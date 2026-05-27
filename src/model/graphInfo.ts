@@ -17,7 +17,11 @@ import type { Graph } from './graph.js';
 import type { LayoutParams, FontnameKind } from './layoutParams.js';
 import type { RankTable } from './rankEntry.js';
 
-export type { RatioKind, FontnameKind, LayoutParams } from './layoutParams.js';
+// Re-export supporting types so consumers can import from this module alone.
+export type { RatioKind, LayoutParams } from './layoutParams.js';
+// FontnameKind is both a const object (value) and a type — a plain export
+// covers both; no separate `export type` needed for the same name.
+export { FontnameKind } from './layoutParams.js';
 export type { RankEntry, RankTable } from './rankEntry.js';
 
 // ---------------------------------------------------------------------------
