@@ -1,0 +1,18 @@
+{
+  "name": "graphviz-ts",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "EPL-2.0",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "esbuild": "^0.21.0",
+    "peggy": "^4.0.0",
+    "@types/node": "^22.0.0"
+  }
+}
