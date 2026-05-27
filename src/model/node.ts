@@ -8,7 +8,7 @@
 
 import type { Edge } from './edge.js';
 import type { Graph } from './graph.js';
-import type { NodeInfo } from './nodeInfo.js';
+import { type NodeInfo, makeNodeInfo } from './nodeInfo.js';
 
 /**
  * Represents an Agnode_t — a graph node.
@@ -57,7 +57,7 @@ export class Node {
     this.id = id;
     this.name = name;
     this.attrs = new Map();
-    this.info = {};
+    this.info = makeNodeInfo();
     this.root = root;
   }
 

@@ -9,7 +9,7 @@
 
 import type { Edge } from './edge.js';
 import type { Node } from './node.js';
-import type { GraphInfo } from './graphInfo.js';
+import { type GraphInfo, makeGraphInfo } from './graphInfo.js';
 
 /**
  * Describes the kind of graph, corresponding to the Agdesc_t descriptor
@@ -104,7 +104,7 @@ export class Graph {
     this.edges = [];
     this.subgraphs = new Map();
     this.attrs = new Map();
-    this.info = {};
+    this.info = makeGraphInfo();
     this.parent = null;
     this.root = this;
   }

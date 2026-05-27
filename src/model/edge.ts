@@ -8,7 +8,7 @@
  */
 
 import type { Node } from './node.js';
-import type { EdgeInfo } from './edgeInfo.js';
+import { type EdgeInfo, makeEdgeInfo, makePort } from './edgeInfo.js';
 
 /**
  * Represents an abstract edge in the graph, corresponding to Agedgepair_t.
@@ -72,6 +72,6 @@ export class Edge {
     this.head = head;
     this.name = name;
     this.attrs = new Map();
-    this.info = {};
+    this.info = makeEdgeInfo(makePort(), makePort());
   }
 }
