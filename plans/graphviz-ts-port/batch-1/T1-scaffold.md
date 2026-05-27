@@ -21,6 +21,7 @@ tsconfig.json
 vitest.config.ts
 .gitignore
 .github/workflows/ci.yml
+src/debug.ts
 ```
 
 ## Read-Set
@@ -33,17 +34,63 @@ No source files to read. Derive configuration from the requirements below.
 
 ## Interface Contracts
 
-None — this task produces only configuration files.
+`src/debug.ts` must export `DebugOptions` and `DebugRecord` with exactly these
+shapes. Every other module imports from this file — changing it later requires
+touching every caller.
+
+```typescript
+// SPDX-License-Identifier: EPL-2.0
+
+/**
+ * Discriminated union of structured records emitted by the debug subsystem.
+ * Add a new member here when a new diagnostic category is introduced.
+ */
+export type DebugRecord =
+  | { kind: 'rank';   nodeId: string; rank: number }
+  | { kind: 'rank-alias-start'; nodeId: string; rankValue: number }
+  | { kind: 'rank-alias-end';   nodeId: string; xCoord: number; rankRestored: number }
+  | { kind: 'spline'; edgeId: string; points: readonly [number, number][] }
+  | { kind: 'coord-space'; phase: string; nodeId: string;
+      x: number; y: number; unit: 'pt' | 'in' }
+  | { kind: 'prng';   seed: number; value: number; index: number };
+
+/**
+ * Flags controlling diagnostic output. All fields are optional; omitting a
+ * flag is equivalent to `false`. Pass this via `GvcContext` constructor options.
+ *
+ * All flags are no-ops in production builds — guarded by `if (debug?.flag)`
+ * so the JIT can eliminate the dead branch. They do not affect algorithm output.
+ */
+export interface DebugOptions {
+  /** Log rank assignments and ND_rank dual-use transitions (AD-8). */
+  rankAssignment?: boolean;
+  /** Log spline control points per edge after pathplan routing. */
+  splineRouting?: boolean;
+  /** Log every PS2INCH / INCH2PS coordinate conversion. */
+  coordinateSpaces?: boolean;
+  /** Log MT19937 seed and generated values (SGD / neato overlap removal). */
+  prngState?: boolean;
+  /**
+   * Receive structured records as they are emitted.
+   * Called synchronously; do not mutate the record.
+   * If omitted, enabled flags write to console.debug.
+   */
+  emit?: (record: DebugRecord) => void;
+}
+```
 
 ## Acceptance Criteria
 
-- Given an empty `src/` directory, when `tsc --noEmit` is run, then it exits 0.
+- Given an empty `src/` directory (containing only `debug.ts`), when
+  `tsc --noEmit` is run, then it exits 0.
 - Given no test files, when `vitest run` is run, then it exits 0 (no tests is
   not a failure).
 - Given `package.json`, then it contains `"type": "module"` and lists no
   runtime dependencies (only devDependencies).
 - Given `tsconfig.json`, then it enables `"strict": true`, targets `"ES2022"`,
   uses `"module": "NodeNext"`, and includes `src/**/*` and `test/**/*`.
+- Given `src/debug.ts`, then it compiles with zero errors and imports nothing
+  from other `src/` files.
 
 ## Key Requirements
 

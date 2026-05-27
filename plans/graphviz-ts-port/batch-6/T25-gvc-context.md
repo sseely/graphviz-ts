@@ -84,8 +84,12 @@ registered SVG renderer, and when quality is tied, the one registered last.
      private readonly renderers: RendererPlugin[] = [];
      private readonly layouts: Map<string, LayoutEngine> = new Map();
      textMeasurer: TextMeasurer;
+     readonly debug: DebugOptions | undefined;
 
-     constructor(measurer: TextMeasurer) { ... }
+     constructor(measurer: TextMeasurer, options?: { debug?: DebugOptions }) {
+       this.textMeasurer = measurer;
+       this.debug = options?.debug;
+     }
 
      register(plugin: RendererPlugin): void;
      register(engine: LayoutEngine): void;
@@ -94,6 +98,11 @@ registered SVG renderer, and when quality is tied, the one registered last.
      renderToString(g: Graph, format: string): string;
    }
    ```
+
+   The `debug` field is `readonly` and set once at construction. Callers check
+   `ctx.debug?.rankAssignment` before emitting; the JIT eliminates the branch
+   when `debug` is `undefined`. Never pass `debug` as a separate argument through
+   the call stack — always read it from `ctx.debug`.
 
 5. `register(plugin: RendererPlugin)` must maintain the sorted invariant:
    - Find the insertion point: scan `this.renderers` to locate where the new
@@ -154,6 +163,7 @@ src/gvc/context.test.ts
   enum values
 - `src/model/index.ts` — `Graph`, `Node`, `Edge` types
 - `src/common/text.ts` — `TextMeasurer`, `TextSpan` (from Batch 5b)
+- `src/debug.ts` — `DebugOptions` (defined in T1)
 
 ## Architecture Decisions
 
@@ -168,13 +178,18 @@ observable and must be reproduced.
 // Exported from src/gvc/context.ts
 export interface RendererPlugin { ... }        // see Task step 2
 export interface LayoutEngine { ... }          // see Task step 3
-export class GvcContext { ... }                // see Task step 4
+export class GvcContext {                      // see Task step 4
+  readonly debug: DebugOptions | undefined;
+  constructor(measurer: TextMeasurer, options?: { debug?: DebugOptions });
+  ...
+}
 export const enum LabelType { Plain, Html }
 export const enum PenType { None, Dashed, Dotted, Solid }
 export const enum FillType { None, Solid, Linear, Radial }
 ```
 
 `RenderJob` is defined in `src/gvc/job.ts` (T26) — import as type only here.
+`DebugOptions` is imported from `src/debug.ts` (T1).
 
 ## Acceptance Criteria
 
