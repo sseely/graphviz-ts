@@ -1,0 +1,7 @@
+graph simple {
+  a [label="Node A", color="blue"]
+  b [label="Node B", color="red"]
+  c [label="Node C", color="green"]
+  a -- b
+  b -- c
+}

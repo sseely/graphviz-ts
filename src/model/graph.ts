@@ -77,6 +77,12 @@ export class Graph {
    */
   attrs: Map<string, string>;
 
+  /** Default attributes applied to all nodes in this graph scope. */
+  nodeDefaults: Map<string, string>;
+
+  /** Default attributes applied to all edges in this graph scope. */
+  edgeDefaults: Map<string, string>;
+
   /**
    * Layout-engine info; replaces GD_* macros via agbindrec (AD-1).
    * @see lib/cgraph/cgraph.h:agbindrec
@@ -104,6 +110,8 @@ export class Graph {
     this.edges = [];
     this.subgraphs = new Map();
     this.attrs = new Map();
+    this.nodeDefaults = new Map();
+    this.edgeDefaults = new Map();
     this.info = makeGraphInfo();
     this.parent = null;
     this.root = this;

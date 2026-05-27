@@ -1,0 +1,10 @@
+digraph pipeline {
+  a [label="Source"]
+  b [label="Transform"]
+  c [label="Filter"]
+  d [label="Sink"]
+  a -> b [weight="2"]
+  b -> c [weight="1"]
+  b -> d [weight="3"]
+  c -> d [weight="1"]
+}
