@@ -208,12 +208,20 @@ export function splay<T, K>(
   const leftPart  = link.right;
   const rightPart = link.left;
 
-  if (leftPart === null)  return rightPart ?? (link as unknown as SplayNode<T>);
-  if (rightPart === null) return leftPart;
-
-  // Attach rightPart as right child of rightmost node in leftPart
-  let p = leftPart;
-  while (p.right !== null) p = p.right;
-  p.right = rightPart;
-  return leftPart;
+  // After the search fails, each partition is a right/left-spine chain
+  // whose HEAD is the first (largest/smallest) node added. We must splay
+  // the true predecessor/successor to root so that splaySplitInsert can
+  // split at a node adjacent to the missing key.
+  //
+  // leftPart chain: connected via .right (largest-first chain, head is
+  //   largest key < target).  splayMax(leftPart) brings true predecessor
+  //   to root.
+  // rightPart chain: connected via .left (smallest-last chain, tail is
+  //   smallest key > target = true successor).  splayMin(rightPart)
+  //   brings true successor to root.
+  if (leftPart === null)  return splayMin(rightPart!);
+  const maxLeft = splayMax(leftPart);
+  if (rightPart === null) return maxLeft;
+  maxLeft.right = rightPart;
+  return maxLeft;
 }
