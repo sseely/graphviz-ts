@@ -1,0 +1,24 @@
+# IDE
+.idea/
+.vscode/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Parser generator output is committed (see AD-11), so only ignore
+# intermediate build artifacts here
+*.js.map
+
+# Test
+coverage/
+test/golden/actual/
+
+# Serena MCP cache
+.serena/cache/

@@ -1,0 +1,76 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm *:*)",
+      "Bash(npx *:*)",
+      "Bash(node *:*)",
+      "Bash(git *:*)",
+      "Bash(pnpm *:*)",
+      "Bash(dot *:*)",
+      "Bash(dot -Tsvg *:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir *:*)",
+      "Bash(cp *:*)",
+      "Bash(mv *:*)",
+      "Bash(chmod *:*)",
+      "Bash(find *:*)",
+      "Bash(grep *:*)",
+      "Bash(wc *:*)",
+      "Bash(sort *:*)",
+      "Bash(head *:*)",
+      "Bash(tail *:*)",
+      "Bash(diff *:*)",
+      "Bash(command -v:*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "mcp__serena__list_dir",
+      "mcp__serena__find_file",
+      "mcp__serena__find_symbol",
+      "mcp__serena__search_for_pattern",
+      "mcp__serena__get_symbols_overview",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__insert_after_symbol",
+      "mcp__serena__insert_before_symbol",
+      "mcp__serena__safe_delete_symbol",
+      "mcp__serena__rename_symbol"
+    ]
+  },
+  "hooks": {
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat ~/.claude/post-compact-context.md"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check-complexity.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-on-stop.sh",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}
