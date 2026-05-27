@@ -1,0 +1,125 @@
+// SPDX-License-Identifier: EPL-2.0
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+import {
+  LUT_FAMILY_COUNT,
+  LutTextMeasurer,
+  estimate_text_width_1pt,
+} from "./textmeasure.js";
+import { ALL_FONT_METRICS } from "./textmeasure-lut-data.js";
+import { normalizeFontName } from "./textmeasure-lookup.js";
+
+// ── AC1: LUT_FAMILY_COUNT === 11 and all families resolve ────────────────────
+
+describe("LUT_FAMILY_COUNT", () => {
+  it("equals 11", () => {
+    expect(LUT_FAMILY_COUNT).toBe(11);
+  });
+
+  it("ALL_FONT_METRICS has exactly 11 entries", () => {
+    expect(ALL_FONT_METRICS.length).toBe(LUT_FAMILY_COUNT);
+  });
+});
+
+describe("all 11 families resolve without fallback warning", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+  });
+
+  const representativeNames = [
+    "Times",
+    "Arial",
+    "Courier",
+    "Nunito",
+    "DejaVu Sans",
+    "Consolas",
+    "Trebuchet MS",
+    "Verdana",
+    "OpenSans",
+    "Georgia",
+    "Calibri",
+  ] as const;
+
+  for (const name of representativeNames) {
+    it(`resolves "${name}" without warning`, () => {
+      const measurer = new LutTextMeasurer();
+      measurer.measure("A", name, 12);
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+  }
+});
+
+// ── AC2: font name normalization ──────────────────────────────────────────────
+
+describe("font name normalization", () => {
+  it("strips spaces and hyphens, lowercases", () => {
+    expect(normalizeFontName("Times New Roman")).toBe("timesnewroman");
+    expect(normalizeFontName("Times-Roman")).toBe("timesroman");
+    expect(normalizeFontName("Arial MT")).toBe("arialmt");
+  });
+
+  it("LutTextMeasurer: 'Times New Roman' and 'Times' produce the same width", () => {
+    const m = new LutTextMeasurer();
+    const wTNR = m.measure("A", "Times New Roman", 12).w;
+    const wTimes = m.measure("A", "Times", 12).w;
+    expect(wTNR).toBe(wTimes);
+  });
+});
+
+// ── AC3: unknown font warns exactly once across 3 calls ──────────────────────
+
+describe("unknown font fallback warning", () => {
+  it("warns exactly once across 3 calls for the same unknown name", () => {
+    // Use a unique name each test run to avoid cross-test bleed from the module
+    // level Set (which persists across tests in the same process).
+    const uniqueName = `UnknownFont_${Math.random().toString(36).slice(2)}`;
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+
+    const m = new LutTextMeasurer();
+    m.measure("x", uniqueName, 10);
+    m.measure("x", uniqueName, 10);
+    m.measure("x", uniqueName, 10);
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(uniqueName),
+    );
+    warnSpy.mockRestore();
+  });
+});
+
+// ── AC4: linear scaling ───────────────────────────────────────────────────────
+
+describe("linear scaling", () => {
+  it("measure at 24pt is within 1e-10 of 2× measure at 12pt", () => {
+    const m = new LutTextMeasurer();
+    const w12 = m.measure("A", "Times", 12).w;
+    const w24 = m.measure("A", "Times", 24).w;
+    expect(Math.abs(w24 - 2 * w12)).toBeLessThan(1e-10);
+  });
+});
+
+// ── Additional: estimate_text_width_1pt sanity checks ────────────────────────
+
+describe("estimate_text_width_1pt", () => {
+  it("returns 0 for empty string", () => {
+    expect(estimate_text_width_1pt("Times", "", false, false)).toBe(0);
+  });
+
+  it("bold width >= regular width for 'W' in Times", () => {
+    const r = estimate_text_width_1pt("Times", "W", false, false);
+    const b = estimate_text_width_1pt("Times", "W", true, false);
+    expect(b).toBeGreaterThanOrEqual(r);
+  });
+
+  it("space character (0x20) returns non-negative width for Times", () => {
+    const w = estimate_text_width_1pt("Times", " ", false, false);
+    expect(w).toBeGreaterThanOrEqual(0);
+  });
+
+  it("width is proportional to string length for Courier (monospace)", () => {
+    const w1 = estimate_text_width_1pt("Courier", "A", false, false);
+    const w3 = estimate_text_width_1pt("Courier", "AAA", false, false);
+    expect(Math.abs(w3 - 3 * w1)).toBeLessThan(1e-10);
+  });
+});
