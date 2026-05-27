@@ -59,7 +59,7 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 
 | Batch | Name | Tasks | Status |
 |-------|------|-------|--------|
-| 1 | Type System and Graph Model | T1–T6 | [ ] |
+| 1 | Type System and Graph Model | T1–T6 | [x] |
 | 2 | Foundation Algorithms | T7–T11 | [ ] |
 | 3 | DOT Parser | T12–T13 | [ ] |
 | 4 | Geometry Primitives | T14–T17 | [ ] |
