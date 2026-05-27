@@ -47,6 +47,9 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 5. MT19937 PRNG output diverges from C reference on any seed value
 6. Task write-set must expand to files outside its declared set
 7. Two consecutive quality-gate failures on the same check after fix attempts
+8. **A failing test can only be made to pass by changing a test assertion
+   rather than fixing the implementation** (see AD-13). STOP immediately,
+   log to `decision-journal.md`, wait for human input. Never alter a test.
 
 ## Push-Forward Conditions
 
@@ -80,7 +83,7 @@ their overview may run in parallel; tasks marked → are sequential.
 
 ## Document Index
 
-- [decisions.md](decisions.md) — 12 architecture decisions (locked)
+- [decisions.md](decisions.md) — 13 architecture decisions (locked); AD-13 governs test discipline
 - [decision-journal.md](decision-journal.md) — append during execution
 - [diagrams/data-flow.md](diagrams/data-flow.md) — dot -Tsvg sequence
 - [diagrams/component-map.md](diagrams/component-map.md) — module deps

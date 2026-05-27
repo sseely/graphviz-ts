@@ -29,6 +29,27 @@ The `clustering.h`, `mq.h`, `DotIO.h`, `color_palette.h`, and `colorutil.h`
 files are in scope as they feed into the sfdp layout pipeline; include them
 in `src/sparse/index.ts` exports.
 
+## TEST DISCIPLINE — Non-Negotiable
+
+**Tests are written before implementation. Expected values come from C source
+only. Tests are never changed to match code output.**
+
+Mandatory workflow:
+1. Read `SparseMatrix.c`, `QuadTree.c`, and `general.c` fully before
+   writing any TypeScript.
+2. Derive every expected value (matrix entries, vector multiply outputs,
+   QuadTree neighbor results) directly from the C source. Where exact
+   output is needed, trace through the C algorithm to obtain ground truth.
+3. Write `sparse.test.ts` with those C-derived expected values as
+   assertions.
+4. Then write the implementation files to satisfy the tests.
+5. If a test fails: re-read the C, fix the TypeScript. Never touch the
+   assertion.
+
+**If a failing test cannot be fixed without changing its assertion, STOP.**
+Log to `decision-journal.md` and wait for human input. This is Stop
+Condition 8 in the mission README (AD-13).
+
 ## Task
 
 Port `lib/sparse` to TypeScript with the following fidelity requirements:

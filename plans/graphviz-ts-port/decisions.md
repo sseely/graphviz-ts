@@ -92,3 +92,33 @@ committed. No parser-generator runtime dependency.
 In scope: SVG (`gvrender_core_svg.c`), DOT/XDOT (`gvrender_core_dot.c`),
 JSON (`gvrender_core_json.c`), plain/IMAP/CMAPX (`gvrender_core_map.c`).
 Out of scope for initial port: FIG renderer (`gvrender_core_fig.c`).
+
+## AD-13: Tests are the immutable spec commitment — code must satisfy tests, never the reverse
+
+**This is the primary quality constraint for all porting work and is not
+negotiable under any circumstance.**
+
+### The rule
+
+Every test assertion expresses a behavioral requirement derived from the
+C source (code, output, or both). Once a test assertion is written it is
+**frozen**. If a test fails, the implementation is wrong. Fix the code.
+
+**Changing a test assertion to make a test pass is always wrong.**
+
+### Required workflow — every task, every test
+
+1. **Read the C source first.** Identify the exact behavior: the algorithm,
+   the output values, the edge cases, the error messages.
+2. **Derive expected values from C.** If a function returns a number, run
+   the C binary or trace through the algorithm by hand to obtain the
+   ground-truth value before writing any TypeScript.
+3. **Write the test.** Commit the expected values as assertions.
+4. **Write the implementation.** Make it satisfy the tests.
+5. **If a test fails, fix the code.** Read the C again. The test is correct.
+
+### Stop condition (triggers autonomous-mode halt)
+
+If a failing test can only be made to pass by changing the test assertion
+rather than the implementation, **STOP**. Log the discrepancy in
+`decision-journal.md` and wait for human input. Do not alter the test.
