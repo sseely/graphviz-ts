@@ -67,7 +67,7 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 | 3 | DOT Parser | T12–T13 | [x] |
 | 4 | Geometry Primitives | T14–T17 | [x] |
 | 5a | Common Layer — Types & Color | T18–T19 | [x] |
-| 5b | Common Layer — Labels, Text, Arrows | T20–T22 | [ ] |
+| 5b | Common Layer — Labels, Text, Arrows | T20–T22 | [x] |
 | 5c | Common Layer — Splines & Emit | T23–T24 | [ ] |
 | 6 | GVC Orchestration | T25–T27 | [ ] |
 | 7 | Renderers | T28–T31 | [ ] |
