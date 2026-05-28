@@ -69,7 +69,7 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 | 5a | Common Layer — Types & Color | T18–T19 | [x] |
 | 5b | Common Layer — Labels, Text, Arrows | T20–T22 | [x] |
 | 5c | Common Layer — Splines & Emit | T23–T24 | [x] |
-| 6 | GVC Orchestration | T25–T27 | [ ] |
+| 6 | GVC Orchestration | T25–T27 | [x] |
 | 7 | Renderers | T28–T31 | [ ] |
 | 8 | dot Layout Engine | T32–T39 | [ ] |
 | 9 | neato Family | T40–T47 | [ ] |
