@@ -31,22 +31,26 @@ class VisPathHelper {
       vl[k + 1] *= -1;
       if (vl[k + 1] === UNSEEN) vl[k + 1] = 0;
       min = VisPathHelper.relaxNode(k, V, dad, vl, wadj);
+      if (min === -1) break;
     }
     return dad;
   }
 
   static countPath(dad: number[], V: number): number {
     let n = 2;
-    for (let i = dad[V]; i !== V + 1; i = dad[i]) n++;
+    for (let i = dad[V]; i !== undefined && i !== -1 && i !== V + 1; i = dad[i]) n++;
     return n;
   }
 
   static extractPath(dad: number[], V: number, p0: Point, p1: Point, conf: VConfig): Point[] {
+    if (dad[V] === -1) return [p0, p1];
     const n = VisPathHelper.countPath(dad, V);
     const ops = new Array<Point>(n);
     let j = n - 1;
     ops[j--] = p1;
-    for (let i = dad[V]; i !== V + 1; i = dad[i]) ops[j--] = conf.P[i];
+    for (let i = dad[V]; i !== undefined && i !== -1 && i !== V + 1; i = dad[i]) {
+      ops[j--] = conf.P[i];
+    }
     ops[0] = p0;
     return ops;
   }
