@@ -90,9 +90,20 @@ class TriangHelper {
 
 export { TriangHelper };
 
+function signedArea(ps: Point[]): number {
+  let sum = 0;
+  for (let i = 0; i < ps.length; i++) {
+    const j = (i + 1) % ps.length;
+    sum += ps[i].x * ps[j].y - ps[j].x * ps[i].y;
+  }
+  return sum;
+}
+
 /** @see lib/pathplan/triang.c:Ptriangulate */
 export function triangulate(poly: Poly, fn: (t: [Point,Point,Point]) => void): number {
-  if (!TriangHelper.triangulateInner(poly.ps.slice(), fn)) return 1;
+  const ps = poly.ps.slice();
+  if (signedArea(ps) > 0) ps.reverse();
+  if (!TriangHelper.triangulateInner(ps, fn)) return 1;
   return 0;
 }
 
