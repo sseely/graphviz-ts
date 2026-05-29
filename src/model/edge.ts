@@ -33,6 +33,16 @@ import { type EdgeInfo, makeEdgeInfo, makePort } from './edgeInfo.js';
  * @see lib/cgraph/cgraph.h:AGMKOUT
  */
 export class Edge {
+  /** @see lib/cgraph/cgraph.h:AGSEQ */
+  private static _nextSeq = 0;
+
+  /**
+   * Monotone sequence number — equivalent to AGSEQ(e) in C.
+   * Used by edgeidcmpf for stable sort ordering.
+   * @see lib/cgraph/cgraph.h:AGSEQ
+   */
+  readonly seq: number;
+
   /**
    * Source node (arrow origin).
    * C: AGTAIL(e) = AGMKIN(e)->node = in.node
@@ -68,6 +78,7 @@ export class Edge {
 
   /** @see lib/cgraph/edge.c:agedge */
   constructor(tail: Node, head: Node, name: string) {
+    this.seq = Edge._nextSeq++;
     this.tail = tail;
     this.head = head;
     this.name = name;

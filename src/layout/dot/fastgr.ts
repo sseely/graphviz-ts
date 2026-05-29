@@ -26,6 +26,15 @@ export const VIRTUAL = 1;
 /** Normal edge type. @see lib/common/types.h */
 export const NORMAL = 0;
 
+/** Flat ordering constraint edge type. @see lib/common/const.h */
+export const FLATORDER = 4;
+
+/** Reversed flat edge type. @see lib/common/const.h */
+export const REVERSED = 3;
+
+/** Scale factor for median computation. @see lib/dotgen/mincross.c:MC_SCALE */
+export const MC_SCALE = 256;
+
 // ---------------------------------------------------------------------------
 // EdgeList helpers  (Group A starts here)
 // ---------------------------------------------------------------------------
@@ -112,25 +121,28 @@ export function findFastEdge(u: Node, v: Node): Edge | undefined {
 // Virtual edge construction  (Group D — fresh after findFastEdge reset)
 // ---------------------------------------------------------------------------
 
-function copyPort(p: Port): Port {
+export function copyPort(p: Port): Port {
   const bp = p.bp !== null ? { ll: { x: p.bp.ll.x, y: p.bp.ll.y }, ur: { x: p.bp.ur.x, y: p.bp.ur.y } } : null;
   return { p: { x: p.p.x, y: p.p.y }, theta: p.theta, bp, defined: p.defined, constrained: p.constrained, clip: p.clip, dyna: p.dyna, order: p.order, side: p.side, name: p.name };
 }
 
 /**
  * Allocate a virtual edge from `u` to `v`, copying port/label info from `orig`.
+ * `orig` may be null when called from do_ordering_node (C passes NULL there).
  * @see lib/dotgen/fastgr.c:new_virtual_edge
  */
-export function newVirtualEdge(u: Node, v: Node, orig: Edge): Edge {
+export function newVirtualEdge(u: Node, v: Node, orig: Edge | null): Edge {
   const e = new EdgeClass(u, v, '');
   e.info.edge_type = VIRTUAL;
-  e.info.tail_port = copyPort(orig.info.tail_port);
-  e.info.head_port = copyPort(orig.info.head_port);
-  e.info.label = orig.info.label;
-  e.info.head_label = orig.info.head_label;
-  e.info.tail_label = orig.info.tail_label;
-  e.info.xlabel = orig.info.xlabel;
-  e.info.to_orig = orig;
+  if (orig) {
+    e.info.tail_port = copyPort(orig.info.tail_port);
+    e.info.head_port = copyPort(orig.info.head_port);
+    e.info.label = orig.info.label;
+    e.info.head_label = orig.info.head_label;
+    e.info.tail_label = orig.info.tail_label;
+    e.info.xlabel = orig.info.xlabel;
+    e.info.to_orig = orig;
+  }
   return e;
 }
 
@@ -148,15 +160,19 @@ export function virtualEdge(u: Node, v: Node, orig: Edge): Edge {
 // Edge merging (concentration)
 // ---------------------------------------------------------------------------
 
-function basicMerge(e: Edge, rep: Edge): void {
+export function mergeWeightsInto(f: Edge, ew: number, em: number, ex: number): void {
+  f.info.weight = (f.info.weight ?? 0) + ew;
+  f.info.minlen = Math.max(f.info.minlen ?? 1, em);
+  f.info.count = (f.info.count ?? 1) + 1;
+  f.info.xpenalty = (f.info.xpenalty ?? 0) + ex;
+}
+
+export function basicMerge(e: Edge, rep: Edge): void {
   const ew = e.info.weight ?? 1;
   const em = e.info.minlen ?? 1;
   const ex = e.info.xpenalty ?? 0;
   for (let f: Edge | undefined = rep; f !== undefined; f = f.info.to_virt) {
-    f.info.weight = (f.info.weight ?? 0) + ew;
-    f.info.minlen = Math.max(f.info.minlen ?? 1, em);
-    f.info.count = (f.info.count ?? 1) + 1;
-    f.info.xpenalty = (f.info.xpenalty ?? 0) + ex;
+    mergeWeightsInto(f, ew, em, ex);
   }
 }
 
@@ -168,6 +184,54 @@ export function mergeOneway(e: Edge, rep: Edge): void {
   if (e.info.to_virt !== undefined) return;
   e.info.to_virt = rep;
   basicMerge(e, rep);
+}
+
+// ---------------------------------------------------------------------------
+// Flat-graph edge operations  (Group E — mirrors Group B for flat edges)
+// ---------------------------------------------------------------------------
+
+/**
+ * Remove `e` from the flat graph (tail.flat_out and head.flat_in).
+ * Also clears `e.info.to_virt` back-reference.
+ * @see lib/dotgen/fastgr.c:delete_flat_edge
+ */
+export function deleteFlatEdge(e: Edge): void {
+  e.info.to_virt = undefined;
+  if (e.tail.info.flat_out) zapinlist(e.tail.info.flat_out, e);
+  if (e.head.info.flat_in) zapinlist(e.head.info.flat_in, e);
+}
+
+/**
+ * Add `e` to the flat graph (tail.flat_out and head.flat_in) and mark the
+ * graph as having flat edges.
+ * @see lib/dotgen/fastgr.c:flat_edge
+ */
+export function flatEdge(g: import('../../model/graph.js').Graph, e: Edge): void {
+  if (!e.tail.info.flat_out) e.tail.info.flat_out = { list: [], size: 0 };
+  if (!e.head.info.flat_in) e.head.info.flat_in = { list: [], size: 0 };
+  elistAppend(e.tail.info.flat_out, e);
+  elistAppend(e.head.info.flat_in, e);
+  g.info.has_flat_edges = true;
+}
+
+/**
+ * Search for an existing flat edge from `u` to `v`.
+ * @see lib/dotgen/fastgr.c:find_flat_edge
+ */
+export function findFlatEdge(u: import('../../model/node.js').Node, v: import('../../model/node.js').Node): Edge | undefined {
+  const uOut = u.info.flat_out;
+  const vIn = v.info.flat_in;
+  if (uOut === undefined || vIn === undefined) return undefined;
+  if (uOut.size <= vIn.size) {
+    for (let i = 0; i < uOut.size; i++) {
+      if (uOut.list[i].head === v) return uOut.list[i];
+    }
+  } else {
+    for (let i = 0; i < vIn.size; i++) {
+      if (vIn.list[i].tail === u) return vIn.list[i];
+    }
+  }
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------

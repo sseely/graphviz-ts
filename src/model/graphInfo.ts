@@ -22,7 +22,7 @@ export type { RatioKind, LayoutParams } from './layoutParams.js';
 // FontnameKind is both a const object (value) and a type — a plain export
 // covers both; no separate `export type` needed for the same name.
 export { FontnameKind } from './layoutParams.js';
-export type { RankEntry, RankTable } from './rankEntry.js';
+export type { AdjMatrix, RankEntry, RankTable } from './rankEntry.js';
 
 // ---------------------------------------------------------------------------
 // Forward stub — replaced when src/gvc/context.ts is written in Batch 6.
@@ -382,6 +382,13 @@ export interface GraphInfo {
    * @see lib/common/types.h:GD_exact_ranksep
    */
   exact_ranksep?: boolean;
+
+  /**
+   * Whether the rank direction is flipped (used in flat_reorder and build_ranks).
+   * Set from GD_realrankdir: true when layout is LR or RL (horizontal).
+   * @see lib/dotgen/mincross.c:GD_flip
+   */
+  flip?: boolean;
 }
 
 // ---------------------------------------------------------------------------
