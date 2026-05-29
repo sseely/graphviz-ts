@@ -254,6 +254,23 @@ export interface EdgeInfo {
    * @see lib/common/types.h:ED_path
    */
   path?: unknown; // ED_path — Ppolyline_t in C
+
+  // -------------------------------------------------------------------------
+  // dot layout tracking (TypeScript-only, no C equivalent field)
+  // -------------------------------------------------------------------------
+
+  /**
+   * True if this edge was reversed by acyclic() during cycle-breaking.
+   * Set by reverseEdge() in src/layout/dot/fastgr.ts. Used by dot_splines
+   * to swap bezier control-point order back to tail→head orientation.
+   *
+   * There is no corresponding C field; C detects reversal via rank comparison
+   * in swap_ends_p() (lib/dotgen/dotsplines.c). The TypeScript port adds this
+   * field for explicit tracking.
+   *
+   * @see lib/dotgen/dotsplines.c:swap_ends_p
+   */
+  reversed?: boolean;
 }
 
 // ---------------------------------------------------------------------------
