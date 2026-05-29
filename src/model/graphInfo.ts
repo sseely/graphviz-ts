@@ -217,6 +217,13 @@ export interface GraphInfo {
   n_cluster?: number;
 
   /**
+   * Cluster margin (in points). Corresponds to the `margin` attribute on a
+   * cluster graph, read by `late_int(g, G_margin, CL_OFFSET, 0)` in C.
+   * @see lib/dotgen/position.c:contain_nodes
+   */
+  clusterMargin?: number;
+
+  /**
    * Cluster array.
    *
    * IMPORTANT: In C this is 1-indexed — clust[1..n_cluster]. This TypeScript
@@ -389,6 +396,14 @@ export interface GraphInfo {
    * @see lib/dotgen/mincross.c:GD_flip
    */
   flip?: boolean;
+
+  /**
+   * AD-8 phase marker: true between create_aux_edges and set_xcoords,
+   * while ND_rank holds x-coordinates instead of rank indices.
+   * Cleared by setXcoords after ND_coord.x is populated.
+   * @see lib/dotgen/position.c:set_xcoords (AD-8)
+   */
+  rankIsXCoord?: boolean;
 }
 
 // ---------------------------------------------------------------------------

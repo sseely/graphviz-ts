@@ -244,6 +244,14 @@ export interface NodeInfo {
    */
   order?: number;
 
+  /**
+   * AD-8: True while the position phase is active and `rank` holds an
+   * x-coordinate instead of a rank index. Set before rank(g,2,…) is called;
+   * cleared by setXcoords after ND_coord.x is populated.
+   * @see lib/dotgen/position.c:set_xcoords
+   */
+  rankIsXCoord?: boolean;
+
   /** @see lib/common/types.h:ND_mval */
   mval?: number;
 
@@ -358,6 +366,14 @@ export interface NodeInfo {
 
   /** Cluster subgraph that this node belongs to. @see lib/common/types.h:ND_clust */
   clust?: Graph;
+
+  /**
+   * Flat-edge label constraint edge stored in ND_alg during dot position phase.
+   * Set by flat.c when a virtual node hosts a flat-edge label; read by
+   * make_LR_constraints and dotsplines.c.
+   * @see lib/dotgen/flat.c:ND_alg (flat edge label usage)
+   */
+  posAlg?: Edge;
 
   // -------------------------------------------------------------------------
   // Fields from #ifndef DOT_ONLY block (neato/fdp/sfdp)

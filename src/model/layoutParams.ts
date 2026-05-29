@@ -83,6 +83,11 @@ export interface LayoutParams {
   /** Ratio mode. @see lib/common/types.h:layout_t.ratio_kind */
   ratioKind: RatioKind;
   /**
+   * Whether parallel edges should be concentrated into fewer edges.
+   * @see lib/common/globals.h:Concentrate
+   */
+  concentrate?: boolean;
+  /**
    * Parsed xdot data; typed fully in a later batch.
    * @see lib/common/types.h:layout_t.xdots
    */
