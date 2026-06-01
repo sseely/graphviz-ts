@@ -263,6 +263,27 @@ export interface EdgeInfo {
    */
   path?: unknown; // ED_path — Ppolyline_t in C
 
+
+  // -------------------------------------------------------------------------
+  // samehead / sametail — group id for port merging (sameport.c)
+  // -------------------------------------------------------------------------
+
+  /**
+   * Group id for samehead port merging. Edges sharing this value at the same
+   * head node will be merged onto a single port by dot_sameports().
+   * Corresponds to agxget(e, E_samehead) in the C source.
+   * @see lib/dotgen/sameport.c:dot_sameports
+   */
+  samehead?: string;
+
+  /**
+   * Group id for sametail port merging. Edges sharing this value at the same
+   * tail node will be merged onto a single port by dot_sameports().
+   * Corresponds to agxget(e, E_sametail) in the C source.
+   * @see lib/dotgen/sameport.c:dot_sameports
+   */
+  sametail?: string;
+
   // -------------------------------------------------------------------------
   // dot layout tracking (TypeScript-only, no C equivalent field)
   // -------------------------------------------------------------------------

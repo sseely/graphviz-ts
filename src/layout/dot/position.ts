@@ -20,6 +20,7 @@ import {
 import { posClusters, compressGraph } from './position-cluster.js';
 import { setYcoords } from './position-ycoords.js';
 import { setAspect } from './position-bbox.js';
+import { dotConcentrate } from './conc.js';
 
 // ---------------------------------------------------------------------------
 // set_xcoords — AD-8 critical: ND_rank holds x-coord; restore to rank index
@@ -134,14 +135,12 @@ export function expandLeaves(_g: Graph): void {
 }
 
 // ---------------------------------------------------------------------------
-// flat_edges (stub, T36) / dot_concentrate (stub, T37)
+// flat_edges (stub, T36)
 // ---------------------------------------------------------------------------
 
 /** @see lib/dotgen/flat.c:flat_edges — stub (T36) */
 export function flatEdges(_g: Graph): boolean { return false; }
 
-/** @see lib/dotgen/conc.c:dot_concentrate — stub (T37) */
-export function dotConcentrate(_g: Graph): number { return 0; }
 
 // ---------------------------------------------------------------------------
 // dot_position — @see lib/dotgen/position.c:dot_position
