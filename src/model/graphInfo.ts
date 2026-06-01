@@ -420,6 +420,15 @@ export interface GraphInfo {
    * @see lib/dotgen/position.c:set_xcoords (AD-8)
    */
   rankIsXCoord?: boolean;
+
+  /**
+   * MT19937 seed used by the SGD layout engine.
+   * Corresponds to the rk_seed() call in lib/neatogen/sgd.c.
+   * Defaults to 0 when not set.
+   *
+   * @see lib/neatogen/sgd.c:sgd (rk_seed call)
+   */
+  seed?: number;
 }
 
 // ---------------------------------------------------------------------------
