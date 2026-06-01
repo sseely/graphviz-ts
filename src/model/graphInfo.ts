@@ -397,6 +397,14 @@ export interface GraphInfo {
    */
   flip?: boolean;
 
+
+  /**
+   * Whether edge concentration is enabled (merges parallel edges).
+   * Corresponds to the `concentrate` graph attribute.
+   * @see lib/dotgen/class2.c:Concentrate
+   */
+  concentrate?: boolean;
+
   /**
    * AD-8 phase marker: true between create_aux_edges and set_xcoords,
    * while ND_rank holds x-coordinates instead of rank indices.

@@ -87,6 +87,14 @@ export interface EdgeInfo {
   // -------------------------------------------------------------------------
 
   /**
+   * Whether this edge participates in rank constraints.
+   * Corresponds to the `constraint` edge attribute (default: true).
+   * When false, the edge does not constrain rank assignment.
+   * @see lib/dotgen/class1.c:nonconstraint_edge
+   */
+  constraint?: boolean;
+
+  /**
    * Edge type code: REGULAREDGE / FLATEDGE / SELFEDGE.
    * Stored as char in C; mapped to number here.
    * @see lib/common/types.h:Agedgeinfo_t.edge_type

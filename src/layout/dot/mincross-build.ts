@@ -410,9 +410,5 @@ export function orderedEdges(ctx: MincrossContext, g: Graph): void {
   doOrderingForNodes(ctx, g);
 }
 
-// class2 stub — T36
-export function class2(_g: Graph): void {
-  /* TODO T36: port lib/dotgen/class2.c:class2 */
-}
-
+export { class2 } from './classify.js';
 export { expandCluster, markLowclusters };

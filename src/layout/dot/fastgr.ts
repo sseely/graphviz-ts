@@ -143,6 +143,7 @@ export function newVirtualEdge(u: Node, v: Node, orig: Edge | null): Edge {
     e.info.head_label = orig.info.head_label;
     e.info.tail_label = orig.info.tail_label;
     e.info.xlabel = orig.info.xlabel;
+    if (orig.info.to_virt === undefined) orig.info.to_virt = e;
     e.info.to_orig = orig;
   }
   return e;
@@ -293,4 +294,13 @@ export function virtualNode(g: Graph): Node {
   n.info.out = { list: [], size: 0 };
   fastNode(g, n);
   return n;
+}
+
+/**
+ * Append edge `e` to the `other` list of its tail node.
+ * @see lib/dotgen/fastgr.c:other_edge
+ */
+export function otherEdge(e: Edge): void {
+  if (!e.tail.info.other) e.tail.info.other = { list: [], size: 0 };
+  elistAppend(e.tail.info.other, e);
 }

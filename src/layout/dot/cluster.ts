@@ -25,9 +25,12 @@ import {
 } from './mincross-build.js';
 import { CLUSTER } from './rank.js';
 import { makeSlots, safeOtherEdge, makeInterclustChain } from './cluster-path.js';
+// mergeChain lives in classify.ts (circular: classify ↔ cluster — safe for function refs)
+import { mergeChain } from './classify.js';
 
 export { CLUSTER_EDGE } from './cluster-path.js';
 export { mapInterclustNode } from './cluster-path.js';
+export { mergeChain };
 
 // ---------------------------------------------------------------------------
 // interclexp helpers — @see lib/dotgen/cluster.c:interclexp
@@ -95,15 +98,6 @@ export function interclexp(subg: Graph): void {
       prev = interclexpOneEdge(subg, g, e, prev);
     }
   }
-}
-
-// ---------------------------------------------------------------------------
-// mergeChain stub (class2-related; T36)
-// ---------------------------------------------------------------------------
-
-/** @see lib/dotgen/class2.c:merge_chain — stubbed until T36 */
-export function mergeChain(_subg: Graph, _e: Edge, _ve: Edge, _flatFlag: boolean): void {
-  /* TODO T36: port lib/dotgen/class2.c:merge_chain */
 }
 
 // ---------------------------------------------------------------------------

@@ -28,6 +28,18 @@ export const LOCAL      = 100;
 export const GLOBAL     = 101;
 export const NOCLUST    = 102;
 
+/**
+ * Back-edge penalty multiplier for cluster constraints.
+ * @see lib/dotgen/class1.c:CL_BACK
+ */
+export const CL_BACK = 10;
+
+/**
+ * Edge type: edge is ignored during layout (concentrated / back-edge suppressed).
+ * @see lib/dotgen/class2.c:IGNORED
+ */
+export const IGNORED = 6;
+
 /** Global cluster layout type. @see lib/common/globals.h:CL_type */
 export let clType = LOCAL;
 export function setClType(t: number): void { clType = t; }
