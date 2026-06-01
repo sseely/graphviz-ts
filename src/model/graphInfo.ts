@@ -397,13 +397,21 @@ export interface GraphInfo {
    */
   flip?: boolean;
 
-
   /**
    * Whether edge concentration is enabled (merges parallel edges).
    * Corresponds to the `concentrate` graph attribute.
    * @see lib/dotgen/class2.c:Concentrate
    */
   concentrate?: boolean;
+
+  /**
+   * Whether the graph has compound edges (lhead/ltail attributes set on edges).
+   * When true, dot_compoundEdges clips splines to cluster bounding boxes.
+   * Corresponds to the `compound` graph attribute.
+   * @see lib/dotgen/compound.c:dot_compoundEdges
+   * @see lib/common/types.h:GD_flags (via compound flag)
+   */
+  compound?: boolean;
 
   /**
    * AD-8 phase marker: true between create_aux_edges and set_xcoords,

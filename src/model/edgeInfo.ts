@@ -285,6 +285,26 @@ export interface EdgeInfo {
   sametail?: string;
 
   // -------------------------------------------------------------------------
+  // Compound edge cluster clipping (dot layout)
+  // -------------------------------------------------------------------------
+
+  /**
+   * Name of the cluster subgraph to clip the head of this edge against.
+   * When set, the spline endpoint at the head is clipped to the cluster's
+   * bounding box by dot_compoundEdges(). Corresponds to agget(e, "lhead").
+   * @see lib/dotgen/compound.c:makeCompoundEdge
+   */
+  lhead?: string;
+
+  /**
+   * Name of the cluster subgraph to clip the tail of this edge against.
+   * When set, the spline start at the tail is clipped to the cluster's
+   * bounding box by dot_compoundEdges(). Corresponds to agget(e, "ltail").
+   * @see lib/dotgen/compound.c:makeCompoundEdge
+   */
+  ltail?: string;
+
+  // -------------------------------------------------------------------------
   // dot layout tracking (TypeScript-only, no C equivalent field)
   // -------------------------------------------------------------------------
 
