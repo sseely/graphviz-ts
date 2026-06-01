@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: EPL-2.0
 /**
  * Tests for the dot position phase: setXcoords (AD-8), setYcoords,
- * connectGraph, setAspect, and the dotPosition entry point.
+ * connectGraph, setAspect, cluster helpers, and the dotPosition entry point.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -19,6 +19,11 @@ import {
   dotComputeBb, scaleBb,
   rankNormalXRange, firstNormalNode, lastNormalNode,
 } from './position-bbox.js';
+import {
+  subgraphBounds,
+  interclexpMergeable, interclexpRanksEq, interclexpHeadHigher,
+} from './cluster.js';
+import { mapInterclustNode, makeSlots } from './cluster-path.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -282,5 +287,131 @@ describe('scaleBb', () => {
     expect(g.info.bb.ll.y).toBe(60);
     expect(g.info.bb.ur.x).toBe(60);
     expect(g.info.bb.ur.y).toBe(120);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// cluster helpers (cluster.ts / cluster-path.ts)
+// ---------------------------------------------------------------------------
+
+describe('subgraphBounds', () => {
+  it('returns [minrank, maxrank] for a graph with explicit ranks', () => {
+    const [g] = makeTestGraph(0);
+    g.info.minrank = 2;
+    g.info.maxrank = 5;
+    expect(subgraphBounds(g)).toEqual([2, 5]);
+  });
+
+  it('defaults undefined minrank/maxrank to 0', () => {
+    const [g] = makeTestGraph(0);
+    expect(subgraphBounds(g)).toEqual([0, 0]);
+  });
+});
+
+describe('interclexpMergeable', () => {
+  it('returns false when prev is undefined', () => {
+    const [g, nodes] = makeTestGraph(2);
+    const e = addTestEdge(g, nodes[0], nodes[1]);
+    e.info.minlen = 1;
+    e.info.weight = 1;
+    expect(interclexpMergeable(undefined, e)).toBe(false);
+  });
+  it('returns true when prev and e share tail, minlen, weight', () => {
+    const [g, nodes] = makeTestGraph(2);
+    const e1 = addTestEdge(g, nodes[0], nodes[1]);
+    e1.info.minlen = 2;
+    e1.info.weight = 3;
+    const e2 = addTestEdge(g, nodes[0], nodes[1]);
+    e2.info.minlen = 2;
+    e2.info.weight = 3;
+    expect(interclexpMergeable(e1, e2)).toBe(true);
+  });
+  it('returns false when minlen differs', () => {
+    const [g, nodes] = makeTestGraph(2);
+    const e1 = addTestEdge(g, nodes[0], nodes[1]);
+    e1.info.minlen = 1;
+    e1.info.weight = 1;
+    const e2 = addTestEdge(g, nodes[0], nodes[1]);
+    e2.info.minlen = 2;
+    e2.info.weight = 1;
+    expect(interclexpMergeable(e1, e2)).toBe(false);
+  });
+});
+
+describe('interclexpRanksEq', () => {
+  it('returns true when tail and head ranks are equal', () => {
+    const [g, nodes] = makeTestGraph(2);
+    nodes[0].info.rank = 3;
+    nodes[1].info.rank = 3;
+    const e = addTestEdge(g, nodes[0], nodes[1]);
+    expect(interclexpRanksEq(e)).toBe(true);
+  });
+
+  it('returns false when tail and head ranks differ', () => {
+    const [g, nodes] = makeTestGraph(2);
+    nodes[0].info.rank = 1;
+    nodes[1].info.rank = 2;
+    const e = addTestEdge(g, nodes[0], nodes[1]);
+    expect(interclexpRanksEq(e)).toBe(false);
+  });
+});
+
+describe('interclexpHeadHigher', () => {
+  it('returns true when head rank > tail rank', () => {
+    const [g, nodes] = makeTestGraph(2);
+    nodes[0].info.rank = 1;
+    nodes[1].info.rank = 3;
+    const e = addTestEdge(g, nodes[0], nodes[1]);
+    expect(interclexpHeadHigher(e)).toBe(true);
+  });
+
+  it('returns false when head rank <= tail rank', () => {
+    const [g, nodes] = makeTestGraph(2);
+    nodes[0].info.rank = 3;
+    nodes[1].info.rank = 1;
+    const e = addTestEdge(g, nodes[0], nodes[1]);
+    expect(interclexpHeadHigher(e)).toBe(false);
+  });
+});
+
+describe('mapInterclustNode', () => {
+  it('returns node unchanged when no cluster is assigned', () => {
+    const [, nodes] = makeTestGraph(1);
+    nodes[0].info.clust = undefined;
+    expect(mapInterclustNode(nodes[0])).toBe(nodes[0]);
+  });
+
+  it('returns node unchanged when cluster is already expanded', () => {
+    const [, nodes] = makeTestGraph(1);
+    const clust = new Graph('c', 'directed');
+    clust.info.expanded = true;
+    nodes[0].info.clust = clust;
+    expect(mapInterclustNode(nodes[0])).toBe(nodes[0]);
+  });
+
+  it('returns rankleader when cluster is not yet expanded', () => {
+    const [, nodes] = makeTestGraph(2);
+    nodes[0].info.rank = 1;
+    const clust = new Graph('c', 'directed');
+    clust.info.expanded = false;
+    clust.info.rankleader = [null as unknown as Node, nodes[1]];
+    nodes[0].info.clust = clust;
+    expect(mapInterclustNode(nodes[0])).toBe(nodes[1]);
+  });
+});
+
+describe('makeSlots', () => {
+  it('expands rank by d slots (d > 0)', () => {
+    const [g, nodes] = makeTestGraph(3);
+    nodes[0].info.order = 0;
+    nodes[1].info.order = 1;
+    nodes[2].info.order = 2;
+    const rk = makeRankEntry();
+    rk.v = [nodes[0], nodes[1], nodes[2]];
+    rk.n = 3;
+    g.info.rank = [rk];
+    makeSlots(g, 0, 0, 2);
+    expect(rk.n).toBe(4);
+    expect(rk.v[0]).toBe(nodes[0]);
   });
 });

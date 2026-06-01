@@ -11,10 +11,12 @@
  */
 
 import type { Node } from '../../model/node.js';
+import { Node as NodeClass } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import { Edge as EdgeClass } from '../../model/edge.js';
 import type { Port } from '../../model/geom.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
+import type { Graph } from '../../model/graph.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -252,4 +254,43 @@ export function reverseEdge(e: Edge): void {
   } else {
     virtualEdge(e.head, e.tail, e);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Fast-graph node operations
+// ---------------------------------------------------------------------------
+
+/**
+ * Add node `n` to graph `g`'s fast-graph linked list (nlist).
+ * @see lib/dotgen/fastgr.c:fast_node
+ */
+export function fastNode(g: Graph, n: Node): void {
+  n.info.next = g.info.nlist;
+  if (g.info.nlist !== undefined) g.info.nlist.info.prev = n;
+  n.info.prev = undefined;
+  g.info.nlist = n;
+}
+
+/**
+ * Remove node `n` from graph `g`'s fast-graph linked list.
+ * @see lib/dotgen/fastgr.c:delete_fast_node
+ */
+export function deleteFastNode(g: Graph, n: Node): void {
+  if (n.info.prev !== undefined) n.info.prev.info.next = n.info.next;
+  else g.info.nlist = n.info.next;
+  if (n.info.next !== undefined) n.info.next.info.prev = n.info.prev;
+}
+
+/**
+ * Allocate a virtual (VIRTUAL node_type) node, add it to `g`'s fast graph
+ * with pre-allocated in/out edge lists of capacity 4.
+ * @see lib/dotgen/fastgr.c:virtual_node
+ */
+export function virtualNode(g: Graph): Node {
+  const n = new NodeClass(0, '', g);
+  n.info.node_type = VIRTUAL;
+  n.info.in = { list: [], size: 0 };
+  n.info.out = { list: [], size: 0 };
+  fastNode(g, n);
+  return n;
 }

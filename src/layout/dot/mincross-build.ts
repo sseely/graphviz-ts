@@ -22,6 +22,7 @@ import {
 } from './mincross-utils.js';
 import { transpose, ncross } from './mincross-cross.js';
 import { CLUSTER, isACluster } from './rank.js';
+import { installCluster, expandCluster, markLowclusters } from './cluster.js';
 
 // betweenclust — @see lib/dotgen/mincross.c:betweenclust
 export function betweenclust(e: Edge): boolean {
@@ -286,11 +287,7 @@ export function enqueueNeighbors(q: Node[], n0: Node, pass: number): void {
   }
 }
 
-// installCluster stub — T35
-export function installCluster(_g: Graph, _n0: Node, _pass: number, _q: Node[]): number {
-  /* TODO T35: port lib/dotgen/cluster.c:install_cluster */
-  return 0;
-}
+export { installCluster };
 
 // build_ranks — @see lib/dotgen/mincross.c:build_ranks
 export function buildRanksFlip(ctx: MincrossContext, g: Graph, mn: number, mx: number): void {
@@ -413,16 +410,9 @@ export function orderedEdges(ctx: MincrossContext, g: Graph): void {
   doOrderingForNodes(ctx, g);
 }
 
-// Stubs for T35 / T36
+// class2 stub — T36
 export function class2(_g: Graph): void {
   /* TODO T36: port lib/dotgen/class2.c:class2 */
 }
 
-export function expandCluster(_g: Graph): number {
-  /* TODO T35: port lib/dotgen/cluster.c:expand_cluster */
-  return 0;
-}
-
-export function markLowclusters(_g: Graph): void {
-  /* TODO T35: port lib/dotgen/cluster.c:mark_lowclusters */
-}
+export { expandCluster, markLowclusters };
