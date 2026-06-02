@@ -72,7 +72,7 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 | 6 | GVC Orchestration | T25–T27 | [x] |
 | 7 | Renderers | T28–T31 | [x] |
 | 8 | dot Layout Engine | T32–T39 | [x] |
-| 9 | neato Family | T40–T47 | [ ] |
+| 9 | neato Family | T40–T47 | [x] |
 | 10 | Remaining Layout Engines | T48–T52 | [ ] |
 | 11 | Integration & Golden-File Tests | T53–T56 | [ ] |
 
