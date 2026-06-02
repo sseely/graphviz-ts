@@ -429,6 +429,33 @@ export interface GraphInfo {
    * @see lib/neatogen/sgd.c:sgd (rk_seed call)
    */
   seed?: number;
+
+  /**
+   * Neato start attribute: controls initial placement and RNG seed.
+   * Values: "random[N]" | "self" | "regular" | numeric string.
+   * Corresponds to agget(g, "start") in lib/neatogen/neatoinit.c:setSeed.
+   *
+   * @see lib/neatogen/neatoinit.c:setSeed
+   */
+  start?: string;
+
+  /**
+   * Neato layout mode string attribute.
+   * Values: "KK" | "major" | "hier" | "ipsep" | "sgd".
+   * Corresponds to agget(g, "mode") in lib/neatogen/neato.h:neatoMode.
+   *
+   * @see lib/neatogen/neato.h:neatoMode
+   */
+  mode?: string;
+
+  /**
+   * Neato overlap removal control.
+   * "false" disables VPSC overlap removal; any other value enables it.
+   * Corresponds to agget(g, "overlap") in lib/neatogen/neatoinit.c.
+   *
+   * @see lib/neatogen/neatoinit.c:neato_layout
+   */
+  overlap?: string;
 }
 
 // ---------------------------------------------------------------------------
