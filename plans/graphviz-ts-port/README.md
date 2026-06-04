@@ -74,7 +74,7 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 | 8 | dot Layout Engine | T32–T39 | [x] |
 | 9 | neato Family | T40–T47 | [x] |
 | 10 | Remaining Layout Engines | T48–T52 | [x] |
-| 11 | Integration & Golden-File Tests | T53–T56 | [ ] |
+| 11 | Integration & Golden-File Tests | T53–T56 | [~] |
 
 **Execution order:** 1 → (2 ‖ 3) → 4 → 5a → 5b → 5c → 6 → 7 → 8 → 9 → 10 → 11
 
