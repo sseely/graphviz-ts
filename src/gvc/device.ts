@@ -17,6 +17,7 @@ import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
+import { computeSubgraphBB } from '../layout/pack/index.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -113,6 +114,8 @@ export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin):
 export function render(ctx: GvcContext, g: Graph, format: string): string {
   const renderer = ctx.bestRenderer(format);
   const job = new RenderJob(format, ctx.textMeasurer);
-  job.bb = g.info.bb;
+  const gbb = g.info.bb;
+  const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
+  job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
   return renderGraph(g, job, renderer);
 }

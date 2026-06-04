@@ -9,6 +9,7 @@ import { acyclic } from './acyclic.js';
 import { reverseEdge, virtualEdge, zapinlist } from './fastgr.js';
 import { rank } from './ns.js';
 import { dot2Rank } from './rank-dot2.js';
+import { class1 } from './classify.js';
 
 // ---------------------------------------------------------------------------
 // Constants  @see lib/common/const.h
@@ -69,8 +70,7 @@ export function isACluster(g: Graph): boolean {
   return mapbool(g.attrs.get('cluster'));
 }
 
-/** Stub for class1 (not yet ported — T34+). @see lib/dotgen/class.c:class1 */
-export function class1(_g: Graph): void { /* TODO: port lib/dotgen/class.c */ }
+export { class1 };
 
 // ---------------------------------------------------------------------------
 // cleanup1 — clear fast graph, remove SLACKNODE nodes from comp lists
