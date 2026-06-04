@@ -1,0 +1,7 @@
+// graphviz-ts reference input: two triangles connected by a bridge at c
+// engine: circo
+// tolerance: deterministic
+graph G {
+    a -- b -- c -- a;
+    c -- d -- e -- c;
+}

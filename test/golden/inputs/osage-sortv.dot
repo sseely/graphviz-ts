@@ -1,0 +1,11 @@
+// graphviz-ts reference input: 4-node graph with sortv attribute on nodes
+// engine: osage
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        A [sortv=4];
+        B [sortv=3];
+        C [sortv=2];
+        D [sortv=1];
+    }
+}

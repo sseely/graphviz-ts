@@ -1,0 +1,14 @@
+// graphviz-ts reference input: 6-node digraph with 2 subgraph clusters
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    subgraph cluster_0 {
+        label="Cluster 0";
+        A -> B -> C;
+    }
+    subgraph cluster_1 {
+        label="Cluster 1";
+        D -> E -> F;
+    }
+    C -> D;
+}

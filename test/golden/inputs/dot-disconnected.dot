@@ -1,0 +1,7 @@
+// graphviz-ts reference input: two separate 3-node digraph components
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B -> C;
+    D -> E -> F;
+}

@@ -1,0 +1,7 @@
+// graphviz-ts reference input: 3-node digraph with box nodes and straight edges
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    node [shape=box];
+    A -> B -> C;
+}

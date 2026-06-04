@@ -1,0 +1,7 @@
+// graphviz-ts reference input: 4-node cycle with one record-shaped node
+// engine: circo
+// tolerance: deterministic
+graph G {
+    R [shape=record label="x|y|z"];
+    R -- B -- C -- D -- R;
+}

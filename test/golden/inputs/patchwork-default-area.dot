@@ -1,0 +1,8 @@
+// graphviz-ts reference input: 4-node graph with no area attribute on nodes
+// engine: patchwork
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        A; B; C; D;
+    }
+}

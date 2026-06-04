@@ -1,0 +1,19 @@
+// graphviz-ts reference input: 8-node graph with two cluster subgraphs
+// engine: patchwork
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        label="GroupA";
+        A [area=4];
+        B [area=3];
+        C [area=2];
+        D [area=1];
+    }
+    subgraph cluster_1 {
+        label="GroupB";
+        E [area=6];
+        F [area=5];
+        G [area=4];
+        H [area=3];
+    }
+}

@@ -1,0 +1,9 @@
+// graphviz-ts reference input: edges with dir=both
+// engine: fdp
+// tolerance: iterative
+graph G {
+    A -- B [dir=both];
+    B -- C [dir=both];
+    C -- D [dir=both];
+    D -- A [dir=both];
+}

@@ -1,0 +1,402 @@
+[
+  {
+    "id": "dot-simple-box",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-simple-box.dot",
+    "reference": "test/golden/refs/dot-simple-box.svg",
+    "description": "Simple 3-node digraph with box nodes and straight edges"
+  },
+  {
+    "id": "dot-record-node",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-record-node.dot",
+    "reference": "test/golden/refs/dot-record-node.svg",
+    "description": "2-node digraph with a record node having 3 fields"
+  },
+  {
+    "id": "dot-html-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-label.dot",
+    "reference": "test/golden/refs/dot-html-label.svg",
+    "description": "2-node digraph with one HTML table label"
+  },
+  {
+    "id": "dot-cluster",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster.dot",
+    "reference": "test/golden/refs/dot-cluster.svg",
+    "description": "6-node digraph with 2 subgraph clusters"
+  },
+  {
+    "id": "dot-nested-cluster",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-nested-cluster.dot",
+    "reference": "test/golden/refs/dot-nested-cluster.svg",
+    "description": "8-node digraph with a cluster nested inside a cluster"
+  },
+  {
+    "id": "dot-edge-styles",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-styles.dot",
+    "reference": "test/golden/refs/dot-edge-styles.svg",
+    "description": "4-node digraph with dashed, dotted, and bold edges"
+  },
+  {
+    "id": "dot-disconnected",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-disconnected.dot",
+    "reference": "test/golden/refs/dot-disconnected.svg",
+    "description": "Two separate 3-node digraph components"
+  },
+  {
+    "id": "dot-edge-dirs",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-dirs.dot",
+    "reference": "test/golden/refs/dot-edge-dirs.svg",
+    "description": "4 edges with dir=forward, back, both, and none"
+  },
+  {
+    "id": "neato-simple",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-simple.dot",
+    "reference": "test/golden/refs/neato-simple.svg",
+    "description": "5-node undirected graph"
+  },
+  {
+    "id": "neato-weighted",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-weighted.dot",
+    "reference": "test/golden/refs/neato-weighted.svg",
+    "description": "5-node undirected graph with len attributes on edges"
+  },
+  {
+    "id": "neato-diamond",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-diamond.dot",
+    "reference": "test/golden/refs/neato-diamond.svg",
+    "description": "Undirected graph with diamond-shaped nodes"
+  },
+  {
+    "id": "neato-cluster",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-cluster.dot",
+    "reference": "test/golden/refs/neato-cluster.svg",
+    "description": "Undirected graph with a cluster subgraph"
+  },
+  {
+    "id": "neato-disconnected",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-disconnected.dot",
+    "reference": "test/golden/refs/neato-disconnected.svg",
+    "description": "Two 3-node undirected components"
+  },
+  {
+    "id": "neato-polygon",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-polygon.dot",
+    "reference": "test/golden/refs/neato-polygon.svg",
+    "description": "Undirected graph with hexagonal polygon nodes"
+  },
+  {
+    "id": "neato-circle",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-circle.dot",
+    "reference": "test/golden/refs/neato-circle.svg",
+    "description": "Undirected graph with circle-shaped nodes"
+  },
+  {
+    "id": "fdp-simple",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-simple.dot",
+    "reference": "test/golden/refs/fdp-simple.svg",
+    "description": "6-node undirected graph"
+  },
+  {
+    "id": "fdp-cluster",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-cluster.dot",
+    "reference": "test/golden/refs/fdp-cluster.svg",
+    "description": "Undirected graph with two cluster subgraphs"
+  },
+  {
+    "id": "fdp-disconnected",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-disconnected.dot",
+    "reference": "test/golden/refs/fdp-disconnected.svg",
+    "description": "Two 4-node undirected components"
+  },
+  {
+    "id": "fdp-edge-both",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-edge-both.dot",
+    "reference": "test/golden/refs/fdp-edge-both.svg",
+    "description": "Undirected graph with dir=both edges"
+  },
+  {
+    "id": "fdp-large",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-large.dot",
+    "reference": "test/golden/refs/fdp-large.svg",
+    "description": "20-node undirected graph"
+  },
+  {
+    "id": "fdp-nested-cluster",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-nested-cluster.dot",
+    "reference": "test/golden/refs/fdp-nested-cluster.svg",
+    "description": "Undirected graph with cluster inside a cluster"
+  },
+  {
+    "id": "sfdp-simple",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-simple.dot",
+    "reference": "test/golden/refs/sfdp-simple.svg",
+    "description": "10-node undirected graph"
+  },
+  {
+    "id": "sfdp-medium",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-medium.dot",
+    "reference": "test/golden/refs/sfdp-medium.svg",
+    "description": "30-node undirected graph"
+  },
+  {
+    "id": "sfdp-large",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-large.dot",
+    "reference": "test/golden/refs/sfdp-large.svg",
+    "description": "100-node undirected graph in a ring pattern"
+  },
+  {
+    "id": "sfdp-disconnected",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-disconnected.dot",
+    "reference": "test/golden/refs/sfdp-disconnected.svg",
+    "description": "Three 5-node undirected components"
+  },
+  {
+    "id": "sfdp-weighted",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-weighted.dot",
+    "reference": "test/golden/refs/sfdp-weighted.svg",
+    "description": "15-node undirected graph with weight attributes"
+  },
+  {
+    "id": "circo-simple",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-simple.dot",
+    "reference": "test/golden/refs/circo-simple.svg",
+    "description": "6-node undirected cycle"
+  },
+  {
+    "id": "circo-biconn",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-biconn.dot",
+    "reference": "test/golden/refs/circo-biconn.svg",
+    "description": "Two triangles connected by a bridge"
+  },
+  {
+    "id": "circo-star",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-star.dot",
+    "reference": "test/golden/refs/circo-star.svg",
+    "description": "Star graph with center and 6 leaf nodes"
+  },
+  {
+    "id": "circo-html-label",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-html-label.dot",
+    "reference": "test/golden/refs/circo-html-label.svg",
+    "description": "4-node cycle with one HTML table label"
+  },
+  {
+    "id": "circo-disconnected",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-disconnected.dot",
+    "reference": "test/golden/refs/circo-disconnected.svg",
+    "description": "Two separate 4-node cycles"
+  },
+  {
+    "id": "circo-record",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-record.dot",
+    "reference": "test/golden/refs/circo-record.svg",
+    "description": "4-node cycle with one record-shaped node"
+  },
+  {
+    "id": "twopi-star",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-star.dot",
+    "reference": "test/golden/refs/twopi-star.svg",
+    "description": "Star graph with center and 5 leaf nodes"
+  },
+  {
+    "id": "twopi-chain",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-chain.dot",
+    "reference": "test/golden/refs/twopi-chain.svg",
+    "description": "Path graph with 5 nodes in a chain"
+  },
+  {
+    "id": "twopi-tree",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-tree.dot",
+    "reference": "test/golden/refs/twopi-tree.svg",
+    "description": "Binary tree with 7 nodes"
+  },
+  {
+    "id": "twopi-root-attr",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-root-attr.dot",
+    "reference": "test/golden/refs/twopi-root-attr.svg",
+    "description": "6-node graph with one node having root=true"
+  },
+  {
+    "id": "twopi-disconnected",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-disconnected.dot",
+    "reference": "test/golden/refs/twopi-disconnected.svg",
+    "description": "Two separate 3-node star subgraphs"
+  },
+  {
+    "id": "twopi-ranksep",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-ranksep.dot",
+    "reference": "test/golden/refs/twopi-ranksep.svg",
+    "description": "6-node star graph with ranksep=2.0"
+  },
+  {
+    "id": "osage-simple",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-simple.dot",
+    "reference": "test/golden/refs/osage-simple.svg",
+    "description": "6-node graph with two cluster subgraphs"
+  },
+  {
+    "id": "osage-nested",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-nested.dot",
+    "reference": "test/golden/refs/osage-nested.svg",
+    "description": "8-node graph with 3 levels of cluster nesting"
+  },
+  {
+    "id": "osage-sortv",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-sortv.dot",
+    "reference": "test/golden/refs/osage-sortv.svg",
+    "description": "4-node graph with sortv attribute on nodes"
+  },
+  {
+    "id": "osage-array-mode",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-array-mode.dot",
+    "reference": "test/golden/refs/osage-array-mode.svg",
+    "description": "6-node graph with packmode=array"
+  },
+  {
+    "id": "osage-labels",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-labels.dot",
+    "reference": "test/golden/refs/osage-labels.svg",
+    "description": "Clusters with label attributes"
+  },
+  {
+    "id": "osage-empty-cluster",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-empty-cluster.dot",
+    "reference": "test/golden/refs/osage-empty-cluster.svg",
+    "description": "Graph with one cluster that has no nodes"
+  },
+  {
+    "id": "patchwork-simple",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-simple.dot",
+    "reference": "test/golden/refs/patchwork-simple.svg",
+    "description": "5-node graph with all nodes having area=1"
+  },
+  {
+    "id": "patchwork-weighted",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-weighted.dot",
+    "reference": "test/golden/refs/patchwork-weighted.svg",
+    "description": "5-node graph with varying area values 1,4,9,16,25"
+  },
+  {
+    "id": "patchwork-cluster",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-cluster.dot",
+    "reference": "test/golden/refs/patchwork-cluster.svg",
+    "description": "8-node graph with two cluster subgraphs"
+  },
+  {
+    "id": "patchwork-nested",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-nested.dot",
+    "reference": "test/golden/refs/patchwork-nested.svg",
+    "description": "10-node graph with nested clusters"
+  },
+  {
+    "id": "patchwork-default-area",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-default-area.dot",
+    "reference": "test/golden/refs/patchwork-default-area.svg",
+    "description": "4-node graph with no area attribute on nodes"
+  },
+  {
+    "id": "patchwork-html-label",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-html-label.dot",
+    "reference": "test/golden/refs/patchwork-html-label.svg",
+    "description": "Patchwork graph with one HTML table label node"
+  }
+]

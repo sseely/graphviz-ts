@@ -1,0 +1,9 @@
+// graphviz-ts reference input: 4 edges with varying dir attributes
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B [dir=forward];
+    B -> C [dir=back];
+    C -> D [dir=both];
+    D -> A [dir=none];
+}

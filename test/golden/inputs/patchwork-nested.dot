@@ -1,0 +1,21 @@
+// graphviz-ts reference input: 10-node graph with nested clusters
+// engine: patchwork
+// tolerance: deterministic
+graph G {
+    subgraph cluster_outer {
+        label="Outer";
+        subgraph cluster_inner {
+            label="Inner";
+            A [area=5];
+            B [area=4];
+            C [area=3];
+            D [area=2];
+            E [area=1];
+        }
+        F [area=8];
+        G [area=7];
+        H [area=6];
+        I [area=5];
+        J [area=4];
+    }
+}

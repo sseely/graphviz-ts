@@ -1,0 +1,9 @@
+// graphviz-ts reference input: 4-node digraph with dashed, dotted, and bold edges
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B [style=dashed];
+    B -> C [style=dotted];
+    C -> D [style=bold];
+    D -> A [style=solid];
+}

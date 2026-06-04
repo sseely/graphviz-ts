@@ -1,0 +1,12 @@
+// graphviz-ts reference input: 6-node graph with packmode=array
+// engine: osage
+// tolerance: deterministic
+graph G {
+    packmode=array;
+    subgraph cluster_0 {
+        A; B; C;
+    }
+    subgraph cluster_1 {
+        D; E; F;
+    }
+}

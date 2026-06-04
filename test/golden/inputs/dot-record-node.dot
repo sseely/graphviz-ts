@@ -1,0 +1,8 @@
+// graphviz-ts reference input: 2-node digraph with a record node
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    rec [shape=record label="a|b|c"];
+    dest [shape=box];
+    rec -> dest;
+}

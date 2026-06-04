@@ -1,0 +1,12 @@
+// graphviz-ts reference input: 5-node graph with areas 1,4,9,16,25
+// engine: patchwork
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        A [area=1];
+        B [area=4];
+        C [area=9];
+        D [area=16];
+        E [area=25];
+    }
+}

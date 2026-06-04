@@ -1,0 +1,11 @@
+// graphviz-ts reference input: 6-node star graph with ranksep=2.0
+// engine: twopi
+// tolerance: deterministic
+graph G {
+    ranksep=2.0;
+    center -- A;
+    center -- B;
+    center -- C;
+    center -- D;
+    center -- E;
+}

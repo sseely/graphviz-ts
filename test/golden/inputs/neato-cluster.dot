@@ -1,0 +1,11 @@
+// graphviz-ts reference input: undirected graph with a cluster subgraph
+// engine: neato
+// tolerance: iterative
+graph G {
+    subgraph cluster_0 {
+        label="Group";
+        A -- B -- C;
+    }
+    D -- A;
+    D -- C;
+}

@@ -1,0 +1,11 @@
+// graphviz-ts reference input: nodes with shape=circle
+// engine: neato
+// tolerance: iterative
+graph G {
+    node [shape=circle];
+    A -- B;
+    B -- C;
+    C -- A;
+    C -- D;
+    D -- E;
+}

@@ -1,0 +1,13 @@
+// graphviz-ts reference input: clusters with label attributes
+// engine: osage
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        label="ClusterA";
+        A; B; C;
+    }
+    subgraph cluster_1 {
+        label="ClusterB";
+        D; E; F;
+    }
+}
