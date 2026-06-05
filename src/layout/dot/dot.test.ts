@@ -19,7 +19,7 @@ import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
 import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
-import { fastEdge } from './fastgr.js';
+import { fastEdge, NORMAL } from './fastgr.js';
 import {
   DOT_LAYOUT_ENGINE,
   dotLayoutEntry,
@@ -85,11 +85,11 @@ describe('dotLayoutEntry: empty graph', () => {
 // ---------------------------------------------------------------------------
 
 describe('dotInitSubg: graph attribute defaults', () => {
-  it('sets nodesep and ranksep to 54 pts when unset', () => {
+  it('sets nodesep to 18 pts and ranksep to 36 pts when unset', () => {
     const g = makeGraph('attrs');
     dotInitSubg(g);
-    expect(g.info.nodesep).toBe(54);
-    expect(g.info.ranksep).toBe(54);
+    expect(g.info.nodesep).toBe(18);
+    expect(g.info.ranksep).toBe(36);
   });
 
   it('preserves caller-set nodesep and ranksep', () => {
@@ -103,16 +103,17 @@ describe('dotInitSubg: graph attribute defaults', () => {
 });
 
 describe('dotInitNode: node geometry and edge list defaults', () => {
-  it('initialises UF_size, edge lists, and geometry', () => {
+  it('initialises UF_size, edge lists, geometry, and node_type', () => {
     const g = makeGraph('ninfo');
     const n = addNode(g, 0, 'a');
     dotInitNode(n);
     expect(n.info.UF_size).toBe(1);
     expect(n.info.in).toEqual({ list: [], size: 0 });
     expect(n.info.out).toEqual({ list: [], size: 0 });
-    expect(n.info.lw).toBe(54);
-    expect(n.info.rw).toBe(54);
+    expect(n.info.lw).toBe(27);
+    expect(n.info.rw).toBe(27);
     expect(n.info.ht).toBe(36);
+    expect(n.info.node_type).toBe(NORMAL);
   });
 });
 

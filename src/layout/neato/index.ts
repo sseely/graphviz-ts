@@ -32,6 +32,7 @@ import {
 } from './init.js';
 import { removeOverlap } from './overlap.js';
 import { splineEdges } from './splines.js';
+import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
 // Re-export constants for downstream consumers
 export {
@@ -115,17 +116,19 @@ export function maybeRemoveOverlap(g: Graph): void {
  * Full neato layout pipeline for a single graph.
  *
  * Pipeline (matches neato_layout in C):
- * 1. Init each node (pos, UF_size, default width/height)
- * 2. Parse mode and seed from graph attributes
- * 3. Solve the layout (SGD, stress majorization, or KK)
- * 4. Optionally remove overlaps via VPSC
- * 5. Route edges as splines
- * 6. Translate so minimum position is (0,0)
- * 7. Convert inches → points into coord
+ * 1. Init common node geometry (lw, rw, ht defaults)
+ * 2. Init each node (pos, UF_size, default width/height)
+ * 3. Parse mode and seed from graph attributes
+ * 4. Solve the layout (SGD, stress majorization, or KK)
+ * 5. Optionally remove overlaps via VPSC
+ * 6. Route edges as splines
+ * 7. Translate so minimum position is (0,0)
+ * 8. Convert inches → points into coord
  *
  * @see lib/neatogen/neatoinit.c:neato_layout
  */
 export function neatoLayout(g: Graph): void {
+  commonInitNodeEdge(g);
   for (const [, n] of g.nodes) neatoInitNode(n);
 
   const mode = parseMode(g);

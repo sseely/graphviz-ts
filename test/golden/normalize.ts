@@ -62,6 +62,7 @@ function normalizeAttrValue(name: string, value: string): string {
   if (NUMERIC_ATTRS.has(name)) return normalizeNumber(value);
   if (name === 'd') return normalizePathD(value);
   if (name === 'points') return normalizePoints(value);
+  if (name === 'viewBox') return normalizePoints(value);
   if (name === 'transform') return normalizeTransform(value);
   return value;
 }

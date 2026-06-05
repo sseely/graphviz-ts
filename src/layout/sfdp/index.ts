@@ -16,6 +16,7 @@ import {
   multilevelSpringElectricalEmbedding,
 } from './spring.js';
 import { sfdpInitGraph, sfdpCleanup } from './init.js';
+import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
 const DIM = 2;
 const POINTS_PER_INCH = 72;
@@ -84,6 +85,7 @@ export function xToNodes(g: Graph, n: number, dim: number, x: Float64Array): voi
  * @see lib/sfdpgen/sfdpinit.c:sfdp_layout
  */
 export function sfdpLayout(g: Graph): void {
+  commonInitNodeEdge(g);
   const ctrl = springElectricalControlNew();
   sfdpInitGraph(g, ctrl);
   const n = g.nodes.size;

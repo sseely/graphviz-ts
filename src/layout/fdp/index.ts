@@ -32,6 +32,7 @@ import {
   repulseSelf,
   updatePositions,
 } from './forces.js';
+import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
 // Re-export public types and helpers that external consumers depend on.
 export type { ForceCtx, RepulseGrid } from './forces.js';
@@ -221,6 +222,7 @@ export function finalisePositions(g: Graph): void {
  * @see lib/fdpgen/layout.c:fdp_layout
  */
 export function fdpLayout(g: Graph): void {
+  commonInitNodeEdge(g);
   fdpInitNodeEdge(g);
   const params = fdpInitParams(g);
   const { comps } = findCComp(g);

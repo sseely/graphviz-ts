@@ -13,7 +13,7 @@ import { parse } from './parser/index.js';
 import { GvcContext } from './gvc/context.js';
 import { render } from './gvc/device.js';
 import { createSvgRenderer } from './render/svg.js';
-import { LutTextMeasurer } from './common/textmeasure.js';
+import { createMeasurer } from './common/textmeasure-factory.js';
 import { DOT_LAYOUT_ENGINE } from './layout/dot/index.js';
 import { NEATO_LAYOUT_ENGINE } from './layout/neato/index.js';
 import { fdpEngine } from './layout/fdp/index.js';
@@ -24,7 +24,7 @@ import { OSAGE_LAYOUT_ENGINE } from './layout/osage/index.js';
 import { PATCHWORK_LAYOUT_ENGINE } from './layout/patchwork/index.js';
 
 function makeContext(): GvcContext {
-  const ctx = new GvcContext(new LutTextMeasurer());
+  const ctx = new GvcContext(createMeasurer());
   ctx.register(DOT_LAYOUT_ENGINE);
   ctx.register(NEATO_LAYOUT_ENGINE);
   ctx.register(fdpEngine);

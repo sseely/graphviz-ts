@@ -9,7 +9,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { virtualNode } from './fastgr.js';
+import { virtualNode, NORMAL } from './fastgr.js';
 import { SLACKNODE, LEAFSET } from './rank.js';
 import { rank } from './ns.js';
 import { markLowclusters } from './cluster.js';
@@ -35,16 +35,58 @@ import { dotConcentrate } from './conc.js';
  *
  * @see lib/dotgen/position.c:set_xcoords
  */
-export function setXcoords(g: Graph): void {
+/** @see lib/dotgen/position.c:set_xcoords (rank→coord copy + rank restore) */
+export function setXcoordsFromRank(g: Graph): void {
   const rankArr = g.info.rank!;
   for (let i = graphMinrank(g); i <= graphMaxrank(g); i++) {
     const rk = rankArr[i];
     for (let j = 0; j < rk.n; j++) {
       const v = rk.v[j];
-      v.info.coord.x = nodeRank(v);  // x-coord stored in ND_rank by NS
-      v.info.rank = i;               // restore actual rank index (AD-8)
+      v.info.coord.x = nodeRank(v);
+      v.info.rank = i;
     }
   }
+}
+
+/** Minimum left-edge x over all NORMAL nodes; INT_MAX if none. */
+export function minNormalLeftX(g: Graph): number {
+  const rankArr = g.info.rank!;
+  let minX = Number.MAX_SAFE_INTEGER;
+  for (let i = graphMinrank(g); i <= graphMaxrank(g); i++) {
+    const rk = rankArr[i];
+    for (let j = 0; j < rk.n; j++) {
+      const v = rk.v[j];
+      if ((v.info.node_type ?? 0) !== NORMAL) continue;
+      const lx = v.info.coord.x - (v.info.lw ?? 0);
+      if (lx < minX) minX = lx;
+    }
+  }
+  return minX;
+}
+
+/** Subtract delta from every node's coord.x across all ranks. */
+export function shiftAllXcoords(g: Graph, delta: number): void {
+  const rankArr = g.info.rank!;
+  for (let i = graphMinrank(g); i <= graphMaxrank(g); i++) {
+    const rk = rankArr[i];
+    for (let j = 0; j < rk.n; j++) rk.v[j].info.coord.x -= delta;
+  }
+}
+
+/**
+ * Shift all node x-coords so the leftmost NORMAL node's left edge is at x=0.
+ * Matches C: left boundary virtual node (GD_ln) ends at rank=0 after NS,
+ * so the leftmost real node sits at x=lw (left edge=0).
+ */
+export function normalizeXcoords(g: Graph): void {
+  const minX = minNormalLeftX(g);
+  if (minX !== Number.MAX_SAFE_INTEGER && minX !== 0) shiftAllXcoords(g, minX);
+}
+
+/** @see lib/dotgen/position.c:set_xcoords */
+export function setXcoords(g: Graph): void {
+  setXcoordsFromRank(g);
+  normalizeXcoords(g);
   g.info.rankIsXCoord = false;
 }
 

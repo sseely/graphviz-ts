@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: EPL-2.0
+/**
+ * Factory that selects the best available TextMeasurer for the runtime.
+ * Uses CanvasTextMeasurer in browsers, LutTextMeasurer elsewhere.
+ *
+ * @see lib/common/textspan.c:estimate_textspan_size
+ */
+
+import { LutTextMeasurer, CanvasTextMeasurer, type TextMeasurer } from './textmeasure.js';
+
+/**
+ * Returns a CanvasTextMeasurer when a browser canvas is available,
+ * otherwise falls back to LutTextMeasurer.
+ */
+export function createMeasurer(): TextMeasurer {
+  if (typeof document === 'undefined') return new LutTextMeasurer();
+  try {
+    const ctx2d = document.createElement('canvas').getContext('2d');
+    if (ctx2d) return new CanvasTextMeasurer(ctx2d);
+  } catch { /* canvas unavailable */ }
+  return new LutTextMeasurer();
+}

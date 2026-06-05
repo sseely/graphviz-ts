@@ -11,6 +11,7 @@ import type { LayoutEngine } from '../../gvc/context.js';
 import { twopiInitGraph, twopiCleanup } from './init.js';
 import { ccomps } from '../pack/index.js';
 import { layoutSingle, layoutMulti, buildPackInfo } from './pipeline.js';
+import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
 export {
   twopiInitGraph,
@@ -29,6 +30,7 @@ export { THETA_UNSET } from '../../model/nodeInfo.js';
  */
 export function twopiLayout(g: Graph): void {
   if (g.nodes.size === 0) return;
+  commonInitNodeEdge(g);
   twopiInitGraph(g);
   const rootAttr = g.attrs.get('root');
   const setRoot = rootAttr !== undefined;

@@ -193,6 +193,8 @@ export class RenderJob {
   flags: number = 0;
   numLayers: number = 0;
   layerNum: number = 0;
+  nodeId: number = 0;
+  edgeId: number = 0;
 
   private readonly objStack: ObjState[] = [];
 

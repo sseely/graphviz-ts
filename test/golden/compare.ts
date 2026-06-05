@@ -196,7 +196,7 @@ function compareNodes(
         continue;
       }
 
-      if (name === 'points') {
+      if (name === 'points' || name === 'viewBox') {
         const actualNums = extractNumbers(av);
         const expectedNums = extractNumbers(ev);
         if (actualNums.length !== expectedNums.length) {

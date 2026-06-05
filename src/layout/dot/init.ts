@@ -12,6 +12,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import { nonconstraintEdge } from './classify.js';
+import { NORMAL } from './fastgr.js';
 
 // ---------------------------------------------------------------------------
 // CL_CROSS — cost of cluster skeleton edge crossing
@@ -42,10 +43,12 @@ export function dotInitNode(n: Node): void {
   if (!n.info.flat_in)  n.info.flat_in  = { list: [], size: 0 };
   if (!n.info.flat_out) n.info.flat_out = { list: [], size: 0 };
   if (!n.info.other)    n.info.other    = { list: [], size: 0 };
-  // Default node geometry: 0.75 in × 72 dpi = 54 pts; ht = 0.5 in = 36 pts
-  if (!n.info.lw) n.info.lw = 54;
-  if (!n.info.rw) n.info.rw = 54;
+  // Default lw = rw = 0.75in/2 × 72 = 27 pts; ht = 0.5in × 72 = 36 pts
+  if (!n.info.lw) n.info.lw = 27;
+  if (!n.info.rw) n.info.rw = 27;
   if (!n.info.ht) n.info.ht = 36;
+  // Mark as a real (NORMAL) node so firstNormalNode() can find it.
+  n.info.node_type = NORMAL;
 }
 
 // ---------------------------------------------------------------------------
@@ -90,13 +93,13 @@ export function dotInitEdge(e: Edge): void {
  * Recursively initialises subgraph-level attributes with defaults.
  * Mirrors dot_init_subg: binds Agraphinfo_t and propagates params.
  *
- * nodesep / ranksep defaults: 0.75 in × 72 dpi = 54 pts.
+ * nodesep defaults: 0.25 in × 72 = 18 pts; ranksep: 0.5 in × 72 = 36 pts.
  *
  * @see lib/dotgen/dotinit.c:dot_init_subg
  */
 export function dotInitSubg(g: Graph): void {
-  if (g.info.nodesep === undefined) g.info.nodesep = 54;
-  if (g.info.ranksep === undefined) g.info.ranksep = 54;
+  if (g.info.nodesep === undefined) g.info.nodesep = 18;
+  if (g.info.ranksep === undefined) g.info.ranksep = 36;
   const nc = g.info.n_cluster ?? 0;
   const clust = g.info.clust;
   for (let c = 1; c <= nc; c++) {
