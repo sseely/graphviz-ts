@@ -1,0 +1,70 @@
+// SPDX-License-Identifier: EPL-2.0
+
+/**
+ * Geometric helpers for edge spline routing: vector math and node-box
+ * ray clipping.
+ *
+ * @see lib/common/splines.c:clip_and_install (box-clipping logic)
+ */
+
+import type { Point } from '../../model/geom.js';
+
+// ---------------------------------------------------------------------------
+// Vector helpers
+// ---------------------------------------------------------------------------
+
+/** Normalize a 2-D vector; returns {0,0} if near-zero length. */
+export function normalizeVec(v: Point): Point {
+  const d = Math.sqrt(v.x * v.x + v.y * v.y);
+  if (d < 1e-10) return { x: 0, y: 0 };
+  return { x: v.x / d, y: v.y / d };
+}
+
+/** Reverse a vector. */
+export function negateVec(v: Point): Point { return { x: -v.x, y: -v.y }; }
+
+/** Offset a point by dir * scale. */
+export function offsetPoint(p: Point, dir: Point, scale: number): Point {
+  return { x: p.x + dir.x * scale, y: p.y + dir.y * scale };
+}
+
+// ---------------------------------------------------------------------------
+// clipToNodeBox
+// ---------------------------------------------------------------------------
+
+/** Min positive t along x-axis for the given boundary half-width. */
+export function xClipT(dirX: number, halfW: number): number {
+  if (dirX > 0) return halfW / dirX;
+  if (dirX < 0) return -halfW / dirX;
+  return Infinity;
+}
+
+/** Min positive t along y-axis for the given boundary half-height. */
+export function yClipT(dirY: number, halfH: number): number {
+  if (dirY > 0) return halfH / dirY;
+  if (dirY < 0) return -halfH / dirY;
+  return Infinity;
+}
+
+/**
+ * Node box dimensions bundled for clipping.
+ * @see lib/common/types.h:Agnodeinfo_t (ND_lw, ND_rw, ND_ht)
+ */
+export interface NodeBox {
+  center: Point;
+  lw: number;
+  rw: number;
+  ht: number;
+}
+
+/**
+ * Clip a ray from box.center in direction `dir` to the node box boundary.
+ * @see lib/dotgen/dotsplines.c — box clipping used in clip_and_install
+ */
+export function clipToNodeBox(box: NodeBox, dir: Point): Point {
+  if (dir.x === 0 && dir.y === 0) return { x: box.center.x, y: box.center.y };
+  const halfW = dir.x > 0 ? box.rw : box.lw;
+  const t = Math.min(xClipT(dir.x, halfW), yClipT(dir.y, box.ht / 2));
+  if (t === Infinity) return { x: box.center.x, y: box.center.y };
+  return { x: box.center.x + dir.x * t, y: box.center.y + dir.y * t };
+}
