@@ -259,21 +259,39 @@ export function fillRanks(_g: Graph): void {
 }
 
 // install_in_rank / enqueue_neighbors — @see lib/dotgen/mincross.c
-export function installInRank(ctx: MincrossContext, g: Graph, n: Node): number {
-  const r = n.info.rank !== undefined ? n.info.rank : 0;
+
+/** Check that rank r is within the graph's rank range. */
+export function rankInRange(g: Graph, r: number): boolean {
+  const mn = g.info.minrank !== undefined ? g.info.minrank : 0;
+  const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
+  return r >= mn && r <= mx;
+}
+
+/** Check that node's order doesn't exceed root rank allocation. */
+export function orderWithinAlloc(ctx: MincrossContext, r: number, order: number): boolean {
+  const rootRank = ctx.root.info.rank;
+  return !rootRank || order <= rootRank[r].an;
+}
+
+/** Place node n into its rank slot, honouring vStart for multi-component graphs. */
+export function placeInRankSlot(g: Graph, n: Node, r: number): number {
   const rank = g.info.rank;
   if (!rank) return -1;
   const rk = rank[r];
   if (rk.an <= 0) return -1;
-  const i = rk.n;
+  // vStart simulates C's rank[r].v pointer arithmetic across components.
+  const i = (rk.vStart ?? 0) + rk.n;
   rk.v[i] = n;
   n.info.order = i;
   rk.n++;
-  const mn = g.info.minrank !== undefined ? g.info.minrank : 0;
-  const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
-  if (r < mn || r > mx) return -1;
-  const rootRank = ctx.root.info.rank;
-  if (rootRank && n.info.order > rootRank[r].an) return -1;
+  return i;
+}
+
+export function installInRank(ctx: MincrossContext, g: Graph, n: Node): number {
+  const r = n.info.rank !== undefined ? n.info.rank : 0;
+  if (placeInRankSlot(g, n, r) < 0) return -1;
+  if (!rankInRange(g, r)) return -1;
+  if (!orderWithinAlloc(ctx, r, n.info.order ?? 0)) return -1;
   return 0;
 }
 

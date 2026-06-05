@@ -18,6 +18,7 @@ import type { Bezier, Spline } from '../../model/geom.js';
 import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
 import { IGNORED } from './rank.js';
 import { markLowclusters } from './cluster.js';
+import { routeDotEdges } from './edge-route.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -282,9 +283,9 @@ export function collectNodeEdges(n: Node, edges: Edge[]): void {
 /**
  * Main spline routing entry point (internal, with normalize flag).
  *
- * The pathplan routing (routesplines, clip_and_install, pathend, etc.)
- * is deferred until pathplan.ts is ported. The edge-normalize pass is
- * applied when normalize=true, satisfying acceptance criterion 4.
+ * Performs straight-line edge routing via routeDotEdges, then normalizes
+ * spline orientation when normalize=true. The full pathplan-based obstacle
+ * routing (routesplines, boxes, clip_and_install) is deferred.
  *
  * @see lib/dotgen/dotsplines.c:dot_splines_
  */
@@ -295,6 +296,7 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   for (const n of g.nodes.values()) collectNodeEdges(n, edges);
   edges.sort(edgecmp);
   if (normalize) edgeNormalize(g);
+  routeDotEdges(g);
   return 0;
 }
 

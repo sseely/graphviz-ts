@@ -38,6 +38,8 @@ import {
   svgBezier,
   svgPolyline,
   svgComment,
+  svgEdgePath,
+  svgArrowPolygon,
 } from './svg-helpers.js';
 
 // ---------------------------------------------------------------------------
@@ -55,7 +57,19 @@ export class SvgRenderer implements RendererPlugin {
   beginNode(n: Node, job: RenderJob): void { svgBeginNode(n, job); }
   endNode(_n: Node, job: RenderJob): void { svgEndNode(job); }
   beginEdge(e: Edge, job: RenderJob): void { svgBeginEdge(e, job); }
-  endEdge(_e: Edge, job: RenderJob): void { svgEndEdge(job); }
+
+  /**
+   * Close the edge group.  Edge graphics (path + arrowhead) are emitted here
+   * because the full spline is available on e.info.spl only after layout has
+   * run routeDotEdges.
+   *
+   * @see plugin/core/gvrender_core_svg.c:svg_end_edge
+   */
+  endEdge(e: Edge, job: RenderJob): void {
+    svgEdgePath(e, job);
+    svgArrowPolygon(e, job);
+    svgEndEdge(job);
+  }
 
   beginAnchor(
     href: string,

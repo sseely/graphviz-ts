@@ -24,10 +24,11 @@
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
-import type { Point, Box } from '../model/geom.js';
+import type { Point, Box, Bezier } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
 import { PenType } from '../gvc/context.js';
+import { transformPoint } from '../gvc/device.js';
 
 // ---------------------------------------------------------------------------
 // Module-level constants
@@ -433,4 +434,58 @@ export function svgPolyline(pts: Point[], job: RenderJob): void {
 
 export function svgComment(text: string, job: RenderJob): void {
   job.write('<!-- ' + escapeXml(text) + ' -->\n');
+}
+
+// ---------------------------------------------------------------------------
+// Edge graphics — path and arrowhead polygon
+// @see plugin/core/gvrender_core_svg.c:svg_bzptarray + svg_polygon (arrow)
+// ---------------------------------------------------------------------------
+
+/**
+ * Emit the bezier edge path for a routed edge.
+ *
+ * Reads the Spline installed by routeDotEdges, transforms each control
+ * point through the job's devscale/zoom, and writes a <path> element
+ * with fixed fill="none" stroke="black" matching the C SVG plugin output.
+ *
+ * @see plugin/core/gvrender_core_svg.c:svg_bzptarray (edge path emission)
+ */
+export function svgEdgePath(e: Edge, job: RenderJob): void {
+  const spl = e.info.spl;
+  if (spl === undefined || spl.size === 0) return;
+  for (let si = 0; si < spl.size; si++) {
+    const bz = spl.list[si] as Bezier | undefined;
+    if (bz === undefined || bz.size < 4) continue;
+    const pts = bz.list.map((p) => transformPoint(p, job));
+    job.write('<path fill="none" stroke="black" d="');
+    emitBezierPath(job, pts);
+    job.write('"/>\n');
+  }
+}
+
+/**
+ * Emit the arrowhead polygon for a routed edge.
+ *
+ * Reads `(e.info as any)._arrowPts` set by routeOneEdge, transforms each
+ * point through devscale/zoom, and writes a filled <polygon> element with
+ * Adobe first-point repetition.
+ *
+ * @see plugin/core/gvrender_core_svg.c:svg_polygon (arrowhead case)
+ * @see lib/common/arrows.c:arrow_type_normal
+ */
+export function svgArrowPolygon(e: Edge, job: RenderJob): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawPts = (e.info as any)._arrowPts as Point[] | undefined;
+  if (rawPts === undefined || rawPts.length === 0) return;
+  const pts = rawPts.map((p) => transformPoint(p, job));
+  job.write('<polygon fill="black" stroke="black" points="');
+  emitPoints(job, pts);
+  if (pts.length > 0) {
+    const p0 = pts[0]!;
+    job.write(' ');
+    job.printDouble(p0.x);
+    job.write(',');
+    job.printDouble(p0.y);
+  }
+  job.write('"/>\n');
 }
