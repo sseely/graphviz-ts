@@ -16,8 +16,10 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
+import type { ShapeDesc } from '../common/types.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
+import { polyInit } from '../common/poly-init.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -67,19 +69,38 @@ export function buildPoint(x: number, y: number): Point {
 // Node/Edge walk helpers
 // ---------------------------------------------------------------------------
 
-/** Walk all nodes, calling beginNode/endNode for each. @see gvrender_begin_node */
-export function walkNodes(nodes: Map<string, Node>, renderer: RendererPlugin, job: RenderJob): void {
-  for (const n of nodes.values()) {
-    renderer.beginNode(n, job);
-    renderer.endNode(n, job);
-  }
+/** Render a single node if not already rendered. @see lib/common/emit.c:emit_node */
+export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, done: Set<Node>): void {
+  if (done.has(n)) return;
+  done.add(n);
+  renderer.beginNode(n, job);
+  const shape = n.info.shape as ShapeDesc | undefined;
+  if (shape?.fns?.codefn) shape.fns.codefn(job, n);
+  renderer.endNode(n, job);
 }
 
-/** Walk all edges, calling beginEdge/endEdge for each. @see gvrender_begin_edge */
-export function walkEdges(edges: Edge[], renderer: RendererPlugin, job: RenderJob): void {
-  for (const e of edges) {
-    renderer.beginEdge(e, job);
-    renderer.endEdge(e, job);
+/** Render a single edge. @see lib/common/emit.c:emit_edge */
+export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
+  renderer.beginEdge(e, job);
+  renderer.endEdge(e, job);
+}
+
+/**
+ * Render nodes and edges in C's "breadth-first walk" order.
+ * For each node: emit the node, then for each outgoing edge emit the
+ * head node and the edge itself.  Matches the default (no-flag) path in
+ * lib/common/emit.c:emit_graph.
+ *
+ * @see lib/common/emit.c:emit_graph (breadth-first default case)
+ */
+export function walkNodesAndEdges(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  const done = new Set<Node>();
+  for (const n of g.nodes.values()) {
+    renderNode(n, renderer, job, done);
+    for (const e of n.outEdges(g)) {
+      renderNode(e.head, renderer, job, done);
+      renderEdge(e, renderer, job);
+    }
   }
 }
 
@@ -95,8 +116,7 @@ export function walkEdges(edges: Edge[], renderer: RendererPlugin, job: RenderJo
  */
 export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin): string {
   renderer.beginGraph(g, job);
-  walkNodes(g.nodes, renderer, job);
-  walkEdges(g.edges, renderer, job);
+  walkNodesAndEdges(g, renderer, job);
   renderer.endGraph(g, job);
   return job.output.join('');
 }
@@ -117,5 +137,7 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   const gbb = g.info.bb;
   const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
   job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
+  job.renderer = renderer;
+  for (const n of g.nodes.values()) polyInit(n, g, job.measurer);
   return renderGraph(g, job, renderer);
 }

@@ -16,6 +16,7 @@ import type { Edge } from '../model/edge.js';
 import type { Point, Box } from '../model/geom.js';
 import type { GVColor } from '../common/color.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
+import type { RendererPlugin } from './context.js';
 import { PenType, FillType } from './context.js';
 
 // ---------------------------------------------------------------------------
@@ -195,6 +196,9 @@ export class RenderJob {
   layerNum: number = 0;
   nodeId: number = 0;
   edgeId: number = 0;
+
+  /** Active renderer plugin; set by render() before walkNodes. */
+  renderer?: RendererPlugin;
 
   private readonly objStack: ObjState[] = [];
 

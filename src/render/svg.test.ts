@@ -130,7 +130,7 @@ export function testBeginNode(): void {
   const job = makeJob();
   r.beginNode(makeNode(makeGraph()), job);
   const out = job.output.join('');
-  expect(out).toContain('<g id="myNode" class="node">');
+  expect(out).toContain('class="node">');  // id is sequential (node1, node2...)
   expect(out).toContain('<title>myNode</title>');
 }
 

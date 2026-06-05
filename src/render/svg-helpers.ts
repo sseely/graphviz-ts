@@ -168,21 +168,12 @@ export function textAnchor(just: 'l' | 'n' | 'r'): string {
 // NOTE: no ${...} template literals below — Lizard bug #2 (see file header).
 // ---------------------------------------------------------------------------
 
-// Root graph group always uses id="graph0" matching C's GD_graph_id counter.
-// The user-visible graph name appears in <title>, not the id attribute.
-// @see plugin/core/gvrender_core_svg.c:svg_begin_page
-function graphGroupId(_name: string): string {
+/** Root graph group id always matches C's GD_graph_id counter. */
+export function graphGroupId(_name: string): string {
   return 'graph0';
 }
 
-/**
- * Emit the opening `<svg>` tag with padded dimensions.
- *
- * Width/height are expanded by 2xSVG_PAD to match the C plugin's
- * default_pad=4.0.  ViewBox origin is bb.ll for non-zero-origin graphs.
- *
- * @see plugin/core/gvrender_core_svg.c:svg_begin_graph
- */
+/** Emit SVG tag. ViewBox starts at (0,0); group translate absorbs bb.ll offset. */
 export function emitSvgTag(job: RenderJob): void {
   const bb = job.bb;
   const contentW = Math.round(bb.ur.x - bb.ll.x);
@@ -190,8 +181,8 @@ export function emitSvgTag(job: RenderJob): void {
   const w = contentW + 2 * SVG_PAD;
   const h = contentH + 2 * SVG_PAD;
   job.write('<svg width="' + String(w) + 'pt" height="' + String(h) + 'pt"\n');
-  job.write('     viewBox="' + String(bb.ll.x) + ' ' + String(bb.ll.y) +
-    ' ' + String(w) + ' ' + String(h) + '"\n');
+  // viewBox always starts at (0,0); group translate accounts for bb.ll offset
+  job.write('     viewBox="0.00 0.00 ' + String(w) + '.00 ' + String(h) + '.00"\n');
   job.write('     xmlns="http://www.w3.org/2000/svg"');
   job.write(' xmlns:xlink="http://www.w3.org/1999/xlink">\n');
 }
@@ -271,7 +262,10 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
   emitSvgTag(job);
   const bb = job.bb;
   const contentH = Math.round(bb.ur.y - bb.ll.y);
-  emitGraphGroupOpen(graphGroupId(g.name), SVG_PAD, contentH + SVG_PAD, job);
+  // tx/ty account for bb.ll offset so viewBox can stay at (0,0)
+  const tx = SVG_PAD - bb.ll.x;
+  const ty = contentH + SVG_PAD + bb.ll.y;
+  emitGraphGroupOpen(graphGroupId(g.name), tx, ty, job);
   emitGraphTitle(g, job);
   emitGraphBackground(bb, job);
 }
@@ -357,9 +351,21 @@ export function svgEndAnchor(job: RenderJob): void {
 // Text span
 // ---------------------------------------------------------------------------
 
+/**
+ * Emit a text span SVG element.
+ *
+ * pos.y is in Graphviz y-up space (same as pos.x for symmetry).
+ * C's svg_textspan writes `y = -(p.y + yoffset)` — negating the
+ * Graphviz coordinate and then adding the centerline offset.
+ * Match that behavior exactly.
+ *
+ * @see plugin/core/gvrender_core_svg.c:svg_textspan
+ */
 export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   const anchor = textAnchor(span.just);
-  const y = pos.y + span.yoffset_centerline;
+  // C writes: p.y += yoffset_centerline; then gvprintdouble(job, -p.y)
+  // → SVG y = -(graphviz_y + yoffset_centerline)
+  const y = -(pos.y + span.yoffset_centerline);
   const fontName = span.fontName ?? 'Times,serif';
   job.write('<text xml:space="preserve" text-anchor="' + anchor + '"');
   job.write(' x="' + String(pos.x) + '" y="' + String(y) + '"');

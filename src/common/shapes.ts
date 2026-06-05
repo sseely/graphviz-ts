@@ -10,7 +10,7 @@
  * @see lib/common/shapes.c:bind_shape
  */
 
-import { ShapeKind, type ShapeDesc } from './types.js';
+import { ShapeKind, type ShapeDesc, type ShapeFunctions } from './types.js';
 import {
   P_BOX, P_POLYGON, P_ELLIPSE, P_EGG, P_TRIANGLE, P_CIRCLE,
   P_SQUARE, P_PLAINTEXT, P_PLAIN, P_DIAMOND, P_TRAPEZIUM,
@@ -24,12 +24,27 @@ import {
   P_FIVEPOVERHANG, P_THREEPOVERHANG, P_NOVERHANG, P_ASSEMBLY,
   P_SIGNATURE, P_RPROMOTER, P_RARROW, P_LARROW, P_LPROMOTER,
 } from './shapeData.js';
+import { polyGencode } from './poly-gencode.js';
+
+// ---------------------------------------------------------------------------
+// Shape function tables
+// ---------------------------------------------------------------------------
+
+/** Function table for all polygon-based shapes. @see lib/common/shapes.c */
+const POLY_FNS: ShapeFunctions = {
+  initfn: null,
+  freefn: null,
+  portfn: null,
+  insidefn: null,
+  pboxfn: null,
+  codefn: polyGencode,
+};
 
 // Descriptor constructors (one per shape_functions group in shapes.c)
 const mkPoly = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
-  ({ name: n, fns: null, polygon: p, kind: ShapeKind.SH_POLY, usershape: false });
+  ({ name: n, fns: POLY_FNS, polygon: p, kind: ShapeKind.SH_POLY, usershape: false });
 const mkPoint = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
-  ({ name: n, fns: null, polygon: p, kind: ShapeKind.SH_POINT, usershape: false });
+  ({ name: n, fns: POLY_FNS, polygon: p, kind: ShapeKind.SH_POINT, usershape: false });
 const mkRecord = (n: string): ShapeDesc =>
   ({ name: n, fns: null, polygon: null, kind: ShapeKind.SH_RECORD, usershape: false });
 const mkEpsf = (n: string): ShapeDesc =>

@@ -72,13 +72,21 @@ export function estimate_text_width_1pt(
 }
 
 /**
- * LUT-based TextMeasurer. Height is fontsize (matches C estimate_textspan_size).
+ * FreeType line-spacing ratio for Times-Roman on macOS (measured empirically).
+ * C's FreeType gives size.y = 15.1pt for 14pt Times, matching the reference SVGs.
+ * estimate_textspan_size uses LINESPACING=1.2, but FreeType gives ~1.0786.
+ * @see lib/common/textspan.c:estimate_textspan_size
+ */
+export const FREETYPE_LINE_SPACING = 1.0786;
+
+/**
+ * LUT-based TextMeasurer. Width from LUT; height matches FreeType Times-Roman.
  * @see lib/common/textspan.c:estimate_textspan_size
  */
 export class LutTextMeasurer implements TextMeasurer {
   measure(text: string, fontname: string, fontsize: number): TextSize {
     const w = estimate_text_width_1pt(fontname, text, false, false) * fontsize;
-    return { w, h: fontsize };
+    return { w, h: fontsize * FREETYPE_LINE_SPACING };
   }
 }
 
