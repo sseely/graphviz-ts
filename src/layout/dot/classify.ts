@@ -210,11 +210,17 @@ export function makeChain(g: Graph, from: Node, to: Node, orig: Edge): void {
 // mergeChain  @see lib/dotgen/class2.c:merge_chain
 // ---------------------------------------------------------------------------
 
+function nodeRank(n: Node): number { return n.info.rank ?? 0; }
+function edgeCount(e: Edge): number { return e.info.count ?? 1; }
+function edgeXpenalty(e: Edge): number { return e.info.xpenalty ?? 0; }
+function edgeWeight(e: Edge): number { return e.info.weight ?? 1; }
+function nextVirtEdge(e: Edge): Edge | undefined { return e.head.info.out?.list[0]; }
+
 function mergeChainStep(rep: Edge, e: Edge, updateCount: boolean): Edge | undefined {
-  if (updateCount) rep.info.count = (rep.info.count ?? 1) + (e.info.count ?? 1);
-  rep.info.xpenalty = (rep.info.xpenalty ?? 0) + (e.info.xpenalty ?? 0);
-  rep.info.weight = (rep.info.weight ?? 1) + (e.info.weight ?? 1);
-  return rep.head.info.out?.list[0];
+  if (updateCount) rep.info.count = edgeCount(rep) + edgeCount(e);
+  rep.info.xpenalty = edgeXpenalty(rep) + edgeXpenalty(e);
+  rep.info.weight = edgeWeight(rep) + edgeWeight(e);
+  return nextVirtEdge(rep);
 }
 
 /**
@@ -254,7 +260,7 @@ export function mergeable(e: Edge | undefined, f: Edge | undefined): boolean {
 function interclrepChain(g: Graph, e: Edge, t: Node, h: Node): void {
   makeChain(g, t, h, e);
   let cur: Edge | undefined = e.info.to_virt;
-  while (cur !== undefined && (cur.head.info.rank ?? 0) <= (h.info.rank ?? 0)) {
+  while (cur !== undefined && nodeRank(cur.head) <= nodeRank(h)) {
     cur.info.edge_type = CLUSTER_EDGE;
     cur = cur.head.info.out?.list[0];
   }
@@ -263,11 +269,11 @@ function interclrepChain(g: Graph, e: Edge, t: Node, h: Node): void {
 function interclrep(g: Graph, e: Edge): void {
   let t = leaderOf(e.tail);
   let h = leaderOf(e.head);
-  if ((t.info.rank ?? 0) > (h.info.rank ?? 0)) { const tmp = t; t = h; h = tmp; }
+  if (nodeRank(t) > nodeRank(h)) { const tmp = t; t = h; h = tmp; }
   if (t.info.clust === h.info.clust) return;
   const ve = findFastEdge(t, h);
   if (ve !== undefined) { mergeChain(g, e, ve, true); return; }
-  if ((t.info.rank ?? 0) === (h.info.rank ?? 0)) return;
+  if (nodeRank(t) === nodeRank(h)) return;
   interclrepChain(g, e, t, h);
 }
 
@@ -375,6 +381,12 @@ function handleBackEdge(g: Graph, e: Edge): Edge | undefined {
 // class2 node-edge loop
 // ---------------------------------------------------------------------------
 
+function class2EdgeSameRep(g: Graph, e: Edge): Edge | undefined {
+  if (nodeRank(e.tail) === nodeRank(e.head)) { flatEdge(g, e); return e; }
+  if (nodeRank(e.head) > nodeRank(e.tail)) { makeChain(g, e.tail, e.head, e); return e; }
+  return handleBackEdge(g, e);
+}
+
 function class2OneEdge(
   g: Graph, e: Edge, prev: Edge | undefined,
 ): Edge | undefined {
@@ -385,24 +397,27 @@ function class2OneEdge(
   const t = ufFind(e.tail);
   const h = ufFind(e.head);
   if (e.tail !== t || e.head !== h) return prev;
-  if ((e.tail.info.rank ?? 0) === (e.head.info.rank ?? 0)) { flatEdge(g, e); return e; }
-  if ((e.head.info.rank ?? 0) > (e.tail.info.rank ?? 0)) { makeChain(g, e.tail, e.head, e); return e; }
-  return handleBackEdge(g, e);
+  return class2EdgeSameRep(g, e);
 }
 
 function class2ProcessNodeEdges(g: Graph, n: Node): void {
   let prev: Edge | undefined;
-  for (const e of outEdges(n)) {
+  for (const e of n.outEdges(g)) {
     const next = class2OneEdge(g, e, prev);
     prev = next !== undefined ? next : prev;
   }
 }
 
+function weightClass(n: Node): number { return n.info.weight_class ?? 0; }
+function incrWeightClass(n: Node): void {
+  if (weightClass(n) <= 2) n.info.weight_class = weightClass(n) + 1;
+}
+
 function class2WeightClasses(g: Graph): void {
   for (const n of g.nodes.values()) {
     for (const e of n.outEdges(g)) {
-      if ((e.head.info.weight_class ?? 0) <= 2) e.head.info.weight_class = (e.head.info.weight_class ?? 0) + 1;
-      if ((e.tail.info.weight_class ?? 0) <= 2) e.tail.info.weight_class = (e.tail.info.weight_class ?? 0) + 1;
+      incrWeightClass(e.head);
+      incrWeightClass(e.tail);
     }
   }
 }

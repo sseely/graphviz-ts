@@ -14,7 +14,7 @@ import {
   normalizeVec, negateVec, offsetPoint, clipToNodeBox,
 } from './edge-route-geom.js';
 import type { NodeBox } from './edge-route-geom.js';
-import { bezierClipNode, makeBoxInsideFn, arrowEndClip, DEFAULT_NODEPENWIDTH } from './edge-route-clip.js';
+import { bezierClipNode, makeBoxInsideFn, makeEllipseInsideFn, arrowEndClip, DEFAULT_NODEPENWIDTH } from './edge-route-clip.js';
 import { computeSpline } from './edge-route-poly.js';
 import {
   makeTailBox, makeHeadBox, makeRankBox, makeMaximalBbox,
@@ -84,24 +84,21 @@ export function buildRankCorridor(
 /**
  * Arrow length for "normal" arrowhead (matching C's arrow_length_normal).
  *
- * C computes this using arrow_type_normal0 with the miter correction:
- *   u = {ARROW_LENGTH, 0} (horizontal reference)
- *   delta_tip ≈ (-1.496, -0.006) for arrowwidth=0.35, penwidth=1
- *   delta_base ≈ {penwidth/2 * cos(π), 0} = {-penwidth/2, 0}
- *   q = u - delta_tip - delta_base  →  q.x = ARROW_LENGTH + 1.496 + penwidth/2
- *   full_length = q.x ≈ ARROW_LENGTH + 1.496 + penwidth/2
+ * Derived from miter_shape geometry for the normal (triangular) arrowhead:
+ *   arrowwidth = 0.35, half-angle theta/2 = arctan(arrowwidth)
+ *   miter_length l = penwidth/2 / tan(theta/2) = penwidth / (2*arrowwidth)
+ *   delta_tip.x = -penwidth * sqrt(1 + arrowwidth^2) / (2*arrowwidth)
+ *   full_length = ARROW_LENGTH - delta_tip.x + penwidth/2
  *   overlap = penwidth/2
- *   elen = full_length - overlap = ARROW_LENGTH + 1.496
- *
- * Empirically: elen ≈ ARROW_LENGTH + 1.496 = 11.496 for penwidth=1.
+ *   elen = full_length - overlap = ARROW_LENGTH + penwidth*sqrt(1+arrowwidth^2)/(2*arrowwidth)
  *
  * @see lib/common/arrows.c:arrow_length_normal
+ * @see lib/common/arrows.c:miter_shape
+ * @see lib/common/arrows.c:arrow_type_normal0
  */
 export function normalArrowLen(penwidth = DEFAULT_NODEPENWIDTH): number {
-  // miter correction ≈ 1.496 for arrowwidth=0.35, penwidth=1
-  // This is |delta_base.x| + |delta_tip.x| contribution to q.x
-  const MITER_CORRECTION = 1.496;
-  return ARROW_LENGTH + MITER_CORRECTION;
+  const ARROWWIDTH = 0.35;
+  return ARROW_LENGTH + penwidth * Math.sqrt(1 + ARROWWIDTH * ARROWWIDTH) / (2 * ARROWWIDTH);
 }
 
 /**
@@ -110,25 +107,31 @@ export function normalArrowLen(penwidth = DEFAULT_NODEPENWIDTH): number {
  * @see lib/common/splines.c:clip_and_install
  * @see lib/common/arrows.c:arrowEndClip
  */
+export function nodeInsideFn(
+  box: NodeBox,
+): (lx: number, ly: number) => boolean {
+  const halfW = (box.lw + box.rw) / 2;
+  const halfH = box.ht / 2;
+  return box.isEllipse
+    ? makeEllipseInsideFn(halfW, halfH)
+    : makeBoxInsideFn(halfW, halfH);
+}
+
 export function clipToNodes(
   bezier: Point[],
   tailBox: NodeBox,
   headBox: NodeBox,
+  penwidth = DEFAULT_NODEPENWIDTH,
 ): { clipped: Point[]; arrowTip: Point; arrowDir: Point } {
-  const tailInside = makeBoxInsideFn((tailBox.lw + tailBox.rw) / 2, tailBox.ht / 2);
   const step1 = bezierClipNode(
-    bezier, tailBox.center.x, tailBox.center.y, tailInside, true,
+    bezier, tailBox.center.x, tailBox.center.y, nodeInsideFn(tailBox), true,
   );
-  const headInside = makeBoxInsideFn((headBox.lw + headBox.rw) / 2, headBox.ht / 2);
   const step2 = bezierClipNode(
-    step1, headBox.center.x, headBox.center.y, headInside, false,
+    step1, headBox.center.x, headBox.center.y, nodeInsideFn(headBox), false,
   );
-  // arrowTip = node boundary clip result = spl.ep in C
   const arrowTip = step2[3] as Point;
-  // arrowEndClip: trim path to arrowhead BASE (path P3 -> arrowhead base)
-  const elen = normalArrowLen();
+  const elen = normalArrowLen(penwidth);
   const clipped = arrowEndClip(step2, arrowTip, elen);
-  // Arrow direction: from arrowTip toward shaft (= clipped[3] → arrowTip direction)
   const arrowDir = normalizeVec({
     x: (clipped[3] as Point).x - arrowTip.x,
     y: (clipped[3] as Point).y - arrowTip.y,
@@ -149,10 +152,11 @@ export function routeWithRank(
   tailBox: NodeBox,
   headBox: NodeBox,
   rank: RankEdgeInfo,
+  penwidth = DEFAULT_NODEPENWIDTH,
 ): EdgeSplineResult {
   const { startPt, endPt, boxes } = buildRankCorridor(tailBox, headBox, rank);
   const bezier = computeSpline(boxes, startPt, endPt);
-  const { clipped, arrowTip, arrowDir } = clipToNodes(bezier, tailBox, headBox);
+  const { clipped, arrowTip, arrowDir } = clipToNodes(bezier, tailBox, headBox, penwidth);
   return { bezierPts: clipped, arrowTip, arrowDir };
 }
 
@@ -182,4 +186,43 @@ export function routeSimple(
     arrowTip,
     arrowDir: headToTail,
   };
+}
+
+// ---------------------------------------------------------------------------
+// routeEdgeRaw — node-clipped bezier with no arrow endpoint adjustment
+// ---------------------------------------------------------------------------
+
+/** Return type for routeEdgeRaw: raw node-clipped bezier + endpoints. */
+export interface RawEdgeRoute {
+  bezierPts: Point[];
+  arrowTip: Point;
+  tailTip: Point;
+  arrowDir: Point;
+}
+
+/**
+ * Route to node boundaries only — no arrow-length offset on either end.
+ * Used when dir=back/both/none so callers can apply selective arrow clips.
+ * @see lib/common/splines.c:clip_and_install (pre-arrow step)
+ */
+export function routeEdgeRaw(
+  tailBox: NodeBox,
+  headBox: NodeBox,
+  rank: RankEdgeInfo | undefined,
+  routeBezierFn: (from: Point, to: Point) => Point[],
+): RawEdgeRoute {
+  if (rank !== undefined) {
+    const { startPt, endPt, boxes } = buildRankCorridor(tailBox, headBox, rank);
+    const bezier = computeSpline(boxes, startPt, endPt);
+    const s1 = bezierClipNode(bezier, tailBox.center.x, tailBox.center.y, nodeInsideFn(tailBox), true);
+    const s2 = bezierClipNode(s1, headBox.center.x, headBox.center.y, nodeInsideFn(headBox), false);
+    const arrowTip = s2[3] as Point;
+    const arrowDir = normalizeVec({ x: (s2[2] as Point).x - arrowTip.x, y: (s2[2] as Point).y - arrowTip.y });
+    return { bezierPts: s2, arrowTip, tailTip: s1[0] as Point, arrowDir };
+  }
+  const dir = normalizeVec({ x: headBox.center.x - tailBox.center.x, y: headBox.center.y - tailBox.center.y });
+  const headToTail = negateVec(dir);
+  const tailTip = clipToNodeBox(tailBox, dir);
+  const arrowTip = clipToNodeBox(headBox, headToTail);
+  return { bezierPts: routeBezierFn(tailTip, arrowTip), arrowTip, tailTip, arrowDir: headToTail };
 }

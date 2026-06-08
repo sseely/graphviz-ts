@@ -9,7 +9,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
 import { twopiInitGraph, twopiCleanup } from './init.js';
-import { ccomps } from '../pack/index.js';
+import { ccomps, normalizeGraphBB } from '../pack/index.js';
 import { layoutSingle, layoutMulti, buildPackInfo } from './pipeline.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
@@ -43,6 +43,7 @@ export function twopiLayout(g: Graph): void {
   } else {
     layoutMulti(g, comps, globalRoot, buildPackInfo(g));
   }
+  normalizeGraphBB(g);
 }
 
 /**

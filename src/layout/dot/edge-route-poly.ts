@@ -171,3 +171,19 @@ export function computeSpline(boxes: Box[], startPt: Point, endPt: Point): Point
   return tryRouteSpline(polyEdgesFromPts(polygon), wpts)
     ?? linearBezier(startPt, endPt);
 }
+
+/**
+ * Like computeSpline but returns ALL raw bezier points (compound bezier).
+ * Used for multi-rank back-edge routing where routeSpline may produce
+ * more than one cubic segment.
+ * @see lib/pathplan/route.c:reallyroutespline
+ */
+export function computeSplineMulti(boxes: Box[], startPt: Point, endPt: Point): Point[] {
+  const polygon = boxesToPolygon(boxes);
+  if (polygon.length < 3) return linearBezier(startPt, endPt);
+  const wpts = shortestPath({ ps: polygon }, [startPt, endPt]);
+  if (wpts === null || wpts.length < 2) return linearBezier(startPt, endPt);
+  const zero: Point = { x: 0, y: 0 };
+  const raw = routeSpline(polyEdgesFromPts(polygon), wpts, [zero, zero]);
+  return raw.length >= 4 ? raw : linearBezier(startPt, endPt);
+}

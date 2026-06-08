@@ -262,10 +262,9 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
   job.write(SVG_GENERATOR_COMMENT);
   emitSvgTag(job);
   const bb = job.bb;
-  const contentH = Math.round(bb.ur.y - bb.ll.y);
   // tx/ty account for bb.ll offset so viewBox can stay at (0,0)
   const tx = SVG_PAD - bb.ll.x;
-  const ty = contentH + SVG_PAD + bb.ll.y;
+  const ty = bb.ur.y + SVG_PAD;
   emitGraphGroupOpen(graphGroupId(g.name), tx, ty, job);
   emitGraphTitle(g, job);
   emitGraphBackground(bb, job);
@@ -441,44 +440,35 @@ export function svgComment(text: string, job: RenderJob): void {
 // @see plugin/core/gvrender_core_svg.c:svg_bzptarray + svg_polygon (arrow)
 // ---------------------------------------------------------------------------
 
-/**
- * Emit the bezier edge path for a routed edge.
- *
- * Reads the Spline installed by routeDotEdges, transforms each control
- * point through the job's devscale/zoom, and writes a <path> element
- * with fixed fill="none" stroke="black" matching the C SVG plugin output.
- *
- * @see plugin/core/gvrender_core_svg.c:svg_bzptarray (edge path emission)
- */
+const EDGE_STYLE_ATTR: Record<string, string> = {
+  dashed: ' stroke-dasharray="' + SVG_DASH_ARRAY + '"',
+  dotted: ' stroke-dasharray="' + SVG_DOT_ARRAY + '"',
+  bold: ' stroke-width="' + String(PENWIDTH_BOLD) + '"',
+};
+const edgeStrokeColor = (e: Edge): string => { const c = e.attrs.get('color'); return c && c.length > 0 ? c : 'black'; };
+function edgeStyleAttr(s: string | undefined): string { return EDGE_STYLE_ATTR[s ?? ''] ?? ''; }
+
+/** Emit Bezier edge path with style attributes. @see plugin/core/gvrender_core_svg.c:svg_bzptarray */
 export function svgEdgePath(e: Edge, job: RenderJob): void {
   const spl = e.info.spl;
   if (spl === undefined || spl.size === 0) return;
+  const stroke = edgeStrokeColor(e);
+  const dash = edgeStyleAttr(e.attrs.get('style'));
   for (let si = 0; si < spl.size; si++) {
     const bz = spl.list[si] as Bezier | undefined;
     if (bz === undefined || bz.size < 4) continue;
     const pts = bz.list.map((p) => transformPoint(p, job));
-    job.write('<path fill="none" stroke="black" d="');
+    job.write('<path fill="none" stroke="' + stroke + '"' + dash + ' d="');
     emitBezierPath(job, pts);
     job.write('"/>\n');
   }
 }
 
-/**
- * Emit the arrowhead polygon for a routed edge.
- *
- * Reads `(e.info as any)._arrowPts` set by routeOneEdge, transforms each
- * point through devscale/zoom, and writes a filled <polygon> element with
- * Adobe first-point repetition.
- *
- * @see plugin/core/gvrender_core_svg.c:svg_polygon (arrowhead case)
- * @see lib/common/arrows.c:arrow_type_normal
- */
-export function svgArrowPolygon(e: Edge, job: RenderJob): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawPts = (e.info as any)._arrowPts as Point[] | undefined;
-  if (rawPts === undefined || rawPts.length === 0) return;
+/** Emit one filled arrowhead polygon with Adobe first-point repetition. */
+function emitArrowPolygon(rawPts: Point[], job: RenderJob, strokeWidth?: number): void {
   const pts = rawPts.map((p) => transformPoint(p, job));
-  job.write('<polygon fill="black" stroke="black" points="');
+  const sw = strokeWidth !== undefined && strokeWidth !== 1 ? ` stroke-width="${strokeWidth}"` : '';
+  job.write('<polygon fill="black" stroke="black"' + sw + ' points="');
   emitPoints(job, pts);
   if (pts.length > 0) {
     const p0 = pts[0]!;
@@ -488,4 +478,19 @@ export function svgArrowPolygon(e: Edge, job: RenderJob): void {
     job.printDouble(p0.y);
   }
   job.write('"/>\n');
+}
+
+/**
+ * Emit arrowhead polygon(s) for a routed edge (tail first, then head).
+ * @see plugin/core/gvrender_core_svg.c:svg_polygon (arrowhead case)
+ * @see lib/common/arrows.c:arrow_type_normal
+ */
+export function svgArrowPolygons(e: Edge, job: RenderJob): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const einfo = e.info as any;
+  const sw = e.attrs.get('style') === 'bold' ? 2 : undefined;
+  const tailPts = einfo._tailArrowPts as Point[] | undefined;
+  if (tailPts?.length) emitArrowPolygon(tailPts, job, sw);
+  const headPts = einfo._arrowPts as Point[] | undefined;
+  if (headPts?.length) emitArrowPolygon(headPts, job, sw);
 }

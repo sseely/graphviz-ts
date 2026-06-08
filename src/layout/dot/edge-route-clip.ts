@@ -166,7 +166,8 @@ export function arrowEndClip(
   const clipped = clippedRel.map(p => ({ x: p.x + arrowTip.x, y: p.y + arrowTip.y }));
   // Un-reverse: the clipped right subdivision = [arrowBase, ..., arrowTip]
   // The path endpoint becomes arrowBase = clipped[0]
-  return [path4[0]!, path4[1]!, path4[2]!, clipped[0]!];
+  // Un-reverse the full clipped result; all 4 points update via de Casteljau
+  return [clipped[3]!, clipped[2]!, clipped[1]!, clipped[0]!];
 }
 
 /**
@@ -193,4 +194,46 @@ export function makeBoxInsideFn(
   const uh = halfH + penwidth / 2;
   return (lx: number, ly: number): boolean =>
     Math.abs(lx) <= uw && Math.abs(ly) <= uh;
+}
+
+/**
+ * Returns an ellipse-shape inside function for use with bezierClipNode.
+ *
+ * Matches C's poly_inside ellipse branch (sides <= 2):
+ *   hypot(P.x/box_URx, P.y/box_URy) < 1  (strict less-than, matching C)
+ * where box_URx = lw + penwidth/2 and box_URy = ht/2 + penwidth/2.
+ *
+ * C uses strict < 1 (not <=) — the one-bit difference matters during
+ * binary search: a point exactly on the boundary is classified as outside
+ * in C, which determines when the search terminates.
+ *
+ * @see lib/common/shapes.c:poly_inside (sides <= 2 branch)
+ */
+export function makeEllipseInsideFn(
+  rx: number,
+  ry: number,
+  penwidth = DEFAULT_NODEPENWIDTH,
+): (lx: number, ly: number) => boolean {
+  const erx = rx + penwidth / 2;
+  const ery = ry + penwidth / 2;
+  return (lx: number, ly: number): boolean =>
+    (lx * lx) / (erx * erx) + (ly * ly) / (ery * ery) < 1.0;
+}
+
+/**
+ * Clip path START to the tail arrowhead base (symmetric to arrowEndClip).
+ *
+ * path4[0] = tail node boundary (inside arrowhead sphere); after clip,
+ * path4[0] = arrowhead base (elen from tailTip).
+ *
+ * @see lib/common/arrows.c:arrowEndClip
+ */
+export function tailArrowEndClip(
+  path4: Point[],
+  tailTip: Point,
+  elen: number,
+): Point[] {
+  if (elen <= 0) return path4;
+  const inside = (lx: number, ly: number): boolean => Math.hypot(lx, ly) <= elen;
+  return bezierClipNode(path4, tailTip.x, tailTip.y, inside, true);
 }

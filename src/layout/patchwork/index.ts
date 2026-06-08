@@ -17,7 +17,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { LayoutEngine } from '../../gvc/context.js';
-import { ps2inch } from '../pack/index.js';
+import { ps2inch, normalizeGraphBB } from '../pack/index.js';
 import type { Rectangle } from './tree-map.js';
 import { treeMap } from './tree-map.js';
 
@@ -335,6 +335,7 @@ export function patchworkEngineLayout(g: Graph): void {
   }
   mkClusters(g);
   patchworkLayout(g);
+  normalizeGraphBB(g);
 }
 
 /** @see lib/patchwork/patchworkinit.c:patchwork_cleanup */

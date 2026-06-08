@@ -22,6 +22,7 @@ import type { LayoutEngine } from '../../gvc/context.js';
 import { circoInitGraph, freeNData } from './init.js';
 import { circoLayout } from './circular.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
+import { normalizeGraphBB } from '../pack/index.js';
 
 // Re-export key functions for consumers that need them individually.
 export { circoInitGraph, freeNData } from './init.js';
@@ -42,6 +43,7 @@ export function circoLayoutFull(g: Graph): void {
   // ORDERING: alg freed HERE, before spline routing (matches C source).
   freeNData(g);
   // splineEdges and dotneato_postprocess are renderer concerns in this port.
+  normalizeGraphBB(g);
 }
 
 /** @see lib/circogen/circularinit.c:circo_cleanup */

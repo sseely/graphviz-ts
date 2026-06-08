@@ -156,6 +156,20 @@ export function shiftOneGraph(g: Graph, dx: number, dy: number): void {
 }
 
 /**
+ * Normalize bb.ll to (0,0) by shifting all nodes; update g.info.bb.
+ * @see lib/common/postproc.c:translate_drawing
+ */
+export function normalizeGraphBB(g: Graph): void {
+  const bb = computeSubgraphBB(g, 0);
+  if (bb.ll.x !== 0 || bb.ll.y !== 0) {
+    shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
+    g.info.bb = computeSubgraphBB(g, 0);
+  } else {
+    g.info.bb = bb;
+  }
+}
+
+/**
  * Apply packing offsets to subgraphs; shifts coords and pos.
  * @see lib/pack/pack.c:shiftGraphs
  */

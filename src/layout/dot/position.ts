@@ -86,7 +86,6 @@ export function normalizeXcoords(g: Graph): void {
 /** @see lib/dotgen/position.c:set_xcoords */
 export function setXcoords(g: Graph): void {
   setXcoordsFromRank(g);
-  normalizeXcoords(g);
   g.info.rankIsXCoord = false;
 }
 
@@ -206,6 +205,7 @@ export function dotPosition(g: Graph): number {
     rank(g, 2, nsiter2(g));
   }
   setXcoords(g);
+  normalizeXcoords(g);
   setAspect(g);
   /* remove_aux_edges must come after set_aspect: GD_ln/GD_rn used for bbox width */
   removeAuxEdges(g);

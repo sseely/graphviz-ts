@@ -39,7 +39,7 @@ import {
   svgPolyline,
   svgComment,
   svgEdgePath,
-  svgArrowPolygon,
+  svgArrowPolygons,
 } from './svg-helpers.js';
 
 // ---------------------------------------------------------------------------
@@ -67,7 +67,7 @@ export class SvgRenderer implements RendererPlugin {
    */
   endEdge(e: Edge, job: RenderJob): void {
     svgEdgePath(e, job);
-    svgArrowPolygon(e, job);
+    svgArrowPolygons(e, job);
     svgEndEdge(job);
   }
 

@@ -55,14 +55,27 @@ export interface NodeBox {
   lw: number;
   rw: number;
   ht: number;
+  /** True when the node shape is elliptical (sides === 1 in C poly_inside). */
+  isEllipse?: boolean;
 }
 
 /**
- * Clip a ray from box.center in direction `dir` to the node box boundary.
- * @see lib/dotgen/dotsplines.c — box clipping used in clip_and_install
+ * Clip a ray from box.center in direction `dir` to the node boundary.
+ * For ellipse nodes uses the ellipse formula; for box nodes uses the box formula.
+ * @see lib/common/shapes.c:poly_inside
  */
 export function clipToNodeBox(box: NodeBox, dir: Point): Point {
   if (dir.x === 0 && dir.y === 0) return { x: box.center.x, y: box.center.y };
+  if (box.isEllipse) {
+    const rx = (box.lw + box.rw) / 2;
+    const ry = box.ht / 2;
+    const fx = dir.x / rx;
+    const fy = dir.y / ry;
+    const d = Math.sqrt(fx * fx + fy * fy);
+    if (d < 1e-10) return { x: box.center.x, y: box.center.y };
+    const t = 1 / d;
+    return { x: box.center.x + dir.x * t, y: box.center.y + dir.y * t };
+  }
   const halfW = dir.x > 0 ? box.rw : box.lw;
   const t = Math.min(xClipT(dir.x, halfW), yClipT(dir.y, box.ht / 2));
   if (t === Infinity) return { x: box.center.x, y: box.center.y };
