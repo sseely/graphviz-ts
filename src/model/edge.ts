@@ -44,6 +44,13 @@ export class Edge {
   readonly seq: number;
 
   /**
+   * Per-graph creation-order index (1-based).
+   * Set by the parser after root.edges.push(). Used as the SVG edge id,
+   * matching C's AGSEQ-based edge id assignment.
+   */
+  graphSeq: number = 0;
+
+  /**
    * Source node (arrow origin).
    * C: AGTAIL(e) = AGMKIN(e)->node = in.node
    * @see lib/cgraph/cgraph.h:AGTAIL

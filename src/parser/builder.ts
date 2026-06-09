@@ -111,17 +111,19 @@ export class StmtProcessor {
     }
   }
 
-  processNodeStmt(stmt: NodeStmt, root: Graph): void {
+  processNodeStmt(stmt: NodeStmt, graph: Graph, root: Graph): void {
     const node = this.registry.ensure(stmt.id.id, root);
     applyAttrs(stmt.attrs, node.attrs);
+    if (graph !== root) graph.nodes.set(node.name, node);
   }
 
-  processEdgeStmt(stmt: EdgeStmt, root: Graph): void {
+  processEdgeStmt(stmt: EdgeStmt, graph: Graph, root: Graph): void {
     for (let i = 0; i < stmt.nodes.length - 1; i++) {
       this.processEdgePair(
         stmt.nodes[i],
         stmt.nodes[i + 1],
         stmt.attrs,
+        graph,
         root,
       );
     }
@@ -150,8 +152,8 @@ export class StmtProcessor {
     switch (stmt.type) {
       case 'assign':   this.processAssign(stmt, graph); break;
       case 'attr':     this.processAttr(stmt, graph); break;
-      case 'node':     this.processNodeStmt(stmt, root); break;
-      case 'edge':     this.processEdgeStmt(stmt, root); break;
+      case 'node':     this.processNodeStmt(stmt, graph, root); break;
+      case 'edge':     this.processEdgeStmt(stmt, graph, root); break;
       case 'subgraph': this.processSubgraph(stmt, graph, root, directed); break;
     }
   }
@@ -169,6 +171,7 @@ export class StmtProcessor {
     tailItem: NodeId | SubgraphStmt,
     headItem: NodeId | SubgraphStmt,
     attrs: AttrPair[],
+    graph: Graph,
     root: Graph,
   ): void {
     for (const tail of this.resolveEndpoint(tailItem, root)) {
@@ -176,6 +179,11 @@ export class StmtProcessor {
         const edge = new Edge(tail, head, '');
         applyAttrs(attrs, edge.attrs);
         root.edges.push(edge);
+        edge.graphSeq = root.edges.length;
+        if (graph !== root) {
+          graph.nodes.set(tail.name, tail);
+          graph.nodes.set(head.name, head);
+        }
       }
     }
   }

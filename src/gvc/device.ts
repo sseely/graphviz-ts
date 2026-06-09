@@ -16,7 +16,8 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
-import type { ShapeDesc } from '../common/types.js';
+import type { ShapeDesc, TextlabelT } from '../common/types.js';
+import type { TextSpan } from '../common/emit-types.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
@@ -108,14 +109,59 @@ export function walkNodesAndEdges(g: Graph, renderer: RendererPlugin, job: Rende
 // renderGraph — @see lib/gvc/gvrender.c:gvrender_begin_graph / end_graph
 // ---------------------------------------------------------------------------
 
+/** @see lib/common/emit.c:emit_clusters (label text spans) */
+function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  const lab = sg.info.label as TextlabelT | undefined;
+  if (!lab?.set || lab.u.kind !== 'txt' || lab.u.nspans <= 0) return;
+  const py = lab.pos.y + lab.dimen.y / 2.0 - lab.fontsize;
+  for (let i = 0; i < lab.u.nspans; i++) {
+    const span = lab.u.span[i] as TextSpan | undefined;
+    if (!span) break;
+    renderer.textspan({ x: lab.pos.x, y: py }, span, job);
+  }
+}
+
+/** @see lib/common/emit.c:emit_clusters (single cluster: recurse, box, label) */
+function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  renderClusters(sg, renderer, job);
+  renderer.beginCluster?.(sg, job);
+  const bb = sg.info.bb!;
+  const rawPts = [
+    { x: bb.ll.x, y: bb.ll.y },
+    { x: bb.ll.x, y: bb.ur.y },
+    { x: bb.ur.x, y: bb.ur.y },
+    { x: bb.ur.x, y: bb.ll.y },
+  ];
+  renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
+  renderClusterLabel(sg, renderer, job);
+  renderer.endCluster?.(sg, job);
+}
+
 /**
- * Primary render loop: beginGraph → nodes → edges → endGraph.
+ * Render cluster boundary polygons and labels, depth-first.
+ * Corner order matches C's gvrender_box: LL, (LL.x,UR.y), UR, (UR.x,LL.y).
+ * @see lib/gvc/gvrender.c:gvrender_box
+ * @see lib/common/emit.c:emit_clusters
+ */
+export function renderClusters(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  const nClust = g.info.n_cluster ?? 0;
+  const clust = g.info.clust;
+  if (nClust === 0 || !clust) return;
+  for (let c = 0; c < nClust; c++) {
+    const sg = clust[c];
+    if (sg) renderOneCluster(sg, renderer, job);
+  }
+}
+
+/**
+ * Primary render loop: beginGraph → clusters → nodes → edges → endGraph.
  *
  * @see lib/gvc/gvrender.c:gvrender_begin_graph
  * @see lib/gvc/gvrender.c:gvrender_end_graph
  */
 export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin): string {
   renderer.beginGraph(g, job);
+  renderClusters(g, renderer, job);
   walkNodesAndEdges(g, renderer, job);
   renderer.endGraph(g, job);
   return job.output.join('');

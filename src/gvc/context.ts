@@ -74,6 +74,8 @@ export interface RendererPlugin {
   endAnchor?(job: RenderJob): void;
   beginLabel?(type: LabelType, job: RenderJob): void;
   endLabel?(job: RenderJob): void;
+  beginCluster?(sg: Graph, job: RenderJob): void;
+  endCluster?(sg: Graph, job: RenderJob): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -171,6 +173,7 @@ export class GvcContext {
     if (engine === undefined) {
       throw new Error(`no layout engine registered: ${engineName}`);
     }
+    if (g.info) g.info.gvc = this as unknown;
     engine.layout(g);
     engine.cleanup(g);
   }

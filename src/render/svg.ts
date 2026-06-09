@@ -41,6 +41,7 @@ import {
   svgEdgePath,
   svgArrowPolygons,
 } from './svg-helpers.js';
+import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 
 // ---------------------------------------------------------------------------
 // SvgRenderer — delegates all work to module-level helpers in svg-helpers.ts
@@ -111,6 +112,8 @@ export class SvgRenderer implements RendererPlugin {
 
   beginLabel(_type: LabelType, _job: RenderJob): void { /* no-op */ }
   endLabel(_job: RenderJob): void { /* no-op */ }
+  beginCluster(sg: Graph, job: RenderJob): void { svgBeginCluster(sg, job); }
+  endCluster(_sg: Graph, job: RenderJob): void { svgEndCluster(job); }
 }
 
 // ---------------------------------------------------------------------------

@@ -196,6 +196,7 @@ export class RenderJob {
   layerNum: number = 0;
   nodeId: number = 0;
   edgeId: number = 0;
+  clusterId: number = 0;
 
   /** Active renderer plugin; set by render() before walkNodes. */
   renderer?: RendererPlugin;

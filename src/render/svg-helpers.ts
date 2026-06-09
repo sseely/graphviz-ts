@@ -294,10 +294,9 @@ export function svgEndNode(job: RenderJob): void {
 }
 
 export function svgBeginEdge(e: Edge, job: RenderJob): void {
-  job.edgeId++;
   const tid = escapeXml(e.tail.name);
   const hid = escapeXml(e.head.name);
-  job.write('<g id="edge' + job.edgeId + '" class="edge">\n');
+  job.write('<g id="edge' + e.graphSeq + '" class="edge">\n');
   job.write('<title>' + tid + '-&gt;' + hid + '</title>\n');
 }
 

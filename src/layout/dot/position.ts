@@ -19,7 +19,7 @@ import {
 } from './position-aux.js';
 import { posClusters, compressGraph } from './position-cluster.js';
 import { setYcoords } from './position-ycoords.js';
-import { setAspect } from './position-bbox.js';
+import { setAspect, placeGraphLabel } from './position-bbox.js';
 import { dotConcentrate } from './conc.js';
 
 // ---------------------------------------------------------------------------
@@ -205,8 +205,12 @@ export function dotPosition(g: Graph): number {
     rank(g, 2, nsiter2(g));
   }
   setXcoords(g);
-  normalizeXcoords(g);
+  /* normalizeXcoords is a no-op in C (GD_ln ends at rank=0 naturally), but our
+   * NS may leave a non-zero leftmost edge. Skip for cluster graphs: the cluster
+   * offset (CL_OFFSET) is already correct from posClusters. */
+  if ((g.info.n_cluster ?? 0) === 0) normalizeXcoords(g);
   setAspect(g);
+  placeGraphLabel(g);
   /* remove_aux_edges must come after set_aspect: GD_ln/GD_rn used for bbox width */
   removeAuxEdges(g);
   return 0;

@@ -7,10 +7,12 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
+import type { TextlabelT } from '../../common/types.js';
 import { NORMAL } from './fastgr.js';
 import { dotRoot } from './mincross-utils.js';
 import {
   CL_OFFSET,
+  TOP_IX, BOTTOM_IX, LEFT_IX, RIGHT_IX,
   graphMinrank, graphMaxrank, graphNclust,
   graphHt1, graphHt2, nodeRank,
 } from './position-aux.js';
@@ -162,6 +164,54 @@ export function setAspect(g: Graph): void {
     n.info.coord.y = Math.round(n.info.coord.y * yf);
   }
   scaleBb(g, xf, yf);
+}
+
+// ---------------------------------------------------------------------------
+// placeGraphLabel — @see lib/common/postproc.c:place_graph_label
+// ---------------------------------------------------------------------------
+
+/** @see lib/common/postproc.c:place_graph_label (non-flip branch) */
+function placeLabelNonFlip(g: Graph): { x: number; y: number } {
+  const bb = g.info.bb!;
+  const labelPos = g.info.label_pos ?? 1;
+  const border = g.info.border;
+  const zero = { x: 0, y: 0 };
+  const d = (labelPos & 1) ? (border?.[TOP_IX] ?? zero) : (border?.[BOTTOM_IX] ?? zero);
+  const py = (labelPos & 1) ? bb.ur.y - d.y / 2 : bb.ll.y + d.y / 2;
+  const px = (labelPos & 4) ? bb.ur.x - d.x / 2
+    : (labelPos & 2) ? bb.ll.x + d.x / 2
+    : (bb.ll.x + bb.ur.x) / 2;
+  return { x: px, y: py };
+}
+
+/** @see lib/common/postproc.c:place_flip_graph_label */
+function placeLabelFlip(g: Graph): { x: number; y: number } {
+  const bb = g.info.bb!;
+  const labelPos = g.info.label_pos ?? 1;
+  const border = g.info.border;
+  const zero = { x: 0, y: 0 };
+  const d = (labelPos & 1) ? (border?.[RIGHT_IX] ?? zero) : (border?.[LEFT_IX] ?? zero);
+  const px = (labelPos & 1) ? bb.ur.x - d.x / 2 : bb.ll.x + d.x / 2;
+  const py = (labelPos & 4) ? bb.ll.y + d.y / 2
+    : (labelPos & 2) ? bb.ur.y - d.y / 2
+    : (bb.ll.y + bb.ur.y) / 2;
+  return { x: px, y: py };
+}
+
+/**
+ * Set cluster label positions after bounding boxes are computed.
+ * @see lib/common/postproc.c:place_graph_label
+ */
+export function placeGraphLabel(g: Graph): void {
+  if (g !== g.root) {
+    const lab = g.info.label as TextlabelT | undefined;
+    if (lab && !lab.set) {
+      lab.pos = (g.root.info.flip ?? false) ? placeLabelFlip(g) : placeLabelNonFlip(g);
+      lab.set = true;
+    }
+  }
+  const nClust = g.info.n_cluster ?? 0;
+  for (let c = 0; c < nClust; c++) placeGraphLabel(g.info.clust![c]!);
 }
 
 /** @internal — get dot root for use in bbox computations */
