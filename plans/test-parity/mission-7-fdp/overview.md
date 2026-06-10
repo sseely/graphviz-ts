@@ -26,9 +26,11 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/fdp/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md (oracle workflow, 15.0.0-tag plan) | claude | this directory only | - | [x] |
+| T2 | fdp_tLayout + grid + parms (flat graphs) | claude | src/layout/fdp/* | T1 | [ ] |
+| T3 | cluster scheme (layout.c derived graphs, xLayout sans Mlimit) | claude | src/layout/fdp/* | T2 | [ ] |
+| T4 | components + pipeline tail | claude | src/layout/fdp/* | T3 | [ ] |
+| T5 | verify 6 goldens; re-baseline; merge | claude | plans/test-parity/* | T4 | [ ] |
 
 ## T1 recon spec (run as-is)
 
