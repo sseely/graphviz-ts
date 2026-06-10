@@ -231,28 +231,28 @@ export function testMkClustersNoClusterGraph(): void {
 
 export function testPackModeFloorNode(): void {
   const g = freshGraph();
-  ((g.info as unknown) as Record<string, unknown>)['packMode'] = 'node';
+  g.attrs.set('packmode', 'node');
   const pinfo = buildPackInfo(g);
   expect(pinfo.mode).toBeGreaterThanOrEqual(PackMode.Graph);
 }
 
 export function testPackModeFloorCluster(): void {
   const g = freshGraph();
-  ((g.info as unknown) as Record<string, unknown>)['packMode'] = 'cluster';
+  g.attrs.set('packmode', 'cluster');
   const pinfo = buildPackInfo(g);
   expect(pinfo.mode).toBeGreaterThanOrEqual(PackMode.Graph);
 }
 
 export function testPackModePreservesGraph(): void {
   const g = freshGraph();
-  ((g.info as unknown) as Record<string, unknown>)['packMode'] = 'graph';
+  g.attrs.set('packmode', 'graph');
   const pinfo = buildPackInfo(g);
   expect(pinfo.mode).toBe(PackMode.Graph);
 }
 
 export function testPackModePreservesArray(): void {
   const g = freshGraph();
-  ((g.info as unknown) as Record<string, unknown>)['packMode'] = 'array';
+  g.attrs.set('packmode', 'array');
   const pinfo = buildPackInfo(g);
   expect(pinfo.mode).toBe(PackMode.Array);
 }
