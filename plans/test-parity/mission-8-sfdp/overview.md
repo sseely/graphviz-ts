@@ -5,6 +5,13 @@ Branch: `feature/parity-m8-sfdp` off `feature/ts-port`.
 **Owned tests:** sfdp-simple, sfdp-medium, sfdp-large, sfdp-weighted, sfdp-disconnected
 
 **C spec:** ~/git/graphviz/lib/sfdpgen/ - sfdpinit.c, spring_electrical.c, Multilevel.c, post_process.c; lib/sparse QuadTree + SparseMatrix
+
+**SPEC VERSION (2026-06-10, see decision journal):** the local C repo
+is 82 commits past 15.0.0. sfdpgen/sparse churn since the tag looks
+refactor-only (static fns, array prealloc removal,
+QuadTree_get_supernodes signature), but the refs are 15.0.0 output —
+prefer `git -C ~/git/graphviz show 15.0.0:<path>` when porting, and
+treat any HEAD-vs-15.0.0 difference in formulas as out of spec.
 **Our port:** src/layout/sfdp/ (9 files, ~1834 lines)
 
 **Scoping notes (from project baseline):** Largest numeric port (multilevel coarsening + Barnes-Hut). Uses src/common/random.ts from mission 6. Expect the recon task to split this into many small port tasks; the QuadTree/SparseMatrix substrate may deserve its own sub-batch.

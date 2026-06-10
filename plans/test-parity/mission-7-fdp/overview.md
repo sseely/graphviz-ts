@@ -5,6 +5,14 @@ Branch: `feature/parity-m7-fdp` off `feature/ts-port`.
 **Owned tests:** fdp-simple, fdp-large, fdp-cluster, fdp-nested-cluster, fdp-edge-both, fdp-disconnected
 
 **C spec:** ~/git/graphviz/lib/fdpgen/ - fdpinit.c, layout.c, grid.c, xlayout.c, dbg.c; clusters via recursive layout
+
+**SPEC VERSION (2026-06-10, see decision journal):** the local C repo
+is now 82 commits past 15.0.0, and fdpgen changed after the tag:
+tlayout/xlayout doRep got ULP-level float reorderings (hypot vs
+sqrt(x²+y²)) and a NEW `Mlimit` force cutoff (`-Lm`, default off).
+The golden refs are 15.0.0 output — read the spec via
+`git -C ~/git/graphviz show 15.0.0:lib/fdpgen/<file>` and do NOT port
+the Mlimit branch.
 **Our port:** src/layout/fdp/ (8 files, ~1679 lines)
 
 **Scoping notes (from project baseline):** Uses src/common/random.ts from mission 6. fdp-cluster height 46 vs 162: cluster handling collapses - check fdp recursive cluster layout (clust.c) before the force loop constants.
