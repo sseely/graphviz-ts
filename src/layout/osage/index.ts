@@ -25,6 +25,9 @@ import { neatoInitNode } from '../neato/init.js';
 import { commonInitNode, layoutMeasurer, lateInt } from '../../common/nodeinit.js';
 import { nodeAttr } from '../../common/poly-init.js';
 import { splineEdges, EDGETYPE_NONE } from '../neato/splines.js';
+// Engine-neutral C common functions, currently parked under layout/dot:
+import { doGraphLabel } from '../dot/graph-label.js';
+import { placeGraphLabel } from '../dot/position-bbox.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -124,6 +127,8 @@ export function mkClustersInto(
     if (isCluster(subg)) {
       subg.info.bb = subg.info.bb ??
         { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
+      // C binds Agraphinfo_t then builds the cluster label + border.
+      doGraphLabel(subg, layoutMeasurer(subg));
       clist.push(subg);
       mkClusters(subg, null, subg);
     } else {
@@ -434,6 +439,8 @@ export function osageLayout(g: Graph): void {
   osageReposition(g, 0);
   const et = g.info.flags & 0xf;
   if (et !== EDGETYPE_NONE) splineEdges(g);
+  // C: dotneato_postprocess -> place_graph_label positions cluster labels.
+  placeGraphLabel(g);
 }
 
 // ---------------------------------------------------------------------------
