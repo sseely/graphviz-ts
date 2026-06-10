@@ -80,12 +80,42 @@ export function estimate_text_width_1pt(
 export const FREETYPE_LINE_SPACING = 16.5 / 14;
 
 /**
- * LUT-based TextMeasurer. Width from LUT; height matches FreeType Times-Roman.
+ * graphviz's text layout plugin rasterises at 96 dpi, so every glyph
+ * advance lands on an integer pixel and converts back at 72/96 pt per px.
+ * Reference values (Times 14pt): 'a' 0.444em → 8.29px → 8px → 6pt;
+ * 'b' 0.5em → 9.33px → 9px → 6.75pt.
+ */
+const FREETYPE_PX_PER_PT = 96 / 72;
+const PT_PER_FREETYPE_PX = 72 / 96;
+
+/**
+ * Per-character FreeType-hinted text width in points: each glyph advance is
+ * rounded to the 96 dpi pixel grid before summing.
+ */
+export function freetypeHintedWidth(
+  fontName: string,
+  text: string,
+  fontsize: number,
+): number {
+  const family = getFamilyMetrics(fontName);
+  const widths = getVariantWidths(family, false, false);
+  let total = 0;
+  for (let i = 0; i < text.length; i++) {
+    const units = charWidthUnits(widths, text.charCodeAt(i));
+    const px = Math.round((units / family.unitsPerEm) * fontsize * FREETYPE_PX_PER_PT);
+    total += px * PT_PER_FREETYPE_PX;
+  }
+  return total;
+}
+
+/**
+ * LUT-based TextMeasurer. Width from LUT quantised to FreeType's 96 dpi
+ * pixel grid; height matches FreeType Times-Roman.
  * @see lib/common/textspan.c:estimate_textspan_size
  */
 export class LutTextMeasurer implements TextMeasurer {
   measure(text: string, fontname: string, fontsize: number): TextSize {
-    const w = estimate_text_width_1pt(fontname, text, false, false) * fontsize;
+    const w = freetypeHintedWidth(fontname, text, fontsize);
     return { w, h: fontsize * FREETYPE_LINE_SPACING };
   }
 }

@@ -88,14 +88,29 @@ describe("unknown font fallback warning", () => {
   });
 });
 
-// ── AC4: linear scaling ───────────────────────────────────────────────────────
+// ── AC4: FreeType pixel-grid quantisation ────────────────────────────────────
+// Widths snap to the 96 dpi pixel grid (0.75 pt steps), so doubling the font
+// size does NOT exactly double the width. Ground truth from graphviz 15.0.0
+// reference SVGs: Times 14pt 'a' → 6.0 pt, 'b' → 6.75 pt.
 
-describe("linear scaling", () => {
-  it("measure at 24pt is within 1e-10 of 2× measure at 12pt", () => {
+describe("FreeType-hinted widths", () => {
+  it("matches graphviz reference advances for Times 14pt", () => {
     const m = new LutTextMeasurer();
-    const w12 = m.measure("A", "Times", 12).w;
-    const w24 = m.measure("A", "Times", 24).w;
-    expect(Math.abs(w24 - 2 * w12)).toBeLessThan(1e-10);
+    expect(m.measure("a", "Times", 14).w).toBe(6.0);
+    expect(m.measure("b", "Times", 14).w).toBe(6.75);
+    expect(m.measure("c", "Times", 14).w).toBe(6.0);
+  });
+
+  it("quantises every advance to 0.75pt steps", () => {
+    const m = new LutTextMeasurer();
+    const w = m.measure("Hello", "Times", 14).w;
+    expect((w / 0.75) % 1).toBeCloseTo(0, 10);
+  });
+
+  it("raw 1pt estimate still scales linearly", () => {
+    const w1 = estimate_text_width_1pt("Times", "A", false, false);
+    expect(w1).toBeGreaterThan(0);
+    expect(estimate_text_width_1pt("Times", "AA", false, false)).toBeCloseTo(2 * w1, 10);
   });
 });
 

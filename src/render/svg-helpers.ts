@@ -368,7 +368,11 @@ export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   const y = -(pos.y + span.yoffset_centerline);
   const fontName = span.fontName ?? 'Times,serif';
   job.write('<text xml:space="preserve" text-anchor="' + anchor + '"');
-  job.write(' x="' + String(pos.x) + '" y="' + String(y) + '"');
+  job.write(' x="');
+  job.printDouble(pos.x);
+  job.write('" y="');
+  job.printDouble(y);
+  job.write('"');
   job.write(' font-family="' + escapeXml(fontName) + '"');
   job.write(' font-size="' + span.fontSize.toFixed(2) + '"');
   job.write('>' + escapeXml(span.str) + '</text>\n');
