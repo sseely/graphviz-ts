@@ -11,7 +11,10 @@ import type { Node } from '../model/node.js';
 import type { Graph } from '../model/graph.js';
 import type { TextMeasurer } from './textmeasure.js';
 import type { PolygonT, ShapeDesc } from './types.js';
+import { ShapeKind } from './types.js';
 import { bindShape } from './shapes.js';
+// Circular import: poly-init ↔ record — safe for function declarations.
+import { recordNodeInit } from './record.js';
 import {
   makeLabel,
   DEFAULT_FONTSIZE,
@@ -60,14 +63,19 @@ export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
 
 /**
  * Initialise shape descriptor and label for a node before rendering.
+ * Record nodes are initialised during layout (their size depends on the
+ * field tree); only build them here if layout did not.
  * @see lib/common/shapes.c:poly_init
  */
 export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   const shapeName = nodeAttr(n, g, 'shape') ?? 'ellipse';
+  n.info.shape = bindShape(shapeName);
+  if ((n.info.shape as ShapeDesc).kind === ShapeKind.SH_RECORD) {
+    if (n.info.shape_info === undefined) recordNodeInit(n, g, measurer);
+    return;
+  }
   const labelText = nodeAttr(n, g, 'label') ?? n.name;
   const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
-
-  n.info.shape = bindShape(shapeName);
   n.info.label = makeLabel(labelText, fontname, fontsize, fontcolor, measurer);
 
   const polyDesc = (n.info.shape as ShapeDesc).polygon;

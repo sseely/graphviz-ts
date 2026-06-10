@@ -25,6 +25,7 @@ import {
   P_SIGNATURE, P_RPROMOTER, P_RARROW, P_LARROW, P_LPROMOTER,
 } from './shapeData.js';
 import { polyGencode } from './poly-gencode.js';
+import { recordGencode } from './record.js';
 
 // ---------------------------------------------------------------------------
 // Shape function tables
@@ -40,13 +41,23 @@ const POLY_FNS: ShapeFunctions = {
   codefn: polyGencode,
 };
 
+/** Function table for record shapes. @see lib/common/shapes.c:record_fns */
+const RECORD_FNS: ShapeFunctions = {
+  initfn: null,
+  freefn: null,
+  portfn: null,
+  insidefn: null,
+  pboxfn: null,
+  codefn: recordGencode,
+};
+
 // Descriptor constructors (one per shape_functions group in shapes.c)
 const mkPoly = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
   ({ name: n, fns: POLY_FNS, polygon: p, kind: ShapeKind.SH_POLY, usershape: false });
 const mkPoint = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
   ({ name: n, fns: POLY_FNS, polygon: p, kind: ShapeKind.SH_POINT, usershape: false });
 const mkRecord = (n: string): ShapeDesc =>
-  ({ name: n, fns: null, polygon: null, kind: ShapeKind.SH_RECORD, usershape: false });
+  ({ name: n, fns: RECORD_FNS, polygon: null, kind: ShapeKind.SH_RECORD, usershape: false });
 const mkEpsf = (n: string): ShapeDesc =>
   ({ name: n, fns: null, polygon: null, kind: ShapeKind.SH_EPSF, usershape: false });
 

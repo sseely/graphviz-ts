@@ -159,9 +159,22 @@ export function straightEdgeSplineWithRank(
 /** Ellipse shape names (use ellipse clip, not box clip). @see lib/common/shapes.c:poly_inside */
 const ELLIPSE_SHAPES = new Set(['ellipse', 'oval', 'circle', 'egg', 'doublecircle', 'Mcircle', 'point']);
 
+/** Record shapes clip against the field box, not node ht (which carries
+ *  record_init's +1 rounding kluge). @see lib/common/shapes.c:record_inside */
+function recordClipBox(n: Node): { lw: number; rw: number; ht: number } | undefined {
+  const f = n.info.shape_info as { b?: { ll: Point; ur: Point } } | undefined;
+  if (!f?.b) return undefined;
+  const halfW = (f.b.ur.x - f.b.ll.x) / 2;
+  return { lw: halfW, rw: halfW, ht: f.b.ur.y - f.b.ll.y };
+}
+
 /** Returns a NodeBox with defaulted lw/rw/ht for a node. */
 export function nodeBoxOf(n: Node, g: Graph): NodeBox {
   const shapeName = nodeAttr(n, g, 'shape') ?? 'ellipse';
+  if (shapeName === 'record' || shapeName === 'Mrecord') {
+    const rb = recordClipBox(n);
+    if (rb) return { center: n.info.coord, ...rb, isEllipse: false };
+  }
   return {
     center: n.info.coord,
     lw: n.info.lw > 0 ? n.info.lw : 27,

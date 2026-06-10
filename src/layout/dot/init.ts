@@ -11,6 +11,11 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
+import type { TextMeasurer } from '../../common/textmeasure.js';
+import { ShapeKind } from '../../common/types.js';
+import { bindShape } from '../../common/shapes.js';
+import { nodeAttr } from '../../common/poly-init.js';
+import { recordNodeInit } from '../../common/record.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL } from './fastgr.js';
 
@@ -112,12 +117,34 @@ export function dotInitSubg(g: Graph): void {
 // ---------------------------------------------------------------------------
 
 /**
+ * Size record-shaped nodes from their field tree before ranking.
+ * C's dot_init_node runs the shape initfn (record_init) for every node;
+ * polygon shapes keep their defaults here and are initialised at render
+ * time, so only record kinds need layout-time sizing.
+ *
+ * @see lib/common/utils.c:common_init_node
+ */
+export function dotInitRecordNode(n: Node, g: Graph): void {
+  const shapeName = nodeAttr(n, g, 'shape');
+  if (shapeName === undefined) return;
+  const shape = bindShape(shapeName);
+  if (shape.kind !== ShapeKind.SH_RECORD) return;
+  const gvc = g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined;
+  if (!gvc?.textMeasurer) return;
+  n.info.shape = shape;
+  recordNodeInit(n, g, gvc.textMeasurer);
+}
+
+/**
  * Calls dotInitNode for every node then dotInitEdge for every edge.
  *
  * @see lib/dotgen/dotinit.c:dot_init_node_edge
  */
 export function dotInitNodeEdge(g: Graph): void {
-  for (const n of g.nodes.values()) dotInitNode(n);
+  for (const n of g.nodes.values()) {
+    dotInitRecordNode(n, g);
+    dotInitNode(n);
+  }
   for (const e of g.edges) dotInitEdge(e);
 }
 
