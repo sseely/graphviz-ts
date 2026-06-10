@@ -404,7 +404,7 @@ export function addFastEdges(Xg: Graph): void {
 export function setMinMax2Clusters(g: Graph): void {
   const nc = g.info.n_cluster ?? 0;
   const cl = g.info.clust ?? [];
-  for (let c = 1; c <= nc; c++) setMinMax2(cl[c], false);
+  for (let c = 1; c <= nc; c++) setMinMax2(cl[c - 1], false);
 }
 
 export function setMinMax2ScanNode(g: Graph, n: Node, ref: { v: Node | undefined }): void {

@@ -66,7 +66,8 @@ export function elistAppend(el: EdgeList, e: Edge): void {
 export function zapinlist(el: EdgeList, e: Edge): void {
   let i = 0;
   while (i < el.size && el.list[i] !== e) i++;
-  if (i < el.size) el.list[i] = el.list[--el.size];
+  // Match C: L->list[L->size] = NULL after swap — callers poll list[0] as sentinel.
+  if (i < el.size) { el.list[i] = el.list[--el.size]; el.list[el.size] = undefined as unknown as typeof e; }
 }
 
 // ---------------------------------------------------------------------------
@@ -129,6 +130,33 @@ export function copyPort(p: Port): Port {
 }
 
 /**
+ * Port copy is direction-aware: a reversed virtual edge takes the
+ * orig's opposite-end port.
+ * @see lib/dotgen/fastgr.c:new_virtual_edge
+ */
+export function copyVirtualPorts(e: Edge, orig: Edge): void {
+  if (e.tail === orig.tail) e.info.tail_port = copyPort(orig.info.tail_port);
+  else if (e.tail === orig.head) e.info.tail_port = copyPort(orig.info.head_port);
+  if (e.head === orig.head) e.info.head_port = copyPort(orig.info.head_port);
+  else if (e.head === orig.tail) e.info.head_port = copyPort(orig.info.tail_port);
+}
+
+/** Copy weights, ports, and labels from orig; link to_virt/to_orig. */
+export function copyVirtualEdgeInfo(e: Edge, orig: Edge): void {
+  e.info.count = orig.info.count;
+  e.info.xpenalty = orig.info.xpenalty;
+  e.info.weight = orig.info.weight;
+  e.info.minlen = orig.info.minlen;
+  copyVirtualPorts(e, orig);
+  e.info.label = orig.info.label;
+  e.info.head_label = orig.info.head_label;
+  e.info.tail_label = orig.info.tail_label;
+  e.info.xlabel = orig.info.xlabel;
+  if (orig.info.to_virt === undefined) orig.info.to_virt = e;
+  e.info.to_orig = orig;
+}
+
+/**
  * Allocate a virtual edge from `u` to `v`, copying port/label info from `orig`.
  * `orig` may be null when called from do_ordering_node (C passes NULL there).
  * @see lib/dotgen/fastgr.c:new_virtual_edge
@@ -137,14 +165,12 @@ export function newVirtualEdge(u: Node, v: Node, orig: Edge | null): Edge {
   const e = new EdgeClass(u, v, '');
   e.info.edge_type = VIRTUAL;
   if (orig) {
-    e.info.tail_port = copyPort(orig.info.tail_port);
-    e.info.head_port = copyPort(orig.info.head_port);
-    e.info.label = orig.info.label;
-    e.info.head_label = orig.info.head_label;
-    e.info.tail_label = orig.info.tail_label;
-    e.info.xlabel = orig.info.xlabel;
-    if (orig.info.to_virt === undefined) orig.info.to_virt = e;
-    e.info.to_orig = orig;
+    copyVirtualEdgeInfo(e, orig);
+  } else {
+    e.info.weight = 1;
+    e.info.xpenalty = 1;
+    e.info.count = 1;
+    e.info.minlen = 1;
   }
   return e;
 }

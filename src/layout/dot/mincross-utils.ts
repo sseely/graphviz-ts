@@ -150,13 +150,11 @@ export function insideCluster(g: Graph, v: Node): boolean {
 
 /** @see lib/dotgen/mincross.c:neighbor */
 export function neighborNode(ctx: MincrossContext, v: Node, dir: number): Node | undefined {
-  const r = v.info.rank ?? 0;
+  const rk = ctx.root.info.rank?.[v.info.rank ?? 0];
+  if (!rk) return undefined;
   const order = v.info.order ?? 0;
-  const rootRank = ctx.root.info.rank;
-  if (!rootRank) return undefined;
-  const rk = rootRank[r];
-  if (dir < 0) return order > 0 ? rk.v[order - 1] : undefined;
-  return rk.v[order + 1];
+  // rank.v may contain explicit null entries (make_slots); coerce null→undefined.
+  return (dir < 0 ? (order > 0 ? rk.v[order - 1] : undefined) : rk.v[order + 1]) ?? undefined;
 }
 
 /** @see lib/dotgen/mincross.c:furthestnode */

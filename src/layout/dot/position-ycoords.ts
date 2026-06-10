@@ -159,7 +159,11 @@ export function equalSpaceRanks(g: Graph, maxht: number): void {
 export function setYcoordsInitial(g: Graph, lbl: boolean): void {
   const rankArr = g.info.rank!;
   const maxR = graphMaxrank(g);
-  rankArr[maxR].v[0].info.coord.y = rankArr[maxR].ht1;
+  // g.info.ht1 (GD_ht1 of root) may exceed rank[maxR].ht1 when a cluster at
+  // maxRank expands the bottom margin beyond the bare node height.  Using the
+  // graph-level ht1 matches C: clust_ht propagates the expanded value back up
+  // so that LL.y = y(bottom) - GD_ht1(root) = 0.
+  rankArr[maxR].v[0].info.coord.y = g.info.ht1 ?? rankArr[maxR].ht1;
   let maxht = 0;
   for (let r = maxR - 1; r >= graphMinrank(g); r--) {
     const d0 = rankArr[r + 1].pht2 + rankArr[r].pht1 + graphRanksep(g);

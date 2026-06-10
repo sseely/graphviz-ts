@@ -3,6 +3,8 @@
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Graph } from '../../model/graph.js';
+import type { TextMeasurer } from '../../common/textmeasure.js';
+import { doGraphLabel } from './graph-label.js';
 import { ufFind, ufUnion, ufSingleton } from './decomp.js';
 import { decompose } from './decomp.js';
 import { acyclic } from './acyclic.js';
@@ -198,7 +200,9 @@ export function makeNewCluster(g: Graph, subg: Graph): void {
   const nc = (g.info.n_cluster ?? 0) + 1;
   g.info.n_cluster = nc;
   if (!g.info.clust) g.info.clust = [];
-  g.info.clust[nc] = subg;
+  g.info.clust[nc - 1] = subg;
+  const measurer = (g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined)?.textMeasurer;
+  doGraphLabel(subg, measurer);
 }
 
 /** @see lib/dotgen/rank.c:node_induce */
@@ -269,7 +273,7 @@ export function collapseCluster(g: Graph, subg: Graph): void {
   nodeInduce(g, subg);
   if (subg.nodes.size === 0) return;
   makeNewCluster(g, subg);
-  if (clType === LOCAL) { rank(subg, 0, Number.MAX_SAFE_INTEGER); clusterLeader(subg); }
+  if (clType === LOCAL) { dot1Rank(subg); clusterLeader(subg); }
   else dotScanRanks(subg);
 }
 
@@ -322,7 +326,7 @@ export function setMinmax(g: Graph): void {
   g.info.minrank = gMinrankVal(g) + lr;
   g.info.maxrank = gMaxrankVal(g) + lr;
   const cl = gClust(g); const nc = gNCluster(g);
-  for (let c = 1; c <= nc; c++) setMinmax(cl[c]);
+  for (let c = 1; c <= nc; c++) setMinmax(cl[c - 1]);
 }
 
 export function minmaxEdgesReverse(n: Node, isOut: boolean): number {
@@ -411,7 +415,7 @@ export function expandNode(g: Graph, n: Node): void {
 export function expandRankPostprocess(g: Graph): void {
   if (clType === LOCAL) {
     const cl = gClust(g);
-    for (let c = 1; c <= gNCluster(g); c++) setMinmax(cl[c]);
+    for (let c = 1; c <= gNCluster(g); c++) setMinmax(cl[c - 1]);
   } else {
     findClusters(g);
   }
