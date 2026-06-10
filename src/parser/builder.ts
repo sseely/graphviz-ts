@@ -24,13 +24,10 @@ import type {
 // ── Attribute helpers ─────────────────────────────────────────────────────────
 
 /**
- * Normalise an attribute value.
- * HTML strings arrive as `<content>`; strip the outer angle brackets.
+ * Normalise an attribute value. HTML strings arrive from the grammar
+ * already prefixed with the HTML marker (cgraph's aghtmlstr flag).
  */
 export function normaliseAttrValue(value: string): string {
-  if (value.startsWith('<') && value.endsWith('>')) {
-    return value.slice(1, -1);
-  }
   return value;
 }
 

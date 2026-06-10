@@ -12,9 +12,12 @@ import type { Graph } from '../model/graph.js';
 import type { TextMeasurer } from './textmeasure.js';
 import type { PolygonT, ShapeDesc } from './types.js';
 import { ShapeKind } from './types.js';
+import type { TextlabelT } from './types.js';
 import { bindShape } from './shapes.js';
-// Circular import: poly-init ↔ record — safe for function declarations.
+import { isHtmlValue, htmlValueContent } from './html-string.js';
+// Circular imports: poly-init ↔ record / htmltable-pos — safe for function declarations.
 import { recordNodeInit } from './record.js';
+import { makeHtmlLabel } from './htmltable-pos.js';
 import {
   makeLabel,
   DEFAULT_FONTSIZE,
@@ -67,6 +70,21 @@ export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
  * field tree); only build them here if layout did not.
  * @see lib/common/shapes.c:poly_init
  */
+/** Build the node's label, dispatching on the HTML marker. */
+export function buildNodeLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
+  const labelAttr = nodeAttr(n, g, 'label');
+  const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
+  if (labelAttr !== undefined && isHtmlValue(labelAttr)) {
+    // Layout init may already have built the HTML label; keep it.
+    if ((n.info.label as TextlabelT | undefined)?.html) return;
+    n.info.label = makeHtmlLabel(
+      htmlValueContent(labelAttr), fontname, fontsize, fontcolor, measurer,
+    );
+    return;
+  }
+  n.info.label = makeLabel(labelAttr ?? n.name, fontname, fontsize, fontcolor, measurer);
+}
+
 export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   const shapeName = nodeAttr(n, g, 'shape') ?? 'ellipse';
   n.info.shape = bindShape(shapeName);
@@ -74,9 +92,7 @@ export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {
     if (n.info.shape_info === undefined) recordNodeInit(n, g, measurer);
     return;
   }
-  const labelText = nodeAttr(n, g, 'label') ?? n.name;
-  const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
-  n.info.label = makeLabel(labelText, fontname, fontsize, fontcolor, measurer);
+  buildNodeLabel(n, g, measurer);
 
   const polyDesc = (n.info.shape as ShapeDesc).polygon;
   if (polyDesc !== null) assignShapeInfo(n, polyDesc);

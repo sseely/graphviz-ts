@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, serialize, ParseError } from './index.js';
+import { isHtmlValue, htmlValueContent } from '../common/html-string.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const fix = (name: string): string =>
@@ -170,10 +171,17 @@ describe('strict digraph', () => {
 // ── HTML labels ──────────────────────────────────────────────────────────────
 
 describe('HTML label preservation', () => {
-  it('preserves HTML label verbatim', () => {
+  it('preserves HTML label content and marks it as HTML', () => {
     const src = 'graph { a [label=<<B>hello</B>>] }';
     const g = parse(src);
     const label = g.nodes.get('a')?.attrs.get('label');
-    expect(label).toBe('<B>hello</B>');
+    expect(label).toBeDefined();
+    expect(isHtmlValue(label!)).toBe(true);
+    expect(htmlValueContent(label!)).toBe('<B>hello</B>');
+  });
+
+  it('does not mark quoted labels as HTML', () => {
+    const g = parse('graph { a [label="<B>hello</B>"] }');
+    expect(isHtmlValue(g.nodes.get('a')!.attrs.get('label')!)).toBe(false);
   });
 });

@@ -11,6 +11,7 @@ import { parse as peggyParse } from './dot.js';
 import { Graph } from '../model/graph.js';
 import type { GraphKind } from '../model/graph.js';
 import type { Edge } from '../model/edge.js';
+import { isHtmlValue, htmlValueContent } from '../common/html-string.js';
 import { buildFromAst } from './builder.js';
 import type { ParsedGraph } from './ast.js';
 
@@ -149,7 +150,10 @@ export function quoteId(id: string): string {
 
 export function attrMapStr(attrs: Map<string, string>): string {
   const parts: string[] = [];
-  for (const [k, v] of attrs) parts.push(`${quoteId(k)}=${quoteId(v)}`);
+  for (const [k, v] of attrs) {
+    const val = isHtmlValue(v) ? `<${htmlValueContent(v)}>` : quoteId(v);
+    parts.push(`${quoteId(k)}=${val}`);
+  }
   return parts.join(', ');
 }
 

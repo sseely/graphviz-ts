@@ -12,6 +12,8 @@ import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import type { PolygonT, TextlabelT } from './types.js';
 import type { TextSpan } from './emit-types.js';
+import type { PlacedHtml } from './htmltable-pos.js';
+import { emitHtmlLabel } from './htmltable-emit.js';
 import { transformPoint } from '../gvc/device.js'; // used by renderEllipse/renderPolygon
 
 /** Render an ellipse shape for a node. */
@@ -93,5 +95,11 @@ export function polyGencode(rawJob: unknown, rawNode: unknown): void {
   }
 
   const label = n.info.label as TextlabelT | undefined;
-  if (label) renderLabel(label, coord, renderer, job);
+  if (label?.html && label.u.kind === 'html') {
+    label.pos = coord;
+    label.set = true;
+    emitHtmlLabel(label.u.html as PlacedHtml, coord, renderer, job);
+  } else if (label) {
+    renderLabel(label, coord, renderer, job);
+  }
 }

@@ -183,10 +183,11 @@ QChar
 
 // scan.l: [<] begins hstring state; tracks html_nest for matching '>'
 // Content between outer <> is returned verbatim (including inner <>).
-// HTML strings are returned as "<content>" so caller can detect the <>.
+// HTML strings are prefixed with U+0001 (cgraph's aghtmlstr flag) so a
+// quoted string that happens to start with '<' stays distinguishable.
 HtmlString
   = "<" content:HtmlContent ">"
-    { return "<" + content + ">"; }
+    { return "\u0001" + content; }
 
 HtmlContent
   = chars:HtmlChar*

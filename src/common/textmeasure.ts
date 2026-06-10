@@ -109,6 +109,19 @@ export function freetypeHintedWidth(
 }
 
 /**
+ * Times-Roman ascender ratio (TrueType hhea ascender 1825/2048em).
+ * Hinted to the 96 dpi grid: 14pt → 17px → 12.75pt, matching the baseline
+ * positions in graphviz reference SVGs.
+ */
+export const FREETYPE_ASCENT_RATIO = 1825 / 2048;
+
+/** FreeType-hinted font ascent in points (baseline distance from line top). */
+export function freetypeAscent(fontsize: number): number {
+  const px = Math.round(FREETYPE_ASCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
+  return px * PT_PER_FREETYPE_PX;
+}
+
+/**
  * LUT-based TextMeasurer. Width from LUT quantised to FreeType's 96 dpi
  * pixel grid; height matches FreeType Times-Roman.
  * @see lib/common/textspan.c:estimate_textspan_size

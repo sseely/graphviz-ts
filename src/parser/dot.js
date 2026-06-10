@@ -354,7 +354,7 @@ function peg$parse(input, options) {
   var peg$f44 = function() { return '\\r'; };
   var peg$f45 = function() { return ''; };
   var peg$f46 = function(c) { return c; };
-  var peg$f47 = function(content) { return "<" + content + ">"; };
+  var peg$f47 = function(content) { return "\u0001" + content; };
   var peg$f48 = function(chars) { return chars.join(""); };
   var peg$f49 = function(nested, content) { return "<" + content + ">"; };
   var peg$f50 = function(n) { return n; };

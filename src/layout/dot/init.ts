@@ -13,9 +13,12 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
 import { ShapeKind } from '../../common/types.js';
+import type { ShapeDesc, TextlabelT } from '../../common/types.js';
 import { bindShape } from '../../common/shapes.js';
-import { nodeAttr } from '../../common/poly-init.js';
+import { nodeAttr, readFontAttrs } from '../../common/poly-init.js';
 import { recordNodeInit } from '../../common/record.js';
+import { isHtmlValue, htmlValueContent } from '../../common/html-string.js';
+import { makeHtmlLabel } from '../../common/htmltable-pos.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL } from './fastgr.js';
 
@@ -116,6 +119,11 @@ export function dotInitSubg(g: Graph): void {
 // dotInitNodeEdge
 // ---------------------------------------------------------------------------
 
+function layoutMeasurer(g: Graph): TextMeasurer | undefined {
+  const gvc = g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined;
+  return gvc?.textMeasurer;
+}
+
 /**
  * Size record-shaped nodes from their field tree before ranking.
  * C's dot_init_node runs the shape initfn (record_init) for every node;
@@ -124,15 +132,54 @@ export function dotInitSubg(g: Graph): void {
  *
  * @see lib/common/utils.c:common_init_node
  */
-export function dotInitRecordNode(n: Node, g: Graph): void {
+export function dotInitRecordNode(n: Node, g: Graph, measurer: TextMeasurer): boolean {
   const shapeName = nodeAttr(n, g, 'shape');
-  if (shapeName === undefined) return;
+  if (shapeName === undefined) return false;
   const shape = bindShape(shapeName);
-  if (shape.kind !== ShapeKind.SH_RECORD) return;
-  const gvc = g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined;
-  if (!gvc?.textMeasurer) return;
+  if (shape.kind !== ShapeKind.SH_RECORD) return false;
   n.info.shape = shape;
-  recordNodeInit(n, g, gvc.textMeasurer);
+  recordNodeInit(n, g, measurer);
+  return true;
+}
+
+/** Label padding when no margin attr. @see lib/common/macros.h:PAD */
+const LABEL_PAD_X = 16;
+const LABEL_PAD_Y = 8;
+const SQRT2 = Math.SQRT2;
+
+/**
+ * Size a node with an HTML label before ranking: PAD the label, expand
+ * by sqrt(2) for ellipse shapes, clamp to the width/height minimums.
+ * Mirrors poly_init's sizing for label-driven dimensions.
+ *
+ * @see lib/common/shapes.c:poly_init
+ */
+export function dotInitHtmlNode(n: Node, g: Graph, measurer: TextMeasurer): void {
+  const labelAttr = nodeAttr(n, g, 'label');
+  if (labelAttr === undefined || !isHtmlValue(labelAttr)) return;
+  const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
+  const label = makeHtmlLabel(
+    htmlValueContent(labelAttr), fontname, fontsize, fontcolor, measurer,
+  );
+  n.info.label = label;
+  const shape = bindShape(nodeAttr(n, g, 'shape') ?? 'ellipse');
+  n.info.shape = shape;
+  sizeNodeFromLabel(n, g, shape, label);
+}
+
+/** Apply poly_init's label-driven node sizing. @see lib/common/shapes.c:poly_init */
+export function sizeNodeFromLabel(n: Node, g: Graph, shape: ShapeDesc, label: TextlabelT): void {
+  let dx = label.dimen.x + LABEL_PAD_X;
+  let dy = label.dimen.y + LABEL_PAD_Y;
+  const sides = shape.polygon?.sides ?? 4;
+  if (sides <= 2) { dx *= SQRT2; dy *= SQRT2; }
+  const w = parseFloat(nodeAttr(n, g, 'width') ?? '0.75') * 72;
+  const h = parseFloat(nodeAttr(n, g, 'height') ?? '0.5') * 72;
+  const bw = Math.max(dx, w);
+  const bh = Math.max(dy, h);
+  n.info.lw = bw / 2;
+  n.info.rw = bw / 2;
+  n.info.ht = bh;
 }
 
 /**
@@ -141,8 +188,9 @@ export function dotInitRecordNode(n: Node, g: Graph): void {
  * @see lib/dotgen/dotinit.c:dot_init_node_edge
  */
 export function dotInitNodeEdge(g: Graph): void {
+  const measurer = layoutMeasurer(g);
   for (const n of g.nodes.values()) {
-    dotInitRecordNode(n, g);
+    if (measurer && !dotInitRecordNode(n, g, measurer)) dotInitHtmlNode(n, g, measurer);
     dotInitNode(n);
   }
   for (const e of g.edges) dotInitEdge(e);

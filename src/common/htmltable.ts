@@ -109,11 +109,11 @@ const sizeContentItem = (
   return { w: 0, h: 0 };
 };
 
-const cellPad = (cell: HtmlCell, tbl: HtmlTable): number =>
+export const cellPad = (cell: HtmlCell, tbl: HtmlTable): number =>
   cell.cellpadding !== undefined ? cell.cellpadding
     : (tbl.cellpadding !== undefined ? tbl.cellpadding : DEFAULT_CELLPADDING);
 
-const cellBorder = (cell: HtmlCell, tbl: HtmlTable): number => {
+export const cellBorder = (cell: HtmlCell, tbl: HtmlTable): number => {
   if (cell.border !== undefined) return cell.border;
   const cb = tbl.cellborder;
   return cb !== undefined && cb >= 0 ? cb : DEFAULT_BORDER;
@@ -229,19 +229,49 @@ const sumTableDims = (a: TableDimArgs): { wd: number; ht: number } => {
   return { wd, ht };
 };
 
+/** Full table layout: per-cell sizes plus column/row dimensions. */
+export interface HtmlTableLayout {
+  entries: {
+    cell: HtmlCell; row: number; col: number;
+    colspan: number; rowspan: number; w: number; h: number;
+  }[];
+  widths: number[];
+  heights: number[];
+  spacing: number;
+  border: number;
+}
+
+/**
+ * Lay out a table: per-cell sizes and column/row dimension arrays.
+ * Shared by the size pass and the position pass.
+ * @see lib/common/htmltable.c:size_html_tbl
+ */
+export const layoutHtmlTable = (
+  tbl: HtmlTable,
+  measurer: TextMeasurer,
+): HtmlTableLayout => {
+  const spacing = getSpacing(tbl);
+  const border = getBorder(tbl);
+  const entries = buildLayouts(tbl, measurer);
+  if (entries.length === 0) {
+    return { entries, widths: [], heights: [], spacing, border };
+  }
+  const ncols = Math.max(...entries.map(e => e.col + e.colspan));
+  const nrows = Math.max(...entries.map(e => e.row + e.rowspan));
+  const widths = setColWidths(entries, ncols, spacing);
+  const heights = setRowHeights(entries, nrows, spacing);
+  return { entries, widths, heights, spacing, border };
+};
+
 /** @see lib/common/htmltable.c:size_html_tbl */
 const sizeTableInner = (
   tbl: HtmlTable,
   measurer: TextMeasurer,
 ): void => {
-  const spacing = getSpacing(tbl);
-  const border = getBorder(tbl);
-  const entries = buildLayouts(tbl, measurer);
+  const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer);
   if (entries.length === 0) { tbl.dimen = { w: 0, h: 0 }; return; }
   const ncols = Math.max(...entries.map(e => e.col + e.colspan));
   const nrows = Math.max(...entries.map(e => e.row + e.rowspan));
-  const widths = setColWidths(entries, ncols, spacing);
-  const heights = setRowHeights(entries, nrows, spacing);
   for (const e of entries) e.cell.dimen = { w: e.w, h: e.h };
   const { wd, ht } = sumTableDims({ widths, heights, ncols, nrows, spacing, border });
   const baseWd = tbl.width !== undefined ? tbl.width : 0;
