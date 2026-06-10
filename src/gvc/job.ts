@@ -197,6 +197,8 @@ export class RenderJob {
   nodeId: number = 0;
   edgeId: number = 0;
   clusterId: number = 0;
+  /** Whether the graph being rendered is directed (edge titles use -> vs --). */
+  directed: boolean = true;
 
   /** Active renderer plugin; set by render() before walkNodes. */
   renderer?: RendererPlugin;

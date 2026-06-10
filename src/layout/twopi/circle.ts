@@ -38,12 +38,22 @@ function neighborOf(ep: Edge, n: Node): Node | null {
 }
 
 /**
+ * Edges incident to n in agfstedge/agnxtedge order: out-edges first,
+ * then in-edges. C's traversal order is load-bearing for the fan
+ * assignment in setChildPositions.
+ * @see lib/cgraph/edge.c:agfstedge
+ */
+function incidentEdges(g: Graph, n: Node): Edge[] {
+  return [...n.outEdges(g), ...n.inEdges(g)];
+}
+
+/**
  * Return true if n is a leaf: at most one distinct neighbor.
  * @see lib/twopigen/circle.c:isLeaf
  */
 export function isLeaf(g: Graph, n: Node): boolean {
   let neighp: Node | null = null;
-  for (const ep of g.edges) {
+  for (const ep of incidentEdges(g, n)) {
     const np = neighborOf(ep, n);
     if (np === null || np === n) continue;
     if (neighp === null) { neighp = np; }
@@ -87,7 +97,7 @@ function relaxLeafEdge(g: Graph, next: Node, from: Node, nsteps: number): void {
  */
 export function setNStepsToLeaf(g: Graph, n: Node, prev: Node | null): void {
   const nsteps = rdata(n).nStepsToLeaf + 1;
-  for (const ep of g.edges) {
+  for (const ep of incidentEdges(g, n)) {
     const next = neighborOf(ep, n);
     if (next !== null && next !== prev) relaxLeafEdge(g, next, n, nsteps);
   }
@@ -131,7 +141,7 @@ export function setNStepsToCenter(g: Graph, n: Node): void {
   while (head < queue.length) {
     const cur = queue[head++]!;
     const nsteps = rdata(cur).nStepsToCenter + 1;
-    for (const ep of g.edges) {
+    for (const ep of incidentEdges(g, cur)) {
       if (ep.attrs.get('weight') === '0') continue;
       const next = neighborOf(ep, cur);
       if (next !== null) processBfsEdge(cur, next, nsteps, queue);
@@ -200,7 +210,7 @@ export function setChildSubtreeSpans(g: Graph, n: Node): void {
   const nd = rdata(n);
   const ratio = nd.span / nd.subtreeSize;
   const seen = new Set<Node>();
-  for (const ep of g.edges) {
+  for (const ep of incidentEdges(g, n)) {
     const next = neighborOf(ep, n);
     if (next !== null) applySpanToChild(g, n, next, ratio, seen);
   }
@@ -235,7 +245,7 @@ function applyThetaToChild(sg: Graph, n: Node, next: Node, theta: number): numbe
 export function setChildPositions(sg: Graph, n: Node): void {
   const nd = rdata(n);
   let theta = nd.parent === null ? 0 : nd.theta - nd.span / 2;
-  for (const ep of sg.edges) {
+  for (const ep of incidentEdges(sg, n)) {
     const next = neighborOf(ep, n);
     if (next !== null) theta = applyThetaToChild(sg, n, next, theta);
   }

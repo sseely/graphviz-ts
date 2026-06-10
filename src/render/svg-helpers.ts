@@ -184,8 +184,9 @@ export function svgEndNode(job: RenderJob): void {
 export function svgBeginEdge(e: Edge, job: RenderJob): void {
   const tid = escapeXml(e.tail.name);
   const hid = escapeXml(e.head.name);
+  const sep = job.directed ? '-&gt;' : '--';
   job.write('<g id="edge' + e.graphSeq + '" class="edge">\n');
-  job.write('<title>' + tid + '-&gt;' + hid + '</title>\n');
+  job.write('<title>' + tid + sep + hid + '</title>\n');
 }
 
 export function svgEndEdge(job: RenderJob): void {

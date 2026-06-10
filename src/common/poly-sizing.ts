@@ -64,6 +64,8 @@ export interface PolySizeParams {
   quantumIn: number;
   /** True when rankdir flips coordinates. @see GD_flip */
   flip: boolean;
+  /** penwidth attr (default 1, min 0). @see lib/common/const.h:DEFAULT_NODEPENWIDTH */
+  penwidth?: number;
 }
 
 /** Node geometry in points: left/right half-widths and height. */
@@ -71,6 +73,14 @@ export interface NodeSize {
   lw: number;
   rw: number;
   ht: number;
+}
+
+/** polySize result: node size plus unflipped outline extents (points). */
+export interface PolySizeResult extends NodeSize {
+  /** Outline width in points (bb + penwidth growth). @see ND_outline_width */
+  outlineW: number;
+  /** Outline height in points. @see ND_outline_height */
+  outlineH: number;
 }
 
 /** @see lib/common/utils.c:mapbool */
@@ -166,11 +176,39 @@ export function expandForShape(
   return b;
 }
 
-/** Grow an ellipse bb by GAP per extra periphery. @see shapes.c:poly_init (sides < 3) */
-function ellipsePeripheryBB(bb: Point, peripheries: number): Point {
-  if (peripheries <= 1) return bb;
-  const grow = 2 * GAP * (peripheries - 1);
-  return { x: bb.x + grow, y: bb.y + grow };
+/**
+ * Grow an ellipse bb by GAP per extra periphery; the outline adds half
+ * the penwidth on each side. @see shapes.c:poly_init (sides < 3)
+ */
+function ellipsePeripheryBB(
+  bb: Point,
+  peripheries: number,
+  penwidth: number,
+  hasOutline: boolean,
+): { bb: Point; outline: Point } {
+  let b = bb;
+  if (peripheries > 1) {
+    const grow = 2 * GAP * (peripheries - 1);
+    b = { x: bb.x + grow, y: bb.y + grow };
+  }
+  const outline = hasOutline ? { x: b.x + penwidth, y: b.y + penwidth } : b;
+  return { bb: b, outline };
+}
+
+/** Effective polygon geometry for the unit vertex loop. */
+export interface PolyGeom {
+  sides: number;
+  orientation: number;
+  distortion: number;
+  skew: number;
+}
+
+/** Distort, skew, orient, and scale one unit vertex. @see shapes.c:poly_init */
+function transformUnitVertex(R: Point, g: PolyGeom, c: { skewdist: number; gdistortion: number; gskew: number }, bb: Point): Point {
+  const D = { x: R.x * (c.skewdist + R.y * c.gdistortion) + R.y * c.gskew, y: R.y };
+  const alpha = (g.orientation * Math.PI) / 180 + Math.atan2(D.y, D.x);
+  const r = Math.hypot(D.x, D.y);
+  return { x: r * Math.cos(alpha) * bb.x, y: r * Math.sin(alpha) * bb.y };
 }
 
 /**
@@ -180,33 +218,25 @@ function ellipsePeripheryBB(bb: Point, peripheries: number): Point {
  */
 export function polygonVertices(
   bb: Point,
-  sides: number,
-  orientation: number,
-  distortion: number,
-  skew: number,
+  g: PolyGeom,
   isBox: boolean,
 ): { verts: Point[]; xmax: number; ymax: number } {
-  const sectorangle = (2 * Math.PI) / sides;
+  const sectorangle = (2 * Math.PI) / g.sides;
   const sidelength = Math.sin(sectorangle / 2);
-  const skewdist = Math.hypot(Math.abs(distortion) + Math.abs(skew), 1);
-  const gdistortion = (distortion * SQRT2) / Math.cos(sectorangle / 2);
-  const gskew = skew / 2;
+  const c = {
+    skewdist: Math.hypot(Math.abs(g.distortion) + Math.abs(g.skew), 1),
+    gdistortion: (g.distortion * SQRT2) / Math.cos(sectorangle / 2),
+    gskew: g.skew / 2,
+  };
   let angle = (sectorangle - Math.PI) / 2;
   const R = { x: 0.5 * Math.cos(angle), y: 0.5 * Math.sin(angle) };
   angle += (Math.PI - sectorangle) / 2;
-  let xmax = 0;
-  let ymax = 0;
   const verts: Point[] = [];
-  for (let i = 0; i < sides; i++) {
+  for (let i = 0; i < g.sides; i++) {
     angle += sectorangle;
     R.x += sidelength * Math.cos(angle);
     R.y += sidelength * Math.sin(angle);
-    const D = { x: R.x * (skewdist + R.y * gdistortion) + R.y * gskew, y: R.y };
-    const alpha = (orientation * Math.PI) / 180 + Math.atan2(D.y, D.x);
-    const r = Math.hypot(D.x, D.y);
-    const P = { x: r * Math.cos(alpha) * bb.x, y: r * Math.sin(alpha) * bb.y };
-    xmax = Math.max(Math.abs(P.x), xmax);
-    ymax = Math.max(Math.abs(P.y), ymax);
+    const P = transformUnitVertex(R, g, c, bb);
     verts.push(P);
     if (isBox) {
       // enforce exact symmetry of box
@@ -214,82 +244,121 @@ export function polygonVertices(
       break;
     }
   }
-  return { verts, xmax, ymax };
+  return { verts, ...vertexExtents(verts) };
+}
+
+/** Max |x| / |y| half-extents over a vertex list. */
+function vertexExtents(verts: Point[]): { xmax: number; ymax: number } {
+  let xmax = 0;
+  let ymax = 0;
+  for (const v of verts) {
+    xmax = Math.max(Math.abs(v.x), xmax);
+    ymax = Math.max(Math.abs(v.y), ymax);
+  }
+  return { xmax, ymax };
+}
+
+/** Mutable bisector-walk state shared across vertices. */
+interface BisectorState {
+  beta: number;
+  Qprev: Point;
+  sinx: number;
+  cosx: number;
+}
+
+/** Initial bisector state from the last distinct vertex pair. @see shapes.c:poly_init */
+function initBisector(verts: Point[], sides: number): BisectorState {
+  const R = verts[0]!;
+  let Q = R;
+  for (let j = 1; j < sides; j++) {
+    Q = verts[(sides - j) % sides]!;
+    if (Q.x !== R.x || Q.y !== R.y) break;
+  }
+  return { beta: Math.atan2(R.y - Q.y, R.x - Q.x), Qprev: Q, sinx: 0, cosx: 0 };
 }
 
 /**
- * Grow a polygon bb to cover the outermost periphery ring. Each base
- * vertex is offset along its angle bisector by GAP per periphery.
+ * Per-vertex GAP offset along the angle bisector; degenerate sides
+ * keep the previous offset (cylinder-style shapes).
+ * @see lib/common/shapes.c:poly_init (peripheries bisector loop)
+ */
+function bisectorOffset(verts: Point[], sides: number, i: number, st: BisectorState): void {
+  const V = verts[i]!;
+  if (V.x !== st.Qprev.x || V.y !== st.Qprev.y) {
+    let R = V;
+    for (let j = 1; j < sides; j++) {
+      R = verts[(i + j) % sides]!;
+      if (R.x !== V.x || R.y !== V.y) break;
+    }
+    const alpha = st.beta;
+    st.beta = Math.atan2(R.y - V.y, R.x - V.x);
+    const gamma = (alpha + Math.PI - st.beta) / 2;
+    const temp = GAP / Math.sin(gamma);
+    st.sinx = Math.sin(alpha - gamma) * temp;
+    st.cosx = Math.cos(alpha - gamma) * temp;
+  }
+  st.Qprev = V;
+}
+
+/**
+ * Grow a polygon bb to cover the outermost periphery ring, and the
+ * outline bb to cover the half-penwidth ring beyond it.
  * @see lib/common/shapes.c:poly_init (peripheries bisector loop)
  */
 export function polygonPeripheryBB(
   verts: Point[],
   sides: number,
-  peripheries: number,
+  p: { peripheries: number; penwidth: number; hasOutline: boolean },
   bb: Point,
-): Point {
-  let R = verts[0];
-  let Q = R;
-  for (let j = 1; j < sides; j++) {
-    Q = verts[(sides - j) % sides];
-    if (Q.x !== R.x || Q.y !== R.y) break;
-  }
-  let beta = Math.atan2(R.y - Q.y, R.x - Q.x);
-  let Qprev = Q;
-  let sinx = 0;
-  let cosx = 0;
+): { bb: Point; outline: Point } {
+  const st = initBisector(verts, sides);
   const out = { x: bb.x, y: bb.y };
+  const outl = { x: bb.x, y: bb.y };
   for (let i = 0; i < sides; i++) {
-    const V = verts[i];
-    if (V.x !== Qprev.x || V.y !== Qprev.y) {
-      // degenerate sides keep the previous offset (cylinder-style shapes)
-      for (let j = 1; j < sides; j++) {
-        R = verts[(i + j) % sides];
-        if (R.x !== V.x || R.y !== V.y) break;
-      }
-      const alpha = beta;
-      beta = Math.atan2(R.y - V.y, R.x - V.x);
-      const gamma = (alpha + Math.PI - beta) / 2;
-      const temp = GAP / Math.sin(gamma);
-      sinx = Math.sin(alpha - gamma) * temp;
-      cosx = Math.cos(alpha - gamma) * temp;
-    }
-    Qprev = V;
-    const off = peripheries - 1;
-    const P = { x: V.x + off * cosx, y: V.y + off * sinx };
+    bisectorOffset(verts, sides, i, st);
+    const off = p.peripheries - 1;
+    const V = verts[i]!;
+    const P = { x: V.x + off * st.cosx, y: V.y + off * st.sinx };
     out.x = Math.max(2 * Math.abs(P.x), out.x);
     out.y = Math.max(2 * Math.abs(P.y), out.y);
+    // outline ring: half the penwidth outside the outermost periphery
+    const k = p.hasOutline ? p.penwidth / 2 / GAP : 0;
+    const Q = { x: P.x + k * st.cosx, y: P.y + k * st.sinx };
+    outl.x = Math.max(2 * Math.abs(Q.x), outl.x);
+    outl.y = Math.max(2 * Math.abs(Q.y), outl.y);
   }
-  return out;
+  return { bb: out, outline: { x: Math.max(outl.x, out.x), y: Math.max(outl.y, out.y) } };
 }
 
 /**
  * Polygon (sides >= 3) bounding box: apply minimum dimensions against
- * the vertex extents, then grow for peripheries.
+ * the vertex extents, then grow for peripheries and the outline.
  * @see lib/common/shapes.c:poly_init (apply minimum dimensions)
  */
 function polygonBB(
   bb: Point,
-  widthPts: number,
-  heightPts: number,
+  minSize: Point,
+  p: PolySizeParams & { penwidth: number; hasOutline: boolean },
   sides: number,
-  p: PolySizeParams,
   isBox: boolean,
-): Point {
-  const { verts, xmax, ymax } = polygonVertices(
-    bb, sides, p.orientation, p.distortion, p.skew, isBox,
-  );
+): { bb: Point; outline: Point } {
+  const geom: PolyGeom = {
+    sides, orientation: p.orientation, distortion: p.distortion, skew: p.skew,
+  };
+  const { verts, xmax, ymax } = polygonVertices(bb, geom, isBox);
   const xmax2 = 2 * xmax;
   const ymax2 = 2 * ymax;
-  const nbb = { x: Math.max(widthPts, xmax2), y: Math.max(heightPts, ymax2) };
-  if (p.peripheries <= 1) return nbb;
+  const nbb = { x: Math.max(minSize.x, xmax2), y: Math.max(minSize.y, ymax2) };
+  // C gates the bisector walk on outp > 1; peripheries < 1 never enters it.
+  const walk = p.peripheries > 1 || (p.peripheries >= 1 && p.penwidth > 0);
+  if (!walk) return { bb: nbb, outline: nbb };
   const scalex = nbb.x / xmax2;
   const scaley = nbb.y / ymax2;
   for (const v of verts) {
     v.x *= scalex;
     v.y *= scaley;
   }
-  return polygonPeripheryBB(verts, isBox ? 4 : sides, p.peripheries, nbb);
+  return polygonPeripheryBB(verts, isBox ? 4 : sides, p, nbb);
 }
 
 /** Convert final node width/height (points) to lw/rw/ht. @see lib/common/utils.c:gv_nodesize */
@@ -298,43 +367,92 @@ export function gvNodesize(widthPts: number, heightPts: number, flip: boolean): 
   return { lw: widthPts / 2, rw: widthPts / 2, ht: heightPts };
 }
 
+/** Result of the fixedsize/regular constraint block. */
+interface SizeConstraints {
+  bb: Point;
+  width: number;
+  height: number;
+  fixedshape: boolean;
+}
+
+/** Apply fixedsize/regular minimums. @see shapes.c:poly_init ("increase node size") */
+function applySizeConstraints(
+  p: PolySizeParams,
+  bb0: Point,
+  width0: number,
+  height0: number,
+): SizeConstraints {
+  let c: SizeConstraints;
+  if (p.fixedsize === 'shape') {
+    c = { bb: { x: width0, y: height0 }, width: width0, height: height0, fixedshape: true };
+  } else if (mapbool(p.fixedsize)) {
+    c = { bb: { x: width0, y: height0 }, width: width0, height: height0, fixedshape: false };
+  } else {
+    const bb = { x: Math.max(width0, bb0.x), y: Math.max(height0, bb0.y) };
+    c = { bb, width: bb.x, height: bb.y, fixedshape: false };
+  }
+  if (p.regular) {
+    const m = Math.max(c.bb.x, c.bb.y);
+    c = { bb: { x: m, y: m }, width: m, height: m, fixedshape: c.fixedshape };
+  }
+  return c;
+}
+
 /**
  * Compute node dimensions from label size and attrs — the sizing
  * portion of poly_init followed by gv_nodesize.
  * @see lib/common/shapes.c:poly_init
  */
-export function polySize(p: PolySizeParams): NodeSize {
-  let { width, height } = initialSizePts(p);
-  let sides = p.sides;
+export function polySize(p: PolySizeParams): PolySizeResult {
+  const init = initialSizePts(p);
   const dimen = quantize(padLabelDimen(p.labelDimen, p.margin, p.isPlain), p.quantumIn);
+  const { sides, isBox } = effectiveShape(p);
   let bb: Point = { x: dimen.x, y: dimen.y };
+  if (!isBox) bb = expandForShape(bb, sides, init.height, labelValign(p));
+
+  const c = applySizeConstraints(p, bb, init.width, init.height);
+  const penwidth = p.penwidth ?? 1; // DEFAULT_NODEPENWIDTH
+  // C: outp exceeds peripheries when an outline ring is added.
+  const hasOutline = penwidth > 0 || p.peripheries < 1;
+  const grown = sides < 3
+    ? ellipsePeripheryBB(c.bb, p.peripheries, penwidth, hasOutline)
+    : polygonBB(c.bb, { x: c.width, y: c.height }, { ...p, penwidth, hasOutline }, sides, isBox);
+  return assembleResult(p, dimen, grown, c.fixedshape);
+}
+
+/** Effective sides (distortion/skew turn ellipses into 120-gons) and box test. */
+function effectiveShape(p: PolySizeParams): { sides: number; isBox: boolean } {
+  let sides = p.sides;
   if (sides <= 2 && (p.distortion !== 0 || p.skew !== 0)) sides = 120;
-  const ll = p.labelloc?.[0];
-  const valign = ll === 't' || ll === 'b' ? ll : 'c';
   const isBox =
     sides === 4 && Math.abs(p.orientation % 90) < 0.5 &&
     p.distortion === 0 && p.skew === 0;
-  if (!isBox) bb = expandForShape(bb, sides, height, valign);
+  return { sides, isBox };
+}
 
-  // increase node size to width/height if needed
-  let fixedshape = false;
-  if (p.fixedsize === 'shape') {
-    bb = { x: width, y: height };
-    fixedshape = true;
-  } else if (mapbool(p.fixedsize)) {
-    bb = { x: width, y: height };
-  } else {
-    bb.x = width = Math.max(width, bb.x);
-    bb.y = height = Math.max(height, bb.y);
-  }
-  if (p.regular) width = height = bb.x = bb.y = Math.max(bb.x, bb.y);
+/** labelloc -> vertical alignment character. @see shapes.c:poly_init */
+function labelValign(p: PolySizeParams): string {
+  const ll = p.labelloc?.[0];
+  return ll === 't' || ll === 'b' ? ll : 'c';
+}
 
-  bb = sides < 3
-    ? ellipsePeripheryBB(bb, p.peripheries)
-    : polygonBB(bb, width, height, sides, p, isBox);
-
+/** Final width/height selection (fixedshape covers the label) + gv_nodesize. */
+function assembleResult(
+  p: PolySizeParams,
+  dimen: Point,
+  grown: { bb: Point; outline: Point },
+  fixedshape: boolean,
+): PolySizeResult {
   if (fixedshape) {
-    return gvNodesize(Math.max(dimen.x, bb.x), Math.max(dimen.y, bb.y), p.flip);
+    return {
+      ...gvNodesize(Math.max(dimen.x, grown.bb.x), Math.max(dimen.y, grown.bb.y), p.flip),
+      outlineW: Math.max(dimen.x, grown.outline.x),
+      outlineH: Math.max(dimen.y, grown.outline.y),
+    };
   }
-  return gvNodesize(bb.x, bb.y, p.flip);
+  return {
+    ...gvNodesize(grown.bb.x, grown.bb.y, p.flip),
+    outlineW: grown.outline.x,
+    outlineH: grown.outline.y,
+  };
 }

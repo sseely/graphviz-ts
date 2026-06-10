@@ -32,6 +32,8 @@ import {
   EDGETYPE_NONE, EDGETYPE_LINE, EDGETYPE_ORTHO,
   EDGETYPE_PLINE,
 } from '../dot/splines.js';
+import { shiftGraphBBs } from '../pack/index.js';
+import { neatoSetAspect } from './init.js';
 
 // ---------------------------------------------------------------------------
 // Re-export EDGETYPE constants for consumers of this module
@@ -401,6 +403,68 @@ export function splineEdges(g: Graph): void {
   if (edgetype === EDGETYPE_NONE) return;
   if (edgetype === EDGETYPE_LINE) { RoutingHelper.straight(g); return; }
   splineEdgesImpl(g, { x: 4, y: 4 }, edgetype);
+}
+
+// ---------------------------------------------------------------------------
+// splineEdgesShifted — the C spline_edges wrapper
+// ---------------------------------------------------------------------------
+
+/**
+ * Graph bounding box in points derived from node pos (inches) and node
+ * sizes, expanded by any existing edge splines. xlabels are not ported
+ * (no engine sets them yet).
+ * @see lib/common/utils.c:compute_bb
+ */
+export function computeBBFromPos(g: Graph): { ll: Point; ur: Point } {
+  const bb = {
+    ll: { x: Infinity, y: Infinity },
+    ur: { x: -Infinity, y: -Infinity },
+  };
+  for (const n of g.nodes.values()) {
+    const px = (n.info.pos?.[0] ?? 0) * 72;
+    const py = (n.info.pos?.[1] ?? 0) * 72;
+    const sx = (n.info.lw + n.info.rw) / 2;
+    const sy = n.info.ht / 2;
+    bb.ll.x = Math.min(bb.ll.x, px - sx);
+    bb.ll.y = Math.min(bb.ll.y, py - sy);
+    bb.ur.x = Math.max(bb.ur.x, px + sx);
+    bb.ur.y = Math.max(bb.ur.y, py + sy);
+  }
+  return bb;
+}
+
+/**
+ * The C spline_edges wrapper: translate pos so the drawing's lower
+ * left corner is the origin, shift cluster bbs along, sync coord from
+ * pos (neato_set_aspect), then route edges by edge type.
+ * @see lib/neatogen/neatosplines.c:spline_edges
+ * @see lib/neatogen/neatosplines.c:spline_edges0
+ * @see lib/neatogen/neatosplines.c:shiftClusters
+ */
+/** Shift every node pos (inches) by the given offset. */
+function shiftAllPos(g: Graph, ox: number, oy: number): void {
+  for (const n of g.nodes.values()) {
+    if (!n.info.pos) n.info.pos = [0, 0];
+    n.info.pos[0] = (n.info.pos[0] ?? 0) - ox;
+    n.info.pos[1] = (n.info.pos[1] ?? 0) - oy;
+  }
+}
+
+/** Shift all top-level cluster bbs. @see lib/neatogen/neatosplines.c:shiftClusters */
+function shiftClusters(g: Graph, dx: number, dy: number): void {
+  const nClust = g.info.n_cluster ?? 0;
+  for (let c = 1; c <= nClust; c++) {
+    const sub = g.info.clust?.[c - 1];
+    if (sub) shiftGraphBBs(sub, dx, dy);
+  }
+}
+
+export function splineEdgesShifted(g: Graph): void {
+  const bb = computeBBFromPos(g);
+  shiftAllPos(g, bb.ll.x / 72, bb.ll.y / 72);
+  shiftClusters(g, -bb.ll.x, -bb.ll.y);
+  neatoSetAspect(g); // spline_edges0(g, true): pos -> coord
+  splineEdges(g);
 }
 
 // ---------------------------------------------------------------------------

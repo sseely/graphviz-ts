@@ -78,7 +78,7 @@ class SplineClipHelper {
   static clipSide(n: Node, box: Box | null, ps: Point[], pn: number, tail: boolean): number {
     const fn = SplineClipHelper.getInsideFn(n);
     if (fn == null) return tail ? 0 : pn - 4;
-    const ctx: InsideContext = { nodeCoord: n.info.coord, rw: n.info.rw, bp: box };
+    const ctx: InsideContext = { nodeCoord: n.info.coord, rw: n.info.rw, bp: box, node: n };
     let idx = tail ? 0 : pn - 4;
     const step = tail ? 3 : -3;
     const limit = tail ? pn - 4 : 0;
@@ -87,7 +87,11 @@ class SplineClipHelper {
       if (!fn(ctx, { x: ref.x - n.info.coord.x, y: ref.y - n.info.coord.y })) break;
       idx += step;
     }
-    SplineClipHelper.shapeClip0(ctx, fn, n, ps.slice(idx, idx + 4), tail);
+    const seg = ps.slice(idx, idx + 4);
+    SplineClipHelper.shapeClip0(ctx, fn, n, seg, tail);
+    // shape_clip0 mutates the curve in place in C; write the clipped
+    // segment back into the source array.
+    for (let i = 0; i < 4; i++) ps[idx + i] = seg[i];
     return idx;
   }
 

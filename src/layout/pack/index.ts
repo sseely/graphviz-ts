@@ -13,6 +13,7 @@ import type { Node } from '../../model/node.js';
 import type { Box, Point } from '../../model/geom.js';
 import { arrayRects } from './array-pack.js';
 import { polyRects } from './poly-pack.js';
+import { polyGraphs } from './poly-place.js';
 import {
   PackMode, PackInfo,
   PS2INCH, PK_COL_MAJOR, PK_USER_VALS, PK_LEFT_ALIGN,
@@ -108,14 +109,29 @@ export function subgraphBBs(gs: Graph[], margin: number): Box[] {
 // ---------------------------------------------------------------------------
 
 /**
- * Compute packing offsets for ng pre-laid-out subgraphs.
+ * Compute packing translation deltas for ng pre-laid-out subgraphs.
+ * Bounding boxes are raw (C compute_bb has no margin; the packers add
+ * the margin themselves).
  * @see lib/pack/pack.c:putGraphs
  */
-export function putGraphs(ng: number, gs: Graph[], _root: Graph, pinfo: PackInfo): Point[] | null {
-  if (ng <= 0) return [];
-  if (pinfo.mode === PackMode.Aspect) return null;
-  const bbs = subgraphBBs(gs, pinfo.margin);
-  return putRects(ng, bbs, pinfo);
+export function putGraphs(ng: number, gs: Graph[], root: Graph, pinfo: PackInfo): Point[] | null {
+  if (ng <= 0) return null;
+  const bbs = gs.map((g) => {
+    const bb = computeSubgraphBB(g, 0);
+    g.info.bb = bb;
+    return bb;
+  });
+  if (pinfo.mode <= PackMode.Graph) return polyGraphs(gs, root, pinfo, bbs);
+  if (pinfo.mode === PackMode.Array) {
+    if (pinfo.flags & PK_USER_VALS) {
+      pinfo.vals = gs.map((g) => {
+        const v = parseInt(g.attrs.get('sortv') ?? '', 10);
+        return !Number.isNaN(v) && v >= 0 ? v : 0;
+      });
+    }
+    return arrayRects(ng, bbs, pinfo);
+  }
+  return null;
 }
 
 /**
@@ -195,16 +211,17 @@ export function normalizeGraphBB(g: Graph): void {
 }
 
 /**
- * Apply packing offsets to subgraphs; shifts coords and pos.
+ * Apply packing translation DELTAS to subgraphs; shifts coords, pos,
+ * bbs, labels, and cluster bbs. Spline shifting (doSplines) is not
+ * ported — no packing caller has routed edges before packing yet.
  * @see lib/pack/pack.c:shiftGraphs
  */
 export function shiftGraphs(
   ng: number, gs: Graph[], pp: Point[], _root: Graph, _doSplines: boolean,
 ): number {
   for (let i = 0; i < ng; i++) {
-    const bb = computeSubgraphBB(gs[i], 0);
-    const dx = pp[i].x - bb.ll.x;
-    const dy = pp[i].y - bb.ll.y;
+    const dx = pp[i].x;
+    const dy = pp[i].y;
     if (dx !== 0 || dy !== 0) shiftOneGraph(gs[i], dx, dy);
   }
   return 0;
@@ -235,6 +252,10 @@ export function dfsCollect(g: Graph, start: Node, visited: Set<string>): Node[] 
 export function buildSubgraph(root: Graph, nodes: Node[], name: string): Graph {
   const sg = new (root.constructor as { new(name: string, kind: string): Graph })(name, 'directed');
   sg.info.dotroot = root;
+  // C ccomps creates components via agsubg: sg->root is the original
+  // root graph, so root attrs (ranksep etc.) stay visible.
+  sg.parent = root;
+  sg.root = root.root;
   for (const n of nodes) sg.nodes.set(n.name, n);
   return sg;
 }

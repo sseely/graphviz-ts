@@ -18,7 +18,7 @@ import {
 } from './init.js';
 import { circleLayout } from './circle.js';
 import { packSubgraphs, getPackInfo, PackMode } from '../pack/index.js';
-import { splineEdges } from '../neato/splines.js';
+import { splineEdgesShifted } from '../neato/splines.js';
 
 /** Margin constant matching C CL_OFFSET. @see lib/pack/pack.h:CL_OFFSET */
 export const CL_OFFSET = 8;
@@ -51,24 +51,15 @@ export function layoutComponent(g: Graph, sg: Graph, globalRoot: Center): Center
 /**
  * Build a PackInfo for multi-component packing.
  *
- * Uses PackMode.Graph as the default: the TS port does not implement
- * node-geometry polygon packing (PackMode.Node returns null from putRects),
- * so bounding-box graph packing is the effective fallback. getPackInfo can
- * override this if the graph declares an explicit pack attribute.
- *
  * @see lib/twopigen/twopiinit.c:twopi_layout (getPackInfo call with l_node)
  */
 export function buildPackInfo(g: Graph): PackInfo {
   const pinfo: PackInfo = {
     aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: false,
-    mode: PackMode.Graph, fixed: null, vals: null, flags: 0,
+    mode: PackMode.Node, fixed: null, vals: null, flags: 0,
   };
-  getPackInfo(g, PackMode.Graph, CL_OFFSET, pinfo);
-  // Node-mode packing requires shape geometry not available in this port;
-  // fall back to Graph (BB) packing so packSubgraphs can separate components.
-  if (pinfo.mode === PackMode.Node || pinfo.mode === PackMode.Cluster) {
-    pinfo.mode = PackMode.Graph;
-  }
+  // C: getPackInfo(g, l_node, CL_OFFSET) — polyomino node-mode packing.
+  getPackInfo(g, PackMode.Node, CL_OFFSET, pinfo);
   pinfo.doSplines = false;
   return pinfo;
 }
@@ -80,8 +71,9 @@ export function layoutSingle(g: Graph, comps: Graph[], globalRoot: Center, setRo
   if (setRoot && globalRoot === null && center !== null) {
     g.attrs.set('root', center.name);
   }
-  twopiCleanup(g); // ORDERING: before splineEdges
-  splineEdges(g);
+  twopiCleanup(g); // ORDERING: before spline routing
+  // C: spline_edges(g) — shifts pos to the origin, syncs coord, routes.
+  splineEdgesShifted(g);
   finaliseCoords(g);
 }
 
@@ -98,8 +90,9 @@ export function layoutMulti(g: Graph, comps: Graph[], globalRoot: Center, pinfo:
     layoutComponent(g, sg, globalRoot);
     finaliseCoords(sg);
   }
-  twopiCleanup(g); // ORDERING: before splineEdges
+  twopiCleanup(g); // ORDERING: before spline routing
   packSubgraphs(comps.length, comps, g, pinfo);
+  // C: spline_edges(g) — shifts pos to the origin, syncs coord, routes.
+  splineEdgesShifted(g);
   finaliseCoords(g);
-  splineEdges(g);
 }

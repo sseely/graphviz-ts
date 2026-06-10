@@ -21,9 +21,27 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/twopi/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md + tasks | claude | this directory only | - | [x] |
+| T2 | setEdgeType + spline_edges wrapper + working clipping (96d20fb) | claude | src/layout/twopi/*, src/common/*, src/model/edgeInfo.ts, src/render/* (journal) | T1 | [x] |
+| T3 | ranksep via ccomps root fix (7c28a30) | claude | src/layout/pack/index.ts (journal) | T2 | [x] |
+| T4 | chain fan order (agfstedge) + unit test per D5 (62e08a5) | claude | src/layout/twopi/circle.ts, twopi.test.ts | T3 | [x] |
+| T5 | polyomino component packing (9fb539f) | claude | src/layout/pack/* (journal), src/layout/twopi/pipeline.ts | T4 | [x] |
+| T6 | Verify; re-baseline; tick README; merge | claude | plans/test-parity/* | T2-T5 | [x] |
+
+## Mission summary (2026-06-10)
+
+- Tasks: 6 (recon 8a582ef, then 96d20fb, 7c28a30, 62e08a5, 9fb539f,
+  T6 this commit). Suite 990/32 → 997/25; all 6 twopi goldens + both
+  twopi/circo-adjacent unit tests owned by this mission pass.
+- The mission turned out to be mostly CROSS-CUTTING infrastructure:
+  working edge clipping (poly_inside, clip write-back, Center-port
+  clip, outline extents), the C spline_edges wrapper, and the
+  polyomino component packer — missions 5-8 all consume these.
+- Deviations documented in the journal: polygon walk on base ring,
+  no rankdir rotation in poly_inside, genPoly l_clust block and
+  doSplines edge-fill not ported (no callers yet).
+- Gates: tsc clean and 11 dot goldens green after every commit; one
+  unit test updated per D5 (hub-at-origin asserted pre-shift coords).
 
 ## T1 recon spec (run as-is)
 

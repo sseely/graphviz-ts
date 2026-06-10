@@ -111,13 +111,25 @@ describe('twopiCleanup', () => {
 // Star-graph leaf positions
 // ---------------------------------------------------------------------------
 
-describe('star-graph layout: hub at origin', () => {
-  it('places hub coord at approximately (0,0)', () => {
+describe('star-graph layout: hub centered', () => {
+  // C's spline_edges translates pos so the drawing's lower-left corner
+  // is the origin (decision D5: the old "hub at (0,0)" expectation
+  // contradicted C behavior). The hub must sit at the leaf-ring center.
+  it('places hub coord at the centroid of the leaves', () => {
     const g = makeStar(4);
     twopiLayout(g);
     const hub = g.nodes.get('hub')!;
-    expect(hub.info.coord.x).toBeCloseTo(0, 0);
-    expect(hub.info.coord.y).toBeCloseTo(0, 0);
+    let cx = 0;
+    let cy = 0;
+    let count = 0;
+    for (const [name, n] of g.nodes) {
+      if (name === 'hub') continue;
+      cx += n.info.coord.x;
+      cy += n.info.coord.y;
+      count++;
+    }
+    expect(hub.info.coord.x).toBeCloseTo(cx / count, 5);
+    expect(hub.info.coord.y).toBeCloseTo(cy / count, 5);
   });
 });
 
