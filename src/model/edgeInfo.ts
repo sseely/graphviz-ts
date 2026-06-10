@@ -340,7 +340,10 @@ export function makePort(): Port {
     bp: null,
     defined: false,
     constrained: false,
-    clip: false,
+    // C's default Center port has clip = true; edges clip to the node
+    // boundary unless head/tailclip disables it.
+    // @see lib/common/shapes.c:Center
+    clip: true,
     dyna: false,
     order: 0,
     side: 0,

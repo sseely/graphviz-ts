@@ -15,12 +15,13 @@ import type { TextMeasurer } from './textmeasure.js';
 import type { PolygonT, ShapeDesc, TextlabelT } from './types.js';
 import { ShapeKind } from './types.js';
 import { bindShape } from './shapes.js';
-import { buildNodeLabel, nodeAttr } from './poly-init.js';
+import { assignShapeInfo, buildNodeLabel, nodeAttr } from './poly-init.js';
 import { recordNodeInit } from './record.js';
 import {
   gvNodesize,
   polySize,
   type PolySizeParams,
+  type PolySizeResult,
 } from './poly-sizing.js';
 
 /** Default node half-width in points. C: DEFAULT_NODEWIDTH=0.75in/2 * 72 = 27 */
@@ -160,15 +161,24 @@ function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
   const flip = g.root.info.flip === true;
   const params = polySizeParamsFromNode(n, g, { ...shape, polygon: poly }, label.dimen, flip);
   // Unflipped size first so width/height (inches) match C's ND_width/ND_height.
-  const unflipped = polySize({ ...params, flip: false });
+  storeNodeSize(n, polySize({ ...params, flip: false }), flip);
+  // C poly_init also installs ND_shape_info; edge clipping (poly_inside)
+  // reads it during layout-time spline routing.
+  assignShapeInfo(n, poly);
+  return true;
+}
+
+/** Write polySize results onto the node (gv_nodesize flip applied last). */
+function storeNodeSize(n: Node, unflipped: PolySizeResult, flip: boolean): void {
   const widthPts = unflipped.lw + unflipped.rw;
   n.info.width = widthPts / 72;
   n.info.height = unflipped.ht / 72;
+  n.info.outline_width = unflipped.outlineW / 72;
+  n.info.outline_height = unflipped.outlineH / 72;
   const size = gvNodesize(widthPts, unflipped.ht, flip);
   n.info.lw = size.lw;
   n.info.rw = size.rw;
   n.info.ht = size.ht;
-  return true;
 }
 
 /** Pre-T1 fallback sizing from width/height attrs only (no measurer). */

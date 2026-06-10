@@ -115,6 +115,7 @@ export function emitGraphBackground(bb: Box, job: RenderJob): void {
  */
 export function svgBeginGraph(g: Graph, job: RenderJob): void {
   job.devscale = { x: 1, y: -1 };
+  job.directed = g.kind === 'directed' || g.kind === 'strict-directed';
   job.write(SVG_XML_DECL);
   job.write(SVG_DOCTYPE);
   job.write(SVG_GENERATOR_COMMENT);

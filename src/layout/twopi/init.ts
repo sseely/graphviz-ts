@@ -13,6 +13,8 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { TwopiAlgData } from '../../model/nodeInfo.js';
 import { THETA_UNSET } from '../../model/nodeInfo.js';
+import { setEdgeType } from '../dot/index.js';
+import { EDGETYPE_LINE } from '../neato/splines.js';
 
 /** Points per inch, used to convert pos (inches) → coord (points). */
 const POINTS_PER_INCH = 72;
@@ -96,6 +98,8 @@ export function twopiInitNodeEdge(g: Graph): void {
  * @see lib/twopigen/twopiinit.c:twopi_init_graph
  */
 export function twopiInitGraph(g: Graph): void {
+  // C: setEdgeType(g, EDGETYPE_LINE) — twopi routes straight lines.
+  setEdgeType(g, EDGETYPE_LINE);
   g.info.ndim = 2;
   twopiInitNodeEdge(g);
 }

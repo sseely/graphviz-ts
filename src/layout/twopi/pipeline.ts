@@ -18,7 +18,7 @@ import {
 } from './init.js';
 import { circleLayout } from './circle.js';
 import { packSubgraphs, getPackInfo, PackMode } from '../pack/index.js';
-import { splineEdges } from '../neato/splines.js';
+import { splineEdgesShifted } from '../neato/splines.js';
 
 /** Margin constant matching C CL_OFFSET. @see lib/pack/pack.h:CL_OFFSET */
 export const CL_OFFSET = 8;
@@ -80,8 +80,9 @@ export function layoutSingle(g: Graph, comps: Graph[], globalRoot: Center, setRo
   if (setRoot && globalRoot === null && center !== null) {
     g.attrs.set('root', center.name);
   }
-  twopiCleanup(g); // ORDERING: before splineEdges
-  splineEdges(g);
+  twopiCleanup(g); // ORDERING: before spline routing
+  // C: spline_edges(g) — shifts pos to the origin, syncs coord, routes.
+  splineEdgesShifted(g);
   finaliseCoords(g);
 }
 
@@ -98,8 +99,9 @@ export function layoutMulti(g: Graph, comps: Graph[], globalRoot: Center, pinfo:
     layoutComponent(g, sg, globalRoot);
     finaliseCoords(sg);
   }
-  twopiCleanup(g); // ORDERING: before splineEdges
+  twopiCleanup(g); // ORDERING: before spline routing
   packSubgraphs(comps.length, comps, g, pinfo);
+  // C: spline_edges(g) — shifts pos to the origin, syncs coord, routes.
+  splineEdgesShifted(g);
   finaliseCoords(g);
-  splineEdges(g);
 }

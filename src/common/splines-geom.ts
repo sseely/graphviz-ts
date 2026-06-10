@@ -89,6 +89,8 @@ export interface InsideContext {
   rw: number;
   /** Optional port box. */
   bp: Box | null;
+  /** Node being clipped; poly_inside reads its shape info. @see inside_t.s.n */
+  node?: unknown;
 }
 
 /**

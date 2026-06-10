@@ -26,17 +26,21 @@ import {
 } from './shapeData.js';
 import { polyGencode } from './poly-gencode.js';
 import { recordGencode } from './record.js';
+import { polyInside } from './poly-inside.js';
 
 // ---------------------------------------------------------------------------
 // Shape function tables
 // ---------------------------------------------------------------------------
+
+/** insidefn entry: ShapeFunctions types the context as unknown. */
+const POLY_INSIDE = polyInside as ShapeFunctions['insidefn'];
 
 /** Function table for all polygon-based shapes. @see lib/common/shapes.c */
 const POLY_FNS: ShapeFunctions = {
   initfn: null,
   freefn: null,
   portfn: null,
-  insidefn: null,
+  insidefn: POLY_INSIDE,
   pboxfn: null,
   codefn: polyGencode,
 };
