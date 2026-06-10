@@ -72,12 +72,12 @@ export function estimate_text_width_1pt(
 }
 
 /**
- * FreeType line-spacing ratio for Times-Roman on macOS (measured empirically).
- * C's FreeType gives size.y = 15.1pt for 14pt Times, matching the reference SVGs.
- * estimate_textspan_size uses LINESPACING=1.2, but FreeType gives ~1.0786.
+ * FreeType line-spacing ratio measured from graphviz 15.0.0 reference SVGs.
+ * 14pt Times-Roman label height = 16.5pt → ratio = 16.5/14.
+ * C's LINESPACING=1.20 is a fallback estimate; actual FreeType gives ~1.17857.
  * @see lib/common/textspan.c:estimate_textspan_size
  */
-export const FREETYPE_LINE_SPACING = 1.0786;
+export const FREETYPE_LINE_SPACING = 16.5 / 14;
 
 /**
  * LUT-based TextMeasurer. Width from LUT; height matches FreeType Times-Roman.

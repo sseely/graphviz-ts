@@ -29,7 +29,7 @@ function buildSpan(
     fontColor: fontcolor,
     fontFlags: 0,
     yoffset_layout: 0,
-    yoffset_centerline: 0.1 * fontsize,
+    yoffset_centerline: 0.05 * fontsize,
     size: { x: measured.w, y: measured.h },
     just: 'n',
   };
