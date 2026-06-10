@@ -9,6 +9,10 @@ Branch: `feature/parity-m7-fdp` off `feature/ts-port`.
 
 **Scoping notes (from project baseline):** Uses src/common/random.ts from mission 6. fdp-cluster height 46 vs 162: cluster handling collapses - check fdp recursive cluster layout (clust.c) before the force loop constants.
 
+After mission 1: failure set and first diffs for this family are
+unchanged (small labels were already at default node size) - see
+../baseline-after-m1.md.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 

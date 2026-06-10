@@ -9,6 +9,10 @@ Branch: `feature/parity-m2-osage` off `feature/ts-port`.
 
 **Scoping notes (from project baseline):** Baseline deltas are small (height off by 8-50pt) - likely margin/packing constants and cluster label space. Three tests share identical first-diff (96 vs 88), suggesting one shared cause.
 
+After mission 1: failure set and first diffs for this family are
+unchanged (small labels were already at default node size) - see
+../baseline-after-m1.md.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 

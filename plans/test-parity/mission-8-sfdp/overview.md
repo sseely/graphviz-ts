@@ -9,6 +9,10 @@ Branch: `feature/parity-m8-sfdp` off `feature/ts-port`.
 
 **Scoping notes (from project baseline):** Largest numeric port (multilevel coarsening + Barnes-Hut). Uses src/common/random.ts from mission 6. Expect the recon task to split this into many small port tasks; the QuadTree/SparseMatrix substrate may deserve its own sub-batch.
 
+After mission 1: failure set and first diffs for this family are
+unchanged (small labels were already at default node size) - see
+../baseline-after-m1.md.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 

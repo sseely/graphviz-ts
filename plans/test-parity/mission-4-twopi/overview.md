@@ -9,6 +9,13 @@ Branch: `feature/parity-m4-twopi` off `feature/ts-port`.
 
 **Scoping notes (from project baseline):** twopi-chain cy is -306 vs -18: placement is wrong, not just sizing (chain root should sit at origin-ish). The failing unit test (hub at (0,0), actual 68.9) points at the same root-placement bug. Per D5, if the unit test contradicts C behavior, fix the test; but first assume the test encodes C behavior here.
 
+**After mission 1 (see ../baseline-after-m1.md):** node sizing is fixed
+— twopi-star/twopi-root-attr no longer diff at `ellipse@rx` (27 vs
+33.44). All three of star/root-attr/tree now first-diff at
+`svg/g[1]/g[3][childCount]` 1 vs 2: an edge `<g>` is missing a child
+(likely the edge label or arrowhead element group). chain/disconnected/
+ranksep diffs unchanged.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 
