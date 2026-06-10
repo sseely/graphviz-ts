@@ -22,7 +22,7 @@ import type { LayoutEngine } from '../../gvc/context.js';
 import { circoInitGraph, freeNData } from './init.js';
 import { circoLayout } from './circular.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
-import { normalizeGraphBB } from '../pack/index.js';
+import { splineEdgesShifted } from '../neato/splines.js';
 
 // Re-export key functions for consumers that need them individually.
 export { circoInitGraph, freeNData } from './init.js';
@@ -42,8 +42,9 @@ export function circoLayoutFull(g: Graph): void {
   circoLayout(g);
   // ORDERING: alg freed HERE, before spline routing (matches C source).
   freeNData(g);
-  // splineEdges and dotneato_postprocess are renderer concerns in this port.
-  normalizeGraphBB(g);
+  // C: spline_edges(g) shifts pos to the origin, syncs coord (x72),
+  // and routes; dotneato_postprocess adds nothing further here.
+  splineEdgesShifted(g);
 }
 
 /** @see lib/circogen/circularinit.c:circo_cleanup */

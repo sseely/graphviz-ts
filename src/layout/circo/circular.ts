@@ -80,6 +80,8 @@ export function derivedComponents(g: Graph, dg: DerivedGraph, allEdges: DerivedE
       const dn = dg.nodes.get(n.name);
       if (dn) nodes.push(dn);
     }
+    // cgraph subgraph iteration is ID-ordered (root creation order).
+    nodes.sort((a, b) => a.orig.id - b.orig.id);
     const ns = new Set(nodes);
     const edges = allEdges.filter((e) => ns.has(e.tail) && ns.has(e.head));
     return { name: `_cc_${i}`, nodes, edges, parent: dg };
@@ -130,12 +132,10 @@ export function circularLayout(sg: SubGraph, realg: Graph, blockCount: number, a
 // @see lib/circogen/circularinit.c:copyPosns
 // ---------------------------------------------------------------------------
 
-export function copyPositions(sg: SubGraph): void {
-  for (const dn of sg.nodes) {
-    // pos was written to dn.orig.info.pos by assignPositions in layoutBlock
-    const p = dn.orig.info.pos ?? [0, 0];
-    dn.orig.info.coord = { x: p[0] ?? 0, y: p[1] ?? 0 };
-  }
+export function copyPositions(_sg: SubGraph): void {
+  // assignPositions writes straight to dn.orig.info.pos (inches), so
+  // the C derived->orig copy is already done. coord is synced from pos
+  // (x72) later by splineEdgesShifted, exactly like C spline_edges.
 }
 
 // ---------------------------------------------------------------------------
@@ -177,8 +177,9 @@ export function layoutMultiComponent(
 ): void {
   let bc = blockCount;
   for (const sg of comps) { bc = circularLayout(sg, g, bc, allEdges); adjustNodes(sg); }
-  const pinfo = { aspect: 1, sz: 0, margin: 8, doSplines: false, mode: PackMode.Graph, fixed: null, vals: null, flags: 0 };
-  getPackInfo(g, PackMode.Graph, 8, pinfo);
+  // C: getPackInfo(g, l_node, CL_OFFSET) — polyomino node-mode packing.
+  const pinfo = { aspect: 1, sz: 0, margin: 8, doSplines: false, mode: PackMode.Node, fixed: null, vals: null, flags: 0 };
+  getPackInfo(g, PackMode.Node, 8, pinfo);
   // Build proxy Graph objects for packSubgraphs
   const proxyGraphs = comps.map((sg) => buildProxyGraph(sg, g));
   packSubgraphs(comps.length, proxyGraphs, g, pinfo);
@@ -191,8 +192,9 @@ export function buildProxyGraph(sg: SubGraph, root: Graph): Graph {
   const proxy = new (root.constructor as new (n: string, k: string) => Graph)('_proxy', 'undirected');
   proxy.info.dotroot = root;
   for (const dn of sg.nodes) {
-    // Ensure original node coord is set before packing reads it.
-    dn.orig.info.coord = { x: dn.pos[0], y: dn.pos[1] };
+    // Packing reads coord in POINTS; layout pos is in inches.
+    const p = dn.orig.info.pos ?? [0, 0];
+    dn.orig.info.coord = { x: (p[0] ?? 0) * 72, y: (p[1] ?? 0) * 72 };
     proxy.nodes.set(dn.name, dn.orig);
   }
   return proxy;

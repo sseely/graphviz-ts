@@ -149,8 +149,13 @@ export function measureDist(leaf: SpanNode, anc: SpanNode, dist: number, change:
   const d = dist + 1;
   if (p.distone === 0) { p.leafone = leaf; p.distone = d; }
   else if (d > p.distone) {
-    if (p.leafone !== change) change = p.leafone;
-    p.leaftwo = p.leafone; p.disttwo = p.distone; p.leafone = leaf; p.distone = d;
+    // C only displaces leafone into the second slot when it is not the
+    // leaf being replaced (the `change` chain). @see blockpath.c:measure_distance
+    if (p.leafone !== change) {
+      if (!p.disttwo || p.leaftwo !== change) change = p.leafone;
+      p.leaftwo = p.leafone; p.disttwo = p.distone;
+    }
+    p.leafone = leaf; p.distone = d;
   } else if (d > p.disttwo) { p.leaftwo = leaf; p.disttwo = d; return; }
   else return;
   measureDist(leaf, p, d, change);
@@ -196,8 +201,10 @@ export function findLongestPath(spanNodes: SpanNode[]): SpanNode[] {
 // ---------------------------------------------------------------------------
 
 export function largestNodesize(list: Node[]): number {
+  // C reads ND_width/ND_height — INCHES; the whole circo layout space
+  // is inches until spline_edges converts to points.
   let s = 0;
-  for (const n of list) s = Math.max(s, n.info.lw, n.info.rw, n.info.ht);
+  for (const n of list) s = Math.max(s, n.info.width || 0, n.info.height || 0);
   return s;
 }
 
@@ -272,6 +279,10 @@ export function assignPositions(list: Node[], radius: number): void {
 
 export function layoutBlock(g: SubGraph, sn: Block, minDist: number, _state: CircState): Node[] {
   void _state;
+  // cgraph iterates subgraph nodes in root-creation (ID) order, not
+  // block-insertion order; the spanning-tree root and path order
+  // depend on it. @see lib/cgraph (dictionary ordering by AGID)
+  sn.subGraph.nodes.sort((a, b) => a.orig.id - b.orig.id);
   blockGraph(g.edges, sn);
   const edges = sn.subGraph.edges as unknown as DerivedEdge[];
   for (const dn of sn.subGraph.nodes) dn.cdata.flags &= ~FLAGS_ONPATH;
