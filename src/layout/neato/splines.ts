@@ -461,6 +461,7 @@ function shiftClusters(g: Graph, dx: number, dy: number): void {
 
 export function splineEdgesShifted(g: Graph): void {
   const bb = computeBBFromPos(g);
+  if (process.env['STRESS_DEBUG']) console.error('shiftBB', JSON.stringify(bb));
   shiftAllPos(g, bb.ll.x / 72, bb.ll.y / 72);
   shiftClusters(g, -bb.ll.x, -bb.ll.y);
   neatoSetAspect(g); // spline_edges0(g, true): pos -> coord

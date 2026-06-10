@@ -162,10 +162,27 @@ function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
   const params = polySizeParamsFromNode(n, g, { ...shape, polygon: poly }, label.dimen, flip);
   // Unflipped size first so width/height (inches) match C's ND_width/ND_height.
   storeNodeSize(n, polySize({ ...params, flip: false }), flip);
-  // C poly_init also installs ND_shape_info; edge clipping (poly_inside)
-  // reads it during layout-time spline routing.
-  assignShapeInfo(n, poly);
+  // C poly_init installs the ATTR-RESOLVED polygon into ND_shape_info
+  // (sides/orientation/skew/distortion/peripheries/regular); edge
+  // clipping and rendering read it.
+  assignShapeInfo(n, effectivePolygon(poly, params));
   return true;
+}
+
+/** The attr-resolved polygon poly_init stores. @see shapes.c:poly_init (poly->... assignments) */
+function effectivePolygon(poly: PolygonT, p: PolySizeParams): PolygonT {
+  let sides = p.sides;
+  // ellipses with distortion/skew become 120-gons
+  if (sides <= 2 && (p.distortion !== 0 || p.skew !== 0)) sides = 120;
+  return {
+    ...poly,
+    regular: p.regular,
+    peripheries: p.peripheries,
+    sides,
+    orientation: p.orientation,
+    distortion: p.distortion,
+    skew: p.skew,
+  };
 }
 
 /** Write polySize results onto the node (gv_nodesize flip applied last). */

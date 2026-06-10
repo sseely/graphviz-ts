@@ -301,6 +301,23 @@ function bisectorOffset(verts: Point[], sides: number, i: number, st: BisectorSt
 }
 
 /**
+ * The outline ring: each vertex offset along its angle bisector by
+ * half the penwidth (the stroked boundary poly_inside clips against).
+ * @see lib/common/shapes.c:poly_init (outline ring at outp)
+ */
+export function polygonOutlineRing(verts: Point[], sides: number, penwidth: number): Point[] {
+  const st = initBisector(verts, sides);
+  const out: Point[] = [];
+  const k = penwidth / 2 / GAP;
+  for (let i = 0; i < sides; i++) {
+    bisectorOffset(verts, sides, i, st);
+    const V = verts[i]!;
+    out.push({ x: V.x + k * st.cosx, y: V.y + k * st.sinx });
+  }
+  return out;
+}
+
+/**
  * Grow a polygon bb to cover the outermost periphery ring, and the
  * outline bb to cover the half-penwidth ring beyond it.
  * @see lib/common/shapes.c:poly_init (peripheries bisector loop)

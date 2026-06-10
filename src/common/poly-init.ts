@@ -95,6 +95,9 @@ export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   }
   buildNodeLabel(n, g, measurer);
 
+  // Layout-time common_init_node already installed the attr-resolved
+  // polygon; keep it (C never re-runs poly_init at render time).
+  if (n.info.shape_info !== undefined) return;
   const polyDesc = (n.info.shape as ShapeDesc).polygon;
   if (polyDesc !== null) assignShapeInfo(n, polyDesc);
 }
