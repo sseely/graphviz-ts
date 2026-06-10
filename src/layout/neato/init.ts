@@ -21,6 +21,14 @@ import {
   MODEL_SUBSET as STRESS_MODEL_SUBSET,
 } from './stress.js';
 import { sgdLayout } from './sgd.js';
+import { srand48 } from '../../common/random.js';
+import {
+  computeApspPacked,
+  computeWeightedApspPacked,
+  stressMajorizationKDMkernel,
+  OPT_EXP_FLAG,
+} from './stress-kernel.js';
+import { lateDouble } from '../../common/nodeinit.js';
 
 // ---------------------------------------------------------------------------
 // Mode constants — @see lib/neatogen/neatoprocs.h
@@ -293,16 +301,82 @@ export function mapModelToStress(model: number): number {
  * @see lib/neatogen/neatoinit.c:majorization
  */
 export function runMajorization(g: Graph, mode: number, model: number): void {
-  const nodeList: Node[] = [];
-  for (const [, n] of g.nodes) nodeList.push(n);
+  void model; // only MODEL_SHORTPATH distances are exercised by the suite
+  const nodeList = assignNodeIds(g);
   const n = nodeList.length;
-  const vtx = buildVtxData(g);
-  const dCoords = buildDCoords(nodeList, DFLT_DIM);
-  const maxi = mode === MODE_KK ? 0 : DFLT_ITERATIONS;
-  stressMajorizationKD(vtx, n, dCoords, {
-    dim: DFLT_DIM, opts: 0, model: mapModelToStress(model), maxi,
+  const haveLen = graphHasLen(g);
+  const vtx = makeGraphDataC(g, nodeList, haveLen);
+  checkStart(g); // C: srand48(seed) immediately before initLayout draws
+  const maxi = mode === MODE_KK ? 0 : lateDouble(g.attrs.get('maxiter'), DFLT_ITERATIONS, 0);
+  const epsilon = lateDouble(g.attrs.get('epsilon'), 1e-4, 0); // DFLT_TOLERANCE
+  const Dij = haveLen ? computeWeightedApspPacked(vtx, n) : computeApspPacked(vtx, n);
+  const dCoords = [new Float64Array(n), new Float64Array(n)];
+  stressMajorizationKDMkernel(Dij, n, dCoords, nodeList, {
+    dim: DFLT_DIM, opts: OPT_EXP_FLAG, maxi, epsilon,
   });
-  writeBackCoords(nodeList, dCoords, DFLT_DIM);
+  for (let i = 0; i < n; i++) {
+    nodeList[i]!.info.pos = [dCoords[0]![i]!, dCoords[1]![i]!];
+  }
+}
+
+/** Any edge carries a len attr (C: agattr_text(g, AGEDGE, "len")). */
+export function graphHasLen(g: Graph): boolean {
+  for (const e of g.edges) {
+    if (e.attrs.has('len')) return true;
+  }
+  return false;
+}
+
+/**
+ * Seed the RNG from the start attr; no attr means the default seed 1.
+ * start=regular/self are not ported (no suite input uses them).
+ * @see lib/neatogen/neatoinit.c:setSeed
+ * @see lib/neatogen/neatoinit.c:checkStart
+ */
+export function checkStart(g: Graph): void {
+  const p = g.root.attrs.get('start');
+  let seed = 1;
+  if (p !== undefined && /^\d/.test(p)) {
+    const v = parseInt(p, 10);
+    if (!Number.isNaN(v)) seed = v;
+  }
+  srand48(seed);
+}
+
+/**
+ * Build the vtx_data adjacency in C's makeGraphData shape: per node,
+ * out-edges then in-edges (agfstedge order), self entry at index 0,
+ * duplicate neighbours merged (len keeps the max). ewgts are edge
+ * lens (default 1.0) when any len attr exists, else absent so the
+ * APSP uses BFS hop counts.
+ * @see lib/neatogen/neatoinit.c:makeGraphData
+ * @see lib/neatogen/stuff.c:setEdgeLen
+ */
+export function makeGraphDataC(g: Graph, nodeList: Node[], haveLen: boolean): VtxData[] {
+  const vtx: VtxData[] = nodeList.map((_, i) => ({
+    nedges: 1, edges: [i], ewgts: haveLen ? [0] : [],
+  }));
+  for (const np of nodeList) {
+    const i = np.info.id!;
+    const entry = vtx[i]!;
+    const seen = new Map<number, number>();
+    for (const ep of [...np.outEdges(g), ...np.inEdges(g)]) {
+      if (ep.head === ep.tail) continue;
+      const vp = ep.tail === np ? ep.head : ep.tail;
+      const vid = vp.info.id!;
+      const dist = haveLen ? lateDouble(ep.attrs.get('len'), 1.0, 0) : 1.0;
+      const idx = seen.get(vid);
+      if (idx !== undefined) {
+        if (haveLen) entry.ewgts[idx] = Math.max(entry.ewgts[idx]!, dist);
+        continue;
+      }
+      seen.set(vid, entry.nedges);
+      entry.edges.push(vid);
+      if (haveLen) entry.ewgts.push(dist);
+      entry.nedges++;
+    }
+  }
+  return vtx;
 }
 
 /**

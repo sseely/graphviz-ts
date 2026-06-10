@@ -10,6 +10,7 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
+import type { Edge } from '../../model/edge.js';
 import type { Box, Point } from '../../model/geom.js';
 import { arrayRects } from './array-pack.js';
 import { polyRects } from './poly-pack.js';
@@ -182,6 +183,22 @@ export function shiftGraphBBs(g: Graph, dx: number, dy: number): void {
   }
 }
 
+/** Translate an edge's spline points and label. @see lib/pack/pack.c:shiftEdge */
+export function shiftEdgePoints(e: Edge, dx: number, dy: number): void {
+  const lab = e.info.label as { pos?: Point } | undefined;
+  if (lab?.pos) lab.pos = { x: lab.pos.x + dx, y: lab.pos.y + dy };
+  const spl = e.info.spl;
+  if (!spl) return;
+  for (const bz of spl.list) {
+    for (let k = 0; k < bz.size; k++) {
+      const p = bz.list[k]!;
+      bz.list[k] = { x: p.x + dx, y: p.y + dy };
+    }
+    if (bz.sflag) bz.sp = { x: bz.sp.x + dx, y: bz.sp.y + dy };
+    if (bz.eflag) bz.ep = { x: bz.ep.x + dx, y: bz.ep.y + dy };
+  }
+}
+
 export function shiftOneGraph(g: Graph, dx: number, dy: number): void {
   for (const n of g.nodes.values()) {
     const c = n.info.coord ?? { x: 0, y: 0 };
@@ -192,6 +209,8 @@ export function shiftOneGraph(g: Graph, dx: number, dy: number): void {
       n.info.pos[1] = (n.info.pos[1] ?? 0) + dy * PS2INCH;
     }
   }
+  // C shiftGraphs also translates routed splines (doSplines).
+  for (const e of g.edges) shiftEdgePoints(e, dx, dy);
   // C shiftGraph also translates the graph/cluster bb tree and labels.
   shiftGraphBBs(g, dx, dy);
 }
@@ -253,10 +272,14 @@ export function buildSubgraph(root: Graph, nodes: Node[], name: string): Graph {
   const sg = new (root.constructor as { new(name: string, kind: string): Graph })(name, 'directed');
   sg.info.dotroot = root;
   // C ccomps creates components via agsubg: sg->root is the original
-  // root graph, so root attrs (ranksep etc.) stay visible.
+  // root graph, so root attrs (ranksep etc.) stay visible, and
+  // iteration order is the root-creation (ID) order.
   sg.parent = root;
   sg.root = root.root;
-  for (const n of nodes) sg.nodes.set(n.name, n);
+  for (const n of [...nodes].sort((a, b) => a.id - b.id)) sg.nodes.set(n.name, n);
+  // Induce the component's edges (graphviz_node_induce equivalent).
+  const ns = new Set(nodes);
+  sg.edges = root.edges.filter((e) => ns.has(e.tail) && ns.has(e.head));
   return sg;
 }
 

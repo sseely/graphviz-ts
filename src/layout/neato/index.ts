@@ -31,7 +31,18 @@ import {
   MODEL_MDS,
 } from './init.js';
 import { removeOverlap } from './overlap.js';
-import { splineEdges } from './splines.js';
+import { splineEdgesShifted, EDGETYPE_LINE } from './splines.js';
+import { setEdgeType } from '../dot/index.js';
+import {
+  ccomps,
+  computeSubgraphBB,
+  getPackInfo,
+  packGraphs,
+  shiftOneGraph,
+  PackMode,
+  type PackInfo,
+} from '../pack/index.js';
+import { CL_OFFSET } from '../twopi/pipeline.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
 // Re-export constants for downstream consumers
@@ -128,20 +139,50 @@ export function maybeRemoveOverlap(g: Graph): void {
  * @see lib/neatogen/neatoinit.c:neato_layout
  */
 export function neatoLayout(g: Graph): void {
+  // C: neato_init_graph sets EDGETYPE_LINE before node/edge init.
+  setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);
   for (const [, n] of g.nodes) neatoInitNode(n);
 
   const mode = parseMode(g);
   const model = parseModel(g);
-  const seedRef = { value: g.info.seed ?? 0 };
-  setSeed(g, mode, seedRef);
-  g.info.seed = seedRef.value;
 
-  solveModel(g, mode, model);
-  maybeRemoveOverlap(g);
-  splineEdges(g);
-  neatoTranslate(g);
-  neatoSetAspect(g);
+  const comps = ccomps(g, '_neato_cc');
+  if (comps.length > 1) {
+    layoutComponents(g, comps, mode, model);
+  } else {
+    solveModel(g, mode, model); // srand48 happens inside (C checkStart)
+    maybeRemoveOverlap(g);
+    // C: spline_edges shifts pos to the origin, syncs coord, routes.
+    splineEdgesShifted(g);
+  }
+  g.info.bb = computeSubgraphBB(g, 0);
+}
+
+/**
+ * Disconnected graphs: stress-solve each component (the RNG is
+ * reseeded per component, as C's checkStart runs inside majorization),
+ * route its edges, then pack the components in l_node mode with
+ * spline-aware translation, and translate the whole drawing to the
+ * origin.
+ * @see lib/neatogen/neatoinit.c:neato_layout (Pack >= 0 branch)
+ */
+function layoutComponents(g: Graph, comps: Graph[], mode: number, model: number): void {
+  for (const gc of comps) {
+    setEdgeType(gc, EDGETYPE_LINE);
+    solveModel(gc, mode, model);
+    maybeRemoveOverlap(gc);
+    splineEdgesShifted(gc);
+  }
+  const pinfo: PackInfo = {
+    aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: true,
+    mode: PackMode.Node, fixed: null, vals: null, flags: 0,
+  };
+  getPackInfo(g, PackMode.Node, CL_OFFSET, pinfo);
+  packGraphs(comps.length, comps, g, pinfo);
+  // C: compute_bb + gv_postprocess translate the packed drawing.
+  const bb = computeSubgraphBB(g, 0);
+  if (bb.ll.x !== 0 || bb.ll.y !== 0) shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
 }
 
 // ---------------------------------------------------------------------------
