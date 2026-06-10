@@ -284,8 +284,9 @@ export function svgEndGraph(job: RenderJob): void {
 // ---------------------------------------------------------------------------
 
 export function svgBeginNode(n: Node, job: RenderJob): void {
-  job.nodeId++;
-  job.write('<g id="node' + job.nodeId + '" class="node">\n');
+  // C ids use the object's creation sequence (AGSEQ), not emission order.
+  // @see lib/common/emit.c:getObjId
+  job.write('<g id="node' + (n.id + 1) + '" class="node">\n');
   job.write('<title>' + escapeXml(n.name) + '</title>\n');
 }
 

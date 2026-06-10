@@ -121,9 +121,8 @@ function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob)
   }
 }
 
-/** @see lib/common/emit.c:emit_clusters (single cluster: recurse, box, label) */
+/** @see lib/common/emit.c:emit_clusters (single cluster: box, label, then recurse) */
 function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
-  renderClusters(sg, renderer, job);
   renderer.beginCluster?.(sg, job);
   const bb = sg.info.bb!;
   const rawPts = [
@@ -135,6 +134,8 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
   renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
   renderClusterLabel(sg, renderer, job);
   renderer.endCluster?.(sg, job);
+  // C lays down clusters before sub-clusters when drawing.
+  renderClusters(sg, renderer, job);
 }
 
 /**
