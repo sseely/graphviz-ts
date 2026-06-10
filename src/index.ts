@@ -51,7 +51,10 @@ export function renderSvg(dotSource: string, engine: string): string {
   const g = parse(dotSource);
   const ctx = makeContext();
   ctx.layout(g, engine);
-  return render(ctx, g, 'svg');
+  const svg = render(ctx, g, 'svg');
+  // C: gvFreeLayout runs after gvRenderJobs; cleanup is destructive.
+  ctx.freeLayout(g, engine);
+  return svg;
 }
 
 export { parse } from './parser/index.js';

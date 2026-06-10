@@ -163,7 +163,10 @@ export class GvcContext {
   }
 
   /**
-   * Run layout on g using engineName, then call cleanup.
+   * Run layout on g using engineName. Engine cleanup is deferred to
+   * freeLayout, matching C's gvLayoutJobs / gvFreeLayout split —
+   * rendering happens in between and must see the layout state
+   * (e.g. cluster arrays).
    *
    * @throws Error if the engine is not registered
    * @see lib/gvc/gvlayout.c:gvLayoutJobs
@@ -175,6 +178,19 @@ export class GvcContext {
     }
     if (g.info) g.info.gvc = this as unknown;
     engine.layout(g);
+  }
+
+  /**
+   * Release engine layout state after rendering.
+   *
+   * @throws Error if the engine is not registered
+   * @see lib/gvc/gvlayout.c:gvFreeLayout
+   */
+  freeLayout(g: Graph, engineName: string): void {
+    const engine = this.layouts.get(engineName);
+    if (engine === undefined) {
+      throw new Error(`no layout engine registered: ${engineName}`);
+    }
     engine.cleanup(g);
   }
 }
