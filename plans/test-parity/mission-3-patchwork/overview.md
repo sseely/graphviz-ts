@@ -26,9 +26,20 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/patchwork/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md + T2 spec (single root cause) | claude | this directory only | - | [x] |
+| T2 | [Translate cluster bbs with the drawing](T2-translate-clusters.md) | claude | src/layout/patchwork/index.ts, src/layout/pack/index.ts (journal) | T1 | [x] |
+| T3 | Verify goldens; re-baseline; tick README; merge | claude | plans/test-parity/* | T2 | [x] |
+
+## Mission summary (2026-06-10)
+
+- Tasks: 3 (T1 recon bad8b19, T2 fix e4b4576, T3 this commit).
+- Outcome: suite 984/38 → 990/32; all 6 patchwork goldens pass.
+  Single root cause: cluster bbs were never translated with the
+  drawing (C translate_bb / pack shiftGraph). The mission-2 pipeline
+  fix had already exposed this as the only remaining diff.
+- Decisions: pack shiftOneGraph extended to the full C shiftGraph
+  semantics (journal entry); no patchwork-only workaround.
+- Gates: tsc clean; 11 dot goldens green; no regressions.
 
 ## T1 recon spec (run as-is)
 

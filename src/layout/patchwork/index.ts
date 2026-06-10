@@ -17,7 +17,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { LayoutEngine } from '../../gvc/context.js';
-import { ps2inch, normalizeGraphBB } from '../pack/index.js';
+import { ps2inch, shiftOneGraph } from '../pack/index.js';
 import type { Rectangle } from './tree-map.js';
 import { treeMap } from './tree-map.js';
 
@@ -327,6 +327,18 @@ export function patchworkLayout(g: Graph): void {
 // Public layout engine
 // ---------------------------------------------------------------------------
 
+/**
+ * Translate the whole drawing (nodes, cluster bbs, labels) so the
+ * root bb's lower-left corner is the origin.
+ * @see lib/common/postproc.c:translate_drawing
+ * @see lib/common/postproc.c:translate_bb
+ */
+export function translateDrawing(g: Graph): void {
+  const bb = g.info.bb;
+  if (bb.ll.x === 0 && bb.ll.y === 0) return;
+  shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
+}
+
 /** @see lib/patchwork/patchworkinit.c:patchwork_layout */
 export function patchworkEngineLayout(g: Graph): void {
   if (g.nodes.size === 0 && (g.info.n_cluster ?? 0) === 0) return;
@@ -335,7 +347,8 @@ export function patchworkEngineLayout(g: Graph): void {
   }
   mkClusters(g);
   patchworkLayout(g);
-  normalizeGraphBB(g);
+  // C: dotneato_postprocess translates everything by -bb.LL.
+  translateDrawing(g);
 }
 
 /** @see lib/patchwork/patchworkinit.c:patchwork_cleanup */
