@@ -24,10 +24,35 @@ Mlimit + ULP churn in exactly these files)
   boundary handling (T_Wd/T_Ht).
 - xlayout.c: overlap expansion (use the 15.0.0 doRep WITHOUT the
   Mlimit branch).
-- dist.c/comp.c/clusteredges.c: distance init, components, cluster
-  edge routing.
-- fdp defaults printed by the oracle: useGrid=1, useNew=1,
-  numIters=600(?), K from... (verify with `fdp -v -v` next session).
+- comp.c/clusteredges.c: generalized components, cluster edge
+  routing (dist.c is empty at the tag).
+
+## Verified parameters and control flow (T1 completion, 2026-06-10)
+
+- fdpParms defaults (common/globals.c @15.0.0): useGrid=1, useNew=1,
+  numIters=-1, unscaled=50, C=0.0, Tfact=1.0, K=-1.0, T0=-1.0.
+  fdp_initParams: maxiter=600, K=0.3, seed=1, smode=INIT_RANDOM,
+  Cell=3K=0.9, pass1=300. xparams: T0=T_T0/2, numIters=300,
+  loopcnt=300, C stays 1.5 (static xParams; T_C=0 never overrides).
+- **Overlap pass:** DFLT_overlap="9:prism". Oracle experiments:
+  `-Goverlap=9:` is byte-identical to default on ALL 6 inputs →
+  prism NEVER runs (no prism/delaunay/sparse port needed).
+  `-Goverlap=true` changes ALL 6 outputs → x_layout force expansion
+  IS load-bearing everywhere. Guard the prism fallback with a throw.
+- All fdp math is double (no float32 discipline, unlike neato).
+- srand48(1) at every initPositions (per component & cluster level).
+- rand() fallback (dist2==0) unreachable for these inputs → throwing
+  guard instead of macOS-rand emulation.
+- Derived graph = agopen(Agstrictdirected); agedge(NULL name) dedups
+  on strict digraphs (cgraph/edge.c:262) → derived multi-edges merge,
+  ED_count tracks multiplicity. Edge direction canonicalized by C
+  POINTER order (`hd > tl`) → model as creation order (ND_id).
+- Grid walk = dtwalk over Dtoset: ascending (i,j); per-cell node
+  lists prepend → float accumulation order fixed by both.
+- normalize() no-op without "normalize" attr; sepFactor default
+  doAdd (4,4)pt → PS2INCH'd in x_layout.
+- Oracle == installed 15.0.0 (`fdp -V`); plain output captures in
+  /tmp/*.plain, spec extraction in /tmp/fdp-spec/.
 
 ## Oracle workflow (proven in mission 6)
 
@@ -43,14 +68,20 @@ src/common/random.ts (exact drand48), float32 matrix-ops discipline,
 splineEdgesShifted, polyomino packing with spline-aware shifts,
 cluster bb/label machinery, effective-polygon shape_info.
 
-## Plan
+## Plan (revised at T1 completion — see task files)
 
-- T2: port fdp_tLayout + grid.c + parameter resolution (tlayout
-  parms; seed handling; the adjust/cooling loop) for the FLAT
-  (cluster-free) case; validate fdp-simple/edge-both/large against
-  the oracle by maxiter bisection.
-- T3: cluster scheme from layout.c (derived graphs, ports, xLayout
-  WITHOUT Mlimit) for fdp-cluster/nested-cluster.
-- T4: components (fdp-disconnected packs like neato); pipeline tail
-  (splineEdgesShifted, clusters, translate).
-- T5: verify 6 goldens; re-baseline; merge.
+- T2 ([T2-flat-fdp.md](T2-flat-fdp.md)): rewrite src/layout/fdp/ to
+  the C architecture — fdp.h model, grid, tlayout, xlayout,
+  findCComp, layout.c flat path (deriveGraph runs unconditionally;
+  disconnected packing happens INSIDE layout() via putGraphs on
+  derived components), pipeline tail reusing M6 spline machinery.
+  Targets 4 goldens: fdp-simple, fdp-edge-both, fdp-large,
+  fdp-disconnected.
+- T3 ([T3-clusters.md](T3-clusters.md)): cluster scheme — ports
+  (getEdgeList/genPorts/expandCluster), recursion, finalCC borders,
+  evalPositions, cluster emission. Targets fdp-cluster,
+  fdp-nested-cluster.
+- T-final: full suite, baseline-after-m7.md, README tick, merge.
+
+Old T4/T5 folded in: component packing proved inseparable from
+layout() (T2), and the pipeline tail is part of the engine wiring.
