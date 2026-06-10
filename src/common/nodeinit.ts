@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: EPL-2.0
 /**
  * Common node geometry initialisation shared by all layout engines.
- * Ports common_init_node / gv_nodesize from lib/common/utils.c.
+ * Ports common_init_node / gv_nodesize from lib/common/utils.c: binds
+ * the shape, builds the label (text/html/record), and sizes the node
+ * from the label via the poly_init port.
  *
  * @see lib/common/utils.c:common_init_node
  * @see lib/common/utils.c:gv_nodesize
@@ -9,37 +11,188 @@
 
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
+import type { TextMeasurer } from './textmeasure.js';
+import type { PolygonT, ShapeDesc, TextlabelT } from './types.js';
+import { ShapeKind } from './types.js';
+import { bindShape } from './shapes.js';
+import { buildNodeLabel, nodeAttr } from './poly-init.js';
+import { recordNodeInit } from './record.js';
+import {
+  gvNodesize,
+  polySize,
+  type PolySizeParams,
+} from './poly-sizing.js';
 
 /** Default node half-width in points. C: DEFAULT_NODEWIDTH=0.75in/2 * 72 = 27 */
 export const DEFAULT_NODE_LW = 27;
 /** Default node full-height in points. C: DEFAULT_NODEHEIGHT=0.5in * 72 = 36 */
 export const DEFAULT_NODE_HT = 36;
 
+/** @see lib/common/const.h:DEFAULT_NODEWIDTH / MIN_NODEWIDTH */
+const DEFAULT_NODEWIDTH = 0.75;
+const MIN_NODEWIDTH = 0.01;
+/** @see lib/common/const.h:DEFAULT_NODEHEIGHT / MIN_NODEHEIGHT */
+const DEFAULT_NODEHEIGHT = 0.5;
+const MIN_NODEHEIGHT = 0.02;
+
+/** Parse a double attr with default and minimum. @see lib/common/utils.c:late_double */
+export function lateDouble(
+  s: string | undefined,
+  defaultValue: number,
+  minimum: number,
+): number {
+  if (s === undefined || s === '') return defaultValue;
+  const rv = parseFloat(s);
+  if (Number.isNaN(rv)) return defaultValue;
+  return rv < minimum ? minimum : rv;
+}
+
+/** Parse an int attr with default and minimum. @see lib/common/utils.c:late_int */
+export function lateInt(
+  s: string | undefined,
+  defaultValue: number,
+  minimum: number,
+): number {
+  if (s === undefined || s === '') return defaultValue;
+  const rv = parseInt(s, 10);
+  if (Number.isNaN(rv)) return defaultValue;
+  return rv < minimum ? minimum : rv;
+}
+
+/** @see lib/common/utils.c:mapbool */
+function mapbool(s: string | undefined): boolean {
+  if (!s || s.toLowerCase() === 'false' || s.toLowerCase() === 'no') return false;
+  if (s.toLowerCase() === 'true' || s.toLowerCase() === 'yes') return true;
+  const n = parseInt(s, 10);
+  return !Number.isNaN(n) && n !== 0;
+}
+
+/** The text measurer threaded through the GVC context, if any. */
+export function layoutMeasurer(g: Graph): TextMeasurer | undefined {
+  const gvc = g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined;
+  return gvc?.textMeasurer;
+}
+
 /**
- * Initialise per-node geometry with defaults from common_init_node + gv_nodesize.
- * Sets lw, rw, ht if not already set. Reads width/height attrs to override.
+ * Resolve sides/skew/distortion: builtin descriptors win; shape=polygon
+ * (sides == 0) reads the attrs. @see lib/common/shapes.c:poly_init
+ */
+function resolvePolyGeometry(
+  n: Node,
+  g: Graph,
+  poly: PolygonT,
+): { sides: number; skew: number; distortion: number } {
+  if (poly.sides !== 0) {
+    return { sides: poly.sides, skew: poly.skew, distortion: poly.distortion };
+  }
+  return {
+    skew: lateDouble(nodeAttr(n, g, 'skew'), 0.0, -100.0),
+    sides: lateInt(nodeAttr(n, g, 'sides'), 4, 0),
+    distortion: lateDouble(nodeAttr(n, g, 'distortion'), 0.0, -100.0),
+  };
+}
+
+/** User size in points: max of set width/height attrs, 0 when unset. @see shapes.c:userSize */
+function userSizePts(n: Node, g: Graph): number {
+  const uw = lateDouble(nodeAttr(n, g, 'width'), 0.0, MIN_NODEWIDTH);
+  const uh = lateDouble(nodeAttr(n, g, 'height'), 0.0, MIN_NODEHEIGHT);
+  return 72 * Math.max(uw, uh);
+}
+
+/** Size-related plain attrs read by poly_init. */
+function sizeAttrs(
+  n: Node,
+  g: Graph,
+): Pick<PolySizeParams, 'widthIn' | 'heightIn' | 'userSizePts' | 'margin' | 'fixedsize' | 'labelloc' | 'quantumIn'> {
+  return {
+    widthIn: lateDouble(nodeAttr(n, g, 'width'), DEFAULT_NODEWIDTH, MIN_NODEWIDTH),
+    heightIn: lateDouble(nodeAttr(n, g, 'height'), DEFAULT_NODEHEIGHT, MIN_NODEHEIGHT),
+    userSizePts: userSizePts(n, g),
+    margin: nodeAttr(n, g, 'margin'),
+    fixedsize: nodeAttr(n, g, 'fixedsize') ?? 'false',
+    labelloc: nodeAttr(n, g, 'labelloc'),
+    quantumIn: lateDouble(g.root.attrs.get('quantum'), 0.0, 0.0),
+  };
+}
+
+/**
+ * Resolve poly_init's sizing inputs from node attrs and the bound
+ * polygon descriptor.
+ * @see lib/common/shapes.c:poly_init (attribute resolution)
+ */
+export function polySizeParamsFromNode(
+  n: Node,
+  g: Graph,
+  shape: ShapeDesc & { polygon: PolygonT },
+  labelDimen: { x: number; y: number },
+  flip: boolean,
+): PolySizeParams {
+  const poly = shape.polygon;
+  return {
+    labelDimen,
+    ...resolvePolyGeometry(n, g, poly),
+    ...sizeAttrs(n, g),
+    peripheries: lateInt(nodeAttr(n, g, 'peripheries'), poly.peripheries, 0),
+    orientation: poly.orientation + lateDouble(nodeAttr(n, g, 'orientation'), 0.0, -360.0),
+    regular: poly.regular || mapbool(nodeAttr(n, g, 'regular')),
+    isPlain: shape.name === 'plain',
+    flip,
+  };
+}
+
+/**
+ * Build the label and size the node from it, mirroring
+ * common_init_node + the shape initfn. Returns false when the shape
+ * has no polygon descriptor to size against.
+ * @see lib/common/utils.c:common_init_node
+ */
+function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
+  const shape = bindShape(nodeAttr(n, g, 'shape') ?? 'ellipse');
+  n.info.shape = shape;
+  if (shape.kind === ShapeKind.SH_RECORD) {
+    recordNodeInit(n, g, measurer); // sets lw/rw/ht from the field tree
+    return true;
+  }
+  buildNodeLabel(n, g, measurer);
+  const poly = shape.polygon;
+  if (poly === null) return false;
+  const label = n.info.label as TextlabelT;
+  const flip = g.root.info.flip === true;
+  const params = polySizeParamsFromNode(n, g, { ...shape, polygon: poly }, label.dimen, flip);
+  // Unflipped size first so width/height (inches) match C's ND_width/ND_height.
+  const unflipped = polySize({ ...params, flip: false });
+  const widthPts = unflipped.lw + unflipped.rw;
+  n.info.width = widthPts / 72;
+  n.info.height = unflipped.ht / 72;
+  const size = gvNodesize(widthPts, unflipped.ht, flip);
+  n.info.lw = size.lw;
+  n.info.rw = size.rw;
+  n.info.ht = size.ht;
+  return true;
+}
+
+/** Pre-T1 fallback sizing from width/height attrs only (no measurer). */
+function initNodeDefaults(n: Node, g: Graph): void {
+  const widthIn = lateDouble(nodeAttr(n, g, 'width'), DEFAULT_NODEWIDTH, MIN_NODEWIDTH);
+  const heightIn = lateDouble(nodeAttr(n, g, 'height'), DEFAULT_NODEHEIGHT, MIN_NODEHEIGHT);
+  const flip = g.root.info.flip === true;
+  const w = flip ? heightIn : widthIn;
+  const h = flip ? widthIn : heightIn;
+  if (!n.info.lw) n.info.lw = Math.max((w * 72) / 2, DEFAULT_NODE_LW);
+  if (!n.info.rw) n.info.rw = Math.max((w * 72) / 2, DEFAULT_NODE_LW);
+  if (!n.info.ht) n.info.ht = Math.max(h * 72, DEFAULT_NODE_HT);
+}
+
+/**
+ * Initialise per-node geometry: shape-aware, label-driven sizing when a
+ * text measurer is available; width/height attr defaults otherwise.
  * @see lib/common/utils.c:common_init_node
  * @see lib/common/utils.c:gv_nodesize
  */
 export function commonInitNode(n: Node, g: Graph): void {
-  // Read width/height attrs (in inches), default to 0.75/0.5
-  const widthAttr = n.attrs.get('width');
-  const heightAttr = n.attrs.get('height');
-  const widthIn = widthAttr !== undefined ? parseFloat(widthAttr) : 0.75;
-  const heightIn = heightAttr !== undefined ? parseFloat(heightAttr) : 0.5;
-
-  // Convert to points and compute half-widths (matching gv_nodesize)
-  const flip = g.info.flip === true;
-  if (!flip) {
-    if (!n.info.lw) n.info.lw = Math.max((widthIn * 72) / 2, DEFAULT_NODE_LW);
-    if (!n.info.rw) n.info.rw = Math.max((widthIn * 72) / 2, DEFAULT_NODE_LW);
-    if (!n.info.ht) n.info.ht = Math.max(heightIn * 72, DEFAULT_NODE_HT);
-  } else {
-    // flip=true: width and height are swapped (rankdir=LR/RL)
-    if (!n.info.lw) n.info.lw = Math.max((heightIn * 72) / 2, DEFAULT_NODE_LW);
-    if (!n.info.rw) n.info.rw = Math.max((heightIn * 72) / 2, DEFAULT_NODE_LW);
-    if (!n.info.ht) n.info.ht = Math.max(widthIn * 72, DEFAULT_NODE_HT);
-  }
+  const measurer = layoutMeasurer(g);
+  if (measurer !== undefined && initNodeFromLabel(n, g, measurer)) return;
+  initNodeDefaults(n, g);
 }
 
 /** Call commonInitNode for every node in the graph. */

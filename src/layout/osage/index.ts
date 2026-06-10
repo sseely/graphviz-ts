@@ -22,6 +22,7 @@ import {
   PK_USER_VALS,
 } from '../pack/index.js';
 import { neatoInitNode } from '../neato/init.js';
+import { commonInitNode, layoutMeasurer } from '../../common/nodeinit.js';
 import { splineEdges, EDGETYPE_NONE } from '../neato/splines.js';
 
 // ---------------------------------------------------------------------------
@@ -86,8 +87,15 @@ export function isCluster(g: Graph): boolean {
  */
 export function clusterInitGraph(g: Graph): void {
   g.info.ndim = 2;
+  const measurer = layoutMeasurer(g);
   for (const n of g.nodes.values()) {
     neatoInitNode(n, 2);
+    if (measurer !== undefined) {
+      // C: neato_init_node -> common_init_node + gv_nodesize sizes
+      // every node from its label. @see lib/osage/osageinit.c:layout
+      commonInitNode(n, g);
+      continue;
+    }
     const wPts = (n.info.width || 0.75) * 72;
     const hPts = (n.info.height || 0.5) * 72;
     n.info.lw = wPts / 2;

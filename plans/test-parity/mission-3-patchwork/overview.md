@@ -9,6 +9,10 @@ Branch: `feature/parity-m3-patchwork` off `feature/ts-port`.
 
 **Scoping notes (from project baseline):** All six fail with childCount (one element short at the top level, e.g. 7 vs 8) - we emit one box/label too few. Likely the root cluster box or a graph label. Find the missing element first; sizes may already be close.
 
+After mission 1: failure set and first diffs for this family are
+unchanged (small labels were already at default node size) - see
+../baseline-after-m1.md.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 

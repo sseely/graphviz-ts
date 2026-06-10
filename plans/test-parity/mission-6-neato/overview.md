@@ -9,6 +9,10 @@ Branch: `feature/parity-m6-neato` off `feature/ts-port`.
 
 **Scoping notes (from project baseline):** FIRST TASK after recon: port srand48/drand48 to src/common/random.ts (shared with m7/m8) and replace any Math.random in layout code. Tolerance 0.5pt requires exact replication of initial placement (C: random with fixed seed via start=regular?) and majorization iterations. Check what GD_drawing/start attr defaults the refs imply.
 
+After mission 1: failure set and first diffs for this family are
+unchanged (small labels were already at default node size) - see
+../baseline-after-m1.md.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 
