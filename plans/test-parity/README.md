@@ -53,7 +53,7 @@ Baseline at project start: **957 passed / 44 failed** (see
 | # | Mission | Tests | Status |
 |---|---------|-------|--------|
 | 1 | [Shared node sizing](mission-1-node-sizing/overview.md) | cross-cutting | [x] |
-| 2 | [osage](mission-2-osage/overview.md) | 6 golden | [ ] |
+| 2 | [osage](mission-2-osage/overview.md) | 6 golden | [x] |
 | 3 | [patchwork](mission-3-patchwork/overview.md) | 6 golden | [ ] |
 | 4 | [twopi](mission-4-twopi/overview.md) | 5 golden + 1 unit | [ ] |
 | 5 | [circo](mission-5-circo/overview.md) | 6 golden + 1 unit | [ ] |

@@ -113,12 +113,14 @@ describe('AC4: registry alpha ordering', () => {
 // ---------------------------------------------------------------------------
 
 describe('AC5: layout() engine dispatch', () => {
-  it('calls layout then cleanup on the registered engine', () => {
+  it('layout() runs layout only; freeLayout() runs cleanup (C: gvLayoutJobs/gvFreeLayout)', () => {
     const ctx = new GvcContext(stubMeasurer);
     const engine = makeEngine('dot');
     ctx.register(engine);
     const g = {} as unknown as Graph;
     ctx.layout(g, 'dot');
+    expect(engine.calls).toEqual(['layout']);
+    ctx.freeLayout(g, 'dot');
     expect(engine.calls).toEqual(['layout', 'cleanup']);
   });
 

@@ -22,8 +22,12 @@ import {
   PK_USER_VALS,
 } from '../pack/index.js';
 import { neatoInitNode } from '../neato/init.js';
-import { commonInitNode, layoutMeasurer } from '../../common/nodeinit.js';
+import { commonInitNode, layoutMeasurer, lateInt } from '../../common/nodeinit.js';
+import { nodeAttr } from '../../common/poly-init.js';
 import { splineEdges, EDGETYPE_NONE } from '../neato/splines.js';
+// Engine-neutral C common functions, currently parked under layout/dot:
+import { doGraphLabel } from '../dot/graph-label.js';
+import { placeGraphLabel } from '../dot/position-bbox.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -37,9 +41,10 @@ const DFLT_SZ = 18;
 
 /**
  * Default margin in points passed to getPackInfo.
+ * @see lib/neatogen/adjust.h:DFLT_MARGIN (4 points)
  * @see lib/osage/osageinit.c:layout (DFLT_MARGIN argument to getPackInfo)
  */
-const DFLT_MARGIN = 8;
+const DFLT_MARGIN = 4;
 
 // ---------------------------------------------------------------------------
 // PARENT helper
@@ -122,6 +127,8 @@ export function mkClustersInto(
     if (isCluster(subg)) {
       subg.info.bb = subg.info.bb ??
         { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
+      // C binds Agraphinfo_t then builds the cluster label + border.
+      doGraphLabel(subg, layoutMeasurer(subg));
       clist.push(subg);
       mkClusters(subg, null, subg);
     } else {
@@ -184,7 +191,7 @@ export interface OsageChildLists {
   vals: number[];
 }
 
-/** Append one subcluster to the child lists. */
+/** Append one subcluster to the child lists. @see lib/osage/osageinit.c:layout (sortv via late_int) */
 export function addSubcluster(
   lists: OsageChildLists,
   subg: Graph,
@@ -192,7 +199,7 @@ export function addSubcluster(
 ): void {
   lists.gs.push(cloneBox(subg.info.bb));
   lists.childGraphs.push(subg);
-  if (useVals) lists.vals.push(0);
+  if (useVals) lists.vals.push(lateInt(subg.attrs.get('sortv'), 0, 0));
 }
 
 /** Append one loose node to the child lists and claim it for cluster g. */
@@ -208,7 +215,7 @@ export function addLooseNode(
     ur: { x: n.info.lw + n.info.rw, y: n.info.ht },
   });
   lists.childNodes.push(n);
-  if (useVals) lists.vals.push(0);
+  if (useVals) lists.vals.push(lateInt(nodeAttr(n, g, 'sortv'), 0, 0));
 }
 
 /** Build the child lists for g's direct children (subclusters + loose nodes). */
@@ -432,6 +439,8 @@ export function osageLayout(g: Graph): void {
   osageReposition(g, 0);
   const et = g.info.flags & 0xf;
   if (et !== EDGETYPE_NONE) splineEdges(g);
+  // C: dotneato_postprocess -> place_graph_label positions cluster labels.
+  placeGraphLabel(g);
 }
 
 // ---------------------------------------------------------------------------

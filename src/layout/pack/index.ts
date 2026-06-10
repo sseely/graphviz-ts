@@ -260,23 +260,67 @@ export function isConnected(g: Graph): boolean {
 // Attribute readers
 // ---------------------------------------------------------------------------
 
-/** Parse pack mode from string attribute. @see lib/pack/pack.c:parsePackModeInfo */
-export function parsePackModeInfo(p: string, dflt: PackMode, pinfo: PackInfo): PackMode {
-  if (!p) return dflt;
-  const s = p.trim().toLowerCase();
-  if (s === 'cluster') { pinfo.mode = PackMode.Cluster; return PackMode.Cluster; }
-  if (s === 'node')    { pinfo.mode = PackMode.Node;    return PackMode.Node; }
-  if (s === 'graph')   { pinfo.mode = PackMode.Graph;   return PackMode.Graph; }
-  if (s === 'array')   { pinfo.mode = PackMode.Array;   return PackMode.Array; }
-  if (s === 'aspect')  { pinfo.mode = PackMode.Aspect;  return PackMode.Aspect; }
-  pinfo.mode = dflt;
-  return dflt;
+/** Per-flag-character pinfo flag bits. @see lib/pack/pack.c:chkFlags */
+const PACK_FLAG_CHARS: Record<string, number> = {
+  c: PK_COL_MAJOR,
+  i: PK_INPUT_ORDER,
+  u: PK_USER_VALS,
+  t: PK_TOP_ALIGN,
+  b: PK_BOT_ALIGN,
+  l: PK_LEFT_ALIGN,
+  r: PK_RIGHT_ALIGN,
+};
+
+/**
+ * Consume an optional `_<flags>` suffix after "array", OR-ing flag
+ * bits into pinfo. Returns the rest of the string (possible column
+ * count). @see lib/pack/pack.c:chkFlags
+ */
+export function chkFlags(p: string, pinfo: PackInfo): string {
+  if (!p.startsWith('_')) return p;
+  let i = 1;
+  while (i < p.length) {
+    const bit = PACK_FLAG_CHARS[p[i]!];
+    if (bit === undefined) break;
+    pinfo.flags |= bit;
+    i++;
+  }
+  return p.slice(i);
 }
 
-/** Read pack mode from graph attribute. @see lib/pack/pack.c:getPackModeInfo */
+/** Parse pack mode from string attribute. @see lib/pack/pack.c:parsePackModeInfo */
+export function parsePackModeInfo(p: string, dflt: PackMode, pinfo: PackInfo): PackMode {
+  pinfo.flags = 0;
+  pinfo.mode = dflt;
+  pinfo.sz = 0;
+  pinfo.vals = null;
+  if (p.startsWith('array')) {
+    pinfo.mode = PackMode.Array;
+    const rest = chkFlags(p.slice('array'.length), pinfo);
+    const i = parseInt(rest, 10);
+    if (!Number.isNaN(i) && i > 0) pinfo.sz = i;
+  } else if (p.startsWith('aspect')) {
+    pinfo.mode = PackMode.Aspect;
+    const v = parseFloat(p.slice('aspect'.length));
+    pinfo.aspect = !Number.isNaN(v) && v > 0 ? v : 1;
+  } else if (p === 'cluster') {
+    pinfo.mode = PackMode.Cluster;
+  } else if (p === 'graph') {
+    pinfo.mode = PackMode.Graph;
+  } else if (p === 'node') {
+    pinfo.mode = PackMode.Node;
+  }
+  return pinfo.mode;
+}
+
+/** Graph attr with root-default fallback (agget semantics for graphs). */
+function graphAttr(g: Graph, key: string): string | undefined {
+  return g.attrs.get(key) ?? (g !== g.root ? g.root.attrs.get(key) : undefined);
+}
+
+/** Read pack mode from the "packmode" graph attr. @see lib/pack/pack.c:getPackModeInfo */
 export function getPackModeInfo(g: Graph, dflt: PackMode, pinfo: PackInfo): PackMode {
-  const s = (g.info as unknown as Record<string, unknown>)['packMode'] as string | undefined;
-  return parsePackModeInfo(s ?? '', dflt, pinfo);
+  return parsePackModeInfo(graphAttr(g, 'packmode') ?? '', dflt, pinfo);
 }
 
 /** Get pack mode from graph. @see lib/pack/pack.c:getPackMode */
@@ -285,12 +329,18 @@ export function getPackMode(g: Graph, dflt: PackMode): PackMode {
   return getPackModeInfo(g, dflt, pinfo);
 }
 
-/** Get margin/pack value. @see lib/pack/pack.c:getPack */
+/**
+ * Read the "pack" graph attr: unset → notDef; non-negative int →
+ * value; true-ish ('t'/'T') → dflt; otherwise notDef.
+ * @see lib/pack/pack.c:getPack
+ */
 export function getPack(g: Graph, notDef: number, dflt: number): number {
-  const v = (g.info as unknown as Record<string, unknown>)['pack'];
-  if (v === undefined || v === null) return notDef;
-  const n = Number(v);
-  return isNaN(n) ? dflt : n;
+  const p = graphAttr(g, 'pack');
+  if (p === undefined) return notDef;
+  const i = parseInt(p, 10);
+  if (!Number.isNaN(i) && i >= 0) return i;
+  if (p[0] === 't' || p[0] === 'T') return dflt;
+  return notDef;
 }
 
 /** Populate PackInfo from graph attributes. @see lib/pack/pack.c:getPackInfo */
