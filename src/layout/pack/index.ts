@@ -235,6 +235,10 @@ export function dfsCollect(g: Graph, start: Node, visited: Set<string>): Node[] 
 export function buildSubgraph(root: Graph, nodes: Node[], name: string): Graph {
   const sg = new (root.constructor as { new(name: string, kind: string): Graph })(name, 'directed');
   sg.info.dotroot = root;
+  // C ccomps creates components via agsubg: sg->root is the original
+  // root graph, so root attrs (ranksep etc.) stay visible.
+  sg.parent = root;
+  sg.root = root.root;
   for (const n of nodes) sg.nodes.set(n.name, n);
   return sg;
 }
