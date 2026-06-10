@@ -23,6 +23,7 @@ import { circoInitGraph, freeNData } from './init.js';
 import { circoLayout } from './circular.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
 import { splineEdgesShifted } from '../neato/splines.js';
+import { computeSubgraphBB } from '../pack/index.js';
 
 // Re-export key functions for consumers that need them individually.
 export { circoInitGraph, freeNData } from './init.js';
@@ -45,6 +46,8 @@ export function circoLayoutFull(g: Graph): void {
   // C: spline_edges(g) shifts pos to the origin, syncs coord (x72),
   // and routes; dotneato_postprocess adds nothing further here.
   splineEdgesShifted(g);
+  // Refresh the root bb (packing may have left a stale pre-shift box).
+  g.info.bb = computeSubgraphBB(g, 0);
 }
 
 /** @see lib/circogen/circularinit.c:circo_cleanup */
