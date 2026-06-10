@@ -344,6 +344,7 @@ export function stressMajorizationKDMkernel(
   for (; iterations < maxi && !converged; iterations++) {
     buildLap1(st.lap1, lap2, coords, { n, dim, exp });
     const newStress = computeStress(st);
+    if (process.env['STRESS_DEBUG'] && iterations % 5 === 0) console.error(newStress.toFixed(3));
     const change = Math.abs(oldStress - newStress);
     converged = change / oldStress < o.epsilon || newStress < o.epsilon;
     oldStress = newStress;

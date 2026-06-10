@@ -43,6 +43,10 @@ import {
   type PackInfo,
 } from '../pack/index.js';
 import { CL_OFFSET } from '../twopi/pipeline.js';
+import { isACluster } from '../dot/rank.js';
+import { doGraphLabel } from '../dot/graph-label.js';
+import { placeGraphLabel } from '../dot/position-bbox.js';
+import { layoutMeasurer } from '../../common/nodeinit.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
 
 // Re-export constants for downstream consumers
@@ -113,7 +117,10 @@ export function parseModel(g: Graph): number {
  * @see lib/neatogen/neatoinit.c:neato_layout (removeOverlapWith call)
  */
 export function maybeRemoveOverlap(g: Graph): void {
-  if (g.info.overlap === 'false') return;
+  // C: graphAdjustMode defaults to AM_NONE — no overlap attr means no
+  // overlap removal ("overlap: none"). VPSC runs only on request.
+  const overlap = g.attrs.get('overlap');
+  if (overlap === undefined || overlap === 'true') return;
   const nodes = Array.from(g.nodes.values());
   const nodesep = (g.info.nodesep ?? 18) / 72; // points → inches
   removeOverlap(nodes, { x: nodesep / 2, y: nodesep / 2 });
@@ -156,7 +163,29 @@ export function neatoLayout(g: Graph): void {
     // C: spline_edges shifts pos to the origin, syncs coord, routes.
     splineEdgesShifted(g);
   }
+  // C: addCluster registers top-level clusters (label + compute_bb)
+  // after layout; gv_postprocess then places the cluster labels.
+  addClusters(g);
   g.info.bb = computeSubgraphBB(g, 0);
+  placeGraphLabel(g);
+}
+
+/**
+ * Register direct cluster subgraphs: build their labels and tight
+ * member bounding boxes for emission.
+ * @see lib/neatogen/neatoinit.c:addCluster
+ */
+function addClusters(g: Graph): void {
+  const clusters: Graph[] = [];
+  for (const subg of g.subgraphs.values()) {
+    if (!isACluster(subg) || subg === g.root) continue;
+    doGraphLabel(subg, layoutMeasurer(g));
+    subg.info.bb = computeSubgraphBB(subg, 0);
+    clusters.push(subg);
+  }
+  if (clusters.length === 0) return;
+  g.info.clust = clusters;
+  g.info.n_cluster = clusters.length;
 }
 
 /**

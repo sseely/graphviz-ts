@@ -8,6 +8,7 @@
 
 import type { PolygonT } from './types.js';
 import type { Point } from '../model/geom.js';
+import { polygonVertices } from './poly-sizing.js';
 
 /** Compute vertices for an ellipse/circle (sides <= 2). */
 export function ellipseVertices(w: number, h: number): Point[] {
@@ -38,28 +39,32 @@ export function boxVertices(w: number, h: number): Point[] {
  * (top-right for n=4, top for n=3).
  * @see lib/common/shapes.c:poly_init (polygon vertex loop)
  */
-export function generalPolyVertices(
-  sides: number,
-  rx: number,
-  ry: number,
-  orientDeg: number,
-): Point[] {
-  const orient = (orientDeg * Math.PI) / 180;
-  const pts: Point[] = [];
-  for (let i = 0; i < sides; i++) {
-    // C starts at first_angle = 3π/n - π/2 (= offset by 1.5 sectors)
-    const angle = orient + (2 * Math.PI * (i + 1.5)) / sides - Math.PI / 2;
-    pts.push({ x: rx * Math.cos(angle), y: ry * Math.sin(angle) });
-  }
-  return pts;
+export function generalPolyVertices(poly: PolygonT, w: number, h: number): Point[] {
+  // C computes the unit ring (distort/skew/orient), then scales so its
+  // extents exactly span the node box. @see shapes.c:poly_init (scale)
+  const { verts, xmax, ymax } = polygonVertices(
+    { x: w, y: h },
+    {
+      sides: poly.sides,
+      orientation: poly.orientation,
+      distortion: poly.distortion,
+      skew: poly.skew,
+    },
+    false,
+  );
+  const sx = xmax !== 0 ? w / (2 * xmax) : 1;
+  const sy = ymax !== 0 ? h / (2 * ymax) : 1;
+  return verts.map((v) => ({ x: v.x * sx, y: v.y * sy }));
 }
 
 /** Choose vertex layout strategy based on polygon descriptor and size. */
 export function computeVertices(poly: PolygonT, w: number, h: number): Point[] {
   const sides = poly.sides;
   if (sides <= 2) return ellipseVertices(w, h);
-  if (sides === 4 && poly.distortion === 0 && poly.skew === 0) {
+  // C's isBox test: right angles only (diamond = orientation 45).
+  if (sides === 4 && Math.abs(poly.orientation % 90) < 0.5
+      && poly.distortion === 0 && poly.skew === 0) {
     return boxVertices(w, h);
   }
-  return generalPolyVertices(sides, w / 2, h / 2, poly.orientation);
+  return generalPolyVertices(poly, w, h);
 }

@@ -20,6 +20,7 @@ import type { Point } from '../model/geom.js';
 import type { Node } from '../model/node.js';
 import type { PolygonT } from './types.js';
 import type { InsideContext } from './splines-geom.js';
+import { polygonOutlineRing } from './poly-sizing.js';
 
 /** Test if p0 and p1 are on the same side of the line L0-L1. @see shapes.c:same_side */
 export function sameSide(p0: Point, p1: Point, L0: Point, L1: Point): boolean {
@@ -113,7 +114,9 @@ function insideShape(n: Node, poly: PolygonT, p: Point): boolean {
   if (poly.sides <= 2) {
     return Math.hypot(P.x / sc.boxURx, P.y / sc.boxURy) < 1;
   }
-  return polygonWalk(P, poly.vertices!, poly.sides);
+  // C walks the outline ring (base + penwidth/2 bisector offsets).
+  const ring = polygonOutlineRing(poly.vertices!, poly.sides, 1);
+  return polygonWalk(P, ring, poly.sides);
 }
 
 export function polyInside(ctx: InsideContext, p: Point): boolean {
