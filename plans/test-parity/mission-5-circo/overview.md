@@ -5,6 +5,12 @@ Branch: `feature/parity-m5-circo` off `feature/ts-port`.
 **Owned tests:** circo-simple, circo-star, circo-biconn, circo-disconnected, circo-record, circo-html-label + unit test src/layout/circo/circo.test.ts "equal radius"
 
 **C spec:** ~/git/graphviz/lib/circogen/ - circularinit.c, circular.c, block.c, blocktree.c, blockpath.c, circpos.c, edgelist.c, nodelist.c
+
+**SPEC VERSION (2026-06-10, see decision journal):** circogen is
+identical between 15.0.0 and current HEAD, but if any existing TS circo
+code was ported from 14.1.5: find_longest_path gained a null-guard at
+15.0.0 (a24556435, returns an empty nodelist when no common ancestor
+exists — 14.1.5 crashed there). Port the 15.0.0 form.
 **Our port:** src/layout/circo/ (9 files, ~1517 lines)
 
 **Scoping notes (from project baseline):** circo-simple height 105 vs 252: the C layout is much larger - block radius computation likely diverges. The equal-radius unit test fails by 0.05 (close), so the per-node placement is nearly right but the ring size is not.
