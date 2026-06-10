@@ -26,8 +26,19 @@ may have changed this mission's failure set.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Recon: gap-analysis.md (units + pipeline root causes) | claude | this directory only | - | [x] |
-| T2 | Units (inches) + C pipeline (edge type, splineEdgesShifted, l_node packing, recordInit width) | claude | src/layout/circo/*, src/common/record.ts (journal) | T1 | [ ] |
-| T3 | Residuals per test; equal-radius unit test; re-baseline; merge | claude | src/layout/circo/*, plans/test-parity/* | T2 | [ ] |
+| T2 | Units (inches) + C pipeline (edge type, splineEdgesShifted, l_node packing, recordInit width) | claude | src/layout/circo/*, src/common/record.ts (journal) | T1 | [x] |
+| T3 | Residuals per test; equal-radius unit test; re-baseline; merge | claude | src/layout/circo/*, plans/test-parity/* | T2 | [x] |
+
+## Mission summary (2026-06-10)
+
+- Suite 997/25 -> 1004/18; all 6 circo goldens + equal-radius unit
+  test pass. Five commits (recon e5418eb, units/pipeline+ID-order,
+  block positioning, record clipping/bb, this one).
+- Big discoveries (journal): C circo computes in inches; cgraph
+  subgraph iteration is ID-ordered (decides spanning-tree root and
+  ring order); blkParent semantics (PARENT(CHILD(b))); the installed
+  Homebrew graphviz is exactly 15.0.0 and reproduces the refs — use
+  it as an oracle in missions 6-8.
 
 ## T1 recon spec (run as-is)
 
