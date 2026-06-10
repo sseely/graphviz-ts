@@ -51,24 +51,15 @@ export function layoutComponent(g: Graph, sg: Graph, globalRoot: Center): Center
 /**
  * Build a PackInfo for multi-component packing.
  *
- * Uses PackMode.Graph as the default: the TS port does not implement
- * node-geometry polygon packing (PackMode.Node returns null from putRects),
- * so bounding-box graph packing is the effective fallback. getPackInfo can
- * override this if the graph declares an explicit pack attribute.
- *
  * @see lib/twopigen/twopiinit.c:twopi_layout (getPackInfo call with l_node)
  */
 export function buildPackInfo(g: Graph): PackInfo {
   const pinfo: PackInfo = {
     aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: false,
-    mode: PackMode.Graph, fixed: null, vals: null, flags: 0,
+    mode: PackMode.Node, fixed: null, vals: null, flags: 0,
   };
-  getPackInfo(g, PackMode.Graph, CL_OFFSET, pinfo);
-  // Node-mode packing requires shape geometry not available in this port;
-  // fall back to Graph (BB) packing so packSubgraphs can separate components.
-  if (pinfo.mode === PackMode.Node || pinfo.mode === PackMode.Cluster) {
-    pinfo.mode = PackMode.Graph;
-  }
+  // C: getPackInfo(g, l_node, CL_OFFSET) — polyomino node-mode packing.
+  getPackInfo(g, PackMode.Node, CL_OFFSET, pinfo);
   pinfo.doSplines = false;
   return pinfo;
 }
