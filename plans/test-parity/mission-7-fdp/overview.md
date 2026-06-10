@@ -27,10 +27,9 @@ may have changed this mission's failure set.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Recon: gap-analysis.md (oracle workflow, 15.0.0-tag plan) | claude | this directory only | - | [x] |
-| T2 | fdp_tLayout + grid + parms (flat graphs) | claude | src/layout/fdp/* | T1 | [ ] |
-| T3 | cluster scheme (layout.c derived graphs, xLayout sans Mlimit) | claude | src/layout/fdp/* | T2 | [ ] |
-| T4 | components + pipeline tail | claude | src/layout/fdp/* | T3 | [ ] |
-| T5 | verify 6 goldens; re-baseline; merge | claude | plans/test-parity/* | T4 | [ ] |
+| T2 | Flat fdp rewrite: derived graphs, grid, tlayout, xlayout, packed components ([T2-flat-fdp.md](T2-flat-fdp.md)) | claude | src/layout/fdp/* (+ common/pack/neato w/ journal) | T1 | [ ] |
+| T3 | Cluster scheme: ports, recursion, cluster bbs ([T3-clusters.md](T3-clusters.md)) | claude | src/layout/fdp/* | T2 | [ ] |
+| T-final | verify 6 goldens; re-baseline; merge | claude | plans/test-parity/* | T3 | [ ] |
 
 ## T1 recon spec (run as-is)
 
