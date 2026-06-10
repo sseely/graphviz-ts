@@ -21,9 +21,12 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/twopi/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md + tasks | claude | this directory only | - | [x] |
+| T2 | setEdgeType(EDGETYPE_LINE) in twopiInitGraph → edge paths emitted (star/tree/root-attr) | claude | src/layout/twopi/init.ts | T1 | [ ] |
+| T3 | ranksep attr parse fix in circle.ts getRankseps | claude | src/layout/twopi/circle.ts | T2 | [ ] |
+| T4 | chain center/parent placement per C circle.c (+ hub-at-origin unit test per D5) | claude | src/layout/twopi/circle.ts, twopi.test.ts | T3 | [ ] |
+| T5 | disconnected component packing per C l_node mode | claude | src/layout/twopi/pipeline.ts (+ src/layout/pack/* journal) | T4 | [ ] |
+| T6 | Verify; re-baseline; tick README; merge | claude | plans/test-parity/* | T2-T5 | [ ] |
 
 ## T1 recon spec (run as-is)
 
