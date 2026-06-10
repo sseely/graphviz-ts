@@ -22,11 +22,26 @@ may have changed this mission's failure set.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Recon: gap-analysis.md + tasks | claude | this directory only | - | [x] |
-| T2 | setEdgeType(EDGETYPE_LINE) in twopiInitGraph → edge paths emitted (star/tree/root-attr) | claude | src/layout/twopi/init.ts | T1 | [ ] |
-| T3 | ranksep attr parse fix in circle.ts getRankseps | claude | src/layout/twopi/circle.ts | T2 | [ ] |
-| T4 | chain center/parent placement per C circle.c (+ hub-at-origin unit test per D5) | claude | src/layout/twopi/circle.ts, twopi.test.ts | T3 | [ ] |
-| T5 | disconnected component packing per C l_node mode | claude | src/layout/twopi/pipeline.ts (+ src/layout/pack/* journal) | T4 | [ ] |
-| T6 | Verify; re-baseline; tick README; merge | claude | plans/test-parity/* | T2-T5 | [ ] |
+| T2 | setEdgeType + spline_edges wrapper + working clipping (96d20fb) | claude | src/layout/twopi/*, src/common/*, src/model/edgeInfo.ts, src/render/* (journal) | T1 | [x] |
+| T3 | ranksep via ccomps root fix (7c28a30) | claude | src/layout/pack/index.ts (journal) | T2 | [x] |
+| T4 | chain fan order (agfstedge) + unit test per D5 (62e08a5) | claude | src/layout/twopi/circle.ts, twopi.test.ts | T3 | [x] |
+| T5 | polyomino component packing (9fb539f) | claude | src/layout/pack/* (journal), src/layout/twopi/pipeline.ts | T4 | [x] |
+| T6 | Verify; re-baseline; tick README; merge | claude | plans/test-parity/* | T2-T5 | [x] |
+
+## Mission summary (2026-06-10)
+
+- Tasks: 6 (recon 8a582ef, then 96d20fb, 7c28a30, 62e08a5, 9fb539f,
+  T6 this commit). Suite 990/32 → 997/25; all 6 twopi goldens + both
+  twopi/circo-adjacent unit tests owned by this mission pass.
+- The mission turned out to be mostly CROSS-CUTTING infrastructure:
+  working edge clipping (poly_inside, clip write-back, Center-port
+  clip, outline extents), the C spline_edges wrapper, and the
+  polyomino component packer — missions 5-8 all consume these.
+- Deviations documented in the journal: polygon walk on base ring,
+  no rankdir rotation in poly_inside, genPoly l_clust block and
+  doSplines edge-fill not ported (no callers yet).
+- Gates: tsc clean and 11 dot goldens green after every commit; one
+  unit test updated per D5 (hub-at-origin asserted pre-shift coords).
 
 ## T1 recon spec (run as-is)
 
