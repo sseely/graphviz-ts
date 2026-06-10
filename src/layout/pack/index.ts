@@ -143,6 +143,29 @@ export function packSubgraphs(ng: number, gs: Graph[], root: Graph, pinfo: PackI
 // ---------------------------------------------------------------------------
 
 /** Shift all nodes in g by (dx, dy) points. @see lib/pack/pack.c:shiftGraph */
+/**
+ * Shift a graph's bb, label position, and all nested cluster bbs.
+ * @see lib/pack/pack.c:shiftGraph
+ */
+export function shiftGraphBBs(g: Graph, dx: number, dy: number): void {
+  const bb = g.info.bb as Box | undefined;
+  if (bb !== undefined) {
+    g.info.bb = {
+      ll: { x: bb.ll.x + dx, y: bb.ll.y + dy },
+      ur: { x: bb.ur.x + dx, y: bb.ur.y + dy },
+    };
+  }
+  const lab = g.info.label as { set?: boolean; pos?: Point } | undefined;
+  if (lab?.set && lab.pos) {
+    lab.pos = { x: lab.pos.x + dx, y: lab.pos.y + dy };
+  }
+  const nClust = g.info.n_cluster ?? 0;
+  for (let c = 1; c <= nClust; c++) {
+    const sub = g.info.clust?.[c - 1];
+    if (sub) shiftGraphBBs(sub, dx, dy);
+  }
+}
+
 export function shiftOneGraph(g: Graph, dx: number, dy: number): void {
   for (const n of g.nodes.values()) {
     const c = n.info.coord ?? { x: 0, y: 0 };
@@ -153,6 +176,8 @@ export function shiftOneGraph(g: Graph, dx: number, dy: number): void {
       n.info.pos[1] = (n.info.pos[1] ?? 0) + dy * PS2INCH;
     }
   }
+  // C shiftGraph also translates the graph/cluster bb tree and labels.
+  shiftGraphBBs(g, dx, dy);
 }
 
 /**
