@@ -8,7 +8,6 @@ import { describe, it, expect } from 'vitest';
 import { Graph } from '../../model/graph.js';
 import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
-import { fastEdge } from './fastgr.js';
 import { dot1Rank, dotRank, NEW_RANK } from './rank.js';
 import { dot2Rank } from './rank-dot2.js';
 
@@ -33,7 +32,6 @@ export function addRankEdge(
   const e = new Edge(tail, head, '');
   e.info.minlen = minlen;
   g.edges.push(e);
-  fastEdge(e);
   return e;
 }
 

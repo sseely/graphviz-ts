@@ -7,10 +7,6 @@
  * AC2: Attribute parsing — GraphInfo / EdgeInfo fields are set correctly.
  * AC3: DOT_LAYOUT_ENGINE.type === 'dot'.
  * AC4: A→B→C chain with maxphase=3 (TB): y(A) > y(B) > y(C).
- *
- * Note: class1 is currently a stub. Tests that require the fast graph
- * (in/out edge lists) must call fastEdge() directly on each edge after
- * creation, mirroring what class1 will eventually do.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -19,7 +15,7 @@ import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
 import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
-import { fastEdge, NORMAL } from './fastgr.js';
+import { NORMAL } from './fastgr.js';
 import {
   DOT_LAYOUT_ENGINE,
   dotLayoutEntry,
@@ -45,15 +41,14 @@ export function addNode(g: Graph, id: number, nm: string): Node {
 }
 
 /**
- * Adds an edge to the graph AND to the fast graph (in/out lists).
- * class1 is currently a stub so fastEdge must be called explicitly
- * in tests that exercise the full layout pipeline.
+ * Adds an edge to the graph. The fast graph (in/out lists) is built by
+ * class1 during the rank phase — pre-installing raw edges there would
+ * make class1's findFastEdge return the edge itself and self-merge.
  */
 export function addEdge(g: Graph, tail: Node, head: Node): Edge {
   const e = new Edge(tail, head, '');
   e.info = makeEdgeInfo(makePort(), makePort());
   g.edges.push(e);
-  fastEdge(e);
   return e;
 }
 
