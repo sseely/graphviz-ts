@@ -114,7 +114,11 @@ export class StmtProcessor {
   processNodeStmt(stmt: NodeStmt, graph: Graph, root: Graph): void {
     const node = this.registry.ensure(stmt.id.id, root);
     applyAttrs(stmt.attrs, node.attrs);
-    if (graph !== root) graph.nodes.set(node.name, node);
+    // cgraph: a node in a subgraph is a member of every enclosing graph.
+    // @see lib/cgraph/node.c:agnode
+    for (let g: Graph | null = graph; g !== null && g !== root; g = g.parent) {
+      g.nodes.set(node.name, node);
+    }
   }
 
   processEdgeStmt(stmt: EdgeStmt, graph: Graph, root: Graph): void {
@@ -180,9 +184,12 @@ export class StmtProcessor {
         applyAttrs(attrs, edge.attrs);
         root.edges.push(edge);
         edge.graphSeq = root.edges.length;
-        if (graph !== root) {
-          graph.nodes.set(tail.name, tail);
-          graph.nodes.set(head.name, head);
+        // cgraph: nodes and edges belong to every enclosing graph.
+        // @see lib/cgraph/edge.c:agedge
+        for (let g: Graph | null = graph; g !== null && g !== root; g = g.parent) {
+          g.nodes.set(tail.name, tail);
+          g.nodes.set(head.name, head);
+          g.edges.push(edge);
         }
       }
     }

@@ -10,6 +10,7 @@
 import { parse as peggyParse } from './dot.js';
 import { Graph } from '../model/graph.js';
 import type { GraphKind } from '../model/graph.js';
+import type { Edge } from '../model/edge.js';
 import { buildFromAst } from './builder.js';
 import type { ParsedGraph } from './ast.js';
 
@@ -162,9 +163,22 @@ export function serializeHeader(g: Graph): string[] {
   return lines;
 }
 
+/** True when a child subgraph also contains the node (it will be written there). */
+export function nodeInChildSubgraph(g: Graph, name: string): boolean {
+  for (const [, sg] of g.subgraphs) if (sg.nodes.has(name)) return true;
+  return false;
+}
+
+/** True when a child subgraph also contains the edge (it will be written there). */
+export function edgeInChildSubgraph(g: Graph, edge: Edge): boolean {
+  for (const [, sg] of g.subgraphs) if (sg.edges.includes(edge)) return true;
+  return false;
+}
+
 export function serializeNodes(g: Graph): string[] {
   const lines: string[] = [];
   for (const [, node] of g.nodes) {
+    if (nodeInChildSubgraph(g, node.name)) continue;
     const q = quoteId(node.name);
     if (node.attrs.size > 0) lines.push(`  ${q} [${attrMapStr(node.attrs)}];`);
     else lines.push(`  ${q};`);
@@ -176,6 +190,7 @@ export function serializeEdges(g: Graph): string[] {
   const op = (g.kind === 'directed' || g.kind === 'strict-directed') ? '->' : '--';
   const lines: string[] = [];
   for (const edge of g.edges) {
+    if (edgeInChildSubgraph(g, edge)) continue;
     const attr = edge.attrs.size > 0 ? ` [${attrMapStr(edge.attrs)}]` : '';
     lines.push(`  ${quoteId(edge.tail.name)} ${op} ${quoteId(edge.head.name)}${attr};`);
   }
