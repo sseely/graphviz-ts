@@ -72,11 +72,12 @@ export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
  */
 /** Build the node's label, dispatching on the HTML marker. */
 export function buildNodeLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
+  // Layout init may already have built the label; keep it (and any
+  // position it acquired) rather than re-measuring at render time.
+  if ((n.info.label as TextlabelT | undefined) !== undefined) return;
   const labelAttr = nodeAttr(n, g, 'label');
   const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
   if (labelAttr !== undefined && isHtmlValue(labelAttr)) {
-    // Layout init may already have built the HTML label; keep it.
-    if ((n.info.label as TextlabelT | undefined)?.html) return;
     n.info.label = makeHtmlLabel(
       htmlValueContent(labelAttr), fontname, fontsize, fontcolor, measurer,
     );

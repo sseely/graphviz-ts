@@ -12,6 +12,6 @@ dot goldens still pass.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Port poly_init sizing → poly-sizing.ts + tests | claude | src/common/poly-sizing.ts (new), src/common/poly-sizing.test.ts (new) | — | [ ] |
+| T1 | Port poly_init sizing → poly-sizing.ts + tests | claude | src/common/poly-sizing.ts (new), src/common/poly-sizing.test.ts (new) | — | [x] |
 | T2 | Route all engines through shape-aware init | claude | src/common/nodeinit.ts, src/common/poly-init.ts, src/layout/dot/init.ts | T1 | [ ] |
 | T3 | Re-baseline; update mission 2–8 scopes | claude | plans/test-parity/* (journal, baselines) | T2 | [ ] |
