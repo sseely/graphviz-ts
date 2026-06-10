@@ -42,3 +42,11 @@
   only virtual edges at class1 time. Never pre-install raw edges into the
   fast graph in tests.
 - **Confidence**: High
+
+## Observation: .claude/worktrees gitlinks are tracked
+- **Context**: pre-flight for the test-parity project brief.
+- **Finding**: `git ls-files .claude` shows agent worktree gitlinks
+  committed at some point. Now ignored going forward, but the tracked
+  entries need `git rm --cached` in a dedicated cleanup commit.
+- **Impact**: clutter; harmless to builds.
+- **Confidence**: High

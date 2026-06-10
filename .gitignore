@@ -22,3 +22,7 @@ test/golden/actual/
 
 # Serena MCP cache
 .serena/cache/
+
+# Claude session artifacts
+.claude/worktrees/
+.claude/settings.local.json
