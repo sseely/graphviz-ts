@@ -50,3 +50,16 @@
   entries need `git rm --cached` in a dedicated cleanup commit.
 - **Impact**: clutter; harmless to builds.
 - **Confidence**: High
+
+## Observation: cd into a subdirectory spawns project scaffolding
+- **Context**: M1/T3 — a shell command ran with cwd
+  plans/test-parity; minutes later that directory contained
+  .mcp.json, .serena/project.yml, .agent-notes/.gitkeep, and a
+  .gitignore, which `git add plans/test-parity` then swept into the
+  commit.
+- **Finding**: a directory-init hook treats any cwd as a potential
+  project root and writes serena/MCP scaffolding there.
+- **Impact**: never `git add <dir>` after cd'ing into it mid-session;
+  add explicit file paths or inspect `git status` first. Artifacts are
+  safe to delete.
+- **Confidence**: Medium (hook not identified, effect reproduced once)
