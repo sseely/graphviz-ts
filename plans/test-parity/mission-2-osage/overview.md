@@ -18,9 +18,12 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/osage/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md + T2-T6 task specs | claude | this directory only | - | [x] |
+| T2 | [Pipeline order: cleanup after render](T2-pipeline-order.md) | claude | src/gvc/context.ts, src/index.ts, src/gvc/context.test.ts (journal) | T1 | [ ] |
+| T3 | [DFLT_MARGIN=4 + sortv values](T3-margin-sortv.md) | claude | src/layout/osage/index.ts | T2 | [ ] |
+| T4 | [Cluster labels build + place](T4-cluster-labels.md) | claude | src/layout/osage/index.ts | T3 | [ ] |
+| T5 | [pack/packmode attr parsing](T5-pack-attrs.md) | claude | src/layout/pack/* (journal) | T3 | [ ] |
+| T6 | [Verify all goldens; merge](T6-verify-merge.md) | claude | src/layout/osage/*, plans/test-parity/* | T2-T5 | [ ] |
 
 ## T1 recon spec (run as-is)
 
