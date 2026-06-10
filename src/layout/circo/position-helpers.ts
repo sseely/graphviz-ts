@@ -11,7 +11,7 @@
 
 import type { Node } from '../../model/node.js';
 import type { Block } from './blocks.js';
-import { isCoalesced, blkParent } from './blocks.js';
+import { isCoalesced } from './blocks.js';
 
 /** 2-D rotation of (x,y) by (cosR, sinR). */
 export function rotatePoint(
@@ -97,7 +97,8 @@ export function applyDelta(sn: Block, x: number, y: number, rotate: number): voi
 export function getRotation(sn: Block, x: number, y: number, theta: number): number {
   if (sn.parentPos >= 0) return rotFromParentPos(sn, theta);
   if (sn.circleList.length === 2) return theta - Math.PI / 2;
-  const nbr = blkParent(sn);
+  // C: neighbor = CHILD(sn) — the node in sn connected to the parent.
+  const nbr = sn.child;
   if (!nbr) return 0;
   return rotGeneral(sn, x, y, nbr, theta);
 }

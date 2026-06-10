@@ -26,7 +26,7 @@ import {
 } from './shapeData.js';
 import { polyGencode } from './poly-gencode.js';
 import { recordGencode } from './record.js';
-import { polyInside } from './poly-inside.js';
+import { polyInside, recordInside } from './poly-inside.js';
 
 // ---------------------------------------------------------------------------
 // Shape function tables
@@ -50,7 +50,7 @@ const RECORD_FNS: ShapeFunctions = {
   initfn: null,
   freefn: null,
   portfn: null,
-  insidefn: null,
+  insidefn: recordInside as ShapeFunctions['insidefn'],
   pboxfn: null,
   codefn: recordGencode,
 };

@@ -102,9 +102,15 @@ describe('6-node ring layout: position validity', () => {
 });
 
 describe('6-node ring layout: equal radius', () => {
-  it('places all nodes at equal radius', () => {
+  // C's spline_edges translates pos so the drawing's lower-left corner
+  // is the origin (D5: the old origin-radius expectation predated the
+  // translation); measure radii from the ring centroid instead.
+  it('places all nodes at equal radius from the centroid', () => {
     const g = makeRing(6); circoLayoutFull(g);
-    const radii = [...g.nodes.values()].map((n) => { const p = n.info.pos ?? [0,0]; return Math.hypot(p[0]??0, p[1]??0); });
+    const pts = [...g.nodes.values()].map((n) => n.info.pos ?? [0, 0]);
+    const cx = pts.reduce((s, p) => s + (p[0] ?? 0), 0) / pts.length;
+    const cy = pts.reduce((s, p) => s + (p[1] ?? 0), 0) / pts.length;
+    const radii = pts.map((p) => Math.hypot((p[0] ?? 0) - cx, (p[1] ?? 0) - cy));
     const r0 = radii[0]!;
     for (const r of radii) expect(r).toBeCloseTo(r0, 3);
   });

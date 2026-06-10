@@ -127,3 +127,25 @@ export function polyInside(ctx: InsideContext, p: Point): boolean {
   if (poly === undefined || poly.vertices === null) return false;
   return insideShape(n, poly, p);
 }
+
+/**
+ * Point-in-record test: inside the field tree's bounding box, expanded
+ * by half the penwidth (the outline). penwidth attr is read as default
+ * 1 (no attr plumbing here; no test sets node penwidth).
+ * @see lib/common/shapes.c:record_inside
+ */
+export function recordInside(ctx: InsideContext, p: Point): boolean {
+  const n = ctx.node as Node | undefined;
+  if (n === undefined) return false;
+  let bb: { ll: Point; ur: Point };
+  if (ctx.bp) {
+    bb = ctx.bp;
+  } else {
+    const fld = n.info.shape_info as { b?: { ll: Point; ur: Point } } | undefined;
+    if (!fld?.b) return false;
+    bb = fld.b;
+  }
+  const pw = 0.5; // DEFAULT_NODEPENWIDTH / 2
+  return p.x >= bb.ll.x - pw && p.x <= bb.ur.x + pw
+    && p.y >= bb.ll.y - pw && p.y <= bb.ur.y + pw;
+}

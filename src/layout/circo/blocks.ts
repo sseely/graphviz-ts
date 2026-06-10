@@ -168,9 +168,16 @@ export function isCoalesced(bp: Block): boolean {
   return (bp.flags & COALESCED_F) !== 0;
 }
 
-/** @see lib/circogen/block.h:BLK_PARENT */
+/**
+ * The node in the PARENT block this block hangs from:
+ * BLK_PARENT(b) = CHILD(b) ? PARENT(CHILD(b)) : 0.
+ * @see lib/circogen/block.h:BLK_PARENT
+ */
 export function blkParent(bp: Block): Node | null {
-  return bp.child;
+  if (!bp.child) return null;
+  const cd = bp.child.info.alg as CircoCData | undefined;
+  if (cd?.kind !== 'circo-cdata') return null;
+  return cd.parent?.orig ?? null;
 }
 
 // ---------------------------------------------------------------------------

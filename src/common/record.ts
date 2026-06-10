@@ -383,6 +383,9 @@ export function recordInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   n.info.lw = info.size.x / 2;
   n.info.rw = info.size.x / 2;
   n.info.ht = info.size.y + 1;
+  // C: ND_width/ND_height in inches (+1 rounding kluge on height).
+  n.info.width = info.size.x / 72;
+  n.info.height = (info.size.y + 1) / 72;
   n.info.shape_info = info;
 }
 

@@ -19,7 +19,8 @@ import { layoutBlock } from './blockpath.js';
 export type PosState = {
   radius: number; subtreeR: number; nodeAngle: number;
   firstAngle: number; lastAngle: number;
-  cp: Block | null; neighbor: Node | null;
+  /** All child blocks of the block being positioned (C: sn->children list). */
+  cp: Block[]; neighbor: Node | null;
 };
 
 export type PosInfo = {
@@ -30,19 +31,15 @@ export type PosInfo = {
 /** Context bundle for placeChild — keeps param count ≤5. */
 export type PlaceCtx = { childRadius: number; incAngle: number; mindistAngle: number; length: number };
 
-/** Collect child blocks attached at node n. */
+/** Child blocks attached at node n with a non-empty circle list. */
 export function childrenAtNode(stp: PosState, n: Node): Block[] {
-  const result: Block[] = [];
-  for (let c = stp.cp; c !== null; c = c.children[0] ?? null) {
-    if (blkParent(c) === n && c.circleList.length > 0) result.push(c);
-  }
-  return result;
+  return stp.cp.filter((c) => blkParent(c) === n && c.circleList.length > 0);
 }
 
 /** @see lib/circogen/circpos.c:getInfo */
 export function getInfo(pi: PosInfo, stp: PosState, minDist: number): number {
   let maxR = 0; let diam = 0; let cnt = 0;
-  for (let c = stp.cp; c !== null; c = c.children[0] ?? null) {
+  for (const c of stp.cp) {
     if (blkParent(c) !== pi.n) continue;
     cnt++; maxR = Math.max(maxR, c.radius); diam += 2 * c.radius + minDist;
   }
@@ -100,9 +97,15 @@ export function positionChildren(pi: PosInfo, stp: PosState, length: number, min
   const children = childrenAtNode(stp, pi.n);
   if (children.length === 0) return;
   let cr = pi.scale * pi.minRadius;
-  if (length === 1) cr = Math.max(cr, pi.diameter / (2 * Math.PI));
+  let md = minDist;
+  if (length === 1) {
+    cr = Math.max(cr, pi.diameter / (2 * Math.PI));
+    // C redistributes leftover circumference into min_dist.
+    const d = 2 * Math.PI * cr - pi.diameter;
+    if (d > 0) md += d / pi.childCount;
+  }
   stp.subtreeR = Math.max(stp.subtreeR, cr + pi.maxRadius);
-  const mda = minDist / cr;
+  const mda = md / cr;
   let ca = length === 1 ? 0 : pi.theta - pi.diameter / (2 * cr);
   const mid = Math.floor((pi.childCount + 1) / 2);
   const ctx: PlaceCtx = { childRadius: cr, incAngle: 0, mindistAngle: mda, length };
@@ -110,8 +113,8 @@ export function positionChildren(pi: PosInfo, stp: PosState, length: number, min
   for (const child of children) {
     ctx.incAngle = child.radius / cr;
     ca = length === 1
-      ? advanceAngleL1(ca, ctx.incAngle, children.length, cnt, stp)
-      : advanceAngleLN(ca, ctx.incAngle, mda, children.length, pi.theta);
+      ? advanceAngleL1(ca, ctx.incAngle, pi.childCount, cnt, stp)
+      : advanceAngleLN(ca, ctx.incAngle, mda, pi.childCount, pi.theta);
     ca = placeChild(child, ca, ctx);
     cnt++;
     maybeWritePsi(pi.n, stp, ca, cnt === mid && length > 1);
@@ -162,8 +165,9 @@ export function finaliseRadius(sn: Block, maxR: number, minDist: number, stp: Po
 /** @see lib/circogen/circpos.c:position */
 export function position(childCount: number, length: number, nodepath: Node[], sn: Block, minDist: number): number {
   const stp: PosState = {
-    cp: sn.children[0] ?? null, subtreeR: sn.radius, radius: sn.radius,
-    neighbor: blkParent(sn), nodeAngle: (2 * Math.PI) / length, firstAngle: -1, lastAngle: -1,
+    cp: sn.children, subtreeR: sn.radius, radius: sn.radius,
+    // C: state.neighbor = CHILD(sn) — the cut node within this block.
+    neighbor: sn.child, nodeAngle: (2 * Math.PI) / length, firstAngle: -1, lastAngle: -1,
   };
   const parents = buildParents(nodepath, stp, minDist);
   applyScaleFactors(parents);
