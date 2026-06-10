@@ -19,10 +19,10 @@ may have changed this mission's failure set.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Recon: gap-analysis.md (oracle fingerprint, call path) | claude | this directory only | - | [x] |
-| T2 | src/common/random.ts: exact drand48/srand48 + tests | claude | src/common/random.ts(+test) | T1 | [ ] |
-| T3 | stress.c parity: distance matrix, jitter/init draw order, CG kernel, convergence | claude | src/layout/neato/* | T2 | [ ] |
-| T4 | pipeline tail: spline wrapper, packing, clusters | claude | src/layout/neato/* | T3 | [ ] |
-| T5 | verify 7 goldens; re-baseline; merge | claude | plans/test-parity/* | T4 | [ ] |
+| T2 | src/common/random.ts: exact drand48/srand48 + tests | claude | src/common/random.ts(+test) | T1 | [x] |
+| T3 | stress.c parity: distance matrix, jitter/init draw order, CG kernel, convergence | claude | src/layout/neato/* | T2 | [x] |
+| T4 | pipeline tail: spline wrapper, packing, clusters | claude | src/layout/neato/* | T3 | [x] |
+| T5 | verify 7 goldens; re-baseline; merge | claude | plans/test-parity/* | T4 | [x] |
 
 ## T1 recon spec (run as-is)
 
@@ -45,3 +45,14 @@ Steps:
    ../mission-1-node-sizing/T1-poly-sizing.md.
 
 Observability: N/A. Rollback: Reversible (git revert of merge commit).
+
+## Mission summary (2026-06-10)
+
+- Suite 1004/18 -> 1013/11; all 7 neato goldens pass.
+- The float32 stress kernel reproduces C bit-for-bit (oracle stress
+  traces and -Tplain positions match digit-for-digit); drand48 ported
+  exactly and libc-verified. Divergences were isolated with the
+  installed 15.0.0 oracle via -Gmaxiter bisection and -Gnotranslate.
+- fdp/sfdp (missions 7-8) inherit: random.ts, the stress kernel,
+  matrix-ops, effective-polygon shape_info, outline-ring clipping,
+  spline-aware component packing.
