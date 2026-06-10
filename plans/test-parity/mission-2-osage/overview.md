@@ -19,11 +19,24 @@ may have changed this mission's failure set.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Recon: gap-analysis.md + T2-T6 task specs | claude | this directory only | - | [x] |
-| T2 | [Pipeline order: cleanup after render](T2-pipeline-order.md) | claude | src/gvc/context.ts, src/index.ts, src/gvc/context.test.ts (journal) | T1 | [ ] |
-| T3 | [DFLT_MARGIN=4 + sortv values](T3-margin-sortv.md) | claude | src/layout/osage/index.ts | T2 | [ ] |
-| T4 | [Cluster labels build + place](T4-cluster-labels.md) | claude | src/layout/osage/index.ts | T3 | [ ] |
-| T5 | [pack/packmode attr parsing](T5-pack-attrs.md) | claude | src/layout/pack/* (journal) | T3 | [ ] |
-| T6 | [Verify all goldens; merge](T6-verify-merge.md) | claude | src/layout/osage/*, plans/test-parity/* | T2-T5 | [ ] |
+| T2 | [Pipeline order: cleanup after render](T2-pipeline-order.md) | claude | src/gvc/context.ts, src/index.ts, src/gvc/context.test.ts (journal) | T1 | [x] |
+| T3 | [DFLT_MARGIN=4 + sortv values](T3-margin-sortv.md) | claude | src/layout/osage/index.ts | T2 | [x] |
+| T4 | [Cluster labels build + place](T4-cluster-labels.md) | claude | src/layout/osage/index.ts | T3 | [x] |
+| T5 | [pack/packmode attr parsing](T5-pack-attrs.md) | claude | src/layout/pack/* (journal) | T3 | [x] |
+| T6 | [Verify all goldens; merge](T6-verify-merge.md) | claude | src/layout/osage/*, plans/test-parity/* | T2-T5 | [x] |
+
+## Mission summary (2026-06-10)
+
+- Tasks: 6/6 (T1 recon 1732504, T2 pipeline b0da47d, T3 margins
+  0178f52, T4 labels 29a2393, T5 pack attrs f055848, T6 this commit).
+- Outcome: suite 978/44 → 984/38. All 6 osage goldens pass. No
+  residual fixes needed in T6 — T4 already turned the family green.
+- Cross-family win: the M2/T2 pipeline fix (cleanup after render)
+  moved patchwork's first diff from missing-element to a pure
+  coordinate-translation gap (mission 3 head start).
+- Gates: tsc clean throughout; 11 dot goldens green after every task;
+  one transient unit-test regression (pack-mode stub channel) fixed
+  per D5 within T5.
 
 ## T1 recon spec (run as-is)
 

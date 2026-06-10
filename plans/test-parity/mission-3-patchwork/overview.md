@@ -13,6 +13,14 @@ After mission 1: failure set and first diffs for this family are
 unchanged (small labels were already at default node size) - see
 ../baseline-after-m1.md.
 
+**After mission 2 (see ../baseline-after-m2.md):** the childCount gap
+is GONE — the missing element was being destroyed by engine cleanup
+running before render (fixed in M2/T2, src/gvc/context.ts). All six
+now first-diff at `svg/g[1]/g[1]/polygon[1]/@points[0]` (e.g. -35.36
+vs 0): patchwork output is not translated to the root bb origin —
+check C patchwork's coordinate finalisation (dotneato_postprocess /
+translate to LL=0) vs our port.
+
 Re-check ../baseline-after-m*.md at mission start - earlier missions
 may have changed this mission's failure set.
 
