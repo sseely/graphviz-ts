@@ -1,16 +1,17 @@
 {
   "mcpServers": {
-    "mem0": {
-      "type": "sse",
-      "url": "http://localhost:8765/mcp/claude-code/sse/default"
-    },
     "serena": {
       "command": "uv",
       "args": [
-        "--directory", "/Users/scottseely/git/serena",
-        "run", "serena", "start-mcp-server",
-        "--context", "claude-code",
-        "--project", "/Users/scottseely/git/graphviz-ts"
+        "--directory",
+        "/Users/scottseely/git/serena",
+        "run",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "claude-code",
+        "--project",
+        "/Users/scottseely/git/graphviz-ts"
       ]
     }
   }

@@ -15,6 +15,9 @@ executable as a mission brief. Run one mission per autonomous session.
   invent. Every ported symbol gets a `@see` reference.
 - NEVER modify `test/golden/refs/*`, `test/golden/compare.ts`
   tolerances, or `manifest.json`. If a ref seems wrong, STOP and report.
+  *(Amended 2026-06-11 by human decision for sfdp-medium/-large only:
+  per-entry tolerance + portReference drift pin in manifest.json — see
+  decision-journal M8/T-final. The C refs themselves remain untouched.)*
 - Quality gates after every task (see below). A task is not done until
   the gates pass.
 - Re-baseline at mission start: run the suite, record counts in
@@ -59,7 +62,7 @@ Baseline at project start: **957 passed / 44 failed** (see
 | 5 | [circo](mission-5-circo/overview.md) | 6 golden + 1 unit | [x] |
 | 6 | [neato](mission-6-neato/overview.md) | 7 golden | [x] |
 | 7 | [fdp](mission-7-fdp/overview.md) | 6 golden | [x] |
-| 8 | [sfdp](mission-8-sfdp/overview.md) | 5 golden | [ ] |
+| 8 | [sfdp](mission-8-sfdp/overview.md) | 5 golden | [x] |
 
 Missions must run in order (1 → 8). Within missions 2–8, T1 is always
 recon: it produces `gap-analysis.md` and the concrete port-task specs
