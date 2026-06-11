@@ -54,7 +54,46 @@ Baseline at mission start: **1138 passed / 0 failed**, 66 goldens
 | 2 (after 1) | [T2 node + split.q](batch-2/T2-node-splitq.md) | [x] |
 | 3 (after 2) | [T3 R-tree index](batch-3/T3-rtree-index.md) | [x] |
 | 4 (parallel, after 3) | [T4 xlabels placeLabels](batch-4/T4-xlabels.md), [T5 addXLabels + wiring](batch-4/T5-addxlabels.md) | [x] |
-| 5 (after 4) | [T6 verify + promote + close](batch-5/T6-promote-close.md) (orchestrator inline) | [ ] |
+| 5 (after 4) | [T6 verify + promote + close](batch-5/T6-promote-close.md) (orchestrator inline) | STOPPED |
+
+## Mission summary (2026-06-11)
+
+**Tasks: 5 of 6 complete.** T1–T5 landed and gated; T6 STOPPED at the
+promotion step on a brief stop condition.
+
+**Stop condition (verbatim trigger):** "dot-head-tail-label still fails
+after T6 wiring AND the divergence traces to pre-mission-10 code (M9
+postproc/emit)". The golden fails with exactly ONE structural diff: the
+A→B edge group has 3 children instead of 5 — the two `<text>` label
+elements. The mission-10 placement subsystem is **verified bit-correct**:
+after layout, head 'h' and tail 't' positions map to svg
+(23.62,-111.3)/(25.12,-130.4), equal to the C ref; the viewBox already
+matches (62.00 188.00). The sole gap is that M9's emission port
+(src/common/emit.ts, emit-edge.ts:emitEdgeLabels, emit-xdot.ts:emitLabel)
+is dead code — nothing in the live render path
+(src/gvc/device.ts:renderEdge → SvgRenderer.endEdge) calls it, and no
+prior golden ever exercised edge-label text. Fix path documented in
+.agent-notes/m10-emit-dead-code-2026-06.md (~5-line wiring in
+device.ts renderEdge + RenderJob compat check) — **awaiting Scott's
+authorization since it modifies M9-scope code.** After that wiring, T6
+promotion (manifest 66 → 67, quarantine removal) should be re-run from
+batch-5/T6-promote-close.md step 1.
+
+**Decisions:** 13 journal entries; 3 flagged for review — the two T5
+write-set deviations (rank.ts NODE_XLABEL/EDGE_XLABEL constants;
+dotGraphInit edgeLabelsDone reset per AD2) and the T6 stop.
+
+**Quality gates (final, full branch):** tsc clean; vitest 1216/1216
+(baseline 1138 + 78 new); 66/66 manifest goldens byte-identical to the
+pre-batch-4 baseline (own worktree probe). One commit per task (T1–T5)
+plus chore(plans) commits.
+
+**Known issues / follow-ups:**
+1. Edge-label text emission unwired (the T6 blocker, above).
+2. emit.ts family vs device.ts/render duplication should be reconciled
+   when wiring (single emission path).
+3. If non-dot engines ever call gvPostprocess, their inits need the
+   AD2 edgeLabelsDone reset (currently only dotGraphInit has it).
 
 ## Stop conditions
 
