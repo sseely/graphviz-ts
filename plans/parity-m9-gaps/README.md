@@ -49,7 +49,7 @@ feature/post-parity after batch-1 close).
 | 1 (parallel) | [T1 minlen+constraint](batch-1/T1-minlen-constraint.md), [T2 dot self-loop](batch-1/T2-dot-self-loop.md), [T3 twopi/circo self-loop debug](batch-1/T3-twopi-circo-self-loop.md), [T4 rankdir recon](batch-1/T4-rankdir-recon.md), then [T5 promote goldens](batch-1/T5-promote-goldens.md) | [x] partial close; residuals → batch 1b |
 | 1b (parallel; added after stop resolution 2026-06-11) | [T3b twopi bb fix in splines-clip](batch-1b/T3b-twopi-bb-clip.md), [T1b dot-minlen offset debug+fix](batch-1b/T1b-dot-minlen-offset.md), then [T5b promote](batch-1b/T5b-promote-goldens.md) | [x] suite 1098/0, manifest 62 |
 | 2 (after 1b) | [T6 rankdir impl](batch-2/T6-rankdir-impl.md), [T7 multi-edge offset](batch-2/T7-multi-edge-offset.md), then [T8 promote + RL golden](batch-2/T8-promote-goldens.md) | [x] suite 1126/0, manifest 66 |
-| 3 (after 2) | [T9 head/tail labels](batch-3/T9-head-tail-labels.md), then [T10 promote + close](batch-3/T10-promote-close.md) | [ ] |
+| 3 (after 2) | [T9 head/tail labels](batch-3/T9-head-tail-labels.md), then [T10 promote + close](batch-3/T10-promote-close.md) | [~] stopped — xlabels subsystem unported; see Mission summary |
 
 ## Stop conditions
 
@@ -128,3 +128,51 @@ lands).
 **Resolution (Scott, 2026-06-11):** (1) C-faithful fix in
 splines-clip.ts → batch-1b T3b. (2) New debug+fix task → batch-1b
 T1b. (3) Deviations ratified. Mission resumed at batch 1b.
+
+## Mission summary (2026-06-11 — stopped at T9/T10)
+
+**Tasks: 13 of 15 fully complete** (T1–T8 + batch-1b T1b/T3b/T5b;
+T9 partial, T10 reduced). One commit per task throughout.
+
+**Goldens: 9 of the 10 planned landed.** Manifest 57 → **66**
+(8 promoted from quarantine + new dot-rankdir-rl per AD3); quarantine
+holds only dot-head-tail-label. Suite **1138 passed / 0 failed**
+(baseline 1054/0); `npx tsc --noEmit` clean.
+
+**Cluster outcomes**
+- Self-loops: dot (exact), circo (exact, nodesep 16→18 root cause),
+  twopi (exact, 3-layer bb fix per Scott's splines-clip ruling), plus
+  fdp pin re-baseline. dot-minlen bonus cluster: 4 root causes incl.
+  multi-rank forward edges never taking the virtual-chain path.
+- rankdir: gv_postprocess ported (AD1), option A replacement (AD2)
+  with the byte-identity gate proven via HEAD-worktree self-baseline
+  (62/62 byte-identical); LR/BT/RL all exact. RL golden added (AD3,
+  provenance verified).
+- Edge attrs: minlen/constraint init (late_int/mapbool); multi-edge
+  parallel offset (grouping + to_orig install + orig-seq ordering);
+  head/tail label creation + angle-guarded placement (AD6 typing done).
+
+**Stop condition (open, needs Scott):** default-attr head/tail label
+placement in C is addXLabels → lib/label xlabels (R-tree map
+placement, ~1756 lines C) — unported. dot-head-tail-label cannot pass
+without it. Options: (a) new batch/mission to port lib/label (also
+unlocks node/edge xlabel support); (b) close mission 9 at 66/67,
+schedule lib/label separately. Journal has the full analysis.
+
+**Decisions:** 24 journal entries. Flagged for review: T1 dot.test.ts
+expectation fix, T2 self-loop.ts module, T6 poly-init.ts +
+quarantine-RL-early, T7 write-set amendment (splines.ts dispatch +
+edge-route modules + stale-test fixes), T9 splines.ts wiring +
+fontsize-clamp test correction (C late_double returns minimum, not
+default).
+
+**Operational notes:** 5 of 9 batch-2/3 agent runs died of
+infrastructure failures (stream timeouts / watchdog stalls / hook
+loops); each relaunch carried the diagnosis forward; T9 was finished
+inline by the orchestrator. Quality-gate protocol held: gates run on
+batch-final trees, AD2 byte-identity verified independently.
+
+**Follow-ups:** lib/label port decision (above); merge
+feature/parity-m9-gaps → feature/post-parity with a merge commit
+(AD7) once Scott rules on the xlabels gap; post-parity mission then
+resumes.
