@@ -301,7 +301,7 @@ class RoutingHelper {
   static withVconfig(
     g: Graph, obstacles: Poly[], vconfig: VisConfig, edgetype: number,
   ): void {
-    const stepx = g.info.nodesep ?? 16;
+    const stepx = g.info.nodesep ?? 18;
     for (const n of g.nodes.values()) {
       for (const e of n.outEdges(g)) {
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
@@ -316,7 +316,7 @@ class RoutingHelper {
   }
 
   static straight(g: Graph): void {
-    const stepx = g.info.nodesep ?? 16;
+    const stepx = g.info.nodesep ?? 18;
     for (const n of g.nodes.values()) {
       for (const e of n.outEdges(g)) {
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
