@@ -6,10 +6,12 @@
   "scripts": {
     "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
     "test": "vitest run",
+    "coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^1.6.1",
     "@xmldom/xmldom": "^0.9.10",
     "canvas": "^3.2.3",
     "esbuild": "^0.21.0",
