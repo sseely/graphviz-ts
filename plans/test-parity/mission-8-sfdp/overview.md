@@ -26,11 +26,11 @@ may have changed this mission's failure set.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Recon: gap-analysis.md + task files ([gap-analysis.md](gap-analysis.md)) | claude | this directory only | - | [x] |
-| T2 | Substrate: minstd rand + SparseMatrix subset ([T2-substrate.md](T2-substrate.md)) | claude | src/common/crand.ts, src/layout/sfdp/* | T1 | [ ] |
-| T3 | Multilevel + spring-electrical core ([T3-spring-electrical.md](T3-spring-electrical.md)) | claude | src/layout/sfdp/* | T2 | [ ] |
-| T4 | QuadTree supernodes ([T4-quadtree.md](T4-quadtree.md)) | claude | src/layout/sfdp/* | T3 | [ ] |
-| T5 | Pipeline integration + tests ([T5-pipeline.md](T5-pipeline.md)) | claude | src/layout/sfdp/* (+ shared w/ journal) | T4 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T5 | [ ] |
+| T2 | Substrate: minstd rand + SparseMatrix subset ([T2-substrate.md](T2-substrate.md)) | claude | src/common/crand.ts, src/layout/sfdp/* | T1 | [x] |
+| T3 | Multilevel + spring-electrical core ([T3-spring-electrical.md](T3-spring-electrical.md)) | claude | src/layout/sfdp/* | T2 | [x] |
+| T4 | QuadTree supernodes ([T4-quadtree.md](T4-quadtree.md)) | claude | src/layout/sfdp/* | T3 | [x] |
+| T5 | Pipeline integration + tests ([T5-pipeline.md](T5-pipeline.md)) | claude | src/layout/sfdp/* (+ shared w/ journal) | T4 | [x] |
+| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T5 | [ ] STOPPED — see summary |
 
 ## T1 recon spec (run as-is)
 
@@ -53,3 +53,36 @@ Steps:
    ../mission-1-node-sizing/T1-poly-sizing.md.
 
 Observability: N/A. Rollback: Reversible (git revert of merge commit).
+
+## Mission summary (2026-06-11) — STOPPED on the iterative-engine condition
+
+**Tasks:** T1–T5 complete (5/6); T-final's merge withheld pending a human
+decision. Commits: 17c4029 (T1), c9cb1db (T2), 26f90a4 (T3+T4), b80429b (T5).
+
+**Suite:** 1001/5 at mission start (re-baselined 1025/5 after T2–T4 added
+unit tests) → **1025 passed / 2 failed**. Goldens: sfdp-simple,
+sfdp-weighted, sfdp-disconnected PASS (disconnected validates the
+cross-component rand() stream threading end-to-end). All other families
+stay green (11 dot goldens included).
+
+**Stop condition** (README: "iterative engine converges to a
+different-but-valid layout and the 0.5pt tolerance looks unreachable"):
+
+- sfdp-medium first-diffs at viewBox width 698 vs 697 (1pt);
+  sfdp-large at height 723 vs 724 (1pt).
+- Root cause (T3 journal): the repulsive pow(dist, 1−p) rounding. The
+  refs come from Apple's proprietary libm; the port uses ARM
+  optimized-routines pow (MIT/Apache-2.0 — the legally clean choice
+  after the Apple transcription was reverted). ~0.5-ULP argument-level
+  differences are chaotically amplified by the embedding on the two
+  larger graphs.
+- Structural-equivalence evidence (T3 journal): Procrustes residual
+  0.073% (medium) / 0.331% (large), edge crossings 14=14 EXACT on
+  large, ≥96.5% 3-NN preservation. Same picture, different similarity
+  transform; oracle parity on sfdp-simple is ≤2e-7 inches.
+
+**Decision needed:** accept structural equivalence for sfdp-medium/-large
+(and how to encode that without touching refs/tolerances, which the brief
+forbids), regenerate those two refs from a build with a redistributable
+libm, or pursue another pow source. Merge of feature/parity-m8-sfdp
+(strict suite improvement) also awaits that call.
