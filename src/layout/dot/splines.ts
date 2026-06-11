@@ -20,6 +20,7 @@ import { IGNORED } from './rank.js';
 import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
+import { routeParallelEdgeGroup } from './splines-route.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -283,22 +284,55 @@ export function collectNodeEdges(n: Node, edges: Edge[]): void {
 // ---------------------------------------------------------------------------
 
 /**
+ * Count how many consecutive entries in `edges` starting at `ind` share the
+ * same main edge (i.e. belong to the same parallel group).
+ * @see lib/dotgen/dotsplines.c:355-366
+ */
+function groupSize(edges: Edge[], ind: number): number {
+  const le0 = getMainEdge(edges[ind]);
+  let cnt = 1;
+  while (ind + cnt < edges.length && getMainEdge(edges[ind + cnt]) === le0) cnt++;
+  return cnt;
+}
+
+/**
+ * Return the original-edge creation seq for parallel-edge ordering.
+ * Virtual edges resolve through to_orig; original edges use their own seq.
+ * This mirrors C's edgecmp ordering by LE_seq then edge seq — but in TS the
+ * virtual edge that represents e1 gets a higher seq than e2/e3 because seq
+ * allocation is global; resolving back to the original seq restores C order.
+ * @see lib/dotgen/dotsplines.c:edgecmp
+ */
+function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
+
+/**
+ * Dispatch one parallel-edge group to the appropriate router.
+ * - self-loops  → routeSelfEdgeGroup
+ * - cross-rank, cnt > 1 → routeParallelEdgeGroup (Multisep offsets per C)
+ * - other (cnt=1, same-rank) → left for routeDotEdges
+ * @see lib/dotgen/dotsplines.c:367-419
+ */
+function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
+  const e0 = group[0];
+  if (e0.tail === e0.head) {
+    routeSelfEdgeGroup(g, group, group.length, multisep, buildDotSinfo());
+  } else if (group.length > 1 && nodeRankOf(e0.tail) !== nodeRankOf(e0.head)) {
+    // Sort by original seq so the first original edge gets the leftmost offset,
+    // matching C's allocation order (e1 < e2 < e3).
+    // @see lib/dotgen/dotsplines.c:make_regular_edge (lines 1885-1907)
+    group.sort((a, b) => origSeq(a) - origSeq(b));
+    routeParallelEdgeGroup(g, group, multisep);
+  }
+}
+
+/**
  * Route one group of parallel edges from the sorted edge list.
  * Returns the number of edges consumed (cnt).
  * @see lib/dotgen/dotsplines.c:343-419
  */
 function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number): number {
-  const e0 = edges[ind];
-  const le0 = getMainEdge(e0);
-  let cnt = 1;
-  while (ind + cnt < edges.length) {
-    const le1 = getMainEdge(edges[ind + cnt]);
-    if (le0 !== le1) break;
-    cnt++;
-  }
-  if (e0.tail === e0.head) {
-    routeSelfEdgeGroup(g, edges.slice(ind, ind + cnt), cnt, multisep, buildDotSinfo());
-  }
+  const cnt = groupSize(edges, ind);
+  dispatchEdgeGroup(g, edges.slice(ind, ind + cnt), multisep);
   return cnt;
 }
 
