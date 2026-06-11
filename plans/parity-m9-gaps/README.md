@@ -176,3 +176,9 @@ batch-final trees, AD2 byte-identity verified independently.
 feature/parity-m9-gaps → feature/post-parity with a merge commit
 (AD7) once Scott rules on the xlabels gap; post-parity mission then
 resumes.
+
+**Final ruling (Scott, 2026-06-11): option (b).** Mission 9 CLOSED at
+66/67. The lib/label port is mission 10 — brief at
+../parity-m10-xlabels/README.md (approved same day).
+dot-head-tail-label remains quarantined as mission 10's acceptance
+golden.
