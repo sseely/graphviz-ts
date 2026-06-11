@@ -534,5 +534,13 @@
     "input": "test/golden/inputs/dot-rankdir-rl.dot",
     "reference": "test/golden/refs/dot-rankdir-rl.svg",
     "description": "4-node digraph with rankdir=RL; ref: graphviz 15.0.0 dot -Tsvg; AD3 mission 9"
+  },
+  {
+    "id": "dot-head-tail-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-head-tail-label.dot",
+    "reference": "test/golden/refs/dot-head-tail-label.svg",
+    "description": "digraph with headlabel and taillabel on an edge; ref: graphviz 15.0.0 dot -Tsvg; promoted from quarantine (mission 10, post-parity T2 mining)"
   }
 ]
