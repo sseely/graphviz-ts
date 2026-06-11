@@ -1,0 +1,7 @@
+// graphviz-ts reference input: digraph with headlabel and taillabel on an edge
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B [headlabel="h" taillabel="t"];
+    B -> C;
+}

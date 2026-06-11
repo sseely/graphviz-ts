@@ -1,0 +1,9 @@
+// graphviz-ts reference input: digraph with constraint=false on one edge
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B;
+    A -> C;
+    B -> D;
+    C -> D [constraint=false];
+}

@@ -1,0 +1,7 @@
+// graphviz-ts reference input: 4-node digraph with rankdir=LR (left to right)
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    rankdir=LR;
+    A -> B -> C -> D;
+}

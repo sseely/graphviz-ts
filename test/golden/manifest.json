@@ -402,5 +402,65 @@
     "input": "test/golden/inputs/patchwork-html-label.dot",
     "reference": "test/golden/refs/patchwork-html-label.svg",
     "description": "Patchwork graph with one HTML table label node"
+  },
+  {
+    "id": "twopi-single-node",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-single-node.dot",
+    "reference": "test/golden/refs/twopi-single-node.svg",
+    "description": "Single-node graph; ref: graphviz 15.0.0 dot -Ktwopi -Tsvg"
+  },
+  {
+    "id": "circo-single-node",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-single-node.dot",
+    "reference": "test/golden/refs/circo-single-node.svg",
+    "description": "Single-node graph; ref: graphviz 15.0.0 dot -Kcirco -Tsvg"
+  },
+  {
+    "id": "osage-deep-nesting",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-deep-nesting.dot",
+    "reference": "test/golden/refs/osage-deep-nesting.svg",
+    "description": "Graph with 4 levels of cluster nesting; ref: graphviz 15.0.0 dot -Kosage -Tsvg"
+  },
+  {
+    "id": "patchwork-single-node",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-single-node.dot",
+    "reference": "test/golden/refs/patchwork-single-node.svg",
+    "description": "Single-node patchwork graph; ref: graphviz 15.0.0 dot -Kpatchwork -Tsvg"
+  },
+  {
+    "id": "sfdp-single-node",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-single-node.dot",
+    "reference": "test/golden/refs/sfdp-single-node.svg",
+    "description": "Single-node undirected graph; ref: graphviz 15.0.0 dot -Ksfdp -Tsvg"
+  },
+  {
+    "id": "neato-tiny-multi-edge",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "tolerance": 10,
+    "input": "test/golden/inputs/neato-tiny-multi-edge.dot",
+    "reference": "test/golden/refs/neato-tiny-multi-edge.svg",
+    "portReference": "test/golden/refs-port/neato-tiny-multi-edge.svg",
+    "description": "3-node undirected graph with doubled edge; libm-chaotic: ARM libm vs Apple libm, maxDelta=7.08pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kneato -Tsvg"
+  },
+  {
+    "id": "fdp-tiny-self-loop",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "tolerance": 5,
+    "input": "test/golden/inputs/fdp-tiny-self-loop.dot",
+    "reference": "test/golden/refs/fdp-tiny-self-loop.svg",
+    "portReference": "test/golden/refs-port/fdp-tiny-self-loop.svg",
+    "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg"
   }
 ]

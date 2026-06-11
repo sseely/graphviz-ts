@@ -1,0 +1,8 @@
+// graphviz-ts reference input: single-node patchwork graph
+// engine: patchwork
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        A [area=1];
+    }
+}

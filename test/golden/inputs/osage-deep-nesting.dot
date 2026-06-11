@@ -1,0 +1,22 @@
+// graphviz-ts reference input: graph with 4 levels of cluster nesting
+// engine: osage
+// tolerance: deterministic
+graph G {
+    subgraph cluster_l1 {
+        label="L1";
+        subgraph cluster_l2 {
+            label="L2";
+            subgraph cluster_l3 {
+                label="L3";
+                subgraph cluster_l4 {
+                    label="L4";
+                    A; B;
+                }
+                C;
+            }
+            D; E;
+        }
+        F;
+    }
+    G;
+}
