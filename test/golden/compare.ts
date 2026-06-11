@@ -303,8 +303,10 @@ export function compareSvg(
   actual: string,
   reference: string,
   toleranceClass: string,
+  toleranceOverride?: number,
 ): { pass: boolean; diffs: Diff[] } {
-  const tolerance = TOLERANCES[toleranceClass] ?? TOLERANCES['deterministic'];
+  const tolerance =
+    toleranceOverride ?? TOLERANCES[toleranceClass] ?? TOLERANCES['deterministic'];
   const diffs: Diff[] = [];
 
   const actualNorm = normalizeSvg(actual);

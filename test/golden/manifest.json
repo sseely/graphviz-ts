@@ -179,17 +179,21 @@
     "id": "sfdp-medium",
     "engine": "sfdp",
     "toleranceClass": "iterative",
+    "tolerance": 1.25,
     "input": "test/golden/inputs/sfdp-medium.dot",
     "reference": "test/golden/refs/sfdp-medium.svg",
-    "description": "30-node undirected graph"
+    "portReference": "test/golden/refs-port/sfdp-medium.svg",
+    "description": "30-node undirected graph (libm-chaotic: ARM pow vs Apple libm, see decision-journal M8/T3; drift pinned by portReference)"
   },
   {
     "id": "sfdp-large",
     "engine": "sfdp",
     "toleranceClass": "iterative",
+    "tolerance": 10,
     "input": "test/golden/inputs/sfdp-large.dot",
     "reference": "test/golden/refs/sfdp-large.svg",
-    "description": "100-node undirected graph in a ring pattern"
+    "portReference": "test/golden/refs-port/sfdp-large.svg",
+    "description": "100-node undirected graph in a ring pattern (libm-chaotic: ARM pow vs Apple libm, see decision-journal M8/T3; drift pinned by portReference)"
   },
   {
     "id": "sfdp-disconnected",

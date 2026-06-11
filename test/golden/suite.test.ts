@@ -23,8 +23,22 @@ interface ManifestEntry {
   id: string;
   engine: string;
   toleranceClass: string;
+  /**
+   * Per-test tolerance override (pt) for the C-reference comparison.
+   * Used where the port's libm (ARM optimized-routines pow) diverges
+   * chaotically from the Apple libm that generated the refs; structural
+   * equivalence is documented in plans/test-parity/decision-journal.md
+   * (M8/T3). Entries with this set must also set portReference.
+   */
+  tolerance?: number;
   input: string;
   reference: string;
+  /**
+   * Drift pin: the port's own deterministic output, compared at the
+   * deterministic tolerance (0.01pt). Catches any regression that the
+   * loosened C-ref tolerance would let through.
+   */
+  portReference?: string;
   description: string;
 }
 
@@ -107,7 +121,7 @@ describe('golden-file SVG comparison', () => {
 
       const actualSvg = renderSvg(dotSource, entry.engine);
 
-      const result = compareSvg(actualSvg, refSvg, entry.toleranceClass);
+      const result = compareSvg(actualSvg, refSvg, entry.toleranceClass, entry.tolerance);
 
       if (!result.pass) {
         const first = result.diffs[0];
@@ -116,6 +130,20 @@ describe('golden-file SVG comparison', () => {
       }
 
       expect(result.pass).toBe(true);
+
+      // Drift pin: when the C-ref tolerance is loosened, the port's own
+      // pinned output guards against regressions at 0.01pt.
+      if (entry.portReference) {
+        const portRefSvg = readFileSync(
+          join(process.cwd(), entry.portReference),
+          'utf8',
+        );
+        const pin = compareSvg(actualSvg, portRefSvg, 'deterministic');
+        if (!pin.pass) {
+          throw new Error(buildDiffError(`${entry.id} (port-pin)`, pin.diffs));
+        }
+        expect(pin.pass).toBe(true);
+      }
     });
   }
 });

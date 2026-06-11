@@ -30,7 +30,7 @@ may have changed this mission's failure set.
 | T3 | Multilevel + spring-electrical core ([T3-spring-electrical.md](T3-spring-electrical.md)) | claude | src/layout/sfdp/* | T2 | [x] |
 | T4 | QuadTree supernodes ([T4-quadtree.md](T4-quadtree.md)) | claude | src/layout/sfdp/* | T3 | [x] |
 | T5 | Pipeline integration + tests ([T5-pipeline.md](T5-pipeline.md)) | claude | src/layout/sfdp/* (+ shared w/ journal) | T4 | [x] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T5 | [ ] STOPPED — see summary |
+| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T5 | [x] |
 
 ## T1 recon spec (run as-is)
 
@@ -86,3 +86,15 @@ different-but-valid layout and the 0.5pt tolerance looks unreachable"):
 forbids), regenerate those two refs from a build with a redistributable
 libm, or pursue another pow source. Merge of feature/parity-m8-sfdp
 (strict suite improvement) also awaits that call.
+
+## Resolution (2026-06-11, human decision)
+
+Scott reviewed the rendered output and accepted structural equivalence.
+Encoding: per-entry `tolerance` override in manifest.json (medium 1.25pt,
+large 10pt — measured max deltas 1.0 / 9.79 via .probes/maxdelta.ts)
+against the untouched C refs, plus a `portReference` drift pin — the
+port's own deterministic output in test/golden/refs-port/, compared at
+0.01pt — so any future regression fails even inside the loosened bound.
+
+Final suite: **1027 passed / 0 failed**. All 50 goldens pass. Mission 8
+and the test-parity project are complete.
