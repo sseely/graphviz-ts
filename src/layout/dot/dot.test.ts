@@ -7,6 +7,8 @@
  * AC2: Attribute parsing — GraphInfo / EdgeInfo fields are set correctly.
  * AC3: DOT_LAYOUT_ENGINE.type === 'dot'.
  * AC4: A→B→C chain with maxphase=3 (TB): y(A) > y(B) > y(C).
+ * AC5: virtualNode geometry: lw=rw=ht=UF_size=1.
+ * AC6: minlen=2 edge produces correct node positions and compound spline.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -15,7 +17,7 @@ import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
 import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
-import { NORMAL } from './fastgr.js';
+import { NORMAL, VIRTUAL, virtualNode } from './fastgr.js';
 import {
   DOT_LAYOUT_ENGINE,
   dotLayoutEntry,
@@ -24,6 +26,7 @@ import {
   dotInitEdge,
   dotInitSubg,
 } from './index.js';
+import { parse } from '../../parser/index.js';
 
 // ---------------------------------------------------------------------------
 // Graph builder helpers
@@ -168,5 +171,73 @@ describe('dotLayoutPipeline: A→B→C chain coordinate ordering', () => {
     // A→B→C means A is rank 0, B rank 1, C rank 2 → y(A) > y(B) > y(C).
     expect(nodeA.info.coord.y).toBeGreaterThan(nodeB.info.coord.y);
     expect(nodeB.info.coord.y).toBeGreaterThan(nodeC.info.coord.y);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC5: virtualNode geometry initialisation
+// @see lib/dotgen/fastgr.c:virtual_node
+// ---------------------------------------------------------------------------
+
+describe('virtualNode: geometry initialisation', () => {
+  it('sets lw=rw=ht=UF_size=1 and node_type=VIRTUAL', () => {
+    const g = makeGraph('vn');
+    const vn = virtualNode(g);
+    // C: ND_lw(n) = ND_rw(n) = 1; ND_ht(n) = 1; ND_UF_size(n) = 1
+    expect(vn.info.lw).toBe(1);
+    expect(vn.info.rw).toBe(1);
+    expect(vn.info.ht).toBe(1);
+    expect(vn.info.UF_size).toBe(1);
+    expect(vn.info.node_type).toBe(VIRTUAL);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC6: minlen=2 produces correct positions and compound spline
+// Ground truth from C oracle (.probes/dot-minlen-oracle.c).
+// @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
+// ---------------------------------------------------------------------------
+
+const MINLEN_DOT = 'digraph G { A -> B [minlen=2]; B -> C; A -> C; }';
+
+/** Find the first out-edge from `fromName` to `toName` after layout. */
+function findEdgeSpline(fromName: string, toName: string, dot: string) {
+  const g = parse(dot);
+  dotLayoutEntry(g);
+  const src = g.nodes.get(fromName)!;
+  for (const e of src.outEdges(g)) {
+    if (e.head.name === toName) return { g, bz: e.info.spl?.list[0] };
+  }
+  return { g, bz: undefined };
+}
+
+describe('dotLayoutEntry: minlen=2 node positions', () => {
+  it('places A, B, C at C-oracle positions', () => {
+    const g = parse(MINLEN_DOT);
+    dotLayoutEntry(g);
+    const A = g.nodes.get('A')!;
+    const B = g.nodes.get('B')!;
+    const C = g.nodes.get('C')!;
+    expect(A.info.coord).toMatchObject({ x: expect.closeTo(62, 0), y: expect.closeTo(199, 0) });
+    expect(B.info.coord).toMatchObject({ x: expect.closeTo(27, 0), y: expect.closeTo(90, 0) });
+    expect(C.info.coord).toMatchObject({ x: expect.closeTo(54, 0), y: expect.closeTo(18, 0) });
+  });
+});
+
+describe('dotLayoutEntry: minlen=2 compound-spline routing', () => {
+  it('routes A→C via 7 bezier pts (compound, 2-rank span)', () => {
+    const { bz } = findEdgeSpline('A', 'C', MINLEN_DOT);
+    // A→C spans ranks 0→3 via 2 virtual nodes → 7 control points.
+    // A 4-point result signals the compound path was not triggered.
+    expect(bz).toBeDefined();
+    expect(bz!.size).toBe(7);
+  });
+
+  it('intermediate rank[1] has ht1=ht2=0.5 (virtual-node row)', () => {
+    const g = parse(MINLEN_DOT);
+    dotLayoutEntry(g);
+    const rk1 = g.info.rank?.[1];
+    expect(rk1?.ht1).toBeCloseTo(0.5, 5);
+    expect(rk1?.ht2).toBeCloseTo(0.5, 5);
   });
 });
