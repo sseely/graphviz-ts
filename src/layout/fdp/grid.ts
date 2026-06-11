@@ -1,145 +1,77 @@
 // SPDX-License-Identifier: EPL-2.0
 
 /**
- * Spatial hash grid for accelerating repulsion force computation in fdp.
+ * Spatial grid used to localise repulsive-force computation: on each
+ * pass nodes are bucketed into cells; repulsion is only computed
+ * against nodes in the 9 adjacent cells.
  *
- * Nodes are bucketed into cells by dividing their position by cellSize.
- * Repulsion is only computed between nodes in adjacent (3×3) cells,
- * reducing O(n²) to approximately O(n) for uniform distributions.
+ * Ordering is load-bearing for float reproducibility:
+ * - C's dtwalk over a Dtoset dictionary visits cells in ascending
+ *   (i, j) order (grid.c:ijcmpf) — walk() replicates that sort.
+ * - C prepends nodes to each cell's list (grid.c:newNode), so within a
+ *   cell nodes appear in REVERSE insertion order — add() unshifts.
  *
- * @see lib/fdpgen/grid.c
+ * Spec read at the 15.0.0 tag.
+ *
+ * @see lib/fdpgen/grid.c (15.0.0)
  */
 
 import type { Node } from '../../model/node.js';
 
-// ---------------------------------------------------------------------------
-// Cell — one bucket in the spatial grid
-// ---------------------------------------------------------------------------
-
-/**
- * A single grid cell holding all nodes whose quantized position maps to (i, j).
- *
- * @see lib/fdpgen/grid.h:cell
- */
+/** One grid cell. @see lib/fdpgen/grid.h:cell */
 export interface Cell {
-  /** Nodes assigned to this cell. */
+  i: number;
+  j: number;
+  /** Nodes in reverse insertion order. @see lib/fdpgen/grid.c:newNode */
   nodes: Node[];
 }
 
-// ---------------------------------------------------------------------------
-// Grid — spatial hash, keyed by "i:j" string
-// ---------------------------------------------------------------------------
-
 /**
- * Spatial hash grid owning a Map from cell-key to Cell.
+ * The grid: cells keyed by (i, j).
+ * Block allocators (newBlock/getCell) are memory management with no
+ * behavioral effect and are not ported.
  *
- * Cell size should be set to 3K (where K is the fdp spring constant).
- *
- * @see lib/fdpgen/grid.c:struct _grid
- * @see lib/fdpgen/grid.c:mkGrid
+ * @see lib/fdpgen/grid.c:_grid
  */
 export class Grid {
-  private readonly cells: Map<string, Cell>;
-  readonly cellSize: number;
+  private readonly cells = new Map<string, Cell>();
 
-  /** @see lib/fdpgen/grid.c:mkGrid */
-  constructor(cellSize: number) {
-    this.cellSize = cellSize;
-    this.cells = new Map();
-  }
-
-  /** @see lib/fdpgen/grid.c:clearGrid */
+  /** Reset the grid, reusing storage. @see lib/fdpgen/grid.c:clearGrid */
   clear(): void {
     this.cells.clear();
   }
 
-  /** @see lib/fdpgen/grid.c:addGrid */
+  /** Add node n to cell (i, j). @see lib/fdpgen/grid.c:addGrid */
   add(i: number, j: number, n: Node): void {
-    const key = gridCellKey(i, j);
-    let cell = this.cells.get(key);
-    if (cell === undefined) {
-      cell = { nodes: [] };
-      this.cells.set(key, cell);
+    const key = `${i},${j}`;
+    let c = this.cells.get(key);
+    if (c === undefined) {
+      c = { i, j, nodes: [] };
+      this.cells.set(key, c);
     }
-    cell.nodes.push(n);
+    c.nodes.unshift(n);
   }
 
-  /** @see lib/fdpgen/grid.c:findGrid */
+  /** Cell at (i, j), if any. @see lib/fdpgen/grid.c:findGrid */
   find(i: number, j: number): Cell | undefined {
-    return this.cells.get(gridCellKey(i, j));
+    return this.cells.get(`${i},${j}`);
   }
 
-  /** @see lib/fdpgen/grid.c:walkGrid */
-  walk(fn: (cell: Cell, i: number, j: number) => void): void {
-    for (const [key, cell] of this.cells) {
-      const sep = key.indexOf(':');
-      const i = parseInt(key.slice(0, sep), 10);
-      const j = parseInt(key.slice(sep + 1), 10);
-      fn(cell, i, j);
-    }
+  /**
+   * Apply walkf to each cell in ascending (i, j) order — the dtwalk
+   * traversal order of the Dtoset dictionary.
+   * @see lib/fdpgen/grid.c:walkGrid
+   * @see lib/fdpgen/grid.c:ijcmpf
+   */
+  walk(walkf: (c: Cell, g: Grid) => void): void {
+    const sorted = [...this.cells.values()].sort(
+      (a, b) => (a.i - b.i) || (a.j - b.j),
+    );
+    for (const c of sorted) walkf(c, this);
   }
 }
 
-// ---------------------------------------------------------------------------
-// Pure helper functions (exported for testing and internal use)
-// ---------------------------------------------------------------------------
-
-/**
- * Returns the canonical string key for grid cell (i, j).
- *
- * @see lib/fdpgen/grid.c:ijcmpf
- */
-export function gridCellKey(i: number, j: number): string {
-  return `${i}:${j}`;
-}
-
-/**
- * Converts a continuous position value into a grid cell index.
- *
- * Equivalent to `FLOOR(pos / cellSize)` in the C source.
- *
- * @see lib/fdpgen/tlayout.c:gAdjust (FLOOR macro usage)
- */
-export function gridToCell(pos: number, cellSize: number): number {
-  return Math.floor(pos / cellSize);
-}
-
-/**
- * Adds node n to the grid cell that contains its current position.
- *
- * @see lib/fdpgen/tlayout.c:gAdjust (addGrid call)
- */
-export function addToGrid(grid: Grid, n: Node): void {
-  const pos = n.info.pos;
-  if (!pos) return;
-  const i = gridToCell(pos[0], grid.cellSize);
-  const j = gridToCell(pos[1], grid.cellSize);
-  grid.add(i, j, n);
-}
-
-/**
- * Returns the cell at (i, j) if it exists.
- *
- * @see lib/fdpgen/grid.c:findGrid
- */
-export function findInGrid(grid: Grid, i: number, j: number): Cell | undefined {
-  return grid.find(i, j);
-}
-
-/**
- * Calls fn for every non-empty cell in the grid.
- *
- * @see lib/fdpgen/grid.c:walkGrid
- */
-export function walkGrid(grid: Grid, fn: (cell: Cell) => void): void {
-  grid.walk((cell) => fn(cell));
-}
-
-/**
- * Clears all cells from the grid (resets state before each iteration).
- *
- * @see lib/fdpgen/grid.c:clearGrid
- */
-export function clearGrid(grid: Grid): void {
-  grid.clear();
+/** Number of nodes in a cell. @see lib/fdpgen/grid.c:gLength */
+export function gLength(c: Cell): number {
+  return c.nodes.length;
 }

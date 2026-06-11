@@ -16,6 +16,11 @@ import type { Edge } from '../model/edge.js';
 import type { Node } from '../model/node.js';
 import { approxEqPt, bezierClip, updateBbBz, InsideContext } from './splines-geom.js';
 import { MILLIPOINT, ARR_NONE } from './splines-constants.js';
+import { normalArrowLen } from '../layout/dot/edge-route-routing.js';
+import { arrowheadPolygon } from '../layout/dot/edge-route-arrow.js';
+
+/** Normal (filled triangle) arrowhead. @see lib/common/const.h:ARR_TYPE_NORM */
+export const ARR_NORM = 1;
 
 // Internal shape accessor type for host objects that may carry a shape.
 type ShapeHost = { shape?: { fns?: { insidefn?: ((c: InsideContext, p: Point) => boolean) | null } | null } | null };
@@ -55,24 +60,145 @@ class SplineClipHelper {
     return info.swapEnds(orig);
   }
 
-  static resolveArrowFlags(info: SplineInfo, hn: Node, tail: Node, j: boolean): [number, number] {
+  /**
+   * Arrow flags from graph directedness, the dir attribute, and the
+   * arrowhead/arrowtail attributes. Only "normal" and "none" arrow
+   * type names are ported (other types — diamond, tee, crow, ... —
+   * are unused by the supported inputs and fall back to normal).
+   * conc_opp_flag merging is not ported (no concentrators).
+   * @see lib/common/arrows.c:arrow_flags
+   */
+  static arrowFlags(e: Edge): [number, number] {
     let sflag = ARR_NONE;
-    let eflag = ARR_NONE;
+    let eflag = e.tail.root.kind.includes('undirected') ? ARR_NONE : ARR_NORM;
+    const dir = e.attrs.get('dir');
+    if (dir === 'forward') { sflag = ARR_NONE; eflag = ARR_NORM; }
+    else if (dir === 'back') { sflag = ARR_NORM; eflag = ARR_NONE; }
+    else if (dir === 'both') { sflag = ARR_NORM; eflag = ARR_NORM; }
+    else if (dir === 'none') { sflag = ARR_NONE; eflag = ARR_NONE; }
+    if (eflag === ARR_NORM && e.attrs.get('arrowhead') === 'none') eflag = ARR_NONE;
+    if (sflag === ARR_NORM && e.attrs.get('arrowtail') === 'none') sflag = ARR_NONE;
+    return [sflag, eflag];
+  }
+
+  static resolveArrowFlags(info: SplineInfo, hn: Node, fe: Edge, orig: Edge, j: boolean): [number, number] {
+    let [sflag, eflag] = SplineClipHelper.arrowFlags(orig);
     if (info.splineMerge != null) {
       if (info.splineMerge(hn)) eflag = ARR_NONE;
-      if (info.splineMerge(tail)) sflag = ARR_NONE;
+      if (info.splineMerge(fe.tail)) sflag = ARR_NONE;
     }
     if (j) return [eflag, sflag];
     return [sflag, eflag];
   }
 
-  static arrowClip(fe: Edge, hn: Node, newspl: Bezier, info: SplineInfo): void {
+  /** DIST(p, q). */
+  static dist(p: Point, q: Point): number {
+    return Math.hypot(p.x - q.x, p.y - q.y);
+  }
+
+  /** Sphere inside-fn around `tip` with radius `r` for bezierClip. */
+  static sphereCtx(tip: Point, r: number): {
+    ctx: InsideContext;
+    fn: (c: InsideContext, p: Point) => boolean;
+  } {
+    return {
+      ctx: { nodeCoord: { x: 0, y: 0 }, rw: 0, bp: null },
+      fn: (_c: InsideContext, p: Point) => SplineClipHelper.dist(p, tip) <= r,
+    };
+  }
+
+  /**
+   * Clip the spline end to the head arrowhead base; records the tip in
+   * spl.ep. @see lib/common/arrows.c:arrowEndClip
+   */
+  static arrowEndClip(
+    e: Edge, ps: Point[], startp: number, endpIn: number, spl: Bezier, eflag: number,
+  ): number {
+    let endp = endpIn;
+    const elen = normalArrowLen(SplineClipHelper.edgePenwidth(e));
+    spl.eflag = eflag;
+    spl.ep = ps[endp + 3]!;
+    if (endp > startp && SplineClipHelper.dist(ps[endp]!, ps[endp + 3]!) < elen) {
+      endp -= 3;
+    }
+    const sp: Point[] = [spl.ep, ps[endp + 2]!, ps[endp + 1]!, ps[endp]!];
+    if (elen > 0) {
+      const { ctx, fn } = SplineClipHelper.sphereCtx(spl.ep, elen);
+      bezierClip(ctx, fn, sp, true);
+    }
+    ps[endp] = sp[3]!;
+    ps[endp + 1] = sp[2]!;
+    ps[endp + 2] = sp[1]!;
+    ps[endp + 3] = sp[0]!;
+    return endp;
+  }
+
+  /**
+   * Clip the spline start to the tail arrowhead base; records the tip
+   * in spl.sp. @see lib/common/arrows.c:arrowStartClip
+   */
+  static arrowStartClip(
+    e: Edge, ps: Point[], startpIn: number, endp: number, spl: Bezier, sflag: number,
+  ): number {
+    let startp = startpIn;
+    const slen = normalArrowLen(SplineClipHelper.edgePenwidth(e));
+    spl.sflag = sflag;
+    spl.sp = ps[startp]!;
+    if (endp > startp && SplineClipHelper.dist(ps[startp]!, ps[startp + 3]!) < slen) {
+      startp += 3;
+    }
+    const sp: Point[] = [ps[startp + 3]!, ps[startp + 2]!, ps[startp + 1]!, spl.sp];
+    if (slen > 0) {
+      const { ctx, fn } = SplineClipHelper.sphereCtx(spl.sp, slen);
+      bezierClip(ctx, fn, sp, false);
+    }
+    ps[startp] = sp[3]!;
+    ps[startp + 1] = sp[2]!;
+    ps[startp + 2] = sp[1]!;
+    ps[startp + 3] = sp[0]!;
+    return startp;
+  }
+
+  /** Edge penwidth attr with C default. */
+  static edgePenwidth(e: Edge): number {
+    const v = parseFloat(e.attrs.get('penwidth') ?? '');
+    return Number.isNaN(v) ? 1.0 : v;
+  }
+
+  /**
+   * Arrowhead clipping: resolve flags, shorten the spline at each
+   * flagged end, and stash the arrow polygons for the renderer
+   * (the TS equivalent of emit.c's arrow_gen pass).
+   * @see lib/common/splines.c:arrow_clip
+   */
+  static arrowClip(
+    fe: Edge, hn: Node, ps: Point[],
+    bounds: { start: number; end: number }, newspl: Bezier, info: SplineInfo,
+  ): void {
     let orig = fe;
     while (orig.info.to_orig != null) orig = orig.info.to_orig;
     const j = SplineClipHelper.resolveSwap(info, orig);
-    const [sflag, eflag] = SplineClipHelper.resolveArrowFlags(info, hn, fe.tail, j);
+    const [sflag, eflag] = SplineClipHelper.resolveArrowFlags(info, hn, fe, orig, j);
     newspl.sflag = sflag;
     newspl.eflag = eflag;
+    if (sflag) {
+      bounds.start = SplineClipHelper.arrowStartClip(
+        orig, ps, bounds.start, bounds.end, newspl, sflag);
+      SplineClipHelper.stashArrow(orig, newspl.sp, ps[bounds.start]!, true);
+    }
+    if (eflag) {
+      bounds.end = SplineClipHelper.arrowEndClip(
+        orig, ps, bounds.start, bounds.end, newspl, eflag);
+      SplineClipHelper.stashArrow(orig, newspl.ep, ps[bounds.end + 3]!, false);
+    }
+  }
+
+  /** Record an arrow polygon on the edge for svgArrowPolygons. */
+  static stashArrow(e: Edge, tip: Point, base: Point, isTail: boolean): void {
+    const dir = { x: base.x - tip.x, y: base.y - tip.y };
+    const pts = arrowheadPolygon(tip, dir, SplineClipHelper.edgePenwidth(e));
+    const key = isTail ? '_tailArrowPts' : '_arrowPts';
+    (e.info as unknown as Record<string, unknown>)[key] = pts;
   }
 
   static clipSide(n: Node, box: Box | null, ps: Point[], pn: number, tail: boolean): number {
@@ -191,9 +317,11 @@ export function clipAndInstall(fe: Edge, hn: Node, ps: Point[], pn: number, info
   const [effTn, effHn] = SplineClipHelper.resolveEndpoints(fe, hn, info);
   const rawStart = SplineClipHelper.findStart(clipTail, effTn, tbox, ps, pn);
   const rawEnd = SplineClipHelper.findEnd(clipHead, effHn, hbox, ps, pn);
-  const start = SplineClipHelper.trimStart(ps, pn, rawStart);
-  const end = SplineClipHelper.trimEnd(ps, rawEnd);
-  SplineClipHelper.arrowClip(fe, hn, newspl, info);
+  const bounds = {
+    start: SplineClipHelper.trimStart(ps, pn, rawStart),
+    end: SplineClipHelper.trimEnd(ps, rawEnd),
+  };
+  SplineClipHelper.arrowClip(fe, hn, ps, bounds, newspl, info);
   // bb update deferred: Edge has no graph ref; callers that need bb must pass it separately.
-  SplineClipHelper.copyToBezier(newspl, ps, start, end, null);
+  SplineClipHelper.copyToBezier(newspl, ps, bounds.start, bounds.end, null);
 }
