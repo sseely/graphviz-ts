@@ -30,6 +30,10 @@ export const EDGE_LABEL = 1;
 export const HEAD_LABEL = 1 << 1;
 /** @see lib/common/const.h:TAIL_LABEL */
 export const TAIL_LABEL = 1 << 2;
+/** @see lib/common/const.h:NODE_XLABEL */
+export const NODE_XLABEL = 1 << 4;
+/** @see lib/common/const.h:EDGE_XLABEL */
+export const EDGE_XLABEL = 1 << 5;
 export const NEW_RANK   = 1 << 4;
 export const LOCAL      = 100;
 export const GLOBAL     = 101;

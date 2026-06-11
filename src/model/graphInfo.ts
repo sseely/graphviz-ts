@@ -431,6 +431,19 @@ export interface GraphInfo {
   seed?: number;
 
   /**
+   * Per-layout flag: true when edge label positions have been computed by
+   * the spline-routing pass (dotsplines.c:EdgeLabelsDone).
+   *
+   * C uses a process-global `EdgeLabelsDone` (lib/common/globals.h) reset in
+   * lib/common/input.c:commonInitGraph and set at lib/dotgen/dotsplines.c:471.
+   * This port lifts it onto GraphInfo so it is per-graph (no globals).
+   *
+   * @see lib/common/globals.h:EdgeLabelsDone
+   * @see lib/dotgen/dotsplines.c:471
+   */
+  edgeLabelsDone?: boolean;
+
+  /**
    * Neato start attribute: controls initial placement and RNG seed.
    * Values: "random[N]" | "self" | "regular" | numeric string.
    * Corresponds to agget(g, "start") in lib/neatogen/neatoinit.c:setSeed.

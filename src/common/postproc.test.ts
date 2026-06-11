@@ -17,6 +17,12 @@ import { ccwrotatepf } from '../model/geom.js';
 import { Graph } from '../model/graph.js';
 import { Node } from '../model/node.js';
 import { RANKDIR_TB, RANKDIR_LR, RANKDIR_BT, RANKDIR_RL } from '../layout/dot/init.js';
+import {
+  addXLabel, edgeTailpoint, edgeHeadpoint,
+  type XLabelCtx, type ELike,
+} from './xlabels-place.js';
+import type { XLabelT, ObjectT } from '../label/xlabels.js';
+import { NODE_XLABEL, EDGE_XLABEL, TAIL_LABEL, HEAD_LABEL } from '../layout/dot/rank.js';
 
 // ---------------------------------------------------------------------------
 // Test-graph factory helpers
@@ -275,4 +281,130 @@ describe('gvPostprocess: arrowhead winding order correction', () => {
   it('BT: base points swapped (reflection, det=-1)', assertArrowBtSwapped);
   it('RL: base points swapped (reflection, det=-1)', assertArrowRlSwapped);
   it('_tailArrowPts also corrected for BT', assertTailArrowBtSwapped);
+});
+
+// ---------------------------------------------------------------------------
+// addXLabels guard cases — via gvPostprocess (no xlabels → early return)
+// ---------------------------------------------------------------------------
+
+describe('addXLabels guard: no external labels → gvPostprocess runs without error', () => {
+  it('graph with no has_labels bits set: postprocess completes', () => {
+    const g = makeTestGraph(RANKDIR_TB);
+    addNode(g);
+    // has_labels defaults to 0 — none of NODE_XLABEL, EDGE_XLABEL, etc.
+    g.info.has_labels = 0;
+    expect(() => gvPostprocess(g)).not.toThrow();
+  });
+
+  it('EDGE_LABEL only + edgeLabelsDone=true → early return, no label mutations', () => {
+    const g = makeTestGraph(RANKDIR_TB);
+    const n = addNode(g);
+    g.info.has_labels = 1; // EDGE_LABEL = 1
+    g.info.edgeLabelsDone = true;
+    gvPostprocess(g);
+    // Nothing should have thrown; coord should be transformed normally.
+    expect(n.info.coord).toBeDefined();
+  });
+
+  it('NODE_XLABEL set but no nodes with xlabels → postprocess completes', () => {
+    const g = makeTestGraph(RANKDIR_TB);
+    addNode(g);
+    g.info.has_labels = NODE_XLABEL | EDGE_XLABEL | TAIL_LABEL | HEAD_LABEL;
+    // Nodes have no xlabel attached — nLbls will be 0, runPlacement returns early.
+    expect(() => gvPostprocess(g)).not.toThrow();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// addXLabel — Flip size swap
+// @see lib/common/postproc.c:addXLabel (Flip branch)
+// ---------------------------------------------------------------------------
+
+function makeCtx(flip: boolean): XLabelCtx {
+  const obj: ObjectT = { pos: { x: 0, y: 0 }, sz: { x: 0, y: 0 }, lbl: null };
+  const lbl: XLabelT = { sz: { x: 0, y: 0 }, pos: { x: 0, y: 0 }, lbl: null, set: 0 };
+  return { objs: [obj], lbls: [lbl], flip, oi: 0, xi: 0,
+    bb: { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } } };
+}
+
+describe('addXLabel: Flip size swap', () => {
+  it('flip=false: xlp.sz = {dimen.x, dimen.y}', () => {
+    const ctx = makeCtx(false);
+    const lp = { dimen: { x: 30, y: 10 }, pos: { x: 0, y: 0 }, set: false } as never;
+    addXLabel(lp, ctx, false, { x: 0, y: 0 });
+    expect(ctx.lbls[0]!.sz.x).toBeCloseTo(30, 6);
+    expect(ctx.lbls[0]!.sz.y).toBeCloseTo(10, 6);
+  });
+
+  it('flip=true: xlp.sz = {dimen.y, dimen.x} (axes swapped)', () => {
+    const ctx = makeCtx(true);
+    const lp = { dimen: { x: 30, y: 10 }, pos: { x: 0, y: 0 }, set: false } as never;
+    addXLabel(lp, ctx, false, { x: 0, y: 0 });
+    expect(ctx.lbls[0]!.sz.x).toBeCloseTo(10, 6);
+    expect(ctx.lbls[0]!.sz.y).toBeCloseTo(30, 6);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// edgeTailpoint / edgeHeadpoint — with and without sflag/eflag
+// @see lib/common/postproc.c:edgeTailpoint / edgeHeadpoint
+// ---------------------------------------------------------------------------
+
+function makeEdge(
+  pts: Array<{ x: number; y: number }>,
+  sflag: number,
+  eflag: number,
+  sp: { x: number; y: number },
+  ep: { x: number; y: number },
+): ELike {
+  return {
+    info: {
+      spl: { list: [{ list: pts, sflag, eflag, sp, ep }] },
+      edge_type: 1,
+    },
+  };
+}
+
+describe('edgeTailpoint', () => {
+  it('sflag=0: returns first control point', () => {
+    const e = makeEdge(
+      [{ x: 5, y: 6 }, { x: 10, y: 20 }, { x: 15, y: 25 }, { x: 20, y: 30 }],
+      0, 0, { x: 1, y: 2 }, { x: 99, y: 99 },
+    );
+    const pt = edgeTailpoint(e);
+    expect(pt.x).toBeCloseTo(5, 6);
+    expect(pt.y).toBeCloseTo(6, 6);
+  });
+
+  it('sflag=1: returns sp (arrow endpoint)', () => {
+    const e = makeEdge(
+      [{ x: 5, y: 6 }, { x: 10, y: 20 }, { x: 15, y: 25 }, { x: 20, y: 30 }],
+      1, 0, { x: 1, y: 2 }, { x: 99, y: 99 },
+    );
+    const pt = edgeTailpoint(e);
+    expect(pt.x).toBeCloseTo(1, 6);
+    expect(pt.y).toBeCloseTo(2, 6);
+  });
+});
+
+describe('edgeHeadpoint', () => {
+  it('eflag=0: returns last control point', () => {
+    const e = makeEdge(
+      [{ x: 5, y: 6 }, { x: 10, y: 20 }, { x: 15, y: 25 }, { x: 20, y: 30 }],
+      0, 0, { x: 1, y: 2 }, { x: 99, y: 99 },
+    );
+    const pt = edgeHeadpoint(e);
+    expect(pt.x).toBeCloseTo(20, 6);
+    expect(pt.y).toBeCloseTo(30, 6);
+  });
+
+  it('eflag=1: returns ep (arrow endpoint)', () => {
+    const e = makeEdge(
+      [{ x: 5, y: 6 }, { x: 10, y: 20 }, { x: 15, y: 25 }, { x: 20, y: 30 }],
+      0, 1, { x: 1, y: 2 }, { x: 77, y: 88 },
+    );
+    const pt = edgeHeadpoint(e);
+    expect(pt.x).toBeCloseTo(77, 6);
+    expect(pt.y).toBeCloseTo(88, 6);
+  });
 });

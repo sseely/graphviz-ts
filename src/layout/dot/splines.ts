@@ -359,6 +359,8 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   if (normalize) edgeNormalize(g);
   routeDotEdges(g);
   placePortLabels(g);
+  // Mirror lib/dotgen/dotsplines.c:471 — State = GVSPLINES; EdgeLabelsDone = 1
+  g.info.edgeLabelsDone = true;
   return 0;
 }
 
