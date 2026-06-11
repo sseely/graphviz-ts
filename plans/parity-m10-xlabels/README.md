@@ -53,7 +53,7 @@ Baseline at mission start: **1138 passed / 0 failed**, 66 goldens
 | 1 | [T1 rectangle](batch-1/T1-rectangle.md) | [x] |
 | 2 (after 1) | [T2 node + split.q](batch-2/T2-node-splitq.md) | [x] |
 | 3 (after 2) | [T3 R-tree index](batch-3/T3-rtree-index.md) | [x] |
-| 4 (parallel, after 3) | [T4 xlabels placeLabels](batch-4/T4-xlabels.md), [T5 addXLabels + wiring](batch-4/T5-addxlabels.md) | [ ] |
+| 4 (parallel, after 3) | [T4 xlabels placeLabels](batch-4/T4-xlabels.md), [T5 addXLabels + wiring](batch-4/T5-addxlabels.md) | [x] |
 | 5 (after 4) | [T6 verify + promote + close](batch-5/T6-promote-close.md) (orchestrator inline) | [ ] |
 
 ## Stop conditions
