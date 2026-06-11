@@ -86,6 +86,62 @@ export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): v
   renderer.endEdge(e, job);
 }
 
+/** valign codes stored on textlabel_t. @see lib/common/types.h:textlabel_t.valign */
+const VALIGN_TOP = 't'.charCodeAt(0);
+const VALIGN_BOTTOM = 'b'.charCodeAt(0);
+
+/** First-span baseline y per valign. @see lib/common/labels.c:emit_label (240-251) */
+function labelFirstSpanY(lp: TextlabelT): number {
+  if (lp.valign === VALIGN_TOP) return lp.pos.y + lp.space.y / 2.0 - lp.fontsize;
+  if (lp.valign === VALIGN_BOTTOM) {
+    return lp.pos.y - lp.space.y / 2.0 + lp.dimen.y - lp.fontsize;
+  }
+  return lp.pos.y + lp.dimen.y / 2.0 - lp.fontsize;
+}
+
+/** Span x position per justification. @see lib/common/labels.c:emit_label (254-266) */
+function labelSpanX(lp: TextlabelT, just: 'l' | 'n' | 'r'): number {
+  if (just === 'l') return lp.pos.x - lp.space.x / 2.0;
+  if (just === 'r') return lp.pos.x + lp.space.x / 2.0;
+  return lp.pos.x;
+}
+
+/**
+ * Emit one edge label's text spans if present and placed.
+ * URL/anchor/map machinery and E_decorate attachment (emit.c:emit_attachment)
+ * are not ported, matching the live path's AD-2 scope.
+ * @see lib/common/emit.c:emit_edge_label
+ * @see lib/common/labels.c:emit_label
+ */
+function renderOneEdgeLabel(
+  lp: TextlabelT | undefined,
+  renderer: RendererPlugin,
+  job: RenderJob,
+): void {
+  if (!lp?.set) return; // emit_edge_label: lbl == NULL || !lbl->set
+  if (lp.html) return; // HTML labels not ported (AD-2)
+  if (lp.u.kind !== 'txt' || lp.u.nspans < 1) return;
+  let y = labelFirstSpanY(lp);
+  for (let i = 0; i < lp.u.nspans; i++) {
+    const span = lp.u.span[i] as TextSpan | undefined;
+    if (!span) break;
+    renderer.textspan({ x: labelSpanX(lp, span.just), y }, span, job);
+    y -= span.size.y; // UL position for next span
+  }
+}
+
+/**
+ * Emit all four edge label slots in C order: label, xlabel, head, tail.
+ * Must run inside the edge group, after the path and arrow polygons.
+ * @see lib/common/emit.c:emit_end_edge (3010-3025)
+ */
+export function renderEdgeLabels(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
+  renderOneEdgeLabel(e.info.label as TextlabelT | undefined, renderer, job);
+  renderOneEdgeLabel(e.info.xlabel as TextlabelT | undefined, renderer, job);
+  renderOneEdgeLabel(e.info.head_label, renderer, job);
+  renderOneEdgeLabel(e.info.tail_label, renderer, job);
+}
+
 /**
  * Render nodes and edges in C's "breadth-first walk" order.
  * For each node: emit the node, then for each outgoing edge emit the

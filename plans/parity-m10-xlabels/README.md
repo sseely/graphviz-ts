@@ -54,46 +54,46 @@ Baseline at mission start: **1138 passed / 0 failed**, 66 goldens
 | 2 (after 1) | [T2 node + split.q](batch-2/T2-node-splitq.md) | [x] |
 | 3 (after 2) | [T3 R-tree index](batch-3/T3-rtree-index.md) | [x] |
 | 4 (parallel, after 3) | [T4 xlabels placeLabels](batch-4/T4-xlabels.md), [T5 addXLabels + wiring](batch-4/T5-addxlabels.md) | [x] |
-| 5 (after 4) | [T6 verify + promote + close](batch-5/T6-promote-close.md) (orchestrator inline) | STOPPED |
+| 5 (after 4) | [T6 verify + promote + close](batch-5/T6-promote-close.md) (orchestrator inline) | [x] |
 
-## Mission summary (2026-06-11)
+## Mission summary (2026-06-11, final)
 
-**Tasks: 5 of 6 complete.** T1–T5 landed and gated; T6 STOPPED at the
-promotion step on a brief stop condition.
+**Tasks: 6 of 6 complete.** T6 initially STOPPED on the brief's
+pre-M10-code condition: the golden's only diff was the two missing
+`<text>` elements — placement was bit-correct (head 'h' → svg
+(23.62,-111.3), tail 't' → (25.12,-130.4), equal to the C ref) but M9's
+emission port (emit.ts / emit-edge.ts / emit-xdot.ts) was dead code,
+unreferenced by the live render path. Scott authorized the M9-scope fix
+("go"); device.ts gained renderEdgeLabels (emit.c:emit_end_edge:3010-25
++ labels.c:emit_label), called from SvgRenderer.endEdge inside the edge
+group after path+arrows.
 
-**Stop condition (verbatim trigger):** "dot-head-tail-label still fails
-after T6 wiring AND the divergence traces to pre-mission-10 code (M9
-postproc/emit)". The golden fails with exactly ONE structural diff: the
-A→B edge group has 3 children instead of 5 — the two `<text>` label
-elements. The mission-10 placement subsystem is **verified bit-correct**:
-after layout, head 'h' and tail 't' positions map to svg
-(23.62,-111.3)/(25.12,-130.4), equal to the C ref; the viewBox already
-matches (62.00 188.00). The sole gap is that M9's emission port
-(src/common/emit.ts, emit-edge.ts:emitEdgeLabels, emit-xdot.ts:emitLabel)
-is dead code — nothing in the live render path
-(src/gvc/device.ts:renderEdge → SvgRenderer.endEdge) calls it, and no
-prior golden ever exercised edge-label text. Fix path documented in
-.agent-notes/m10-emit-dead-code-2026-06.md (~5-line wiring in
-device.ts renderEdge + RenderJob compat check) — **awaiting Scott's
-authorization since it modifies M9-scope code.** After that wiring, T6
-promotion (manifest 66 → 67, quarantine removal) should be re-run from
-batch-5/T6-promote-close.md step 1.
+**Acceptance met:** dot-head-tail-label passes at dot deterministic
+tolerance; manifest 66 → 67 (append-only per AD5, existing entries
+byte-unchanged); quarantine emptied and directory removed.
 
-**Decisions:** 13 journal entries; 3 flagged for review — the two T5
+**Decisions:** 14 journal entries; 3 flagged for review — the two T5
 write-set deviations (rank.ts NODE_XLABEL/EDGE_XLABEL constants;
-dotGraphInit edgeLabelsDone reset per AD2) and the T6 stop.
+dotGraphInit edgeLabelsDone reset per AD2) and the T6 stop/authorize
+cycle.
 
-**Quality gates (final, full branch):** tsc clean; vitest 1216/1216
-(baseline 1138 + 78 new); 66/66 manifest goldens byte-identical to the
-pre-batch-4 baseline (own worktree probe). One commit per task (T1–T5)
-plus chore(plans) commits.
+**Quality gates (final):** tsc clean; vitest 1217/1217 (baseline 1138
++ 79 new, incl. the promoted golden); the original 66 goldens
+byte-identical across both batch 4 and the T6 emission wiring (own
+worktree/probe byte-diffs). One commit per task T1–T6 plus chore(plans)
+commits.
 
 **Known issues / follow-ups:**
-1. Edge-label text emission unwired (the T6 blocker, above).
-2. emit.ts family vs device.ts/render duplication should be reconciled
-   when wiring (single emission path).
+1. src/common/emit.ts family remains a dead parallel pipeline; the live
+   path now has its own edge-label emission in device.ts. Reconcile to
+   a single emission path in a future cleanup mission
+   (.agent-notes/m10-emit-dead-code-2026-06.md).
+2. URL/anchor and E_decorate attachment (emit.c:emit_attachment) are
+   still unported in the live path (pre-existing AD-2 scope).
 3. If non-dot engines ever call gvPostprocess, their inits need the
    AD2 edgeLabelsDone reset (currently only dotGraphInit has it).
+4. Node xlabel emission (emit_node side) was not needed by this golden
+   and remains unexercised; placement support exists via addXLabels.
 
 ## Stop conditions
 

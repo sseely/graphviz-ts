@@ -23,6 +23,7 @@ import type { Point } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { RendererPlugin, LabelType } from '../gvc/context.js';
 import type { RenderJob } from '../gvc/job.js';
+import { renderEdgeLabels } from '../gvc/device.js';
 import {
   svgBeginGraph,
   svgEndGraph,
@@ -69,6 +70,9 @@ export class SvgRenderer implements RendererPlugin {
   endEdge(e: Edge, job: RenderJob): void {
     svgEdgePath(e, job);
     svgArrowPolygons(e, job);
+    // Edge labels go inside the group, after path + arrows.
+    // @see lib/common/emit.c:emit_end_edge (3010-3025)
+    renderEdgeLabels(e, this, job);
     svgEndEdge(job);
   }
 
