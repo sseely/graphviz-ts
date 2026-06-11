@@ -46,8 +46,8 @@ feature/post-parity after batch-1 close).
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 minlen+constraint](batch-1/T1-minlen-constraint.md), [T2 dot self-loop](batch-1/T2-dot-self-loop.md), [T3 twopi/circo self-loop debug](batch-1/T3-twopi-circo-self-loop.md), [T4 rankdir recon](batch-1/T4-rankdir-recon.md), then [T5 promote goldens](batch-1/T5-promote-goldens.md) | [ ] |
-| 2 (after 1) | [T6 rankdir impl](batch-2/T6-rankdir-impl.md), [T7 multi-edge offset](batch-2/T7-multi-edge-offset.md), then [T8 promote + RL golden](batch-2/T8-promote-goldens.md) | [ ] |
+| 1 (parallel) | [T1 minlen+constraint](batch-1/T1-minlen-constraint.md), [T2 dot self-loop](batch-1/T2-dot-self-loop.md), [T3 twopi/circo self-loop debug](batch-1/T3-twopi-circo-self-loop.md), [T4 rankdir recon](batch-1/T4-rankdir-recon.md), then [T5 promote goldens](batch-1/T5-promote-goldens.md) | [~] stopped — see Stop report below |
+| 2 (after 1) | [T6 rankdir impl](batch-2/T6-rankdir-impl.md), [T7 multi-edge offset](batch-2/T7-multi-edge-offset.md), then [T8 promote + RL golden](batch-2/T8-promote-goldens.md) | [ ] blocked on stop resolution |
 | 3 (after 2) | [T9 head/tail labels](batch-3/T9-head-tail-labels.md), then [T10 promote + close](batch-3/T10-promote-close.md) | [ ] |
 
 ## Stop conditions
@@ -84,3 +84,42 @@ feature/post-parity after batch-1 close).
 - .agent-notes/fdp-fma-oracle-2026-06.md — C oracle probe technique
   (AD4); .agent-notes/cluster-hang-2026-06.md — hang debugging (--prof,
   never guard-bisect)
+
+## Stop report — batch 1 (2026-06-11)
+
+**Tasks completed vs planned:** 3 of 5 fully (T2, T4, T5-reduced);
+2 partial (T1, T3). Commits 77fc30c, 1ecb5af, 9fb1e2e, d5ecf99,
+d2305d6 — one per task. Quality gates on the batch-final tree:
+`npx tsc --noEmit` clean; `npx vitest run` **1090 passed / 0 failed**
+(baseline 1054/0). Manifest 57 → 60; quarantine 9 → 6 goldens.
+
+**Promoted:** dot-constraint-false, dot-self-loop (exact match),
+circo-self-loop (exact match).
+
+**Decisions:** 9 journal entries; 3 flagged for human review
+(T1 dot.test.ts expectation fix outside write-set; T2 new module
+self-loop.ts outside write-set; fdp-tiny-self-loop port-pin
+re-baseline push-forward).
+
+**Stop conditions hit (mission paused for human input):**
+
+1. **T3 Bug 2 — twopi-self-loop viewBox (18pt):** self-loop spline
+   extent is never folded into `g.info.bb`. C does `update_bb_bz`
+   inside `clip_and_install` (lib/common/splines.c:312); the port's
+   `clipAndInstall` (src/common/splines-clip.ts) passes `bb=null`.
+   Fix location is outside the T3 write-set. **Decision needed:**
+   (a) fix `src/common/splines-clip.ts` to thread the graph bb
+   (C-faithful, affects all neato-family engines), or (b) local bb
+   expansion in `src/layout/twopi/index.ts` after `normalizeGraphBB`.
+   The C structure argues for (a).
+2. **dot-minlen golden still FAILS (4.32pt):** minlen rank logic is
+   correct; a distinct node-position/emitter offset bug remains
+   (signature in .agent-notes/dot-minlen-offset-2026-06.md).
+   **Decision needed:** scope a new debug task (oracle methodology,
+   AD4) — not covered by any planned T1–T10 task.
+
+**Known follow-ups for resume:** Batch 2 (T6–T8) is functionally
+independent of both stops and could proceed once the deviations above
+are ratified; T4's recon recommends AD2 option A (delete the
+`- bb.ll.x` term in src/render/svg-graph.ts:125 once gv_postprocess
+lands).
