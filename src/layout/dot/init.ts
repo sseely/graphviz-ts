@@ -48,6 +48,9 @@ export const RANKDIR_RL = 3;
  * @see lib/common/types.h:GD_rankdir2
  */
 export function dotGraphInit(g: Graph): void {
+  // EdgeLabelsDone reset at layout start (AD2 per-layout semantics)
+  // @see lib/common/input.c:711
+  g.info.edgeLabelsDone = false;
   let rankdir = RANKDIR_TB;
   const p = g.attrs.get('rankdir');
   if (p === 'LR') rankdir = RANKDIR_LR;

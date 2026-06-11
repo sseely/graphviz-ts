@@ -4,14 +4,15 @@
  * TypeScript port of lib/common/postproc.c — gv_postprocess (coordinate
  * rotation + translation pass run after spline routing).
  *
- * Only the coordinate-transform functions are ported here; the label-placement
- * helpers (place_graph_label, place_flip_graph_label, addXLabels) live in
- * graph-label.ts and are handled by the dot pipeline before this function runs.
+ * addXLabels logic lives in xlabels-place.ts to keep this file under the
+ * 500-line limit. It is called from gvPostprocess at the C point
+ * (postproc.c:616 — after graph-label placement, before the bb adjustment).
  *
  * @see lib/common/postproc.c:gv_postprocess
  * @see lib/common/postproc.c:map_point
  * @see lib/common/postproc.c:translate_bb
  * @see lib/common/postproc.c:translate_drawing
+ * @see lib/common/postproc.c:addXLabels
  */
 
 import type { Graph } from '../model/graph.js';
@@ -22,6 +23,7 @@ import { gvNodesize } from './poly-sizing.js';
 import {
   RANKDIR_TB, RANKDIR_LR, RANKDIR_BT, RANKDIR_RL,
 } from '../layout/dot/init.js';
+import { addXLabels } from './xlabels-place.js';
 
 // ---------------------------------------------------------------------------
 // Module-level state (mirrors the C file-scope statics Rankdir, Flip, Offset)
@@ -82,7 +84,7 @@ function mapSpl(spl: { list: Array<{ list: Point[]; sflag: number; eflag: number
 // @see lib/common/postproc.c:98-125
 // ---------------------------------------------------------------------------
 
-/** Map all points in a pre-computed arrowhead polygon (if present).
+/** Map pos on a TextlabelT in place if the label and its pos exist.
  *
  * The ccwrotatepf transforms used for BT (180°, {x,-y}) and RL (270°,
  * {y,x}) are reflections (determinant = -1), not proper rotations.
@@ -245,8 +247,8 @@ function computeOffset(bb: Box, rankdir: number): Point {
  * Sets Rankdir from g.info.rankdir, computes the per-rankdir Offset,
  * then calls translateDrawing to rotate+shift all coordinates.
  *
- * Label placement (place_graph_label, addXLabels, place_root_label) is handled
- * by the dot pipeline's existing graph-label.ts pass before this call.
+ * addXLabels is called at postproc.c:616 — after graph-label placement (done
+ * by the dot pipeline's graph-label.ts pass), before the bb adjustment.
  *
  * @see lib/common/postproc.c:gv_postprocess
  * @see lib/common/postproc.c:dotneato_postprocess
@@ -254,5 +256,7 @@ function computeOffset(bb: Box, rankdir: number): Point {
 export function gvPostprocess(g: Graph): void {
   Rankdir = g.info.rankdir & 0x3;
   Offset = computeOffset(g.info.bb, Rankdir);
+  // addXLabels at postproc.c:616 — after place_graph_label, before bb adjust.
+  addXLabels(g);
   translateDrawing(g);
 }
