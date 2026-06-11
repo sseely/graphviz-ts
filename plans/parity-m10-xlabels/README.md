@@ -50,7 +50,7 @@ Baseline at mission start: **1138 passed / 0 failed**, 66 goldens
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | [T1 rectangle](batch-1/T1-rectangle.md) | [ ] |
+| 1 | [T1 rectangle](batch-1/T1-rectangle.md) | [x] |
 | 2 (after 1) | [T2 node + split.q](batch-2/T2-node-splitq.md) | [ ] |
 | 3 (after 2) | [T3 R-tree index](batch-3/T3-rtree-index.md) | [ ] |
 | 4 (parallel, after 3) | [T4 xlabels placeLabels](batch-4/T4-xlabels.md), [T5 addXLabels + wiring](batch-4/T5-addxlabels.md) | [ ] |
