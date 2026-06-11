@@ -25,9 +25,12 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/sfdp/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md + task files ([gap-analysis.md](gap-analysis.md)) | claude | this directory only | - | [x] |
+| T2 | Substrate: minstd rand + SparseMatrix subset ([T2-substrate.md](T2-substrate.md)) | claude | src/common/crand.ts, src/layout/sfdp/* | T1 | [ ] |
+| T3 | Multilevel + spring-electrical core ([T3-spring-electrical.md](T3-spring-electrical.md)) | claude | src/layout/sfdp/* | T2 | [ ] |
+| T4 | QuadTree supernodes ([T4-quadtree.md](T4-quadtree.md)) | claude | src/layout/sfdp/* | T3 | [ ] |
+| T5 | Pipeline integration + tests ([T5-pipeline.md](T5-pipeline.md)) | claude | src/layout/sfdp/* (+ shared w/ journal) | T4 | [ ] |
+| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T5 | [ ] |
 
 ## T1 recon spec (run as-is)
 
