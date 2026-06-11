@@ -43,7 +43,11 @@ feature/ts-port after mission-8 merge).
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 coverage baseline](batch-1/T1-coverage-baseline.md), [T2 new goldens](batch-1/T2-new-goldens.md), [T3 guard tests](batch-1/T3-guard-tests.md) | [ ] |
+| 1 (parallel) | [T1 coverage baseline](batch-1/T1-coverage-baseline.md), [T2 new goldens](batch-1/T2-new-goldens.md), [T3 guard tests](batch-1/T3-guard-tests.md) | [x] |
+
+**STOPPED 2026-06-11 after batch 1:** T2 quarantined 9/16 candidates
+(>half) — stop condition #4 (systemic layout gap). Batch 2 not started;
+awaiting Scott. Details in [decision-journal.md](decision-journal.md).
 | 2 (after 1) | [T4 gates rework](batch-2/T4-gates-rework.md), [T5 demos](batch-2/T5-demos.md) | [ ] |
 | CHECKPOINT | STOP: present coverage-baseline.md to Scott; he sizes batch 3 | [ ] |
 | 3 (defined at checkpoint) | [placeholder](batch-3/overview.md) | [ ] |
@@ -77,3 +81,25 @@ feature/ts-port after mission-8 merge).
   (libm-chaos context for iterative engines: entries M8/T3, M8/T-final)
 - Debugging hangs: .agent-notes/cluster-hang-2026-06.md (esbuild bundle +
   node --prof; never guard-bisect)
+
+## Session summary — 2026-06-11 (stopped after batch 1)
+
+- **Tasks:** 3/3 of batch 1 complete (T1, T2, T3); batches 2–3 not
+  started (stop condition #4).
+- **Suite:** 1054 passed / 0 failed (baseline 1027 + 7 goldens + 20
+  guard tests). tsc clean. Write-sets verified per commit.
+- **Coverage baseline (T1):** 86.83% stmts / 78.18% branch / 79.03%
+  funcs / 86.83% lines — see coverage-baseline.md.
+- **Goldens (T2):** manifest 50 → 57. 5 clean adds, 2 iterative pins
+  (neato-tiny-multi-edge tol=10, fdp-tiny-self-loop tol=5). 9/16
+  QUARANTINED → stop condition: systemic gaps in self-loop rendering
+  (dot/twopi/circo), rankdir=LR/BT, multi-edge offsetting, minlen,
+  constraint=false, head/tail labels. These need a dedicated parity
+  mission.
+- **Guards (T3):** all 7 guards covered (4 via public API, 3 via
+  direct call — unreachable from public API, documented in tests).
+- **Decisions flagged for review:** 2 tolerance pins (journal rows 2–3);
+  quarantine list (row 2).
+- **Awaiting Scott:** scope of a self-loop/rankdir/edge-attr parity
+  mission vs. proceeding to batch 2 (demos + gates rework) as-is; the
+  batch-2-to-3 coverage checkpoint also still pending.
