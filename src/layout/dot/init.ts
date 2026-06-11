@@ -17,6 +17,66 @@ import { NORMAL } from './fastgr.js';
 import { mapbool } from './rank.js';
 
 // ---------------------------------------------------------------------------
+// RANKDIR constants
+// @see lib/common/const.h RANKDIR_TB/LR/BT/RL
+// ---------------------------------------------------------------------------
+
+/** @see lib/common/const.h:RANKDIR_TB */
+export const RANKDIR_TB = 0;
+/** @see lib/common/const.h:RANKDIR_LR */
+export const RANKDIR_LR = 1;
+/** @see lib/common/const.h:RANKDIR_BT */
+export const RANKDIR_BT = 2;
+/** @see lib/common/const.h:RANKDIR_RL */
+export const RANKDIR_RL = 3;
+
+// ---------------------------------------------------------------------------
+// dotGraphInit — parse rankdir and propagate to subgraphs (graph_init semantics)
+// @see lib/common/input.c:600-663 graph_init
+// @see lib/dotgen/dotinit.c:352 initSubg (GD_rankdir2 propagation)
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse the `rankdir` graph attribute and store the encoded value on g.info.rankdir.
+ * Mirrors C's graph_init SET_RANKDIR with use_rankdir=true for the dot engine:
+ *   SET_RANKDIR(g, (rankdir << 2) | rankdir)
+ * Also sets g.info.flip = (rankdir & 1) == 1 (true for LR and RL).
+ *
+ * @see lib/common/input.c:600-663 graph_init
+ * @see lib/common/types.h:GD_rankdir2
+ */
+export function dotGraphInit(g: Graph): void {
+  let rankdir = RANKDIR_TB;
+  const p = g.attrs.get('rankdir');
+  if (p === 'LR') rankdir = RANKDIR_LR;
+  else if (p === 'BT') rankdir = RANKDIR_BT;
+  else if (p === 'RL') rankdir = RANKDIR_RL;
+  // SET_RANKDIR: effective rankdir in bits 0-1, real rankdir in bits 2-3
+  g.info.rankdir = (rankdir << 2) | rankdir;
+  // GD_flip: bit 0 of effective rankdir
+  g.info.flip = (rankdir & 1) === 1;
+  // Propagate to subgraphs (dotinit.c:352: GD_rankdir2(sg) = GD_rankdir2(g))
+  initSubgraphRankdir(g);
+}
+
+/**
+ * Recursively propagate the root graph's rankdir2 to all subgraphs.
+ * @see lib/dotgen/dotinit.c:352
+ */
+function initSubgraphRankdir(g: Graph): void {
+  const nc = g.info.n_cluster ?? 0;
+  const clust = g.info.clust;
+  for (let c = 1; c <= nc; c++) {
+    if (clust && clust[c - 1]) {
+      const sg = clust[c - 1];
+      sg.info.rankdir = g.info.rankdir;
+      sg.info.flip = g.info.flip;
+      initSubgraphRankdir(sg);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // CL_CROSS — cost of cluster skeleton edge crossing
 // @see lib/common/const.h:CL_CROSS
 // ---------------------------------------------------------------------------

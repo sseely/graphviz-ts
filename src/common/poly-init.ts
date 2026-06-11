@@ -54,10 +54,27 @@ export function readFontAttrs(n: Node, g: Graph): {
   };
 }
 
-/** Assign computed polygon vertices to node shape_info. */
+/** Assign computed polygon vertices to node shape_info.
+ *
+ * Vertices are computed from the UNFLIPPED visual dimensions (width × 72,
+ * height × 72) so that the rendered ellipse/polygon is always the
+ * correct shape before any rotation is applied by gvPostprocess.
+ *
+ * n.info.width / n.info.height are stored in INCHES (unflipped) by
+ * storeNodeSize (nodeinit.ts).  lw/rw/ht are the LAYOUT-FLIPPED values;
+ * using them would produce swapped rx/ry for LR/RL graphs.
+ *
+ * @see lib/common/shapes.c:poly_init — vertices use bb.x/bb.y (unflipped)
+ */
 export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
-  const w = (n.info.lw || DEFAULT_LW) + (n.info.rw || DEFAULT_RW);
-  const h = n.info.ht || DEFAULT_HT;
+  // Prefer the stored unflipped dimensions; fall back to lw+rw / ht for
+  // the no-measurer path where width/height may not be set.
+  const w = n.info.width !== undefined
+    ? n.info.width * 72
+    : (n.info.lw || DEFAULT_LW) + (n.info.rw || DEFAULT_RW);
+  const h = n.info.height !== undefined
+    ? n.info.height * 72
+    : (n.info.ht || DEFAULT_HT);
   n.info.shape_info = {
     ...polyDesc,
     vertices: computeVertices(polyDesc, w, h),

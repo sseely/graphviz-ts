@@ -30,7 +30,9 @@ import {
   dotInitNodeEdge,
   removeFill,
   dotCleanup,
+  dotGraphInit,
 } from './init.js';
+import { gvPostprocess } from '../../common/postproc.js';
 
 // Re-export init helpers for external consumers.
 export {
@@ -41,6 +43,11 @@ export {
   dotInitNodeEdge,
   removeFill,
   dotCleanup,
+  dotGraphInit,
+  RANKDIR_TB,
+  RANKDIR_LR,
+  RANKDIR_BT,
+  RANKDIR_RL,
 } from './init.js';
 
 // ---------------------------------------------------------------------------
@@ -81,10 +88,13 @@ export function getAttrInt(g: Graph, key: string, defaultVal: number): number {
 // ---------------------------------------------------------------------------
 
 /**
- * Phase 0: set edge type and run aspect + init passes.
+ * Phase 0: parse rankdir, set edge type, and run aspect + init passes.
+ * dotGraphInit must run first so g.info.flip is set before nodeinit uses it.
+ * @see lib/common/input.c:600-663 graph_init
  * @see lib/dotgen/dotinit.c:dotLayout (static)
  */
 export function dotPhaseInit(g: Graph): void {
+  dotGraphInit(g);
   setEdgeType(g, EDGETYPE_SPLINE);
   setAspect(g);
   dotInitSubg(g);
@@ -92,14 +102,17 @@ export function dotPhaseInit(g: Graph): void {
 }
 
 /**
- * Phase 4: post-position passes — removeFill, sameports, splines, compound.
+ * Phase 4: post-position passes — removeFill, sameports, splines, compound,
+ * then gvPostprocess to rotate/translate coordinates per rankdir.
  * @see lib/dotgen/dotinit.c:dotLayout (static)
+ * @see lib/common/postproc.c:dotneato_postprocess
  */
 export function dotPhasePost(g: Graph): void {
   removeFill(g);
   dotSameports(g);
   dotSplines(g);
   if (g.info.compound) dotCompoundEdges(g);
+  gvPostprocess(g);
 }
 
 // ---------------------------------------------------------------------------
