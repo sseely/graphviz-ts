@@ -64,6 +64,13 @@ export class Node {
   /**
    * Returns out-edges of this node in graph g (where this node is the tail).
    *
+   * ORDER: cgraph's per-node out-edge dict sorts by the SEQ of the edge's
+   * out-half node — the HEAD — then by edge seq (edge.c:agedgeseqcmpf,
+   * Ag_mainedge_seq_disc). Iteration is therefore by (head creation order,
+   * edge creation order), NOT by plain edge insertion order. This ordering
+   * is load-bearing for emission order and for force-accumulation order in
+   * the iterative engines.
+   *
    * INVARIANT: In the C cgraph library, the adjacency list for a node begins
    * with the node's own self-loop (index 0), and neighbor traversal MUST start
    * at index 1. This convention originates from lib/cgraph/edge.c and
@@ -74,20 +81,27 @@ export class Node {
    *
    * @see lib/cgraph/edge.c:agfstout
    * @see lib/cgraph/edge.c:agnxtout
+   * @see lib/cgraph/edge.c:agedgeseqcmpf
    */
   outEdges(g: Graph): Edge[] {
-    return g.edges.filter((e) => e.tail === this);
+    return g.edges
+      .filter((e) => e.tail === this)
+      .sort((a, b) => (a.head.id - b.head.id) || (a.seq - b.seq));
   }
 
   /**
    * Returns in-edges of this node in graph g (where this node is the head).
-   * Self-loops are excluded per C agnxtedge semantics.
+   * Self-loops are excluded per C agnxtedge semantics. Ordered by the SEQ
+   * of the in-half node — the TAIL — then edge seq (agedgeseqcmpf).
    *
    * @see lib/cgraph/edge.c:agfstin
    * @see lib/cgraph/edge.c:agnxtin
    * @see lib/cgraph/edge.c:agnxtedge (skips self-loops as in-edges)
+   * @see lib/cgraph/edge.c:agedgeseqcmpf
    */
   inEdges(g: Graph): Edge[] {
-    return g.edges.filter((e) => e.head === this && e.tail !== this);
+    return g.edges
+      .filter((e) => e.head === this && e.tail !== this)
+      .sort((a, b) => (a.tail.id - b.tail.id) || (a.seq - b.seq));
   }
 }

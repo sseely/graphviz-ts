@@ -137,9 +137,17 @@ describe('clipAndInstall', () => {
     const info = { swapEnds: null, splineMerge: null, ignoreSwap: true, isOrtho: false };
     clipAndInstall(e, head, ps, 4, info);
     expect(e.info.spl).not.toBeNull();
-    expect(e.info.spl!.list[0].size).toBe(4);
-    expect(e.info.spl!.list[0].list[0]).toEqual({ x: 0, y: 0 });
-    expect(e.info.spl!.list[0].list[3]).toEqual({ x: 100, y: 0 });
+    const bz = e.info.spl!.list[0];
+    expect(bz.size).toBe(4);
+    expect(bz.list[0]).toEqual({ x: 0, y: 0 });
+    // Directed graph: clip_and_install arrow-clips the head end — the
+    // path is shortened to the arrowhead BASE and the boundary point
+    // becomes the arrow tip (spl.ep). @see lib/common/splines.c:arrow_clip
+    expect(bz.eflag).toBe(1);
+    expect(bz.ep).toEqual({ x: 100, y: 0 });
+    expect(bz.list[3].y).toBe(0);
+    expect(bz.list[3].x).toBeLessThan(100);
+    expect(bz.list[3].x).toBeGreaterThan(85);
   });
 });
 

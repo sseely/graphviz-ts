@@ -58,7 +58,7 @@ Baseline at project start: **957 passed / 44 failed** (see
 | 4 | [twopi](mission-4-twopi/overview.md) | 5 golden + 1 unit | [x] |
 | 5 | [circo](mission-5-circo/overview.md) | 6 golden + 1 unit | [x] |
 | 6 | [neato](mission-6-neato/overview.md) | 7 golden | [x] |
-| 7 | [fdp](mission-7-fdp/overview.md) | 6 golden | [ ] |
+| 7 | [fdp](mission-7-fdp/overview.md) | 6 golden | [x] |
 | 8 | [sfdp](mission-8-sfdp/overview.md) | 5 golden | [ ] |
 
 Missions must run in order (1 → 8). Within missions 2–8, T1 is always

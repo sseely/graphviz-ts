@@ -26,9 +26,17 @@ may have changed this mission's failure set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Recon: render each owned input, diff vs ref (use test/golden/compare.ts CLI or the suite), read the C spec, write gap-analysis.md and T2..Tn task files in this directory | claude | this directory only | - | [ ] |
-| T2..Tn | Port tasks defined by T1 - one C function-group each, one commit each, suite-green gate after each | claude | src/layout/fdp/* (+ src/common/*, src/layout/pack/* with journal entry) | T1 | [ ] |
-| T-final | Full suite; journal entry; tick README checkbox; merge branch | claude | plans/test-parity/* | T2..Tn | [ ] |
+| T1 | Recon: gap-analysis.md (oracle workflow, 15.0.0-tag plan) | claude | this directory only | - | [x] |
+| T2 | Flat fdp rewrite: derived graphs, grid, tlayout, xlayout, packed components ([T2-flat-fdp.md](T2-flat-fdp.md)) | claude | src/layout/fdp/* (+ common/pack/neato w/ journal) | T1 | [x] |
+| T3 | Cluster scheme: ports, recursion, cluster bbs ([T3-clusters.md](T3-clusters.md)) — absorbed into T2 (see journal) | claude | src/layout/fdp/* | T2 | [x] |
+| T-final | verify 6 goldens; re-baseline; merge | claude | plans/test-parity/* | T3 | [x] |
+
+## Result (2026-06-10)
+
+All 6 fdp goldens pass; suite 1013/11 → 1001/5 (only sfdp remains).
+End-to-end node positions match the 15.0.0 C binary to ≤1.3e-15
+inches; the tlayout pass is bit-exact (after the software-fma fix —
+see decision journal and .agent-notes/fdp-fma-oracle-2026-06.md).
 
 ## T1 recon spec (run as-is)
 

@@ -44,12 +44,44 @@ export interface NeatoAlgData {
 }
 
 /**
- * Layout-engine algorithm data stored in ND_alg for the fdp engine.
+ * fdp data for REAL (input-graph) nodes.
  *
- * @see lib/fdpgen/ — fdp-engine algorithm data
+ * C stores DNODE in ND_next and PARENT in ND_clust (dot fields reused);
+ * here both live in the alg record together with the numeric ND_pinned
+ * state (P_SET/P_FIX/P_PIN), which the boolean NodeInfo.pinned cannot
+ * represent.
+ *
+ * @see lib/fdpgen/fdp.h:DNODE / PARENT
  */
 export interface FdpAlgData {
   readonly kind: 'fdp';
+  /** Derived node for this real node. @see lib/fdpgen/fdp.h:DNODE */
+  dnode: Node | null;
+  /** Smallest containing cluster. @see lib/fdpgen/fdp.h:PARENT */
+  parent: Graph | null;
+  /** ND_pinned P_* state. @see lib/common/const.h:P_SET */
+  pinned: number;
+}
+
+/**
+ * fdp data for DERIVED-graph nodes (dndata in C).
+ *
+ * @see lib/fdpgen/fdp.h:dndata
+ */
+export interface FdpDndata {
+  readonly kind: 'fdp-dndata';
+  /** Degree of node. @see lib/fdpgen/fdp.h:DEG */
+  deg: number;
+  /** Weighted degree of node. @see lib/fdpgen/fdp.h:WDEG */
+  wdeg: number;
+  /** Real node if not a cluster. @see lib/fdpgen/fdp.h:ANODE */
+  dn: Node | null;
+  /** Cluster in real graph, for cluster nodes. @see lib/common/types.h:ND_clust */
+  clust: Graph | null;
+  /** Incremental displacement. @see lib/fdpgen/fdp.h:DISP */
+  disp: [number, number];
+  /** ND_pinned P_* state. @see lib/common/const.h:P_SET */
+  pinned: number;
 }
 
 /**
@@ -164,6 +196,7 @@ export type NodeAlgData =
   | DotAlgData
   | NeatoAlgData
   | FdpAlgData
+  | FdpDndata
   | CircoNData
   | CircoCData
   | TwopiAlgData
