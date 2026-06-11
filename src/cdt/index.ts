@@ -12,5 +12,6 @@
 
 export type { Comparator, KeyOf } from "./types.js";
 export { DtSplay } from "./splay.js";
+export { DtBag }   from "./bag.js";
 export { DtHash }  from "./hash.js";
 export { dtStrHash } from "./strhash.js";
