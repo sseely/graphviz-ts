@@ -15,6 +15,8 @@ import { commonInitNode, lateInt } from '../../common/nodeinit.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL } from './fastgr.js';
 import { mapbool } from './rank.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
+import type { TextMeasurer } from '../../common/textmeasure.js';
 
 // ---------------------------------------------------------------------------
 // RANKDIR constants
@@ -213,7 +215,11 @@ export function dotInitNodeEdge(g: Graph): void {
     commonInitNode(n, g);
     dotInitNode(n);
   }
-  for (const e of g.edges) dotInitEdge(e);
+  const measurer = (g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined)?.textMeasurer;
+  for (const e of g.edges) {
+    dotInitEdge(e);
+    if (measurer) initEdgeLabels(e, g, measurer);
+  }
 }
 
 // ---------------------------------------------------------------------------

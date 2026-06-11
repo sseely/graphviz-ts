@@ -13,6 +13,7 @@
 
 import type { Port, Spline } from './geom.js';
 import type { Edge } from './edge.js';
+import type { TextlabelT } from '../common/types.js';
 
 /**
  * Edge layout and rendering info record; replaces the ED_* macro family.
@@ -51,7 +52,7 @@ export interface EdgeInfo {
   spl?: Spline;
 
   // -------------------------------------------------------------------------
-  // Labels — typed in Batch 5b; left as unknown until TextLabel is ported.
+  // Labels — AD6: typed as TextlabelT (was unknown until TextLabel was ported).
   // -------------------------------------------------------------------------
 
   /**
@@ -59,28 +60,28 @@ export interface EdgeInfo {
    * @see lib/common/types.h:Agedgeinfo_t.label
    * @see lib/common/types.h:ED_label
    */
-  label?: unknown; // ED_label — textlabel_t* in C
+  label?: TextlabelT;
 
   /**
    * Head-end label (arrowhead side).
    * @see lib/common/types.h:Agedgeinfo_t.head_label
    * @see lib/common/types.h:ED_head_label
    */
-  head_label?: unknown; // ED_head_label — textlabel_t* in C
+  head_label?: TextlabelT;
 
   /**
    * Tail-end label (arrowtail side).
    * @see lib/common/types.h:Agedgeinfo_t.tail_label
    * @see lib/common/types.h:ED_tail_label
    */
-  tail_label?: unknown; // ED_tail_label — textlabel_t* in C
+  tail_label?: TextlabelT;
 
   /**
    * External label (placed outside the edge spline).
    * @see lib/common/types.h:Agedgeinfo_t.xlabel
    * @see lib/common/types.h:ED_xlabel
    */
-  xlabel?: unknown; // ED_xlabel — textlabel_t* in C
+  xlabel?: TextlabelT;
 
   // -------------------------------------------------------------------------
   // Edge metadata

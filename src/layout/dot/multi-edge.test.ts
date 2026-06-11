@@ -21,10 +21,29 @@ import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
 import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
+import type { TextlabelT } from '../../common/types.js';
 import type { RankEntry } from '../../model/rankEntry.js';
 import { EDGETYPE_SPLINE } from './splines.js';
 import { interclexpMergeable } from './cluster.js';
 import { routeParallelEdgeGroup, shiftInteriorPts } from './splines-route.js';
+
+/** Minimal TextlabelT fixture for tests — text content only, geometry zeroed. */
+function makeTestLabel(text: string): TextlabelT {
+  return {
+    text,
+    fontname: 'Times,serif',
+    fontcolor: 'black',
+    charset: 0,
+    fontsize: 14,
+    dimen: { x: 0, y: 0 },
+    space: { x: 0, y: 0 },
+    pos: { x: 0, y: 0 },
+    u: { kind: 'txt', span: [], nspans: 0 },
+    valign: 'c'.charCodeAt(0),
+    set: false,
+    html: false,
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Shared builders
@@ -95,8 +114,8 @@ describe('interclexpMergeable — AC1 different labels', () => {
     const b = makeNode({ id: 2, name: 'B', rank: 0, order: 0, cx: 0, cy: 18 }, g);
     const e1 = makeEdge(a, b, g);
     const e2 = makeEdge(a, b, g);
-    e1.info.label = { text: 'x' };
-    e2.info.label = { text: 'y' };
+    e1.info.label = makeTestLabel('x');
+    e2.info.label = makeTestLabel('y');
     expect(interclexpMergeable(e1, e2)).toBe(false);
   });
 });

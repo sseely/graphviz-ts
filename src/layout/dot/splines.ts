@@ -21,6 +21,7 @@ import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
+import { placePortLabels } from './splines-label.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -357,6 +358,7 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   }
   if (normalize) edgeNormalize(g);
   routeDotEdges(g);
+  placePortLabels(g);
   return 0;
 }
 

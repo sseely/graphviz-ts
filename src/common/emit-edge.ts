@@ -98,9 +98,8 @@ export function emitEndEdge(e: Edge, job: RenderJob): void {
 
 /** Emit one optional edge label if present and positioned. */
 class EdgeLabelHelper {
-  static emit(raw: unknown, job: RenderJob): void {
-    if (raw === undefined || raw === null) return;
-    const lp = raw as TextlabelT;
+  static emit(lp: TextlabelT | undefined, job: RenderJob): void {
+    if (lp === undefined) return;
     if (!lp.set) return;
     emitLabel(lp, job);
   }
