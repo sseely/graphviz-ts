@@ -47,7 +47,7 @@ feature/post-parity after batch-1 close).
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 (parallel) | [T1 minlen+constraint](batch-1/T1-minlen-constraint.md), [T2 dot self-loop](batch-1/T2-dot-self-loop.md), [T3 twopi/circo self-loop debug](batch-1/T3-twopi-circo-self-loop.md), [T4 rankdir recon](batch-1/T4-rankdir-recon.md), then [T5 promote goldens](batch-1/T5-promote-goldens.md) | [x] partial close; residuals → batch 1b |
-| 1b (parallel; added after stop resolution 2026-06-11) | [T3b twopi bb fix in splines-clip](batch-1b/T3b-twopi-bb-clip.md), [T1b dot-minlen offset debug+fix](batch-1b/T1b-dot-minlen-offset.md), then [T5b promote](batch-1b/T5b-promote-goldens.md) | [ ] |
+| 1b (parallel; added after stop resolution 2026-06-11) | [T3b twopi bb fix in splines-clip](batch-1b/T3b-twopi-bb-clip.md), [T1b dot-minlen offset debug+fix](batch-1b/T1b-dot-minlen-offset.md), then [T5b promote](batch-1b/T5b-promote-goldens.md) | [x] suite 1098/0, manifest 62 |
 | 2 (after 1b) | [T6 rankdir impl](batch-2/T6-rankdir-impl.md), [T7 multi-edge offset](batch-2/T7-multi-edge-offset.md), then [T8 promote + RL golden](batch-2/T8-promote-goldens.md) | [ ] |
 | 3 (after 2) | [T9 head/tail labels](batch-3/T9-head-tail-labels.md), then [T10 promote + close](batch-3/T10-promote-close.md) | [ ] |
 
