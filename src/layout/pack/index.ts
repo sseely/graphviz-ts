@@ -216,16 +216,19 @@ export function shiftOneGraph(g: Graph, dx: number, dy: number): void {
 }
 
 /**
- * Normalize bb.ll to (0,0) by shifting all nodes; update g.info.bb.
+ * Normalize bb.ll to (0,0) by shifting all nodes, edges, and the bb itself.
+ * Uses g.info.bb.ll (which includes spline extent from clipAndInstall) as the
+ * translation offset — matching C's translate_drawing which reads GD_bb(g).LL
+ * after clip_and_install has expanded it via update_bb_bz. A node-only
+ * recompute here would discard spline extent (twopi-self-loop divergence).
  * @see lib/common/postproc.c:translate_drawing
+ * @see lib/common/splines.c:clip_and_install
  */
 export function normalizeGraphBB(g: Graph): void {
-  const bb = computeSubgraphBB(g, 0);
-  if (bb.ll.x !== 0 || bb.ll.y !== 0) {
-    shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
-    g.info.bb = computeSubgraphBB(g, 0);
-  } else {
-    g.info.bb = bb;
+  const ll = g.info.bb.ll;
+  if (ll.x !== 0 || ll.y !== 0) {
+    shiftOneGraph(g, -ll.x, -ll.y);
+    // g.info.bb updated by shiftOneGraph → shiftGraphBBs; no recompute needed.
   }
 }
 
