@@ -486,5 +486,21 @@
     "input": "test/golden/inputs/circo-self-loop.dot",
     "reference": "test/golden/refs/circo-self-loop.svg",
     "description": "3-node cycle with a self-loop on one node; ref: graphviz 15.0.0 dot -Kcirco -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-minlen",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-minlen.dot",
+    "reference": "test/golden/refs/dot-minlen.svg",
+    "description": "3-node digraph with minlen=2 on one edge; ref: graphviz 15.0.0 dot -Kdot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "twopi-self-loop",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-self-loop.dot",
+    "reference": "test/golden/refs/twopi-self-loop.svg",
+    "description": "3-node undirected path with a self-loop on one node; ref: graphviz 15.0.0 dot -Ktwopi -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
   }
 ]

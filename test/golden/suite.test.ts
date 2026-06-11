@@ -62,11 +62,11 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 }
 
 // ---------------------------------------------------------------------------
-// Suite-level check: manifest must have exactly 60 entries
+// Suite-level check: manifest must have exactly 62 entries
 // ---------------------------------------------------------------------------
 
-test('manifest has 60 entries', () => {
-  expect(manifest).toHaveLength(60);
+test('manifest has 62 entries', () => {
+  expect(manifest).toHaveLength(62);
 });
 
 // ---------------------------------------------------------------------------
