@@ -308,33 +308,36 @@ describe('subgraphBounds', () => {
   });
 });
 
-describe('interclexpMergeable', () => {
+// C mergeable() checks only tail/head/label/ports — minlen and weight are
+// irrelevant to the predicate. @see lib/dotgen/class2.c:mergeable
+
+describe('interclexpMergeable — undefined prev', () => {
   it('returns false when prev is undefined', () => {
     const [g, nodes] = makeTestGraph(2);
     const e = addTestEdge(g, nodes[0], nodes[1]);
-    e.info.minlen = 1;
-    e.info.weight = 1;
     expect(interclexpMergeable(undefined, e)).toBe(false);
   });
-  it('returns true when prev and e share tail, minlen, weight', () => {
+});
+
+describe('interclexpMergeable — same endpoints', () => {
+  it('returns true when prev and e share tail, head, label, ports', () => {
     const [g, nodes] = makeTestGraph(2);
     const e1 = addTestEdge(g, nodes[0], nodes[1]);
-    e1.info.minlen = 2;
-    e1.info.weight = 3;
     const e2 = addTestEdge(g, nodes[0], nodes[1]);
-    e2.info.minlen = 2;
-    e2.info.weight = 3;
     expect(interclexpMergeable(e1, e2)).toBe(true);
   });
-  it('returns false when minlen differs', () => {
+});
+
+// C mergeable() ignores minlen/weight — differing minlen does NOT make edges
+// non-mergeable. @see lib/dotgen/class2.c:mergeable (lines 150-153)
+describe('interclexpMergeable — minlen ignored', () => {
+  it('returns true even when minlen differs', () => {
     const [g, nodes] = makeTestGraph(2);
     const e1 = addTestEdge(g, nodes[0], nodes[1]);
     e1.info.minlen = 1;
-    e1.info.weight = 1;
     const e2 = addTestEdge(g, nodes[0], nodes[1]);
     e2.info.minlen = 2;
-    e2.info.weight = 1;
-    expect(interclexpMergeable(e1, e2)).toBe(false);
+    expect(interclexpMergeable(e1, e2)).toBe(true);
   });
 });
 

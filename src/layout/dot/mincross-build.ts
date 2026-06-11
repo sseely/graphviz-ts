@@ -221,13 +221,15 @@ export function makeEmptyRank(): RankEntry {
 }
 
 export function allocateRanksCount(g: Graph, cn: number[]): void {
+  // Must iterate REAL graph edges (agfstout/agnxtout in C), not fast-graph
+  // virtual edges (n.info.out). Virtual edges are 1-rank-spanning by
+  // construction, so they contribute nothing to intermediate-rank counts.
+  // Real edges carry the original tail→head rank span (e.g. minlen=2 makes
+  // A.rank=0, B.rank=2 → intermediate rank 1 needs a slot).
   for (const n of g.nodes.values()) {
     const r = n.info.rank !== undefined ? n.info.rank : 0;
     cn[r]++;
-    const out = n.info.out;
-    if (!out) continue;
-    for (let ei = 0; ei < out.size; ei++) {
-      const e = out.list[ei];
+    for (const e of n.outEdges(g)) {
       let lo = e.tail.info.rank !== undefined ? e.tail.info.rank : 0;
       let hi = e.head.info.rank !== undefined ? e.head.info.rank : 0;
       if (lo > hi) { const tmp = lo; lo = hi; hi = tmp; }

@@ -11,9 +11,72 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { commonInitNode } from '../../common/nodeinit.js';
+import { commonInitNode, lateInt } from '../../common/nodeinit.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL } from './fastgr.js';
+import { mapbool } from './rank.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
+import type { TextMeasurer } from '../../common/textmeasure.js';
+
+// ---------------------------------------------------------------------------
+// RANKDIR constants
+// @see lib/common/const.h RANKDIR_TB/LR/BT/RL
+// ---------------------------------------------------------------------------
+
+/** @see lib/common/const.h:RANKDIR_TB */
+export const RANKDIR_TB = 0;
+/** @see lib/common/const.h:RANKDIR_LR */
+export const RANKDIR_LR = 1;
+/** @see lib/common/const.h:RANKDIR_BT */
+export const RANKDIR_BT = 2;
+/** @see lib/common/const.h:RANKDIR_RL */
+export const RANKDIR_RL = 3;
+
+// ---------------------------------------------------------------------------
+// dotGraphInit — parse rankdir and propagate to subgraphs (graph_init semantics)
+// @see lib/common/input.c:600-663 graph_init
+// @see lib/dotgen/dotinit.c:352 initSubg (GD_rankdir2 propagation)
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse the `rankdir` graph attribute and store the encoded value on g.info.rankdir.
+ * Mirrors C's graph_init SET_RANKDIR with use_rankdir=true for the dot engine:
+ *   SET_RANKDIR(g, (rankdir << 2) | rankdir)
+ * Also sets g.info.flip = (rankdir & 1) == 1 (true for LR and RL).
+ *
+ * @see lib/common/input.c:600-663 graph_init
+ * @see lib/common/types.h:GD_rankdir2
+ */
+export function dotGraphInit(g: Graph): void {
+  let rankdir = RANKDIR_TB;
+  const p = g.attrs.get('rankdir');
+  if (p === 'LR') rankdir = RANKDIR_LR;
+  else if (p === 'BT') rankdir = RANKDIR_BT;
+  else if (p === 'RL') rankdir = RANKDIR_RL;
+  // SET_RANKDIR: effective rankdir in bits 0-1, real rankdir in bits 2-3
+  g.info.rankdir = (rankdir << 2) | rankdir;
+  // GD_flip: bit 0 of effective rankdir
+  g.info.flip = (rankdir & 1) === 1;
+  // Propagate to subgraphs (dotinit.c:352: GD_rankdir2(sg) = GD_rankdir2(g))
+  initSubgraphRankdir(g);
+}
+
+/**
+ * Recursively propagate the root graph's rankdir2 to all subgraphs.
+ * @see lib/dotgen/dotinit.c:352
+ */
+function initSubgraphRankdir(g: Graph): void {
+  const nc = g.info.n_cluster ?? 0;
+  const clust = g.info.clust;
+  for (let c = 1; c <= nc; c++) {
+    if (clust && clust[c - 1]) {
+      const sg = clust[c - 1];
+      sg.info.rankdir = g.info.rankdir;
+      sg.info.flip = g.info.flip;
+      initSubgraphRankdir(sg);
+    }
+  }
+}
 
 // ---------------------------------------------------------------------------
 // CL_CROSS — cost of cluster skeleton edge crossing
@@ -66,24 +129,52 @@ export function isSelfLoop(e: Edge): boolean {
 }
 
 /**
+ * Reads the `constraint` edge attr and stores the parsed boolean on e.info.
+ * Absent or empty attr leaves e.info.constraint unchanged (C: constr[0] guard).
+ * @see lib/dotgen/rank.c:is_nonconstraint
+ * @see lib/common/utils.c:mapbool
+ */
+function initEdgeConstraint(e: Edge): void {
+  const s = e.attrs.get('constraint');
+  if (s !== undefined && s !== '') e.info.constraint = mapbool(s);
+}
+
+/**
+ * Applies the self-loop group-penalty to xpenalty and weight.
+ * @see lib/dotgen/dotinit.c:dot_init_edge (tailgroup/headgroup block)
+ */
+function applyGroupPenalty(e: Edge): void {
+  if (!isSelfLoop(e)) return;
+  e.info.xpenalty = CL_CROSS;
+  e.info.weight = (e.info.weight ?? 1) * 100;
+}
+
+/**
+ * Zeroes xpenalty and weight when the edge is a non-constraint edge.
+ * @see lib/dotgen/dotinit.c:dot_init_edge:73-76
+ */
+function applyNonconstraintZero(e: Edge): void {
+  if (!nonconstraintEdge(e)) return;
+  e.info.xpenalty = 0;
+  e.info.weight = 0;
+}
+
+/**
  * Initialises per-edge layout data for the dot engine.
  * Mirrors dot_init_edge: sets weight, count, xpenalty, minlen.
  *
  * @see lib/dotgen/dotinit.c:dot_init_edge
  */
 export function dotInitEdge(e: Edge): void {
+  initEdgeConstraint(e);
   e.info.weight = e.info.weight ?? 1;
   e.info.count = 1;
   e.info.xpenalty = 1;
-  if (isSelfLoop(e)) {
-    e.info.xpenalty = CL_CROSS;
-    e.info.weight = (e.info.weight) * 100;
-  }
-  if (nonconstraintEdge(e)) {
-    e.info.xpenalty = 0;
-    e.info.weight = 0;
-  }
-  e.info.minlen = e.info.minlen ?? 1;
+  applyGroupPenalty(e);
+  applyNonconstraintZero(e);
+  // late_int semantics: default 1, minimum 0.
+  // @see lib/dotgen/dotinit.c:85  ED_minlen(e) = late_int(e, E_minlen, 1, 0)
+  e.info.minlen = lateInt(e.attrs.get('minlen'), 1, 0);
 }
 
 // ---------------------------------------------------------------------------
@@ -124,7 +215,11 @@ export function dotInitNodeEdge(g: Graph): void {
     commonInitNode(n, g);
     dotInitNode(n);
   }
-  for (const e of g.edges) dotInitEdge(e);
+  const measurer = (g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined)?.textMeasurer;
+  for (const e of g.edges) {
+    dotInitEdge(e);
+    if (measurer) initEdgeLabels(e, g, measurer);
+  }
 }
 
 // ---------------------------------------------------------------------------

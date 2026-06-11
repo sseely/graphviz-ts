@@ -316,6 +316,12 @@ export function deleteFastNode(g: Graph, n: Node): void {
 export function virtualNode(g: Graph): Node {
   const n = new NodeClass(0, '', g);
   n.info.node_type = VIRTUAL;
+  // C: ND_lw(n) = ND_rw(n) = 1; ND_ht(n) = 1; ND_UF_size(n) = 1
+  // @see lib/dotgen/fastgr.c:virtual_node
+  n.info.lw = 1;
+  n.info.rw = 1;
+  n.info.ht = 1;
+  n.info.UF_size = 1;
   n.info.in = { list: [], size: 0 };
   n.info.out = { list: [], size: 0 };
   fastNode(g, n);

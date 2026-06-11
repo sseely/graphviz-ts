@@ -11,9 +11,15 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import type { Box } from '../../model/geom.js';
+import type { Box, Point } from '../../model/geom.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
-import { nodeRankOf, nodeOrderOf, nodeCoordX, splineMerge } from './splines.js';
+import { nodeRankOf, nodeOrderOf, nodeCoordX, splineMerge, resolveOrigEdge } from './splines.js';
+import { buildRankCorridor, clipToNodes } from './edge-route-routing.js';
+import { computeSpline } from './edge-route-poly.js';
+import { nodeBoxOf, installEdgeSpline, edgePenwidthAttr } from './edge-route-helpers.js';
+import { rankEdgeInfoOf } from './edge-route-rank.js';
+import { arrowheadPolygon } from './edge-route-arrow.js';
+import { edgeRenderPenwidth } from './edge-route-helpers.js';
 
 // ---------------------------------------------------------------------------
 // SplineInfo
@@ -250,6 +256,97 @@ export function makeRegularEdge(
   _edges: Edge[], _cnt: number, _et: number,
 ): void {
   // TODO: implement when pathplan.ts is ported
+}
+
+// ---------------------------------------------------------------------------
+// routeParallelEdgeGroup — parallel-edge offset for regular (non-self) edges
+// @see lib/dotgen/dotsplines.c:make_regular_edge (cnt > 1 offset section)
+// ---------------------------------------------------------------------------
+
+/**
+ * Apply x-offset to interior control points of a bezier (any length).
+ * C shifts only k=1..size-2 (interior control points).
+ * Endpoints (index 0 and index length-1) are fixed.
+ *
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (pointfs interior shift)
+ */
+export function shiftInteriorPts(pts: Point[], dx: number): Point[] {
+  return pts.map((p, i) => isInterior(i, pts.length)
+    ? { x: p.x + dx, y: p.y }
+    : p,
+  );
+}
+
+/** True when index i is an interior control point (not an endpoint). */
+function isInterior(i: number, len: number): boolean {
+  return i > 0 && i < len - 1;
+}
+
+/**
+ * Build the unclipped base bezier for the edge group via rank-corridor,
+ * falling back to a linear bezier when rank geometry is unavailable.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (spline computation)
+ */
+function baseSplineForGroup(g: Graph, e0: Edge): Point[] {
+  const tailBox = nodeBoxOf(e0.tail, g);
+  const headBox = nodeBoxOf(e0.head, g);
+  const rankInfo = rankEdgeInfoOf(g, e0.tail, e0.head);
+  if (rankInfo !== undefined) {
+    const corridor = buildRankCorridor(tailBox, headBox, rankInfo);
+    return computeSpline(corridor.boxes, corridor.startPt, corridor.endPt);
+  }
+  const s = e0.tail.info.coord;
+  const d = e0.head.info.coord;
+  return [
+    { x: s.x, y: s.y },
+    { x: s.x + (d.x - s.x) / 3,       y: s.y + (d.y - s.y) / 3 },
+    { x: s.x + 2 * (d.x - s.x) / 3,   y: s.y + 2 * (d.y - s.y) / 3 },
+    { x: d.x, y: d.y },
+  ];
+}
+
+/** Clip a shifted bezier to node boundaries and install spline + arrowhead. */
+function installShiftedEdge(g: Graph, e: Edge, shifted: Point[]): void {
+  // Clip using the edge's own tail/head nodes (virtual edges have physical coords).
+  const tBox = nodeBoxOf(e.tail, g);
+  const hBox = nodeBoxOf(e.head, g);
+  const pw = edgePenwidthAttr(e);
+  const { clipped, arrowTip, arrowDir } = clipToNodes(shifted, tBox, hBox, pw);
+  // Install spl on the original NORMAL edge (mirrors C clip_and_install's to_orig loop).
+  // @see lib/common/splines.c:clip_and_install (lines 248-249)
+  const orig = resolveOrigEdge(e);
+  installEdgeSpline(orig, clipped, arrowTip);
+  (orig.info as unknown as Record<string, unknown>)._arrowPts =
+    arrowheadPolygon(arrowTip, arrowDir, edgeRenderPenwidth(orig));
+}
+
+/**
+ * Route a group of cnt >= 1 parallel regular edges with C-faithful x-offsets.
+ *
+ * Algorithm (mirrors make_regular_edge cnt > 1 section in dotsplines.c):
+ *   1. Route one base path via rank-corridor spline.
+ *   2. dx = Multisep * (cnt - 1) / 2
+ *   3. edge[0]: interior points shifted left by dx
+ *   4. edge[j] (j=1..cnt-1): shift right by Multisep per step
+ *   Each shifted path is clipped to node boundaries independently.
+ *
+ * @see lib/dotgen/dotsplines.c:make_regular_edge
+ */
+export function routeParallelEdgeGroup(
+  g: Graph, edges: Edge[], multisep: number,
+): void {
+  const cnt = edges.length;
+  if (cnt === 0) return;
+  const base = baseSplineForGroup(g, edges[0]!);
+  if (cnt === 1) { installShiftedEdge(g, edges[0]!, base); return; }
+  // dx = Multisep * (cnt-1) / 2 centres the fan on the base path.
+  // @see lib/dotgen/dotsplines.c:make_regular_edge:1885
+  const dx = multisep * (cnt - 1) / 2;
+  let shifted = shiftInteriorPts(base, -dx);
+  for (let j = 0; j < cnt; j++) {
+    if (j > 0) shifted = shiftInteriorPts(shifted, multisep);
+    installShiftedEdge(g, edges[j]!, shifted);
+  }
 }
 
 export { splineMerge };

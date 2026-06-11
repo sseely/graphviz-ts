@@ -26,6 +26,10 @@ export const LEAFSET    = 6;
 export const CLUSTER    = 7;
 export const SLACKNODE  = 2;
 export const EDGE_LABEL = 1;
+/** @see lib/common/const.h:HEAD_LABEL */
+export const HEAD_LABEL = 1 << 1;
+/** @see lib/common/const.h:TAIL_LABEL */
+export const TAIL_LABEL = 1 << 2;
 export const NEW_RANK   = 1 << 4;
 export const LOCAL      = 100;
 export const GLOBAL     = 101;

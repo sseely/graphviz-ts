@@ -227,3 +227,44 @@ describe('splineEdges self-loop', () => {
     expect(eSelf.info.spl).toBeDefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// 10. nodesep fallback — self-loop stepx defaults to 18 (POINTS(DEFAULT_NODESEP))
+//
+// C spec: lib/common/input.c line 667
+//   GD_nodesep(g) = POINTS(late_double(g, "nodesep", DEFAULT_NODESEP, MIN_NODESEP))
+//   DEFAULT_NODESEP = 0.25 inches → POINTS(0.25) = 18
+//
+// When g.info.nodesep is not set (undefined), RoutingHelper.straight and
+// withVconfig must fall back to 18, producing a rightmost spline control
+// point at coord.x + rw + 18.
+// ---------------------------------------------------------------------------
+
+describe('nodesep default fallback', () => {
+  it('self-loop rightmost control point = rw + 18 when nodesep unset', () => {
+    // n1 is at coord (0,0), rw=36; expected rightmost x = 0 + 36 + 18 = 54
+    const eSelf = Fixture.edge(g, n1, n1);
+    Fixture.setEdgetype(g, EDGETYPE_LINE);
+    // Confirm nodesep is not set on the graph
+    expect(g.info.nodesep).toBeUndefined();
+    splineEdges(g);
+    const spl = eSelf.info.spl;
+    expect(spl).toBeDefined();
+    const allX = spl!.list.flatMap((bz) => bz.list.map((p) => p.x));
+    const maxX = Math.max(...allX);
+    // Tolerance: 1 point; exact value is n1.info.coord.x + n1.info.rw + 18
+    expect(maxX).toBeCloseTo(n1.info.coord.x + n1.info.rw + 18, 0);
+  });
+
+  it('explicit nodesep=16 produces rightmost x = rw + 16', () => {
+    const eSelf = Fixture.edge(g, n1, n1);
+    Fixture.setEdgetype(g, EDGETYPE_LINE);
+    g.info.nodesep = 16;
+    splineEdges(g);
+    const spl = eSelf.info.spl;
+    expect(spl).toBeDefined();
+    const allX = spl!.list.flatMap((bz) => bz.list.map((p) => p.x));
+    const maxX = Math.max(...allX);
+    expect(maxX).toBeCloseTo(n1.info.coord.x + n1.info.rw + 16, 0);
+  });
+});

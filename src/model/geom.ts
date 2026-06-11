@@ -119,6 +119,31 @@ export type Port = {
 // Utility functions
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Rotation helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Counter-clockwise rotate point p by ccwrot degrees (0, 90, 180, or 270).
+ *
+ * Matches the four-case switch in lib/common/geom.c:ccwrotatepf exactly:
+ *   0   → identity
+ *   90  → perp(p)  = { x: -p.y, y: p.x }
+ *   180 → { x: p.x, y: -p.y }    (note: keep x, negate y — matches geom.c:180 case)
+ *   270 → exch_xyf(p) = { x: p.y, y: p.x }
+ *
+ * @see lib/common/geom.c:ccwrotatepf
+ */
+export function ccwrotatepf(p: Point, ccwrot: number): Point {
+  switch (ccwrot) {
+    case 0:   return p;
+    case 90:  return { x: -p.y, y: p.x };
+    case 180: return { x: p.x, y: -p.y };
+    case 270: return { x: p.y, y: p.x };
+    default:  return p;
+  }
+}
+
 /**
  * Returns true if box `b0` completely contains box `b1`.
  *

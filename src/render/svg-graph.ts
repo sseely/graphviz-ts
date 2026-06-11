@@ -36,7 +36,7 @@ export function emitSvgTag(job: RenderJob): void {
   const w = contentW + 2 * SVG_PAD;
   const h = contentH + 2 * SVG_PAD;
   job.write('<svg width="' + String(w) + 'pt" height="' + String(h) + 'pt"\n');
-  // viewBox always starts at (0,0); group translate accounts for bb.ll offset
+  // viewBox always starts at (0,0); gvPostprocess normalises bb.ll to (0,0) before render
   job.write('     viewBox="0.00 0.00 ' + String(w) + '.00 ' + String(h) + '.00"\n');
   job.write('     xmlns="http://www.w3.org/2000/svg"');
   job.write(' xmlns:xlink="http://www.w3.org/1999/xlink">\n');
@@ -121,8 +121,8 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
   job.write(SVG_GENERATOR_COMMENT);
   emitSvgTag(job);
   const bb = job.bb;
-  // tx/ty account for bb.ll offset so viewBox can stay at (0,0)
-  const tx = SVG_PAD - bb.ll.x;
+  // gvPostprocess zeroes bb.ll before render; tx is simply the padding.
+  const tx = SVG_PAD;
   const ty = bb.ur.y + SVG_PAD;
   emitGraphGroupOpen(graphGroupId(g.name), tx, ty, job);
   emitGraphTitle(g, job);

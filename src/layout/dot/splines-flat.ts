@@ -34,7 +34,18 @@ export function cloneGraph(g: Graph): Graph {
   auxg.info.nodesep = g.info.nodesep;
   auxg.info.ranksep = g.info.ranksep;
   auxg.info.flags = g.info.flags;
-  auxg.info.flip = true; // rankdir=LR equivalent
+  // Mirror C cloneGraph: if parent is flipped (LR/RL) set rankdir=TB on auxg,
+  // else set rankdir=LR. The flat-adj pipeline needs the inverse axis.
+  // @see lib/dotgen/dotsplines.c:787-790
+  if (g.info.flip) {
+    // SET_RANKDIR(auxg, RANKDIR_TB): rankdir=0, flip=false
+    auxg.info.rankdir = 0;
+    auxg.info.flip = false;
+  } else {
+    // SET_RANKDIR(auxg, RANKDIR_LR): rankdir=(1<<2)|1=5, flip=true
+    auxg.info.rankdir = (1 << 2) | 1;
+    auxg.info.flip = true;
+  }
   auxg.info.dotroot = auxg;
   auxg.info.gvc = g.info.gvc;
   return auxg;

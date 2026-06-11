@@ -26,7 +26,7 @@ import {
 import { CLUSTER } from './rank.js';
 import { makeSlots, safeOtherEdge, makeInterclustChain } from './cluster-path.js';
 // mergeChain lives in classify.ts (circular: classify ↔ cluster — safe for function refs)
-import { mergeChain } from './classify.js';
+import { mergeChain, portsEq } from './classify.js';
 
 export { CLUSTER_EDGE } from './cluster-path.js';
 export { mapInterclustNode } from './cluster-path.js';
@@ -36,11 +36,18 @@ export { mergeChain };
 // interclexp helpers — @see lib/dotgen/cluster.c:interclexp
 // ---------------------------------------------------------------------------
 
-/** @see lib/dotgen/cluster.c:mergeable */
+/**
+ * True when edges e and f can be merged as parallel intercluster edges.
+ * Must match C exactly: same tail, same head, same label identity, and equal ports.
+ *
+ * @see lib/dotgen/class2.c:mergeable
+ */
 export function interclexpMergeable(prev: Edge | undefined, e: Edge): boolean {
   if (!prev) return false;
-  return prev.tail === e.tail && prev.info.minlen === e.info.minlen
-    && prev.info.weight === e.info.weight;
+  return prev.tail === e.tail
+    && prev.head === e.head
+    && prev.info.label === e.info.label
+    && portsEq(prev, e);
 }
 
 /** Rank equality helper — extracts ?? so callers stay below CCN 10. */

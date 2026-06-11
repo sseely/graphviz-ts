@@ -311,6 +311,8 @@ export function newSpline(e: Edge, sz: number): Bezier {
 
 /** @see lib/common/splines.c:clip_and_install */
 export function clipAndInstall(fe: Edge, hn: Node, ps: Point[], pn: number, info: SplineInfo): void {
+  // C: graph_t *const g = agraphof(agtail(fe)); — get root graph from tail node.
+  const g = fe.tail.root;
   const newspl = newSpline(fe, pn);
   const orig = SplineClipHelper.resolveOrig(fe);
   const { clipTail, clipHead, tbox, hbox } = SplineClipHelper.getPortConfig(fe, orig);
@@ -322,6 +324,6 @@ export function clipAndInstall(fe: Edge, hn: Node, ps: Point[], pn: number, info
     end: SplineClipHelper.trimEnd(ps, rawEnd),
   };
   SplineClipHelper.arrowClip(fe, hn, ps, bounds, newspl, info);
-  // bb update deferred: Edge has no graph ref; callers that need bb must pass it separately.
-  SplineClipHelper.copyToBezier(newspl, ps, bounds.start, bounds.end, null);
+  // C: update_bb_bz(&GD_bb(g), cp) — expand g's bb by each installed bezier.
+  SplineClipHelper.copyToBezier(newspl, ps, bounds.start, bounds.end, g.info.bb);
 }

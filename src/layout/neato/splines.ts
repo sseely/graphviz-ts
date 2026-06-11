@@ -32,7 +32,7 @@ import {
   EDGETYPE_NONE, EDGETYPE_LINE, EDGETYPE_ORTHO,
   EDGETYPE_PLINE,
 } from '../dot/splines.js';
-import { shiftGraphBBs } from '../pack/index.js';
+import { shiftGraphBBs, computeSubgraphBB } from '../pack/index.js';
 import { neatoSetAspect } from './init.js';
 
 // ---------------------------------------------------------------------------
@@ -301,7 +301,7 @@ class RoutingHelper {
   static withVconfig(
     g: Graph, obstacles: Poly[], vconfig: VisConfig, edgetype: number,
   ): void {
-    const stepx = g.info.nodesep ?? 16;
+    const stepx = g.info.nodesep ?? 18;
     for (const n of g.nodes.values()) {
       for (const e of n.outEdges(g)) {
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
@@ -316,7 +316,7 @@ class RoutingHelper {
   }
 
   static straight(g: Graph): void {
-    const stepx = g.info.nodesep ?? 16;
+    const stepx = g.info.nodesep ?? 18;
     for (const n of g.nodes.values()) {
       for (const e of n.outEdges(g)) {
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
@@ -465,6 +465,13 @@ export function splineEdgesShifted(g: Graph): void {
   shiftAllPos(g, bb.ll.x / 72, bb.ll.y / 72);
   shiftClusters(g, -bb.ll.x, -bb.ll.y);
   neatoSetAspect(g); // spline_edges0(g, true): pos -> coord
+  // C: spline_edges calls compute_bb(g) before routing, setting GD_bb to the
+  // node-extent bb. clip_and_install then expands GD_bb via update_bb_bz for
+  // each installed bezier. Initialise g.info.bb here so the expansion lands
+  // on the correct base (coord is now valid after neatoSetAspect).
+  // @see lib/neatogen/neatosplines.c:spline_edges
+  // @see lib/common/utils.c:compute_bb
+  g.info.bb = computeSubgraphBB(g, 0);
   splineEdges(g);
 }
 
