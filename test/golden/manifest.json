@@ -462,5 +462,29 @@
     "reference": "test/golden/refs/fdp-tiny-self-loop.svg",
     "portReference": "test/golden/refs-port/fdp-tiny-self-loop.svg",
     "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg"
+  },
+  {
+    "id": "dot-constraint-false",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-constraint-false.dot",
+    "reference": "test/golden/refs/dot-constraint-false.svg",
+    "description": "4-node digraph with constraint=false on one edge; ref: graphviz 15.0.0 dot -Kdot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-self-loop",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-self-loop.dot",
+    "reference": "test/golden/refs/dot-self-loop.svg",
+    "description": "3-node digraph with a self-loop on one node; ref: graphviz 15.0.0 dot -Kdot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "circo-self-loop",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-self-loop.dot",
+    "reference": "test/golden/refs/circo-self-loop.svg",
+    "description": "3-node cycle with a self-loop on one node; ref: graphviz 15.0.0 dot -Kcirco -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
   }
 ]
