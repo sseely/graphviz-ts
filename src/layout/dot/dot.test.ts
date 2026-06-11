@@ -125,7 +125,10 @@ describe('dotInitEdge: edge field defaults and pre-set values', () => {
     expect(e.info.minlen).toBe(1);
   });
 
-  it('respects pre-set weight=2, minlen=2', () => {
+  it('respects pre-set weight=2; minlen is driven by attrs not pre-set info', () => {
+    // C: ED_weight uses e.info.weight ?? 1 (pre-set preserved for weight)
+    // C: ED_minlen = late_int(e, E_minlen, 1, 0) — always reads attr, not info
+    // So a pre-set e.info.minlen without a matching attr is overwritten to default 1.
     const g = makeGraph('presetedge');
     const a = addNode(g, 0, 'a');
     const b = addNode(g, 1, 'b');
@@ -134,7 +137,7 @@ describe('dotInitEdge: edge field defaults and pre-set values', () => {
     e.info.minlen = 2;
     dotInitEdge(e);
     expect(e.info.weight).toBe(2);
-    expect(e.info.minlen).toBe(2);
+    expect(e.info.minlen).toBe(1); // no attr → late_int default = 1
   });
 });
 

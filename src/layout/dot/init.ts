@@ -11,9 +11,10 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { commonInitNode } from '../../common/nodeinit.js';
+import { commonInitNode, lateInt } from '../../common/nodeinit.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL } from './fastgr.js';
+import { mapbool } from './rank.js';
 
 // ---------------------------------------------------------------------------
 // CL_CROSS — cost of cluster skeleton edge crossing
@@ -66,24 +67,52 @@ export function isSelfLoop(e: Edge): boolean {
 }
 
 /**
+ * Reads the `constraint` edge attr and stores the parsed boolean on e.info.
+ * Absent or empty attr leaves e.info.constraint unchanged (C: constr[0] guard).
+ * @see lib/dotgen/rank.c:is_nonconstraint
+ * @see lib/common/utils.c:mapbool
+ */
+function initEdgeConstraint(e: Edge): void {
+  const s = e.attrs.get('constraint');
+  if (s !== undefined && s !== '') e.info.constraint = mapbool(s);
+}
+
+/**
+ * Applies the self-loop group-penalty to xpenalty and weight.
+ * @see lib/dotgen/dotinit.c:dot_init_edge (tailgroup/headgroup block)
+ */
+function applyGroupPenalty(e: Edge): void {
+  if (!isSelfLoop(e)) return;
+  e.info.xpenalty = CL_CROSS;
+  e.info.weight = (e.info.weight ?? 1) * 100;
+}
+
+/**
+ * Zeroes xpenalty and weight when the edge is a non-constraint edge.
+ * @see lib/dotgen/dotinit.c:dot_init_edge:73-76
+ */
+function applyNonconstraintZero(e: Edge): void {
+  if (!nonconstraintEdge(e)) return;
+  e.info.xpenalty = 0;
+  e.info.weight = 0;
+}
+
+/**
  * Initialises per-edge layout data for the dot engine.
  * Mirrors dot_init_edge: sets weight, count, xpenalty, minlen.
  *
  * @see lib/dotgen/dotinit.c:dot_init_edge
  */
 export function dotInitEdge(e: Edge): void {
+  initEdgeConstraint(e);
   e.info.weight = e.info.weight ?? 1;
   e.info.count = 1;
   e.info.xpenalty = 1;
-  if (isSelfLoop(e)) {
-    e.info.xpenalty = CL_CROSS;
-    e.info.weight = (e.info.weight) * 100;
-  }
-  if (nonconstraintEdge(e)) {
-    e.info.xpenalty = 0;
-    e.info.weight = 0;
-  }
-  e.info.minlen = e.info.minlen ?? 1;
+  applyGroupPenalty(e);
+  applyNonconstraintZero(e);
+  // late_int semantics: default 1, minimum 0.
+  // @see lib/dotgen/dotinit.c:85  ED_minlen(e) = late_int(e, E_minlen, 1, 0)
+  e.info.minlen = lateInt(e.attrs.get('minlen'), 1, 0);
 }
 
 // ---------------------------------------------------------------------------
