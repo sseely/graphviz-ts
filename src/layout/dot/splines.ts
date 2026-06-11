@@ -19,6 +19,7 @@ import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
 import { IGNORED } from './rank.js';
 import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
+import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -273,12 +274,33 @@ export function collectNodeEdges(n: Node, edges: Edge[]): void {
   if (!nodeNeedsRouting(n)) return;
   collectOutEdges(n, edges);
   collectFlatEdges(n, edges);
+  collectOtherEdges(n, edges);
 }
 
 // ---------------------------------------------------------------------------
 // dot_splines_ / dot_splines — main entry points
 // @see lib/dotgen/dotsplines.c:dot_splines_, dot_splines
 // ---------------------------------------------------------------------------
+
+/**
+ * Route one group of parallel edges from the sorted edge list.
+ * Returns the number of edges consumed (cnt).
+ * @see lib/dotgen/dotsplines.c:343-419
+ */
+function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number): number {
+  const e0 = edges[ind];
+  const le0 = getMainEdge(e0);
+  let cnt = 1;
+  while (ind + cnt < edges.length) {
+    const le1 = getMainEdge(edges[ind + cnt]);
+    if (le0 !== le1) break;
+    cnt++;
+  }
+  if (e0.tail === e0.head) {
+    routeSelfEdgeGroup(g, edges.slice(ind, ind + cnt), cnt, multisep, buildDotSinfo());
+  }
+  return cnt;
+}
 
 /**
  * Main spline routing entry point (internal, with normalize flag).
@@ -295,6 +317,10 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   const edges: Edge[] = [];
   for (const n of g.nodes.values()) collectNodeEdges(n, edges);
   edges.sort(edgecmp);
+  const multisep = g.info.nodesep ?? 18;
+  for (let l = 0; l < edges.length;) {
+    l += routeEdgeGroup(g, edges, l, multisep);
+  }
   if (normalize) edgeNormalize(g);
   routeDotEdges(g);
   return 0;
