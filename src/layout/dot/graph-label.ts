@@ -9,7 +9,8 @@
 import type { Graph } from '../../model/graph.js';
 import type { Point } from '../../model/geom.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
-import { makeLabel, DEFAULT_FONTSIZE, DEFAULT_FONTNAME, DEFAULT_COLOR } from '../../common/make-label.js';
+import { makeAnyLabel, DEFAULT_FONTSIZE, DEFAULT_FONTNAME, DEFAULT_COLOR } from '../../common/make-label.js';
+import { isHtmlValue, htmlValueContent } from '../../common/html-string.js';
 import { BOTTOM_IX, TOP_IX, RIGHT_IX, LEFT_IX } from './position-aux.js';
 
 /** Graph has a label. @see lib/common/const.h:GRAPH_LABEL */
@@ -50,6 +51,7 @@ function applyLabelBorder(sg: Graph, dimen: Point): void {
  * accounts for label height.
  *
  * @see lib/common/input.c:do_graph_label
+ * @see lib/common/input.c:850 — make_label(sg, str, aghtmlstr(str), false, ...)
  */
 export function doGraphLabel(sg: Graph, measurer: TextMeasurer | undefined): void {
   if (!measurer) return;
@@ -57,7 +59,9 @@ export function doGraphLabel(sg: Graph, measurer: TextMeasurer | undefined): voi
   if (!str) return;
 
   const { fontsize, fontname, fontcolor } = readFontParams(sg);
-  const label = makeLabel(str, fontname, fontsize, fontcolor, measurer);
+  const isHtml = isHtmlValue(str);
+  const content = isHtml ? htmlValueContent(str) : str;
+  const label = makeAnyLabel(content, isHtml, { fontname, fontsize, fontcolor }, measurer);
   sg.info.label = label;
   sg.root.info.has_labels |= GRAPH_LABEL;
 

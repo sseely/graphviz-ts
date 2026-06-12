@@ -16,7 +16,8 @@ import type { PolygonT, ShapeDesc, TextlabelT } from './types.js';
 import { ShapeKind } from './types.js';
 import { bindShape } from './shapes.js';
 import { assignShapeInfo, buildNodeLabel, nodeAttr, readFontAttrs } from './poly-init.js';
-import { makeLabel } from './make-label.js';
+import { makeAnyLabel } from './make-label.js';
+import { isHtmlValue, htmlValueContent } from './html-string.js';
 import { NODE_XLABEL } from '../layout/dot/rank.js';
 import { recordNodeInit } from './record.js';
 import {
@@ -145,15 +146,17 @@ export function polySizeParamsFromNode(
 
 /**
  * Create ND_xlabel when the xlabel attr is non-empty and set NODE_XLABEL.
- * HTML xlabels are a future mission (architecture decision D2).
  * @see lib/common/utils.c:443-447
  * @see lib/common/utils.c:447 — GD_has_labels scoped to agraphof(n) root
  */
 function initNodeXLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
   const str = nodeAttr(n, g, 'xlabel');
   if (!str || str.length === 0) return;
-  const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
-  n.info.xlabel = makeLabel(str, fontname, fontsize, fontcolor, measurer);
+  const font = readFontAttrs(n, g);
+  const isHtml = isHtmlValue(str);
+  const content = isHtml ? htmlValueContent(str) : str;
+  // utils.c:444 — make_label(n, str, aghtmlstr(str), false, ...)
+  n.info.xlabel = makeAnyLabel(content, isHtml, font, measurer);
   g.root.info.has_labels = (g.root.info.has_labels ?? 0) | NODE_XLABEL;
 }
 
