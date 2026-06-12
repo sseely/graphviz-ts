@@ -13,6 +13,7 @@ import type { TextlabelT } from './types.js';
 import type { TextMeasurer, TextSize } from './textmeasure.js';
 import type { TextSpan } from './emit-types.js';
 import { makeHtmlLabel } from './htmltable-pos.js';
+import { substObj, type GraphObj } from './subst.js';
 
 export const DEFAULT_FONTSIZE = 14.0;
 export const DEFAULT_FONTNAME = 'Times,serif';
@@ -96,6 +97,7 @@ export function makeAnyLabel(
   isHtml: boolean,
   font: FontInfo,
   measurer: TextMeasurer,
+  obj?: GraphObj,
 ): TextlabelT {
   // labels.c:119 — is_html &= !streq(str, "");
   if (isHtml && content !== '') {
@@ -103,5 +105,9 @@ export function makeAnyLabel(
     // plain text (html=false) per htmltable.c:1892.
     return makeHtmlLabel(content, font, measurer);
   }
-  return makePlainLabel(content, font, measurer);
+  // Plain path: resolve \G \N \E \T \H \L against the owning object
+  // BEFORE measuring, as C does (labels.c:169, escBackslash=0; the
+  // formatting escapes \n \l \r are handled separately).
+  const text = obj !== undefined ? substObj(content, obj, false) : content;
+  return makePlainLabel(text, font, measurer);
 }

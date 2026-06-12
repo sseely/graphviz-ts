@@ -128,7 +128,7 @@ function applyLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): vo
   if (!str) return;
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
-  e.info.label = makeAnyLabel(content, isHtml, fi, measurer);
+  e.info.label = makeAnyLabel(content, isHtml, fi, measurer, e);
   g.info.has_labels |= EDGE_LABEL;
   // ED_label_ontop: mapbool(late_string(e, E_label_float, "false"))
   // @see lib/common/utils.c:522
@@ -151,7 +151,7 @@ function applyXLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): v
   if (!str) return;
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
-  e.info.xlabel = makeAnyLabel(content, isHtml, fi, measurer);
+  e.info.xlabel = makeAnyLabel(content, isHtml, fi, measurer, e);
   g.info.has_labels |= EDGE_XLABEL;
 }
 
@@ -169,7 +169,7 @@ function applyHeadLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer
   if (!str) return;
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
-  e.info.head_label = makeAnyLabel(content, isHtml, lfi, measurer);
+  e.info.head_label = makeAnyLabel(content, isHtml, lfi, measurer, e);
   g.info.has_labels = (g.info.has_labels ?? 0) | HEAD_LABEL;
 }
 
@@ -187,7 +187,7 @@ function applyTailLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer
   if (!str) return;
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
-  e.info.tail_label = makeAnyLabel(content, isHtml, lfi, measurer);
+  e.info.tail_label = makeAnyLabel(content, isHtml, lfi, measurer, e);
   g.info.has_labels = (g.info.has_labels ?? 0) | TAIL_LABEL;
 }
 

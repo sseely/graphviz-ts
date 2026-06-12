@@ -98,7 +98,7 @@ export function buildNodeLabel(n: Node, g: Graph, measurer: TextMeasurer): void 
   const font = readFontAttrs(n, g);
   const isHtml = labelAttr !== undefined && isHtmlValue(labelAttr);
   const content = isHtml ? htmlValueContent(labelAttr) : (labelAttr ?? n.name);
-  n.info.label = makeAnyLabel(content, isHtml, font, measurer);
+  n.info.label = makeAnyLabel(content, isHtml, font, measurer, n);
 }
 
 export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {

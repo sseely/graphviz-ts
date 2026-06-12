@@ -15,6 +15,8 @@ import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml } from './htmltable-pos.js';
 import { emitHtmlLabel } from './htmltable-emit.js';
 import { transformPoint } from '../gvc/device.js'; // used by renderEllipse/renderPolygon
+import { nodeAttr } from './poly-init.js';
+import { substObjAnchor, interpretCRNL } from './subst.js';
 
 /** Render one ellipse periphery ring for a node. */
 export function renderEllipse(
@@ -93,6 +95,36 @@ export function renderLabel(
   }
 }
 
+/** Non-empty node attr (root-default inheritance), or undefined. */
+function anchorAttr(n: Node, key: string): string | undefined {
+  const v = nodeAttr(n, n.root, key);
+  return v !== undefined && v !== '' ? v : undefined;
+}
+
+/**
+ * Open the whole-node anchor when the node has a URL or an explicit
+ * tooltip; the tooltip defaults to the label text (initMapData).
+ * Returns true when the caller must close the anchor after the label.
+ * @see lib/common/shapes.c:poly_gencode (doMap)
+ * @see lib/common/emit.c:initObjMapData / initMapData
+ */
+function beginNodeAnchor(n: Node, renderer: RendererPlugin, job: RenderJob): boolean {
+  const url = anchorAttr(n, 'href') ?? anchorAttr(n, 'URL');
+  const tooltip = anchorAttr(n, 'tooltip');
+  if (url === undefined && tooltip === undefined) return false;
+  const label = n.info.label as TextlabelT | undefined;
+  renderer.beginAnchor?.(
+    url !== undefined ? substObjAnchor(url, n) : '',
+    // C: preprocessTooltip (CRNL) runs before initMapData's substitution.
+    // @see lib/common/emit.c:initObjMapData
+    tooltip !== undefined ? substObjAnchor(interpretCRNL(tooltip), n) : (label?.text ?? ''),
+    anchorAttr(n, 'target') ?? '',
+    'node' + (n.id + 1),
+    job,
+  );
+  return true;
+}
+
 /**
  * Render node shape (polygon/ellipse) and label.
  * Shape codefn — called from walkNodes.
@@ -108,6 +140,7 @@ export function polyGencode(rawJob: unknown, rawNode: unknown): void {
   if (!poly?.vertices) return;
 
   const coord = n.info.coord ?? { x: 0, y: 0 };
+  const inAnchor = beginNodeAnchor(n, renderer, job);
   renderPeripheries(poly, coord, renderer, job);
 
   const label = n.info.label as TextlabelT | undefined;
@@ -118,4 +151,5 @@ export function polyGencode(rawJob: unknown, rawNode: unknown): void {
   } else if (label) {
     renderLabel(label, coord, renderer, job);
   }
+  if (inAnchor) renderer.endAnchor?.(job);
 }

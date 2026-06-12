@@ -156,7 +156,7 @@ function initNodeXLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
   // utils.c:444 — make_label(n, str, aghtmlstr(str), false, ...)
-  n.info.xlabel = makeAnyLabel(content, isHtml, font, measurer);
+  n.info.xlabel = makeAnyLabel(content, isHtml, font, measurer, n);
   g.root.info.has_labels = (g.root.info.has_labels ?? 0) | NODE_XLABEL;
 }
 

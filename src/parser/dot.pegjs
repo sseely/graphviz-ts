@@ -177,6 +177,10 @@ QChar
   / '\\t'        { return '\t'; }
   / '\\l'        { return '\\l'; }
   / '\\r'        { return '\\r'; }
+  // Graph-object substitution escapes stay verbatim; they are resolved
+  // per object at label creation / anchor emission.
+  // @see lib/common/labels.c:strdup_and_subst_obj0
+  / '\\' c:[GNETHL] { return '\\' + c; }
   / '\\\n'       { return ''; }           // scan.l: escaped newline ignored
   / '\\' c:.    { return c; }            // scan.l: \X → X for any other char
   / [^"\\]

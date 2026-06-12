@@ -61,7 +61,7 @@ export function doGraphLabel(sg: Graph, measurer: TextMeasurer | undefined): voi
   const { fontsize, fontname, fontcolor } = readFontParams(sg);
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
-  const label = makeAnyLabel(content, isHtml, { fontname, fontsize, fontcolor }, measurer);
+  const label = makeAnyLabel(content, isHtml, { fontname, fontsize, fontcolor }, measurer, sg);
   sg.info.label = label;
   sg.root.info.has_labels |= GRAPH_LABEL;
 
