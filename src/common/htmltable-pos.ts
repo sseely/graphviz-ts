@@ -33,6 +33,13 @@ export interface PlacedLine {
   fontSize: number;
   fontName: string | null;
   fontColor: string | null;
+  /**
+   * Renderer-applied above-baseline correction; C emit_htextspans uses
+   * the item value for simple blocks (cancelled by the lfsize math, so
+   * the port leaves it 0) and the constant 1 for non-simple blocks.
+   * @see lib/common/htmltable.c:emit_htextspans (lines 177-180)
+   */
+  yoffsetCenterline?: number;
   /** Resolved HTML font flags (HTML_BF | HTML_IF | HTML_UL | …). @see lib/common/textspan.h */
   fontFlags: number;
 }
@@ -158,7 +165,16 @@ export interface HtmlFontInfo {
   fontcolor: string;
 }
 
-interface LineRun { items: HtmlTextItem[]; width: number; fontSize: number; height: number; }
+interface LineRun {
+  items: HtmlTextItem[];
+  width: number;
+  /** Max raw font size over items (C mxfsize). */
+  fontSize: number;
+  /** Max metric line height over items (C mxysize). */
+  height: number;
+  /** Max yoffset_centerline over items (C maxoffset = 0.05 × fs). */
+  maxOffset: number;
+}
 
 /**
  * Compute the HTML font flags bitmask from an HtmlTextItem.
@@ -184,8 +200,11 @@ export function buildLineRuns(
   measurer: TextMeasurer,
 ): LineRun[] {
   const runs: LineRun[] = [];
-  let cur: LineRun = { items: [], width: 0, fontSize: 0, height: 0 };
-  const flush = (): void => { runs.push(cur); cur = { items: [], width: 0, fontSize: 0, height: 0 }; };
+  let cur: LineRun = { items: [], width: 0, fontSize: 0, height: 0, maxOffset: 0 };
+  const flush = (): void => {
+    runs.push(cur);
+    cur = { items: [], width: 0, fontSize: 0, height: 0, maxOffset: 0 };
+  };
   for (const txt of texts) {
     for (const item of txt.items) {
       if (item.br) { flush(); continue; }
@@ -199,10 +218,37 @@ export function buildLineRuns(
       cur.width += sz.w;
       cur.fontSize = Math.max(cur.fontSize, fs);
       cur.height = Math.max(cur.height, sz.h);
+      // C maxoffset = MAX item yoffset_centerline; the binary's metric
+      // model yields 0.05 × fontsize (same constant as the plain-text
+      // path's buildSpan). @see lib/common/htmltable.c:size_html_txt
+      cur.maxOffset = Math.max(cur.maxOffset, 0.05 * fs);
     }
     flush();
   }
   return runs.filter(r => r.items.length > 0);
+}
+
+/**
+ * C's "simple" test over built runs: one item per line, no font flags,
+ * uniform resolved face/size across lines.
+ * @see lib/common/htmltable.c:size_html_txt (lines 946-986)
+ */
+export function runsAreSimple(runs: LineRun[], finfo: HtmlFontInfo): boolean {
+  let prevFs = -1;
+  let prevFace: string | null = null;
+  for (const run of runs) {
+    if (run.items.length > 1) return false;
+    const item = run.items[0];
+    if (item === undefined) continue;
+    if (itemFontFlags(item) !== 0) return false;
+    const fs = item.fontSize !== undefined ? item.fontSize : finfo.fontsize;
+    const face = item.fontFace !== undefined ? item.fontFace : finfo.fontname;
+    if (prevFs < 0) prevFs = fs;
+    else if (fs !== prevFs) return false;
+    if (prevFace === null) prevFace = face;
+    else if (face !== prevFace) return false;
+  }
+  return true;
 }
 
 /** Place one run's items left-to-right at a fixed baseline. */
@@ -238,15 +284,68 @@ export function placeTextRuns(
   finfo: HtmlFontInfo,
   measurer: TextMeasurer,
 ): PlacedLine[] {
+  if (runsAreSimple(runs, finfo)) {
+    return placeSimpleRuns(runs, box, finfo, measurer);
+  }
+  return placeComplexRuns(runs, box, finfo, measurer);
+}
+
+/**
+ * Simple block (one plain uniform item per line): first baseline one
+ * ascent below the block top; later lines advance by the metric line
+ * height. Net effect of C's lfsize = maxlayout + maxoffset followed by
+ * the renderer adding yoffset_centerline back.
+ * @see lib/common/htmltable.c:size_html_txt (simple branch, line 1045)
+ */
+function placeSimpleRuns(
+  runs: LineRun[],
+  box: Box,
+  finfo: HtmlFontInfo,
+  measurer: TextMeasurer,
+): PlacedLine[] {
   const centerX = (box.ll.x + box.ur.x) / 2;
   const lines: PlacedLine[] = [];
   let baseline = box.ur.y;
   for (let i = 0; i < runs.length; i++) {
     const run = runs[i];
-    // First baseline sits one ascent below the block top; later lines
-    // advance by the measured line height. @see size_html_txt (lfsize)
     baseline -= i === 0 ? freetypeAscent(run.fontSize) : run.height;
     lines.push(...placeRunItems(run, centerX - run.width / 2, baseline, finfo, measurer));
+  }
+  return lines;
+}
+
+/**
+ * Non-simple block (font flags, multiple runs per line, or mixed
+ * faces/sizes): C switches to raw font sizes —
+ *   lfsize_0 = mxfsize − maxoffset
+ *   lfsize_i = mxfsize + ysize − curbline − maxoffset   (i > 0)
+ * with lsize = mxfsize accumulated into ysize, and every item rendered
+ * with yoffset_centerline = 1 (emit_htextspans line 180).
+ * @see lib/common/htmltable.c:size_html_txt (lines 1056-1060)
+ * @see lib/common/htmltable.c:emit_htextspans (lines 177-180)
+ */
+function placeComplexRuns(
+  runs: LineRun[],
+  box: Box,
+  finfo: HtmlFontInfo,
+  measurer: TextMeasurer,
+): PlacedLine[] {
+  const centerX = (box.ll.x + box.ur.x) / 2;
+  const lines: PlacedLine[] = [];
+  let curbline = 0;
+  let ysize = 0;
+  for (let i = 0; i < runs.length; i++) {
+    const run = runs[i];
+    const lfsize = i === 0
+      ? run.fontSize - run.maxOffset
+      : run.fontSize + ysize - curbline - run.maxOffset;
+    curbline += lfsize;
+    ysize += run.fontSize;
+    const baseline = box.ur.y - curbline;
+    for (const pl of placeRunItems(run, centerX - run.width / 2, baseline, finfo, measurer)) {
+      pl.yoffsetCenterline = 1;
+      lines.push(pl);
+    }
   }
   return lines;
 }
@@ -437,7 +536,9 @@ export function posHtmlTable(
     ll: { x: -dim.w / 2, y: -dim.h / 2 },
     ur: { x: dim.w / 2, y: dim.h / 2 },
   };
-  const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer);
+  const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer, {
+    fontsize: finfo.fontsize, fontname: finfo.fontname,
+  });
   const ncols = widths.length > 0 ? Math.max(...entries.map(e => e.col + e.colspan)) : 0;
   const nrows = heights.length > 0 ? Math.max(...entries.map(e => e.row + e.rowspan)) : 0;
   const colX = buildColX(pos, border, spacing, widths);
@@ -495,7 +596,9 @@ export function makeHtmlLabel(
   } catch {
     return makeLabel(content, fontname, fontsize, fontcolor, measurer);
   }
-  sizeHtmlLabel(lbl, measurer, imageSizer);
+  sizeHtmlLabel(lbl, measurer, {
+    fontsize, fontname, imageSizer,
+  });
   const placed = posHtmlLabel(lbl, { fontname, fontsize, fontcolor }, measurer);
   const dim = lbl.dimen ?? { w: 0, h: 0 };
   // C replaces table-label text: "this may be used for the title and

@@ -266,3 +266,27 @@ describe('T9 — anchor ids and default tooltip (htmltable.c:initAnchor)', () =>
     expect(renderSvg(dot, 'dot')).toContain('id="a_node1_0"');
   });
 });
+
+describe('T9 — non-simple vertical model (size_html_txt simple branch)', () => {
+  // C output values verified against graphviz 15.0.0 on 2026-06-12.
+  it('bold single-line label uses mxfsize − maxoffset (y=-13.95)', () => {
+    const svg = renderSvg('digraph G { A [label=<<b>hi</b>>]; }', 'dot');
+    expect(svg).toMatch(/<text[^>]* y="-13\.95"[^>]*font-weight="bold"/);
+  });
+
+  it('multi-run regular line is non-simple (y=-13.95)', () => {
+    const svg = renderSvg('digraph G { A [label=<<u>u</u> and <s>s</s>>]; }', 'dot');
+    expect(svg).toMatch(/y="-13\.95"/);
+  });
+
+  it('plain single-run html label stays simple (y=-13.5)', () => {
+    const svg = renderSvg('digraph G { A [label=<hi>]; }', 'dot');
+    expect(svg).toMatch(/y="-13\.5"/);
+  });
+
+  it('node fontsize attr reaches html sizing (env.finfo)', () => {
+    const a = renderSvg('digraph { A [label=<hi> fontsize=20] }', 'dot');
+    const b = renderSvg('digraph { A [label=<hi>] }', 'dot');
+    expect(a.match(/height="(\d+)pt"/)?.[1]).not.toBe(b.match(/height="(\d+)pt"/)?.[1]);
+  });
+});

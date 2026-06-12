@@ -20,6 +20,7 @@ export type { TextMeasurer } from './textmeasure.js';
 
 import type {
   HtmlCell, HtmlCellContent, HtmlImage, HtmlLabel, HtmlTable, HtmlText,
+  HtmlTextItem,
 } from './htmltable-types.js';
 import type { ImageSizer } from './htmltable-types.js';
 import { findImageSize } from '../gvc/usershape.js';
@@ -66,47 +67,126 @@ const findCol = (
   return col;
 };
 
-const sizeOneItem = (
-  item: HtmlText['items'][number],
-  st: { lineW: number; lineH: number; maxW: number; totalH: number },
+/**
+ * Sizing environment: label-level font defaults + image resolution.
+ * Ports htmlenv_t.finfo — C threads lp->fontname/fontsize through
+ * make_html_label's env into size_html_txt.
+ * @see lib/common/htmltable.c:make_html_label (env.finfo)
+ */
+export interface HtmlSizeEnv {
+  fontsize: number;
+  fontname: string;
+  imageSizer?: ImageSizer;
+}
+
+const DEFAULT_SIZE_ENV: HtmlSizeEnv = { fontsize: DEFAULT_FONTSIZE, fontname: '' };
+
+/** One measured text line (a C "span"). @see size_html_txt */
+interface SizedLine {
+  items: HtmlTextItem[];
+  width: number;
+  /** Max metric line height over items (C mxysize). */
+  mxysize: number;
+  /** Max raw font size over items (C mxfsize). */
+  mxfsize: number;
+}
+
+const itemFont = (item: HtmlTextItem, env: HtmlSizeEnv): { fs: number; face: string } => ({
+  fs: item.fontSize !== undefined ? item.fontSize : env.fontsize,
+  face: item.fontFace !== undefined ? item.fontFace : env.fontname,
+});
+
+const measureItem = (
+  item: HtmlTextItem,
   measurer: TextMeasurer,
-): void => {
-  if (item.br) {
-    st.maxW = Math.max(st.maxW, st.lineW);
-    st.totalH += st.lineH > 0 ? st.lineH : DEFAULT_FONTSIZE;
-    st.lineW = 0; st.lineH = 0;
-    return;
-  }
-  if (!item.text) return;
-  const fs = item.fontSize !== undefined ? item.fontSize : DEFAULT_FONTSIZE;
-  const face = item.fontFace !== undefined ? item.fontFace : '';
-  /**
-   * Pass bold/italic flags from each text run to the measurer so variant
-   * widths are used. C counterpart: size_html_txt measures each span with
-   * its own font flags (bold/italic come from textfont_t.flags).
-   * @see lib/common/htmltable.c:size_html_txt
-   */
+  env: HtmlSizeEnv,
+): { w: number; h: number } => {
+  const { fs, face } = itemFont(item, env);
+  // Variant widths per run flags. @see lib/common/htmltable.c:size_html_txt
   const flags = (item.bold === true || item.italic === true)
     ? { bold: item.bold === true, italic: item.italic === true }
     : undefined;
-  const sz = measurer.measure(item.text, face, fs, flags);
-  st.lineW += sz.w;
-  if (sz.h > st.lineH) st.lineH = sz.h;
+  return measurer.measure(item.text ?? '', face, fs, flags);
 };
 
-/** @see lib/common/htmltable.c:size_html_txt */
+/** Split items into measured lines at <BR/>. @see size_html_txt */
+const splitSizedLines = (
+  texts: HtmlText[],
+  measurer: TextMeasurer,
+  env: HtmlSizeEnv,
+): SizedLine[] => {
+  const lines: SizedLine[] = [];
+  let cur: SizedLine = { items: [], width: 0, mxysize: 0, mxfsize: 0 };
+  const flush = (): void => {
+    lines.push(cur);
+    cur = { items: [], width: 0, mxysize: 0, mxfsize: 0 };
+  };
+  for (const txt of texts) {
+    for (const item of txt.items) {
+      if (item.br) { flush(); continue; }
+      if (item.text === undefined) continue;
+      const sz = measureItem(item, measurer, env);
+      cur.items.push(item);
+      cur.width += sz.w;
+      cur.mxysize = Math.max(cur.mxysize, sz.h);
+      cur.mxfsize = Math.max(cur.mxfsize, itemFont(item, env).fs);
+    }
+    flush();
+  }
+  return lines;
+};
+
+/** Does an item carry any font flag (C textfont_t.flags)? */
+const itemHasFlags = (i: HtmlTextItem): boolean =>
+  i.bold === true || i.italic === true || i.underline === true ||
+  i.strikethrough === true || i.overline === true ||
+  i.subscript === true || i.superscript === true;
+
+/**
+ * C's "simple" test: one item per line, no font flags, uniform
+ * resolved face and size across all lines.
+ * @see lib/common/htmltable.c:size_html_txt (lines 946-986)
+ */
+export const htmlTextIsSimple = (texts: HtmlText[], env: HtmlSizeEnv): boolean => {
+  let prevFs = -1;
+  let prevFace: string | null = null;
+  let count = 0;
+  for (const txt of texts) {
+    for (const item of txt.items) {
+      if (item.br) { count = 0; continue; }
+      if (item.text === undefined) continue;
+      if (++count > 1 || itemHasFlags(item)) return false;
+      const { fs, face } = itemFont(item, env);
+      if (prevFs < 0) prevFs = fs;
+      else if (fs !== prevFs) return false;
+      if (prevFace === null) prevFace = face;
+      else if (face !== prevFace) return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * Size a text block. C: per line lsize = mxysize when simple, else the
+ * raw max font size (mxfsize); a single-line block always uses mxysize.
+ * @see lib/common/htmltable.c:size_html_txt (lines 1045-1075)
+ */
 const sizeTextContent = (
   texts: HtmlText[],
   measurer: TextMeasurer,
+  env: HtmlSizeEnv = DEFAULT_SIZE_ENV,
 ): { w: number; h: number } => {
-  const st = { lineW: 0, lineH: 0, maxW: 0, totalH: 0 };
-  for (const txt of texts) {
-    st.lineW = 0; st.lineH = 0;
-    for (const item of txt.items) sizeOneItem(item, st, measurer);
-    st.maxW = Math.max(st.maxW, st.lineW);
-    st.totalH += st.lineH > 0 ? st.lineH : DEFAULT_FONTSIZE;
+  const lines = splitSizedLines(texts, measurer, env);
+  const simple = htmlTextIsSimple(texts, env);
+  let w = 0;
+  let h = 0;
+  for (const ln of lines) {
+    w = Math.max(w, ln.width);
+    const lsize = simple ? ln.mxysize : ln.mxfsize;
+    h += ln.items.length > 0 ? lsize : DEFAULT_FONTSIZE;
   }
-  return { w: st.maxW, h: st.totalH };
+  if (lines.length === 1) h = lines[0]!.items.length > 0 ? lines[0]!.mxysize : DEFAULT_FONTSIZE;
+  return { w, h };
 };
 
 /**
@@ -143,15 +223,15 @@ const sizeHtmlImg = (img: HtmlImage, imageSizer?: ImageSizer): void => {
 const sizeContentItem = (
   item: HtmlCellContent,
   measurer: TextMeasurer,
-  imageSizer?: ImageSizer,
+  env: HtmlSizeEnv,
 ): { w: number; h: number } => {
-  if (item.kind === 'text') return sizeTextContent([item], measurer);
+  if (item.kind === 'text') return sizeTextContent([item], measurer, env);
   if (item.kind === 'table') {
-    sizeTableInner(item, measurer, imageSizer);
+    sizeTableInner(item, measurer, env);
     return item.dimen !== undefined ? item.dimen : { w: 0, h: 0 };
   }
   if (item.kind === 'image') {
-    sizeHtmlImg(item, imageSizer);
+    sizeHtmlImg(item, env.imageSizer);
     return { w: item.width ?? 0, h: item.height ?? 0 };
   }
   return { w: 0, h: 0 };
@@ -172,12 +252,12 @@ const getCellSize = (
   cell: HtmlCell,
   tbl: HtmlTable,
   measurer: TextMeasurer,
-  imageSizer?: ImageSizer,
+  env: HtmlSizeEnv,
 ): { w: number; h: number } => {
   const margin = 2 * (cellPad(cell, tbl) + cellBorder(cell, tbl));
   let cw = 0, ch = 0;
   for (const item of cell.content) {
-    const s = sizeContentItem(item, measurer, imageSizer);
+    const s = sizeContentItem(item, measurer, env);
     cw = Math.max(cw, s.w); ch += s.h;
   }
   if (cell.fixedsize && cell.width !== undefined && cell.height !== undefined)
@@ -191,7 +271,7 @@ const getCellSize = (
 const buildLayouts = (
   tbl: HtmlTable,
   measurer: TextMeasurer,
-  imageSizer?: ImageSizer,
+  env: HtmlSizeEnv,
 ): CellEntry[] => {
   const entries: CellEntry[] = [];
   const used = new Set<string>();
@@ -202,7 +282,7 @@ const buildLayouts = (
       if (c.kind !== 'cell') { continue; }
       const colspan = c.colspan !== undefined ? c.colspan : 1;
       const rowspan = c.rowspan !== undefined ? c.rowspan : 1;
-      const { w, h } = getCellSize(c, tbl, measurer, imageSizer);
+      const { w, h } = getCellSize(c, tbl, measurer, env);
       col = findCol(used, rowIdx, col, colspan, rowspan);
       entries.push({ cell: c, row: rowIdx, col, colspan, rowspan, w, h });
       col += colspan;
@@ -299,11 +379,11 @@ export interface HtmlTableLayout {
 export const layoutHtmlTable = (
   tbl: HtmlTable,
   measurer: TextMeasurer,
-  imageSizer?: ImageSizer,
+  env: HtmlSizeEnv = DEFAULT_SIZE_ENV,
 ): HtmlTableLayout => {
   const spacing = getSpacing(tbl);
   const border = getBorder(tbl);
-  const entries = buildLayouts(tbl, measurer, imageSizer);
+  const entries = buildLayouts(tbl, measurer, env);
   if (entries.length === 0) {
     return { entries, widths: [], heights: [], spacing, border };
   }
@@ -318,9 +398,9 @@ export const layoutHtmlTable = (
 const sizeTableInner = (
   tbl: HtmlTable,
   measurer: TextMeasurer,
-  imageSizer?: ImageSizer,
+  env: HtmlSizeEnv,
 ): void => {
-  const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer, imageSizer);
+  const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer, env);
   if (entries.length === 0) { tbl.dimen = { w: 0, h: 0 }; return; }
   const ncols = Math.max(...entries.map(e => e.col + e.colspan));
   const nrows = Math.max(...entries.map(e => e.row + e.rowspan));
@@ -345,12 +425,12 @@ const sizeTableInner = (
 export const sizeHtmlLabel = (
   label: HtmlLabel,
   measurer: TextMeasurer,
-  imageSizer?: ImageSizer,
+  env: HtmlSizeEnv = DEFAULT_SIZE_ENV,
 ): void => {
   if (label.kind === 'table') {
-    sizeTableInner(label.table, measurer, imageSizer);
+    sizeTableInner(label.table, measurer, env);
     label.dimen = label.table.dimen;
   } else {
-    label.dimen = sizeTextContent(label.texts, measurer);
+    label.dimen = sizeTextContent(label.texts, measurer, env);
   }
 };

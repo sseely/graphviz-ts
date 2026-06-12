@@ -62,7 +62,9 @@ function lineToSpan(line: PlacedLine): TextSpan {
     fontColor: line.fontColor,
     fontFlags: line.fontFlags,
     yoffset_layout: 0,
-    yoffset_centerline: 0,
+    // simple blocks: 0 (cancelled in the lfsize math); non-simple: 1.
+    // @see lib/common/htmltable.c:emit_htextspans (lines 177-180)
+    yoffset_centerline: line.yoffsetCenterline ?? 0,
     size: { x: line.width, y: line.fontSize },
     just: 'l',
   };
