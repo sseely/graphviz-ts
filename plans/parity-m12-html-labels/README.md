@@ -53,7 +53,7 @@ Baseline at mission start: **1254 passed / 0 failed**, 72 goldens
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 unified make_label](batch-1/T1-make-label.md), [T2 variant measurement](batch-1/T2-measure-variants.md), [T3 lex/parse/types](batch-1/T3-lex-parse-types.md) | [ ] |
+| 1 (parallel) | [T1 unified make_label](batch-1/T1-make-label.md), [T2 variant measurement](batch-1/T2-measure-variants.md), [T3 lex/parse/types](batch-1/T3-lex-parse-types.md) | [x] |
 | 2 (parallel, after 1) | [T4 creation dispatch](batch-2/T4-creation-dispatch.md), [T5 font-flag chain](batch-2/T5-font-flags.md) | [ ] |
 | 3 (after 2; T6→T7 sequenced, T8 parallel) | [T6 cell decoration](batch-3/T6-cell-decoration.md), [T7 IMG + ImageSizer](batch-3/T7-img.md), [T8 emission unskip](batch-3/T8-unskip.md) | [ ] |
 | 4 (after 3) | [T9 C-oracle verify + gap-fill](batch-4/T9-verify.md), then [T10 goldens 72→82](batch-4/T10-goldens.md) (orchestrator inline) | [ ] |
