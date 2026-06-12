@@ -17,9 +17,8 @@ import { bindShape } from './shapes.js';
 import { isHtmlValue, htmlValueContent } from './html-string.js';
 // Circular imports: poly-init ↔ record / htmltable-pos — safe for function declarations.
 import { recordNodeInit } from './record.js';
-import { makeHtmlLabel } from './htmltable-pos.js';
 import {
-  makeLabel,
+  makeAnyLabel,
   DEFAULT_FONTSIZE,
   DEFAULT_FONTNAME,
   DEFAULT_COLOR,
@@ -87,20 +86,16 @@ export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
  * field tree); only build them here if layout did not.
  * @see lib/common/shapes.c:poly_init
  */
-/** Build the node's label, dispatching on the HTML marker. */
+/** Build the node's label via the unified C make_label boundary. */
 export function buildNodeLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
   // Layout init may already have built the label; keep it (and any
   // position it acquired) rather than re-measuring at render time.
   if ((n.info.label as TextlabelT | undefined) !== undefined) return;
   const labelAttr = nodeAttr(n, g, 'label');
-  const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
-  if (labelAttr !== undefined && isHtmlValue(labelAttr)) {
-    n.info.label = makeHtmlLabel(
-      htmlValueContent(labelAttr), fontname, fontsize, fontcolor, measurer,
-    );
-    return;
-  }
-  n.info.label = makeLabel(labelAttr ?? n.name, fontname, fontsize, fontcolor, measurer);
+  const font = readFontAttrs(n, g);
+  const isHtml = labelAttr !== undefined && isHtmlValue(labelAttr);
+  const content = isHtml ? htmlValueContent(labelAttr) : (labelAttr ?? n.name);
+  n.info.label = makeAnyLabel(content, isHtml, font, measurer);
 }
 
 export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {
