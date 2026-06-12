@@ -212,6 +212,8 @@ function storeNodeSize(n: Node, unflipped: PolySizeResult, flip: boolean): void 
   n.info.height = unflipped.ht / 72;
   n.info.outline_width = unflipped.outlineW / 72;
   n.info.outline_height = unflipped.outlineH / 72;
+  n.info.base_width = unflipped.baseW / 72;
+  n.info.base_height = unflipped.baseH / 72;
   const size = gvNodesize(widthPts, unflipped.ht, flip);
   n.info.lw = size.lw;
   n.info.rw = size.rw;

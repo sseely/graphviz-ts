@@ -81,6 +81,14 @@ export interface PolySizeResult extends NodeSize {
   outlineW: number;
   /** Outline height in points. @see ND_outline_height */
   outlineH: number;
+  /**
+   * Pre-periphery-growth bb (points) — the box C scales the BASE
+   * (innermost) vertex ring to before stepping rings outward. Needed
+   * by ring generation for multi-periphery general polygons.
+   * @see lib/common/shapes.c:poly_init (bb before the outp loop)
+   */
+  baseW: number;
+  baseH: number;
 }
 
 /** @see lib/common/utils.c:mapbool */
@@ -301,6 +309,21 @@ function bisectorOffset(verts: Point[], sides: number, i: number, st: BisectorSt
 }
 
 /**
+ * Per-vertex bisector GAP offsets for a polygon ring — the (cosx, sinx)
+ * pairs C uses to place each successive periphery.
+ * @see lib/common/shapes.c:poly_init (peripheries bisector loop)
+ */
+export function polygonRingOffsets(verts: Point[], sides: number): Point[] {
+  const st = initBisector(verts, sides);
+  const out: Point[] = [];
+  for (let i = 0; i < sides; i++) {
+    bisectorOffset(verts, sides, i, st);
+    out.push({ x: st.cosx, y: st.sinx });
+  }
+  return out;
+}
+
+/**
  * The outline ring: each vertex offset along its angle bisector by
  * half the penwidth (the stroked boundary poly_inside clips against).
  * @see lib/common/shapes.c:poly_init (outline ring at outp)
@@ -434,7 +457,7 @@ export function polySize(p: PolySizeParams): PolySizeResult {
   const grown = sides < 3
     ? ellipsePeripheryBB(c.bb, p.peripheries, penwidth, hasOutline)
     : polygonBB(c.bb, { x: c.width, y: c.height }, { ...p, penwidth, hasOutline }, sides, isBox);
-  return assembleResult(p, dimen, grown, c.fixedshape);
+  return assembleResult(p, dimen, { ...grown, base: c.bb }, c.fixedshape);
 }
 
 /** Effective sides (distortion/skew turn ellipses into 120-gons) and box test. */
@@ -457,7 +480,7 @@ function labelValign(p: PolySizeParams): string {
 function assembleResult(
   p: PolySizeParams,
   dimen: Point,
-  grown: { bb: Point; outline: Point },
+  grown: { bb: Point; outline: Point; base: Point },
   fixedshape: boolean,
 ): PolySizeResult {
   if (fixedshape) {
@@ -465,11 +488,13 @@ function assembleResult(
       ...gvNodesize(Math.max(dimen.x, grown.bb.x), Math.max(dimen.y, grown.bb.y), p.flip),
       outlineW: Math.max(dimen.x, grown.outline.x),
       outlineH: Math.max(dimen.y, grown.outline.y),
+      baseW: grown.base.x, baseH: grown.base.y,
     };
   }
   return {
     ...gvNodesize(grown.bb.x, grown.bb.y, p.flip),
     outlineW: grown.outline.x,
     outlineH: grown.outline.y,
+    baseW: grown.base.x, baseH: grown.base.y,
   };
 }

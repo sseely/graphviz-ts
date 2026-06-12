@@ -16,31 +16,53 @@ import type { PlacedHtml } from './htmltable-pos.js';
 import { emitHtmlLabel } from './htmltable-emit.js';
 import { transformPoint } from '../gvc/device.js'; // used by renderEllipse/renderPolygon
 
-/** Render an ellipse shape for a node. */
+/** Render one ellipse periphery ring for a node. */
 export function renderEllipse(
-  poly: PolygonT,
+  ring: Point[],
   coord: Point,
   renderer: RendererPlugin,
   job: RenderJob,
 ): void {
-  const verts = poly.vertices!;
-  const rx = Math.abs((verts[1]!.x - verts[0]!.x) / 2);
-  const ry = Math.abs((verts[1]!.y - verts[0]!.y) / 2);
+  const rx = Math.abs((ring[1]!.x - ring[0]!.x) / 2);
+  const ry = Math.abs((ring[1]!.y - ring[0]!.y) / 2);
   const center = transformPoint(coord, job);
   renderer.ellipse(center, rx, ry, false, job);
 }
 
-/** Render a polygon shape for a node. */
+/** Render one polygon periphery ring for a node. */
 export function renderPolygon(
+  ring: Point[],
+  coord: Point,
+  renderer: RendererPlugin,
+  job: RenderJob,
+): void {
+  const pts = ring.map(
+    (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, job),
+  );
+  renderer.polygon(pts, false, job);
+}
+
+/**
+ * Draw the node boundary: one ring per periphery, innermost first.
+ * peripheries < 1 (plaintext/none/plain) draws no boundary — C only
+ * draws in that case for filled nodes (transparent pen), and fills are
+ * not yet ported in the live path.
+ * @see lib/common/shapes.c:poly_gencode (peripheries draw loop, :3013-3055)
+ */
+function renderPeripheries(
   poly: PolygonT,
   coord: Point,
   renderer: RendererPlugin,
   job: RenderJob,
 ): void {
-  const pts = poly.vertices!.map(
-    (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, job),
-  );
-  renderer.polygon(pts, false, job);
+  const sides = poly.sides <= 2 ? 2 : poly.sides;
+  const verts = poly.vertices!;
+  for (let j = 0; j < poly.peripheries; j++) {
+    const ring = verts.slice(j * sides, (j + 1) * sides);
+    if (ring.length < sides) break;
+    if (poly.sides <= 2) renderEllipse(ring, coord, renderer, job);
+    else renderPolygon(ring, coord, renderer, job);
+  }
 }
 
 /**
@@ -86,13 +108,7 @@ export function polyGencode(rawJob: unknown, rawNode: unknown): void {
   if (!poly?.vertices) return;
 
   const coord = n.info.coord ?? { x: 0, y: 0 };
-  const sides = poly.sides <= 2 ? 2 : poly.sides;
-
-  if (sides <= 2) {
-    renderEllipse(poly, coord, renderer, job);
-  } else {
-    renderPolygon(poly, coord, renderer, job);
-  }
+  renderPeripheries(poly, coord, renderer, job);
 
   const label = n.info.label as TextlabelT | undefined;
   if (label?.html && label.u.kind === 'html') {

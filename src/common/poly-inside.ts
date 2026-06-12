@@ -114,8 +114,11 @@ function insideShape(n: Node, poly: PolygonT, p: Point): boolean {
   if (poly.sides <= 2) {
     return Math.hypot(P.x / sc.boxURx, P.y / sc.boxURy) < 1;
   }
-  // C walks the outline ring (base + penwidth/2 bisector offsets).
-  const ring = polygonOutlineRing(poly.vertices!, poly.sides, 1);
+  // C walks the outline ring (outermost periphery + penwidth/2
+  // bisector offsets). @see shapes.c:poly_inside (outp selection)
+  const outerStart = (Math.max(poly.peripheries, 1) - 1) * poly.sides;
+  const outer = poly.vertices!.slice(outerStart, outerStart + poly.sides);
+  const ring = polygonOutlineRing(outer, poly.sides, 1);
   return polygonWalk(P, ring, poly.sides);
 }
 

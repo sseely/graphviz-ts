@@ -74,9 +74,12 @@ export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
   const h = n.info.height !== undefined
     ? n.info.height * 72
     : (n.info.ht || DEFAULT_HT);
+  const base = n.info.base_width !== undefined && n.info.base_height !== undefined
+    ? { w: n.info.base_width * 72, h: n.info.base_height * 72 }
+    : undefined;
   n.info.shape_info = {
     ...polyDesc,
-    vertices: computeVertices(polyDesc, w, h),
+    vertices: computeVertices(polyDesc, w, h, base),
   } as PolygonT;
 }
 
