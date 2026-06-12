@@ -6,6 +6,6 @@ T7 when T6 lands.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T6 | Cell decoration emission ([T6-cell-decoration.md](T6-cell-decoration.md)) | sonnet | src/common/htmltable-emit.ts (+test) | T3, T5 | [ ] |
-| T7 | IMG sizing+emission+ImageSizer ([T7-img.md](T7-img.md)) | sonnet | src/common/htmltable.ts, htmltable-emit.ts, + located plumbing file (+tests) | T3, T6 | [ ] |
-| T8 | Emission unskip in live path ([T8-unskip.md](T8-unskip.md)) | sonnet | src/gvc/device.ts (+test) | T5 | [ ] |
+| T6 | Cell decoration emission ([T6-cell-decoration.md](T6-cell-decoration.md)) | sonnet | src/common/htmltable-emit.ts (+test) | T3, T5 | [x] |
+| T7 | IMG sizing+emission+ImageSizer ([T7-img.md](T7-img.md)) | sonnet | src/common/htmltable.ts, htmltable-emit.ts, + located plumbing file (+tests) | T3, T6 | [x] |
+| T8 | Emission unskip in live path ([T8-unskip.md](T8-unskip.md)) | sonnet | src/gvc/device.ts (+test) | T5 | [x] |
