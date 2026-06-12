@@ -54,7 +54,7 @@ Baseline at mission start: **1217 passed / 0 failed**, 67 goldens
 |-------|-------|--------|
 | 1 (parallel) | [T1 node xlabel](batch-1/T1-node-xlabel.md), [T2 edge label+xlabel](batch-1/T2-edge-labels.md), [T3 graph label](batch-1/T3-graph-label.md) | [x] |
 | 2 (after 1) | [T4 live emission](batch-2/T4-emission.md), [T5 verify vs C + gap-fill](batch-2/T5-verify-gaps.md) | [x] |
-| 3 (after 2) | [T6 goldens 67→72](batch-3/T6-goldens.md) (orchestrator inline) | [ ] |
+| 3 (after 2) | [T6 goldens 67→72](batch-3/T6-goldens.md) (orchestrator inline) | [x] |
 | 4 (after 3) | [T7 emit-family audit + delete](batch-4/T7-emit-cleanup.md), then [T8 html scope doc](batch-4/T8-html-scope.md) | [ ] |
 
 ## Stop conditions
