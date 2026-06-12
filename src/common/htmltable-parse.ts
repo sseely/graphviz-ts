@@ -23,7 +23,14 @@ import type {
   Token,
   OpenToken,
 } from './htmltable-types.js';
-import { HtmlParseError } from './htmltable-types.js';
+import {
+  HtmlParseError,
+  BORDER_LEFT,
+  BORDER_TOP,
+  BORDER_RIGHT,
+  BORDER_BOTTOM,
+  BORDER_MASK,
+} from './htmltable-types.js';
 import { tokenize } from './htmltable-lex.js';
 
 // ---------------------------------------------------------------------------
@@ -257,6 +264,54 @@ const parseFixedSize = (a: Record<string, string>): true | undefined =>
 const parseTitle = (a: Record<string, string>): string | undefined =>
   a['title'] !== undefined ? a['title'] : a['tooltip'];
 
+/**
+ * Parse SIDES attribute into a bitmask matching C sidesfn().
+ * Unrecognised chars are silently skipped (C issues a warning but continues).
+ * C guard: if (flags != BORDER_MASK) p->flags |= flags — the full-mask case
+ * is a no-op (means "all sides", the default), so we return undefined for it.
+ * @see lib/common/htmllex.c:sidesfn
+ */
+const parseSides = (v: string | undefined): number | undefined => {
+  if (v === undefined) return undefined;
+  let flags = 0;
+  for (const c of v.toLowerCase()) {
+    if (c === 'l') flags |= BORDER_LEFT;
+    else if (c === 't') flags |= BORDER_TOP;
+    else if (c === 'r') flags |= BORDER_RIGHT;
+    else if (c === 'b') flags |= BORDER_BOTTOM;
+  }
+  // C: if (flags != BORDER_MASK) p->flags |= flags
+  if (flags === 0 || flags === BORDER_MASK) return undefined;
+  return flags;
+};
+
+/**
+ * Parse GRADIENTANGLE attribute — integer in [0, 360].
+ * Out-of-range or non-integer values are ignored (C issues a warning).
+ * @see lib/common/htmllex.c:gradientanglefn
+ */
+const parseGradientAngle = (v: string | undefined): number | undefined => {
+  if (v === undefined) return undefined;
+  const n = parseInt(v, 10);
+  if (isNaN(n) || String(n) !== v.trim()) return undefined;
+  if (n < 0 || n > 360) return undefined;
+  return n;
+};
+
+/**
+ * Parse COLUMNS attribute — only "*" is valid (sets vrule=true).
+ * @see lib/common/htmllex.c:columnsfn
+ */
+const parseColumns = (v: string | undefined): true | undefined =>
+  v === '*' ? true : undefined;
+
+/**
+ * Parse ROWS attribute — only "*" is valid (sets hrule=true).
+ * @see lib/common/htmllex.c:rowsfn
+ */
+const parseRows = (v: string | undefined): true | undefined =>
+  v === '*' ? true : undefined;
+
 const buildCell = (content: HtmlCellContent[], a: Record<string, string>): HtmlCell => ({
   kind: 'cell',
   content,
@@ -269,7 +324,8 @@ const buildCell = (content: HtmlCellContent[], a: Record<string, string>): HtmlC
   border: num(a['border']),
   cellpadding: num(a['cellpadding']),
   cellspacing: num(a['cellspacing']),
-  sides: a['sides'],
+  sides: parseSides(a['sides']),
+  gradientangle: parseGradientAngle(a['gradientangle']),
   style: a['style'],
   width: num(a['width']),
   height: num(a['height']),
@@ -346,6 +402,11 @@ const buildTable = (rows: HtmlRow[], a: Record<string, string>): HtmlTable => ({
   title: parseTitle(a),
   target: a['target'],
   id: a['id'],
+  port: a['port'],
+  sides: parseSides(a['sides']),
+  gradientangle: parseGradientAngle(a['gradientangle']),
+  vrule: parseColumns(a['columns']),
+  hrule: parseRows(a['rows']),
 });
 
 /** @see lib/common/htmlparse.y:table rule / lib/common/htmllex.c:mkTbl */
