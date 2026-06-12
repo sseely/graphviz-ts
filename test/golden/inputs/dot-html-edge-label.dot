@@ -1,0 +1,4 @@
+// graphviz-ts reference input: edge html label, bold
+// engine: dot
+// tolerance: deterministic
+digraph G { A -> B [label=<<b>el</b>>]; }

@@ -582,5 +582,85 @@
     "input": "test/golden/inputs/dot-labels-combined.dot",
     "reference": "test/golden/refs/dot-labels-combined.svg",
     "description": "digraph combining graph, node-xlabel, edge label/xlabel, head/tail labels; ref: graphviz 15.0.0 dot -Tsvg; mission 11 label parity"
+  },
+  {
+    "id": "dot-html-node-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-node-label.dot",
+    "reference": "test/golden/refs/dot-html-node-label.svg",
+    "description": "node html main label, bold (first golden for the live node-html path); ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-node-xlabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-node-xlabel.dot",
+    "reference": "test/golden/refs/dot-html-node-xlabel.svg",
+    "description": "node html xlabel, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-edge-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-edge-label.dot",
+    "reference": "test/golden/refs/dot-html-edge-label.svg",
+    "description": "edge html label, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-edge-xlabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-edge-xlabel.dot",
+    "reference": "test/golden/refs/dot-html-edge-xlabel.svg",
+    "description": "edge html xlabel, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-head-tail-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-head-tail-label.dot",
+    "reference": "test/golden/refs/dot-html-head-tail-label.svg",
+    "description": "edge html head/tail labels, bold + italic; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-graph-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-graph-label.dot",
+    "reference": "test/golden/refs/dot-html-graph-label.svg",
+    "description": "root graph html label, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-cluster-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-cluster-label.dot",
+    "reference": "test/golden/refs/dot-html-cluster-label.svg",
+    "description": "cluster html label, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-fonts",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-fonts.dot",
+    "reference": "test/golden/refs/dot-html-fonts.svg",
+    "description": "html font nesting: b/i/u/s/color, nested b+i, multi-line; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-table-styling",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-table-styling.dot",
+    "reference": "test/golden/refs/dot-html-table-styling.svg",
+    "description": "html table styling: bgcolor, cellborder=2, vr, sides, hr, colspan; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-combined",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-combined.dot",
+    "reference": "test/golden/refs/dot-html-combined.svg",
+    "description": "combined: graph+cluster html labels, decorated table with anchor, edge label/head/tail, node xlabel; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
   }
 ]

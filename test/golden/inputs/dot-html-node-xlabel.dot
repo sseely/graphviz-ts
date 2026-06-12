@@ -1,0 +1,4 @@
+// graphviz-ts reference input: node html xlabel, bold
+// engine: dot
+// tolerance: deterministic
+digraph G { A [xlabel=<<b>nx</b>>]; A -> B; }

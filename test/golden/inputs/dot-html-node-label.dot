@@ -1,0 +1,4 @@
+// graphviz-ts reference input: node html main label, bold (first golden for the live node-html path)
+// engine: dot
+// tolerance: deterministic
+digraph G { A [label=<<b>hi</b>>]; }

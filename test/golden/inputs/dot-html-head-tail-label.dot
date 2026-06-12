@@ -1,0 +1,4 @@
+// graphviz-ts reference input: edge html head/tail labels, bold + italic
+// engine: dot
+// tolerance: deterministic
+digraph G { A -> B [headlabel=<<b>hl</b>> taillabel=<<i>tl</i>>]; }
