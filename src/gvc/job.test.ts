@@ -97,6 +97,26 @@ describe('RenderJob.printDouble', () => {
   });
 });
 
+// Exact binary ties at 2 dp (fractional part odd/8) round half-to-
+// even like C snprintf("%.2f"), not half-up like Number.toFixed.
+// @see lib/gvc/gvdevice.c:gvprintdouble
+describe('RenderJob.printDouble tie rounding', () => {
+  it.each([
+    [34.125,   '34.12'],
+    [-34.125,  '-34.12'],
+    [45.375,   '45.38'],
+    [0.625,    '0.62'],
+    [0.875,    '0.88'],
+    [-0.375,   '-0.38'],
+    [2.5,      '2.5'],
+    [0.195,    '0.2'],
+  ])('printDouble(%f) rounds ties half-to-even => %s', (input, expected) => {
+    const job = makeJob();
+    job.printDouble(input);
+    expect(job.output.join('')).toBe(expected);
+  });
+});
+
 // ---------------------------------------------------------------------------
 // AC2: write accumulation
 // ---------------------------------------------------------------------------
