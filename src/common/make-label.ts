@@ -101,9 +101,7 @@ export function makeAnyLabel(
   if (isHtml && content !== '') {
     // labels.c:145-161; htmltable.c:1856 — on parse failure falls back to
     // plain text (html=false) per htmltable.c:1892.
-    return makeHtmlLabel(
-      content, font.fontname, font.fontsize, font.fontcolor, measurer,
-    );
+    return makeHtmlLabel(content, font, measurer);
   }
   return makePlainLabel(content, font, measurer);
 }

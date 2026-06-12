@@ -18,7 +18,7 @@
 import type { Box } from '../model/geom.js';
 import type { TextlabelT } from './types.js';
 import type { TextMeasurer } from './textmeasure.js';
-import type { HtmlCell, HtmlLabel, HtmlTable, HtmlText, HtmlTextItem } from './htmltable-types.js';
+import type { HtmlCell, HtmlImage, HtmlLabel, HtmlTable, HtmlText, HtmlTextItem, ImageSizer } from './htmltable-types.js';
 import { layoutHtmlTable, cellPad, cellBorder, sizeHtmlLabel, parseHtmlLabel } from './htmltable.js';
 import { freetypeAscent } from './textmeasure.js';
 import { makeLabel } from './make-label.js';
@@ -38,7 +38,26 @@ export interface PlacedLine {
 }
 
 /**
- * A positioned cell: border box plus its text runs.
+ * A placed IMG element inside a cell.
+ * Carries the sized box (relative to label center) and scale attribute.
+ *
+ * Geometry: emit_html_img centers the image in the cell box, applying scale.
+ * @see lib/common/htmltable.c:emit_html_img (line 597)
+ */
+export interface PlacedImage {
+  src: string;
+  /** Scale attribute from <IMG SCALE="..."/>. */
+  scale?: string;
+  /** Intrinsic image width (from the ImageSizer), pre-scale. */
+  iw: number;
+  /** Intrinsic image height (from the ImageSizer), pre-scale. */
+  ih: number;
+  /** Target box for the image (alignment-adjusted cell content area). */
+  box: Box;
+}
+
+/**
+ * A positioned cell: border box plus its text runs and optional image.
  * Carries decoration metadata from htmlcell_t so the emitter can apply
  * bgcolor fill, per-side borders, anchors, and rules without a separate
  * decorated type.
@@ -49,6 +68,8 @@ export interface PlacedCell {
   box: Box;
   border: number;
   lines: PlacedLine[];
+  /** Placed image, present when the cell contains an <IMG> element. */
+  image?: PlacedImage;
   /** BGCOLOR attribute (solid color or "color1:color2" gradient spec). */
   bgcolor?: string;
   /** Pen (border) color override. */
@@ -271,6 +292,40 @@ function placeCellRuns(
   return placeTextRuns(runs, centerContentBox(cbox, w, h), finfo, measurer);
 }
 
+/**
+ * Build the placed image for a cell containing an <IMG> element.
+ *
+ * The target box is the inset content area, shrunk per the cell's
+ * halign/valign exactly as pos_html_cell's image branch does
+ * ("alignment trumps scaling"); the default alignment leaves the full
+ * content box, and emission centers/scales the intrinsic image within
+ * it (gvrender_usershape with imagepos "mc").
+ *
+ * @see lib/common/htmltable.c:pos_html_cell (image branch, :1456-1486)
+ */
+function placeCellImage(cell: HtmlCell, tbl: HtmlTable, box: Box): PlacedImage | undefined {
+  const img = cell.content.find((c): c is HtmlImage => c.kind === 'image');
+  if (img === undefined) return undefined;
+  const inset = cellBorder(cell, tbl) + cellPad(cell, tbl);
+  const iw = img.width ?? 0;
+  const ih = img.height ?? 0;
+  const cbox: Box = {
+    ll: { x: box.ll.x + inset, y: box.ll.y + inset },
+    ur: { x: box.ur.x - inset, y: box.ur.y - inset },
+  };
+  const delx = cbox.ur.x - cbox.ll.x - iw;
+  if (delx > 0) {
+    if (cell.align === 'left') cbox.ur.x -= delx;
+    else if (cell.align === 'right') cbox.ll.x += delx;
+  }
+  const dely = cbox.ur.y - cbox.ll.y - ih;
+  if (dely > 0) {
+    if (cell.valign === 'bottom') cbox.ur.y -= dely;
+    else if (cell.valign === 'top') cbox.ll.y += dely;
+  }
+  return { src: img.src, scale: img.scale, iw, ih, box: cbox };
+}
+
 /** Position one cell's text inside its box, copying decoration metadata. @see pos_html_cell */
 export function placeCell(ctx: CellPlaceCtx): PlacedCell {
   const { cell, tbl, box, col, row, colspan, rowspan } = ctx;
@@ -279,9 +334,11 @@ export function placeCell(ctx: CellPlaceCtx): PlacedCell {
   // "cells VR cell" for explicit <VR>); copy it through.
   // @see lib/common/htmlparse.y:329,434-435
   const vruled = cell.vruled;
+  const image = placeCellImage(cell, tbl, box);
   return {
     box, border,
     lines: placeCellRuns(ctx),
+    image,
     bgcolor: cell.bgcolor,
     color: cell.color,
     sides: cell.sides,
@@ -420,22 +477,25 @@ export function posHtmlLabel(
  * Build a TextlabelT for an HTML label string: parse, size, position.
  * Falls back to a plain-text label on parse failure (C reverts to the
  * object name; we keep the markup text).
+ *
+ * The optional `imageSizer` on `finfo` resolves `<IMG SRC="..."/>` dims.
+ * Absent → C missing-image behavior (zero size + warning).
+ *
  * @see lib/common/htmltable.c:make_html_label
  */
 export function makeHtmlLabel(
   content: string,
-  fontname: string,
-  fontsize: number,
-  fontcolor: string,
+  finfo: HtmlFontInfo & { imageSizer?: ImageSizer },
   measurer: TextMeasurer,
 ): TextlabelT {
+  const { fontname, fontsize, fontcolor, imageSizer } = finfo;
   let lbl: HtmlLabel;
   try {
     lbl = parseHtmlLabel(content);
   } catch {
     return makeLabel(content, fontname, fontsize, fontcolor, measurer);
   }
-  sizeHtmlLabel(lbl, measurer);
+  sizeHtmlLabel(lbl, measurer, imageSizer);
   const placed = posHtmlLabel(lbl, { fontname, fontsize, fontcolor }, measurer);
   const dim = lbl.dimen ?? { w: 0, h: 0 };
   return {

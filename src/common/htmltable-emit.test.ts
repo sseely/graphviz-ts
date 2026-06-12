@@ -189,3 +189,43 @@ describe('T6 — undecorated tables unchanged', () => {
     expect(svg).toContain('<polygon fill="none" stroke="black" points="21,-7 21,-29.5 33,-29.5 33,-7 21,-7"/>');
   });
 });
+
+// ---------------------------------------------------------------------------
+// T7 — <IMG> sizing + emission via injected ImageSizer (AD3).
+// Expected strings verified against C graphviz 15.0.0 on 2026-06-12.
+// @see lib/common/htmltable.c:emit_html_img / size_html_img
+// @see lib/gvc/gvrender.c:gvrender_usershape
+// ---------------------------------------------------------------------------
+
+import { setImageSizer } from '../gvc/usershape.js';
+import { afterEach } from 'vitest';
+
+const imgTbl = (attrs: string): string =>
+  `digraph { A [shape=plaintext label=<<TABLE><TR><TD${attrs.startsWith(' W') ? attrs.slice(0, attrs.indexOf('>')) : ''}><IMG${attrs.startsWith(' W') ? attrs.slice(attrs.indexOf('>') + 1) : attrs}/></TD></TR></TABLE>>]; }`;
+
+describe('T7 — html IMG emission', () => {
+  afterEach(() => setImageSizer(null));
+
+  it('sized image emits <image> at C geometry (24x12pt centered)', () => {
+    setImageSizer((s) => (s === 'x.png' ? { w: 24, h: 12 } : null));
+    const svg = renderSvg(imgTbl(' SRC="x.png"'), 'dot');
+    expect(svg).toContain(
+      '<image xlink:href="x.png" width="24px" height="12px" preserveAspectRatio="xMinYMin meet" x="15" y="-24"/>');
+  });
+
+  it('SCALE="true" upscales preserving aspect into the cell box', () => {
+    setImageSizer((s) => (s === 'x.png' ? { w: 24, h: 12 } : null));
+    const svg = renderSvg(
+      'digraph { A [shape=plaintext label=<<TABLE><TR><TD WIDTH="60" HEIGHT="40"><IMG SCALE="true" SRC="x.png"/></TD></TR></TABLE>>]; }',
+      'dot');
+    expect(svg).toContain(
+      '<image xlink:href="x.png" width="54px" height="27px" preserveAspectRatio="xMinYMin meet" x="14" y="-40.5"/>');
+  });
+
+  it('missing image: no <image>, zero-size cell, C cell geometry', () => {
+    const svg = renderSvg(imgTbl(' SRC="/nope.png"'), 'dot');
+    expect(svg).not.toContain('<image');
+    // C: cell collapses to padding+border chrome (6x6 inner box)
+    expect(svg).toContain('points="24,-15 24,-21 30,-21 30,-15 24,-15"');
+  });
+});

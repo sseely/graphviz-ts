@@ -58,5 +58,7 @@ export function renderSvg(dotSource: string, engine: string): string {
 }
 
 export { parse } from './parser/index.js';
+export { setImageSizer } from './gvc/usershape.js';
+export type { ImageSizer } from './common/htmltable-types.js';
 export { GvcContext } from './gvc/context.js';
 export { render } from './gvc/device.js';

@@ -57,11 +57,26 @@ export interface HtmlImage {
   kind: 'image';
   src: string;
   scale?: string;
-  /** AD3 prep: computed image width in points (from htmlimg_t.box). */
+  /** AD3: computed image width in points (from htmlimg_t.box.UR.x). */
   width?: number;
-  /** AD3 prep: computed image height in points (from htmlimg_t.box). */
+  /** AD3: computed image height in points (from htmlimg_t.box.UR.y). */
   height?: number;
 }
+
+/**
+ * Callback for resolving image dimensions in HTML labels.
+ *
+ * Returns the intrinsic {w, h} in points for `src`, or null when the image
+ * cannot be resolved.  Absent or null → zero-size cell + warning, matching
+ * C's missing-image behavior (htmltable.c:size_html_img, gvusershape.c).
+ *
+ * AD3 (locked): absent ImageSizer must be indistinguishable from
+ * C-with-missing-file.
+ *
+ * @see lib/common/htmltable.c:size_html_img (line 1080)
+ * @see lib/gvc/gvusershape.c:gvusershape_size
+ */
+export type ImageSizer = (src: string) => { w: number; h: number } | null;
 
 /**
  * A single run of styled text within a line.

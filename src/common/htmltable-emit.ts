@@ -26,12 +26,12 @@ import type { Point, Box } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import type { TextSpan } from './emit-types.js';
-import type { PlacedHtml, PlacedCell, PlacedLine } from './htmltable-pos.js';
+import type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage } from './htmltable-pos.js';
 import { transformPoint } from '../gvc/device.js';
 import { withHtmlPaint, parseGradientSpec, doBorder } from './htmltable-emit-fill.js';
 import { emitHtmlRules, initHtmlAnchor, endHtmlAnchor } from './htmltable-emit-rules.js';
 
-export type { PlacedHtml, PlacedCell, PlacedLine };
+export type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage };
 
 // ---------------------------------------------------------------------------
 // Primitive helpers
@@ -53,14 +53,9 @@ export function emitHtmlBox(
   renderer.polygon(pts, false, job);
 }
 
-/** Emit one text run. @see lib/common/htmltable.c:emit_htextspans */
-export function emitHtmlLine(
-  line: PlacedLine,
-  pos: Point,
-  renderer: RendererPlugin,
-  job: RenderJob,
-): void {
-  const span: TextSpan = {
+/** Build a TextSpan from a PlacedLine. */
+function lineToSpan(line: PlacedLine): TextSpan {
+  return {
     str: line.text,
     fontName: line.fontName,
     fontSize: line.fontSize,
@@ -71,7 +66,13 @@ export function emitHtmlLine(
     size: { x: line.width, y: line.fontSize },
     just: 'l',
   };
-  renderer.textspan({ x: line.x + pos.x, y: line.baseline + pos.y }, span, job);
+}
+
+/** Emit one text run. @see lib/common/htmltable.c:emit_htextspans */
+export function emitHtmlLine(
+  line: PlacedLine, pos: Point, renderer: RendererPlugin, job: RenderJob,
+): void {
+  renderer.textspan({ x: line.x + pos.x, y: line.baseline + pos.y }, lineToSpan(line), job);
 }
 
 // ---------------------------------------------------------------------------
@@ -150,11 +151,68 @@ function emitCellDecoration(
   }
 }
 
+/** Scale the intrinsic image size per the IMG SCALE attribute. */
+function scaleImage(d: { iw: number; ih: number; pw: number; ph: number; scale?: string }):
+    { iw: number; ih: number } {
+  const sx = d.pw / d.iw;
+  const sy = d.ph / d.ih;
+  const mode = (d.scale ?? '').toLowerCase();
+  if (mode === 'width') return { iw: d.iw * sx, ih: d.ih };
+  if (mode === 'height') return { iw: d.iw, ih: d.ih * sy };
+  if (mode === 'both') return { iw: d.iw * sx, ih: d.ih * sy };
+  if (mode === 'true' || mode === 'yes' || mode === '1') {
+    const f = Math.min(sx, sy);
+    return { iw: d.iw * f, ih: d.ih * f };
+  }
+  return { iw: d.iw, ih: d.ih };
+}
+
+/**
+ * Emit a placed HTML IMG through the renderer's usershape hook.
+ *
+ * Ports gvrender_usershape: compute the target box from the placed
+ * box, apply the SCALE modes against the intrinsic size, then center
+ * the result (imagepos "mc" — hardcoded by emit_html_img).
+ *
+ * Deviation (journaled): C falls back to the node-level `imagescale`
+ * attribute via env->imgscale when the IMG has no SCALE; the port's
+ * emission path carries no node env, so only the IMG SCALE attribute
+ * is honored.
+ *
+ * @see lib/common/htmltable.c:emit_html_img (line 597)
+ * @see lib/gvc/gvrender.c:gvrender_usershape (line 670)
+ */
+export function emitHtmlImg(
+  img: PlacedImage,
+  pos: Point,
+  renderer: RendererPlugin,
+  job: RenderJob,
+): void {
+  if (img.iw <= 0 && img.ih <= 0) return; // C: zero-size image → skip
+  const b: Box = {
+    ll: { x: img.box.ll.x + pos.x, y: img.box.ll.y + pos.y },
+    ur: { x: img.box.ur.x + pos.x, y: img.box.ur.y + pos.y },
+  };
+  const pw = b.ur.x - b.ll.x;
+  const ph = b.ur.y - b.ll.y;
+  const { iw, ih } = scaleImage({ iw: img.iw, ih: img.ih, pw, ph, scale: img.scale });
+  // imagepos "mc": center the (possibly scaled) image in the target box
+  if (iw < pw) {
+    b.ll.x += (pw - iw) / 2.0;
+    b.ur.x -= (pw - iw) / 2.0;
+  }
+  if (ih < ph) {
+    b.ll.y += (ph - ih) / 2.0;
+    b.ur.y -= (ph - ih) / 2.0;
+  }
+  renderer.usershape?.(img.src, b, job);
+}
+
 /**
  * Emit one positioned HTML cell.
  *
  * Draw order mirrors C emit_html_cell:
- *   1. Open anchor   2. BGCOLOR fill   3. Border   4. Text   5. Close anchor
+ *   1. Open anchor   2. BGCOLOR fill   3. Border   4. Content   5. Close anchor
  *
  * @see lib/common/htmltable.c:emit_html_cell
  */
@@ -169,7 +227,11 @@ export function emitHtmlCell(
     renderer, job,
   );
   emitCellDecoration(cell, pos, renderer, job);
-  for (const line of cell.lines) emitHtmlLine(line, pos, renderer, job);
+  if (cell.image !== undefined) {
+    emitHtmlImg(cell.image, pos, renderer, job);
+  } else {
+    for (const line of cell.lines) emitHtmlLine(line, pos, renderer, job);
+  }
   if (inAnchor) endHtmlAnchor(renderer, job);
 }
 
