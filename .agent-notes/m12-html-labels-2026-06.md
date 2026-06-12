@@ -73,10 +73,11 @@
   C (edge label "A to B" graph bb 72 vs 71pt; text positions identical)
   — per-char LUT px rounding vs pango whole-string shaping. Needs real
   shaping data; not fixable in the LUT model.
-- **Finding**: Parser still cooks \t→tab and \X→X (scan.l keeps both
-  verbatim; C handles them at make_simple_label/subst time). Escaped
-  backslash before a subst escape ("\\\\N") therefore substitutes where
-  C keeps it literal. Niche; full escape parity would need the lexer to
-  stop cooking and every text consumer to process escapes like C.
+- **Finding (RESOLVED same day, commit 5e57052)**: full escape parity
+  landed — the grammar now keeps all escapes verbatim per scan.l (only
+  \" and escaped-newline transform); make_simple_label's splitter drops
+  backslashes from unknown escapes; record fields substitute \N via
+  makeAnyLabel(obj). 14-case oracle matrix exact, incl. literal \\N,
+  record escapes, and escaped node names in titles.
 - **Confidence**: High (all fixes verified case-by-case against dot
   15.0.0; 82 goldens byte-identical throughout; suite 1449 tests).
