@@ -42,11 +42,6 @@ export interface HtmlHR {
   kind: 'hr';
 }
 
-/** @see lib/common/htmltable.h (VR separator between cells) */
-export interface HtmlVR {
-  kind: 'vr';
-}
-
 /**
  * Border-side bitmask constants matching C htmltable.h BORDER_* defines.
  * @see lib/common/htmltable.h:BORDER_LEFT etc.
@@ -105,6 +100,12 @@ export type HtmlCellContent = HtmlText | HtmlTable | HtmlImage | HtmlHR;
 export interface HtmlCell {
   kind: 'cell';
   content: HtmlCellContent[];
+  /**
+   * Vertical rule right of this cell: set by <VR> between cells
+   * (htmlparse.y:329) or table COLUMNS="*" (htmlparse.y setCell).
+   * @see lib/common/htmltable.h:htmlcell_t.vruled
+   */
+  vruled?: boolean;
   port?: string;
   align?: HtmlAlign;
   valign?: HtmlVAlign;
@@ -141,7 +142,13 @@ export interface HtmlCell {
 
 /** @see lib/common/htmltable.h:row_t */
 export interface HtmlRow {
-  cells: (HtmlCell | HtmlVR)[];
+  cells: HtmlCell[];
+  /**
+   * Horizontal rule below this row: set by <HR> between rows
+   * (htmlparse.y:321) or table ROWS="*" (htmlparse.y addRow).
+   * @see lib/common/htmltable.h:row_t.ruled
+   */
+  ruled?: boolean;
 }
 
 /** @see lib/common/htmltable.h:htmltbl_t */

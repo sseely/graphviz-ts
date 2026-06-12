@@ -6,6 +6,10 @@
  * center, mirroring pos_html_tbl / pos_html_cell / emit_htextspans
  * geometry.
  *
+ * Decoration metadata (bgcolor, color, sides, href, title, target, id,
+ * style, vruled, hruled, col, row, colspan, rowspan) is carried directly
+ * on PlacedCell/PlacedHtml — matching C's htmlcell_t/htmltbl_t layout.
+ *
  * @see lib/common/htmltable.c:pos_html_tbl
  * @see lib/common/htmltable.c:pos_html_cell
  * @see lib/common/htmltable.c:emit_htextspans
@@ -33,18 +37,97 @@ export interface PlacedLine {
   fontFlags: number;
 }
 
-/** A positioned cell: border box plus its text runs. */
+/**
+ * A positioned cell: border box plus its text runs.
+ * Carries decoration metadata from htmlcell_t so the emitter can apply
+ * bgcolor fill, per-side borders, anchors, and rules without a separate
+ * decorated type.
+ *
+ * @see lib/common/htmltable.h:htmlcell_t
+ */
 export interface PlacedCell {
   box: Box;
   border: number;
   lines: PlacedLine[];
+  /** BGCOLOR attribute (solid color or "color1:color2" gradient spec). */
+  bgcolor?: string;
+  /** Pen (border) color override. */
+  color?: string;
+  /** SIDES bitmask (BORDER_LEFT|TOP|RIGHT|BOTTOM). */
+  sides?: number;
+  /** HREF for this cell's anchor. */
+  href?: string;
+  /** TOOLTIP for this cell's anchor. */
+  title?: string;
+  /** TARGET for this cell's anchor. */
+  target?: string;
+  /** ID attribute. */
+  id?: string;
+  /** Style string (dashed, dotted, rounded, …). */
+  style?: string;
+  /** Column index (0-based). @see lib/common/htmltable.h:htmlcell_t.col */
+  col: number;
+  /** Row index (0-based). @see lib/common/htmltable.h:htmlcell_t.row */
+  row: number;
+  /** Column span (≥1). */
+  colspan: number;
+  /** Row span (≥1). */
+  rowspan: number;
+  /**
+   * True when this cell has a vertical rule to its right.
+   * Set by table vrule (COLUMNS="*") or explicit <VR/> in the row.
+   * @see lib/common/htmltable.h:htmlcell_t.vruled
+   */
+  vruled?: boolean;
+  /**
+   * True when this cell has a horizontal rule below it.
+   * Set by table hrule (ROWS="*") propagated via row_t.ruled.
+   * @see lib/common/htmltable.h:htmlcell_t.hruled
+   */
+  hruled?: boolean;
 }
 
-/** A fully positioned HTML label. */
+/**
+ * A fully positioned HTML label (table).
+ * Carries table-level decoration metadata from htmltbl_t.
+ *
+ * @see lib/common/htmltable.h:htmltbl_t
+ */
 export interface PlacedHtml {
   box: Box;
   border: number;
   cells: PlacedCell[];
+  /** BGCOLOR attribute for the table background. */
+  bgcolor?: string;
+  /** Pen color for the table border. */
+  color?: string;
+  /** SIDES bitmask. */
+  sides?: number;
+  /** Table HREF anchor. */
+  href?: string;
+  /** Table TOOLTIP. */
+  title?: string;
+  /** Table TARGET. */
+  target?: string;
+  /** Table ID. */
+  id?: string;
+  /** Table style string. */
+  style?: string;
+  /**
+   * Total number of columns (used for vruled boundary check).
+   * @see lib/common/htmltable.h:htmltbl_t.column_count
+   */
+  columnCount: number;
+  /**
+   * Total number of rows (used for hruled boundary check).
+   * @see lib/common/htmltable.h:htmltbl_t.row_count
+   */
+  rowCount: number;
+  /**
+   * Cell spacing (cellspacing attribute or default).
+   * @see lib/common/htmltable.h:htmldata_t.space
+   */
+  spacing: number;
 }
 
 /** Font info inherited from the enclosing label. */
@@ -157,14 +240,24 @@ export function centerContentBox(box: Box, w: number, h: number): Box {
   };
 }
 
-/** Position one cell's text inside its box. @see pos_html_cell */
-export function placeCell(
-  cell: HtmlCell,
-  tbl: HtmlTable,
-  box: Box,
-  finfo: HtmlFontInfo,
-  measurer: TextMeasurer,
-): PlacedCell {
+/** Cell placement context: geometry + grid position, used by placeCell. */
+export interface CellPlaceCtx {
+  cell: HtmlCell;
+  tbl: HtmlTable;
+  box: Box;
+  finfo: HtmlFontInfo;
+  measurer: TextMeasurer;
+  col: number;
+  row: number;
+  colspan: number;
+  rowspan: number;
+}
+
+/** Place text runs for a cell, returning the inset content box. */
+function placeCellRuns(
+  ctx: CellPlaceCtx,
+): PlacedLine[] {
+  const { cell, tbl, box, finfo, measurer } = ctx;
   const border = cellBorder(cell, tbl);
   const inset = border + cellPad(cell, tbl);
   const cbox: Box = {
@@ -175,8 +268,105 @@ export function placeCell(
   const runs = buildLineRuns(texts, finfo, measurer);
   const w = Math.max(...runs.map(r => r.width), 0);
   const h = runs.reduce((a, r) => a + r.height, 0);
-  const tbox = centerContentBox(cbox, w, h);
-  return { box, border, lines: placeTextRuns(runs, tbox, finfo, measurer) };
+  return placeTextRuns(runs, centerContentBox(cbox, w, h), finfo, measurer);
+}
+
+/** Position one cell's text inside its box, copying decoration metadata. @see pos_html_cell */
+export function placeCell(ctx: CellPlaceCtx): PlacedCell {
+  const { cell, tbl, box, col, row, colspan, rowspan } = ctx;
+  const border = cellBorder(cell, tbl);
+  // vruled is fully resolved at parse time (setCell for COLUMNS="*",
+  // "cells VR cell" for explicit <VR>); copy it through.
+  // @see lib/common/htmlparse.y:329,434-435
+  const vruled = cell.vruled;
+  return {
+    box, border,
+    lines: placeCellRuns(ctx),
+    bgcolor: cell.bgcolor,
+    color: cell.color,
+    sides: cell.sides,
+    href: cell.href,
+    title: cell.title,
+    target: cell.target,
+    id: cell.id,
+    style: cell.style,
+    col, row, colspan, rowspan,
+    vruled,
+    // hruled set post-construction in posHtmlTable from hrule propagation
+  };
+}
+
+/** Compute column X-offsets from layout widths. */
+function buildColX(pos: Box, border: number, spacing: number, widths: number[]): number[] {
+  const colX: number[] = [];
+  let x = pos.ll.x + border + spacing;
+  for (let i = 0; i < widths.length; i++) { colX[i] = x; x += widths[i] + spacing; }
+  return colX;
+}
+
+/** Compute row Y-offsets from layout heights. */
+function buildRowY(pos: Box, border: number, spacing: number, heights: number[]): number[] {
+  const rowY: number[] = [];
+  let y = pos.ur.y - border - spacing;
+  for (let i = 0; i < heights.length; i++) { rowY[i] = y; y -= heights[i] + spacing; }
+  return rowY;
+}
+
+/** Build table-level decoration fields from htmltbl_t. */
+function tblDecoration(tbl: HtmlTable): Partial<PlacedHtml> {
+  return {
+    bgcolor: tbl.bgcolor,
+    color: tbl.color,
+    sides: tbl.sides,
+    href: tbl.href,
+    title: tbl.title,
+    target: tbl.target,
+    id: tbl.id,
+    style: tbl.style,
+  };
+}
+
+/** Context for placeCells, grouping grid and font state. */
+interface PlaceCellsCtx {
+  tbl: HtmlTable;
+  entries: ReturnType<typeof layoutHtmlTable>['entries'];
+  colX: number[];
+  rowY: number[];
+  spacing: number;
+  nrows: number;
+  finfo: HtmlFontInfo;
+  measurer: TextMeasurer;
+}
+
+/**
+ * Mark hruled cells: C processTbl sets bit r+1 for each row with
+ * ruled=true, then any cell whose bottom edge (row + rowspan) lands on
+ * a set bit becomes hruled. The bottom-boundary draw guard lives at
+ * emit time (htmltable.c:488), as in C.
+ * @see lib/common/htmltable.c:processTbl (bitarray, :1199-1224)
+ */
+function ruledBoundaries(tbl: HtmlTable): Set<number> {
+  const bits = new Set<number>();
+  tbl.rows.forEach((row, r) => { if (row.ruled === true) bits.add(r + 1); });
+  return bits;
+}
+
+/** Place all cells for a table, marking ruled cells per C processTbl. */
+function placeCells(ctx: PlaceCellsCtx): PlacedCell[] {
+  const { tbl, entries, colX, rowY, spacing, finfo, measurer } = ctx;
+  const boundaries = ruledBoundaries(tbl);
+  return entries.map((e) => {
+    const box: Box = {
+      ll: { x: colX[e.col], y: rowY[e.row + e.rowspan] + spacing },
+      ur: { x: colX[e.col + e.colspan] - spacing, y: rowY[e.row] },
+    };
+    const placed = placeCell({
+      cell: e.cell, tbl, box, finfo, measurer,
+      col: e.col, row: e.row, colspan: e.colspan, rowspan: e.rowspan,
+    });
+    if (boundaries.has(e.row + e.rowspan)) placed.hruled = true;
+    return placed;
+  });
 }
 
 /** Position the table and all cells. @see pos_html_tbl */
@@ -191,20 +381,29 @@ export function posHtmlTable(
     ur: { x: dim.w / 2, y: dim.h / 2 },
   };
   const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer);
-  const colX: number[] = [];
-  let x = pos.ll.x + border + spacing;
-  for (let i = 0; i <= widths.length - 1; i++) { colX[i] = x; x += widths[i] + spacing; }
-  const rowY: number[] = [];
-  let y = pos.ur.y - border - spacing;
-  for (let i = 0; i <= heights.length - 1; i++) { rowY[i] = y; y -= heights[i] + spacing; }
-  const cells = entries.map((e) => {
-    const box: Box = {
-      ll: { x: colX[e.col], y: rowY[e.row + e.rowspan] + spacing },
-      ur: { x: colX[e.col + e.colspan] - spacing, y: rowY[e.row] },
-    };
-    return placeCell(e.cell, tbl, box, finfo, measurer);
-  });
-  return { box: pos, border, cells };
+  const ncols = widths.length > 0 ? Math.max(...entries.map(e => e.col + e.colspan)) : 0;
+  const nrows = heights.length > 0 ? Math.max(...entries.map(e => e.row + e.rowspan)) : 0;
+  const colX = buildColX(pos, border, spacing, widths);
+  const rowY = buildRowY(pos, border, spacing, heights);
+  const cells = placeCells({ tbl, entries, colX, rowY, spacing, nrows, finfo, measurer });
+  return { box: pos, border, cells, spacing, columnCount: ncols, rowCount: nrows, ...tblDecoration(tbl) };
+}
+
+/** Build a single-cell PlacedHtml for a plain text label. */
+function posTextLabel(label: Extract<HtmlLabel, { kind: 'text' }>, finfo: HtmlFontInfo, measurer: TextMeasurer): PlacedHtml {
+  const dim = label.dimen ?? { w: 0, h: 0 };
+  const box: Box = {
+    ll: { x: -dim.w / 2, y: -dim.h / 2 },
+    ur: { x: dim.w / 2, y: dim.h / 2 },
+  };
+  const runs = buildLineRuns(label.texts, finfo, measurer);
+  return {
+    box, border: 0, columnCount: 1, rowCount: 1, spacing: 0,
+    cells: [{
+      box, border: 0, col: 0, row: 0, colspan: 1, rowspan: 1,
+      lines: placeTextRuns(runs, box, finfo, measurer),
+    }],
+  };
 }
 
 /** Position a sized HtmlLabel relative to its center. */
@@ -214,16 +413,7 @@ export function posHtmlLabel(
   measurer: TextMeasurer,
 ): PlacedHtml {
   if (label.kind === 'table') return posHtmlTable(label.table, finfo, measurer);
-  const dim = label.dimen ?? { w: 0, h: 0 };
-  const box: Box = {
-    ll: { x: -dim.w / 2, y: -dim.h / 2 },
-    ur: { x: dim.w / 2, y: dim.h / 2 },
-  };
-  const runs = buildLineRuns(label.texts, finfo, measurer);
-  return {
-    box, border: 0,
-    cells: [{ box, border: 0, lines: placeTextRuns(runs, box, finfo, measurer) }],
-  };
+  return posTextLabel(label, finfo, measurer);
 }
 
 /**

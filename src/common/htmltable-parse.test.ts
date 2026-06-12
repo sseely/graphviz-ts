@@ -154,3 +154,48 @@ describe('existing attrs unaffected', () => {
     expect(cell.border).toBe(2);
   });
 });
+
+// ---------------------------------------------------------------------------
+// HR / VR rule semantics — C grammar actions.
+// @see lib/common/htmlparse.y:321 (rows HR row), :329 (cells VR cell)
+// ---------------------------------------------------------------------------
+
+describe('HR between rows (htmlparse.y:321)', () => {
+  it('marks the preceding row ruled', () => {
+    const lbl = parseHtmlLabel('<TABLE><TR><TD>a</TD></TR><HR/><TR><TD>b</TD></TR></TABLE>');
+    if (lbl.kind !== 'table') throw new Error('expected table');
+    expect(lbl.table.rows[0]?.ruled).toBe(true);
+    expect(lbl.table.rows[1]?.ruled).toBeUndefined();
+  });
+
+  it('throws when HR precedes any row (C syntax error)', () => {
+    expect(() => parseHtmlLabel('<TABLE><HR/><TR><TD>a</TD></TR></TABLE>')).toThrow();
+  });
+});
+
+describe('VR between cells (htmlparse.y:329)', () => {
+  it('marks the preceding cell vruled', () => {
+    const lbl = parseHtmlLabel('<TABLE><TR><TD>a</TD><VR/><TD>b</TD></TR></TABLE>');
+    if (lbl.kind !== 'table') throw new Error('expected table');
+    expect(lbl.table.rows[0]?.cells[0]?.vruled).toBe(true);
+    expect(lbl.table.rows[0]?.cells[1]?.vruled).toBeUndefined();
+  });
+
+  it('throws when VR precedes any cell (C syntax error)', () => {
+    expect(() => parseHtmlLabel('<TABLE><TR><VR/><TD>a</TD></TR></TABLE>')).toThrow();
+  });
+});
+
+describe('ROWS/COLUMNS="*" propagation (htmlparse.y addRow/setCell)', () => {
+  it('ROWS="*" marks every row ruled', () => {
+    const lbl = parseHtmlLabel('<TABLE ROWS="*"><TR><TD>a</TD></TR><TR><TD>b</TD></TR></TABLE>');
+    if (lbl.kind !== 'table') throw new Error('expected table');
+    expect(lbl.table.rows.every((r) => r.ruled === true)).toBe(true);
+  });
+
+  it('COLUMNS="*" marks every cell vruled', () => {
+    const lbl = parseHtmlLabel('<TABLE COLUMNS="*"><TR><TD>a</TD><TD>b</TD></TR></TABLE>');
+    if (lbl.kind !== 'table') throw new Error('expected table');
+    expect(lbl.table.rows[0]?.cells.every((c) => c.vruled === true)).toBe(true);
+  });
+});

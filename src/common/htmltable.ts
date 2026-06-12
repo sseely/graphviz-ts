@@ -11,7 +11,7 @@
 export { HtmlParseError } from './htmltable-types.js';
 export type {
   HtmlAlign, HtmlVAlign,
-  HtmlHR, HtmlVR, HtmlImage, HtmlTextItem, HtmlText,
+  HtmlHR, HtmlImage, HtmlTextItem, HtmlText,
   HtmlCellContent, HtmlCell, HtmlRow, HtmlTable, HtmlLabel,
 } from './htmltable-types.js';
 export { parseHtmlLabel } from './htmltable-parse.js';

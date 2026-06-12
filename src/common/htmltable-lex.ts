@@ -84,7 +84,15 @@ function scanTag(src: string, start: number, tokens: Token[]) {
   const inner = src.slice(start + 1, j).trim();
   const next = j + 1;
   if (inner.startsWith('!--')) return next;
-  tokens.push(inner.startsWith('/') ? parseCloseToken(inner) : parseOpenToken(inner));
+  if (inner.startsWith('/')) { tokens.push(parseCloseToken(inner)); return next; }
+  // Self-closing <X/>: expat reports startElement then endElement.
+  // @see lib/common/htmllex.c (XML_SetElementHandler callbacks)
+  if (inner.endsWith('/')) {
+    const open = parseOpenToken(inner.slice(0, -1).trim());
+    tokens.push(open, { type: 'close', tag: open.tag });
+    return next;
+  }
+  tokens.push(parseOpenToken(inner));
   return next;
 }
 

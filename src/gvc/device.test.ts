@@ -311,10 +311,14 @@ function makePlacedHtml(text: string): PlacedHtml {
   return {
     box: { ll: { x: -20, y: -7 }, ur: { x: 20, y: 7 } },
     border: 0,
+    columnCount: 1,
+    rowCount: 1,
+    spacing: 0,
     cells: [
       {
         box: { ll: { x: -20, y: -7 }, ur: { x: 20, y: 7 } },
         border: 0,
+        col: 0, row: 0, colspan: 1, rowspan: 1,
         lines: [
           {
             text,

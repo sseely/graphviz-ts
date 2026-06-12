@@ -67,3 +67,33 @@ describe('tokenize — basic tokens', () => {
     expect(tokenize('</TABLE>')[0]).toMatchObject({ type: 'close', tag: 'TABLE' });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Self-closing tags: expat reports startElement then endElement for <X/>.
+// @see lib/common/htmllex.c (XML_SetElementHandler callbacks)
+// ---------------------------------------------------------------------------
+
+describe('self-closing tags', () => {
+  it('<VR/> lexes as open + close pair', () => {
+    const toks = tokenize('<VR/>');
+    expect(toks).toEqual([
+      { type: 'open', tag: 'VR', attrs: {} },
+      { type: 'close', tag: 'VR' },
+    ]);
+  });
+
+  it('<HR/> lexes as open + close pair', () => {
+    const toks = tokenize('<HR/>');
+    expect(toks).toEqual([
+      { type: 'open', tag: 'HR', attrs: {} },
+      { type: 'close', tag: 'HR' },
+    ]);
+  });
+
+  it('self-closing tag with attributes keeps them on the open token', () => {
+    const toks = tokenize('<IMG SRC="x.png"/>');
+    expect(toks[0]?.type).toBe('open');
+    expect(toks[0]?.type === 'open' && toks[0].attrs['src']).toBe('x.png');
+    expect(toks[1]).toEqual({ type: 'close', tag: 'IMG' });
+  });
+});
