@@ -290,3 +290,22 @@ describe('T9 — non-simple vertical model (size_html_txt simple branch)', () =>
     expect(a.match(/height="(\d+)pt"/)?.[1]).not.toBe(b.match(/height="(\d+)pt"/)?.[1]);
   });
 });
+
+describe('IMG SCALE fallback to node imagescale attr (emit_html_img:615-618)', () => {
+  it('node imagescale=true scales the image like IMG SCALE="true"', () => {
+    setImageSizer((s) => (s === 'x.png' ? { w: 24, h: 12 } : null));
+    const withAttr = renderSvg(
+      'digraph { A [imagescale=true label=<<TABLE><TR><TD WIDTH="60" HEIGHT="40"><IMG SRC="x.png"/></TD></TR></TABLE>>]; }', 'dot');
+    const withScale = renderSvg(
+      'digraph { A [label=<<TABLE><TR><TD WIDTH="60" HEIGHT="40"><IMG SCALE="true" SRC="x.png"/></TD></TR></TABLE>>]; }', 'dot');
+    expect(withAttr.match(/<image[^>]*/)?.[0]).toBe(withScale.match(/<image[^>]*/)?.[0]);
+    expect(withAttr).toContain('width="54px" height="27px"');
+  });
+
+  it('IMG SCALE attr overrides the node attr', () => {
+    setImageSizer((s) => (s === 'x.png' ? { w: 24, h: 12 } : null));
+    const svg = renderSvg(
+      'digraph { A [imagescale=true label=<<TABLE><TR><TD WIDTH="60" HEIGHT="40"><IMG SCALE="false" SRC="x.png"/></TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toContain('width="24px" height="12px"');
+  });
+});
