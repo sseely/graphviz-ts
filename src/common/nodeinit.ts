@@ -15,7 +15,9 @@ import type { TextMeasurer } from './textmeasure.js';
 import type { PolygonT, ShapeDesc, TextlabelT } from './types.js';
 import { ShapeKind } from './types.js';
 import { bindShape } from './shapes.js';
-import { assignShapeInfo, buildNodeLabel, nodeAttr } from './poly-init.js';
+import { assignShapeInfo, buildNodeLabel, nodeAttr, readFontAttrs } from './poly-init.js';
+import { makeLabel } from './make-label.js';
+import { NODE_XLABEL } from '../layout/dot/rank.js';
 import { recordNodeInit } from './record.js';
 import {
   gvNodesize,
@@ -142,6 +144,20 @@ export function polySizeParamsFromNode(
 }
 
 /**
+ * Create ND_xlabel when the xlabel attr is non-empty and set NODE_XLABEL.
+ * HTML xlabels are a future mission (architecture decision D2).
+ * @see lib/common/utils.c:443-447
+ * @see lib/common/utils.c:447 — GD_has_labels scoped to agraphof(n) root
+ */
+function initNodeXLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
+  const str = nodeAttr(n, g, 'xlabel');
+  if (!str || str.length === 0) return;
+  const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
+  n.info.xlabel = makeLabel(str, fontname, fontsize, fontcolor, measurer);
+  g.root.info.has_labels = (g.root.info.has_labels ?? 0) | NODE_XLABEL;
+}
+
+/**
  * Build the label and size the node from it, mirroring
  * common_init_node + the shape initfn. Returns false when the shape
  * has no polygon descriptor to size against.
@@ -155,6 +171,7 @@ function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
     return true;
   }
   buildNodeLabel(n, g, measurer);
+  initNodeXLabel(n, g, measurer);
   const poly = shape.polygon;
   if (poly === null) return false;
   const label = n.info.label as TextlabelT;
