@@ -21,6 +21,8 @@ import type { TextSpan } from '../common/emit-types.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
+import { emitHtmlLabel } from '../common/htmltable-emit.js';
+import type { PlacedHtml } from '../common/htmltable-pos.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -122,7 +124,14 @@ export function renderOneLabel(
   job: RenderJob,
 ): void {
   if (!lp?.set) return; // emit_label: lbl == NULL || !lbl->set
-  if (lp.html) return; // HTML labels not ported (AD-2)
+  // HTML branch: @see lib/common/labels.c:emit_label (226-230)
+  // C routes to emit_html_label(job, lp->u.html, lp) using lp->pos as anchor.
+  if (lp.html) {
+    if (lp.u.kind === 'html') {
+      emitHtmlLabel(lp.u.html as PlacedHtml, lp.pos, renderer, job);
+    }
+    return;
+  }
   if (lp.u.kind !== 'txt' || lp.u.nspans < 1) return;
   let y = labelFirstSpanY(lp);
   for (let i = 0; i < lp.u.nspans; i++) {
@@ -187,10 +196,21 @@ export function walkNodesAndEdges(g: Graph, renderer: RendererPlugin, job: Rende
 // renderGraph — @see lib/gvc/gvrender.c:gvrender_begin_graph / end_graph
 // ---------------------------------------------------------------------------
 
-/** @see lib/common/emit.c:emit_clusters (label text spans) */
-function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
+/**
+ * @see lib/common/emit.c:emit_clusters (label text spans and html branch)
+ * Exported for testing (AC12).
+ */
+export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
   const lab = sg.info.label as TextlabelT | undefined;
-  if (!lab?.set || lab.u.kind !== 'txt' || lab.u.nspans <= 0) return;
+  if (!lab?.set) return;
+  // HTML branch: @see lib/common/labels.c:emit_label (226-230)
+  if (lab.html) {
+    if (lab.u.kind === 'html') {
+      emitHtmlLabel(lab.u.html as PlacedHtml, lab.pos, renderer, job);
+    }
+    return;
+  }
+  if (lab.u.kind !== 'txt' || lab.u.nspans <= 0) return;
   const py = lab.pos.y + lab.dimen.y / 2.0 - lab.fontsize;
   for (let i = 0; i < lab.u.nspans; i++) {
     const span = lab.u.span[i] as TextSpan | undefined;

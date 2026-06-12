@@ -11,10 +11,14 @@
  * AC6: node xlabel not emitted when set=false
  * AC7: graph label emitted before first node group (set=true)
  * AC8: graph label not emitted when absent or set=false
+ * AC9: renderOneLabel — placed html edge label renders cells (set=true, html=true)
+ * AC10: renderOneLabel — txt-only labels unchanged by html branch
+ * AC11: renderOneLabel — set=false html label is skipped
+ * AC12: renderClusterLabel — html cluster label renders cells
  */
 
 import { describe, it, expect } from 'vitest';
-import { transformPoint, renderGraph, renderOneLabel, renderNodeXLabel, renderGraphLabel } from './device.js';
+import { transformPoint, renderGraph, renderOneLabel, renderNodeXLabel, renderGraphLabel, renderClusterLabel } from './device.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
 import type { RendererPlugin } from './context.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
@@ -26,6 +30,7 @@ import { makeNodeInfo } from '../model/nodeInfo.js';
 import { makePort, makeEdgeInfo } from '../model/edgeInfo.js';
 import type { TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
+import type { PlacedHtml } from '../common/htmltable-pos.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -293,6 +298,165 @@ describe('AC8: renderGraphLabel — label suppressed when absent or set=false', 
     const renderer = new TextCapture();
     const job = new RenderJob('svg', stubMeasurer);
     renderGraphLabel(g, renderer, job);
+    expect(renderer.spans).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// HTML label helpers
+// ---------------------------------------------------------------------------
+
+/** Build a minimal PlacedHtml with one cell, one line. */
+function makePlacedHtml(text: string): PlacedHtml {
+  return {
+    box: { ll: { x: -20, y: -7 }, ur: { x: 20, y: 7 } },
+    border: 0,
+    cells: [
+      {
+        box: { ll: { x: -20, y: -7 }, ur: { x: 20, y: 7 } },
+        border: 0,
+        lines: [
+          {
+            text,
+            fontName: 'Times,serif',
+            fontSize: 14,
+            fontColor: '#000000',
+            fontFlags: 0,
+            x: -18,
+            baseline: 5,
+            width: 36,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+/** Build a placed html TextlabelT wrapping the given PlacedHtml. */
+function makeHtmlLabel(placed: PlacedHtml, set: boolean): TextlabelT {
+  return {
+    text: '',
+    fontname: 'Times,serif',
+    fontcolor: 'black',
+    charset: 0,
+    fontsize: 14,
+    dimen: { x: 40, y: 14 },
+    space: { x: 40, y: 14 },
+    pos: { x: 50, y: 20 },
+    u: { kind: 'html', html: placed },
+    valign: 0,
+    set,
+    html: true,
+  };
+}
+
+/** Renderer that captures polygon (border box) and textspan calls. */
+class HtmlCapture implements RendererPlugin {
+  readonly type = 'test';
+  readonly quality = 0;
+  readonly spans: Array<{ str: string; x: number; y: number }> = [];
+  readonly polygons: number[] = []; // polygon call count
+  beginGraph() {}
+  endGraph() {}
+  beginNode() {}
+  endNode() {}
+  beginEdge() {}
+  endEdge() {}
+  textspan(pos: { x: number; y: number }, span: TextSpan) {
+    this.spans.push({ str: span.str, x: pos.x, y: pos.y });
+  }
+  ellipse() {}
+  polygon() { this.polygons.push(1); }
+  bezier() {}
+  polyline() {}
+}
+
+// ---------------------------------------------------------------------------
+// AC9: renderOneLabel — placed html edge label renders cells (set=true)
+// @see lib/common/labels.c:emit_label (226-230)
+// ---------------------------------------------------------------------------
+
+describe('AC9: renderOneLabel — html edge label renders cells when set=true', () => {
+  it('calls textspan for the html cell line text', () => {
+    const placed = makePlacedHtml('bold-edge');
+    const lp = makeHtmlLabel(placed, true);
+    const renderer = new HtmlCapture();
+    const job = new RenderJob('svg', stubMeasurer);
+    renderOneLabel(lp, renderer, job);
+    expect(renderer.spans).toHaveLength(1);
+    expect(renderer.spans[0].str).toBe('bold-edge');
+  });
+
+  it('passes lp.pos as the html anchor (labels.c:emit_label:252, emit_html_label:764)', () => {
+    const placed = makePlacedHtml('e');
+    const lp = makeHtmlLabel(placed, true);
+    // PlacedLine x=-18, baseline=5, lp.pos={x:50,y:20}; job identity transform
+    const renderer = new HtmlCapture();
+    const job = new RenderJob('svg', stubMeasurer);
+    job.zoom = 1;
+    job.devscale = { x: 1, y: 1 };
+    job.translation = { x: 0, y: 0 };
+    job.rotation = 0;
+    renderOneLabel(lp, renderer, job);
+    // x = line.x + pos.x = -18 + 50 = 32; y = line.baseline + pos.y = 5 + 20 = 25
+    expect(renderer.spans[0].x).toBe(32);
+    expect(renderer.spans[0].y).toBe(25);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC10: renderOneLabel — txt label path unchanged by html branch
+// ---------------------------------------------------------------------------
+
+describe('AC10: renderOneLabel — txt label unchanged', () => {
+  it('still emits textspan for txt label when html=false', () => {
+    const lp = makePlacedLabel('plain', true);
+    const renderer = new TextCapture();
+    const job = new RenderJob('svg', stubMeasurer);
+    renderOneLabel(lp, renderer, job);
+    expect(renderer.spans).toHaveLength(1);
+    expect(renderer.spans[0].str).toBe('plain');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC11: renderOneLabel — set=false html label is skipped
+// @see lib/common/labels.c:emit_label guards (caller: lbl->set check)
+// ---------------------------------------------------------------------------
+
+describe('AC11: renderOneLabel — html label skipped when set=false', () => {
+  it('emits nothing when set=false even if html=true', () => {
+    const placed = makePlacedHtml('should-not-emit');
+    const lp = makeHtmlLabel(placed, false);
+    const renderer = new HtmlCapture();
+    const job = new RenderJob('svg', stubMeasurer);
+    renderOneLabel(lp, renderer, job);
+    expect(renderer.spans).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC12: renderClusterLabel — html cluster label renders cells
+// @see lib/common/emit.c:emit_clusters (3921)
+// ---------------------------------------------------------------------------
+
+describe('AC12: renderClusterLabel — html cluster label renders cells', () => {
+  it('emits textspan for html cluster label', () => {
+    const g = new GraphClass('G', 'directed');
+    const placed = makePlacedHtml('cluster-html');
+    g.info.label = makeHtmlLabel(placed, true);
+    const renderer = new HtmlCapture();
+    const job = new RenderJob('svg', stubMeasurer);
+    renderClusterLabel(g, renderer, job);
+    expect(renderer.spans).toHaveLength(1);
+    expect(renderer.spans[0].str).toBe('cluster-html');
+  });
+
+  it('does not emit when cluster label is absent', () => {
+    const g = new GraphClass('G', 'directed') as unknown as Graph;
+    const renderer = new HtmlCapture();
+    const job = new RenderJob('svg', stubMeasurer);
+    renderClusterLabel(g, renderer, job);
     expect(renderer.spans).toHaveLength(0);
   });
 });
