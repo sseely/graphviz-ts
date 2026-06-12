@@ -52,9 +52,10 @@ const isJust = (c: string | undefined): c is 'n' | 'l' | 'r' =>
 
 /**
  * Split label text into lines at \n / \l / \r escapes and literal
- * newlines (the DOT lexer cooks \n to a real newline; \l and \r
- * arrive as two-character escapes). The terminator becomes the line's
- * justification.
+ * newlines; the terminator becomes the line's justification. Any other
+ * escape drops its backslash and keeps the following character
+ * (including \\ → \) — the lexer delivers escapes verbatim and this
+ * is where C interprets them.
  * @see lib/common/labels.c:make_simple_label
  */
 export function splitLabelLines(text: string): LabelLine[] {
@@ -62,9 +63,14 @@ export function splitLabelLines(text: string): LabelLine[] {
   let cur = '';
   for (let i = 0; i < text.length; i++) {
     const c = text[i]!;
-    if (c === '\\' && isJust(text[i + 1])) {
-      lines.push({ text: cur, just: text[++i] as 'n' | 'l' | 'r' });
-      cur = '';
+    if (c === '\\' && i + 1 < text.length) {
+      const e = text[++i]!;
+      if (isJust(e)) {
+        lines.push({ text: cur, just: e });
+        cur = '';
+      } else {
+        cur += e; // C default: agxbputc(&line, *p) — backslash dropped
+      }
     } else if (c === '\n') {
       lines.push({ text: cur, just: 'n' });
       cur = '';

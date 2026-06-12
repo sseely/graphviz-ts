@@ -52,3 +52,64 @@ describe('multiline labels end-to-end (C-verified)', () => {
     expect(svg).toContain('text-anchor="start"');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Escape parity: the lexer keeps escapes verbatim (scan.l); consumers
+// interpret them. Verified against C graphviz 15.0.0 on 2026-06-12.
+// ---------------------------------------------------------------------------
+
+import { parse } from '../parser/index.js';
+
+describe('quoted-string lexing (scan.l: only \\" and \\<newline> transform)', () => {
+  const attr = (dot: string): string => {
+    const g = parse(dot);
+    return [...g.nodes.values()][0]!.attrs.get('label')!;
+  };
+
+  it('keeps \\n \\t \\X \\\\ verbatim', () => {
+    expect(attr('digraph { A [label="a\\nb\\tc\\qd\\\\e"] }')).toBe('a\\nb\\tc\\qd\\\\e');
+  });
+
+  it('converts \\" and drops escaped newlines', () => {
+    expect(attr('digraph { A [label="say \\"hi\\" one\\\ntwo"] }')).toBe('say "hi" onetwo');
+  });
+});
+
+describe('make_simple_label escape interpretation', () => {
+  it('drops the backslash from unknown escapes (\\t → t, \\q → q)', () => {
+    expect(splitLabelLines('a\\tb\\qc')).toEqual([{ text: 'atbqc', just: 'n' }]);
+  });
+
+  it('collapses \\\\ to a single backslash', () => {
+    expect(splitLabelLines('a\\\\b')).toEqual([{ text: 'a\\b', just: 'n' }]);
+  });
+
+  it('literal \\\\N survives as \\N text after the subst pass leaves it escaped', () => {
+    // subst (escBackslash=0) keeps "\\\\N"; the splitter then renders "\\N".
+    expect(splitLabelLines('a\\\\Nb')).toEqual([{ text: 'a\\Nb', just: 'n' }]);
+  });
+});
+
+describe('escape parity end-to-end (C-verified)', () => {
+  it('label "a\\tb" renders "atb"', () => {
+    expect(renderSvg('digraph { A [label="a\\tb"] }', 'dot')).toContain('>atb</text>');
+  });
+
+  it('escaped \\\\N is not substituted', () => {
+    expect(renderSvg('digraph { A [label="a\\\\Nb"] }', 'dot')).toContain('>a\\Nb</text>');
+  });
+
+  it('node name escapes stay raw in the title and split in the default label', () => {
+    const svg = renderSvg('digraph { "a\\nb" }', 'dot');
+    expect(svg).toContain('<title>a\\nb</title>');
+    expect(svg).toContain('>a</text>');
+    expect(svg).toContain('>b</text>');
+  });
+
+  it('record fields substitute \\N and split \\n', () => {
+    const svg = renderSvg('digraph { R [shape=record label="top\\nbottom | \\N"] }', 'dot');
+    expect(svg).toContain('>top</text>');
+    expect(svg).toContain('>bottom</text>');
+    expect(svg).toContain('>R</text>');
+  });
+});
