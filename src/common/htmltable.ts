@@ -77,7 +77,16 @@ const sizeOneItem = (
   if (!item.text) return;
   const fs = item.fontSize !== undefined ? item.fontSize : DEFAULT_FONTSIZE;
   const face = item.fontFace !== undefined ? item.fontFace : '';
-  const sz = measurer.measure(item.text, face, fs);
+  /**
+   * Pass bold/italic flags from each text run to the measurer so variant
+   * widths are used. C counterpart: size_html_txt measures each span with
+   * its own font flags (bold/italic come from textfont_t.flags).
+   * @see lib/common/htmltable.c:size_html_txt
+   */
+  const flags = (item.bold === true || item.italic === true)
+    ? { bold: item.bold === true, italic: item.italic === true }
+    : undefined;
+  const sz = measurer.measure(item.text, face, fs, flags);
   st.lineW += sz.w;
   if (sz.h > st.lineH) st.lineH = sz.h;
 };

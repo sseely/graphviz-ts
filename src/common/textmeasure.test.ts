@@ -138,3 +138,48 @@ describe("estimate_text_width_1pt", () => {
     expect(Math.abs(w3 - 3 * w1)).toBeLessThan(1e-10);
   });
 });
+
+// ── AC5: variant-aware measure() — bold ──────────────────────────────────────
+
+describe("LutTextMeasurer.measure bold variant", () => {
+  it("bold 'hi' Times 14 is wider than regular", () => {
+    const m = new LutTextMeasurer();
+    const wReg = m.measure("hi", "Times", 14).w;
+    const wBold = m.measure("hi", "Times", 14, { bold: true }).w;
+    expect(wBold).toBeGreaterThan(wReg);
+  });
+
+  // TB[104]='h'=1139, TB[105]='i'=569, unitsPerEm=2048, 96 dpi grid
+  // 'h': round(1139/2048*14*(96/72))=10px → 7.5pt
+  // 'i': round(569/2048*14*(96/72))=5px → 3.75pt  total=11.25pt
+  it("bold 'hi' Times 14 equals LUT bold-table value (11.25 pt)", () => {
+    const m = new LutTextMeasurer();
+    expect(m.measure("hi", "Times", 14, { bold: true }).w).toBeCloseTo(11.25, 5);
+  });
+});
+
+// ── AC5: variant-aware measure() — regression & other variants ───────────────
+
+describe("LutTextMeasurer.measure variant regression", () => {
+  it("omitted flags produces same result as explicit regular", () => {
+    const m = new LutTextMeasurer();
+    const wNoFlags = m.measure("Hello", "Times", 14).w;
+    expect(m.measure("Hello", "Times", 14, {}).w).toBe(wNoFlags);
+    expect(m.measure("Hello", "Times", 14, { bold: false, italic: false }).w)
+      .toBe(wNoFlags);
+  });
+
+  it("italic 'A' Times 14 differs from regular (TI[65]=1251 vs TR[65]=1479)", () => {
+    const m = new LutTextMeasurer();
+    const wReg = m.measure("A", "Times", 14).w;
+    const wItal = m.measure("A", "Times", 14, { italic: true }).w;
+    expect(wItal).not.toBe(wReg);
+  });
+
+  it("bold-italic 'A' Times 14 differs from bold-only (TB[65]=1479 vs TBI[65]=1366)", () => {
+    const m = new LutTextMeasurer();
+    const wBold = m.measure("A", "Times", 14, { bold: true }).w;
+    const wBI = m.measure("A", "Times", 14, { bold: true, italic: true }).w;
+    expect(wBI).not.toBe(wBold);
+  });
+});

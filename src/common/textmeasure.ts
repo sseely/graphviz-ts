@@ -19,9 +19,24 @@ export interface TextSize {
   h: number;
 }
 
+/**
+ * Font variant flags (bold / italic) for text measurement.
+ * Mirrors textfont_t.flags in the C source.
+ * @see lib/common/textspan_lut.c:estimate_textspan_size (AD2)
+ */
+export interface TextVariantFlags {
+  readonly bold?: boolean;
+  readonly italic?: boolean;
+}
+
 /** Abstraction over text measurement strategies. */
 export interface TextMeasurer {
-  measure(text: string, fontname: string, fontsize: number): TextSize;
+  measure(
+    text: string,
+    fontname: string,
+    fontsize: number,
+    flags?: TextVariantFlags,
+  ): TextSize;
 }
 
 // ── Variant selection ─────────────────────────────────────────────────────────
@@ -91,14 +106,17 @@ const PT_PER_FREETYPE_PX = 72 / 96;
 /**
  * Per-character FreeType-hinted text width in points: each glyph advance is
  * rounded to the 96 dpi pixel grid before summing.
+ * @see lib/common/textspan_lut.c:estimate_textspan_size
  */
 export function freetypeHintedWidth(
   fontName: string,
   text: string,
   fontsize: number,
+  bold = false,
+  italic = false,
 ): number {
   const family = getFamilyMetrics(fontName);
-  const widths = getVariantWidths(family, false, false);
+  const widths = getVariantWidths(family, bold, italic);
   let total = 0;
   for (let i = 0; i < text.length; i++) {
     const units = charWidthUnits(widths, text.charCodeAt(i));
@@ -127,8 +145,15 @@ export function freetypeAscent(fontsize: number): number {
  * @see lib/common/textspan.c:estimate_textspan_size
  */
 export class LutTextMeasurer implements TextMeasurer {
-  measure(text: string, fontname: string, fontsize: number): TextSize {
-    const w = freetypeHintedWidth(fontname, text, fontsize);
+  measure(
+    text: string,
+    fontname: string,
+    fontsize: number,
+    flags?: TextVariantFlags,
+  ): TextSize {
+    const bold = flags?.bold === true;
+    const italic = flags?.italic === true;
+    const w = freetypeHintedWidth(fontname, text, fontsize, bold, italic);
     return { w, h: fontsize * FREETYPE_LINE_SPACING };
   }
 }
@@ -141,8 +166,19 @@ export class LutTextMeasurer implements TextMeasurer {
 export class CanvasTextMeasurer implements TextMeasurer {
   constructor(private readonly ctx: CanvasRenderingContext2D) {}
 
-  measure(text: string, fontname: string, fontsize: number): TextSize {
-    this.ctx.font = `${fontsize}px ${fontname}`;
+  measure(
+    text: string,
+    fontname: string,
+    fontsize: number,
+    flags?: TextVariantFlags,
+  ): TextSize {
+    const bold = flags?.bold === true;
+    const italic = flags?.italic === true;
+    const style = bold && italic ? 'bold italic'
+      : bold ? 'bold'
+      : italic ? 'italic'
+      : '';
+    this.ctx.font = style ? `${style} ${fontsize}px ${fontname}` : `${fontsize}px ${fontname}`;
     const m = this.ctx.measureText(text);
     return { w: m.width, h: fontsize };
   }

@@ -2,10 +2,11 @@
 import { describe, it, expect } from 'vitest';
 import { HtmlParseError, parseHtmlLabel, sizeHtmlLabel } from './htmltable.js';
 import type { TextMeasurer } from './htmltable.js';
+import type { TextVariantFlags } from './textmeasure.js';
 
 const mockMeasurer: TextMeasurer = {
-  measure: (text, _font, fontSize) => ({
-    w: text.length * fontSize * 0.6,
+  measure: (text, _font, fontSize, flags?: TextVariantFlags) => ({
+    w: text.length * fontSize * (flags?.bold === true ? 0.8 : 0.6),
     h: fontSize,
   }),
 };
@@ -39,6 +40,34 @@ describe('parseHtmlLabel — AC3 unknown tag', () => {
     } catch (e: unknown) {
       expect((e as { tag?: string }).tag).toBe('SPAN');
     }
+  });
+});
+
+describe('sizeHtmlLabel — AC5 bold run sized wider than regular', () => {
+  it('bold text item produces wider cell than regular', () => {
+    const boldSrc = '<TABLE><TR><TD><B>hi</B></TD></TR></TABLE>';
+    const regSrc  = '<TABLE><TR><TD>hi</TD></TR></TABLE>';
+    const boldLabel = parseHtmlLabel(boldSrc);
+    const regLabel  = parseHtmlLabel(regSrc);
+    sizeHtmlLabel(boldLabel, mockMeasurer);
+    sizeHtmlLabel(regLabel, mockMeasurer);
+    expect(boldLabel.kind).toBe('table');
+    expect(regLabel.kind).toBe('table');
+    if (boldLabel.kind !== 'table' || regLabel.kind !== 'table') return;
+    const boldW = boldLabel.table.rows[0].cells[0];
+    const regW  = regLabel.table.rows[0].cells[0];
+    if (boldW.kind !== 'cell' || regW.kind !== 'cell') return;
+    expect(boldW.dimen?.w).toBeGreaterThan(regW.dimen?.w ?? 0);
+  });
+
+  it('flags are not passed when item has no bold/italic', () => {
+    const src = '<TABLE><TR><TD>hello</TD></TR></TABLE>';
+    const label = parseHtmlLabel(src);
+    sizeHtmlLabel(label, mockMeasurer);
+    expect(label.kind).toBe('table');
+    if (label.kind !== 'table') return;
+    const cell = label.table.rows[0].cells[0];
+    expect(cell.kind).toBe('cell');
   });
 });
 
