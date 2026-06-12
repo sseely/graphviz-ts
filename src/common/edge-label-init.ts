@@ -17,7 +17,7 @@ import type { Graph } from '../model/graph.js';
 import type { TextMeasurer } from './textmeasure.js';
 import { makeLabel, DEFAULT_FONTNAME, DEFAULT_COLOR, DEFAULT_FONTSIZE } from './make-label.js';
 import { lateDouble } from '../common/nodeinit.js';
-import { HEAD_LABEL, TAIL_LABEL } from '../layout/dot/rank.js';
+import { EDGE_LABEL, EDGE_XLABEL, HEAD_LABEL, TAIL_LABEL } from '../layout/dot/rank.js';
 
 // ---------------------------------------------------------------------------
 // Constants — @see lib/common/const.h
@@ -37,6 +37,23 @@ interface FontInfo {
   fontsize: number;
   fontname: string;
   fontcolor: string;
+}
+
+// ---------------------------------------------------------------------------
+// mapbool — @see lib/common/utils.c:mapbool
+// ---------------------------------------------------------------------------
+
+/**
+ * Maps a string attribute value to boolean, mirroring mapbool() in utils.c.
+ * "false"/"no"/empty → false; "true"/"yes"/non-zero integer → true.
+ *
+ * @see lib/common/utils.c:mapbool
+ */
+function mapbool(s: string | undefined): boolean {
+  if (!s || s.toLowerCase() === 'false' || s.toLowerCase() === 'no') return false;
+  if (s.toLowerCase() === 'true' || s.toLowerCase() === 'yes') return true;
+  const n = parseInt(s, 10);
+  return !Number.isNaN(n) && n !== 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -96,6 +113,43 @@ function getLabelFontInfo(e: Edge): FontInfo {
 }
 
 // ---------------------------------------------------------------------------
+// applyLabel — @see lib/common/utils.c:517-523
+// ---------------------------------------------------------------------------
+
+/**
+ * Create center edge label and set EDGE_LABEL bit when label attr is non-empty.
+ * HTML labels are a future mission; plain text only per architecture decision D2.
+ *
+ * @see lib/common/utils.c:common_init_edge (lines 517-523)
+ */
+function applyLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): void {
+  const str = e.attrs.get('label');
+  if (!str) return;
+  e.info.label = makeLabel(str, fi.fontname, fi.fontsize, fi.fontcolor, measurer);
+  g.info.has_labels |= EDGE_LABEL;
+  // ED_label_ontop: mapbool(late_string(e, E_label_float, "false"))
+  // @see lib/common/utils.c:522
+  e.info.label_ontop = mapbool(e.attrs.get('label_float')) ? 1 : 0;
+}
+
+// ---------------------------------------------------------------------------
+// applyXLabel — @see lib/common/utils.c:525-531
+// ---------------------------------------------------------------------------
+
+/**
+ * Create external edge label and set EDGE_XLABEL bit when xlabel attr is
+ * non-empty. Reuses fi if already initialized by applyLabel (C laziness).
+ *
+ * @see lib/common/utils.c:common_init_edge (lines 525-531)
+ */
+function applyXLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): void {
+  const str = e.attrs.get('xlabel');
+  if (!str) return;
+  e.info.xlabel = makeLabel(str, fi.fontname, fi.fontsize, fi.fontcolor, measurer);
+  g.info.has_labels |= EDGE_XLABEL;
+}
+
+// ---------------------------------------------------------------------------
 // applyHeadLabel — @see lib/common/utils.c:533-538
 // ---------------------------------------------------------------------------
 
@@ -120,22 +174,50 @@ function applyTailLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer
 }
 
 // ---------------------------------------------------------------------------
-// initEdgeLabels — head/tail label block of common_init_edge
-// @see lib/common/utils.c:533-545
+// initEdgeLabels — full label block of common_init_edge
+// @see lib/common/utils.c:509-545
 // ---------------------------------------------------------------------------
 
 /**
- * Creates head_label and tail_label TextlabelT objects on the edge.
- * No-ops quickly when neither headlabel nor taillabel attrs are set.
- *
+ * Apply label and xlabel with lazy fi init mirroring C's NULL-guard pattern.
+ * fi is initialized at most once and reused for xlabel.
+ * @see lib/common/utils.c:common_init_edge (lines 515-531)
+ */
+function applyMainLabels(e: Edge, g: Graph, measurer: TextMeasurer): void {
+  // C: fi.fontname = NULL; init on first need, reuse for xlabel.
+  let fi: FontInfo | null = null;
+  const labelStr = e.attrs.get('label');
+  if (labelStr) {
+    fi = initFontEdgeAttr(e);
+    applyLabel(e, g, fi, measurer);
+  }
+  const xlabelStr = e.attrs.get('xlabel');
+  if (xlabelStr) {
+    applyXLabel(e, g, fi ?? initFontEdgeAttr(e), measurer);
+  }
+}
+
+/**
+ * Apply headlabel and taillabel using the labelfont* chain.
  * @see lib/common/utils.c:common_init_edge (lines 533-545)
  */
-export function initEdgeLabels(e: Edge, g: Graph, measurer: TextMeasurer): void {
-  const hasHead = !!e.attrs.get('headlabel');
-  const hasTail = !!e.attrs.get('taillabel');
-  if (!hasHead && !hasTail) return;
-
+function applyEndLabels(e: Edge, g: Graph, measurer: TextMeasurer): void {
   const lfi = getLabelFontInfo(e);
-  if (hasHead) applyHeadLabel(e, g, lfi, measurer);
-  if (hasTail) applyTailLabel(e, g, lfi, measurer);
+  applyHeadLabel(e, g, lfi, measurer);
+  applyTailLabel(e, g, lfi, measurer);
+}
+
+/**
+ * Creates label, xlabel, head_label, and tail_label TextlabelT objects on the
+ * edge, mirroring common_init_edge in C. C statement order is preserved:
+ * label → xlabel → headlabel → taillabel.
+ *
+ * @see lib/common/utils.c:common_init_edge (lines 509-545)
+ */
+export function initEdgeLabels(e: Edge, g: Graph, measurer: TextMeasurer): void {
+  const hasMain = e.attrs.has('label') || e.attrs.has('xlabel');
+  const hasEnd  = e.attrs.has('headlabel') || e.attrs.has('taillabel');
+  if (!hasMain && !hasEnd) return;
+  if (hasMain) applyMainLabels(e, g, measurer);
+  if (hasEnd)  applyEndLabels(e, g, measurer);
 }

@@ -7,6 +7,6 @@ label attributes present, output must not change.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | ND_xlabel creation ([T1-node-xlabel.md](T1-node-xlabel.md)) | sonnet | src/common/nodeinit.ts (+ its test file) | — | [ ] |
-| T2 | ED_label + ED_xlabel creation ([T2-edge-labels.md](T2-edge-labels.md)) | sonnet | src/common/edge-label-init.ts (+ its test file) | — | [ ] |
-| T3 | root doGraphLabel + place_root_label ([T3-graph-label.md](T3-graph-label.md)) | sonnet | src/layout/dot/init.ts, src/common/postproc.ts (+ postproc.test.ts) | — | [ ] |
+| T1 | ND_xlabel creation ([T1-node-xlabel.md](T1-node-xlabel.md)) | sonnet | src/common/nodeinit.ts (+ its test file) | — | [x] |
+| T2 | ED_label + ED_xlabel creation ([T2-edge-labels.md](T2-edge-labels.md)) | sonnet | src/common/edge-label-init.ts (+ its test file) | — | [x] |
+| T3 | root doGraphLabel + place_root_label ([T3-graph-label.md](T3-graph-label.md)) | sonnet | src/layout/dot/init.ts, src/common/postproc.ts (+ postproc.test.ts) | — | [x] |

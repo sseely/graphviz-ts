@@ -1,0 +1,4 @@
+// graphviz-ts reference input: digraph combining graph, node-xlabel, edge label/xlabel, head/tail labels
+// engine: dot
+// tolerance: deterministic
+digraph G { label="gl"; A [xlabel="nx"]; A -> B [label="el" xlabel="ex" headlabel="hl" taillabel="tl"]; }

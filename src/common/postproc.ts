@@ -237,6 +237,145 @@ function computeOffset(bb: Box, rankdir: number): Point {
 }
 
 // ---------------------------------------------------------------------------
+// LABEL_AT constants
+// @see lib/common/const.h:LABEL_AT_BOTTOM / LABEL_AT_TOP / LABEL_AT_LEFT / LABEL_AT_RIGHT
+// ---------------------------------------------------------------------------
+
+/** @see lib/common/const.h:LABEL_AT_BOTTOM */
+const LABEL_AT_BOTTOM = 0;
+/** @see lib/common/const.h:LABEL_AT_TOP */
+const LABEL_AT_TOP = 1;
+/** @see lib/common/const.h:LABEL_AT_LEFT */
+const LABEL_AT_LEFT = 2;
+/** @see lib/common/const.h:LABEL_AT_RIGHT */
+const LABEL_AT_RIGHT = 4;
+
+/** PAD constants (GAP=4): x += 4*GAP=16, y += 2*GAP=8. @see lib/common/macros.h:PAD */
+const XPAD_AMOUNT = 16;
+const YPAD_AMOUNT = 8;
+
+// ---------------------------------------------------------------------------
+// rootLabelPos — read label position flags directly from graph attrs
+// Used when doGraphLabel hasn't set label_pos on the root graph.
+// @see lib/common/input.c:do_graph_label:866-877
+// ---------------------------------------------------------------------------
+
+/**
+ * Compute the label-position flag for the root graph from its attributes.
+ * Root default is LABEL_AT_BOTTOM (unlike clusters which default to TOP).
+ * @see lib/common/input.c:do_graph_label:866-877
+ */
+function rootLabelPos(g: Graph): number {
+  const loc = g.attrs.get('labelloc');
+  let pos: number = loc && loc[0] === 't' ? LABEL_AT_TOP : LABEL_AT_BOTTOM;
+  const just = g.attrs.get('labeljust');
+  if (just) {
+    if (just[0] === 'l') pos |= LABEL_AT_LEFT;
+    else if (just[0] === 'r') pos |= LABEL_AT_RIGHT;
+  }
+  return pos;
+}
+
+// ---------------------------------------------------------------------------
+// expandBbForRootLabel — expand bounding box for unplaced root graph label
+// @see lib/common/postproc.c:619-655
+// ---------------------------------------------------------------------------
+
+/**
+ * If the root graph has an unset label, expand the bounding box to make
+ * room for it and return the padded dimen. Returns {x:0, y:0} otherwise.
+ *
+ * Called after addXLabels (postproc.c:616), before Offset/translateDrawing.
+ *
+ * @see lib/common/postproc.c:619-655
+ */
+function expandBbForRootLabel(g: Graph): { x: number; y: number } {
+  const label = g.info.label as TextlabelT | undefined;
+  if (!label || label.set) return { x: 0, y: 0 };
+
+  const dimen = { x: label.dimen.x + XPAD_AMOUNT, y: label.dimen.y + YPAD_AMOUNT };
+  const labelPos = rootLabelPos(g);
+  const flip = g.info.flip ?? false;
+  const bb = g.info.bb;
+
+  if (flip) {
+    expandBbFlip(bb, dimen, labelPos);
+  } else {
+    expandBbNoFlip(bb, dimen, labelPos, Rankdir);
+  }
+  return dimen;
+}
+
+/** @see lib/common/postproc.c:622-634 (Flip branch) */
+function expandBbFlip(bb: { ll: { x: number; y: number }; ur: { x: number; y: number } }, dimen: { x: number; y: number }, labelPos: number): void {
+  if (labelPos & LABEL_AT_TOP) {
+    bb.ur.x += dimen.y;
+  } else {
+    bb.ll.x -= dimen.y;
+  }
+  const span = bb.ur.y - bb.ll.y;
+  if (dimen.x > span) {
+    const diff = (dimen.x - span) / 2;
+    bb.ll.y -= diff;
+    bb.ur.y += diff;
+  }
+}
+
+/** Expand bb y-axis for label height in the non-flip case. @see lib/common/postproc.c:636-646 */
+function expandBbNoFlipY(bb: { ll: { x: number; y: number }; ur: { x: number; y: number } }, dy: number, labelPos: number, rankdir: number): void {
+  if (labelPos & LABEL_AT_TOP) {
+    if (rankdir === RANKDIR_TB) bb.ur.y += dy; else bb.ll.y -= dy;
+  } else {
+    if (rankdir === RANKDIR_TB) bb.ll.y -= dy; else bb.ur.y += dy;
+  }
+}
+
+/** @see lib/common/postproc.c:635-654 (non-Flip branch) */
+function expandBbNoFlip(bb: { ll: { x: number; y: number }; ur: { x: number; y: number } }, dimen: { x: number; y: number }, labelPos: number, rankdir: number): void {
+  expandBbNoFlipY(bb, dimen.y, labelPos, rankdir);
+  const span = bb.ur.x - bb.ll.x;
+  if (dimen.x > span) {
+    const diff = (dimen.x - span) / 2;
+    bb.ll.x -= diff;
+    bb.ur.x += diff;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// place_root_label
+// @see lib/common/postproc.c:174-200
+// ---------------------------------------------------------------------------
+
+/** Label x-coordinate per justification flags. @see lib/common/postproc.c:184-190 */
+function rootLabelX(bb: Box, labelPos: number, dimX: number): number {
+  if (labelPos & LABEL_AT_RIGHT) return bb.ur.x - dimX / 2;
+  if (labelPos & LABEL_AT_LEFT)  return bb.ll.x + dimX / 2;
+  return (bb.ll.x + bb.ur.x) / 2;
+}
+
+/** Label y-coordinate per position flag. @see lib/common/postproc.c:192-196 */
+function rootLabelY(bb: Box, labelPos: number, dimY: number): number {
+  if (labelPos & LABEL_AT_TOP) return bb.ur.y - dimY / 2;
+  return bb.ll.y + dimY / 2;
+}
+
+/**
+ * Set the position of the root graph label.
+ * Called after translate_drawing so the bb is already in output space;
+ * no flip/rotation compensation is needed here.
+ *
+ * @see lib/common/postproc.c:place_root_label
+ */
+export function placeRootLabel(g: Graph, dimen: { x: number; y: number }): void {
+  const label = g.info.label as TextlabelT | undefined;
+  if (!label) return;
+  const labelPos = rootLabelPos(g);
+  const bb = g.info.bb;
+  label.pos = { x: rootLabelX(bb, labelPos, dimen.x), y: rootLabelY(bb, labelPos, dimen.y) };
+  label.set = true;
+}
+
+// ---------------------------------------------------------------------------
 // gvPostprocess
 // @see lib/common/postproc.c:599-687
 // ---------------------------------------------------------------------------
@@ -244,19 +383,28 @@ function computeOffset(bb: Box, rankdir: number): Point {
 /**
  * Port of gv_postprocess with allowTranslation=1 (dotneato_postprocess path).
  *
- * Sets Rankdir from g.info.rankdir, computes the per-rankdir Offset,
- * then calls translateDrawing to rotate+shift all coordinates.
+ * Order matches C: addXLabels → expand bb for root label → compute Offset →
+ * translateDrawing → place_root_label.
  *
- * addXLabels is called at postproc.c:616 — after graph-label placement (done
- * by the dot pipeline's graph-label.ts pass), before the bb adjustment.
+ * addXLabels is called at postproc.c:616 — after place_graph_label (cluster
+ * labels handled elsewhere), before bb adjustment.
+ * Root graph label is placed at postproc.c:675-676, after translateDrawing.
  *
  * @see lib/common/postproc.c:gv_postprocess
  * @see lib/common/postproc.c:dotneato_postprocess
  */
 export function gvPostprocess(g: Graph): void {
   Rankdir = g.info.rankdir & 0x3;
-  Offset = computeOffset(g.info.bb, Rankdir);
   // addXLabels at postproc.c:616 — after place_graph_label, before bb adjust.
   addXLabels(g);
+  // Expand bb to make room for root graph label (postproc.c:619-655).
+  const dimen = expandBbForRootLabel(g);
+  // Compute Offset from the (possibly expanded) bb, then translate.
+  Offset = computeOffset(g.info.bb, Rankdir);
   translateDrawing(g);
+  // Place root graph label after translation (postproc.c:675-676).
+  const rootLabel = g.info.label as TextlabelT | undefined;
+  if (rootLabel && !rootLabel.set) {
+    placeRootLabel(g, dimen);
+  }
 }

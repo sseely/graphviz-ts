@@ -77,6 +77,8 @@ export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, do
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
   if (shape?.fns?.codefn) shape.fns.codefn(job, n);
+  // emit xlabel inside the node group, after codefn @see lib/common/emit.c:emit_node (1829-1830)
+  renderNodeXLabel(n, renderer, job);
   renderer.endNode(n, job);
 }
 
@@ -107,18 +109,19 @@ function labelSpanX(lp: TextlabelT, just: 'l' | 'n' | 'r'): number {
 }
 
 /**
- * Emit one edge label's text spans if present and placed.
+ * Emit one label's text spans if present and placed.
+ * Shared by edge-label, node-xlabel, and graph-label slots.
  * URL/anchor/map machinery and E_decorate attachment (emit.c:emit_attachment)
  * are not ported, matching the live path's AD-2 scope.
- * @see lib/common/emit.c:emit_edge_label
+ * @see lib/common/emit.c:emit_label
  * @see lib/common/labels.c:emit_label
  */
-function renderOneEdgeLabel(
+export function renderOneLabel(
   lp: TextlabelT | undefined,
   renderer: RendererPlugin,
   job: RenderJob,
 ): void {
-  if (!lp?.set) return; // emit_edge_label: lbl == NULL || !lbl->set
+  if (!lp?.set) return; // emit_label: lbl == NULL || !lbl->set
   if (lp.html) return; // HTML labels not ported (AD-2)
   if (lp.u.kind !== 'txt' || lp.u.nspans < 1) return;
   let y = labelFirstSpanY(lp);
@@ -136,10 +139,29 @@ function renderOneEdgeLabel(
  * @see lib/common/emit.c:emit_end_edge (3010-3025)
  */
 export function renderEdgeLabels(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
-  renderOneEdgeLabel(e.info.label as TextlabelT | undefined, renderer, job);
-  renderOneEdgeLabel(e.info.xlabel as TextlabelT | undefined, renderer, job);
-  renderOneEdgeLabel(e.info.head_label, renderer, job);
-  renderOneEdgeLabel(e.info.tail_label, renderer, job);
+  renderOneLabel(e.info.label as TextlabelT | undefined, renderer, job);
+  renderOneLabel(e.info.xlabel as TextlabelT | undefined, renderer, job);
+  renderOneLabel(e.info.head_label, renderer, job);
+  renderOneLabel(e.info.tail_label, renderer, job);
+}
+
+/**
+ * Emit node external label (ND_xlabel) if placed.
+ * Must run inside the node group, after codefn (shape draw), matching C order.
+ * @see lib/common/emit.c:emit_node (1829-1830)
+ */
+export function renderNodeXLabel(n: Node, renderer: RendererPlugin, job: RenderJob): void {
+  renderOneLabel(n.info.xlabel as TextlabelT | undefined, renderer, job);
+}
+
+/**
+ * Emit root-graph label (GD_label) if present and placed.
+ * Must run before clusters and nodes (emit_page order: background, then label,
+ * then emit_view which contains clusters+nodes+edges).
+ * @see lib/common/emit.c:emit_page (3656-3657)
+ */
+export function renderGraphLabel(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  renderOneLabel(g.info.label as TextlabelT | undefined, renderer, job);
 }
 
 /**
@@ -211,13 +233,18 @@ export function renderClusters(g: Graph, renderer: RendererPlugin, job: RenderJo
 }
 
 /**
- * Primary render loop: beginGraph → clusters → nodes → edges → endGraph.
+ * Primary render loop: beginGraph → graph-label → clusters → nodes → edges → endGraph.
+ * Graph label emits before clusters/nodes to match C's emit_page order
+ * (emit_background, GD_label, then emit_view).
  *
  * @see lib/gvc/gvrender.c:gvrender_begin_graph
  * @see lib/gvc/gvrender.c:gvrender_end_graph
+ * @see lib/common/emit.c:emit_page (3655-3660)
  */
 export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin): string {
   renderer.beginGraph(g, job);
+  // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page (3656-3657)
+  renderGraphLabel(g, renderer, job);
   renderClusters(g, renderer, job);
   walkNodesAndEdges(g, renderer, job);
   renderer.endGraph(g, job);

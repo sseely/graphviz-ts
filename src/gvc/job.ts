@@ -144,6 +144,30 @@ export interface ObjState {
 // ---------------------------------------------------------------------------
 
 /**
+ * Format to 2 decimal places, rounding exact ties half-to-even as C's
+ * snprintf("%.2f") does under FE_TONEAREST; Number.toFixed rounds them
+ * half-away-from-zero instead. A tie at 2 dp exists iff the exact
+ * decimal expansion terminates with '5' in the third place (fractional
+ * part odd/8); its kept digit is then always 2 or 7, so bumping the
+ * odd case never carries.
+ *
+ * @see lib/gvc/gvdevice.c:gvprintdouble
+ */
+function toFixed2HalfEven(n: number): string {
+  // Exact tie at 2 dp ⇔ fractional part is odd/8. n*8 and n*4 are
+  // exact (power-of-two scaling only shifts the exponent), so this
+  // never misclassifies near-ties like 0.195 (= 0.19500…00624).
+  if (!Number.isInteger(n * 8) || Number.isInteger(n * 4)) {
+    return n.toFixed(2);
+  }
+  const s3 = n.toFixed(3); // exact expansion "x.yz5"
+  const trunc = s3.slice(0, -1);
+  const kept = trunc.charCodeAt(trunc.length - 1) - 48;
+  // kept is always 2 or 7 for odd/8 ties; bumping 7 never carries.
+  return kept % 2 === 0 ? trunc : trunc.slice(0, -1) + String(kept + 1);
+}
+
+/**
  * Mirrors gv_trim_zeros: given a "%.02f" result, return the trimmed string.
  * Assumes input has exactly 2 decimal places.
  *
@@ -250,7 +274,7 @@ export class RenderJob {
       this.output.push('0');
       return;
     }
-    const buf = n.toFixed(2);
+    const buf = toFixed2HalfEven(n);
     this.output.push(trimZeros(buf));
   }
 

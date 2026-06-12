@@ -19,7 +19,7 @@ import { Node } from '../model/node.js';
 import { Edge } from '../model/edge.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../model/edgeInfo.js';
-import { HEAD_LABEL, TAIL_LABEL } from '../layout/dot/rank.js';
+import { EDGE_LABEL, EDGE_XLABEL, HEAD_LABEL, TAIL_LABEL } from '../layout/dot/rank.js';
 import {
   initFontEdgeAttr,
   initFontLabelEdgeAttr,
@@ -208,5 +208,141 @@ describe('initEdgeLabels — accumulation', () => {
     expect((g.info.has_labels ?? 0) & HEAD_LABEL).toBeTruthy();
     expect(e1.info.head_label?.text).toBe('H1');
     expect(e2.info.head_label?.text).toBe('H2');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// initEdgeLabels — label= (EDGE_LABEL) creation
+// @see lib/common/utils.c:517-523
+// ---------------------------------------------------------------------------
+
+describe('initEdgeLabels — label noop', () => {
+  it('no-ops when label attr is absent', () => {
+    const { g, e } = makeEdgeInGraph(new Map());
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label).toBeUndefined();
+    expect((g.info.has_labels ?? 0) & EDGE_LABEL).toBe(0);
+  });
+
+  it('no-ops when label attr is empty string', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['label', '']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label).toBeUndefined();
+    expect((g.info.has_labels ?? 0) & EDGE_LABEL).toBe(0);
+  });
+});
+
+describe('initEdgeLabels — label creation', () => {
+  it('creates e.info.label and sets EDGE_LABEL bit', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['label', 'el']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.text).toBe('el');
+    expect((g.info.has_labels ?? 0) & EDGE_LABEL).toBeTruthy();
+  });
+
+  it('uses edge fontinfo chain for label fontname/fontsize/fontcolor', () => {
+    const { g, e } = makeEdgeInGraph(new Map([
+      ['label', 'el'],
+      ['fontname', 'Arial'], ['fontsize', '16'], ['fontcolor', 'navy'],
+    ]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.fontname).toBe('Arial');
+    expect(e.info.label?.fontsize).toBe(16);
+    expect(e.info.label?.fontcolor).toBe('navy');
+  });
+
+  it('falls back to global font defaults when no font attrs set', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['label', 'el']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.fontname).toBe(DEFAULT_FONTNAME);
+    expect(e.info.label?.fontsize).toBe(DEFAULT_FONTSIZE);
+    expect(e.info.label?.fontcolor).toBe(DEFAULT_COLOR);
+  });
+});
+
+describe('initEdgeLabels — label_ontop', () => {
+  it('defaults label_ontop to 0 when label_float absent', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['label', 'el']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label_ontop).toBe(0);
+  });
+
+  it('sets label_ontop to 1 when label_float="true"', () => {
+    const { g, e } = makeEdgeInGraph(new Map([
+      ['label', 'el'], ['label_float', 'true'],
+    ]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label_ontop).toBe(1);
+  });
+
+  it('sets label_ontop to 0 when label_float="false"', () => {
+    const { g, e } = makeEdgeInGraph(new Map([
+      ['label', 'el'], ['label_float', 'false'],
+    ]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label_ontop).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// initEdgeLabels — xlabel= (EDGE_XLABEL) creation
+// @see lib/common/utils.c:525-531
+// ---------------------------------------------------------------------------
+
+describe('initEdgeLabels — xlabel noop', () => {
+  it('no-ops when xlabel attr is absent', () => {
+    const { g, e } = makeEdgeInGraph(new Map());
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.xlabel).toBeUndefined();
+    expect((g.info.has_labels ?? 0) & EDGE_XLABEL).toBe(0);
+  });
+
+  it('no-ops when xlabel attr is empty string', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['xlabel', '']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.xlabel).toBeUndefined();
+    expect((g.info.has_labels ?? 0) & EDGE_XLABEL).toBe(0);
+  });
+});
+
+describe('initEdgeLabels — xlabel creation', () => {
+  it('creates e.info.xlabel and sets EDGE_XLABEL bit', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['xlabel', 'ex']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.xlabel?.text).toBe('ex');
+    expect((g.info.has_labels ?? 0) & EDGE_XLABEL).toBeTruthy();
+  });
+
+  it('initializes fi for xlabel when label is absent', () => {
+    const { g, e } = makeEdgeInGraph(new Map([
+      ['xlabel', 'ex'],
+      ['fontname', 'Helvetica'], ['fontsize', '12'], ['fontcolor', 'blue'],
+    ]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.xlabel?.fontname).toBe('Helvetica');
+    expect(e.info.xlabel?.fontsize).toBe(12);
+    expect(e.info.xlabel?.fontcolor).toBe('blue');
+  });
+
+  it('accumulates EDGE_LABEL and EDGE_XLABEL bits independently', () => {
+    const { g, e } = makeEdgeInGraph(new Map([['label', 'el'], ['xlabel', 'ex']]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect((g.info.has_labels ?? 0) & EDGE_LABEL).toBeTruthy();
+    expect((g.info.has_labels ?? 0) & EDGE_XLABEL).toBeTruthy();
+  });
+});
+
+describe('initEdgeLabels — xlabel fi laziness', () => {
+  it('reuses fi from label block when both label and xlabel are set', () => {
+    // C: if (!fi.fontname) initFontEdgeAttr(e, &fi) — init once, reuse
+    const { g, e } = makeEdgeInGraph(new Map([
+      ['label', 'el'], ['xlabel', 'ex'],
+      ['fontname', 'Courier'], ['fontsize', '10'], ['fontcolor', 'red'],
+    ]));
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.fontname).toBe('Courier');
+    expect(e.info.xlabel?.fontname).toBe('Courier');
+    expect(e.info.label?.fontsize).toBe(10);
+    expect(e.info.xlabel?.fontsize).toBe(10);
   });
 });

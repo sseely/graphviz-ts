@@ -21,7 +21,7 @@ import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
-import { placePortLabels } from './splines-label.js';
+import { placePortLabels, placeRegularEdgeLabels } from './splines-label.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -356,6 +356,9 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   for (let l = 0; l < edges.length;) {
     l += routeEdgeGroup(g, edges, l, multisep);
   }
+  // Place regular edge labels from virtual nodes; expand bb per label.
+  // @see lib/dotgen/dotsplines.c:422-430
+  placeRegularEdgeLabels(g);
   if (normalize) edgeNormalize(g);
   routeDotEdges(g);
   placePortLabels(g);

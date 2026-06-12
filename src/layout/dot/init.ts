@@ -11,12 +11,13 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { commonInitNode, lateInt } from '../../common/nodeinit.js';
+import { commonInitNode, lateInt, layoutMeasurer } from '../../common/nodeinit.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL } from './fastgr.js';
 import { mapbool } from './rank.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
+import { doGraphLabel } from './graph-label.js';
 
 // ---------------------------------------------------------------------------
 // RANKDIR constants
@@ -62,6 +63,11 @@ export function dotGraphInit(g: Graph): void {
   g.info.flip = (rankdir & 1) === 1;
   // Propagate to subgraphs (dotinit.c:352: GD_rankdir2(sg) = GD_rankdir2(g))
   initSubgraphRankdir(g);
+  // Root graph label: dimensions measured here so bb expansion in gvPostprocess
+  // has the dimen available. Cluster labels are handled by buildSkeleton/rank.ts.
+  // HTML labels not yet supported — plain-text only.
+  // @see lib/common/input.c:719 (do_graph_label call at end of graph_init)
+  doGraphLabel(g, layoutMeasurer(g));
 }
 
 /**
