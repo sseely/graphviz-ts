@@ -97,3 +97,33 @@ describe('self-closing tags', () => {
     expect(toks[1]).toEqual({ type: 'close', tag: 'IMG' });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Attribute scanning: value consumption + XML well-formedness.
+// @see lib/common/htmllex.c (expat "not well-formed" error path)
+// ---------------------------------------------------------------------------
+
+describe('attribute scanning', () => {
+  it('words inside quoted values do not become phantom attributes', () => {
+    const toks = tokenize('<IMG SRC="x.png"/>');
+    expect(toks[0]?.type === 'open' && toks[0].attrs).toEqual({ src: 'x.png' });
+  });
+
+  it('multiple quoted attributes parse cleanly', () => {
+    const toks = tokenize('<TABLE BORDER="1" CELLPADDING="2">');
+    expect(toks[0]?.type === 'open' && toks[0].attrs).toEqual({ border: '1', cellpadding: '2' });
+  });
+
+  it('bare attribute is not well-formed (C: expat error -> fallback)', () => {
+    expect(() => tokenize('<TD NOWRAP>')).toThrow();
+  });
+
+  it('unquoted value is not well-formed', () => {
+    expect(() => tokenize('<TABLE BORDER=1>')).toThrow();
+  });
+
+  it('single-quoted values are accepted', () => {
+    const toks = tokenize("<TD PORT='p1'>");
+    expect(toks[0]?.type === 'open' && toks[0].attrs).toEqual({ port: 'p1' });
+  });
+});
