@@ -87,11 +87,17 @@ export function renderLabel(
   label.pos = coord;
   label.set = true;
   // Center-valign y: pos.y + dimen.y/2 - fontsize  (graphviz y-up space)
-  const py = coord.y + label.dimen.y / 2.0 - label.fontsize;
+  let py = coord.y + label.dimen.y / 2.0 - label.fontsize;
   for (let i = 0; i < label.u.nspans; i++) {
     const span = label.u.span[i] as TextSpan;
+    // x per line justification; y advances by the span height per line.
+    // @see lib/common/labels.c:emit_label (254-266)
+    const px = span.just === 'l' ? coord.x - label.space.x / 2.0
+      : span.just === 'r' ? coord.x + label.space.x / 2.0
+      : coord.x;
     // Pass graphviz y; svgTextspan negates it per C svg_textspan behavior
-    renderer.textspan({ x: coord.x, y: py }, span, job);
+    renderer.textspan({ x: px, y: py }, span, job);
+    py -= span.size.y;
   }
 }
 

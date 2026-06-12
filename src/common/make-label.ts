@@ -44,18 +44,67 @@ function buildSpan(
   };
 }
 
+/** One line split out of a label, with its justification terminator. */
+interface LabelLine { text: string; just: 'n' | 'l' | 'r'; }
+
+const isJust = (c: string | undefined): c is 'n' | 'l' | 'r' =>
+  c === 'n' || c === 'l' || c === 'r';
+
+/**
+ * Split label text into lines at \n / \l / \r escapes and literal
+ * newlines (the DOT lexer cooks \n to a real newline; \l and \r
+ * arrive as two-character escapes). The terminator becomes the line's
+ * justification.
+ * @see lib/common/labels.c:make_simple_label
+ */
+export function splitLabelLines(text: string): LabelLine[] {
+  const lines: LabelLine[] = [];
+  let cur = '';
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]!;
+    if (c === '\\' && isJust(text[i + 1])) {
+      lines.push({ text: cur, just: text[++i] as 'n' | 'l' | 'r' });
+      cur = '';
+    } else if (c === '\n') {
+      lines.push({ text: cur, just: 'n' });
+      cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  if (cur.length > 0) lines.push({ text: cur, just: 'n' });
+  return lines;
+}
+
+/** C LINESPACING — empty lines take (int)(fontsize * 1.2). @see const.h:LINESPACING */
+const LINESPACING = 1.2;
+
+/** Build one measured span for a label line. @see labels.c:storeline */
+function buildLineSpan(line: LabelLine, font: FontInfo, measurer: TextMeasurer): TextSpan {
+  const measured = line.text.length > 0
+    ? measurer.measure(line.text, font.fontname, font.fontsize)
+    : { w: 0, h: Math.trunc(font.fontsize * LINESPACING) };
+  const span = buildSpan(line.text, font, measured);
+  span.just = line.just;
+  return span;
+}
+
+/** @see lib/common/labels.c:make_simple_label / storeline */
 function makePlainLabel(
   text: string,
   font: FontInfo,
   measurer: TextMeasurer,
 ): TextlabelT {
-  const measured = measurer.measure(text, font.fontname, font.fontsize);
+  const spans = splitLabelLines(text).map((ln) => buildLineSpan(ln, font, measurer));
+  // dimen.x = max line width; dimen.y accumulates heights; space = dimen.
+  const w = spans.reduce((a, sp) => Math.max(a, sp.size.x), 0);
+  const h = spans.reduce((a, sp) => a + sp.size.y, 0);
   return {
     text, ...font, charset: 0,
-    dimen: { x: measured.w, y: measured.h },
-    space: { x: measured.w, y: measured.h },
+    dimen: { x: w, y: h },
+    space: { x: w, y: h },
     pos: { x: 0, y: 0 },
-    u: { kind: 'txt', span: [buildSpan(text, font, measured)], nspans: 1 },
+    u: { kind: 'txt', span: spans, nspans: spans.length },
     valign: 'c'.charCodeAt(0),
     set: false, html: false,
   };
