@@ -204,8 +204,9 @@ export function emitAnchorAttrs(
   job: RenderJob,
 ): void {
   if (href.length > 0) {
-    const h = escapeXml(href);
-    job.write(' xlink:href="' + h + '" href="' + h + '"');
+    // C svg_begin_anchor writes xlink:href only.
+    // @see plugin/core/gvrender_core_svg.c:svg_begin_anchor
+    job.write(' xlink:href="' + escapeXml(href) + '"');
   }
   if (tooltip.length > 0) {
     job.write(' xlink:title="' + escapeXml(tooltip) + '"');

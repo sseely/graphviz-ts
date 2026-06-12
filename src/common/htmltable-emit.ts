@@ -117,19 +117,18 @@ interface BorderDecor {
 }
 
 /**
- * Emit a border: use doBorder when sides/color decoration is present,
- * otherwise fall back to plain box outline.
+ * Emit a border. C emit_html_cell/emit_html_tbl always route through
+ * doBorder (penwidth = border, box inset by border/2 when border > 1);
+ * for the default border=1/no-decoration case doBorder's output is
+ * byte-identical to a plain box outline.
+ * @see lib/common/htmltable.c:emit_html_cell
  */
 function emitBorder(
   d: BorderDecor,
   renderer: RendererPlugin,
   job: RenderJob,
 ): void {
-  if (d.sides !== undefined || d.color !== undefined) {
-    doBorder({ box: d.box, pos: d.pos, border: d.border, color: d.color ?? 'black', sides: d.sides, style: d.style }, renderer, job);
-  } else {
-    emitHtmlBox(d.box, d.pos, renderer, job);
-  }
+  doBorder({ box: d.box, pos: d.pos, border: d.border, color: d.color ?? 'black', sides: d.sides, style: d.style }, renderer, job);
 }
 
 // ---------------------------------------------------------------------------

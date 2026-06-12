@@ -142,6 +142,33 @@ export interface AnchorData {
   id?:     string;
 }
 
+/**
+ * Current object context for html anchors. C keeps this on job->obj
+ * (set by emit_begin_node/edge/graph); the port's live path has no
+ * persistent obj state, so the device walk sets it here before
+ * emitting each object's labels.
+ * objLabel feeds the C default tooltip (initMapData: tooltip falls
+ * back to obj->label — "<TABLE>" for table labels).
+ * @see lib/common/emit.c:initMapData (line 163)
+ */
+const anchorEnv: { objId: string; objLabel: string | null } = { objId: '', objLabel: null };
+
+/** Anchor id counter — C's `static int anchorId` in initAnchor, reset per render job (each dot invocation is one process). */
+let anchorSeq = 0;
+
+/** Set the current object context for anchor id/tooltip resolution. */
+export function setHtmlAnchorObj(objId: string, objLabel: string | null): void {
+  anchorEnv.objId = objId;
+  anchorEnv.objLabel = objLabel;
+}
+
+/** Reset the per-render anchor id counter. Call at render start. */
+export function resetHtmlAnchorIds(): void {
+  anchorSeq = 0;
+  anchorEnv.objId = '';
+  anchorEnv.objLabel = null;
+}
+
 /** Normalise AnchorData to plain strings (empty when absent). */
 function normaliseAnchor(data: AnchorData): { h: string; t: string; tg: string; i: string } {
   return {
@@ -153,10 +180,18 @@ function normaliseAnchor(data: AnchorData): { h: string; t: string; tg: string; 
 }
 
 /**
- * Open an anchor if href/title/target is set.
- * Returns true when an anchor was opened (caller must call endHtmlAnchor).
+ * Open an anchor when the data carries href/title/target.
  *
- * @see lib/common/htmltable.c:initAnchor
+ * Mirrors C initAnchor exactly: an internal id `<objId>_<n>` is
+ * generated (consuming the counter) whenever the call is made without
+ * an explicit ID attr, but the anchor element only opens when there is
+ * a URL or an explicit tooltip (initMapData: obj->url ||
+ * obj->explicit_tooltip). A missing TITLE inherits the object label
+ * as tooltip.
+ * Returns true when an anchor was opened (caller must endHtmlAnchor).
+ *
+ * @see lib/common/htmltable.c:initAnchor (line 381)
+ * @see lib/common/emit.c:initMapData (line 163)
  */
 export function initHtmlAnchor(
   data: AnchorData,
@@ -166,8 +201,15 @@ export function initHtmlAnchor(
   if (data.href === undefined && data.title === undefined && data.target === undefined) {
     return false;
   }
-  const { h, t, tg, i } = normaliseAnchor(data);
-  renderer.beginAnchor?.(h, t, tg, i, job);
+  const id = data.id !== undefined && data.id !== ''
+    ? data.id
+    : `${anchorEnv.objId}_${anchorSeq++}`;
+  if (data.href === undefined && data.title === undefined) {
+    return false; // target-only: id consumed, no anchor (C: !url && !explicit_tooltip)
+  }
+  const tooltip = data.title ?? anchorEnv.objLabel ?? '';
+  const { h, tg } = normaliseAnchor(data);
+  renderer.beginAnchor?.(h, tooltip, tg, id, job);
   return true;
 }
 

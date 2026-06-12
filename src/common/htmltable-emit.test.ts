@@ -229,3 +229,40 @@ describe('T7 — html IMG emission', () => {
     expect(svg).toContain('points="24,-15 24,-21 30,-21 30,-15 24,-15"');
   });
 });
+
+// ---------------------------------------------------------------------------
+// T9 — gaps found by C-oracle verification.
+// Expected strings verified against C graphviz 15.0.0 on 2026-06-12.
+// ---------------------------------------------------------------------------
+
+describe('T9 — CELLBORDER > 1 (htmltable.c:doBorder via emit_html_cell)', () => {
+  it('emits stroke-width and insets the box by border/2', () => {
+    const svg = renderSvg(
+      'digraph G { A [label=<<TABLE CELLBORDER="2"><TR><TD>a</TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toMatch(/<polygon fill="none" stroke="black" stroke-width="2" points="/);
+  });
+});
+
+describe('T9 — anchor ids and default tooltip (htmltable.c:initAnchor)', () => {
+  it('generates a_node1_0 and inherits the <TABLE> tooltip', () => {
+    const svg = renderSvg(
+      'digraph G { A [label=<<TABLE><TR><TD HREF="http://x">go</TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toContain('<g id="a_node1_0"><a xlink:href="http://x" xlink:title="&lt;TABLE&gt;">');
+  });
+
+  it('TITLE attr overrides the default tooltip', () => {
+    const svg = renderSvg(
+      'digraph G { A [label=<<TABLE><TR><TD HREF="http://x" TITLE="cellt">go</TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toContain('xlink:title="cellt"');
+  });
+
+  it('anchor counter is global across objects and resets per render', () => {
+    const dot = 'digraph G { A [label=<<TABLE><TR><TD HREF="http://x">a</TD></TR></TABLE>>]; B [label=<<TABLE HREF="http://y"><TR><TD HREF="http://z">b</TD></TR></TABLE>>]; }';
+    const svg = renderSvg(dot, 'dot');
+    expect(svg).toContain('id="a_node1_0"');
+    expect(svg).toContain('id="a_node2_1"');
+    expect(svg).toContain('id="a_node2_2"');
+    // second render restarts at 0 (C: one process per dot invocation)
+    expect(renderSvg(dot, 'dot')).toContain('id="a_node1_0"');
+  });
+});

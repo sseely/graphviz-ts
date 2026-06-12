@@ -70,9 +70,16 @@ describe('makeAnyLabel — HTML label', () => {
     expect(result.u.kind).toBe('html');
   });
 
-  it('text equals input content', () => {
+  it('table labels get the C "<TABLE>" placeholder text', () => {
+    // C replaces table-label text for title/alt use in image maps.
+    // @see lib/common/htmltable.c:make_html_label (line 1935)
     const result = makeAnyLabel(htmlContent, true, ARIAL, stubMeasurer);
-    expect(result.text).toBe(htmlContent);
+    expect(result.text).toBe('<TABLE>');
+  });
+
+  it('text-only html labels keep the original content', () => {
+    const result = makeAnyLabel('plain <b>run</b>', true, ARIAL, stubMeasurer);
+    expect(result.text).toBe('plain <b>run</b>');
   });
 });
 

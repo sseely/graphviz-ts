@@ -22,6 +22,10 @@ import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
+import {
+  setHtmlAnchorObj,
+  resetHtmlAnchorIds,
+} from '../common/htmltable-emit-rules.js';
 import type { PlacedHtml } from '../common/htmltable-pos.js';
 
 // ---------------------------------------------------------------------------
@@ -72,10 +76,18 @@ export function buildPoint(x: number, y: number): Point {
 // Node/Edge walk helpers
 // ---------------------------------------------------------------------------
 
+/** Label text for anchor tooltip defaults (C: obj->label). */
+function labelTextOf(lp: unknown): string | null {
+  return (lp as TextlabelT | undefined)?.text ?? null;
+}
+
 /** Render a single node if not already rendered. @see lib/common/emit.c:emit_node */
 export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, done: Set<Node>): void {
   if (done.has(n)) return;
   done.add(n);
+  // C emit_begin_node: job->obj carries the node id/label for anchors.
+  // @see lib/common/emit.c:emit_begin_node / getObjId
+  setHtmlAnchorObj('node' + (n.id + 1), labelTextOf(n.info.label));
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
   if (shape?.fns?.codefn) shape.fns.codefn(job, n);
@@ -86,6 +98,8 @@ export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, do
 
 /** Render a single edge. @see lib/common/emit.c:emit_edge */
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
+  // @see lib/common/emit.c:emit_begin_edge / getObjId
+  setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
   renderer.beginEdge(e, job);
   renderer.endEdge(e, job);
 }
@@ -170,6 +184,8 @@ export function renderNodeXLabel(n: Node, renderer: RendererPlugin, job: RenderJ
  * @see lib/common/emit.c:emit_page (3656-3657)
  */
 export function renderGraphLabel(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  // @see lib/common/emit.c:emit_begin_graph / getObjId (root graph → graph0)
+  setHtmlAnchorObj('graph0', labelTextOf(g.info.label));
   renderOneLabel(g.info.label as TextlabelT | undefined, renderer, job);
 }
 
@@ -230,6 +246,8 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     { x: bb.ur.x, y: bb.ll.y },
   ];
   renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
+  // @see lib/common/emit.c:emit_begin_cluster / getObjId
+  setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
   renderClusterLabel(sg, renderer, job);
   renderer.endCluster?.(sg, job);
   // C lays down clusters before sub-clusters when drawing.
@@ -288,6 +306,7 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
   job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
   job.renderer = renderer;
+  resetHtmlAnchorIds(); // C: fresh anchorId per dot invocation
   for (const n of g.nodes.values()) polyInit(n, g, job.measurer);
   return renderGraph(g, job, renderer);
 }

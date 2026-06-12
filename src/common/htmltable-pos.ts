@@ -498,8 +498,12 @@ export function makeHtmlLabel(
   sizeHtmlLabel(lbl, measurer, imageSizer);
   const placed = posHtmlLabel(lbl, { fontname, fontsize, fontcolor }, measurer);
   const dim = lbl.dimen ?? { w: 0, h: 0 };
+  // C replaces table-label text: "this may be used for the title and
+  // alt fields in image maps" — anchors inherit it as default tooltip.
+  // @see lib/common/htmltable.c:make_html_label (line 1935)
+  const text = lbl.kind === 'table' ? '<TABLE>' : content;
   return {
-    text: content,
+    text,
     fontname, fontcolor, charset: 0, fontsize,
     dimen: { x: dim.w, y: dim.h },
     space: { x: dim.w, y: dim.h },
