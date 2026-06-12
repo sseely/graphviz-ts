@@ -55,7 +55,7 @@ Baseline at mission start: **1217 passed / 0 failed**, 67 goldens
 | 1 (parallel) | [T1 node xlabel](batch-1/T1-node-xlabel.md), [T2 edge label+xlabel](batch-1/T2-edge-labels.md), [T3 graph label](batch-1/T3-graph-label.md) | [x] |
 | 2 (after 1) | [T4 live emission](batch-2/T4-emission.md), [T5 verify vs C + gap-fill](batch-2/T5-verify-gaps.md) | [x] |
 | 3 (after 2) | [T6 goldens 67→72](batch-3/T6-goldens.md) (orchestrator inline) | [x] |
-| 4 (after 3) | [T7 emit-family audit + delete](batch-4/T7-emit-cleanup.md), then [T8 html scope doc](batch-4/T8-html-scope.md) | [ ] |
+| 4 (after 3) | [T7 emit-family audit + delete](batch-4/T7-emit-cleanup.md), then [T8 html scope doc](batch-4/T8-html-scope.md) | [x] |
 
 ## Stop conditions
 
@@ -91,3 +91,29 @@ Baseline at mission start: **1217 passed / 0 failed**, 67 goldens
 - .agent-notes/m10-emit-dead-code-2026-06.md — live path vs dead family
 - plans/parity-m10-xlabels/ — AD precedents, byte-stability probe
   technique (.probes/render-all.ts exists and is reusable)
+
+## Mission summary (2026-06-12, close)
+
+- **Tasks:** 8/8 complete (T1–T8), 12 commits, one per task plus
+  progress markers and one authorized out-of-scope fix.
+- **Decisions:** 11 journal rows; one flagged for review: the
+  printDouble half-to-even fix (commit a3a6694) — Scott authorized
+  mid-mission after a stop condition; it made dot-head-tail-label
+  byte-equal to its C ref.
+- **Stop conditions hit:** 1. Combined-label probe diverged 0.01 from
+  C; root-caused to toFixed tie rounding in src/gvc/job.ts (outside
+  write-set); resolved by authorization, not silently.
+- **Gap-fills beyond the plan:** T5 ported the missing
+  dotsplines.c:422-430 post-routing place_vnlabel loop (declared
+  conditional write-set) — without it edge labels were misplaced at
+  the edge midpoint.
+- **Final gates:** tsc clean; vitest 1254/1254 (1217 baseline + 58
+  new − 21 deleted with emit.test.ts); 72 goldens (67 + 5 new per
+  D4), all passing, byte-stable; all 5 label-parity cases verified
+  vs dot 15.0.0 (.probes/m11-combined-check.ts).
+- **Known issues / follow-ups (html mission scope,
+  plans/parity-html-labels/SCOPE.md):** bold/italic dropped on the
+  live html node-label path; renderClusterLabel lacks an lp.html
+  guard; graph-label.ts:60 lacks a D2 comment.
+- **Merge:** pending Scott's go-ahead — merge commit (not squash)
+  into feature/post-parity.
