@@ -18,6 +18,7 @@ import type { HtmlCell, HtmlLabel, HtmlTable, HtmlText, HtmlTextItem } from './h
 import { layoutHtmlTable, cellPad, cellBorder, sizeHtmlLabel, parseHtmlLabel } from './htmltable.js';
 import { freetypeAscent } from './textmeasure.js';
 import { makeLabel } from './make-label.js';
+import { HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL } from './emit-types.js';
 
 /** One emitted run of text. Coordinates relative to the label center. */
 export interface PlacedLine {
@@ -28,6 +29,8 @@ export interface PlacedLine {
   fontSize: number;
   fontName: string | null;
   fontColor: string | null;
+  /** Resolved HTML font flags (HTML_BF | HTML_IF | HTML_UL | …). @see lib/common/textspan.h */
+  fontFlags: number;
 }
 
 /** A positioned cell: border box plus its text runs. */
@@ -53,6 +56,23 @@ export interface HtmlFontInfo {
 
 interface LineRun { items: HtmlTextItem[]; width: number; fontSize: number; height: number; }
 
+/**
+ * Compute the HTML font flags bitmask from an HtmlTextItem.
+ * Mirrors the per-span flag accumulation in htmltable.c:emit_htextspans.
+ * @see lib/common/textspan.h:HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL
+ */
+export function itemFontFlags(item: HtmlTextItem): number {
+  let f = 0;
+  if (item.bold) f |= HTML_BF;
+  if (item.italic) f |= HTML_IF;
+  if (item.underline) f |= HTML_UL;
+  if (item.superscript) f |= HTML_SUP;
+  if (item.subscript) f |= HTML_SUB;
+  if (item.strikethrough) f |= HTML_S;
+  if (item.overline) f |= HTML_OL;
+  return f;
+}
+
 /** Split text content into lines at <BR/> items. @see size_html_txt */
 export function buildLineRuns(
   texts: HtmlText[],
@@ -68,7 +88,9 @@ export function buildLineRuns(
       if (item.text === undefined) continue;
       const fs = item.fontSize !== undefined ? item.fontSize : finfo.fontsize;
       const face = item.fontFace !== undefined ? item.fontFace : finfo.fontname;
-      const sz = measurer.measure(item.text, face, fs);
+      const flags = itemFontFlags(item);
+      const sz = measurer.measure(item.text, face, fs,
+        { bold: !!(flags & HTML_BF), italic: !!(flags & HTML_IF) });
       cur.items.push(item);
       cur.width += sz.w;
       cur.fontSize = Math.max(cur.fontSize, fs);
@@ -92,10 +114,13 @@ export function placeRunItems(
   for (const item of run.items) {
     const fs = item.fontSize !== undefined ? item.fontSize : finfo.fontsize;
     const face = item.fontFace !== undefined ? item.fontFace : finfo.fontname;
-    const sz = measurer.measure(item.text!, face, fs);
+    const flags = itemFontFlags(item);
+    const sz = measurer.measure(item.text!, face, fs,
+      { bold: !!(flags & HTML_BF), italic: !!(flags & HTML_IF) });
     lines.push({
       text: item.text!, x, baseline, width: sz.w, fontSize: fs,
       fontName: face, fontColor: item.fontColor ?? finfo.fontcolor,
+      fontFlags: flags,
     });
     x += sz.w;
   }

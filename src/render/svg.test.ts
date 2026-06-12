@@ -165,6 +165,105 @@ export function testTextspan(): void {
   expect(out).toContain('Hello');
 }
 
+export function testTextspanPlainNoFontAttrs(): void {
+  // Plain-text span (fontFlags=0, fontColor=null) must NOT emit
+  // font-weight, font-style, text-decoration, or fill — byte-stability.
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 0, fontColor: null };
+  r.textspan({ x: 50, y: 40 }, span, job);
+  const out = job.output.join('');
+  expect(out).not.toContain('font-weight');
+  expect(out).not.toContain('font-style');
+  expect(out).not.toContain('text-decoration');
+  expect(out).not.toContain('fill=');
+}
+
+export function testTextspanBoldFlag(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 1 }; // HTML_BF=1
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('font-weight="bold"');
+}
+
+export function testTextspanItalicFlag(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 2 }; // HTML_IF=2
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('font-style="italic"');
+}
+
+export function testTextspanUnderlineFlag(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 4 }; // HTML_UL=4
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('text-decoration="underline"');
+}
+
+export function testTextspanStrikeFlag(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 32 }; // HTML_S=32
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('text-decoration="line-through"');
+}
+
+export function testTextspanUnderlineAndStrike(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 4 | 32 }; // HTML_UL|HTML_S
+  r.textspan({ x: 50, y: 40 }, span, job);
+  const out = job.output.join('');
+  expect(out).toContain('text-decoration="underline,line-through"');
+}
+
+export function testTextspanFontColorRed(): void {
+  // Non-black fontColor should emit fill="red"
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 0, fontColor: 'red' };
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('fill="red"');
+}
+
+export function testTextspanFontColorBlackOmitted(): void {
+  // "black" fontColor must NOT emit fill= (C omits fill for black)
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 0, fontColor: 'black' };
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).not.toContain('fill=');
+}
+
+export function testTextspanSupFlag(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 8 }; // HTML_SUP=8
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('baseline-shift="super"');
+}
+
+export function testTextspanSubFlag(): void {
+  const r = new SvgRenderer();
+  const job = makeJob();
+  job.pushObj(makeObjState());
+  const span: TextSpan = { ...makeSpan(), fontFlags: 16 }; // HTML_SUB=16
+  r.textspan({ x: 50, y: 40 }, span, job);
+  expect(job.output.join('')).toContain('baseline-shift="sub"');
+}
+
 export function testEllipse(): void {
   const r = new SvgRenderer();
   const job = makeJob();
@@ -234,4 +333,17 @@ describe('SvgRenderer shapes', () => {
   it('bezier emits path starting with M then C', testBezier);
   it('polygon emits polygon element', testPolygon);
   it('comment emits HTML comment', testComment);
+});
+
+describe('svgTextspan font flags', () => {
+  it('plain span emits no font-weight/style/decoration/fill', testTextspanPlainNoFontAttrs);
+  it('HTML_BF emits font-weight=bold', testTextspanBoldFlag);
+  it('HTML_IF emits font-style=italic', testTextspanItalicFlag);
+  it('HTML_UL emits text-decoration=underline', testTextspanUnderlineFlag);
+  it('HTML_S emits text-decoration=line-through', testTextspanStrikeFlag);
+  it('HTML_UL|HTML_S emits underline,line-through', testTextspanUnderlineAndStrike);
+  it('fontColor=red emits fill=red', testTextspanFontColorRed);
+  it('fontColor=black omits fill', testTextspanFontColorBlackOmitted);
+  it('HTML_SUP emits baseline-shift=super', testTextspanSupFlag);
+  it('HTML_SUB emits baseline-shift=sub', testTextspanSubFlag);
 });

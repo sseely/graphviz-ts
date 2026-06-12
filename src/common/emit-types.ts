@@ -32,6 +32,46 @@ export const PS2INCH = 1.0 / 72.0;
 export const INCH2PS = 72.0;
 
 // ---------------------------------------------------------------------------
+// HTML font flags — @see lib/common/textspan.h
+// ---------------------------------------------------------------------------
+
+/**
+ * Bold font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_BF (1 << 0)
+ */
+export const HTML_BF  = 1 << 0; // 0x01
+/**
+ * Italic font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_IF (1 << 1)
+ */
+export const HTML_IF  = 1 << 1; // 0x02
+/**
+ * Underline font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_UL (1 << 2)
+ */
+export const HTML_UL  = 1 << 2; // 0x04
+/**
+ * Superscript font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_SUP (1 << 3)
+ */
+export const HTML_SUP = 1 << 3; // 0x08
+/**
+ * Subscript font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_SUB (1 << 4)
+ */
+export const HTML_SUB = 1 << 4; // 0x10
+/**
+ * Strikethrough font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_S (1 << 5)
+ */
+export const HTML_S   = 1 << 5; // 0x20
+/**
+ * Overline font flag for HTML-label text spans.
+ * @see lib/common/textspan.h:HTML_OL (1 << 6)
+ */
+export const HTML_OL  = 1 << 6; // 0x40
+
+// ---------------------------------------------------------------------------
 // TextSpan — @see lib/common/textspan.h:textspan_t
 // ---------------------------------------------------------------------------
 

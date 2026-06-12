@@ -45,7 +45,7 @@ export function emitHtmlLine(
     fontName: line.fontName,
     fontSize: line.fontSize,
     fontColor: line.fontColor,
-    fontFlags: 0,
+    fontFlags: line.fontFlags,
     yoffset_layout: 0,
     yoffset_centerline: 0,
     size: { x: line.width, y: line.fontSize },
