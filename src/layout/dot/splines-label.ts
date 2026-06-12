@@ -296,6 +296,32 @@ function updateBB(g: Graph, l: TextlabelT): void {
 }
 
 // ---------------------------------------------------------------------------
+// placeRegularEdgeLabels — post-routing label placement loop
+// @see lib/dotgen/dotsplines.c:422-430
+// ---------------------------------------------------------------------------
+
+/**
+ * After edge routing completes, place regular edge labels from virtual nodes
+ * and expand the graph bounding box to include each label.
+ *
+ * Called once per graph after the parallel-edge routing loop and before
+ * edge_normalize.  Mirrors the C post-routing place_vnlabel + updateBB loop
+ * at dotsplines.c:422-430.  Flat-edge virtual nodes (in.size == 0) are
+ * skipped inside placeVnlabel as in C.
+ *
+ * @see lib/dotgen/dotsplines.c:422-430
+ */
+export function placeRegularEdgeLabels(g: Graph): void {
+  for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
+    if ((n.info.node_type ?? 0) !== VIRTUAL) continue;
+    const l = n.info.label as TextlabelT | undefined;
+    if (!l) continue;
+    placeVnlabel(n);
+    if (l.set) updateBB(g, l);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // placePortLabels — the placement loop from dotsplines.c:440-458
 // @see lib/dotgen/dotsplines.c:440-458
 // ---------------------------------------------------------------------------
