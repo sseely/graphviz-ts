@@ -662,5 +662,125 @@
     "input": "test/golden/inputs/dot-html-combined.dot",
     "reference": "test/golden/refs/dot-html-combined.svg",
     "description": "combined: graph+cluster html labels, decorated table with anchor, edge label/head/tail, node xlabel; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-node-fillcolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-fillcolor.dot",
+    "reference": "test/golden/refs/dot-node-fillcolor.svg",
+    "description": "filled node with explicit fillcolor (ellipse); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-pencolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-pencolor.dot",
+    "reference": "test/golden/refs/dot-node-pencolor.svg",
+    "description": "node with a non-default pen color; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-penwidth",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-penwidth.dot",
+    "reference": "test/golden/refs/dot-node-penwidth.svg",
+    "description": "node with penwidth=3; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-style-dashed",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-style-dashed.dot",
+    "reference": "test/golden/refs/dot-node-style-dashed.svg",
+    "description": "node with dashed boundary; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-style-dotted",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-style-dotted.dot",
+    "reference": "test/golden/refs/dot-node-style-dotted.svg",
+    "description": "node with dotted boundary; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-style-bold",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-style-bold.dot",
+    "reference": "test/golden/refs/dot-node-style-bold.svg",
+    "description": "node with bold boundary (penwidth 2); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-filled-default",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-filled-default.dot",
+    "reference": "test/golden/refs/dot-node-filled-default.svg",
+    "description": "filled node, no fillcolor (default lightgrey); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-color",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-color.dot",
+    "reference": "test/golden/refs/dot-edge-color.svg",
+    "description": "edge with a non-default color (path + arrow); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-penwidth",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-penwidth.dot",
+    "reference": "test/golden/refs/dot-edge-penwidth.svg",
+    "description": "edge with penwidth=2; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-style-dashed",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-style-dashed.dot",
+    "reference": "test/golden/refs/dot-edge-style-dashed.svg",
+    "description": "single dashed edge; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-colored-arrow",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-colored-arrow.dot",
+    "reference": "test/golden/refs/dot-edge-colored-arrow.svg",
+    "description": "double-ended edge with colored arrowheads; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-graph-bgcolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-graph-bgcolor.dot",
+    "reference": "test/golden/refs/dot-graph-bgcolor.svg",
+    "description": "graph with a background color; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-cluster-filled",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-filled.dot",
+    "reference": "test/golden/refs/dot-cluster-filled.svg",
+    "description": "filled cluster (color sets fill and pen); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-cluster-bgcolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-bgcolor.dot",
+    "reference": "test/golden/refs/dot-cluster-bgcolor.svg",
+    "description": "cluster filled via bgcolor backward-compat; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-styled-combined",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-styled-combined.dot",
+    "reference": "test/golden/refs/dot-styled-combined.svg",
+    "description": "node fill + node pen + edge color/style + cluster fill + bgcolor together; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
   }
 ]

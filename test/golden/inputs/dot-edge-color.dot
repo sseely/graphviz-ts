@@ -1,0 +1,6 @@
+// graphviz-ts reference input: edge with a non-default color (path + arrow)
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a -> b [color=red];
+}

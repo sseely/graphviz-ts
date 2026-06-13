@@ -1,0 +1,6 @@
+// graphviz-ts reference input: single dashed edge
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a -> b [style=dashed];
+}

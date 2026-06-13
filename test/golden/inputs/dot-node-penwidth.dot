@@ -1,0 +1,6 @@
+// graphviz-ts reference input: node with penwidth=3
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a [penwidth=3];
+}

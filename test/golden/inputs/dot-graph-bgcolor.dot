@@ -1,0 +1,7 @@
+// graphviz-ts reference input: graph with a background color
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    bgcolor=lightyellow;
+    a;
+}
