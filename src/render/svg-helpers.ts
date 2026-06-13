@@ -27,7 +27,8 @@ import type { Point, Bezier } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import { HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL } from '../common/emit-types.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
-import { PenType } from '../gvc/context.js';
+import { PenType, FillType } from '../gvc/context.js';
+import { emitLinearGradient, emitRadialGradient, gradientId } from './svg-gradient.js';
 import { transformPoint } from '../gvc/device.js';
 
 // ---------------------------------------------------------------------------
@@ -109,9 +110,14 @@ export function emitPenWidth(job: RenderJob, pw: number): void {
   job.write('"');
 }
 
-export function emitStyle(job: RenderJob, filled: boolean): void {
+export function emitStyle(job: RenderJob, filled: boolean, gradFillUrl?: string): void {
   const obj = job.obj;
-  const fill = obj !== null && filled ? paintStr(obj, true) : 'none';
+  let fill: string;
+  if (gradFillUrl !== undefined) {
+    fill = 'url(#' + gradFillUrl + ')';
+  } else {
+    fill = obj !== null && filled ? paintStr(obj, true) : 'none';
+  }
   const stroke = obj !== null ? paintStr(obj, false) : 'black';
   job.write(' fill="' + fill + '" stroke="' + stroke + '"');
   if (obj === null) return;
@@ -305,6 +311,28 @@ export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
 // Shape emitters
 // ---------------------------------------------------------------------------
 
+/**
+ * Emit `<defs>` gradient block for a filled shape; returns the gradient id
+ * to use as fill="url(#id)", or undefined for solid/none fills (AD2, AD3).
+ * pts must be in y-up (Graphviz) coordinate space.
+ * @see plugin/core/gvrender_core_svg.c:647-694 (gradient dispatch)
+ */
+export function emitGradientDefs(job: RenderJob, ptsYup: Point[], filled: boolean): string | undefined {
+  if (!filled) return undefined;
+  const obj = job.obj;
+  if (obj === null) return undefined;
+  if (obj.fill === FillType.Linear) {
+    const gid = gradientId(obj.id, 'l', job.linearGradId++);
+    emitLinearGradient(job, ptsYup, gid);
+    return gid;
+  }
+  if (obj.fill === FillType.Radial) {
+    const gid = gradientId(obj.id, 'r', job.radialGradId++);
+    emitRadialGradient(job, gid);
+    return gid;
+  }
+  return undefined;
+}
 export function svgEllipse(
   center: Point,
   rx: number,
@@ -312,8 +340,10 @@ export function svgEllipse(
   filled: boolean,
   job: RenderJob,
 ): void {
+  const ptsUp = [{ x: center.x, y: -center.y }, { x: center.x + rx, y: -center.y + ry }];
+  const gradUrl = emitGradientDefs(job, ptsUp, filled);
   job.write('<ellipse');
-  emitStyle(job, filled);
+  emitStyle(job, filled, gradUrl);
   job.write(' cx="');
   job.printDouble(center.x);
   job.write('" cy="');
@@ -324,10 +354,11 @@ export function svgEllipse(
   job.printDouble(ry);
   job.write('"/>\n');
 }
-
 export function svgPolygon(pts: Point[], filled: boolean, job: RenderJob): void {
+  const ptsUp = pts.map((p) => ({ x: p.x, y: -p.y }));
+  const gradUrl = emitGradientDefs(job, ptsUp, filled);
   job.write('<polygon');
-  emitStyle(job, filled);
+  emitStyle(job, filled, gradUrl);
   job.write(' points="');
   emitPoints(job, pts);
   if (pts.length > 0) {
@@ -341,15 +372,15 @@ export function svgPolygon(pts: Point[], filled: boolean, job: RenderJob): void 
   }
   job.write('"/>\n');
 }
-
 export function svgBezier(pts: Point[], filled: boolean, job: RenderJob): void {
+  const ptsUp = pts.map((p) => ({ x: p.x, y: -p.y }));
+  const gradUrl = emitGradientDefs(job, ptsUp, filled);
   job.write('<path');
-  emitStyle(job, filled);
+  emitStyle(job, filled, gradUrl);
   job.write(' d="');
   emitBezierPath(job, pts);
   job.write('"/>\n');
 }
-
 export function svgPolyline(pts: Point[], job: RenderJob): void {
   job.write('<polyline');
   emitStyle(job, false);
