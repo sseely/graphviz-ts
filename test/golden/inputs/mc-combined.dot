@@ -1,0 +1,10 @@
+// graphviz-ts reference input: gradient node + striped node + gradient cluster bg + multicolor edge
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    bgcolor="lightcyan:white";
+    a [style=filled, fillcolor="red:blue"];
+    c [style=filled, fillcolor="green:yellow"];
+    b [shape=box, style=striped, fillcolor="orange:purple"];
+    a -> c [color="red:blue"];
+}

@@ -5,32 +5,10 @@
  * pen/fill properties from node attributes.  Data-in / data-out only —
  * no rendering, no ObjState mutation (AD2).
  *
- * Exported interface:
- *
- *   interface PolyStyleFlags {
- *     filled, dashed, dotted, bold, invis, diagonals,
- *     rounded, radial, striped, wedged: boolean
- *   }
- *
- *   interface NodeAttrs {
- *     style?: string; fillcolor?: string; color?: string
- *   }
- *
- *   interface ClusterAttrs {
- *     style?: string; color?: string; pencolor?: string;
- *     fillcolor?: string; bgcolor?: string; penwidth?: string
- *   }
- *
- *   interface ClusterFill {
- *     filled: boolean; fillColor: string; penColor: string
- *   }
- *
- *   parseStyleFlags(style?: string)        → PolyStyleFlags
- *   resolvePenType(flags)                  → PenType
- *   resolvePenWidth(flags, penwidthAttr?)  → number
- *   resolveNodeFill(attrs)                 → { filled: boolean; color: string }
- *   resolvePenColor(colorAttr?)            → string
- *   resolveClusterFill(attrs)              → ClusterFill
+ * Exports: parseStyleFlags, resolvePenType, resolvePenWidth,
+ * resolveNodeFill, resolveNodeFillEx, resolvePenColor,
+ * resolveClusterFill, resolveClusterFillEx, findStopColor.
+ * Types: PolyStyleFlags, NodeAttrs, ClusterAttrs, ClusterFill, ResolvedFill.
  *
  * @see lib/common/types.h:graphviz_polygon_style_t
  * @see lib/common/shapes.c:checkStyle
@@ -45,6 +23,7 @@
 
 import { PenType } from '../gvc/context.js';
 import { parseGradientSpec } from './htmltable-emit-fill.js';
+import { parseSegs } from './multicolor.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -65,17 +44,20 @@ export interface PolyStyleFlags {
 }
 
 /**
- * Minimal node attribute bag consumed by resolveNodeFill.
+ * Minimal node attribute bag consumed by resolveNodeFill / resolveNodeFillEx.
  * Mirrors the subset of node attrs read by findFill / isFilled in C.
  */
 export interface NodeAttrs {
   style?: string | undefined;
   fillcolor?: string | undefined;
   color?: string | undefined;
+  /** @see lib/common/emit.c gradientangle attr */
+  gradientangle?: string | undefined;
 }
 
 /**
- * Minimal cluster attribute bag consumed by resolveClusterFill.
+ * Minimal cluster attribute bag consumed by resolveClusterFill /
+ * resolveClusterFillEx.
  * Mirrors the attrs read in emit_clusters (lib/common/emit.c:3805-3853).
  */
 export interface ClusterAttrs {
@@ -85,6 +67,8 @@ export interface ClusterAttrs {
   fillcolor?: string | undefined;
   bgcolor?: string | undefined;
   penwidth?: string | undefined;
+  /** @see lib/common/emit.c gradientangle attr */
+  gradientangle?: string | undefined;
 }
 
 /**
@@ -99,6 +83,17 @@ export interface ClusterFill {
   /** Pen (stroke) color. */
   penColor: string;
 }
+
+/**
+ * Discriminated fill result (AD4, AD6).
+ * 'none' = not filled; 'solid' = single color;
+ * 'linear'/'radial' = gradient from findStopColor.
+ * @see lib/common/emit.c:4335 findStopColor
+ */
+export type ResolvedFill =
+  | { kind: 'none' }
+  | { kind: 'solid'; color: string }
+  | { kind: 'linear' | 'radial'; fillColor: string; stopColor: string; frac: number; angle: number };
 
 // ---------------------------------------------------------------------------
 // Constants — lib/common/const.h
@@ -160,17 +155,29 @@ function applyToken(flags: PolyStyleFlags, token: string): void {
   if (key !== undefined) flags[key] = true;
 }
 
+/** True when s is a non-empty string. */
+function nonEmpty(s: string | undefined): s is string {
+  return s !== undefined && s.length > 0;
+}
+
+/** Return s if non-empty, else fallback. */
+function orElse(s: string | undefined, fallback: string): string {
+  return nonEmpty(s) ? s : fallback;
+}
+
+/** Return the first solid color from a raw color string (AD3). */
+function firstSolidColor(raw: string): string {
+  const grad = parseGradientSpec(raw);
+  return grad !== null ? grad[0] : raw;
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
 /**
  * Parse a graphviz style attribute string into a flag set.
- *
- * Splits on commas, trims whitespace, skips tokens containing '('
- * (e.g. "setlinewidth(3)") — penwidth is handled separately by
- * resolvePenWidth, not here.
- *
+ * Splits on commas, trims whitespace, skips tokens containing '('.
  * @see lib/common/emit.c:4010 parse_style
  * @see lib/gvc/gvrender.c:481 gvrender_set_style
  */
@@ -186,12 +193,7 @@ export function parseStyleFlags(style: string | undefined): PolyStyleFlags {
 
 /**
  * Resolve PenType from parsed style flags.
- *
- * Precedence: dashed checked before dotted, matching the order in
- * lib/gvc/gvrender.c:493-495 (gvrender_set_style processes "dashed"
- * on line 493, "dotted" on line 495 — when both flags are set we
- * report Dashed to preserve that ordering intent).
- *
+ * Dashed is checked before dotted (lib/gvc/gvrender.c:493-495).
  * @see lib/gvc/gvrender.c:493
  */
 export function resolvePenType(flags: PolyStyleFlags): PenType {
@@ -202,13 +204,8 @@ export function resolvePenType(flags: PolyStyleFlags): PenType {
 
 /**
  * Resolve pen width from flags and the raw penwidth attribute string.
- *
- * Precedence (verified in lib/common/shapes.c:539-541, stylenode):
- *   1. Explicit penwidth attr (if it parses to a finite number) — wins.
- *   2. bold flag → PENWIDTH_BOLD (2.0).
- *   3. Default → 1.0.
- *
- * @see lib/common/shapes.c:539 stylenode (N_penwidth applied first)
+ * Precedence: explicit attr → bold flag (2.0) → default (1.0).
+ * @see lib/common/shapes.c:539 stylenode
  * @see lib/gvc/gvcjob.h:41 PENWIDTH_BOLD = 2.0
  */
 export function resolvePenWidth(
@@ -225,17 +222,9 @@ export function resolvePenWidth(
 
 /**
  * Resolve fill state and fill color for a node.
- *
- * A node is filled when its style contains "filled" (or "radial").
- * Fill color precedence mirrors lib/common/shapes.c:findFillDflt:
- *   fillcolor attr → color attr → DEFAULT_FILL ("lightgrey").
- *
- * For two-color/gradient specs ("c1:c2") the first solid color is
- * returned (AD3); parseGradientSpec is reused, not reimplemented.
- * When not filled, color is returned as "".
- *
+ * Precedence: fillcolor → color → DEFAULT_FILL ("lightgrey").
+ * Gradient specs return the first solid color (AD3).
  * @see lib/common/shapes.c:401 findFillDflt
- * @see lib/common/shapes.c:417 findFill → DEFAULT_FILL="lightgrey"
  * @see lib/common/emit.c:705 isFilled
  * @see lib/common/const.h:69 DEFAULT_FILL = "lightgrey"
  */
@@ -249,92 +238,145 @@ export function resolveNodeFill(attrs: NodeAttrs): {
   return { filled: true, color };
 }
 
-/** Choose raw fill color then split gradient spec (AD3). */
+/** Choose raw fill color then extract first solid (AD3). */
 function pickFillColor(
   fillcolor: string | undefined,
   color: string | undefined,
 ): string {
-  // precedence: fillcolor → color → DEFAULT_FILL (lib/common/shapes.c:401-413)
-  const raw =
-    (fillcolor && fillcolor.length > 0) ? fillcolor :
-    (color && color.length > 0) ? color :
-    DEFAULT_FILL;
-  const grad = parseGradientSpec(raw);
-  return grad !== null ? grad[0] : raw;
+  const raw = nonEmpty(fillcolor) ? fillcolor
+    : nonEmpty(color) ? color
+    : DEFAULT_FILL;
+  return firstSolidColor(raw);
 }
 
 /**
- * Resolve pen (stroke) color from the raw color attribute.
- *
- * Returns the color attr if non-empty, else DEFAULT_COLOR ("black").
- * For colorList specs ("c1:c2") returns the first color (AD3).
- *
+ * Resolve pen (stroke) color. Returns first solid color from colorList,
+ * or DEFAULT_COLOR ("black") when attr is absent.
  * @see lib/common/shapes.c:389 penColor
  * @see lib/common/const.h:48 DEFAULT_COLOR = "black"
  */
 export function resolvePenColor(colorAttr: string | undefined): string {
   if (!colorAttr || colorAttr.length === 0) return DEFAULT_COLOR;
-  const grad = parseGradientSpec(colorAttr);
-  return grad !== null ? grad[0] : colorAttr;
+  return firstSolidColor(colorAttr);
+}
+
+// ---------------------------------------------------------------------------
+// Cluster fill helpers (CCN ≤ 3 each)
+// ---------------------------------------------------------------------------
+
+/**
+ * Derive raw fillcolor and pencolor from cluster attrs.
+ * color sets both; pencolor/fillcolor override their respective side.
+ * @see lib/common/emit.c:emit_clusters:3835-3840
+ */
+function clusterColorAttrs(
+  attrs: ClusterAttrs,
+): { fillcolor: string | undefined; pencolor: string | undefined } {
+  const base = nonEmpty(attrs.color) ? attrs.color : undefined;
+  const pencolor = orElse(attrs.pencolor, base ?? '');
+  const fillcolor = orElse(attrs.fillcolor, base ?? '');
+  return {
+    fillcolor: nonEmpty(fillcolor) ? fillcolor : undefined,
+    pencolor: nonEmpty(pencolor) ? pencolor : undefined,
+  };
+}
+
+/**
+ * Apply bgcolor backward-compat: bgcolor activates fill when none set.
+ * @see lib/common/emit.c:emit_clusters:3846-3849
+ */
+function applyBgcolor(
+  attrs: ClusterAttrs,
+  filled: boolean,
+  fillcolor: string | undefined,
+): { filled: boolean; fillcolor: string | undefined } {
+  if ((!filled || !fillcolor) && nonEmpty(attrs.bgcolor)) {
+    return { filled: true, fillcolor: attrs.bgcolor };
+  }
+  return { filled, fillcolor };
 }
 
 /**
  * Resolve cluster fill: filled flag, fill color, and pen color.
- *
- * Ports the precedence in emit_clusters (lib/common/emit.c:3805-3853):
- *   1. style="filled" → filled=true
- *   2. color attr → fillcolor = pencolor = color  (sets both)
- *   3. pencolor attr → overrides pencolor
- *   4. fillcolor attr → overrides fillcolor
- *   5. bgcolor backward-compat: if (!filled || !fillcolor) && bgcolor → fillcolor=bgcolor, filled=true
- *   6. !pencolor → DEFAULT_COLOR ("black")
- *   7. !fillcolor → DEFAULT_FILL ("lightgrey")
- *   8. gradient fillcolor "c1:c2" → first color (AD3)
- *
- * GUI_STATE_ACTIVE/SELECTED/DELETED/VISITED branches are not ported
- * (browser-only runtime; those states are managed externally).
- *
+ * Ports emit_clusters (lib/common/emit.c:3805-3853). GUI state branches
+ * are not ported (browser-only; states managed externally).
  * @see lib/common/emit.c:emit_clusters:3805-3853
- * @see lib/common/const.h:48 DEFAULT_COLOR = "black"
- * @see lib/common/const.h:69 DEFAULT_FILL = "lightgrey"
  */
 export function resolveClusterFill(attrs: ClusterAttrs): ClusterFill {
   const flags = parseStyleFlags(attrs.style);
-  let filled = flags.filled;
-
-  let fillcolor: string | undefined;
-  let pencolor: string | undefined;
-
-  // color attr sets BOTH fill and pen (emit_clusters:3835-3836)
-  if (attrs.color && attrs.color.length > 0) {
-    fillcolor = attrs.color;
-    pencolor = attrs.color;
-  }
-  // pencolor attr overrides pen (emit_clusters:3837-3838)
-  if (attrs.pencolor && attrs.pencolor.length > 0) {
-    pencolor = attrs.pencolor;
-  }
-  // fillcolor attr overrides fill (emit_clusters:3839-3840)
-  if (attrs.fillcolor && attrs.fillcolor.length > 0) {
-    fillcolor = attrs.fillcolor;
-  }
-  // bgcolor backward-compat (emit_clusters:3846-3849)
-  if ((!filled || !fillcolor) && attrs.bgcolor && attrs.bgcolor.length > 0) {
-    fillcolor = attrs.bgcolor;
-    filled = true;
-  }
-
-  // Apply defaults (emit_clusters:3852-3853)
-  const rawPen = pencolor ?? DEFAULT_COLOR;
-  const rawFill = fillcolor ?? DEFAULT_FILL;
-
-  // Gradient: first color only (AD3)
-  const gradPen = parseGradientSpec(rawPen);
-  const gradFill = parseGradientSpec(rawFill);
-
+  const colors = clusterColorAttrs(attrs);
+  const bg = applyBgcolor(attrs, flags.filled, colors.fillcolor);
+  const rawPen = colors.pencolor ?? DEFAULT_COLOR;
+  const rawFill = bg.fillcolor ?? DEFAULT_FILL;
   return {
-    filled,
-    fillColor: gradFill !== null ? gradFill[0] : rawFill,
-    penColor: gradPen !== null ? gradPen[0] : rawPen,
+    filled: bg.filled,
+    fillColor: firstSolidColor(rawFill),
+    penColor: firstSolidColor(rawPen),
   };
+}
+/** @see lib/common/emit.c:4335 findStopColor */
+export function findStopColor(
+  colorlist: string,
+): { fillColor: string; stopColor: string; frac: number } | null {
+  const { segs, error } = parseSegs(colorlist);
+  if (error === 1 || error === 2) return null;
+  if (segs.length < 2) return null;
+  const seg0 = segs[0]!;
+  const seg1 = segs[1]!;
+  if (seg0.color === null) return null;
+  const fillColor = seg0.color;
+  const stopColor = seg1.color ?? DEFAULT_COLOR;
+  const frac = seg0.hasFraction ? seg0.t
+    : seg1.hasFraction ? 1 - seg1.t
+    : 0;
+  return { fillColor, stopColor, frac };
+}
+
+/** Parse gradientangle attr to integer, default 0. */
+function parseAngle(gradientangle: string | undefined): number {
+  if (!gradientangle || gradientangle.length === 0) return 0;
+  const v = parseInt(gradientangle, 10);
+  return isFinite(v) ? v : 0;
+}
+
+/** Build ResolvedFill from raw color + flags. AD6: two-color → gradient. */
+function buildResolvedFill(
+  rawColor: string,
+  flags: PolyStyleFlags,
+  angle: number,
+): ResolvedFill {
+  const stop = findStopColor(rawColor);
+  if (stop === null) return { kind: 'solid', color: rawColor };
+  const kind = flags.radial ? 'radial' : 'linear';
+  return { kind, fillColor: stop.fillColor, stopColor: stop.stopColor, frac: stop.frac, angle };
+}
+
+/**
+ * Discriminated fill for a node (AD4, AD6). New Ex variant — original
+ * resolveNodeFill shape unchanged for G3 compatibility.
+ * @see lib/common/emit.c:4335 findStopColor
+ * @see lib/common/shapes.c:findFill
+ */
+export function resolveNodeFillEx(attrs: NodeAttrs): ResolvedFill {
+  const flags = parseStyleFlags(attrs.style);
+  if (!flags.filled) return { kind: 'none' };
+  const raw = nonEmpty(attrs.fillcolor) ? attrs.fillcolor
+    : nonEmpty(attrs.color) ? attrs.color
+    : DEFAULT_FILL;
+  return buildResolvedFill(raw, flags, parseAngle(attrs.gradientangle));
+}
+
+/**
+ * Discriminated fill for a cluster (AD4, AD6). New Ex variant — original
+ * resolveClusterFill shape unchanged for G4 compatibility.
+ * @see lib/common/emit.c:emit_clusters:3805-3853
+ * @see lib/common/emit.c:4335 findStopColor
+ */
+export function resolveClusterFillEx(attrs: ClusterAttrs): ResolvedFill {
+  const flags = parseStyleFlags(attrs.style);
+  const colors = clusterColorAttrs(attrs);
+  const bg = applyBgcolor(attrs, flags.filled, colors.fillcolor);
+  if (!bg.filled) return { kind: 'none' };
+  const raw = bg.fillcolor ?? DEFAULT_FILL;
+  return buildResolvedFill(raw, flags, parseAngle(attrs.gradientangle));
 }

@@ -19,13 +19,27 @@ import { emitHtmlLabel } from './htmltable-emit.js';
 import { transformPoint } from '../gvc/device.js';
 import { nodeAttr } from './poly-init.js';
 import { substObjAnchor, interpretCRNL } from './subst.js';
+import type { ResolvedFill, PolyStyleFlags } from './style-resolve.js';
 import {
   parseStyleFlags,
-  resolveNodeFill,
+  resolveNodeFillEx,
   resolvePenColor,
   resolvePenType,
   resolvePenWidth,
 } from './style-resolve.js';
+import { stripedBox, wedgedEllipse } from '../render/svg-multicolor.js';
+
+// ---------------------------------------------------------------------------
+// Multicolor test
+// ---------------------------------------------------------------------------
+
+/**
+ * True when the fillcolor string contains more than one color segment.
+ * @see lib/common/shapes.c:2917 multicolor()
+ */
+function isMulticolor(fillcolor: string): boolean {
+  return fillcolor.includes(':');
+}
 
 // ---------------------------------------------------------------------------
 // Periphery ring renderers
@@ -59,6 +73,58 @@ export function renderPolygon(
   renderer.polygon(pts, filled, job);
 }
 
+/** Bundled render context for periphery ring helpers. */
+interface RingCtx {
+  renderer: RendererPlugin;
+  job: RenderJob;
+  style: PolyStyleFlags;
+  fillcolor: string;
+}
+
+/**
+ * Render one ellipse periphery ring, dispatching to wedgedEllipse when
+ * style.wedged + j==0 + multicolor fillcolor.
+ * @see lib/common/shapes.c:poly_gencode :3026-3033
+ */
+function renderEllipseRing(
+  ring: Point[], coord: Point, filled: boolean, j: number, ctx: RingCtx,
+): void {
+  if (ctx.style.wedged && j === 0 && isMulticolor(ctx.fillcolor)) {
+    // Build absolute SVG-space bounding-box points for the ellipse.
+    const pf = ring.map(
+      (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, ctx.job),
+    );
+    wedgedEllipse(ctx.job, pf, ctx.fillcolor, ctx.renderer);
+    // Boundary ellipse drawn unfilled (filled reset to 0 after wedge).
+    // @see lib/common/shapes.c:poly_gencode :3031 (filled = 0)
+    renderEllipse(ring, coord, ctx.renderer, ctx.job, false);
+    return;
+  }
+  renderEllipse(ring, coord, ctx.renderer, ctx.job, filled);
+}
+
+/**
+ * Render one polygon periphery ring, dispatching to stripedBox when
+ * style.striped + j==0.
+ * @see lib/common/shapes.c:poly_gencode :3037-3043
+ */
+function renderPolyRing(
+  ring: Point[], coord: Point, filled: boolean, j: number, ctx: RingCtx,
+): void {
+  if (ctx.style.striped && j === 0) {
+    // Build absolute SVG-space points for the polygon ring.
+    const af = ring.map(
+      (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, ctx.job),
+    );
+    stripedBox(ctx.job, af, ctx.fillcolor, true, ctx.renderer);
+    // Boundary polygon drawn unfilled.
+    // @see lib/common/shapes.c:poly_gencode :3043 gvrender_polygon(job, AF, sides, 0)
+    renderPolygon(ring, coord, ctx.renderer, ctx.job, false);
+    return;
+  }
+  renderPolygon(ring, coord, ctx.renderer, ctx.job, filled);
+}
+
 /**
  * Draw the node boundary: one ring per periphery, innermost first.
  * The `filled` flag is passed to the FIRST ring (j===0) only; all
@@ -67,11 +133,7 @@ export function renderPolygon(
  * @see lib/common/shapes.c:poly_gencode (peripheries draw loop, :3018-3056)
  */
 function renderPeripheries(
-  poly: PolygonT,
-  coord: Point,
-  renderer: RendererPlugin,
-  job: RenderJob,
-  filled: boolean,
+  poly: PolygonT, coord: Point, filled: boolean, ctx: RingCtx,
 ): void {
   const sides = poly.sides <= 2 ? 2 : poly.sides;
   const verts = poly.vertices!;
@@ -80,8 +142,11 @@ function renderPeripheries(
     if (ring.length < sides) break;
     // C: filled applies to j===0 only; filled=0 for all later rings.
     const ringFilled = j === 0 ? filled : false;
-    if (poly.sides <= 2) renderEllipse(ring, coord, renderer, job, ringFilled);
-    else renderPolygon(ring, coord, renderer, job, ringFilled);
+    if (poly.sides <= 2) {
+      renderEllipseRing(ring, coord, ringFilled, j, ctx);
+    } else {
+      renderPolyRing(ring, coord, ringFilled, j, ctx);
+    }
   }
 }
 
@@ -175,13 +240,48 @@ function beginNodeAnchor(n: Node, renderer: RendererPlugin, job: RenderJob): boo
 // Style resolution — populates job.obj from node attrs
 // ---------------------------------------------------------------------------
 
-/** Apply fill state to obj; returns true when filled. @see lib/common/shapes.c:2981-2999 */
-function applyFillState(obj: ObjState, styleAttr: string | undefined,
-  fillcolorAttr: string | undefined, colorAttr: string | undefined): boolean {
-  const fillRes = resolveNodeFill({ style: styleAttr, fillcolor: fillcolorAttr, color: colorAttr });
-  obj.fill = fillRes.filled ? FillType.Solid : FillType.None;
-  if (fillRes.filled) obj.fillColor = { type: 'string', s: fillRes.color };
-  return fillRes.filled;
+/**
+ * Copy gradient fields from a linear/radial ResolvedFill onto obj.
+ * Extracted helper; keeps applyFillState within CCN/param limits.
+ * @see lib/common/shapes.c:2985-2998 GRADIENT/RGRADIENT block
+ */
+function applyGradientFields(
+  obj: ObjState,
+  fill: Extract<ResolvedFill, { kind: 'linear' | 'radial' }>,
+): void {
+  obj.fill = fill.kind === 'radial' ? FillType.Radial : FillType.Linear;
+  obj.fillColor = { type: 'string', s: fill.fillColor };
+  obj.stopColor = { type: 'string', s: fill.stopColor };
+  obj.gradientFrac = fill.frac;
+  obj.gradientAngle = fill.angle;
+}
+
+/**
+ * Apply fill state to obj using the discriminated resolveNodeFillEx.
+ * Sets obj.id to the node's SVG id (nodeN) so emitGradientDefs can
+ * prefix the gradient id correctly.
+ * Returns true when the node should render as filled (truthy fill kind).
+ * @see lib/common/shapes.c:2981-2999 GRADIENT/RGRADIENT/FILL/0 block
+ * @see plugin/core/gvrender_core_svg.c:572 svg_gradstyle (id prefix from obj->id)
+ */
+function applyFillState(obj: ObjState, n: Node): boolean {
+  // Set obj.id so gradient prefix matches C's getObjId result ("nodeN").
+  // @see lib/common/emit.c:209 getObjId (AGNODE case: pfx="node", idnum=AGSEQ)
+  obj.id = 'node' + (n.id + 1);
+  const fillRes = resolveNodeFillEx({
+    style: nodeAttr(n, n.root, 'style'),
+    fillcolor: nodeAttr(n, n.root, 'fillcolor'),
+    color: nodeAttr(n, n.root, 'color'),
+    gradientangle: nodeAttr(n, n.root, 'gradientangle'),
+  });
+  if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
+  if (fillRes.kind === 'solid') {
+    obj.fill = FillType.Solid;
+    obj.fillColor = { type: 'string', s: fillRes.color };
+    return true;
+  }
+  applyGradientFields(obj, fillRes);
+  return true;
 }
 
 /** Apply pen state (color, type, width) to obj. @see lib/common/shapes.c:3007 */
@@ -197,14 +297,13 @@ function applyPenState(obj: ObjState, styleAttr: string | undefined,
  * Resolve and apply node style/fill/pen attrs to the given ObjState.
  * Returns true when the node should be rendered as filled.
  *
- * Striped/wedged: resolveNodeFill returns first solid color (AD3).
- * True stripe/wedge is owned by the gradient mission.
+ * Gradient fills: Linear/Radial FillType + fillColor/stopColor/frac/angle set.
  * @see lib/common/shapes.c:poly_gencode (~2981-3007)
  */
 function applyNodeStyle(obj: ObjState, n: Node): boolean {
   const styleAttr = nodeAttr(n, n.root, 'style');
   const colorAttr = nodeAttr(n, n.root, 'color');
-  const filled = applyFillState(obj, styleAttr, nodeAttr(n, n.root, 'fillcolor'), colorAttr);
+  const filled = applyFillState(obj, n);
   applyPenState(obj, styleAttr, colorAttr, nodeAttr(n, n.root, 'penwidth'));
   return filled;
 }
@@ -224,6 +323,32 @@ function prepareDrawPoly(poly: PolygonT, filled: boolean, obj: ObjState): Polygo
 // Public entry point
 // ---------------------------------------------------------------------------
 
+/** Resolved draw inputs for polyGencode — reduces CCN of the entry point. */
+interface NodeDrawCtx {
+  poly: PolygonT;
+  coord: Point;
+  filled: boolean;
+  ringCtx: RingCtx;
+}
+
+/** Validate and resolve poly/style context for a node; returns null if skip. */
+function resolveNodeDrawCtx(job: RenderJob, n: Node): NodeDrawCtx | null {
+  const poly = n.info.shape_info as PolygonT | undefined;
+  if (poly === undefined || poly.vertices === undefined) return null;
+  const coord = n.info.coord ?? { x: 0, y: 0 };
+  const obj = job.obj;
+  const filled = obj !== null && applyNodeStyle(obj, n);
+  const drawPoly = obj !== null ? prepareDrawPoly(poly, filled, obj) : poly;
+  const styleAttr = nodeAttr(n, n.root, 'style');
+  const ringCtx: RingCtx = {
+    renderer: job.renderer!,
+    job,
+    style: parseStyleFlags(styleAttr),
+    fillcolor: nodeAttr(n, n.root, 'fillcolor') ?? '',
+  };
+  return { poly: drawPoly, coord, filled, ringCtx };
+}
+
 /**
  * Render node shape (polygon/ellipse) and label.
  * Shape codefn — called from walkNodes.
@@ -234,19 +359,10 @@ export function polyGencode(rawJob: unknown, rawNode: unknown): void {
   const n = rawNode as Node;
   const renderer = job.renderer;
   if (!renderer) return;
-
-  const poly = n.info.shape_info as PolygonT | undefined;
-  if (poly === undefined || poly.vertices === undefined) return;
-
-  const coord = n.info.coord ?? { x: 0, y: 0 };
-  const obj = job.obj;
-
-  // Resolve style/fill/pen onto job.obj (T2 guarantees non-null; guard for TS)
-  const filled = obj !== null && applyNodeStyle(obj, n);
-  const drawPoly = obj !== null ? prepareDrawPoly(poly, filled, obj) : poly;
-
+  const ctx = resolveNodeDrawCtx(job, n);
+  if (ctx === null) return;
   const inAnchor = beginNodeAnchor(n, renderer, job);
-  renderPeripheries(drawPoly, coord, renderer, job, filled);
-  renderNodeLabel(n, coord, renderer, job);
+  renderPeripheries(ctx.poly, ctx.coord, ctx.filled, ctx.ringCtx);
+  renderNodeLabel(n, ctx.coord, renderer, job);
   if (inAnchor) renderer.endAnchor?.(job);
 }

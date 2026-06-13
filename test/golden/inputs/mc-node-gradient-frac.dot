@@ -1,0 +1,6 @@
+// graphviz-ts reference input: node gradient with a color-stop fraction
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a [style=filled, fillcolor="red;0.3:blue"];
+}

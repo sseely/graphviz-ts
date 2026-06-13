@@ -295,6 +295,12 @@ export class RenderJob {
   nodeId: number = 0;
   edgeId: number = 0;
   clusterId: number = 0;
+  /** Monotonic counter for linear gradient ids per render.
+   * @see AD1; plugin/core/gvrender_core_svg.c:572 (static gradId) */
+  linearGradId: number = 0;
+  /** Monotonic counter for radial gradient ids per render.
+   * @see AD1; plugin/core/gvrender_core_svg.c:608 (static rgradId) */
+  radialGradId: number = 0;
   /** Whether the graph being rendered is directed (edge titles use -> vs --). */
   directed: boolean = true;
 
