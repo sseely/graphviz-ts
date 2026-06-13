@@ -902,5 +902,13 @@
     "input": "test/golden/inputs/dot-undirected-multirank.dot",
     "reference": "test/golden/refs/dot-undirected-multirank.svg",
     "description": "undirected edge spanning two ranks (curves around); ref: graphviz 15.0.0 dot -Tsvg; fix undirected-edge-clip"
+  },
+  {
+    "id": "dot-node-penwidth-edge-clip",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-penwidth-edge-clip.dot",
+    "reference": "test/golden/refs/dot-node-penwidth-edge-clip.svg",
+    "description": "edge into a thick-bordered (penwidth=2) node clips to the outline; ref: graphviz 15.0.0 dot -Tsvg; fix node-penwidth-edge-clip"
   }
 ]

@@ -112,9 +112,10 @@ export function nodeInsideFn(
 ): (lx: number, ly: number) => boolean {
   const halfW = (box.lw + box.rw) / 2;
   const halfH = box.ht / 2;
+  const pw = box.penwidth ?? DEFAULT_NODEPENWIDTH;
   return box.isEllipse
-    ? makeEllipseInsideFn(halfW, halfH)
-    : makeBoxInsideFn(halfW, halfH);
+    ? makeEllipseInsideFn(halfW, halfH, pw)
+    : makeBoxInsideFn(halfW, halfH, pw);
 }
 
 export function clipToNodes(

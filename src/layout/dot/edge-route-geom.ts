@@ -57,6 +57,13 @@ export interface NodeBox {
   ht: number;
   /** True when the node shape is elliptical (sides === 1 in C poly_inside). */
   isEllipse?: boolean;
+  /**
+   * Node pen width. C's poly_inside clips to the outline periphery (the
+   * boundary grown by penwidth/2), so a thick-bordered node clips the edge
+   * spline / arrow slightly further out. Defaults to DEFAULT_NODEPENWIDTH.
+   * @see lib/common/shapes.c:poly_inside (outline / penwidth)
+   */
+  penwidth?: number;
 }
 
 /**

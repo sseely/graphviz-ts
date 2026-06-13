@@ -19,6 +19,7 @@ import type { Point, Bezier, Spline } from '../../model/geom.js';
 import { routeSpline } from '../../pathplan/route.js';
 import type { Edge as BarrierEdge } from '../../pathplan/types.js';
 import { linearBezier } from './edge-route-poly.js';
+import { DEFAULT_NODEPENWIDTH } from './edge-route-clip.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { routeWithRank, routeSimple } from './edge-route-routing.js';
 import type { RankEdgeInfo, EdgeSplineResult } from './edge-route-routing.js';
@@ -51,12 +52,20 @@ function recordClipBox(n: Node): { lw: number; rw: number; ht: number } | undefi
   return { lw: halfW, rw: halfW, ht: f.b.ur.y - f.b.ll.y };
 }
 
+/** Node pen width (default 1.0), threaded into the clip boundary. */
+function nodePenwidthOf(n: Node, g: Graph): number {
+  const v = nodeAttr(n, g, 'penwidth');
+  const pw = v !== undefined ? parseFloat(v) : NaN;
+  return Number.isFinite(pw) && pw >= 0 ? pw : DEFAULT_NODEPENWIDTH;
+}
+
 /** Returns a NodeBox with defaulted lw/rw/ht for a node. */
 export function nodeBoxOf(n: Node, g: Graph): NodeBox {
   const shapeName = nodeAttr(n, g, 'shape') ?? 'ellipse';
+  const penwidth = nodePenwidthOf(n, g);
   if (shapeName === 'record' || shapeName === 'Mrecord') {
     const rb = recordClipBox(n);
-    if (rb) return { center: n.info.coord, ...rb, isEllipse: false };
+    if (rb) return { center: n.info.coord, ...rb, isEllipse: false, penwidth };
   }
   return {
     center: n.info.coord,
@@ -64,6 +73,7 @@ export function nodeBoxOf(n: Node, g: Graph): NodeBox {
     rw: n.info.rw > 0 ? n.info.rw : 27,
     ht: n.info.ht > 0 ? n.info.ht : 36,
     isEllipse: ELLIPSE_SHAPES.has(shapeName),
+    penwidth,
   };
 }
 
