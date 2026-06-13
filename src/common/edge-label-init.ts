@@ -14,6 +14,9 @@
 
 import type { Edge } from '../model/edge.js';
 import type { Graph } from '../model/graph.js';
+import type { Node } from '../model/node.js';
+import type { Port } from '../model/geom.js';
+import { makePort } from '../model/edgeInfo.js';
 import type { TextMeasurer } from './textmeasure.js';
 import { makeAnyLabel, DEFAULT_FONTNAME, DEFAULT_COLOR, DEFAULT_FONTSIZE } from './make-label.js';
 import { isHtmlValue, htmlValueContent } from './html-string.js';
@@ -232,7 +235,59 @@ function applyEndLabels(e: Edge, g: Graph, measurer: TextMeasurer): void {
  *
  * @see lib/common/utils.c:common_init_edge (lines 509-545)
  */
+/** Shape portfn: aiming point + slope for a named/compass port. */
+type PortFn = (n: unknown, portname: string, compass: string) => Port;
+
+/**
+ * Resolve a "name" or "name:compass" port string. pt.name is the compass
+ * suffix (or the whole string when there is no colon). A null portfn (the
+ * default for shapes without one) yields a zero-init Center port. C passes
+ * the no-colon compass as NULL; the TS portfn type is `string`, so we pass
+ * "" — compassPort treats "" and NULL alike.
+ * @see lib/common/utils.c:489 chkPort
+ */
+function chkPort(pf: PortFn | null, n: Node, s: string): Port {
+  const cp = s.indexOf(':');
+  if (cp >= 0) {
+    const compass = s.slice(cp + 1);
+    const pt = pf ? pf(n, s.slice(0, cp), compass) : makePort();
+    pt.name = compass;
+    return pt;
+  }
+  const pt = pf ? pf(n, s, '') : makePort();
+  pt.name = s;
+  return pt;
+}
+
+/** A clip attr explicitly set false (C noClip / !late_bool(...,true)). */
+function isClipDisabled(v: string | undefined): boolean {
+  return v !== undefined && /^(false|no|0)$/i.test(v.trim());
+}
+
+/** The node shape's portfn, or null. @see lib/common/types.h:shape_functions.portfn */
+function portfnOf(n: Node): PortFn | null {
+  const shape = n.info.shape as { fns?: { portfn?: PortFn | null } } | undefined;
+  return shape?.fns?.portfn ?? null;
+}
+
+/**
+ * Port block of common_init_edge: populate tail_port/head_port from the
+ * tailport/headport attrs (DOT syntax or explicit), honoring tail/headclip.
+ * @see lib/common/utils.c:548-566
+ */
+export function initEdgePorts(e: Edge): void {
+  const tailStr = e.attrs.get('tailport') ?? '';
+  if (tailStr.length > 0) e.tail.info.has_port = true;
+  e.info.tail_port = chkPort(portfnOf(e.tail), e.tail, tailStr);
+  if (isClipDisabled(e.attrs.get('tailclip'))) e.info.tail_port.clip = false;
+  const headStr = e.attrs.get('headport') ?? '';
+  if (headStr.length > 0) e.head.info.has_port = true;
+  e.info.head_port = chkPort(portfnOf(e.head), e.head, headStr);
+  if (isClipDisabled(e.attrs.get('headclip'))) e.info.head_port.clip = false;
+}
+
 export function initEdgeLabels(e: Edge, g: Graph, measurer: TextMeasurer): void {
+  initEdgePorts(e); // port block runs for every edge, before the label short-circuit
   const hasMain = e.attrs.has('label') || e.attrs.has('xlabel');
   const hasEnd  = e.attrs.has('headlabel') || e.attrs.has('taillabel');
   if (!hasMain && !hasEnd) return;

@@ -24,9 +24,11 @@ import {
   initFontEdgeAttr,
   initFontLabelEdgeAttr,
   initEdgeLabels,
+  initEdgePorts,
 } from './edge-label-init.js';
 import { DEFAULT_FONTNAME, DEFAULT_COLOR, DEFAULT_FONTSIZE } from './make-label.js';
 import { HTML_STRING_MARK } from './html-string.js';
+import { parse } from '../parser/index.js';
 
 // ---------------------------------------------------------------------------
 // Stub measurer — geometry zeroed; sufficient for init-phase tests
@@ -418,5 +420,47 @@ describe('initEdgeLabels — html taillabel', () => {
     const { g, e } = edgeWithHtmlAttr('taillabel');
     initEdgeLabels(e, g, stubMeasurer);
     expect(e.info.tail_label?.u.kind).toBe('html');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// initEdgePorts — chkPort + common_init_edge port block (EP-T2)
+// @see lib/common/utils.c:489 chkPort, :548-566 port block
+// ---------------------------------------------------------------------------
+
+/** Parse a graph and run the port block on its first edge. */
+function portEdge(src: string) {
+  const e = parse(src).edges[0]!;
+  initEdgePorts(e);
+  return e;
+}
+
+describe('initEdgePorts — names', () => {
+  it('A:s -> B:n sets tail/head port names; defined=false (portfn null)', () => {
+    const e = portEdge('digraph { A:s -> B:n; }');
+    expect(e.info.tail_port.name).toBe('s');
+    expect(e.info.head_port.name).toBe('n');
+    expect(e.info.tail_port.defined).toBe(false);
+  });
+
+  it('A:f0:ne sets name to the compass suffix "ne"', () => {
+    expect(portEdge('digraph { A:f0:ne -> B; }').info.tail_port.name).toBe('ne');
+  });
+
+  it('a ported tail node is flagged has_port', () => {
+    expect(portEdge('digraph { A:s -> B; }').tail.info.has_port).toBe(true);
+  });
+});
+
+describe('initEdgePorts — defaults and clip', () => {
+  it('no port attrs → default Center port (p zero, clip true, defined false)', () => {
+    const e = portEdge('digraph { A -> B; }');
+    expect(e.info.tail_port.p).toEqual({ x: 0, y: 0 });
+    expect(e.info.tail_port.clip).toBe(true);
+    expect(e.info.tail_port.defined).toBe(false);
+  });
+
+  it('tailclip="false" disables clip on the tail port', () => {
+    expect(portEdge('digraph { A -> B [tailclip="false"]; }').info.tail_port.clip).toBe(false);
   });
 });
