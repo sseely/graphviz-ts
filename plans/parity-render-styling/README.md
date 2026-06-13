@@ -59,7 +59,7 @@ Baseline at mission start: **1466 passed / 0 failed**, 82 goldens
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 style/color resolution helpers](batch-1/T1-style-resolution.md), [T2 obj-state lifecycle in the walk](batch-1/T2-objstate-lifecycle.md) | [ ] |
+| 1 (parallel) | [T1 style/color resolution helpers](batch-1/T1-style-resolution.md), [T2 obj-state lifecycle in the walk](batch-1/T2-objstate-lifecycle.md) | [x] |
 | 2 (after 1; parallel) | [T3 node fill/pen/penwidth/style](batch-2/T3-node-styling.md), [T4 edge color/penwidth/style](batch-2/T4-edge-styling.md), [T5 cluster fill + graph bgcolor](batch-2/T5-cluster-graph.md) | [ ] |
 | 3 (after 2) | [T6 goldens + C-oracle verify](batch-3/T6-goldens.md) (orchestrator inline) | [ ] |
 

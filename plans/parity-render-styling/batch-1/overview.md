@@ -6,8 +6,8 @@ pass byte-identical for both.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Style/color resolution helpers ([T1-style-resolution.md](T1-style-resolution.md)) | sonnet | src/common/style-resolve.ts (+test) | — | [ ] |
-| T2 | obj-state lifecycle in the device walk ([T2-objstate-lifecycle.md](T2-objstate-lifecycle.md)) | sonnet | src/gvc/device.ts, src/gvc/job.ts (ObjState factory only) (+tests) | — | [ ] |
+| T1 | Style/color resolution helpers ([T1-style-resolution.md](T1-style-resolution.md)) | sonnet | src/common/style-resolve.ts (+test) | — | [x] |
+| T2 | obj-state lifecycle in the device walk ([T2-objstate-lifecycle.md](T2-objstate-lifecycle.md)) | sonnet | src/gvc/device.ts, src/gvc/job.ts (ObjState factory only) (+tests) | — | [x] |
 
 T1 produces pure resolution functions; T2 wires the push/pop lifecycle
 and a default-ObjState factory. They are independent: T2 pushes a
