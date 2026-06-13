@@ -54,7 +54,7 @@ Baseline at mission start: **1584 passed / 0 failed**, 97 goldens
 | 1 gradient | [G1 gradient resolution](batch-1/G1-gradient-resolution.md), [G2 gradient emitters](batch-1/G2-gradient-emitters.md), [G3 node+cluster gradient](batch-1/G3-node-cluster-gradient.md), [G4 graph bgcolor gradient](batch-1/G4-graph-bgcolor-gradient.md) | [x] |
 | 2 striped/wedged | [S1 striped + wedged node fills](batch-2/S1-striped-wedged.md) | [x] (striped byte-parity; wedged feature done, libm byte-divergence journaled) |
 | 3 multicolor edges | [M1 parallel-spline edges](batch-3/M1-multicolor-edges.md) | [x] (directed parallel edges byte-match; semicolon split-along-length + undirected routing are journaled follow-ups) |
-| 4 goldens | [T-gold goldens + C-oracle verify](batch-4/T-gold-goldens.md) (orchestrator inline) | [ ] |
+| 4 goldens | [T-gold goldens + C-oracle verify](batch-4/T-gold-goldens.md) (orchestrator inline) | [x] |
 
 Intra-batch sequencing (single-writer-per-file):
 - Batch 1: Round 1 **G1 ‖ G2** (disjoint), Round 2 **G3 ‖ G4** (disjoint;
@@ -100,3 +100,48 @@ Intra-batch sequencing (single-writer-per-file):
   bezier gradient dispatch :650-690).
 - Predecessor: plans/parity-render-styling/ (the mission that built the
   ObjState lifecycle + solid styling this one extends).
+
+## Mission summary (2026-06-13 — COMPLETE, awaiting merge go-ahead)
+
+**Tasks completed:** 7 / 7 (G1–G4, S1, M1, T-gold), one commit each.
+
+| Task | Commit | Result |
+|------|--------|--------|
+| G1 | gradient resolution | multicolor.ts parseSegs + findStopColor + discriminated resolvers |
+| G2 | gradient emitters | svg-gradient.ts (defs/stops) + emitStyle url branch + gradId counters |
+| G3 | node+cluster gradient | linear/radial fills, id-prefixed (node1_l_0 / clust1_l_0) |
+| G4 | graph bgcolor gradient | gradient page background (graph0_l_0) |
+| S1 | striped + wedged | striped byte-matches; wedged feature done (libm byte-divergence journaled) |
+| M1 | multicolor edges | directed parallel offset curves byte-match; semicolon/undirected journaled |
+| T-gold | goldens | 12 goldens vs dot 15.0.0; manifest 97→109 |
+
+**Final gates (full branch):** `tsc --noEmit` 0; `vitest run` 1697
+passed / 0 failed; prior 97 goldens byte-identical to the mission
+baseline; 12 new multicolor goldens pass at deterministic 0.01pt.
+
+**Reached C parity (goldens minted):** linear/radial gradient fills
+(node, cluster, graph bgcolor), gradient stop fractions + angle, striped
+node fills (plain + weighted), directed 2/3-color parallel edges, and a
+combined graph.
+
+**Out of scope / journaled (NOT byte-parity with glibc refs):**
+- Wedged node fills — render correctly but the arc subdivision count
+  diverges (V8 trig vs glibc flips `estimateError` across the 1e-5
+  threshold → 8 vs 16 bezier cubics). FMA/libm stop-condition class; not
+  minted (structural divergence can't be tolerance-pinned).
+- Semicolon split-along-length edges (`color="c1;f1:c2"`) — render as
+  valid parallel colors; C's split-along-length `multicolor()` is a
+  follow-up.
+- Undirected-edge multicolor — the base routed spline pre-diverges from C
+  for undirected edges (a routing matter outside this mission).
+- Box-node edge-spline 0.11pt divergence (carried from the predecessor
+  mission).
+
+**Recovery note:** the M1 agent died on an API socket error mid-run; the
+orchestrator finished it inline (removed a broken edit, refactored an
+over-limit function, fixed the semicolon color parse). See
+decision-journal.md.
+
+**Rollback:** reversible (one commit per task; no migrations).
+**Merge:** ready for a **merge commit** into `feature/parity-render-styling`
+on Scott's go-ahead (NOT yet merged).

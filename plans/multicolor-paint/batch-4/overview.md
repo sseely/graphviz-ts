@@ -9,3 +9,10 @@ procedure precedent.
 
 Mints goldens for every new multicolor behavior, verified against dot
 15.0.0 at deterministic tolerance; prior 97 refs byte-unchanged.
+
+**Done (2026-06-13):** 12 goldens minted (manifest 97→109): node
+gradient linear/radial/frac/angle/box, cluster gradient, graph bgcolor
+gradient, striped plain+weighted, directed 2/3-color edges, combined.
+All pass at deterministic 0.01pt; prior 97 byte-identical. Excluded
+(journaled): wedged (libm arc-subdivision), semicolon/undirected edges.
+tsc 0; vitest 1697/0.
