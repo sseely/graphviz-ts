@@ -129,6 +129,33 @@ regular edges, so the simple path lands the bulk of the value first.
   reproduce within tolerance and journals/excludes the rest with a
   comparison page (per the CLAUDE.md excluded-case rule).
 
+## 6b. T6b outcome — BLOCKED by the active fitter (2026-06-13)
+
+T6b was implemented and reverted. The `BeginRegSide`/`EndRegSide` side boxes
+port cleanly into the active router's frame (confirmed graphviz-internal,
+y-up positive — the SAME frame as C, so §3's "y-flip" worry was unfounded; no
+flip needed). But measuring vs dot 15.0.0 exposed a hard blocker:
+
+- **BOTTOM** matches C exactly — but only with C's `±1` box nudge *removed*
+  (the nudge is internal to C's pathplan and does not survive to C's output;
+  applying it diverged -72→-71). The side box otherwise adds nothing over T6a.
+- **LEFT/RIGHT** produce complete splines exiting the correct face, but the
+  active fitter ignores the lateral box → result ≈ T6a, no C-style bulge,
+  >0.5pt.
+- **TOP** (port points away from the head → requires a loop): the active
+  fitter **truncates** — the spline ends above the node and never reaches the
+  head. Root cause: `computeSpline` → `boxesToPolygon` → `shortestPath`
+  (edge-route-poly.ts) assumes a **monotonic** rank corridor and cannot
+  represent the non-monotonic L-shaped loop corridor a steering port needs.
+
+**The active fitter — not the box math — is the wall.** Faithful steering-port
+routing requires porting `routesplines`/pathplan (the basis of the unused
+`beginPath`/`endPath` path). That is a separate, larger mission outside this
+mission's blast radius. **T6 ships as T6a (attachment points).** The faithful
+side-box helpers were reverted rather than left as dead code; re-porting them
+from C (`BeginRegSide`/`EndRegSide`) is ~30 min when the routesplines mission
+starts.
+
 ## 7. Validation already done
 
 - Port resolution (T1–T5) verified vs C: compass p/theta/side/clip,
