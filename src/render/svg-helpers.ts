@@ -465,3 +465,11 @@ export function svgArrowPolygons(e: Edge, job: RenderJob): void {
   const headPts = einfo._arrowPts as Point[] | undefined;
   if (headPts?.length) emitArrowPolygon(headPts, penColor, job, pw);
 }
+
+// ---------------------------------------------------------------------------
+// Parallel multi-color edge emission — moved to svg-parallel-edge.ts (file-
+// size cap, AD5).  Re-exported here so callers import from one place.
+// ---------------------------------------------------------------------------
+
+export { emitParallelEdgePaths } from './svg-parallel-edge.js';
+export type { ParallelEdgeResult } from './svg-parallel-edge.js';
