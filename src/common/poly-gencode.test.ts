@@ -211,25 +211,105 @@ describe('peripheries=0 + style=filled — borderless filled node', () => {
 });
 
 // ---------------------------------------------------------------------------
-// striped/wedged fallback: first solid color (AD3)
+// S1: style=striped multicolor — wire into poly_gencode
+// Oracle-verified against C graphviz 15.0.0 (dot -Tsvg)
 // ---------------------------------------------------------------------------
 
-describe('striped/wedged — first-color fallback (AD3, gradient out of scope)', () => {
-  it('style=striped fillcolor=red:blue → uses red (first solid color)', () => {
-    const svg = renderSvg(
-      'digraph { A [shape=box style=striped fillcolor="red:blue"] }',
-      'dot',
-    );
-    // We just assert it does not crash and emits something
-    expect(svg).toContain('<svg');
+describe('S1: style=striped multicolor — poly_gencode dispatch', () => {
+  it('3-color striped box emits 3 filled bands + 1 unfilled boundary', () => {
+    const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
+    // 3 filled bands (no fill="none")
+    const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
+    expect(bands).toHaveLength(3);
+    // 1 boundary unfilled
+    const bnd = polygons(svg).filter((p) => p.includes('fill="none"'));
+    expect(bnd).toHaveLength(1);
   });
 
-  it('style=wedged fillcolor=green:yellow → uses green (first solid color)', () => {
-    const svg = renderSvg(
-      'digraph { A [shape=ellipse style=wedged fillcolor="green:yellow"] }',
-      'dot',
-    );
+  it('striped bands have thin-line stroke-width="0.5"', () => {
+    const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
+    const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
+    for (const b of bands) {
+      expect(b).toContain('stroke-width="0.5"');
+    }
+  });
+
+  it('boundary polygon has no stroke-width (default 1.0 suppressed)', () => {
+    const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
+    const bnd = polygons(svg).find((p) => p.includes('fill="none"'));
+    expect(bnd).toBeDefined();
+    expect(bnd).not.toContain('stroke-width');
+  });
+
+  it('oracle byte-match: red band points="0,0 18,0 18,-36 0,-36 0,0"', () => {
+    const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
+    const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
+    expect(bands[0]).toContain('fill="red"');
+    expect(bands[0]).toContain('points="0,0 18,0 18,-36 0,-36 0,0"');
+  });
+
+  it('oracle byte-match: blue band points="36,0 54,0 54,-36 36,-36 36,0"', () => {
+    const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
+    const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
+    expect(bands[2]).toContain('fill="blue"');
+    expect(bands[2]).toContain('points="36,0 54,0 54,-36 36,-36 36,0"');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// S1: style=wedged multicolor — wire into poly_gencode
+// ---------------------------------------------------------------------------
+
+describe('S1: style=wedged multicolor — poly_gencode dispatch', () => {
+  it('3-color wedged ellipse emits 3 <path> wedges + 1 boundary <ellipse>', () => {
+    const svg = svgNode('style=wedged fillcolor="red:green:blue"');
+    const paths = (svg.match(/<path[^>]*\/>/g) ?? []);
+    expect(paths).toHaveLength(3);
+    expect(paths[0]).toContain('fill="red"');
+    expect(paths[1]).toContain('fill="green"');
+    expect(paths[2]).toContain('fill="blue"');
+    // Boundary ellipse unfilled
+    const [el] = (svg.match(/<ellipse[^>]*\/>/g) ?? []);
+    expect(el).toContain('fill="none"');
+  });
+
+  it('wedge paths have thin-line stroke-width="0.5"', () => {
+    const svg = svgNode('style=wedged fillcolor="red:green:blue"');
+    for (const p of (svg.match(/<path[^>]*\/>/g) ?? [])) {
+      expect(p).toContain('stroke-width="0.5"');
+    }
+  });
+
+  it('boundary ellipse has no stroke-width (default 1.0 suppressed)', () => {
+    const svg = svgNode('style=wedged fillcolor="red:green:blue"');
+    const [el] = (svg.match(/<ellipse[^>]*\/>/g) ?? []);
+    expect(el).not.toContain('stroke-width');
+  });
+
+  it('all wedge paths start at center M27,-18', () => {
+    const svg = svgNode('style=wedged fillcolor="red:green:blue"');
+    for (const p of (svg.match(/<path[^>]*\/>/g) ?? [])) {
+      expect(p).toContain('d="M27,-18');
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// S1: single-color striped/wedged unchanged (no multicolor gate)
+// ---------------------------------------------------------------------------
+
+describe('S1: single-color striped/wedged', () => {
+  it('style=striped fillcolor=red → emits SVG with at least one polygon', () => {
+    const svg = svgNode('style=striped fillcolor=red', 'box');
     expect(svg).toContain('<svg');
+    expect(polygons(svg).length).toBeGreaterThan(0);
+  });
+
+  it('style=wedged fillcolor=red → emits SVG with ellipse, no paths', () => {
+    const svg = svgNode('style=wedged fillcolor=red');
+    expect(svg).toContain('<svg');
+    expect((svg.match(/<path[^>]*\/>/g) ?? [])).toHaveLength(0);
+    expect(ellipses(svg)).toHaveLength(1);
   });
 });
 
