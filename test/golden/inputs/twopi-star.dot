@@ -1,0 +1,10 @@
+// graphviz-ts reference input: star graph with center and 5 leaf nodes
+// engine: twopi
+// tolerance: deterministic
+graph G {
+    center -- L1;
+    center -- L2;
+    center -- L3;
+    center -- L4;
+    center -- L5;
+}

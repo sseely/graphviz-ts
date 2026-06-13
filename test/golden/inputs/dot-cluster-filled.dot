@@ -1,0 +1,10 @@
+// graphviz-ts reference input: filled cluster (color sets fill and pen)
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    subgraph cluster_0 {
+        style=filled;
+        color=lightgrey;
+        a;
+    }
+}

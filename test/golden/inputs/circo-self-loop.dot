@@ -1,0 +1,9 @@
+// graphviz-ts reference input: 3-node cycle with a self-loop on one node
+// engine: circo
+// tolerance: deterministic
+graph G {
+    A -- A;
+    A -- B;
+    B -- C;
+    C -- A;
+}

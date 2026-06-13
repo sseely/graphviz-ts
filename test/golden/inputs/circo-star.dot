@@ -1,0 +1,11 @@
+// graphviz-ts reference input: star with center connected to 6 leaf nodes
+// engine: circo
+// tolerance: deterministic
+graph G {
+    center -- L1;
+    center -- L2;
+    center -- L3;
+    center -- L4;
+    center -- L5;
+    center -- L6;
+}

@@ -1,0 +1,15 @@
+// graphviz-ts reference input: cluster inside a cluster
+// engine: fdp
+// tolerance: iterative
+graph G {
+    subgraph cluster_outer {
+        label="Outer";
+        subgraph cluster_inner {
+            label="Inner";
+            A -- B -- C;
+        }
+        D -- A;
+        C -- E;
+    }
+    F -- D;
+}

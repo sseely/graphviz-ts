@@ -1,0 +1,8 @@
+// graphviz-ts reference input: 3-node graph with a self-loop
+// engine: twopi
+// tolerance: deterministic
+graph G {
+    A -- A;
+    A -- B;
+    B -- C;
+}

@@ -1,0 +1,12 @@
+// graphviz-ts reference input: 6-node undirected graph
+// engine: fdp
+// tolerance: iterative
+graph G {
+    A -- B;
+    A -- C;
+    B -- D;
+    C -- D;
+    D -- E;
+    E -- F;
+    F -- A;
+}

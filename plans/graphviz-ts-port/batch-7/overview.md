@@ -25,7 +25,7 @@ Batch 7 requires Batch 6 (all three tasks: T25, T26, T27) to be complete.
 
 | ID | Description | ‖/→ | Writes | Depends On |
 |----|-------------|-----|--------|------------|
-| T28 | SVG renderer | ‖ | src/render/svg.ts, src/render/svg.test.ts | T25, T26, T27 |
-| T29 | DOT and XDOT renderer | ‖ | src/render/dot.ts, src/render/dot.test.ts | T25, T26, T27 |
-| T30 | JSON renderer | ‖ | src/render/json.ts, src/render/json.test.ts | T25, T26, T27 |
-| T31 | plain, IMAP, and CMAPX renderers | ‖ | src/render/map.ts, src/render/map.test.ts | T25, T26, T27 |
+| T28 | SVG renderer | ‖ | src/render/svg.ts, src/render/svg.test.ts | T25, T26, T27 | [x] |
+| T29 | DOT and XDOT renderer | ‖ | src/render/dot.ts, src/render/dot.test.ts | T25, T26, T27 | [x] |
+| T30 | JSON renderer | ‖ | src/render/json.ts, src/render/json.test.ts | T25, T26, T27 | [x] |
+| T31 | plain, IMAP, and CMAPX renderers | ‖ | src/render/map.ts, src/render/map.test.ts | T25, T26, T27 | [x] |

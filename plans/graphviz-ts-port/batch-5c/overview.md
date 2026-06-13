@@ -28,5 +28,5 @@ complete before starting.
 
 | ID  | Description         | ‖/→ | Writes                                                              | Depends On      |
 |-----|---------------------|-----|---------------------------------------------------------------------|-----------------|
-| T23 | Spline routing      | ‖   | src/common/splines.ts, src/common/splines.test.ts                  | T14, 5a, 5b     |
-| T24 | Emit infrastructure | ‖   | src/common/emit.ts, src/common/emit.test.ts                        | T14, 5a, 5b     |
+| T23 | Spline routing      | ‖   | src/common/splines.ts, src/common/splines.test.ts                  | T14, 5a, 5b     | [x] |
+| T24 | Emit infrastructure | ‖   | src/common/emit.ts, src/common/emit.test.ts                        | T14, 5a, 5b     | [x] |

@@ -1,0 +1,7 @@
+// graphviz-ts reference input: 4-node cycle with one HTML table label
+// engine: circo
+// tolerance: deterministic
+graph G {
+    A [label=<<TABLE><TR><TD>A</TD><TD>B</TD></TR></TABLE>>];
+    A -- B -- C -- D -- A;
+}

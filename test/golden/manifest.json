@@ -1,0 +1,882 @@
+[
+  {
+    "id": "dot-simple-box",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-simple-box.dot",
+    "reference": "test/golden/refs/dot-simple-box.svg",
+    "description": "Simple 3-node digraph with box nodes and straight edges"
+  },
+  {
+    "id": "dot-record-node",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-record-node.dot",
+    "reference": "test/golden/refs/dot-record-node.svg",
+    "description": "2-node digraph with a record node having 3 fields"
+  },
+  {
+    "id": "dot-html-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-label.dot",
+    "reference": "test/golden/refs/dot-html-label.svg",
+    "description": "2-node digraph with one HTML table label"
+  },
+  {
+    "id": "dot-cluster",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster.dot",
+    "reference": "test/golden/refs/dot-cluster.svg",
+    "description": "6-node digraph with 2 subgraph clusters"
+  },
+  {
+    "id": "dot-nested-cluster",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-nested-cluster.dot",
+    "reference": "test/golden/refs/dot-nested-cluster.svg",
+    "description": "8-node digraph with a cluster nested inside a cluster"
+  },
+  {
+    "id": "dot-edge-styles",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-styles.dot",
+    "reference": "test/golden/refs/dot-edge-styles.svg",
+    "description": "4-node digraph with dashed, dotted, and bold edges"
+  },
+  {
+    "id": "dot-disconnected",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-disconnected.dot",
+    "reference": "test/golden/refs/dot-disconnected.svg",
+    "description": "Two separate 3-node digraph components"
+  },
+  {
+    "id": "dot-edge-dirs",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-dirs.dot",
+    "reference": "test/golden/refs/dot-edge-dirs.svg",
+    "description": "4 edges with dir=forward, back, both, and none"
+  },
+  {
+    "id": "neato-simple",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-simple.dot",
+    "reference": "test/golden/refs/neato-simple.svg",
+    "description": "5-node undirected graph"
+  },
+  {
+    "id": "neato-weighted",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-weighted.dot",
+    "reference": "test/golden/refs/neato-weighted.svg",
+    "description": "5-node undirected graph with len attributes on edges"
+  },
+  {
+    "id": "neato-diamond",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-diamond.dot",
+    "reference": "test/golden/refs/neato-diamond.svg",
+    "description": "Undirected graph with diamond-shaped nodes"
+  },
+  {
+    "id": "neato-cluster",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-cluster.dot",
+    "reference": "test/golden/refs/neato-cluster.svg",
+    "description": "Undirected graph with a cluster subgraph"
+  },
+  {
+    "id": "neato-disconnected",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-disconnected.dot",
+    "reference": "test/golden/refs/neato-disconnected.svg",
+    "description": "Two 3-node undirected components"
+  },
+  {
+    "id": "neato-polygon",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-polygon.dot",
+    "reference": "test/golden/refs/neato-polygon.svg",
+    "description": "Undirected graph with hexagonal polygon nodes"
+  },
+  {
+    "id": "neato-circle",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/neato-circle.dot",
+    "reference": "test/golden/refs/neato-circle.svg",
+    "description": "Undirected graph with circle-shaped nodes"
+  },
+  {
+    "id": "fdp-simple",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-simple.dot",
+    "reference": "test/golden/refs/fdp-simple.svg",
+    "description": "6-node undirected graph"
+  },
+  {
+    "id": "fdp-cluster",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-cluster.dot",
+    "reference": "test/golden/refs/fdp-cluster.svg",
+    "description": "Undirected graph with two cluster subgraphs"
+  },
+  {
+    "id": "fdp-disconnected",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-disconnected.dot",
+    "reference": "test/golden/refs/fdp-disconnected.svg",
+    "description": "Two 4-node undirected components"
+  },
+  {
+    "id": "fdp-edge-both",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-edge-both.dot",
+    "reference": "test/golden/refs/fdp-edge-both.svg",
+    "description": "Undirected graph with dir=both edges"
+  },
+  {
+    "id": "fdp-large",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-large.dot",
+    "reference": "test/golden/refs/fdp-large.svg",
+    "description": "20-node undirected graph"
+  },
+  {
+    "id": "fdp-nested-cluster",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/fdp-nested-cluster.dot",
+    "reference": "test/golden/refs/fdp-nested-cluster.svg",
+    "description": "Undirected graph with cluster inside a cluster"
+  },
+  {
+    "id": "sfdp-simple",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-simple.dot",
+    "reference": "test/golden/refs/sfdp-simple.svg",
+    "description": "10-node undirected graph"
+  },
+  {
+    "id": "sfdp-medium",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "tolerance": 1.25,
+    "input": "test/golden/inputs/sfdp-medium.dot",
+    "reference": "test/golden/refs/sfdp-medium.svg",
+    "portReference": "test/golden/refs-port/sfdp-medium.svg",
+    "description": "30-node undirected graph (libm-chaotic: ARM pow vs Apple libm, see decision-journal M8/T3; drift pinned by portReference)"
+  },
+  {
+    "id": "sfdp-large",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "tolerance": 10,
+    "input": "test/golden/inputs/sfdp-large.dot",
+    "reference": "test/golden/refs/sfdp-large.svg",
+    "portReference": "test/golden/refs-port/sfdp-large.svg",
+    "description": "100-node undirected graph in a ring pattern (libm-chaotic: ARM pow vs Apple libm, see decision-journal M8/T3; drift pinned by portReference)"
+  },
+  {
+    "id": "sfdp-disconnected",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-disconnected.dot",
+    "reference": "test/golden/refs/sfdp-disconnected.svg",
+    "description": "Three 5-node undirected components"
+  },
+  {
+    "id": "sfdp-weighted",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-weighted.dot",
+    "reference": "test/golden/refs/sfdp-weighted.svg",
+    "description": "15-node undirected graph with weight attributes"
+  },
+  {
+    "id": "circo-simple",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-simple.dot",
+    "reference": "test/golden/refs/circo-simple.svg",
+    "description": "6-node undirected cycle"
+  },
+  {
+    "id": "circo-biconn",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-biconn.dot",
+    "reference": "test/golden/refs/circo-biconn.svg",
+    "description": "Two triangles connected by a bridge"
+  },
+  {
+    "id": "circo-star",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-star.dot",
+    "reference": "test/golden/refs/circo-star.svg",
+    "description": "Star graph with center and 6 leaf nodes"
+  },
+  {
+    "id": "circo-html-label",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-html-label.dot",
+    "reference": "test/golden/refs/circo-html-label.svg",
+    "description": "4-node cycle with one HTML table label"
+  },
+  {
+    "id": "circo-disconnected",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-disconnected.dot",
+    "reference": "test/golden/refs/circo-disconnected.svg",
+    "description": "Two separate 4-node cycles"
+  },
+  {
+    "id": "circo-record",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-record.dot",
+    "reference": "test/golden/refs/circo-record.svg",
+    "description": "4-node cycle with one record-shaped node"
+  },
+  {
+    "id": "twopi-star",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-star.dot",
+    "reference": "test/golden/refs/twopi-star.svg",
+    "description": "Star graph with center and 5 leaf nodes"
+  },
+  {
+    "id": "twopi-chain",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-chain.dot",
+    "reference": "test/golden/refs/twopi-chain.svg",
+    "description": "Path graph with 5 nodes in a chain"
+  },
+  {
+    "id": "twopi-tree",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-tree.dot",
+    "reference": "test/golden/refs/twopi-tree.svg",
+    "description": "Binary tree with 7 nodes"
+  },
+  {
+    "id": "twopi-root-attr",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-root-attr.dot",
+    "reference": "test/golden/refs/twopi-root-attr.svg",
+    "description": "6-node graph with one node having root=true"
+  },
+  {
+    "id": "twopi-disconnected",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-disconnected.dot",
+    "reference": "test/golden/refs/twopi-disconnected.svg",
+    "description": "Two separate 3-node star subgraphs"
+  },
+  {
+    "id": "twopi-ranksep",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-ranksep.dot",
+    "reference": "test/golden/refs/twopi-ranksep.svg",
+    "description": "6-node star graph with ranksep=2.0"
+  },
+  {
+    "id": "osage-simple",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-simple.dot",
+    "reference": "test/golden/refs/osage-simple.svg",
+    "description": "6-node graph with two cluster subgraphs"
+  },
+  {
+    "id": "osage-nested",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-nested.dot",
+    "reference": "test/golden/refs/osage-nested.svg",
+    "description": "8-node graph with 3 levels of cluster nesting"
+  },
+  {
+    "id": "osage-sortv",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-sortv.dot",
+    "reference": "test/golden/refs/osage-sortv.svg",
+    "description": "4-node graph with sortv attribute on nodes"
+  },
+  {
+    "id": "osage-array-mode",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-array-mode.dot",
+    "reference": "test/golden/refs/osage-array-mode.svg",
+    "description": "6-node graph with packmode=array"
+  },
+  {
+    "id": "osage-labels",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-labels.dot",
+    "reference": "test/golden/refs/osage-labels.svg",
+    "description": "Clusters with label attributes"
+  },
+  {
+    "id": "osage-empty-cluster",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-empty-cluster.dot",
+    "reference": "test/golden/refs/osage-empty-cluster.svg",
+    "description": "Graph with one cluster that has no nodes"
+  },
+  {
+    "id": "patchwork-simple",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-simple.dot",
+    "reference": "test/golden/refs/patchwork-simple.svg",
+    "description": "5-node graph with all nodes having area=1"
+  },
+  {
+    "id": "patchwork-weighted",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-weighted.dot",
+    "reference": "test/golden/refs/patchwork-weighted.svg",
+    "description": "5-node graph with varying area values 1,4,9,16,25"
+  },
+  {
+    "id": "patchwork-cluster",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-cluster.dot",
+    "reference": "test/golden/refs/patchwork-cluster.svg",
+    "description": "8-node graph with two cluster subgraphs"
+  },
+  {
+    "id": "patchwork-nested",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-nested.dot",
+    "reference": "test/golden/refs/patchwork-nested.svg",
+    "description": "10-node graph with nested clusters"
+  },
+  {
+    "id": "patchwork-default-area",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-default-area.dot",
+    "reference": "test/golden/refs/patchwork-default-area.svg",
+    "description": "4-node graph with no area attribute on nodes"
+  },
+  {
+    "id": "patchwork-html-label",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-html-label.dot",
+    "reference": "test/golden/refs/patchwork-html-label.svg",
+    "description": "Patchwork graph with one HTML table label node"
+  },
+  {
+    "id": "twopi-single-node",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-single-node.dot",
+    "reference": "test/golden/refs/twopi-single-node.svg",
+    "description": "Single-node graph; ref: graphviz 15.0.0 dot -Ktwopi -Tsvg"
+  },
+  {
+    "id": "circo-single-node",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-single-node.dot",
+    "reference": "test/golden/refs/circo-single-node.svg",
+    "description": "Single-node graph; ref: graphviz 15.0.0 dot -Kcirco -Tsvg"
+  },
+  {
+    "id": "osage-deep-nesting",
+    "engine": "osage",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/osage-deep-nesting.dot",
+    "reference": "test/golden/refs/osage-deep-nesting.svg",
+    "description": "Graph with 4 levels of cluster nesting; ref: graphviz 15.0.0 dot -Kosage -Tsvg"
+  },
+  {
+    "id": "patchwork-single-node",
+    "engine": "patchwork",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/patchwork-single-node.dot",
+    "reference": "test/golden/refs/patchwork-single-node.svg",
+    "description": "Single-node patchwork graph; ref: graphviz 15.0.0 dot -Kpatchwork -Tsvg"
+  },
+  {
+    "id": "sfdp-single-node",
+    "engine": "sfdp",
+    "toleranceClass": "iterative",
+    "input": "test/golden/inputs/sfdp-single-node.dot",
+    "reference": "test/golden/refs/sfdp-single-node.svg",
+    "description": "Single-node undirected graph; ref: graphviz 15.0.0 dot -Ksfdp -Tsvg"
+  },
+  {
+    "id": "neato-tiny-multi-edge",
+    "engine": "neato",
+    "toleranceClass": "iterative",
+    "tolerance": 10,
+    "input": "test/golden/inputs/neato-tiny-multi-edge.dot",
+    "reference": "test/golden/refs/neato-tiny-multi-edge.svg",
+    "portReference": "test/golden/refs-port/neato-tiny-multi-edge.svg",
+    "description": "3-node undirected graph with doubled edge; libm-chaotic: ARM libm vs Apple libm, maxDelta=7.08pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kneato -Tsvg"
+  },
+  {
+    "id": "fdp-tiny-self-loop",
+    "engine": "fdp",
+    "toleranceClass": "iterative",
+    "tolerance": 5,
+    "input": "test/golden/inputs/fdp-tiny-self-loop.dot",
+    "reference": "test/golden/refs/fdp-tiny-self-loop.svg",
+    "portReference": "test/golden/refs-port/fdp-tiny-self-loop.svg",
+    "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg"
+  },
+  {
+    "id": "dot-constraint-false",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-constraint-false.dot",
+    "reference": "test/golden/refs/dot-constraint-false.svg",
+    "description": "4-node digraph with constraint=false on one edge; ref: graphviz 15.0.0 dot -Kdot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-self-loop",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-self-loop.dot",
+    "reference": "test/golden/refs/dot-self-loop.svg",
+    "description": "3-node digraph with a self-loop on one node; ref: graphviz 15.0.0 dot -Kdot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "circo-self-loop",
+    "engine": "circo",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/circo-self-loop.dot",
+    "reference": "test/golden/refs/circo-self-loop.svg",
+    "description": "3-node cycle with a self-loop on one node; ref: graphviz 15.0.0 dot -Kcirco -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-minlen",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-minlen.dot",
+    "reference": "test/golden/refs/dot-minlen.svg",
+    "description": "3-node digraph with minlen=2 on one edge; ref: graphviz 15.0.0 dot -Kdot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "twopi-self-loop",
+    "engine": "twopi",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/twopi-self-loop.dot",
+    "reference": "test/golden/refs/twopi-self-loop.svg",
+    "description": "3-node undirected path with a self-loop on one node; ref: graphviz 15.0.0 dot -Ktwopi -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-rankdir-lr",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-rankdir-lr.dot",
+    "reference": "test/golden/refs/dot-rankdir-lr.svg",
+    "description": "4-node digraph with rankdir=LR; ref: graphviz 15.0.0 dot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-rankdir-bt",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-rankdir-bt.dot",
+    "reference": "test/golden/refs/dot-rankdir-bt.svg",
+    "description": "4-node digraph with rankdir=BT; ref: graphviz 15.0.0 dot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-multi-edge",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-multi-edge.dot",
+    "reference": "test/golden/refs/dot-multi-edge.svg",
+    "description": "digraph with 3 parallel edges between A and B; ref: graphviz 15.0.0 dot -Tsvg; promoted from quarantine (mission 9, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-rankdir-rl",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-rankdir-rl.dot",
+    "reference": "test/golden/refs/dot-rankdir-rl.svg",
+    "description": "4-node digraph with rankdir=RL; ref: graphviz 15.0.0 dot -Tsvg; AD3 mission 9"
+  },
+  {
+    "id": "dot-head-tail-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-head-tail-label.dot",
+    "reference": "test/golden/refs/dot-head-tail-label.svg",
+    "description": "digraph with headlabel and taillabel on an edge; ref: graphviz 15.0.0 dot -Tsvg; promoted from quarantine (mission 10, post-parity T2 mining)"
+  },
+  {
+    "id": "dot-node-xlabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-xlabel.dot",
+    "reference": "test/golden/refs/dot-node-xlabel.svg",
+    "description": "digraph with a node xlabel; ref: graphviz 15.0.0 dot -Tsvg; mission 11 label parity"
+  },
+  {
+    "id": "dot-edge-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-label.dot",
+    "reference": "test/golden/refs/dot-edge-label.svg",
+    "description": "digraph with an edge label; ref: graphviz 15.0.0 dot -Tsvg; mission 11 label parity"
+  },
+  {
+    "id": "dot-edge-xlabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-xlabel.dot",
+    "reference": "test/golden/refs/dot-edge-xlabel.svg",
+    "description": "digraph with an edge xlabel; ref: graphviz 15.0.0 dot -Tsvg; mission 11 label parity"
+  },
+  {
+    "id": "dot-graph-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-graph-label.dot",
+    "reference": "test/golden/refs/dot-graph-label.svg",
+    "description": "digraph with a root graph label; ref: graphviz 15.0.0 dot -Tsvg; mission 11 label parity"
+  },
+  {
+    "id": "dot-labels-combined",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-labels-combined.dot",
+    "reference": "test/golden/refs/dot-labels-combined.svg",
+    "description": "digraph combining graph, node-xlabel, edge label/xlabel, head/tail labels; ref: graphviz 15.0.0 dot -Tsvg; mission 11 label parity"
+  },
+  {
+    "id": "dot-html-node-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-node-label.dot",
+    "reference": "test/golden/refs/dot-html-node-label.svg",
+    "description": "node html main label, bold (first golden for the live node-html path); ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-node-xlabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-node-xlabel.dot",
+    "reference": "test/golden/refs/dot-html-node-xlabel.svg",
+    "description": "node html xlabel, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-edge-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-edge-label.dot",
+    "reference": "test/golden/refs/dot-html-edge-label.svg",
+    "description": "edge html label, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-edge-xlabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-edge-xlabel.dot",
+    "reference": "test/golden/refs/dot-html-edge-xlabel.svg",
+    "description": "edge html xlabel, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-head-tail-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-head-tail-label.dot",
+    "reference": "test/golden/refs/dot-html-head-tail-label.svg",
+    "description": "edge html head/tail labels, bold + italic; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-graph-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-graph-label.dot",
+    "reference": "test/golden/refs/dot-html-graph-label.svg",
+    "description": "root graph html label, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-cluster-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-cluster-label.dot",
+    "reference": "test/golden/refs/dot-html-cluster-label.svg",
+    "description": "cluster html label, bold; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-fonts",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-fonts.dot",
+    "reference": "test/golden/refs/dot-html-fonts.svg",
+    "description": "html font nesting: b/i/u/s/color, nested b+i, multi-line; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-table-styling",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-table-styling.dot",
+    "reference": "test/golden/refs/dot-html-table-styling.svg",
+    "description": "html table styling: bgcolor, cellborder=2, vr, sides, hr, colspan; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-html-combined",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-html-combined.dot",
+    "reference": "test/golden/refs/dot-html-combined.svg",
+    "description": "combined: graph+cluster html labels, decorated table with anchor, edge label/head/tail, node xlabel; ref: graphviz 15.0.0 dot -Tsvg; mission 12 html-label parity"
+  },
+  {
+    "id": "dot-node-fillcolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-fillcolor.dot",
+    "reference": "test/golden/refs/dot-node-fillcolor.svg",
+    "description": "filled node with explicit fillcolor (ellipse); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-pencolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-pencolor.dot",
+    "reference": "test/golden/refs/dot-node-pencolor.svg",
+    "description": "node with a non-default pen color; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-penwidth",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-penwidth.dot",
+    "reference": "test/golden/refs/dot-node-penwidth.svg",
+    "description": "node with penwidth=3; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-style-dashed",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-style-dashed.dot",
+    "reference": "test/golden/refs/dot-node-style-dashed.svg",
+    "description": "node with dashed boundary; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-style-dotted",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-style-dotted.dot",
+    "reference": "test/golden/refs/dot-node-style-dotted.svg",
+    "description": "node with dotted boundary; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-style-bold",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-style-bold.dot",
+    "reference": "test/golden/refs/dot-node-style-bold.svg",
+    "description": "node with bold boundary (penwidth 2); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-node-filled-default",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-filled-default.dot",
+    "reference": "test/golden/refs/dot-node-filled-default.svg",
+    "description": "filled node, no fillcolor (default lightgrey); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-color",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-color.dot",
+    "reference": "test/golden/refs/dot-edge-color.svg",
+    "description": "edge with a non-default color (path + arrow); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-penwidth",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-penwidth.dot",
+    "reference": "test/golden/refs/dot-edge-penwidth.svg",
+    "description": "edge with penwidth=2; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-style-dashed",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-style-dashed.dot",
+    "reference": "test/golden/refs/dot-edge-style-dashed.svg",
+    "description": "single dashed edge; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-edge-colored-arrow",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-colored-arrow.dot",
+    "reference": "test/golden/refs/dot-edge-colored-arrow.svg",
+    "description": "double-ended edge with colored arrowheads; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-graph-bgcolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-graph-bgcolor.dot",
+    "reference": "test/golden/refs/dot-graph-bgcolor.svg",
+    "description": "graph with a background color; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-cluster-filled",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-filled.dot",
+    "reference": "test/golden/refs/dot-cluster-filled.svg",
+    "description": "filled cluster (color sets fill and pen); ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-cluster-bgcolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-bgcolor.dot",
+    "reference": "test/golden/refs/dot-cluster-bgcolor.svg",
+    "description": "cluster filled via bgcolor backward-compat; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "dot-styled-combined",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-styled-combined.dot",
+    "reference": "test/golden/refs/dot-styled-combined.svg",
+    "description": "node fill + node pen + edge color/style + cluster fill + bgcolor together; ref: graphviz 15.0.0 dot -Tsvg; mission render-styling"
+  },
+  {
+    "id": "mc-node-gradient-linear",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-gradient-linear.dot",
+    "reference": "test/golden/refs/mc-node-gradient-linear.svg",
+    "description": "node linear gradient fill (fillcolor c1:c2); ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-node-gradient-radial",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-gradient-radial.dot",
+    "reference": "test/golden/refs/mc-node-gradient-radial.svg",
+    "description": "node radial gradient fill (style=radial); ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-node-gradient-frac",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-gradient-frac.dot",
+    "reference": "test/golden/refs/mc-node-gradient-frac.svg",
+    "description": "node gradient with a color-stop fraction; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-node-gradient-angle",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-gradient-angle.dot",
+    "reference": "test/golden/refs/mc-node-gradient-angle.svg",
+    "description": "node linear gradient with gradientangle; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-node-box-gradient",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-box-gradient.dot",
+    "reference": "test/golden/refs/mc-node-box-gradient.svg",
+    "description": "box-node linear gradient fill; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-cluster-gradient",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-cluster-gradient.dot",
+    "reference": "test/golden/refs/mc-cluster-gradient.svg",
+    "description": "cluster linear gradient fill; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-graph-bgcolor-gradient",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-graph-bgcolor-gradient.dot",
+    "reference": "test/golden/refs/mc-graph-bgcolor-gradient.svg",
+    "description": "graph background linear gradient; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-node-striped",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-striped.dot",
+    "reference": "test/golden/refs/mc-node-striped.svg",
+    "description": "striped box node, three colors; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-node-striped-weighted",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-node-striped-weighted.dot",
+    "reference": "test/golden/refs/mc-node-striped-weighted.svg",
+    "description": "striped box node with weighted bands; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-edge-multicolor",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-edge-multicolor.dot",
+    "reference": "test/golden/refs/mc-edge-multicolor.svg",
+    "description": "directed two-color parallel edge; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-edge-multicolor-3",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-edge-multicolor-3.dot",
+    "reference": "test/golden/refs/mc-edge-multicolor-3.svg",
+    "description": "directed three-color parallel edge; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "mc-combined",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/mc-combined.dot",
+    "reference": "test/golden/refs/mc-combined.svg",
+    "description": "gradient node + striped node + gradient cluster bg + multicolor edge; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  }
+]

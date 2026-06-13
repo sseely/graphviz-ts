@@ -1,0 +1,10 @@
+// graphviz-ts reference input: 5-node undirected graph
+// engine: neato
+// tolerance: iterative
+graph G {
+    A -- B;
+    B -- C;
+    C -- D;
+    D -- E;
+    E -- A;
+}

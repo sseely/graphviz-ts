@@ -1,0 +1,8 @@
+// graphviz-ts reference input: digraph with 3 parallel edges between A and B
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B;
+    A -> B;
+    A -> B;
+}

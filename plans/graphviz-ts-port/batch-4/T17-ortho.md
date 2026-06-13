@@ -106,6 +106,27 @@ When `Concentrate=true` in `GraphInfo`, edges between the same node pair are
 routed only once (first occurrence). The `PointSet` is keyed on
 `(min(tailIdx, headIdx), max(tailIdx, headIdx))`.
 
+## TEST DISCIPLINE — Non-Negotiable
+
+**Tests are written before implementation. Expected values come from C source
+only. Tests are never changed to match code output.**
+
+Mandatory workflow:
+1. Read the full ortho C source (all files in Read-Set) before writing any
+   TypeScript.
+2. Derive every expected value (SEED constant, determinism of routing,
+   bend counts, warning messages) directly from the C source. Where exact
+   output depends on the algorithm, trace through the C code or run the
+   C binary to obtain ground truth.
+3. Write `ortho.test.ts` with those C-derived expected values as assertions.
+4. Then write `index.ts` to satisfy the tests.
+5. If a test fails: re-read the C, fix the TypeScript. Never touch the
+   assertion.
+
+**If a failing test cannot be fixed without changing its assertion, STOP.**
+Log to `decision-journal.md` and wait for human input. This is Stop
+Condition 8 in the mission README (AD-13).
+
 ## Task
 
 Port the complete `lib/ortho` pipeline to TypeScript as a single module

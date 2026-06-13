@@ -1,0 +1,4 @@
+// graphviz-ts reference input: digraph with a root graph label
+// engine: dot
+// tolerance: deterministic
+digraph G { label="gl"; A -> B; }

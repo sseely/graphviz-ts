@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "serena": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/scottseely/git/serena",
+        "run",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "claude-code",
+        "--project",
+        "/Users/scottseely/git/graphviz-ts"
+      ]
+    }
+  }
+}

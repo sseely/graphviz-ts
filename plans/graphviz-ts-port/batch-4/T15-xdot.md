@@ -63,6 +63,25 @@ In `parseXDotColor` in the C source, solid color strings (`xd_none`) point
 into the caller's buffer (not heap-allocated separately). In TypeScript,
 string values are always owned; this distinction does not apply.
 
+## TEST DISCIPLINE — Non-Negotiable
+
+**Tests are written before implementation. Expected values come from C source
+only. Tests are never changed to match code output.**
+
+Mandatory workflow:
+1. Read `xdot.c` and `xdot.h` fully before writing any TypeScript.
+2. Derive every expected value (wire format, parse results, round-trip
+   output) directly from the C source. Where numeric output is needed,
+   trace through the C code or run the C binary to obtain ground truth.
+3. Write `xdot.test.ts` with those C-derived expected values as assertions.
+4. Then write `index.ts` to satisfy the tests.
+5. If a test fails: re-read the C, fix the TypeScript. Never touch the
+   assertion.
+
+**If a failing test cannot be fixed without changing its assertion, STOP.**
+Log to `decision-journal.md` and wait for human input. This is Stop
+Condition 8 in the mission README (AD-13).
+
 ## Task
 
 Port the full public API of `lib/xdot` to TypeScript:

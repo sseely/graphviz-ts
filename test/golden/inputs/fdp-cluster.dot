@@ -1,0 +1,14 @@
+// graphviz-ts reference input: undirected graph with two cluster subgraphs
+// engine: fdp
+// tolerance: iterative
+graph G {
+    subgraph cluster_0 {
+        label="Left";
+        A -- B -- C;
+    }
+    subgraph cluster_1 {
+        label="Right";
+        D -- E -- F;
+    }
+    C -- D;
+}

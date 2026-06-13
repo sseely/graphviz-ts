@@ -1,0 +1,12 @@
+// graphviz-ts reference input: graph with one cluster that has no nodes
+// engine: osage
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        label="Full";
+        A; B; C;
+    }
+    subgraph cluster_1 {
+        label="Empty";
+    }
+}

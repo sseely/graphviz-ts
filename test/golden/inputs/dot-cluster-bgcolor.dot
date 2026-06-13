@@ -1,0 +1,9 @@
+// graphviz-ts reference input: cluster filled via bgcolor backward-compat
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    subgraph cluster_0 {
+        bgcolor=lightpink;
+        a;
+    }
+}

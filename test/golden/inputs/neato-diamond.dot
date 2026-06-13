@@ -1,0 +1,11 @@
+// graphviz-ts reference input: nodes with shape=diamond
+// engine: neato
+// tolerance: iterative
+graph G {
+    node [shape=diamond];
+    A -- B;
+    B -- C;
+    C -- D;
+    D -- A;
+    A -- C;
+}

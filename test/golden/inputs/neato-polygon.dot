@@ -1,0 +1,10 @@
+// graphviz-ts reference input: nodes with shape=polygon sides=6
+// engine: neato
+// tolerance: iterative
+graph G {
+    node [shape=polygon sides=6];
+    A -- B;
+    B -- C;
+    C -- D;
+    D -- A;
+}

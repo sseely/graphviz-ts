@@ -5,9 +5,10 @@
       "Bash(npx *:*)",
       "Bash(node *:*)",
       "Bash(git *:*)",
-      "Bash(pnpm *:*)",
-      "Bash(dot *:*)",
-      "Bash(dot -Tsvg *:*)",
+      "Bash(python3 *:*)",
+      "Bash(gh *:*)",
+      "Bash(shellcheck:*)",
+      "Bash(rg:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(mkdir *:*)",
@@ -22,11 +23,12 @@
       "Bash(tail *:*)",
       "Bash(diff *:*)",
       "Bash(command -v:*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "Glob(*)",
-      "Grep(*)",
+      "Bash(~/.claude/hooks/quality-gate.sh:*)",
+      "Read(**)",
+      "Write(**)",
+      "Edit(**)",
+      "Glob(**)",
+      "Grep(**)",
       "mcp__serena__list_dir",
       "mcp__serena__find_file",
       "mcp__serena__find_symbol",
@@ -36,16 +38,57 @@
       "mcp__serena__insert_after_symbol",
       "mcp__serena__insert_before_symbol",
       "mcp__serena__safe_delete_symbol",
-      "mcp__serena__rename_symbol"
+      "mcp__serena__rename_symbol",
+      "Bash(perl *:*)",
+      "Bash(sed *:*)",
+      "Bash(timeout *:*)",
+      "Bash(pkill -f *probe*:*)"
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-start.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/record-turn-start.sh",
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/project-init.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
     "PostCompact": [
       {
         "hooks": [
           {
             "type": "command",
             "command": "cat ~/.claude/post-compact-context.md"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '-- COMPACTING: verify open TODOs are committed --'"
           }
         ]
       }

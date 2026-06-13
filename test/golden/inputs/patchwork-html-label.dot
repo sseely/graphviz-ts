@@ -1,0 +1,10 @@
+// graphviz-ts reference input: patchwork graph with one HTML table label node
+// engine: patchwork
+// tolerance: deterministic
+graph G {
+    subgraph cluster_0 {
+        A [label=<<TABLE><TR><TD>A</TD><TD>B</TD></TR></TABLE>> area=9];
+        B [area=4];
+        C [area=1];
+    }
+}

@@ -1,0 +1,11 @@
+// graphviz-ts reference input: 6-node graph with one node having root=true
+// engine: twopi
+// tolerance: deterministic
+graph G {
+    center [root=true];
+    center -- A;
+    center -- B;
+    center -- C;
+    A -- D;
+    B -- E;
+}

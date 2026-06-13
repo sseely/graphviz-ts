@@ -1,0 +1,8 @@
+// graphviz-ts reference input: 3-node undirected graph with a doubled edge
+// engine: neato
+// tolerance: iterative
+graph G {
+    A -- B;
+    A -- B;
+    B -- C;
+}

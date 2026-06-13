@@ -1,5 +1,24 @@
 # Batch 4 — Geometry Primitives
 
+## TEST DISCIPLINE — Mandatory for Every Task in This Batch
+
+**AD-13 (locked):** Tests are the immutable spec commitment. Code must
+satisfy tests; tests are never changed to match code.
+
+**Required workflow — no exceptions:**
+
+1. Read the C source. Identify exact output values, algorithm behavior,
+   and edge cases.
+2. If a test asserts a numeric value, obtain that value from the C source
+   or C binary *before* writing any TypeScript.
+3. Write the test with the C-derived expected values.
+4. Write the implementation. Make the code satisfy the test.
+5. If a test fails, read the C source again and fix the code.
+
+**If a failing test can only be fixed by changing its assertion, STOP.**
+Log the discrepancy in `decision-journal.md` and wait for human input.
+This is Stop Condition 8 in the mission README.
+
 ## Summary
 
 Batch 4 ports four self-contained geometry and sparse-math libraries that sit

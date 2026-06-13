@@ -1,0 +1,17 @@
+digraph clustered {
+  node [shape="box"]
+  edge [style="dashed"]
+  subgraph cluster_a {
+    label="Cluster A"
+    x [label="X"]
+    y [label="Y"]
+    x -> y
+  }
+  subgraph cluster_b {
+    label="Cluster B"
+    p [label="P"]
+    q [label="Q"]
+    p -> q
+  }
+  x -> p [label="cross"]
+}

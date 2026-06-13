@@ -25,6 +25,6 @@ and `RendererPlugin` is defined here for the first time.
 
 | ID | Description | ‖/→ | Writes | Depends On |
 |----|-------------|-----|--------|------------|
-| T25 | GVC context and engine registry | → | src/gvc/context.ts, src/gvc/context.test.ts | Batch 5c |
-| T26 | Text layout selection + job lifecycle | ‖ after T25 | src/gvc/job.ts, src/gvc/textlayout.ts, src/gvc/job.test.ts | T25 |
-| T27 | SVG device infrastructure | ‖ after T25 | src/gvc/device.ts, src/gvc/device.test.ts | T25 |
+| T25 | GVC context and engine registry | → | src/gvc/context.ts, src/gvc/context.test.ts | Batch 5c | [x] |
+| T26 | Text layout selection + job lifecycle | ‖ after T25 | src/gvc/job.ts, src/gvc/textlayout.ts, src/gvc/job.test.ts | T25 | [x] |
+| T27 | SVG device infrastructure | ‖ after T25 | src/gvc/device.ts, src/gvc/device.test.ts | T25 | [x] |

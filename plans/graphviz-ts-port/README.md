@@ -47,6 +47,9 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 5. MT19937 PRNG output diverges from C reference on any seed value
 6. Task write-set must expand to files outside its declared set
 7. Two consecutive quality-gate failures on the same check after fix attempts
+8. **A failing test can only be made to pass by changing a test assertion
+   rather than fixing the implementation** (see AD-13). STOP immediately,
+   log to `decision-journal.md`, wait for human input. Never alter a test.
 
 ## Push-Forward Conditions
 
@@ -59,19 +62,19 @@ wc -l src/**/*.ts | sort -n | tail -5             # no file over 600 lines
 
 | Batch | Name | Tasks | Status |
 |-------|------|-------|--------|
-| 1 | Type System and Graph Model | T1–T6 | [ ] |
-| 2 | Foundation Algorithms | T7–T11 | [ ] |
-| 3 | DOT Parser | T12–T13 | [ ] |
-| 4 | Geometry Primitives | T14–T17 | [ ] |
-| 5a | Common Layer — Types & Color | T18–T19 | [ ] |
-| 5b | Common Layer — Labels, Text, Arrows | T20–T22 | [ ] |
-| 5c | Common Layer — Splines & Emit | T23–T24 | [ ] |
-| 6 | GVC Orchestration | T25–T27 | [ ] |
-| 7 | Renderers | T28–T31 | [ ] |
-| 8 | dot Layout Engine | T32–T39 | [ ] |
-| 9 | neato Family | T40–T47 | [ ] |
-| 10 | Remaining Layout Engines | T48–T52 | [ ] |
-| 11 | Integration & Golden-File Tests | T53–T56 | [ ] |
+| 1 | Type System and Graph Model | T1–T6 | [x] |
+| 2 | Foundation Algorithms | T7–T11 | [x] |
+| 3 | DOT Parser | T12–T13 | [x] |
+| 4 | Geometry Primitives | T14–T17 | [x] |
+| 5a | Common Layer — Types & Color | T18–T19 | [x] |
+| 5b | Common Layer — Labels, Text, Arrows | T20–T22 | [x] |
+| 5c | Common Layer — Splines & Emit | T23–T24 | [x] |
+| 6 | GVC Orchestration | T25–T27 | [x] |
+| 7 | Renderers | T28–T31 | [x] |
+| 8 | dot Layout Engine | T32–T39 | [x] |
+| 9 | neato Family | T40–T47 | [x] |
+| 10 | Remaining Layout Engines | T48–T52 | [x] |
+| 11 | Integration & Golden-File Tests | T53–T56 | [~] |
 
 **Execution order:** 1 → (2 ‖ 3) → 4 → 5a → 5b → 5c → 6 → 7 → 8 → 9 → 10 → 11
 
@@ -80,7 +83,7 @@ their overview may run in parallel; tasks marked → are sequential.
 
 ## Document Index
 
-- [decisions.md](decisions.md) — 12 architecture decisions (locked)
+- [decisions.md](decisions.md) — 13 architecture decisions (locked); AD-13 governs test discipline
 - [decision-journal.md](decision-journal.md) — append during execution
 - [diagrams/data-flow.md](diagrams/data-flow.md) — dot -Tsvg sequence
 - [diagrams/component-map.md](diagrams/component-map.md) — module deps

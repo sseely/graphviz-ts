@@ -1,0 +1,16 @@
+// graphviz-ts reference input: 8-node digraph with a cluster inside a cluster
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    subgraph cluster_outer {
+        label="Outer";
+        subgraph cluster_inner {
+            label="Inner";
+            A -> B -> C -> D;
+        }
+        E -> A;
+        D -> F;
+    }
+    G -> E;
+    F -> H;
+}

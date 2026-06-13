@@ -1,0 +1,8 @@
+// graphviz-ts reference input: digraph with minlen=2 on one edge
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    A -> B [minlen=2];
+    B -> C;
+    A -> C;
+}

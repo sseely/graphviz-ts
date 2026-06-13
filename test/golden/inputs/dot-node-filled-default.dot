@@ -1,0 +1,6 @@
+// graphviz-ts reference input: filled node, no fillcolor (default lightgrey)
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a [style=filled];
+}

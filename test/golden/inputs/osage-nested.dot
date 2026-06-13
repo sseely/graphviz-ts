@@ -1,0 +1,18 @@
+// graphviz-ts reference input: 8-node graph with 3 levels of cluster nesting
+// engine: osage
+// tolerance: deterministic
+graph G {
+    subgraph cluster_outer {
+        label="Outer";
+        subgraph cluster_mid {
+            label="Mid";
+            subgraph cluster_inner {
+                label="Inner";
+                A; B;
+            }
+            C; D;
+        }
+        E; F;
+    }
+    G; H;
+}
