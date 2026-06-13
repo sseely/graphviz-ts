@@ -15,11 +15,14 @@
  * AC10: renderOneLabel — txt-only labels unchanged by html branch
  * AC11: renderOneLabel — set=false html label is skipped
  * AC12: renderClusterLabel — html cluster label renders cells
+ * AC13: renderNode pushes obj-state (non-null in codefn) and pops after (balanced)
+ * AC14: unstyled node emits fill="none" stroke="black" via default obj-state
  */
 
 import { describe, it, expect } from 'vitest';
-import { transformPoint, renderGraph, renderOneLabel, renderNodeXLabel, renderGraphLabel, renderClusterLabel } from './device.js';
+import { transformPoint, renderGraph, renderOneLabel, renderNodeXLabel, renderGraphLabel, renderClusterLabel, renderNode } from './device.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
+import { createSvgRenderer } from '../render/svg.js';
 import type { RendererPlugin } from './context.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { Graph } from '../model/graph.js';

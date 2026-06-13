@@ -1,0 +1,6 @@
+// graphviz-ts reference input: striped box node, three colors
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a [shape=box, style=striped, fillcolor="red:green:blue"];
+}

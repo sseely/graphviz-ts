@@ -1,0 +1,13 @@
+// graphviz-ts reference input: node fill + node pen + edge color/style + cluster fill + bgcolor together
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    bgcolor=azure;
+    subgraph cluster_0 {
+        style=filled;
+        color=lightgrey;
+        a [style=filled, fillcolor=lightblue];
+        b [color=red];
+        a -> b [color=blue, style=dashed];
+    }
+}

@@ -59,9 +59,9 @@ Baseline at mission start: **1466 passed / 0 failed**, 82 goldens
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 style/color resolution helpers](batch-1/T1-style-resolution.md), [T2 obj-state lifecycle in the walk](batch-1/T2-objstate-lifecycle.md) | [ ] |
-| 2 (after 1; parallel) | [T3 node fill/pen/penwidth/style](batch-2/T3-node-styling.md), [T4 edge color/penwidth/style](batch-2/T4-edge-styling.md), [T5 cluster fill + graph bgcolor](batch-2/T5-cluster-graph.md) | [ ] |
-| 3 (after 2) | [T6 goldens + C-oracle verify](batch-3/T6-goldens.md) (orchestrator inline) | [ ] |
+| 1 (parallel) | [T1 style/color resolution helpers](batch-1/T1-style-resolution.md), [T2 obj-state lifecycle in the walk](batch-1/T2-objstate-lifecycle.md) | [x] |
+| 2 (after 1; parallel) | [T3 node fill/pen/penwidth/style](batch-2/T3-node-styling.md), [T4 edge color/penwidth/style](batch-2/T4-edge-styling.md), [T5 cluster fill + graph bgcolor](batch-2/T5-cluster-graph.md) | [x] |
+| 3 (after 2) | [T6 goldens + C-oracle verify](batch-3/T6-goldens.md) (orchestrator inline) | [x] |
 
 ## Stop conditions
 
@@ -98,3 +98,44 @@ Baseline at mission start: **1466 passed / 0 failed**, 82 goldens
   penColor); plugin/core/gvrender_core_svg.c (svg_*).
 - M12 precedent: `withHtmlPaint` (src/common/htmltable-emit-fill.ts) is
   a working scoped-ObjState paint — the proof the rendering side works.
+
+## Mission summary (2026-06-13 — COMPLETE, awaiting merge go-ahead)
+
+**Tasks completed:** 6 / 6 (T1–T6), one commit each.
+
+| Task | Commit | Result |
+|------|--------|--------|
+| T1 | `1198d3e` | style-resolve.ts pure resolvers (parse_style, findFill, penColor) |
+| T2 | `b91a6dc` | createObjState() + C push/pop lifecycle in the device walk |
+| T3 | `82d979d` | node fill/pen/penwidth/style via the obj-state |
+| T4 | `2d68dea` | edge color/penwidth/style + colored arrows via the obj-state |
+| T5 | `2f584ed` | cluster fill + graph bgcolor (+ resolveClusterFill) |
+| T6 | `2c02b97` | 15 styled goldens vs dot 15.0.0; manifest 82→97 |
+
+**Final gates (full branch):** `tsc --noEmit` 0 errors; `vitest run`
+1584 passed / 0 failed; prior 82 goldens byte-identical to the mission
+baseline (0 diffs); 15 new styled goldens pass at deterministic 0.01pt.
+
+**Decisions of note (see decision-journal.md):**
+- Batch 2 device.ts conflict (T4 renderEdge vs T5 renderOneCluster)
+  resolved by serializing device.ts writers: Round 1 T3‖T4, Round 2 T5.
+  T5's write-set was expanded to device.ts (renderOneCluster) +
+  style-resolve.ts (resolveClusterFill) — the brief's flagged STOP, the
+  orchestrator's call.
+- `dot-styled-combined` golden uses ellipse edge endpoints: a `shape=box`
+  endpoint exposes a pre-existing 0.11pt edge-spline divergence (box
+  clipping geometry, outside this mission's blast radius — no silent fix,
+  per stop conditions). The combined golden still exercises bgcolor +
+  filled cluster + node fill + node pen + colored dashed edge together.
+
+**Known follow-ups (out of scope, journaled):**
+- Gradient / two-color fills (`<linearGradient>` / svg_gradstyle) — a
+  separate mission; this port falls back to the first solid color (AD3).
+- striped / wedged multicolor node fills — same gradient subsystem.
+- Multi-color parallel-spline edges (`color="c1:c2"`) — first color only.
+- Box-node edge-spline 0.11pt divergence — a layout/libm matter, not
+  styling.
+
+**Rollback:** reversible (one commit per task; no migrations).
+**Merge:** ready for a **merge commit** into `feature/post-parity` on
+Scott's go-ahead (NOT yet merged).

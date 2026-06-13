@@ -41,9 +41,32 @@ import {
   svgComment,
   svgEdgePath,
   svgArrowPolygons,
+  emitArrowPolygon,
+  emitParallelEdgePaths,
   escapeXml,
 } from './svg-helpers.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
+
+// ---------------------------------------------------------------------------
+// Multicolor arrow helpers
+// @see lib/common/emit.c:2508-2528 (tail/head arrow with headcolor/tailcolor)
+// ---------------------------------------------------------------------------
+
+/** Emit tail arrow with tailColor and head arrow with headColor (multicolor). */
+function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailColor: string): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const einfo = e.info as any;
+  const obj = job.obj;
+  const pw = obj !== null ? obj.penWidth : 1.0;
+  const tailPts = einfo._tailArrowPts as Point[] | undefined;
+  if (tailPts?.length) {
+    emitArrowPolygon(tailPts, tailColor, job, pw);
+  }
+  const headPts = einfo._arrowPts as Point[] | undefined;
+  if (headPts?.length) {
+    emitArrowPolygon(headPts, headColor, job, pw);
+  }
+}
 
 // ---------------------------------------------------------------------------
 // SvgRenderer — delegates all work to module-level helpers in svg-helpers.ts
@@ -66,11 +89,26 @@ export class SvgRenderer implements RendererPlugin {
    * because the full spline is available on e.info.spl only after layout has
    * run routeDotEdges.
    *
+   * For multi-color edges (color="c1:c2:…"), emits parallel offset Béziers
+   * (one per color, SEP=2.0 apart) then arrows in headcolor/tailcolor.
+   * Single-color edges use the T4 path unchanged.
+   *
    * @see plugin/core/gvrender_core_svg.c:svg_end_edge
+   * @see lib/common/emit.c:2442-2528 (else if numc parallel-bezier branch)
    */
   endEdge(e: Edge, job: RenderJob): void {
-    svgEdgePath(e, job);
-    svgArrowPolygons(e, job);
+    const colorAttr = e.attrs.get('color') ?? '';
+    const numc = (colorAttr.match(/:/g) ?? []).length;
+    if (numc > 0) {
+      // Multicolor parallel-bezier branch
+      // @see lib/common/emit.c:2443 else if (numc)
+      const { headColor, tailColor } = emitParallelEdgePaths(e, job, colorAttr);
+      emitMulticolorArrows(e, job, headColor, tailColor);
+    } else {
+      // Single-color branch — T4 path unchanged (byte-stable)
+      svgEdgePath(e, job);
+      svgArrowPolygons(e, job);
+    }
     // Edge labels go inside the group, after path + arrows.
     // @see lib/common/emit.c:emit_end_edge (3010-3025)
     renderEdgeLabels(e, this, job);

@@ -1,0 +1,7 @@
+// graphviz-ts reference input: graph background linear gradient
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    bgcolor="lightyellow:lightblue";
+    a;
+}

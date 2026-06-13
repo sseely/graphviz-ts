@@ -1,0 +1,6 @@
+// graphviz-ts reference input: box-node linear gradient fill
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    a [shape=box, style=filled, fillcolor="red:blue"];
+}

@@ -18,7 +18,10 @@ import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
-import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
+import type { ResolvedFill, ClusterAttrs } from '../common/style-resolve.js';
+import type { ObjState } from './job.js';
+import { RenderJob, GVRENDER_DOES_TRANSFORM, createObjState, ObjType, EmitState } from './job.js';
+import { FillType } from './context.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
@@ -29,6 +32,13 @@ import {
 } from '../common/htmltable-emit-rules.js';
 import { nodeAttr } from '../common/poly-init.js';
 import type { PlacedHtml } from '../common/htmltable-pos.js';
+import {
+  parseStyleFlags,
+  resolvePenColor,
+  resolvePenType,
+  resolvePenWidth,
+  resolveClusterFillEx,
+} from '../common/style-resolve.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -83,28 +93,75 @@ function labelTextOf(lp: unknown): string | null {
   return (lp as TextlabelT | undefined)?.text ?? null;
 }
 
-/** Render a single node if not already rendered. @see lib/common/emit.c:emit_node */
-export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, done: Set<Node>): void {
-  if (done.has(n)) return;
-  done.add(n);
-  // C emit_begin_node: job->obj carries the node id/label for anchors.
-  // @see lib/common/emit.c:emit_begin_node / getObjId
+/**
+ * Inner body of renderNode — runs inside the push/pop try block.
+ * Extracted to keep renderNode under the 30-line hook limit.
+ * @see lib/common/emit.c:emit_begin_node:1654
+ */
+function emitNodeBody(n: Node, renderer: RendererPlugin, job: RenderJob): void {
   setHtmlAnchorObj('node' + (n.id + 1), labelTextOf(n.info.label));
   setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
   if (shape?.fns?.codefn) shape.fns.codefn(job, n);
-  // emit xlabel inside the node group, after codefn @see lib/common/emit.c:emit_node (1829-1830)
   renderNodeXLabel(n, renderer, job);
   renderer.endNode(n, job);
 }
 
-/** Render a single edge. @see lib/common/emit.c:emit_edge */
+/**
+ * Render a single node if not already rendered.
+ * push_obj_state before emit_begin_node; pop_obj_state in emit_end_node.
+ * @see lib/common/emit.c:emit_node
+ * @see lib/common/emit.c:emit_begin_node:1654
+ * @see lib/common/emit.c:emit_end_node:1794
+ */
+export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, done: Set<Node>): void {
+  if (done.has(n)) return;
+  done.add(n);
+  const obj = createObjState(ObjType.Node);
+  obj.emitState = EmitState.NDraw;
+  job.pushObj(obj);
+  try {
+    emitNodeBody(n, renderer, job);
+  } finally {
+    job.popObj();
+  }
+}
+
+/**
+ * Render a single edge.
+ * push_obj_state before beginEdge; pop_obj_state after endEdge.
+ * @see lib/common/emit.c:emit_edge
+ * @see lib/common/emit.c:emit_begin_edge:2715
+ * @see lib/common/emit.c:emit_end_edge:3028
+ * @see lib/common/emit.c:emit_edge_graphics:2350 (color/pencolor/penwidth)
+ */
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
-  // @see lib/common/emit.c:emit_begin_edge / getObjId
-  setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
-  renderer.beginEdge(e, job);
-  renderer.endEdge(e, job);
+  // push_obj_state in emit_begin_edge (line 2715)
+  const obj = createObjState(ObjType.Edge);
+  obj.emitState = EmitState.EDraw;
+  job.pushObj(obj);
+  // Set edge pen style from attrs — mirrors emit_edge_graphics color/penwidth path
+  // (AD1: style must flow through job.obj, not ad-hoc attr reads in the renderer).
+  // Guard for TS narrowing: job.obj is non-null here (we just pushed).
+  if (job.obj !== null) {
+    const colorAttr = e.attrs.get('color');
+    const styleAttr = e.attrs.get('style');
+    const penwidthAttr = e.attrs.get('penwidth');
+    const flags = parseStyleFlags(styleAttr);
+    job.obj.penColor = { type: 'string', s: resolvePenColor(colorAttr) };
+    job.obj.pen = resolvePenType(flags);
+    job.obj.penWidth = resolvePenWidth(flags, penwidthAttr);
+  }
+  try {
+    // @see lib/common/emit.c:emit_begin_edge / getObjId
+    setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
+    renderer.beginEdge(e, job);
+    renderer.endEdge(e, job);
+  } finally {
+    // pop_obj_state in emit_end_edge (line 3028)
+    job.popObj();
+  }
 }
 
 /** valign codes stored on textlabel_t. @see lib/common/types.h:textlabel_t.valign */
@@ -238,22 +295,110 @@ export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: Ren
   }
 }
 
-/** @see lib/common/emit.c:emit_clusters (single cluster: box, label, then recurse) */
+/**
+ * Copy gradient fields from a linear/radial ResolvedFill onto obj.
+ * Extracted helper; keeps applyClusterObjState within CCN/param limits.
+ * @see lib/common/emit.c:emit_clusters:3857-3869 GRADIENT/RGRADIENT block
+ */
+function applyClusterGradient(
+  obj: ObjState,
+  fill: Extract<ResolvedFill, { kind: 'linear' | 'radial' }>,
+): void {
+  obj.fill = fill.kind === 'radial' ? FillType.Radial : FillType.Linear;
+  obj.fillColor = { type: 'string', s: fill.fillColor };
+  obj.stopColor = { type: 'string', s: fill.stopColor };
+  obj.gradientFrac = fill.frac;
+  obj.gradientAngle = fill.angle;
+}
+
+/**
+ * Apply pen state (color, width, type) to cluster obj from attrs.
+ * Extracted to keep applyClusterObjState under the 30-line limit.
+ * @see lib/common/emit.c:emit_clusters:3835-3840 (pencolor/penwidth)
+ */
+function applyClusterPenState(obj: ObjState, sg: Graph): void {
+  const styleAttr = sg.attrs.get('style');
+  const flags = parseStyleFlags(styleAttr);
+  const pen = sg.attrs.get('pencolor') ?? sg.attrs.get('color');
+  obj.penColor = { type: 'string', s: resolvePenColor(pen) };
+  obj.penWidth = resolvePenWidth(flags, sg.attrs.get('penwidth'));
+  obj.pen = resolvePenType(flags);
+}
+
+/** Build ClusterAttrs bag from subgraph attrs map. */
+function clusterAttrsOf(sg: Graph): ClusterAttrs {
+  return {
+    style: sg.attrs.get('style'),
+    color: sg.attrs.get('color'),
+    pencolor: sg.attrs.get('pencolor'),
+    fillcolor: sg.attrs.get('fillcolor'),
+    bgcolor: sg.attrs.get('bgcolor'),
+    penwidth: sg.attrs.get('penwidth'),
+    gradientangle: sg.attrs.get('gradientangle'),
+  };
+}
+
+/**
+ * Apply cluster fill/pen state to job.obj from resolved cluster attrs.
+ * obj.id NOT set here — requires job.clusterId known only after beginCluster.
+ * @see lib/common/emit.c:emit_clusters:3805-3874
+ */
+function applyClusterObjState(sg: Graph, job: RenderJob): boolean {
+  const fillRes = resolveClusterFillEx(clusterAttrsOf(sg));
+  if (job.obj === null) return false;
+  const obj = job.obj;
+  applyClusterPenState(obj, sg);
+  if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
+  if (fillRes.kind === 'solid') {
+    obj.fill = FillType.Solid;
+    obj.fillColor = { type: 'string', s: fillRes.color };
+    return true;
+  }
+  applyClusterGradient(obj, fillRes);
+  return true;
+}
+
+/**
+ * Render one cluster: box, label, endCluster, then recurse into sub-clusters.
+ * push_obj_state in emit_begin_cluster (3762); pop in emit_end_cluster (3774).
+ * Sub-cluster recursion follows emit_end_cluster (line 3940-3941) — the pop
+ * completes before recursing; sub-clusters are separate pushes on a clean stack.
+ * @see lib/common/emit.c:emit_clusters:3777
+ * @see lib/common/emit.c:emit_begin_cluster:3762
+ * @see lib/common/emit.c:emit_end_cluster:3774
+ */
 function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
-  renderer.beginCluster?.(sg, job);
-  const bb = sg.info.bb!;
-  const rawPts = [
-    { x: bb.ll.x, y: bb.ll.y },
-    { x: bb.ll.x, y: bb.ur.y },
-    { x: bb.ur.x, y: bb.ur.y },
-    { x: bb.ur.x, y: bb.ll.y },
-  ];
-  renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
-  // @see lib/common/emit.c:emit_begin_cluster / getObjId
-  setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
-  renderClusterLabel(sg, renderer, job);
-  renderer.endCluster?.(sg, job);
-  // C lays down clusters before sub-clusters when drawing.
+  // push_obj_state in emit_begin_cluster (line 3762), before beginCluster
+  const obj = createObjState(ObjType.Cluster);
+  obj.emitState = EmitState.CDraw;
+  job.pushObj(obj);
+  try {
+    // Resolve and wire cluster fill/pen into job.obj before the polygon.
+    // emit_clusters:3805-3874 — must happen before gvrender_box.
+    const filled = applyClusterObjState(sg, job);
+    // beginCluster increments job.clusterId (svgBeginCluster); set obj.id
+    // after so emitGradientDefs prefixes gradient id as "clustN_l_0".
+    // @see lib/common/emit.c:209 getObjId (AGRAPH/cluster: pfx="clust")
+    renderer.beginCluster?.(sg, job);
+    if (job.obj !== null) job.obj.id = 'clust' + job.clusterId;
+    const bb = sg.info.bb!;
+    const rawPts = [
+      { x: bb.ll.x, y: bb.ll.y },
+      { x: bb.ll.x, y: bb.ur.y },
+      { x: bb.ur.x, y: bb.ur.y },
+      { x: bb.ur.x, y: bb.ll.y },
+    ];
+    renderer.polygon(rawPts.map(p => transformPoint(p, job)), filled, job);
+    // @see lib/common/emit.c:emit_begin_cluster / getObjId
+    setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
+    renderClusterLabel(sg, renderer, job);
+    renderer.endCluster?.(sg, job);
+  } finally {
+    // pop_obj_state in emit_end_cluster (line 3774), before sub-cluster recursion
+    job.popObj();
+  }
+  // C recurses AFTER emit_end_cluster (line 3940-3941): sub-clusters are drawn
+  // with the parent already popped — each has its own independent push/pop.
   renderClusters(sg, renderer, job);
 }
 
@@ -283,12 +428,21 @@ export function renderClusters(g: Graph, renderer: RendererPlugin, job: RenderJo
  * @see lib/common/emit.c:emit_page (3655-3660)
  */
 export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin): string {
-  renderer.beginGraph(g, job);
-  // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page (3656-3657)
-  renderGraphLabel(g, renderer, job);
-  renderClusters(g, renderer, job);
-  walkNodesAndEdges(g, renderer, job);
-  renderer.endGraph(g, job);
+  // push_obj_state in emit_begin_graph (line 3573), before beginGraph call
+  const obj = createObjState(ObjType.RootGraph);
+  obj.emitState = EmitState.GDraw;
+  job.pushObj(obj);
+  try {
+    renderer.beginGraph(g, job);
+    // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page (3656-3657)
+    renderGraphLabel(g, renderer, job);
+    renderClusters(g, renderer, job);
+    walkNodesAndEdges(g, renderer, job);
+    renderer.endGraph(g, job);
+  } finally {
+    // pop_obj_state in emit_end_graph (line 3586), after endGraph
+    job.popObj();
+  }
   return job.output.join('');
 }
 
