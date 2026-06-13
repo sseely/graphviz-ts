@@ -19,6 +19,7 @@ import type { RendererPlugin, GvcContext } from './context.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM, createObjState, ObjType, EmitState } from './job.js';
+import { FillType } from './context.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
@@ -34,6 +35,7 @@ import {
   resolvePenColor,
   resolvePenType,
   resolvePenWidth,
+  resolveClusterFill,
 } from '../common/style-resolve.js';
 
 // ---------------------------------------------------------------------------
@@ -288,6 +290,32 @@ export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: Ren
 }
 
 /**
+ * Apply cluster fill/pen state to job.obj from resolved cluster attrs.
+ * Extracted helper to keep renderOneCluster under 30 lines (hook CCN rule).
+ * @see lib/common/emit.c:emit_clusters:3805-3874
+ */
+function applyClusterObjState(sg: Graph, job: RenderJob): boolean {
+  const styleAttr = sg.attrs.get('style');
+  const cf = resolveClusterFill({
+    style: styleAttr,
+    color: sg.attrs.get('color'),
+    pencolor: sg.attrs.get('pencolor'),
+    fillcolor: sg.attrs.get('fillcolor'),
+    bgcolor: sg.attrs.get('bgcolor'),
+    penwidth: sg.attrs.get('penwidth'),
+  });
+  if (job.obj === null) return false;
+  job.obj.fill = cf.filled ? FillType.Solid : FillType.None;
+  job.obj.fillColor = cf.filled
+    ? { type: 'string', s: cf.fillColor }
+    : { type: 'none' };
+  job.obj.penColor = { type: 'string', s: cf.penColor };
+  job.obj.penWidth = resolvePenWidth(parseStyleFlags(styleAttr), sg.attrs.get('penwidth'));
+  job.obj.pen = resolvePenType(parseStyleFlags(styleAttr));
+  return cf.filled;
+}
+
+/**
  * Render one cluster: box, label, endCluster, then recurse into sub-clusters.
  * push_obj_state in emit_begin_cluster (3762); pop in emit_end_cluster (3774).
  * Sub-cluster recursion follows emit_end_cluster (line 3940-3941) — the pop
@@ -302,6 +330,9 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
   obj.emitState = EmitState.CDraw;
   job.pushObj(obj);
   try {
+    // Resolve and wire cluster fill/pen into job.obj before the polygon.
+    // emit_clusters:3805-3874 — must happen before gvrender_box.
+    const filled = applyClusterObjState(sg, job);
     renderer.beginCluster?.(sg, job);
     const bb = sg.info.bb!;
     const rawPts = [
@@ -310,7 +341,7 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
       { x: bb.ur.x, y: bb.ur.y },
       { x: bb.ur.x, y: bb.ll.y },
     ];
-    renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
+    renderer.polygon(rawPts.map(p => transformPoint(p, job)), filled, job);
     // @see lib/common/emit.c:emit_begin_cluster / getObjId
     setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
     renderClusterLabel(sg, renderer, job);

@@ -7,6 +7,7 @@ import {
   resolvePenWidth,
   resolveNodeFill,
   resolvePenColor,
+  resolveClusterFill,
 } from './style-resolve.js';
 import { PenType } from '../gvc/context.js';
 
@@ -222,5 +223,126 @@ describe('resolvePenColor', () => {
 
   it('extracts first color from colorList', () => {
     expect(resolvePenColor('red:blue')).toBe('red');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// resolveClusterFill — @see lib/common/emit.c:emit_clusters:3805-3853
+// ---------------------------------------------------------------------------
+
+describe('resolveClusterFill — unfilled cluster', () => {
+  it('unfilled with no attrs: filled=false, penColor=black', () => {
+    // Byte-gate: unfilled cluster → fill="none" stroke="black"
+    const r = resolveClusterFill({});
+    expect(r.filled).toBe(false);
+    expect(r.penColor).toBe('black');
+  });
+
+  it('unfilled with style=dashed: filled=false, penColor=black', () => {
+    const r = resolveClusterFill({ style: 'dashed' });
+    expect(r.filled).toBe(false);
+    expect(r.penColor).toBe('black');
+  });
+});
+
+describe('resolveClusterFill — style=filled defaults', () => {
+  it('style=filled with no color attrs: lightgrey fill, black pen', () => {
+    // C: subgraph cluster_0{style=filled;a} → fill="lightgrey" stroke="black"
+    // emit_clusters:3852-3853: if !pencolor → "black"; if !fillcolor → "lightgrey"
+    const r = resolveClusterFill({ style: 'filled' });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('lightgrey');
+    expect(r.penColor).toBe('black');
+  });
+});
+
+describe('resolveClusterFill — color attr sets both', () => {
+  it('color=lightgrey with style=filled: fill and pen both lightgrey', () => {
+    // C: subgraph cluster_0{style=filled;color=lightgrey;a}
+    //    → fill="lightgrey" stroke="lightgrey"
+    // emit_clusters:3835-3836: color sets both fillcolor and pencolor
+    const r = resolveClusterFill({ style: 'filled', color: 'lightgrey' });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('lightgrey');
+    expect(r.penColor).toBe('lightgrey');
+  });
+
+  it('color=blue with style=filled: fill and pen both blue', () => {
+    const r = resolveClusterFill({ style: 'filled', color: 'blue' });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('blue');
+    expect(r.penColor).toBe('blue');
+  });
+});
+
+describe('resolveClusterFill — pencolor and fillcolor override', () => {
+  it('pencolor overrides pen portion of color', () => {
+    // emit_clusters:3837-3838: pencolor attr overrides pen
+    const r = resolveClusterFill({
+      style: 'filled',
+      color: 'blue',
+      pencolor: 'red',
+    });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('blue');
+    expect(r.penColor).toBe('red');
+  });
+
+  it('fillcolor overrides fill portion of color', () => {
+    // emit_clusters:3839-3840: fillcolor attr overrides fill
+    const r = resolveClusterFill({
+      style: 'filled',
+      color: 'blue',
+      fillcolor: 'green',
+    });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('green');
+    expect(r.penColor).toBe('blue');
+  });
+});
+
+describe('resolveClusterFill — bgcolor backward-compat', () => {
+  it('bgcolor fills unfilled cluster (no style=filled)', () => {
+    // C: subgraph cluster_0{bgcolor=lightpink;a}
+    //    → fill="lightpink" stroke="black"
+    // emit_clusters:3846-3849: if filled==0 && bgcolor → fillcolor=bgcolor; filled=FILL
+    const r = resolveClusterFill({ bgcolor: 'lightpink' });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('lightpink');
+    expect(r.penColor).toBe('black');
+  });
+
+  it('bgcolor fills cluster when fillcolor not set even if filled', () => {
+    // emit_clusters:3846: (!filled || !fillcolor) condition
+    const r = resolveClusterFill({ style: 'filled', bgcolor: 'lightpink' });
+    expect(r.filled).toBe(true);
+    // fillcolor not set, so bgcolor wins
+    expect(r.fillColor).toBe('lightpink');
+    expect(r.penColor).toBe('black');
+  });
+
+  it('bgcolor ignored when fillcolor already set', () => {
+    // emit_clusters:3846: fillcolor trumps bgcolor
+    const r = resolveClusterFill({
+      style: 'filled',
+      fillcolor: 'green',
+      bgcolor: 'lightpink',
+    });
+    expect(r.fillColor).toBe('green');
+  });
+});
+
+describe('resolveClusterFill — penwidth and gradient (AD3)', () => {
+  it('gradient fillcolor returns first color only', () => {
+    // AD3: two-color/gradient → first solid color
+    const r = resolveClusterFill({ style: 'filled', fillcolor: 'red:blue' });
+    expect(r.filled).toBe(true);
+    expect(r.fillColor).toBe('red');
+  });
+
+  it('gradient color attr returns first color for both pen and fill', () => {
+    const r = resolveClusterFill({ style: 'filled', color: 'cyan:magenta' });
+    expect(r.fillColor).toBe('cyan');
+    expect(r.penColor).toBe('cyan');
   });
 });

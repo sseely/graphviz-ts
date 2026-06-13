@@ -16,11 +16,21 @@
  *     style?: string; fillcolor?: string; color?: string
  *   }
  *
+ *   interface ClusterAttrs {
+ *     style?: string; color?: string; pencolor?: string;
+ *     fillcolor?: string; bgcolor?: string; penwidth?: string
+ *   }
+ *
+ *   interface ClusterFill {
+ *     filled: boolean; fillColor: string; penColor: string
+ *   }
+ *
  *   parseStyleFlags(style?: string)        → PolyStyleFlags
  *   resolvePenType(flags)                  → PenType
  *   resolvePenWidth(flags, penwidthAttr?)  → number
  *   resolveNodeFill(attrs)                 → { filled: boolean; color: string }
  *   resolvePenColor(colorAttr?)            → string
+ *   resolveClusterFill(attrs)              → ClusterFill
  *
  * @see lib/common/types.h:graphviz_polygon_style_t
  * @see lib/common/shapes.c:checkStyle
@@ -62,6 +72,32 @@ export interface NodeAttrs {
   style?: string | undefined;
   fillcolor?: string | undefined;
   color?: string | undefined;
+}
+
+/**
+ * Minimal cluster attribute bag consumed by resolveClusterFill.
+ * Mirrors the attrs read in emit_clusters (lib/common/emit.c:3805-3853).
+ */
+export interface ClusterAttrs {
+  style?: string | undefined;
+  color?: string | undefined;
+  pencolor?: string | undefined;
+  fillcolor?: string | undefined;
+  bgcolor?: string | undefined;
+  penwidth?: string | undefined;
+}
+
+/**
+ * Resolved fill and pen colors for a cluster boundary polygon.
+ * @see lib/common/emit.c:emit_clusters:3805-3853
+ */
+export interface ClusterFill {
+  /** Whether the cluster interior should be painted. */
+  filled: boolean;
+  /** Fill color to use when filled=true. */
+  fillColor: string;
+  /** Pen (stroke) color. */
+  penColor: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -240,4 +276,65 @@ export function resolvePenColor(colorAttr: string | undefined): string {
   if (!colorAttr || colorAttr.length === 0) return DEFAULT_COLOR;
   const grad = parseGradientSpec(colorAttr);
   return grad !== null ? grad[0] : colorAttr;
+}
+
+/**
+ * Resolve cluster fill: filled flag, fill color, and pen color.
+ *
+ * Ports the precedence in emit_clusters (lib/common/emit.c:3805-3853):
+ *   1. style="filled" → filled=true
+ *   2. color attr → fillcolor = pencolor = color  (sets both)
+ *   3. pencolor attr → overrides pencolor
+ *   4. fillcolor attr → overrides fillcolor
+ *   5. bgcolor backward-compat: if (!filled || !fillcolor) && bgcolor → fillcolor=bgcolor, filled=true
+ *   6. !pencolor → DEFAULT_COLOR ("black")
+ *   7. !fillcolor → DEFAULT_FILL ("lightgrey")
+ *   8. gradient fillcolor "c1:c2" → first color (AD3)
+ *
+ * GUI_STATE_ACTIVE/SELECTED/DELETED/VISITED branches are not ported
+ * (browser-only runtime; those states are managed externally).
+ *
+ * @see lib/common/emit.c:emit_clusters:3805-3853
+ * @see lib/common/const.h:48 DEFAULT_COLOR = "black"
+ * @see lib/common/const.h:69 DEFAULT_FILL = "lightgrey"
+ */
+export function resolveClusterFill(attrs: ClusterAttrs): ClusterFill {
+  const flags = parseStyleFlags(attrs.style);
+  let filled = flags.filled;
+
+  let fillcolor: string | undefined;
+  let pencolor: string | undefined;
+
+  // color attr sets BOTH fill and pen (emit_clusters:3835-3836)
+  if (attrs.color && attrs.color.length > 0) {
+    fillcolor = attrs.color;
+    pencolor = attrs.color;
+  }
+  // pencolor attr overrides pen (emit_clusters:3837-3838)
+  if (attrs.pencolor && attrs.pencolor.length > 0) {
+    pencolor = attrs.pencolor;
+  }
+  // fillcolor attr overrides fill (emit_clusters:3839-3840)
+  if (attrs.fillcolor && attrs.fillcolor.length > 0) {
+    fillcolor = attrs.fillcolor;
+  }
+  // bgcolor backward-compat (emit_clusters:3846-3849)
+  if ((!filled || !fillcolor) && attrs.bgcolor && attrs.bgcolor.length > 0) {
+    fillcolor = attrs.bgcolor;
+    filled = true;
+  }
+
+  // Apply defaults (emit_clusters:3852-3853)
+  const rawPen = pencolor ?? DEFAULT_COLOR;
+  const rawFill = fillcolor ?? DEFAULT_FILL;
+
+  // Gradient: first color only (AD3)
+  const gradPen = parseGradientSpec(rawPen);
+  const gradFill = parseGradientSpec(rawFill);
+
+  return {
+    filled,
+    fillColor: gradFill !== null ? gradFill[0] : rawFill,
+    penColor: gradPen !== null ? gradPen[0] : rawPen,
+  };
 }
