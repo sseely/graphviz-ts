@@ -894,5 +894,37 @@
     "input": "test/golden/inputs/dot-edge-multicolor-semi-3.dot",
     "reference": "test/golden/refs/dot-edge-multicolor-semi-3.svg",
     "description": "three-color split-along-length edge; ref: graphviz 15.0.0 dot -Tsvg; follow-up edge-multicolor-semicolon"
+  },
+  {
+    "id": "dot-undirected-simple",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-undirected-simple.dot",
+    "reference": "test/golden/refs/dot-undirected-simple.svg",
+    "description": "undirected graph, single edge (no arrowhead); ref: graphviz 15.0.0 dot -Tsvg; fix undirected-edge-clip"
+  },
+  {
+    "id": "dot-undirected-tree",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-undirected-tree.dot",
+    "reference": "test/golden/refs/dot-undirected-tree.svg",
+    "description": "undirected graph, small tree; ref: graphviz 15.0.0 dot -Tsvg; fix undirected-edge-clip"
+  },
+  {
+    "id": "dot-undirected-multirank",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-undirected-multirank.dot",
+    "reference": "test/golden/refs/dot-undirected-multirank.svg",
+    "description": "undirected edge spanning two ranks (curves around); ref: graphviz 15.0.0 dot -Tsvg; fix undirected-edge-clip"
+  },
+  {
+    "id": "dot-node-penwidth-edge-clip",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-penwidth-edge-clip.dot",
+    "reference": "test/golden/refs/dot-node-penwidth-edge-clip.svg",
+    "description": "edge into a thick-bordered (penwidth=2) node clips to the outline; ref: graphviz 15.0.0 dot -Tsvg; fix node-penwidth-edge-clip"
   }
 ]

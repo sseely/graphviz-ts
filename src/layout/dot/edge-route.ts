@@ -17,7 +17,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
 import type { NodeBox } from './edge-route-geom.js';
-import type { EdgeSplineResult, RankEdgeInfo } from './edge-route-routing.js';
+import type { EdgeSplineResult } from './edge-route-routing.js';
 
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
@@ -33,6 +33,7 @@ import {
   installEdgeSpline,
   routeBezier,
   straightEdgeSplineWithRank,
+  defaultEdgeDir,
 } from './edge-route-helpers.js';
 
 import {
@@ -158,16 +159,32 @@ function isMultiRankFwdEdge(e: GraphEdge): boolean {
     && (e.head.info.rank ?? 0) > (e.tail.info.rank ?? 0) + 1;
 }
 
+/**
+ * Route a multi-rank back/forward edge for the non-forward dir path; arrows
+ * gated by dirAttr. Returns true when it handled the edge.
+ */
+function dispatchMultiRankNonForward(
+  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph, dirAttr: string,
+): boolean {
+  if (isMultiRankBackEdge(e)) {
+    routeBackEdge(e, tailBox, headBox, g);
+    return true;
+  }
+  if (isMultiRankFwdEdge(e)) {
+    // Curve a multi-rank edge around intervening ranks; arrows gated by dir.
+    routeFwdMultiRankEdge(e, tailBox, headBox, g, dirAttr);
+    return true;
+  }
+  return false;
+}
+
 /** Route dir=back/both/none: raw node-clip, selective arrow clips. */
 function routeEdgeNonForward(
   e: GraphEdge, g: Graph, dirAttr: string, pw: number,
 ): void {
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
-  if (isMultiRankBackEdge(e)) {
-    routeBackEdge(e, tailBox, headBox, g);
-    return;
-  }
+  if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const wantHead = dirAttr === 'both';
   const wantTail = dirAttr === 'back' || dirAttr === 'both';
@@ -189,7 +206,7 @@ function routeEdgeNonForward(
 
 /** Route and install spline + arrowhead(s) for a single edge. */
 export function routeOneEdge(e: GraphEdge, g: Graph): void {
-  const dirAttr = e.attrs.get('dir') ?? 'forward';
+  const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
   const pw = edgeRenderPenwidth(e);
   if (dirAttr !== 'forward') {
     routeEdgeNonForward(e, g, dirAttr, pw);
@@ -202,7 +219,7 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
-    routeFwdMultiRankEdge(e, tailBox, headBox, g);
+    routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
     return;
   }
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);

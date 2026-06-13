@@ -26,7 +26,7 @@ import { makeTailBox, makeHeadBox, makeRankBox, makeMaximalBbox } from './edge-r
 import type { RankBoxParams } from './edge-route-boxes.js';
 import {
   nodeBoxOf, edgeRenderPenwidth, edgePenwidthAttr,
-  installEdgeSpline, straightEdgeSplineWithRank, routeBezier,
+  installEdgeSpline, straightEdgeSplineWithRank, routeBezier, defaultEdgeDir,
 } from './edge-route-helpers.js';
 
 // ---------------------------------------------------------------------------
@@ -206,7 +206,7 @@ function reverseClipBackChain(
  * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag back-edge path)
  */
 export function routeBackEdge(e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph): void {
-  const dirAttr = e.attrs.get('dir') ?? 'forward';
+  const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
   const chain = walkVirtChain(e);
   if (chain.length < 2) {
     const raw = routeEdgeRaw(tailBox, headBox, undefined, routeBezier);
@@ -231,8 +231,13 @@ export function routeBackEdge(e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, 
  * Clip compound-bezier arrowhead for a forward multi-rank edge and install.
  * arrowTip = node-boundary clip point (C's spl.ep); pts end at arrowhead base.
  */
-function applyFwdEdgeArrow(e: GraphEdge, clipped: Point[]): void {
+function applyFwdEdgeArrow(e: GraphEdge, clipped: Point[], dirAttr: string): void {
   const arrowTip = clipped[clipped.length - 1] as Point;
+  // dir=none/back draws no head arrow: install the full node-clipped spline.
+  if (dirAttr !== 'forward' && dirAttr !== 'both') {
+    installEdgeSpline(e, clipped, arrowTip);
+    return;
+  }
   const elen = normalArrowLen(edgePenwidthAttr(e));
   // arrowEndClipMulti: only last 4 pts are the final segment — using
   // arrowEndClip on the full array would read the wrong segment.
@@ -251,15 +256,18 @@ function applyFwdEdgeArrow(e: GraphEdge, clipped: Point[]): void {
  * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag path, forward case)
  */
 export function routeFwdMultiRankEdge(
-  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph,
+  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph, dirAttr: string,
 ): void {
+  const wantHead = dirAttr === 'forward' || dirAttr === 'both';
   const chain = walkFwdVirtChain(e);
   if (chain.length < 3) {
     const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
     const result = straightEdgeSplineWithRank(tailBox, headBox, rankInfo, edgePenwidthAttr(e));
     installEdgeSpline(e, result.bezierPts, result.arrowTip);
-    (e.info as unknown as Record<string, unknown>)._arrowPts =
-      arrowheadPolygon(result.arrowTip, result.arrowDir, edgeRenderPenwidth(e));
+    if (wantHead) {
+      (e.info as unknown as Record<string, unknown>)._arrowPts =
+        arrowheadPolygon(result.arrowTip, result.arrowDir, edgeRenderPenwidth(e));
+    }
     return;
   }
   const tailNode = chain[0]!;
@@ -268,5 +276,5 @@ export function routeFwdMultiRankEdge(
   const pts = computeSplineMulti(boxes,
     { x: tailNode.info.coord.x, y: tailNode.info.coord.y - 1 },
     { x: headNode.info.coord.x, y: headNode.info.coord.y + 1 });
-  applyFwdEdgeArrow(e, clipCompoundHead(clipCompoundTail(pts, tailBox), headBox));
+  applyFwdEdgeArrow(e, clipCompoundHead(clipCompoundTail(pts, tailBox), headBox), dirAttr);
 }
