@@ -1,0 +1,10 @@
+// graphviz-ts reference input: cluster linear gradient fill
+// engine: dot
+// tolerance: deterministic
+digraph G {
+    subgraph cluster_0 {
+        style=filled;
+        fillcolor="lightgrey:white";
+        a;
+    }
+}
