@@ -23,6 +23,18 @@ import type { NodeBox } from './edge-route-geom.js';
 import { routeWithRank, routeSimple } from './edge-route-routing.js';
 import type { RankEdgeInfo, EdgeSplineResult } from './edge-route-routing.js';
 
+/**
+ * Default `dir` for an edge given the graph's directedness. C uses
+ * `agisdirected(g) ? "forward" : "none"` — an undirected graph draws no
+ * arrowheads. Without this, undirected edges wrongly get a head arrow and an
+ * arrow-clipped (short) spline.
+ *
+ * @see lib/common/arrows.c:arrow_flags (late_string E_dir default)
+ */
+export function defaultEdgeDir(g: Graph): string {
+  return g.kind === 'directed' || g.kind === 'strict-directed' ? 'forward' : 'none';
+}
+
 // ---------------------------------------------------------------------------
 // nodeBoxOf
 // ---------------------------------------------------------------------------
