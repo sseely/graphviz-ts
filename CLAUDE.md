@@ -137,4 +137,5 @@ EPL-2.0 SPDX header:
 ```
 
 Do not add dependencies licensed under GPL-3.0-only or any license
-incompatible with EPL-2.0.
+incompatible with EPL-2.0. A mission/batch with any quarantined or excluded case is not 'complete' until its comparison page
+exists and is referenced in the decision journal."
