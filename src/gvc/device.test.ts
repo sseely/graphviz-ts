@@ -546,3 +546,39 @@ describe('AC14: unstyled node SVG fill/stroke from default obj-state', () => {
     expect(svg).toContain('stroke="black"');
   });
 });
+
+// ---------------------------------------------------------------------------
+// G3: cluster gradient fill — oracle-verified against dot -Tsvg (graphviz 15.0.0)
+// ---------------------------------------------------------------------------
+
+import { renderSvg } from '../index.js';
+
+describe('G3: cluster linear gradient — style=filled fillcolor="red:blue"', () => {
+  it('emits <linearGradient> with id="clust1_l_0"', () => {
+    const svg = renderSvg(
+      'digraph { subgraph cluster_0 { style=filled; fillcolor="red:blue"; a } }',
+      'dot',
+    );
+    expect(svg).toContain('<linearGradient id="clust1_l_0"');
+  });
+
+  it('cluster polygon fill references url(#clust1_l_0)', () => {
+    const svg = renderSvg(
+      'digraph { subgraph cluster_0 { style=filled; fillcolor="red:blue"; a } }',
+      'dot',
+    );
+    expect(svg).toContain('fill="url(#clust1_l_0)"');
+  });
+});
+
+describe('G3: cluster solid fill unchanged', () => {
+  it('style=filled fillcolor=lightblue → plain fill, no gradient defs', () => {
+    const svg = renderSvg(
+      'digraph { subgraph cluster_0 { style=filled; fillcolor=lightblue; a } }',
+      'dot',
+    );
+    expect(svg).not.toContain('<linearGradient');
+    expect(svg).not.toContain('<radialGradient');
+    expect(svg).toContain('fill="lightblue"');
+  });
+});

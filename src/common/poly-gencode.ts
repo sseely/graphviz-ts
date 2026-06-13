@@ -19,9 +19,10 @@ import { emitHtmlLabel } from './htmltable-emit.js';
 import { transformPoint } from '../gvc/device.js';
 import { nodeAttr } from './poly-init.js';
 import { substObjAnchor, interpretCRNL } from './subst.js';
+import type { ResolvedFill } from './style-resolve.js';
 import {
   parseStyleFlags,
-  resolveNodeFill,
+  resolveNodeFillEx,
   resolvePenColor,
   resolvePenType,
   resolvePenWidth,
@@ -175,13 +176,48 @@ function beginNodeAnchor(n: Node, renderer: RendererPlugin, job: RenderJob): boo
 // Style resolution — populates job.obj from node attrs
 // ---------------------------------------------------------------------------
 
-/** Apply fill state to obj; returns true when filled. @see lib/common/shapes.c:2981-2999 */
-function applyFillState(obj: ObjState, styleAttr: string | undefined,
-  fillcolorAttr: string | undefined, colorAttr: string | undefined): boolean {
-  const fillRes = resolveNodeFill({ style: styleAttr, fillcolor: fillcolorAttr, color: colorAttr });
-  obj.fill = fillRes.filled ? FillType.Solid : FillType.None;
-  if (fillRes.filled) obj.fillColor = { type: 'string', s: fillRes.color };
-  return fillRes.filled;
+/**
+ * Copy gradient fields from a linear/radial ResolvedFill onto obj.
+ * Extracted helper; keeps applyFillState within CCN/param limits.
+ * @see lib/common/shapes.c:2985-2998 GRADIENT/RGRADIENT block
+ */
+function applyGradientFields(
+  obj: ObjState,
+  fill: Extract<ResolvedFill, { kind: 'linear' | 'radial' }>,
+): void {
+  obj.fill = fill.kind === 'radial' ? FillType.Radial : FillType.Linear;
+  obj.fillColor = { type: 'string', s: fill.fillColor };
+  obj.stopColor = { type: 'string', s: fill.stopColor };
+  obj.gradientFrac = fill.frac;
+  obj.gradientAngle = fill.angle;
+}
+
+/**
+ * Apply fill state to obj using the discriminated resolveNodeFillEx.
+ * Sets obj.id to the node's SVG id (nodeN) so emitGradientDefs can
+ * prefix the gradient id correctly.
+ * Returns true when the node should render as filled (truthy fill kind).
+ * @see lib/common/shapes.c:2981-2999 GRADIENT/RGRADIENT/FILL/0 block
+ * @see plugin/core/gvrender_core_svg.c:572 svg_gradstyle (id prefix from obj->id)
+ */
+function applyFillState(obj: ObjState, n: Node): boolean {
+  // Set obj.id so gradient prefix matches C's getObjId result ("nodeN").
+  // @see lib/common/emit.c:209 getObjId (AGNODE case: pfx="node", idnum=AGSEQ)
+  obj.id = 'node' + (n.id + 1);
+  const fillRes = resolveNodeFillEx({
+    style: nodeAttr(n, n.root, 'style'),
+    fillcolor: nodeAttr(n, n.root, 'fillcolor'),
+    color: nodeAttr(n, n.root, 'color'),
+    gradientangle: nodeAttr(n, n.root, 'gradientangle'),
+  });
+  if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
+  if (fillRes.kind === 'solid') {
+    obj.fill = FillType.Solid;
+    obj.fillColor = { type: 'string', s: fillRes.color };
+    return true;
+  }
+  applyGradientFields(obj, fillRes);
+  return true;
 }
 
 /** Apply pen state (color, type, width) to obj. @see lib/common/shapes.c:3007 */
@@ -197,14 +233,13 @@ function applyPenState(obj: ObjState, styleAttr: string | undefined,
  * Resolve and apply node style/fill/pen attrs to the given ObjState.
  * Returns true when the node should be rendered as filled.
  *
- * Striped/wedged: resolveNodeFill returns first solid color (AD3).
- * True stripe/wedge is owned by the gradient mission.
+ * Gradient fills: Linear/Radial FillType + fillColor/stopColor/frac/angle set.
  * @see lib/common/shapes.c:poly_gencode (~2981-3007)
  */
 function applyNodeStyle(obj: ObjState, n: Node): boolean {
   const styleAttr = nodeAttr(n, n.root, 'style');
   const colorAttr = nodeAttr(n, n.root, 'color');
-  const filled = applyFillState(obj, styleAttr, nodeAttr(n, n.root, 'fillcolor'), colorAttr);
+  const filled = applyFillState(obj, n);
   applyPenState(obj, styleAttr, colorAttr, nodeAttr(n, n.root, 'penwidth'));
   return filled;
 }

@@ -232,3 +232,45 @@ describe('striped/wedged — first-color fallback (AD3, gradient out of scope)',
     expect(svg).toContain('<svg');
   });
 });
+
+// ---------------------------------------------------------------------------
+// G3: node gradient fills — oracle-verified against dot -Tsvg (graphviz 15.0.0)
+// ---------------------------------------------------------------------------
+
+describe('G3: node linear gradient — fillcolor="red:blue" style=filled', () => {
+  it('emits <linearGradient> with id="node1_l_0" (obj.id prefix)', () => {
+    const svg = renderSvg('digraph { a [style=filled, fillcolor="red:blue"] }', 'dot');
+    expect(svg).toContain('<linearGradient id="node1_l_0"');
+  });
+
+  it('emits gradientUnits="userSpaceOnUse"', () => {
+    const svg = renderSvg('digraph { a [style=filled, fillcolor="red:blue"] }', 'dot');
+    expect(svg).toContain('gradientUnits="userSpaceOnUse"');
+  });
+
+  it('ellipse fill references url(#node1_l_0)', () => {
+    const svg = renderSvg('digraph { a [style=filled, fillcolor="red:blue"] }', 'dot');
+    expect(svg).toContain('fill="url(#node1_l_0)"');
+  });
+});
+
+describe('G3: node radial gradient — style="radial,filled" fillcolor="red:blue"', () => {
+  it('emits <radialGradient> with id="node1_r_0"', () => {
+    const svg = renderSvg('digraph { a [style="radial,filled", fillcolor="red:blue"] }', 'dot');
+    expect(svg).toContain('<radialGradient id="node1_r_0"');
+  });
+
+  it('ellipse fill references url(#node1_r_0)', () => {
+    const svg = renderSvg('digraph { a [style="radial,filled", fillcolor="red:blue"] }', 'dot');
+    expect(svg).toContain('fill="url(#node1_r_0)"');
+  });
+});
+
+describe('G3: node solid fill unchanged', () => {
+  it('style=filled fillcolor=red → plain fill="red", no gradient defs', () => {
+    const svg = renderSvg('digraph { a [style=filled, fillcolor="red"] }', 'dot');
+    expect(svg).not.toContain('<linearGradient');
+    expect(svg).not.toContain('<radialGradient');
+    expect(svg).toContain('fill="red"');
+  });
+});
