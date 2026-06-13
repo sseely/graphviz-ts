@@ -17,7 +17,8 @@ import type { Graph } from '../../model/graph.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
 import type { NodeBox } from './edge-route-geom.js';
-import type { EdgeSplineResult } from './edge-route-routing.js';
+import type { EdgeSplineResult, PortRoute } from './edge-route-routing.js';
+import { resolvePort } from '../../common/splines-path-shared.js';
 
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
@@ -179,16 +180,14 @@ function dispatchMultiRankNonForward(
 }
 
 /** Route dir=back/both/none: raw node-clip, selective arrow clips. */
-function routeEdgeNonForward(
-  e: GraphEdge, g: Graph, dirAttr: string, pw: number,
-): void {
-  const tailBox = nodeBoxOf(e.tail, g);
-  const headBox = nodeBoxOf(e.head, g);
-  if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
-  const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
-  const wantHead = dirAttr === 'both';
-  const wantTail = dirAttr === 'back' || dirAttr === 'both';
-  const raw = routeEdgeRaw(tailBox, headBox, rankInfo, routeBezier);
+/** Apply tail/head arrowhead polygons + end-clips to a routed non-forward edge. */
+function applyEndArrows(
+  e: GraphEdge,
+  raw: ReturnType<typeof routeEdgeRaw>,
+  pw: number,
+  wantTail: boolean,
+  wantHead: boolean,
+): Point[] {
   const elen = normalArrowLen(edgePenwidthAttr(e));
   let bezPts = raw.bezierPts;
   if (wantTail) {
@@ -201,7 +200,42 @@ function routeEdgeNonForward(
     (e.info as unknown as Record<string, unknown>)._arrowPts =
       arrowheadPolygon(raw.arrowTip, raw.arrowDir, pw);
   }
+  return bezPts;
+}
+
+function routeEdgeNonForward(
+  e: GraphEdge, g: Graph, dirAttr: string, pw: number,
+): void {
+  const tailBox = nodeBoxOf(e.tail, g);
+  const headBox = nodeBoxOf(e.head, g);
+  if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
+  const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
+  const wantHead = dirAttr === 'both';
+  const wantTail = dirAttr === 'back' || dirAttr === 'both';
+  const raw = routeEdgeRaw(tailBox, headBox, rankInfo, routeBezier);
+  const bezPts = applyEndArrows(e, raw, pw, wantTail, wantHead);
   installEdgeSpline(e, bezPts, raw.arrowTip);
+}
+
+/**
+ * Build the active router's port data from an edge's resolved tail/head ports.
+ * Dynamic (`_`) ports are resolved against the opposite endpoint first. Returns
+ * `undefined` when neither end has an active port, so plain edges take the
+ * unchanged center-clip path (byte-stability gate).
+ * @see lib/common/splines.c:beginpath (P.start.p = coord + port.p; clip flag)
+ */
+function portRouteOf(e: GraphEdge): PortRoute | undefined {
+  const tp = resolvePort(e.tail, e.head, e.info.tail_port);
+  const hp = resolvePort(e.head, e.tail, e.info.head_port);
+  if (!tp.defined && !hp.defined) return undefined;
+  const tc = e.tail.info.coord;
+  const hc = e.head.info.coord;
+  return {
+    tailP: tp.defined ? { x: tc.x + tp.p.x, y: tc.y + tp.p.y } : null,
+    headP: hp.defined ? { x: hc.x + hp.p.x, y: hc.y + hp.p.y } : null,
+    clipTail: tp.defined ? tp.clip : true,
+    clipHead: hp.defined ? hp.clip : true,
+  };
 }
 
 /** Route and install spline + arrowhead(s) for a single edge. */
@@ -222,8 +256,17 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
     return;
   }
+  routeForwardEdge(e, g, tailBox, headBox, pw);
+}
+
+/** Route + install a plain forward edge, attaching declared ports if any. */
+function routeForwardEdge(
+  e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
+): void {
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
-  const result = straightEdgeSplineWithRank(tailBox, headBox, rankInfo, edgePenwidthAttr(e));
+  const result = straightEdgeSplineWithRank(
+    tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),
+  );
   installEdgeSpline(e, result.bezierPts, result.arrowTip);
   (e.info as unknown as Record<string, unknown>)._arrowPts =
     arrowheadPolygon(result.arrowTip, result.arrowDir, pw);

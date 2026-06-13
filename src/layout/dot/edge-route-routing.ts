@@ -51,10 +51,33 @@ export interface RankEdgeInfo {
  * Build the three-box corridor (tail, rank-gap, head) and start/end points.
  * @see lib/dotgen/dotsplines.c:make_regular_edge (box assembly section)
  */
+/**
+ * Resolved edge-port routing data, attached to the active router when an edge
+ * declares a tail/head port. A `null` end falls back to the node-center clip;
+ * a present point pins the spline to `node.coord + port.p`. `clip{Tail,Head}`
+ * mirror `port.clip` — false means the port point is exact and the node-boundary
+ * clip is skipped. @see lib/common/splines.c:beginpath (port offset + clip flag)
+ */
+export interface PortRoute {
+  tailP: Point | null;
+  headP: Point | null;
+  clipTail: boolean;
+  clipHead: boolean;
+}
+
+/** Whether to clip the spline to the tail/head node boundary. */
+export interface ClipFlags {
+  tail: boolean;
+  head: boolean;
+}
+
+const CLIP_BOTH: ClipFlags = { tail: true, head: true };
+
 export function buildRankCorridor(
   tailBox: NodeBox,
   headBox: NodeBox,
   rank: RankEdgeInfo,
+  ports?: { tailP: Point | null; headP: Point | null },
 ): { startPt: Point; endPt: Point; boxes: ReturnType<typeof makeTailBox>[] } {
   const startPy = tailBox.center.y;
   const endPy = headBox.center.y;
@@ -66,8 +89,8 @@ export function buildRankCorridor(
     headCy: headBox.center.y, headHt2: rank.headHt2,
   };
   return {
-    startPt: { x: tailBox.center.x, y: startPy - 1 },
-    endPt:   { x: headBox.center.x, y: endPy   + 1 },
+    startPt: ports?.tailP ?? { x: tailBox.center.x, y: startPy - 1 },
+    endPt:   ports?.headP ?? { x: headBox.center.x, y: endPy   + 1 },
     boxes:   [makeTailBox(tailNb, startPy), makeRankBox(rp), makeHeadBox(headNb, endPy)],
   };
 }
@@ -123,13 +146,14 @@ export function clipToNodes(
   tailBox: NodeBox,
   headBox: NodeBox,
   penwidth = DEFAULT_NODEPENWIDTH,
+  clip: ClipFlags = CLIP_BOTH,
 ): { clipped: Point[]; arrowTip: Point; arrowDir: Point } {
-  const step1 = bezierClipNode(
-    bezier, tailBox.center.x, tailBox.center.y, nodeInsideFn(tailBox), true,
-  );
-  const step2 = bezierClipNode(
-    step1, headBox.center.x, headBox.center.y, nodeInsideFn(headBox), false,
-  );
+  const step1 = clip.tail
+    ? bezierClipNode(bezier, tailBox.center.x, tailBox.center.y, nodeInsideFn(tailBox), true)
+    : bezier;
+  const step2 = clip.head
+    ? bezierClipNode(step1, headBox.center.x, headBox.center.y, nodeInsideFn(headBox), false)
+    : step1;
   const arrowTip = step2[3] as Point;
   const elen = normalArrowLen(penwidth);
   const clipped = arrowEndClip(step2, arrowTip, elen);
@@ -154,10 +178,15 @@ export function routeWithRank(
   headBox: NodeBox,
   rank: RankEdgeInfo,
   penwidth = DEFAULT_NODEPENWIDTH,
+  port?: PortRoute,
 ): EdgeSplineResult {
-  const { startPt, endPt, boxes } = buildRankCorridor(tailBox, headBox, rank);
+  const corridor = port ? { tailP: port.tailP, headP: port.headP } : undefined;
+  const { startPt, endPt, boxes } = buildRankCorridor(tailBox, headBox, rank, corridor);
   const bezier = computeSpline(boxes, startPt, endPt);
-  const { clipped, arrowTip, arrowDir } = clipToNodes(bezier, tailBox, headBox, penwidth);
+  const clip: ClipFlags = port
+    ? { tail: port.clipTail, head: port.clipHead }
+    : CLIP_BOTH;
+  const { clipped, arrowTip, arrowDir } = clipToNodes(bezier, tailBox, headBox, penwidth, clip);
   return { bezierPts: clipped, arrowTip, arrowDir };
 }
 
