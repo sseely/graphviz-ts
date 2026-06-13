@@ -365,37 +365,47 @@ export function svgComment(text: string, job: RenderJob): void {
 // ---------------------------------------------------------------------------
 // Edge graphics — path and arrowhead polygon
 // @see plugin/core/gvrender_core_svg.c:svg_bzptarray + svg_polygon (arrow)
+// @see lib/common/emit.c:emit_edge_graphics:2350 (color/penwidth flow)
 // ---------------------------------------------------------------------------
 
-const EDGE_STYLE_ATTR: Record<string, string> = {
-  dashed: ' stroke-dasharray="' + SVG_DASH_ARRAY + '"',
-  dotted: ' stroke-dasharray="' + SVG_DOT_ARRAY + '"',
-  bold: ' stroke-width="' + String(PENWIDTH_BOLD) + '"',
-};
-const edgeStrokeColor = (e: Edge): string => { const c = e.attrs.get('color'); return c && c.length > 0 ? c : 'black'; };
-function edgeStyleAttr(s: string | undefined): string { return EDGE_STYLE_ATTR[s ?? ''] ?? ''; }
-
-/** Emit Bezier edge path with style attributes. @see plugin/core/gvrender_core_svg.c:svg_bzptarray */
+/**
+ * Emit Bezier edge path with style from job.obj (AD1: no ad-hoc attr reads).
+ * Attribute order: fill="none" stroke="X" [stroke-width] [stroke-dasharray] d="..."
+ * @see plugin/core/gvrender_core_svg.c:svg_bzptarray
+ * @see lib/common/emit.c:emit_edge_graphics:2368 (late_string color)
+ */
 export function svgEdgePath(e: Edge, job: RenderJob): void {
   const spl = e.info.spl;
   if (spl === undefined || spl.size === 0) return;
-  const stroke = edgeStrokeColor(e);
-  const dash = edgeStyleAttr(e.attrs.get('style'));
+  const obj = job.obj;
+  const stroke = obj !== null ? paintStr(obj, false) : 'black';
   for (let si = 0; si < spl.size; si++) {
     const bz = spl.list[si] as Bezier | undefined;
     if (bz === undefined || bz.size < 4) continue;
     const pts = bz.list.map((p) => transformPoint(p, job));
-    job.write('<path fill="none" stroke="' + stroke + '"' + dash + ' d="');
+    job.write('<path fill="none" stroke="' + stroke + '"');
+    if (obj !== null && Math.abs(obj.penWidth - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
+      emitPenWidth(job, obj.penWidth);
+    }
+    if (obj !== null) emitDash(job, obj.pen);
+    job.write(' d="');
     emitBezierPath(job, pts);
     job.write('"/>\n');
   }
 }
 
-/** Emit one filled arrowhead polygon with Adobe first-point repetition. */
-function emitArrowPolygon(rawPts: Point[], job: RenderJob, strokeWidth?: number): void {
+/**
+ * Emit one arrowhead polygon with pen color from job.obj and Adobe first-point
+ * repetition.  Exported so Lizard resets its line counter here (parser note above).
+ * @see plugin/core/gvrender_core_svg.c:svg_polygon (arrowhead case)
+ */
+export function emitArrowPolygon(rawPts: Point[], penColor: string, job: RenderJob, pw: number): void {
   const pts = rawPts.map((p) => transformPoint(p, job));
-  const sw = strokeWidth !== undefined && strokeWidth !== 1 ? ` stroke-width="${strokeWidth}"` : '';
-  job.write('<polygon fill="black" stroke="black"' + sw + ' points="');
+  job.write('<polygon fill="' + penColor + '" stroke="' + penColor + '"');
+  if (Math.abs(pw - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
+    emitPenWidth(job, pw);
+  }
+  job.write(' points="');
   emitPoints(job, pts);
   if (pts.length > 0) {
     const p0 = pts[0]!;
@@ -409,15 +419,18 @@ function emitArrowPolygon(rawPts: Point[], job: RenderJob, strokeWidth?: number)
 
 /**
  * Emit arrowhead polygon(s) for a routed edge (tail first, then head).
+ * Arrow fill and stroke use the edge pen color from job.obj (AD1).
  * @see plugin/core/gvrender_core_svg.c:svg_polygon (arrowhead case)
  * @see lib/common/arrows.c:arrow_type_normal
  */
 export function svgArrowPolygons(e: Edge, job: RenderJob): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const einfo = e.info as any;
-  const sw = e.attrs.get('style') === 'bold' ? 2 : undefined;
+  const obj = job.obj;
+  const penColor = obj !== null ? paintStr(obj, false) : 'black';
+  const pw = obj !== null ? obj.penWidth : 1.0;
   const tailPts = einfo._tailArrowPts as Point[] | undefined;
-  if (tailPts?.length) emitArrowPolygon(tailPts, job, sw);
+  if (tailPts?.length) emitArrowPolygon(tailPts, penColor, job, pw);
   const headPts = einfo._arrowPts as Point[] | undefined;
-  if (headPts?.length) emitArrowPolygon(headPts, job, sw);
+  if (headPts?.length) emitArrowPolygon(headPts, penColor, job, pw);
 }

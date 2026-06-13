@@ -29,6 +29,12 @@ import {
 } from '../common/htmltable-emit-rules.js';
 import { nodeAttr } from '../common/poly-init.js';
 import type { PlacedHtml } from '../common/htmltable-pos.js';
+import {
+  parseStyleFlags,
+  resolvePenColor,
+  resolvePenType,
+  resolvePenWidth,
+} from '../common/style-resolve.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -120,12 +126,25 @@ export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, do
  * @see lib/common/emit.c:emit_edge
  * @see lib/common/emit.c:emit_begin_edge:2715
  * @see lib/common/emit.c:emit_end_edge:3028
+ * @see lib/common/emit.c:emit_edge_graphics:2350 (color/pencolor/penwidth)
  */
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
   // push_obj_state in emit_begin_edge (line 2715)
   const obj = createObjState(ObjType.Edge);
   obj.emitState = EmitState.EDraw;
   job.pushObj(obj);
+  // Set edge pen style from attrs — mirrors emit_edge_graphics color/penwidth path
+  // (AD1: style must flow through job.obj, not ad-hoc attr reads in the renderer).
+  // Guard for TS narrowing: job.obj is non-null here (we just pushed).
+  if (job.obj !== null) {
+    const colorAttr = e.attrs.get('color');
+    const styleAttr = e.attrs.get('style');
+    const penwidthAttr = e.attrs.get('penwidth');
+    const flags = parseStyleFlags(styleAttr);
+    job.obj.penColor = { type: 'string', s: resolvePenColor(colorAttr) };
+    job.obj.pen = resolvePenType(flags);
+    job.obj.penWidth = resolvePenWidth(flags, penwidthAttr);
+  }
   try {
     // @see lib/common/emit.c:emit_begin_edge / getObjId
     setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
