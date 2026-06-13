@@ -17,6 +17,7 @@ import { Node } from '../model/node.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
 import { NODE_XLABEL } from '../layout/dot/rank.js';
 import { commonInitNode } from './nodeinit.js';
+import { HTML_STRING_MARK } from './html-string.js';
 
 const stubMeasurer: TextMeasurer = { measure: () => ({ w: 10, h: 5 }) };
 
@@ -127,5 +128,46 @@ describe('commonInitNode — NODE_XLABEL bit', () => {
     commonInitNode(n1, g);
     commonInitNode(n2, g);
     expect((g.info.has_labels ?? 0) & NODE_XLABEL).toBeTruthy();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// HTML xlabel — @see lib/common/utils.c:444 (aghtmlstr dispatch)
+// ---------------------------------------------------------------------------
+
+/** Build a node with an HTML xlabel attr. */
+function nodeWithHtmlXlabel(): { g: Graph; n: Node } {
+  const g = makeGraph();
+  const n = addNode(g, 'A', { xlabel: `${HTML_STRING_MARK}<b>x</b>` });
+  commonInitNode(n, g);
+  return { g, n };
+}
+
+describe('commonInitNode — html xlabel html flag', () => {
+  it('sets html=true', () => {
+    const { n } = nodeWithHtmlXlabel();
+    expect((n.info.xlabel as TextlabelT).html).toBe(true);
+  });
+
+  it('sets u.kind="html"', () => {
+    const { n } = nodeWithHtmlXlabel();
+    expect((n.info.xlabel as TextlabelT).u.kind).toBe('html');
+  });
+
+  it('set=false (not yet placed)', () => {
+    const { n } = nodeWithHtmlXlabel();
+    expect((n.info.xlabel as TextlabelT).set).toBe(false);
+  });
+});
+
+describe('commonInitNode — html xlabel bits', () => {
+  it('sets NODE_XLABEL bit', () => {
+    const { g } = nodeWithHtmlXlabel();
+    expect((g.root.info.has_labels ?? 0) & NODE_XLABEL).toBeTruthy();
+  });
+
+  it('plain-text xlabel remains html=false', () => {
+    const { n } = nodeWithXlabel('plain');
+    expect((n.info.xlabel as TextlabelT).html).toBe(false);
   });
 });

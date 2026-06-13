@@ -1,0 +1,4 @@
+// graphviz-ts reference input: combined: graph+cluster html labels, decorated table with anchor, edge label/head/tail, node xlabel
+// engine: dot
+// tolerance: deterministic
+digraph G { label=<gl>; subgraph cluster_0 { label=<cl>; A [label=<<TABLE BGCOLOR="lightyellow"><TR><TD BGCOLOR="lightblue" HREF="http://x">a</TD><VR/><TD SIDES="LT">b</TD></TR><HR/><TR><TD COLSPAN="2">c</TD></TR></TABLE>>]; } A -> B [label=<el> headlabel=<hl> taillabel=<tl>]; B [xlabel=<nx>]; }

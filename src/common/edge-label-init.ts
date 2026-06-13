@@ -15,7 +15,8 @@
 import type { Edge } from '../model/edge.js';
 import type { Graph } from '../model/graph.js';
 import type { TextMeasurer } from './textmeasure.js';
-import { makeLabel, DEFAULT_FONTNAME, DEFAULT_COLOR, DEFAULT_FONTSIZE } from './make-label.js';
+import { makeAnyLabel, DEFAULT_FONTNAME, DEFAULT_COLOR, DEFAULT_FONTSIZE } from './make-label.js';
+import { isHtmlValue, htmlValueContent } from './html-string.js';
 import { lateDouble } from '../common/nodeinit.js';
 import { EDGE_LABEL, EDGE_XLABEL, HEAD_LABEL, TAIL_LABEL } from '../layout/dot/rank.js';
 
@@ -118,14 +119,16 @@ function getLabelFontInfo(e: Edge): FontInfo {
 
 /**
  * Create center edge label and set EDGE_LABEL bit when label attr is non-empty.
- * HTML labels are a future mission; plain text only per architecture decision D2.
  *
  * @see lib/common/utils.c:common_init_edge (lines 517-523)
+ * @see lib/common/utils.c:519 — make_label(e, str, aghtmlstr(str), false, ...)
  */
 function applyLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): void {
   const str = e.attrs.get('label');
   if (!str) return;
-  e.info.label = makeLabel(str, fi.fontname, fi.fontsize, fi.fontcolor, measurer);
+  const isHtml = isHtmlValue(str);
+  const content = isHtml ? htmlValueContent(str) : str;
+  e.info.label = makeAnyLabel(content, isHtml, fi, measurer);
   g.info.has_labels |= EDGE_LABEL;
   // ED_label_ontop: mapbool(late_string(e, E_label_float, "false"))
   // @see lib/common/utils.c:522
@@ -141,11 +144,14 @@ function applyLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): vo
  * non-empty. Reuses fi if already initialized by applyLabel (C laziness).
  *
  * @see lib/common/utils.c:common_init_edge (lines 525-531)
+ * @see lib/common/utils.c:528 — make_label(e, str, aghtmlstr(str), false, ...)
  */
 function applyXLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): void {
   const str = e.attrs.get('xlabel');
   if (!str) return;
-  e.info.xlabel = makeLabel(str, fi.fontname, fi.fontsize, fi.fontcolor, measurer);
+  const isHtml = isHtmlValue(str);
+  const content = isHtml ? htmlValueContent(str) : str;
+  e.info.xlabel = makeAnyLabel(content, isHtml, fi, measurer);
   g.info.has_labels |= EDGE_XLABEL;
 }
 
@@ -153,11 +159,17 @@ function applyXLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): v
 // applyHeadLabel — @see lib/common/utils.c:533-538
 // ---------------------------------------------------------------------------
 
-/** Create head_label and set HEAD_LABEL bit when headlabel attr is non-empty. */
+/**
+ * Create head_label and set HEAD_LABEL bit when headlabel attr is non-empty.
+ * @see lib/common/utils.c:533-538
+ * @see lib/common/utils.c:535 — make_label(e, str, aghtmlstr(str), false, ...)
+ */
 function applyHeadLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer): void {
   const str = e.attrs.get('headlabel');
   if (!str) return;
-  e.info.head_label = makeLabel(str, lfi.fontname, lfi.fontsize, lfi.fontcolor, measurer);
+  const isHtml = isHtmlValue(str);
+  const content = isHtml ? htmlValueContent(str) : str;
+  e.info.head_label = makeAnyLabel(content, isHtml, lfi, measurer);
   g.info.has_labels = (g.info.has_labels ?? 0) | HEAD_LABEL;
 }
 
@@ -165,11 +177,17 @@ function applyHeadLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer
 // applyTailLabel — @see lib/common/utils.c:539-545
 // ---------------------------------------------------------------------------
 
-/** Create tail_label and set TAIL_LABEL bit when taillabel attr is non-empty. */
+/**
+ * Create tail_label and set TAIL_LABEL bit when taillabel attr is non-empty.
+ * @see lib/common/utils.c:539-545
+ * @see lib/common/utils.c:542 — make_label(e, str, aghtmlstr(str), false, ...)
+ */
 function applyTailLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer): void {
   const str = e.attrs.get('taillabel');
   if (!str) return;
-  e.info.tail_label = makeLabel(str, lfi.fontname, lfi.fontsize, lfi.fontcolor, measurer);
+  const isHtml = isHtmlValue(str);
+  const content = isHtml ? htmlValueContent(str) : str;
+  e.info.tail_label = makeAnyLabel(content, isHtml, lfi, measurer);
   g.info.has_labels = (g.info.has_labels ?? 0) | TAIL_LABEL;
 }
 

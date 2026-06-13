@@ -19,7 +19,7 @@
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
-import type { Point } from '../model/geom.js';
+import type { Point, Box } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { DebugOptions } from '../debug.js';
@@ -76,6 +76,14 @@ export interface RendererPlugin {
   endLabel?(job: RenderJob): void;
   beginCluster?(sg: Graph, job: RenderJob): void;
   endCluster?(sg: Graph, job: RenderJob): void;
+  /**
+   * Draw a user image filling box b (graph coordinates, as C's
+   * loadimage plugins receive it). Renderers without image support
+   * omit this — C formats without a loadimage plugin skip the shape.
+   * @see lib/gvc/gvrender.c:gvrender_usershape
+   * @see plugin/core/gvloadimage_core.c:core_loadimage_svg
+   */
+  usershape?(src: string, b: Box, job: RenderJob): void;
 }
 
 // ---------------------------------------------------------------------------

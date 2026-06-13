@@ -1,0 +1,4 @@
+// graphviz-ts reference input: cluster html label, bold
+// engine: dot
+// tolerance: deterministic
+digraph G { subgraph cluster_0 { label=<<b>cl</b>>; A; } A -> B; }

@@ -21,11 +21,11 @@
  * @see plugin/core/gvrender_core_svg.c
  */
 
-import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
-import type { Point, Box, Bezier } from '../model/geom.js';
+import type { Point, Bezier } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
+import { HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL } from '../common/emit-types.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
 import { PenType } from '../gvc/context.js';
 import { transformPoint } from '../gvc/device.js';
@@ -204,8 +204,9 @@ export function emitAnchorAttrs(
   job: RenderJob,
 ): void {
   if (href.length > 0) {
-    const h = escapeXml(href);
-    job.write(' xlink:href="' + h + '" href="' + h + '"');
+    // C svg_begin_anchor writes xlink:href only.
+    // @see plugin/core/gvrender_core_svg.c:svg_begin_anchor
+    job.write(' xlink:href="' + escapeXml(href) + '"');
   }
   if (tooltip.length > 0) {
     job.write(' xlink:title="' + escapeXml(tooltip) + '"');
@@ -249,6 +250,39 @@ export function svgEndAnchor(job: RenderJob): void {
  *
  * @see plugin/core/gvrender_core_svg.c:svg_textspan
  */
+/**
+ * Build the text-decoration value string for HTML_UL / HTML_OL / HTML_S flags.
+ * Returns empty string when no decoration flags are set.
+ * @see plugin/core/gvrender_core_svg.c:svg_textspan lines 501-515
+ */
+function textDecorationValue(flags: number): string {
+  const parts: string[] = [];
+  if (flags & HTML_UL) parts.push('underline');
+  if (flags & HTML_OL) parts.push('overline');
+  if (flags & HTML_S)  parts.push('line-through');
+  return parts.join(',');
+}
+
+/**
+ * Emit HTML font-flag SVG attributes (font-weight, font-style,
+ * text-decoration, baseline-shift) and fill color for a text span.
+ * Omits each attribute when it is at its default value, matching C exactly.
+ * @see plugin/core/gvrender_core_svg.c:svg_textspan lines 495-531
+ */
+function emitFontAttrs(flags: number, fontColor: string | null, job: RenderJob): void {
+  if (flags & HTML_BF) job.write(' font-weight="bold"');
+  if (flags & HTML_IF) job.write(' font-style="italic"');
+  const dec = flags & (HTML_UL | HTML_OL | HTML_S)
+    ? textDecorationValue(flags) : '';
+  if (dec) job.write(' text-decoration="' + dec + '"');
+  if (flags & HTML_SUP) job.write(' baseline-shift="super"');
+  if (flags & HTML_SUB) job.write(' baseline-shift="sub"');
+  // Omit fill when null or "black" — C omits when pencolor == "black".
+  if (fontColor !== null && fontColor.toLowerCase() !== 'black') {
+    job.write(' fill="' + escapeXml(fontColor) + '"');
+  }
+}
+
 export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   const anchor = textAnchor(span.just);
   // C writes: p.y += yoffset_centerline; then gvprintdouble(job, -p.y)
@@ -262,6 +296,7 @@ export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   job.printDouble(y);
   job.write('"');
   job.write(' font-family="' + escapeXml(fontName) + '"');
+  emitFontAttrs(span.fontFlags, span.fontColor, job);
   job.write(' font-size="' + span.fontSize.toFixed(2) + '"');
   job.write('>' + escapeXml(span.str) + '</text>\n');
 }

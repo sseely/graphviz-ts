@@ -19,11 +19,17 @@ import type {
   HtmlText,
   HtmlTextItem,
   HtmlVAlign,
-  HtmlVR,
   Token,
   OpenToken,
 } from './htmltable-types.js';
-import { HtmlParseError } from './htmltable-types.js';
+import {
+  HtmlParseError,
+  BORDER_LEFT,
+  BORDER_TOP,
+  BORDER_RIGHT,
+  BORDER_BOTTOM,
+  BORDER_MASK,
+} from './htmltable-types.js';
 import { tokenize } from './htmltable-lex.js';
 
 // ---------------------------------------------------------------------------
@@ -257,6 +263,54 @@ const parseFixedSize = (a: Record<string, string>): true | undefined =>
 const parseTitle = (a: Record<string, string>): string | undefined =>
   a['title'] !== undefined ? a['title'] : a['tooltip'];
 
+/**
+ * Parse SIDES attribute into a bitmask matching C sidesfn().
+ * Unrecognised chars are silently skipped (C issues a warning but continues).
+ * C guard: if (flags != BORDER_MASK) p->flags |= flags — the full-mask case
+ * is a no-op (means "all sides", the default), so we return undefined for it.
+ * @see lib/common/htmllex.c:sidesfn
+ */
+const parseSides = (v: string | undefined): number | undefined => {
+  if (v === undefined) return undefined;
+  let flags = 0;
+  for (const c of v.toLowerCase()) {
+    if (c === 'l') flags |= BORDER_LEFT;
+    else if (c === 't') flags |= BORDER_TOP;
+    else if (c === 'r') flags |= BORDER_RIGHT;
+    else if (c === 'b') flags |= BORDER_BOTTOM;
+  }
+  // C: if (flags != BORDER_MASK) p->flags |= flags
+  if (flags === 0 || flags === BORDER_MASK) return undefined;
+  return flags;
+};
+
+/**
+ * Parse GRADIENTANGLE attribute — integer in [0, 360].
+ * Out-of-range or non-integer values are ignored (C issues a warning).
+ * @see lib/common/htmllex.c:gradientanglefn
+ */
+const parseGradientAngle = (v: string | undefined): number | undefined => {
+  if (v === undefined) return undefined;
+  const n = parseInt(v, 10);
+  if (isNaN(n) || String(n) !== v.trim()) return undefined;
+  if (n < 0 || n > 360) return undefined;
+  return n;
+};
+
+/**
+ * Parse COLUMNS attribute — only "*" is valid (sets vrule=true).
+ * @see lib/common/htmllex.c:columnsfn
+ */
+const parseColumns = (v: string | undefined): true | undefined =>
+  v === '*' ? true : undefined;
+
+/**
+ * Parse ROWS attribute — only "*" is valid (sets hrule=true).
+ * @see lib/common/htmllex.c:rowsfn
+ */
+const parseRows = (v: string | undefined): true | undefined =>
+  v === '*' ? true : undefined;
+
 const buildCell = (content: HtmlCellContent[], a: Record<string, string>): HtmlCell => ({
   kind: 'cell',
   content,
@@ -269,7 +323,8 @@ const buildCell = (content: HtmlCellContent[], a: Record<string, string>): HtmlC
   border: num(a['border']),
   cellpadding: num(a['cellpadding']),
   cellspacing: num(a['cellspacing']),
-  sides: a['sides'],
+  sides: parseSides(a['sides']),
+  gradientangle: parseGradientAngle(a['gradientangle']),
   style: a['style'],
   width: num(a['width']),
   height: num(a['height']),
@@ -292,7 +347,7 @@ const parseCell = (
 // ---------------------------------------------------------------------------
 
 const processRowToken = (
-  s: ParseState, t: Token, cells: (HtmlCell | HtmlVR)[], fontStack: FontState[],
+  s: ParseState, t: Token, cells: HtmlCell[], fontStack: FontState[],
 ): void => {
   if (t.type === 'open' && (t.tag === 'TD' || t.tag === 'TH')) {
     consume(s);
@@ -303,7 +358,12 @@ const processRowToken = (
     consume(s);
     const nxt = peek(s);
     if (nxt?.type === 'close' && nxt.tag === 'VR') consume(s);
-    cells.push({ kind: 'vr' as const });
+    // C grammar: "cells VR cell" — VR marks the PRECEDING cell as
+    // vertically ruled; VR without a preceding cell is a syntax error.
+    // @see lib/common/htmlparse.y:329
+    const prev = cells[cells.length - 1];
+    if (prev === undefined) throw new HtmlParseError('VR');
+    prev.vruled = true;
     return;
   }
   consume(s);
@@ -311,7 +371,7 @@ const processRowToken = (
 
 /** @see lib/common/htmlparse.y:row + cells rules */
 const parseRow = (s: ParseState, fontStack: FontState[]): HtmlRow => {
-  const cells: (HtmlCell | HtmlVR)[] = [];
+  const cells: HtmlCell[] = [];
   while (s.pos < s.tokens.length) {
     const t = peek(s);
     if (!t) break;
@@ -346,21 +406,62 @@ const buildTable = (rows: HtmlRow[], a: Record<string, string>): HtmlTable => ({
   title: parseTitle(a),
   target: a['target'],
   id: a['id'],
+  port: a['port'],
+  sides: parseSides(a['sides']),
+  gradientangle: parseGradientAngle(a['gradientangle']),
+  vrule: parseColumns(a['columns']),
+  hrule: parseRows(a['rows']),
 });
 
 /** @see lib/common/htmlparse.y:table rule / lib/common/htmllex.c:mkTbl */
 export const parseTable = (s: ParseState, fontStack: FontState[]): HtmlTable => {
   const open = consume(s); // consume <TABLE>
   if (open.type !== 'open' || open.tag !== 'TABLE') throw new HtmlParseError('TABLE');
+  // C addRow: every row starts ruled when ROWS="*" (htmlparse.y addRow);
+  // C setCell: every cell starts vruled when COLUMNS="*".
+  const hrule = parseRows(open.attrs['rows']) === true;
+  const vrule = parseColumns(open.attrs['columns']) === true;
   const rows: HtmlRow[] = [];
   while (s.pos < s.tokens.length) {
     const t = peek(s);
     if (!t) break;
     if (t.type === 'close' && t.tag === 'TABLE') { consume(s); break; }
-    if (t.type === 'open' && t.tag === 'TR') { consume(s); rows.push(parseRow(s, fontStack)); continue; }
+    if (t.type === 'open' && t.tag === 'TR') {
+      consume(s);
+      rows.push(parseTableRow(s, fontStack, { hrule, vrule }));
+      continue;
+    }
+    if (t.type === 'open' && t.tag === 'HR') {
+      consumeRowHr(s, rows);
+      continue;
+    }
     consume(s);
   }
   return buildTable(rows, open.attrs);
+};
+
+/** Parse one row, applying table-level rule defaults. @see lib/common/htmlparse.y addRow/setCell */
+const parseTableRow = (
+  s: ParseState, fontStack: FontState[], opts: { hrule: boolean; vrule: boolean },
+): HtmlRow => {
+  const row = parseRow(s, fontStack);
+  if (opts.hrule) row.ruled = true;
+  if (opts.vrule) for (const c of row.cells) c.vruled = true;
+  return row;
+};
+
+/**
+ * <HR> between rows marks the PRECEDING row as ruled; HR before any
+ * row is a syntax error in the C grammar.
+ * @see lib/common/htmlparse.y:321 ("rows HR row")
+ */
+const consumeRowHr = (s: ParseState, rows: HtmlRow[]): void => {
+  consume(s);
+  const nxt = peek(s);
+  if (nxt?.type === 'close' && nxt.tag === 'HR') consume(s);
+  const prev = rows[rows.length - 1];
+  if (prev === undefined) throw new HtmlParseError('HR');
+  prev.ruled = true;
 };
 
 // ---------------------------------------------------------------------------

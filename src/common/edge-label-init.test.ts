@@ -26,6 +26,7 @@ import {
   initEdgeLabels,
 } from './edge-label-init.js';
 import { DEFAULT_FONTNAME, DEFAULT_COLOR, DEFAULT_FONTSIZE } from './make-label.js';
+import { HTML_STRING_MARK } from './html-string.js';
 
 // ---------------------------------------------------------------------------
 // Stub measurer — geometry zeroed; sufficient for init-phase tests
@@ -344,5 +345,78 @@ describe('initEdgeLabels — xlabel fi laziness', () => {
     expect(e.info.xlabel?.fontname).toBe('Courier');
     expect(e.info.label?.fontsize).toBe(10);
     expect(e.info.xlabel?.fontsize).toBe(10);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// HTML edge labels — @see lib/common/utils.c:519/528/535/542 (aghtmlstr)
+// ---------------------------------------------------------------------------
+
+/** Build an edge with a single HTML attr set. */
+function edgeWithHtmlAttr(
+  attrKey: string,
+): { g: Graph; e: Edge } {
+  return makeEdgeInGraph(new Map([[attrKey, `${HTML_STRING_MARK}<b>h</b>`]]));
+}
+
+describe('initEdgeLabels — html label', () => {
+  it('html=true for html label attr', () => {
+    const { g, e } = edgeWithHtmlAttr('label');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.html).toBe(true);
+  });
+
+  it('u.kind="html" for html label attr', () => {
+    const { g, e } = edgeWithHtmlAttr('label');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.u.kind).toBe('html');
+  });
+
+  it('set=false for html label attr', () => {
+    const { g, e } = edgeWithHtmlAttr('label');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.label?.set).toBe(false);
+  });
+});
+
+describe('initEdgeLabels — html xlabel', () => {
+  it('html=true for html xlabel attr', () => {
+    const { g, e } = edgeWithHtmlAttr('xlabel');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.xlabel?.html).toBe(true);
+  });
+
+  it('u.kind="html" for html xlabel attr', () => {
+    const { g, e } = edgeWithHtmlAttr('xlabel');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.xlabel?.u.kind).toBe('html');
+  });
+});
+
+describe('initEdgeLabels — html headlabel', () => {
+  it('html=true for html headlabel attr', () => {
+    const { g, e } = edgeWithHtmlAttr('headlabel');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.head_label?.html).toBe(true);
+  });
+
+  it('u.kind="html" for html headlabel attr', () => {
+    const { g, e } = edgeWithHtmlAttr('headlabel');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.head_label?.u.kind).toBe('html');
+  });
+});
+
+describe('initEdgeLabels — html taillabel', () => {
+  it('html=true for html taillabel attr', () => {
+    const { g, e } = edgeWithHtmlAttr('taillabel');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.tail_label?.html).toBe(true);
+  });
+
+  it('u.kind="html" for html taillabel attr', () => {
+    const { g, e } = edgeWithHtmlAttr('taillabel');
+    initEdgeLabels(e, g, stubMeasurer);
+    expect(e.info.tail_label?.u.kind).toBe('html');
   });
 });

@@ -7,5 +7,5 @@ informal check here (T9 formalizes it).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T4 | Creation dispatch, 7 slots ([T4-creation-dispatch.md](T4-creation-dispatch.md)) | sonnet | src/common/nodeinit.ts, edge-label-init.ts, src/layout/dot/graph-label.ts (+tests) | T1 | [ ] |
-| T5 | Font-flag chain pos→emit ([T5-font-flags.md](T5-font-flags.md)) | sonnet | src/common/htmltable-pos.ts, htmltable-emit.ts, src/render/svg-helpers.ts (+tests) | T2 | [ ] |
+| T4 | Creation dispatch, 7 slots ([T4-creation-dispatch.md](T4-creation-dispatch.md)) | sonnet | src/common/nodeinit.ts, edge-label-init.ts, src/layout/dot/graph-label.ts (+tests) | T1 | [x] |
+| T5 | Font-flag chain pos→emit ([T5-font-flags.md](T5-font-flags.md)) | sonnet | src/common/htmltable-pos.ts, htmltable-emit.ts, src/render/svg-helpers.ts (+tests) | T2 | [x] |

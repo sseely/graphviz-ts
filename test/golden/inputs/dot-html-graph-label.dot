@@ -1,0 +1,4 @@
+// graphviz-ts reference input: root graph html label, bold
+// engine: dot
+// tolerance: deterministic
+digraph G { label=<<b>gl</b>>; A -> B; }

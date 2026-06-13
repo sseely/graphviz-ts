@@ -42,17 +42,41 @@ export interface HtmlHR {
   kind: 'hr';
 }
 
-/** @see lib/common/htmltable.h (VR separator between cells) */
-export interface HtmlVR {
-  kind: 'vr';
-}
+/**
+ * Border-side bitmask constants matching C htmltable.h BORDER_* defines.
+ * @see lib/common/htmltable.h:BORDER_LEFT etc.
+ */
+export const BORDER_LEFT   = 1 << 10; // 0x0400
+export const BORDER_TOP    = 1 << 11; // 0x0800
+export const BORDER_RIGHT  = 1 << 12; // 0x1000
+export const BORDER_BOTTOM = 1 << 13; // 0x2000
+export const BORDER_MASK   = BORDER_LEFT | BORDER_TOP | BORDER_RIGHT | BORDER_BOTTOM;
 
 /** @see lib/common/htmltable.h:htmlimg_t */
 export interface HtmlImage {
   kind: 'image';
   src: string;
   scale?: string;
+  /** AD3: computed image width in points (from htmlimg_t.box.UR.x). */
+  width?: number;
+  /** AD3: computed image height in points (from htmlimg_t.box.UR.y). */
+  height?: number;
 }
+
+/**
+ * Callback for resolving image dimensions in HTML labels.
+ *
+ * Returns the intrinsic {w, h} in points for `src`, or null when the image
+ * cannot be resolved.  Absent or null → zero-size cell + warning, matching
+ * C's missing-image behavior (htmltable.c:size_html_img, gvusershape.c).
+ *
+ * AD3 (locked): absent ImageSizer must be indistinguishable from
+ * C-with-missing-file.
+ *
+ * @see lib/common/htmltable.c:size_html_img (line 1080)
+ * @see lib/gvc/gvusershape.c:gvusershape_size
+ */
+export type ImageSizer = (src: string) => { w: number; h: number } | null;
 
 /**
  * A single run of styled text within a line.
@@ -91,6 +115,12 @@ export type HtmlCellContent = HtmlText | HtmlTable | HtmlImage | HtmlHR;
 export interface HtmlCell {
   kind: 'cell';
   content: HtmlCellContent[];
+  /**
+   * Vertical rule right of this cell: set by <VR> between cells
+   * (htmlparse.y:329) or table COLUMNS="*" (htmlparse.y setCell).
+   * @see lib/common/htmltable.h:htmlcell_t.vruled
+   */
+  vruled?: boolean;
   port?: string;
   align?: HtmlAlign;
   valign?: HtmlVAlign;
@@ -100,7 +130,18 @@ export interface HtmlCell {
   border?: number;
   cellpadding?: number;
   cellspacing?: number;
-  sides?: string;
+  /**
+   * Bitmask of exposed border sides (BORDER_LEFT|TOP|RIGHT|BOTTOM).
+   * @see lib/common/htmltable.h:htmldata_t.sides
+   * @see lib/common/htmllex.c:sidesfn
+   */
+  sides?: number;
+  /**
+   * Gradient angle in degrees [0, 360].
+   * @see lib/common/htmltable.h:htmldata_t.gradientangle
+   * @see lib/common/htmllex.c:gradientanglefn
+   */
+  gradientangle?: number;
   style?: string;
   width?: number;
   height?: number;
@@ -116,7 +157,13 @@ export interface HtmlCell {
 
 /** @see lib/common/htmltable.h:row_t */
 export interface HtmlRow {
-  cells: (HtmlCell | HtmlVR)[];
+  cells: HtmlCell[];
+  /**
+   * Horizontal rule below this row: set by <HR> between rows
+   * (htmlparse.y:321) or table ROWS="*" (htmlparse.y addRow).
+   * @see lib/common/htmltable.h:row_t.ruled
+   */
+  ruled?: boolean;
 }
 
 /** @see lib/common/htmltable.h:htmltbl_t */
@@ -139,6 +186,35 @@ export interface HtmlTable {
   title?: string;
   target?: string;
   id?: string;
+  /**
+   * Port name for this table (AD6: store only, attachment deferred).
+   * @see lib/common/htmltable.h:htmldata_t.port
+   */
+  port?: string;
+  /**
+   * Bitmask of exposed border sides (BORDER_LEFT|TOP|RIGHT|BOTTOM).
+   * @see lib/common/htmltable.h:htmldata_t.sides
+   * @see lib/common/htmllex.c:sidesfn
+   */
+  sides?: number;
+  /**
+   * Gradient angle in degrees [0, 360].
+   * @see lib/common/htmltable.h:htmldata_t.gradientangle
+   * @see lib/common/htmllex.c:gradientanglefn
+   */
+  gradientangle?: number;
+  /**
+   * Draw vertical rules between all columns (COLUMNS="*").
+   * @see lib/common/htmltable.h:htmltbl_t.vrule
+   * @see lib/common/htmllex.c:columnsfn
+   */
+  vrule?: boolean;
+  /**
+   * Draw horizontal rules between all rows (ROWS="*").
+   * @see lib/common/htmltable.h:htmltbl_t.hrule
+   * @see lib/common/htmllex.c:rowsfn
+   */
+  hrule?: boolean;
   dimen?: { w: number; h: number };
 }
 

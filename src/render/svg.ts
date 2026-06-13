@@ -19,7 +19,7 @@
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
-import type { Point } from '../model/geom.js';
+import type { Point, Box } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { RendererPlugin, LabelType } from '../gvc/context.js';
 import type { RenderJob } from '../gvc/job.js';
@@ -41,6 +41,7 @@ import {
   svgComment,
   svgEdgePath,
   svgArrowPolygons,
+  escapeXml,
 } from './svg-helpers.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 
@@ -111,6 +112,24 @@ export class SvgRenderer implements RendererPlugin {
   }
 
   polyline(pts: Point[], job: RenderJob): void { svgPolyline(pts, job); }
+
+  /**
+   * Emit an <image> element. C formats numbers with %g here (not the
+   * svg_printdouble used elsewhere); toPrecision(6) reproduces %g.
+   * Deviation: C writes us->name raw (gvputs); the port XML-escapes the
+   * src so metacharacter paths cannot produce invalid SVG.
+   * @see plugin/core/gvloadimage_core.c:core_loadimage_svg
+   */
+  usershape(src: string, b: Box, job: RenderJob): void {
+    const g = (n: number): string => String(parseFloat(n.toPrecision(6)));
+    const width = b.ur.x - b.ll.x;
+    const height = b.ur.y - b.ll.y;
+    const originx = (b.ur.x + b.ll.x - width) / 2;
+    const originy = (b.ur.y + b.ll.y + height) / 2;
+    job.write('<image xlink:href="' + escapeXml(src) + '" width="' + g(width)
+      + 'px" height="' + g(height) + 'px" preserveAspectRatio="xMinYMin meet" x="'
+      + g(originx) + '" y="' + g(-originy) + '"/>\n');
+  }
 
   comment(text: string, job: RenderJob): void { svgComment(text, job); }
 

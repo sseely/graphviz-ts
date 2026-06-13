@@ -1,0 +1,4 @@
+// graphviz-ts reference input: html font nesting: b/i/u/s/color, nested b+i, multi-line
+// engine: dot
+// tolerance: deterministic
+digraph G { A [label=<<b>b</b><i>i</i><u>u</u><s>s</s><font color="red">red</font>>]; B [label=<<b><i>bi</i></b><br/><u>line2</u>>]; A -> B; }
