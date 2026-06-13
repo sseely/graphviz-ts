@@ -62,12 +62,13 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 }
 
 // ---------------------------------------------------------------------------
-// Suite-level check: manifest must have exactly 109 entries
-// (82 baseline + 15 render-styling + 12 multicolor-paint goldens)
+// Suite-level check: manifest must have exactly 111 entries
+// (82 baseline + 15 render-styling + 12 multicolor-paint
+//  + 2 semicolon split-along-length edge goldens)
 // ---------------------------------------------------------------------------
 
-test('manifest has 109 entries', () => {
-  expect(manifest).toHaveLength(109);
+test('manifest has 111 entries', () => {
+  expect(manifest).toHaveLength(111);
 });
 
 // ---------------------------------------------------------------------------

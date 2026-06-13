@@ -878,5 +878,21 @@
     "input": "test/golden/inputs/mc-combined.dot",
     "reference": "test/golden/refs/mc-combined.svg",
     "description": "gradient node + striped node + gradient cluster bg + multicolor edge; ref: graphviz 15.0.0 dot -Tsvg; mission multicolor-paint"
+  },
+  {
+    "id": "dot-edge-multicolor-semi",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-multicolor-semi.dot",
+    "reference": "test/golden/refs/dot-edge-multicolor-semi.svg",
+    "description": "two-color split-along-length edge (semicolon); ref: graphviz 15.0.0 dot -Tsvg; follow-up edge-multicolor-semicolon"
+  },
+  {
+    "id": "dot-edge-multicolor-semi-3",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-multicolor-semi-3.dot",
+    "reference": "test/golden/refs/dot-edge-multicolor-semi-3.svg",
+    "description": "three-color split-along-length edge; ref: graphviz 15.0.0 dot -Tsvg; follow-up edge-multicolor-semicolon"
   }
 ]

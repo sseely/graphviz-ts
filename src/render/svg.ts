@@ -46,6 +46,7 @@ import {
   escapeXml,
 } from './svg-helpers.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
+import { emitSplitEdgePaths } from './svg-edge-split.js';
 
 // ---------------------------------------------------------------------------
 // Multicolor arrow helpers
@@ -99,7 +100,14 @@ export class SvgRenderer implements RendererPlugin {
   endEdge(e: Edge, job: RenderJob): void {
     const colorAttr = e.attrs.get('color') ?? '';
     const numc = (colorAttr.match(/:/g) ?? []).length;
-    if (numc > 0) {
+    const numsemi = (colorAttr.match(/;/g) ?? []).length;
+    if (numsemi > 0 && numc > 0) {
+      // Split-along-length branch (semicolon syntax).
+      // Arrow rule is inverted: tail = first color, head = endcolor.
+      // @see lib/common/emit.c:2390 if (numsemi && numc) multicolor()
+      const { firstColor, endColor } = emitSplitEdgePaths(e, job, colorAttr);
+      emitMulticolorArrows(e, job, endColor, firstColor);
+    } else if (numc > 0) {
       // Multicolor parallel-bezier branch
       // @see lib/common/emit.c:2443 else if (numc)
       const { headColor, tailColor } = emitParallelEdgePaths(e, job, colorAttr);
