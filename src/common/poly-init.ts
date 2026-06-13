@@ -74,9 +74,12 @@ export function assignShapeInfo(n: Node, polyDesc: PolygonT): void {
   const h = n.info.height !== undefined
     ? n.info.height * 72
     : (n.info.ht || DEFAULT_HT);
+  const base = n.info.base_width !== undefined && n.info.base_height !== undefined
+    ? { w: n.info.base_width * 72, h: n.info.base_height * 72 }
+    : undefined;
   n.info.shape_info = {
     ...polyDesc,
-    vertices: computeVertices(polyDesc, w, h),
+    vertices: computeVertices(polyDesc, w, h, base),
   } as PolygonT;
 }
 
@@ -95,7 +98,7 @@ export function buildNodeLabel(n: Node, g: Graph, measurer: TextMeasurer): void 
   const font = readFontAttrs(n, g);
   const isHtml = labelAttr !== undefined && isHtmlValue(labelAttr);
   const content = isHtml ? htmlValueContent(labelAttr) : (labelAttr ?? n.name);
-  n.info.label = makeAnyLabel(content, isHtml, font, measurer);
+  n.info.label = makeAnyLabel(content, isHtml, font, measurer, n);
 }
 
 export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {

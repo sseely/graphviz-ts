@@ -24,8 +24,10 @@ import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
 import {
   setHtmlAnchorObj,
+  setHtmlObjImgscale,
   resetHtmlAnchorIds,
 } from '../common/htmltable-emit-rules.js';
+import { nodeAttr } from '../common/poly-init.js';
 import type { PlacedHtml } from '../common/htmltable-pos.js';
 
 // ---------------------------------------------------------------------------
@@ -88,6 +90,7 @@ export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, do
   // C emit_begin_node: job->obj carries the node id/label for anchors.
   // @see lib/common/emit.c:emit_begin_node / getObjId
   setHtmlAnchorObj('node' + (n.id + 1), labelTextOf(n.info.label));
+  setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
   if (shape?.fns?.codefn) shape.fns.codefn(job, n);

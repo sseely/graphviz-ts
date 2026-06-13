@@ -164,21 +164,20 @@ QAtom
   / HtmlString
 
 // scan.l: ["] begins qstring state; ["] ends it → T_qatom
-// scan.l escape sequences: \" → ", \\ → \\, \n → newline ignored (escaped),
-//   \n (bare) → kept, \l \r kept verbatim, \t → tab, \X → X
+// scan.l applies exactly TWO transformations inside quoted strings:
+//   \" → "   and   \<newline> → dropped (escaped line continuation).
+// EVERYTHING else — \\, \n, \l, \r, \t, \N, \X — is kept verbatim;
+// escape interpretation belongs to the consumers (make_simple_label,
+// strdup_and_subst_obj0, interpretCRNL, record parsing).
+// @see lib/cgraph/scan.l (qstring rules, :137-142)
 QuotedString
   = '"' chars:QChar* '"'
     { return chars.join(""); }
 
 QChar
   = '\\"'        { return '"'; }
-  / '\\\\'       { return '\\'; }
-  / '\\n'        { return '\n'; }
-  / '\\t'        { return '\t'; }
-  / '\\l'        { return '\\l'; }
-  / '\\r'        { return '\\r'; }
-  / '\\\n'       { return ''; }           // scan.l: escaped newline ignored
-  / '\\' c:.    { return c; }            // scan.l: \X → X for any other char
+  / '\\\n'       { return ''; }           // scan.l:140 escaped newline ignored
+  / '\\' c:.    { return '\\' + c; }     // scan.l:139,142 escapes kept verbatim
   / [^"\\]
 
 // scan.l: [<] begins hstring state; tracks html_nest for matching '>'

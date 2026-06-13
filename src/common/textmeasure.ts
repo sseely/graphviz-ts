@@ -90,6 +90,8 @@ export function estimate_text_width_1pt(
  * FreeType line-spacing ratio measured from graphviz 15.0.0 reference SVGs.
  * 14pt Times-Roman label height = 16.5pt → ratio = 16.5/14.
  * C's LINESPACING=1.20 is a fallback estimate; actual FreeType gives ~1.17857.
+ * Kept for callers that want the 14pt-calibrated linear approximation;
+ * the measurer itself uses the exact hinted model (freetypeLineHeight).
  * @see lib/common/textspan.c:estimate_textspan_size
  */
 export const FREETYPE_LINE_SPACING = 16.5 / 14;
@@ -133,10 +135,30 @@ export function freetypeHintedWidth(
  */
 export const FREETYPE_ASCENT_RATIO = 1825 / 2048;
 
-/** FreeType-hinted font ascent in points (baseline distance from line top). */
+/** Times-Roman descender ratio (hhea descender 443/2048em). */
+export const FREETYPE_DESCENT_RATIO = 443 / 2048;
+
+/**
+ * FreeType-hinted font ascent in points (baseline distance from line
+ * top). FreeType rounds the ascender UP to the pixel grid
+ * (FT_PIX_CEIL); at 14pt ceil and round coincide (16.63 → 17px).
+ */
 export function freetypeAscent(fontsize: number): number {
-  const px = Math.round(FREETYPE_ASCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
+  const px = Math.ceil(FREETYPE_ASCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
   return px * PT_PER_FREETYPE_PX;
+}
+
+/**
+ * FreeType-hinted line height in points: ceil-hinted ascender plus
+ * ceil-hinted descender magnitude (FT_PIX_CEIL / FT_PIX_FLOOR on the
+ * negative descender). Verified against graphviz 15.0.0 two-line
+ * baseline deltas for fontsizes 6-48 (e.g. 14pt → 17+5 px = 16.5pt,
+ * 20pt → 24+6 px = 22.5pt).
+ */
+export function freetypeLineHeight(fontsize: number): number {
+  const asc = Math.ceil(FREETYPE_ASCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
+  const desc = Math.ceil(FREETYPE_DESCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
+  return (asc + desc) * PT_PER_FREETYPE_PX;
 }
 
 /**
@@ -154,7 +176,7 @@ export class LutTextMeasurer implements TextMeasurer {
     const bold = flags?.bold === true;
     const italic = flags?.italic === true;
     const w = freetypeHintedWidth(fontname, text, fontsize, bold, italic);
-    return { w, h: fontsize * FREETYPE_LINE_SPACING };
+    return { w, h: freetypeLineHeight(fontsize) };
   }
 }
 

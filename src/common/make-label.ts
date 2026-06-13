@@ -13,6 +13,7 @@ import type { TextlabelT } from './types.js';
 import type { TextMeasurer, TextSize } from './textmeasure.js';
 import type { TextSpan } from './emit-types.js';
 import { makeHtmlLabel } from './htmltable-pos.js';
+import { substObj, type GraphObj } from './subst.js';
 
 export const DEFAULT_FONTSIZE = 14.0;
 export const DEFAULT_FONTNAME = 'Times,serif';
@@ -43,18 +44,73 @@ function buildSpan(
   };
 }
 
+/** One line split out of a label, with its justification terminator. */
+interface LabelLine { text: string; just: 'n' | 'l' | 'r'; }
+
+const isJust = (c: string | undefined): c is 'n' | 'l' | 'r' =>
+  c === 'n' || c === 'l' || c === 'r';
+
+/**
+ * Split label text into lines at \n / \l / \r escapes and literal
+ * newlines; the terminator becomes the line's justification. Any other
+ * escape drops its backslash and keeps the following character
+ * (including \\ → \) — the lexer delivers escapes verbatim and this
+ * is where C interprets them.
+ * @see lib/common/labels.c:make_simple_label
+ */
+export function splitLabelLines(text: string): LabelLine[] {
+  const lines: LabelLine[] = [];
+  let cur = '';
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]!;
+    if (c === '\\' && i + 1 < text.length) {
+      const e = text[++i]!;
+      if (isJust(e)) {
+        lines.push({ text: cur, just: e });
+        cur = '';
+      } else {
+        cur += e; // C default: agxbputc(&line, *p) — backslash dropped
+      }
+    } else if (c === '\n') {
+      lines.push({ text: cur, just: 'n' });
+      cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  if (cur.length > 0) lines.push({ text: cur, just: 'n' });
+  return lines;
+}
+
+/** C LINESPACING — empty lines take (int)(fontsize * 1.2). @see const.h:LINESPACING */
+const LINESPACING = 1.2;
+
+/** Build one measured span for a label line. @see labels.c:storeline */
+function buildLineSpan(line: LabelLine, font: FontInfo, measurer: TextMeasurer): TextSpan {
+  const measured = line.text.length > 0
+    ? measurer.measure(line.text, font.fontname, font.fontsize)
+    : { w: 0, h: Math.trunc(font.fontsize * LINESPACING) };
+  const span = buildSpan(line.text, font, measured);
+  span.just = line.just;
+  return span;
+}
+
+/** @see lib/common/labels.c:make_simple_label / storeline */
 function makePlainLabel(
   text: string,
   font: FontInfo,
   measurer: TextMeasurer,
 ): TextlabelT {
-  const measured = measurer.measure(text, font.fontname, font.fontsize);
+  const spans = splitLabelLines(text).map((ln) => buildLineSpan(ln, font, measurer));
+  // dimen.x = max line width; dimen.y accumulates heights; space = dimen.
+  const w = spans.reduce((a, sp) => Math.max(a, sp.size.x), 0);
+  const h = spans.reduce((a, sp) => a + sp.size.y, 0);
   return {
     text, ...font, charset: 0,
-    dimen: { x: measured.w, y: measured.h },
-    space: { x: measured.w, y: measured.h },
+    dimen: { x: w, y: h },
+    space: { x: w, y: h },
     pos: { x: 0, y: 0 },
-    u: { kind: 'txt', span: [buildSpan(text, font, measured)], nspans: 1 },
+    u: { kind: 'txt', span: spans, nspans: spans.length },
     valign: 'c'.charCodeAt(0),
     set: false, html: false,
   };
@@ -96,6 +152,7 @@ export function makeAnyLabel(
   isHtml: boolean,
   font: FontInfo,
   measurer: TextMeasurer,
+  obj?: GraphObj,
 ): TextlabelT {
   // labels.c:119 — is_html &= !streq(str, "");
   if (isHtml && content !== '') {
@@ -103,5 +160,9 @@ export function makeAnyLabel(
     // plain text (html=false) per htmltable.c:1892.
     return makeHtmlLabel(content, font, measurer);
   }
-  return makePlainLabel(content, font, measurer);
+  // Plain path: resolve \G \N \E \T \H \L against the owning object
+  // BEFORE measuring, as C does (labels.c:169, escBackslash=0; the
+  // formatting escapes \n \l \r are handled separately).
+  const text = obj !== undefined ? substObj(content, obj, false) : content;
+  return makePlainLabel(text, font, measurer);
 }

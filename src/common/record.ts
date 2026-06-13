@@ -18,7 +18,7 @@ import type { Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { FieldT, TextlabelT } from './types.js';
 import type { TextMeasurer } from './textmeasure.js';
-import { makeLabel } from './make-label.js';
+import { makeLabel, makeAnyLabel } from './make-label.js';
 import { nodeAttr, readFontAttrs } from './poly-init.js';
 import { renderLabel } from './poly-gencode.js';
 import { transformPoint } from '../gvc/device.js';
@@ -50,6 +50,8 @@ interface RecScan {
   i: number;
   lbl: TextlabelT;
   measurer: TextMeasurer;
+  /** Owning node — field labels resolve \N etc. against it (C make_label(n, ...)). */
+  obj?: Node;
 }
 
 /** Per-parse_reclbl-call state (C locals). */
@@ -135,8 +137,12 @@ function recFlushText(p: RecScan, st: RecState): void {
   if (st.mode & HASTEXT) {
     const t = st.tbuf;
     if (t.length > 1 && st.hstIdx !== t.length - 1 && t[t.length - 1] === ' ') t.pop();
-    st.fp!.lp = makeLabel(
-      t.join(''), p.lbl.fontname, p.lbl.fontsize, p.lbl.fontcolor, p.measurer,
+    // C: fp->lp = make_label(n, text, ...) — the node enables \N etc.
+    // substitution in field text. @see lib/common/shapes.c:parse_reclbl
+    st.fp!.lp = makeAnyLabel(
+      t.join(''), false,
+      { fontname: p.lbl.fontname, fontsize: p.lbl.fontsize, fontcolor: p.lbl.fontcolor },
+      p.measurer, p.obj,
     );
     st.fp!.LR = 1;
     st.tbuf = [];
@@ -353,11 +359,13 @@ function recAttrSize(n: Node, g: Graph): Point {
 }
 
 /** Parse the record label, falling back to "\\N" on bad syntax. */
-export function recParseOrFallback(lbl: TextlabelT, measurer: TextMeasurer, flip: number): FieldT {
-  const p: RecScan = { s: lbl.text, i: 0, lbl, measurer };
+export function recParseOrFallback(
+  lbl: TextlabelT, measurer: TextMeasurer, flip: number, obj?: Node,
+): FieldT {
+  const p: RecScan = { s: lbl.text, i: 0, lbl, measurer, obj };
   const info = parseReclbl(p, flip, true);
   if (info !== null) return info;
-  const fb: RecScan = { s: '\\N', i: 0, lbl, measurer };
+  const fb: RecScan = { s: '\\N', i: 0, lbl, measurer, obj };
   return parseReclbl(fb, flip, true)!;
 }
 
@@ -371,7 +379,7 @@ export function recordInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   const lbl = n.info.label as TextlabelT;
   // C: flip = !GD_realflip — rankdir TB/BT lays fields out left-to-right.
   const flip = g.root.info.flip === true ? 0 : 1;
-  const info = recParseOrFallback(lbl, measurer, flip);
+  const info = recParseOrFallback(lbl, measurer, flip, n);
   sizeReclbl(n, g, info);
   const sz = recAttrSize(n, g);
   if (!attrBool(n, g, 'fixedsize')) {

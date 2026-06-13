@@ -29,7 +29,7 @@ import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage } from './htmltable-pos.js';
 import { transformPoint } from '../gvc/device.js';
 import { withHtmlPaint, parseGradientSpec, doBorder } from './htmltable-emit-fill.js';
-import { emitHtmlRules, initHtmlAnchor, endHtmlAnchor } from './htmltable-emit-rules.js';
+import { emitHtmlRules, initHtmlAnchor, endHtmlAnchor, htmlObjImgscale } from './htmltable-emit-rules.js';
 
 export type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage };
 
@@ -175,10 +175,8 @@ function scaleImage(d: { iw: number; ih: number; pw: number; ph: number; scale?:
  * box, apply the SCALE modes against the intrinsic size, then center
  * the result (imagepos "mc" — hardcoded by emit_html_img).
  *
- * Deviation (journaled): C falls back to the node-level `imagescale`
- * attribute via env->imgscale when the IMG has no SCALE; the port's
- * emission path carries no node env, so only the IMG SCALE attribute
- * is honored.
+ * SCALE falls back to the object's imagescale attribute (C
+ * env->imgscale, default "false") when the IMG has no SCALE attr.
  *
  * @see lib/common/htmltable.c:emit_html_img (line 597)
  * @see lib/gvc/gvrender.c:gvrender_usershape (line 670)
@@ -196,7 +194,9 @@ export function emitHtmlImg(
   };
   const pw = b.ur.x - b.ll.x;
   const ph = b.ur.y - b.ll.y;
-  const { iw, ih } = scaleImage({ iw: img.iw, ih: img.ih, pw, ph, scale: img.scale });
+  // @see lib/common/htmltable.c:emit_html_img (:615-618)
+  const scale = img.scale !== undefined ? img.scale : htmlObjImgscale();
+  const { iw, ih } = scaleImage({ iw: img.iw, ih: img.ih, pw, ph, scale });
   // imagepos "mc": center the (possibly scaled) image in the target box
   if (iw < pw) {
     b.ll.x += (pw - iw) / 2.0;

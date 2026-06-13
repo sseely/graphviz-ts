@@ -271,6 +271,19 @@ export interface NodeInfo {
   outline_height: number;
 
   /**
+   * Pre-periphery-growth node width in inches: the box the innermost
+   * vertex ring is scaled to before peripheries step outward. Only set
+   * by the measurer sizing path; consumed by multi-periphery vertex
+   * generation. (C keeps the equivalent implicitly — poly_init builds
+   * vertices and bb in one pass.)
+   * @see lib/common/shapes.c:poly_init
+   */
+  base_width?: number;
+
+  /** Pre-periphery-growth node height in inches. @see base_width */
+  base_height?: number;
+
+  /**
    * Layout state (char in C). @see lib/common/types.h:ND_state
    */
   state: number;

@@ -30,25 +30,37 @@ function checkTag(tag: string) {
   }
 }
 
-/** Extract value from attribute string starting after '='. */
-function parseAttrValue(after: string) {
-  const s = after.trimStart();
-  if (s.startsWith('"')) return s.slice(1, s.indexOf('"', 1));
-  if (s.startsWith("'")) return s.slice(1, s.indexOf("'", 1));
-  const end = s.search(/\s/);
-  return end === -1 ? s : s.slice(0, end);
-}
+const isWs = (c: string | undefined): boolean =>
+  c === ' ' || c === '\t' || c === '\n' || c === '\r';
 
-/** @see lib/common/htmllex.c:doAttrs */
+/**
+ * Parse key="value" attribute pairs. Values are consumed, never
+ * re-scanned (the old scanner re-matched words inside quoted values as
+ * phantom attributes). Bare or unquoted attributes are not well-formed
+ * XML — expat rejects the document and the label falls back to plain
+ * text; throwing here reproduces that.
+ * @see lib/common/htmllex.c (XML_Parse "not well-formed" error path)
+ */
 function parseAttrs(raw: string) {
   const out: Attrs = {};
-  const nameRe = /(\w[\w-]*)/g;
-  let nm = nameRe.exec(raw);
-  while (nm !== null) {
-    const name = nm[1].toLowerCase();
-    const rest = raw.slice(nameRe.lastIndex).trimStart();
-    out[name] = rest.startsWith('=') ? parseAttrValue(rest.slice(1)) : '';
-    nm = nameRe.exec(raw);
+  let i = 0;
+  while (i < raw.length) {
+    while (isWs(raw[i])) i++;
+    if (i >= raw.length) break;
+    const m = /^[\w-]+/.exec(raw.slice(i));
+    if (m === null) throw new HtmlParseError(raw.slice(i, i + 10));
+    const name = m[0].toLowerCase();
+    i += m[0].length;
+    while (isWs(raw[i])) i++;
+    if (raw[i] !== '=') throw new HtmlParseError(name);
+    i++;
+    while (isWs(raw[i])) i++;
+    const q = raw[i];
+    if (q !== '"' && q !== "'") throw new HtmlParseError(name);
+    const end = raw.indexOf(q, i + 1);
+    if (end < 0) throw new HtmlParseError(name);
+    out[name] = raw.slice(i + 1, end);
+    i = end + 1;
   }
   return out;
 }

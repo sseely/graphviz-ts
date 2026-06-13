@@ -156,7 +156,7 @@ function initNodeXLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
   // utils.c:444 — make_label(n, str, aghtmlstr(str), false, ...)
-  n.info.xlabel = makeAnyLabel(content, isHtml, font, measurer);
+  n.info.xlabel = makeAnyLabel(content, isHtml, font, measurer, n);
   g.root.info.has_labels = (g.root.info.has_labels ?? 0) | NODE_XLABEL;
 }
 
@@ -212,6 +212,8 @@ function storeNodeSize(n: Node, unflipped: PolySizeResult, flip: boolean): void 
   n.info.height = unflipped.ht / 72;
   n.info.outline_width = unflipped.outlineW / 72;
   n.info.outline_height = unflipped.outlineH / 72;
+  n.info.base_width = unflipped.baseW / 72;
+  n.info.base_height = unflipped.baseH / 72;
   const size = gvNodesize(widthPts, unflipped.ht, flip);
   n.info.lw = size.lw;
   n.info.rw = size.rw;

@@ -151,7 +151,8 @@ export interface AnchorData {
  * back to obj->label — "<TABLE>" for table labels).
  * @see lib/common/emit.c:initMapData (line 163)
  */
-const anchorEnv: { objId: string; objLabel: string | null } = { objId: '', objLabel: null };
+const anchorEnv: { objId: string; objLabel: string | null; imgscale: string } =
+  { objId: '', objLabel: null, imgscale: 'false' };
 
 /** Anchor id counter — C's `static int anchorId` in initAnchor, reset per render job (each dot invocation is one process). */
 let anchorSeq = 0;
@@ -160,6 +161,21 @@ let anchorSeq = 0;
 export function setHtmlAnchorObj(objId: string, objLabel: string | null): void {
   anchorEnv.objId = objId;
   anchorEnv.objLabel = objLabel;
+  anchorEnv.imgscale = 'false';
+}
+
+/**
+ * Record the current object's imagescale attribute — C's
+ * env.imgscale = agget(obj, "imagescale"), defaulting to "false".
+ * @see lib/common/htmltable.c:emit_html_label (lines 768-772)
+ */
+export function setHtmlObjImgscale(imgscale: string | undefined): void {
+  anchorEnv.imgscale = imgscale !== undefined && imgscale !== '' ? imgscale : 'false';
+}
+
+/** The IMG SCALE fallback for the object being emitted. @see setHtmlObjImgscale */
+export function htmlObjImgscale(): string {
+  return anchorEnv.imgscale;
 }
 
 /** Reset the per-render anchor id counter. Call at render start. */
@@ -167,6 +183,7 @@ export function resetHtmlAnchorIds(): void {
   anchorSeq = 0;
   anchorEnv.objId = '';
   anchorEnv.objLabel = null;
+  anchorEnv.imgscale = 'false';
 }
 
 /** Normalise AnchorData to plain strings (empty when absent). */
