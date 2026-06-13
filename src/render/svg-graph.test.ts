@@ -14,6 +14,7 @@ import { RenderJob } from '../gvc/job.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { Box } from '../model/geom.js';
 import { resolveGraphBgcolor, emitGraphBackground } from './svg-graph.js';
+import { renderSvg } from '../index.js';
 
 const measurer: TextMeasurer = { measure: () => ({ w: 0, h: 0 }) };
 
@@ -130,5 +131,29 @@ describe('emitGraphBackground — transparent omits polygon', () => {
     const sentinel = resolveGraphBgcolor('transparent');
     emitGraphBackground(testBb, sentinel, job);
     expect(job.output.join('')).toBe('');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// End-to-end: two-color bgcolor → gradient background (G4)
+// Verified against C graphviz 15.0.0 (dot -Tsvg).
+// ---------------------------------------------------------------------------
+
+describe('graph bgcolor gradient — end to end', () => {
+  it('bgcolor="red:blue" emits a linearGradient defs + url background', () => {
+    const svg = renderSvg('digraph G { bgcolor="red:blue"; a }', 'dot');
+    expect(svg).toContain('<defs>');
+    // root graph obj has id "graph0", so the gradient id is prefixed
+    expect(svg).toContain('<linearGradient id="graph0_l_0"');
+    expect(svg).toContain('stop-color:red');
+    expect(svg).toContain('stop-color:blue');
+    // background polygon now references the gradient instead of a solid fill
+    expect(svg).toContain('<polygon fill="url(#graph0_l_0)" stroke="none"');
+  });
+
+  it('solid bgcolor stays a solid polygon (no gradient defs)', () => {
+    const svg = renderSvg('digraph G { bgcolor=lightyellow; a }', 'dot');
+    expect(svg).not.toContain('<linearGradient');
+    expect(svg).toContain('<polygon fill="lightyellow" stroke="none"');
   });
 });
