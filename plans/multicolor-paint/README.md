@@ -52,7 +52,7 @@ Baseline at mission start: **1584 passed / 0 failed**, 97 goldens
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 gradient | [G1 gradient resolution](batch-1/G1-gradient-resolution.md), [G2 gradient emitters](batch-1/G2-gradient-emitters.md), [G3 node+cluster gradient](batch-1/G3-node-cluster-gradient.md), [G4 graph bgcolor gradient](batch-1/G4-graph-bgcolor-gradient.md) | [x] |
-| 2 striped/wedged | [S1 striped + wedged node fills](batch-2/S1-striped-wedged.md) | [ ] |
+| 2 striped/wedged | [S1 striped + wedged node fills](batch-2/S1-striped-wedged.md) | [x] (striped byte-parity; wedged feature done, libm byte-divergence journaled) |
 | 3 multicolor edges | [M1 parallel-spline edges](batch-3/M1-multicolor-edges.md) | [ ] |
 | 4 goldens | [T-gold goldens + C-oracle verify](batch-4/T-gold-goldens.md) (orchestrator inline) | [ ] |
 

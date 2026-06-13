@@ -74,11 +74,26 @@ If ellipticWedge needs a new geometry module, you MAY add
 src/common/elliptic-wedge.ts to the write-set (journal it) — but prefer
 co-locating in svg-multicolor.ts if small.
 
+## Wedge geometry risk (read before starting)
+
+`ellipticWedge` is defined at ~/git/graphviz/lib/common/ellipse.c:274
+(`Ppolyline_t *ellipticWedge(ctr, xsemi, ysemi, angle0, angle1)`); it
+builds a Bézier path approximating an elliptic sector and depends on the
+arc-to-bezier machinery in that file. The C SVG output for a wedge is a
+dense `<path d="M.. C.. ..">` with ~40 control points at 2dp. STRIPED is
+pure rectangles (low risk, will byte-match). WEDGED depends on sin/cos in
+the arc approximation — if the port's libm trig diverges from C's at 2dp,
+the wedge control points will differ. That is the mission's FMA/libm
+stop-condition class: if the wedge path diverges and the cause is libm
+trig (not a port bug), DO NOT chase a code fix — journal it and let
+T-gold pin-or-exclude the wedged golden. STRIPED must still pass. Build
+striped first (verify byte-match), then wedged.
+
 ## Read-set
 
 - ~/git/graphviz/lib/common/emit.c:549-650 (wedgedEllipse, stripedBox),
-  the `ellipticWedge` definition (grep), and `multicolor`/`mid_pointf`/
-  `sub_pointf` helpers
+  lib/common/ellipse.c:274 (ellipticWedge) + the arc helpers it calls,
+  and `multicolor`/`mid_pointf`/`sub_pointf` helpers
 - ~/git/graphviz/lib/common/shapes.c:poly_gencode (:3015-3055 striped/
   wedged branches)
 - src/common/multicolor.ts (G1 parseSegs), src/common/poly-gencode.ts
