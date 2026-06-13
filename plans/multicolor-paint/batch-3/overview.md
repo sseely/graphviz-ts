@@ -12,3 +12,12 @@ per-end colored arrows. Consumes G1's `parseSegs`. The parity mission
 Single task. Geometry-heavy (offset-spline computation). Runs after
 Batch 1. Byte-stability: existing edge goldens are single-color, so this
 is new behavior; single-color edges keep the parity (T4) path.
+
+**Done (2026-06-13):** directed `color="c1:c2"` parallel edges byte-match
+dot 15.0.0 (SEP=2 offset via computeoffset_p/_qr). Dispatch landed in
+svg.ts endEdge (SVG plugin edge emission). The semicolon syntax
+(split-along-length multicolor()) and the pre-existing undirected-edge
+spline routing divergence are journaled follow-ups (out of this mission's
+blast radius). The M1 agent died on an API socket error; the orchestrator
+finished it inline (see decision-journal.md). tsc 0; vitest 1685/0; 97
+goldens stable.
