@@ -69,10 +69,18 @@
   (5) parseAttrs phantom-attrs fixed; bare/unquoted attrs now throw
   (expat well-formedness → C fallback). (6) IMG SCALE falls back to the
   node imagescale attr via the per-object emit env.
-- **Finding**: Remaining true metric tail: some strings measure ±1px vs
-  C (edge label "A to B" graph bb 72 vs 71pt; text positions identical)
-  — per-char LUT px rounding vs pango whole-string shaping. Needs real
-  shaping data; not fixable in the LUT model.
+- **Finding (ACCEPTED + test-locked)**: Remaining true metric tail: some
+  strings measure ~1px vs C (edge label "A to B" graph bb 72 vs 71pt,
+  centered label x 45.38 vs 45; node glyph positions identical) — per-char
+  LUT px rounding vs pango whole-string shaping. Needs real shaping data;
+  not fixable in the LUT model. Decision (2026-06-13): accept the 1px gap.
+  Held by src/common/textmeasure.shaping-divergence.test.ts, which pins
+  the port's exact output (freetypeHintedWidth "A to B"=36.75, bbox 72,
+  label x 45.38), asserts the gap vs C is exactly 1px (not more), and
+  asserts the divergence is confined (endpoint glyphs + a box-node bbox
+  match C exactly). Mutation-checked: a measurement drift fails it.
+  To revisit (e.g. a pango shaping port), update the PORT_* literals
+  deliberately and re-confirm C_* against dot 15.0.0.
 - **Finding (RESOLVED same day, commit 5e57052)**: full escape parity
   landed — the grammar now keeps all escapes verbatim per scan.l (only
   \" and escaped-newline transform); make_simple_label's splitter drops
