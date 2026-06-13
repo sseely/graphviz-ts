@@ -15,11 +15,14 @@
  * AC10: renderOneLabel — txt-only labels unchanged by html branch
  * AC11: renderOneLabel — set=false html label is skipped
  * AC12: renderClusterLabel — html cluster label renders cells
+ * AC13: renderNode pushes obj-state (non-null in codefn) and pops after (balanced)
+ * AC14: unstyled node emits fill="none" stroke="black" via default obj-state
  */
 
 import { describe, it, expect } from 'vitest';
-import { transformPoint, renderGraph, renderOneLabel, renderNodeXLabel, renderGraphLabel, renderClusterLabel } from './device.js';
+import { transformPoint, renderGraph, renderOneLabel, renderNodeXLabel, renderGraphLabel, renderClusterLabel, renderNode } from './device.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
+import { createSvgRenderer } from '../render/svg.js';
 import type { RendererPlugin } from './context.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { Graph } from '../model/graph.js';
@@ -462,5 +465,84 @@ describe('AC12: renderClusterLabel — html cluster label renders cells', () => 
     const job = new RenderJob('svg', stubMeasurer);
     renderClusterLabel(g, renderer, job);
     expect(renderer.spans).toHaveLength(0);
+  });
+});
+
+
+// ---------------------------------------------------------------------------
+// AC13: renderNode pushes obj-state before codefn; stack balanced after
+// @see lib/common/emit.c:emit_begin_node:1654 / emit_end_node:1794
+// ---------------------------------------------------------------------------
+
+describe('AC13: renderNode — obj-state push/pop lifecycle', () => {
+  it('job.obj is non-null inside codefn and null after renderNode', () => {
+    const g = new GraphClass('G', 'directed');
+    const n = new Node(0, 'A', g);
+    n.info = makeNodeInfo();
+    let objDuringCodefn: boolean | null = null;
+    // Install a codefn that captures job.obj state
+    (n.info.shape as { fns?: { codefn?: (job: RenderJob, n: Node) => void } }) = {
+      fns: {
+        codefn: (job: RenderJob) => {
+          objDuringCodefn = job.obj !== null;
+        },
+      },
+    };
+    const renderer = new RecordingRenderer();
+    const job = new RenderJob('svg', stubMeasurer);
+    const done = new Set<Node>();
+    renderNode(n, renderer, job, done);
+    expect(objDuringCodefn).toBe(true);   // non-null during codefn
+    expect(job.obj).toBeNull();            // stack balanced after
+  });
+
+  it('job.obj is null after renderNode even if codefn throws', () => {
+    const g = new GraphClass('G', 'directed');
+    const n = new Node(0, 'A', g);
+    n.info = makeNodeInfo();
+    (n.info.shape as { fns?: { codefn?: (job: RenderJob, n: Node) => void } }) = {
+      fns: { codefn: () => { throw new Error('test-error'); } },
+    };
+    const renderer = new RecordingRenderer();
+    const job = new RenderJob('svg', stubMeasurer);
+    const done = new Set<Node>();
+    expect(() => renderNode(n, renderer, job, done)).toThrow('test-error');
+    expect(job.obj).toBeNull(); // try/finally ensures pop
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC14: unstyled node emits fill="none" stroke="black" via default obj-state
+// @see src/render/svg-helpers.ts:emitStyle
+// ---------------------------------------------------------------------------
+
+describe('AC14: unstyled node SVG fill/stroke from default obj-state', () => {
+  it('emits fill="none" stroke="black" for a plain ellipse node', () => {
+    const g = new GraphClass('G', 'directed');
+    g.info.bb = { ll: { x: 0, y: 0 }, ur: { x: 100, y: 100 } };
+    const n = new Node(0, 'A', g);
+    n.info = makeNodeInfo();
+    n.info.shape = {
+      name: 'ellipse',
+      fns: {
+        codefn: (job: RenderJob, nd: Node) => {
+          const r = job.renderer!;
+          r.ellipse({ x: 0, y: 0 }, 20, 15, false, job);
+        },
+      },
+    } as unknown as typeof n.info.shape;
+    const svgRenderer = createSvgRenderer();
+    const job = new RenderJob('svg', stubMeasurer);
+    job.bb = { ll: { x: 0, y: 0 }, ur: { x: 100, y: 100 } };
+    job.zoom = 1;
+    job.devscale = { x: 1, y: -1 };
+    job.translation = { x: 0, y: 0 };
+    job.rotation = 0;
+    job.renderer = svgRenderer;
+    const done = new Set<Node>();
+    renderNode(n, svgRenderer, job, done);
+    const svg = job.output.join('');
+    expect(svg).toContain('fill="none"');
+    expect(svg).toContain('stroke="black"');
   });
 });

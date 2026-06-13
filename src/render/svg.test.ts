@@ -4,8 +4,8 @@ import { describe, it, expect } from 'vitest';
 import { escapeXml } from './svg-helpers.js';
 import { SvgRenderer, createSvgRenderer } from './svg.js';
 import type { ObjState } from '../gvc/job.js';
-import { RenderJob, ObjType, EmitState, MapShape } from '../gvc/job.js';
-import { PenType, FillType } from '../gvc/context.js';
+import { RenderJob, createObjState } from '../gvc/job.js';
+
 import { Graph } from '../model/graph.js';
 import { Node } from '../model/node.js';
 import { Edge } from '../model/edge.js';
@@ -25,29 +25,9 @@ export function makeJob(): RenderJob {
   return j;
 }
 
+/** @see createObjState in src/gvc/job.ts */
 export function makeObjState(): ObjState {
-  return {
-    parent: null, type: ObjType.Node, graphObj: null,
-    emitState: EmitState.NDraw,
-    penColor: { type: 'string', s: 'black' },
-    fillColor: { type: 'string', s: 'white' },
-    stopColor: { type: 'none' },
-    gradientAngle: 0, gradientFrac: 0,
-    pen: PenType.Solid, fill: FillType.None, penWidth: 1.0,
-    rawStyle: [],
-    label: null, xlabel: null, tailLabel: null, headLabel: null,
-    url: null, id: null, labelUrl: null, tailUrl: null, headUrl: null,
-    tooltip: null, labelTooltip: null, tailTooltip: null, headTooltip: null,
-    target: null, labelTarget: null, tailTarget: null, headTarget: null,
-    explicitTooltip: false, explicitTailTooltip: false,
-    explicitHeadTooltip: false, explicitLabelTooltip: false,
-    explicitTailTarget: false, explicitHeadTarget: false,
-    explicitEdgeTarget: false, explicitTailUrl: false,
-    explicitHeadUrl: false, labelEdgeAligned: false,
-    urlMapShape: MapShape.Rectangle,
-    urlMapPts: [], urlBsplineMapPts: [],
-    tailEndMapPts: [], headEndMapPts: [],
-  };
+  return createObjState();
 }
 
 export function makeGraph(): Graph {

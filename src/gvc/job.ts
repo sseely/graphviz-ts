@@ -140,6 +140,80 @@ export interface ObjState {
 }
 
 // ---------------------------------------------------------------------------
+// createObjState — @see lib/common/emit.c:push_obj_state
+// ---------------------------------------------------------------------------
+
+/** Default paint fields for a new obj-state. @see lib/common/emit.c:push_obj_state */
+function defaultObjPaint(): Pick<ObjState,
+  | 'penColor' | 'fillColor' | 'stopColor'
+  | 'gradientAngle' | 'gradientFrac'
+  | 'pen' | 'fill' | 'penWidth' | 'rawStyle'
+> {
+  return {
+    penColor: { type: 'string', s: 'black' },
+    fillColor: { type: 'string', s: 'white' },
+    stopColor: { type: 'none' },
+    gradientAngle: 0, gradientFrac: 0,
+    pen: PenType.Solid, fill: FillType.None, penWidth: 1.0,
+    rawStyle: [],
+  };
+}
+
+/** Default URL/label string fields for a new obj-state. Null everywhere. */
+function defaultObjStrings(): Pick<ObjState,
+  | 'label' | 'xlabel' | 'tailLabel' | 'headLabel'
+  | 'url' | 'id' | 'labelUrl' | 'tailUrl' | 'headUrl'
+  | 'tooltip' | 'labelTooltip' | 'tailTooltip' | 'headTooltip'
+  | 'target' | 'labelTarget' | 'tailTarget' | 'headTarget'
+> {
+  return {
+    label: null, xlabel: null, tailLabel: null, headLabel: null,
+    url: null, id: null, labelUrl: null, tailUrl: null, headUrl: null,
+    tooltip: null, labelTooltip: null, tailTooltip: null, headTooltip: null,
+    target: null, labelTarget: null, tailTarget: null, headTarget: null,
+  };
+}
+
+/** Default explicit-flag and map fields for a new obj-state. All false/empty. */
+function defaultObjFlags(): Pick<ObjState,
+  | 'explicitTooltip' | 'explicitTailTooltip' | 'explicitHeadTooltip'
+  | 'explicitLabelTooltip' | 'explicitTailTarget' | 'explicitHeadTarget'
+  | 'explicitEdgeTarget' | 'explicitTailUrl' | 'explicitHeadUrl'
+  | 'labelEdgeAligned'
+  | 'urlMapShape' | 'urlMapPts' | 'urlBsplineMapPts'
+  | 'tailEndMapPts' | 'headEndMapPts'
+> {
+  return {
+    explicitTooltip: false, explicitTailTooltip: false,
+    explicitHeadTooltip: false, explicitLabelTooltip: false,
+    explicitTailTarget: false, explicitHeadTarget: false,
+    explicitEdgeTarget: false, explicitTailUrl: false,
+    explicitHeadUrl: false, labelEdgeAligned: false,
+    urlMapShape: MapShape.Rectangle,
+    urlMapPts: [], urlBsplineMapPts: [],
+    tailEndMapPts: [], headEndMapPts: [],
+  };
+}
+
+/**
+ * Allocate a fresh default ObjState matching C's push_obj_state (no parent).
+ * pen=SOLID, fill=NONE, penWidth=1.0; penColor black, fillColor white so
+ * emitStyle emits "fill=none stroke=black" for unstyled objects (byte-stable).
+ * Batch-2 callers overwrite type/graphObj/emitState per object.
+ *
+ * NOTE: fresh object per call; do NOT pool prematurely — profile first.
+ * @see lib/common/emit.c:push_obj_state
+ */
+export function createObjState(type: ObjType = ObjType.Node): ObjState {
+  return {
+    parent: null, type, graphObj: null, emitState: EmitState.NDraw,
+    ...defaultObjPaint(),
+    ...defaultObjStrings(),
+    ...defaultObjFlags(),
+  };
+}
+
+// ---------------------------------------------------------------------------
 // printDouble helpers — @see lib/gvc/gvdevice.c:gv_trim_zeros
 // ---------------------------------------------------------------------------
 

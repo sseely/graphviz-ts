@@ -18,7 +18,7 @@ import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
-import { RenderJob, GVRENDER_DOES_TRANSFORM } from './job.js';
+import { RenderJob, GVRENDER_DOES_TRANSFORM, createObjState, ObjType, EmitState } from './job.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
@@ -83,28 +83,58 @@ function labelTextOf(lp: unknown): string | null {
   return (lp as TextlabelT | undefined)?.text ?? null;
 }
 
-/** Render a single node if not already rendered. @see lib/common/emit.c:emit_node */
+/**
+ * Render a single node if not already rendered.
+ * push_obj_state before emit_begin_node; pop_obj_state in emit_end_node.
+ * @see lib/common/emit.c:emit_node
+ * @see lib/common/emit.c:emit_begin_node:1654
+ * @see lib/common/emit.c:emit_end_node:1794
+ */
 export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, done: Set<Node>): void {
   if (done.has(n)) return;
   done.add(n);
-  // C emit_begin_node: job->obj carries the node id/label for anchors.
-  // @see lib/common/emit.c:emit_begin_node / getObjId
-  setHtmlAnchorObj('node' + (n.id + 1), labelTextOf(n.info.label));
-  setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
-  renderer.beginNode(n, job);
-  const shape = n.info.shape as ShapeDesc | undefined;
-  if (shape?.fns?.codefn) shape.fns.codefn(job, n);
-  // emit xlabel inside the node group, after codefn @see lib/common/emit.c:emit_node (1829-1830)
-  renderNodeXLabel(n, renderer, job);
-  renderer.endNode(n, job);
+  // push_obj_state in emit_begin_node (line 1654), before beginNode/codefn
+  const obj = createObjState(ObjType.Node);
+  obj.emitState = EmitState.NDraw;
+  job.pushObj(obj);
+  try {
+    // C emit_begin_node: job->obj carries the node id/label for anchors.
+    // @see lib/common/emit.c:emit_begin_node / getObjId
+    setHtmlAnchorObj('node' + (n.id + 1), labelTextOf(n.info.label));
+    setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
+    renderer.beginNode(n, job);
+    const shape = n.info.shape as ShapeDesc | undefined;
+    if (shape?.fns?.codefn) shape.fns.codefn(job, n);
+    // emit xlabel inside the node group, after codefn @see lib/common/emit.c:emit_node (1829-1830)
+    renderNodeXLabel(n, renderer, job);
+    renderer.endNode(n, job);
+  } finally {
+    // pop_obj_state in emit_end_node (line 1794)
+    job.popObj();
+  }
 }
 
-/** Render a single edge. @see lib/common/emit.c:emit_edge */
+/**
+ * Render a single edge.
+ * push_obj_state before beginEdge; pop_obj_state after endEdge.
+ * @see lib/common/emit.c:emit_edge
+ * @see lib/common/emit.c:emit_begin_edge:2715
+ * @see lib/common/emit.c:emit_end_edge:3028
+ */
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
-  // @see lib/common/emit.c:emit_begin_edge / getObjId
-  setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
-  renderer.beginEdge(e, job);
-  renderer.endEdge(e, job);
+  // push_obj_state in emit_begin_edge (line 2715)
+  const obj = createObjState(ObjType.Edge);
+  obj.emitState = EmitState.EDraw;
+  job.pushObj(obj);
+  try {
+    // @see lib/common/emit.c:emit_begin_edge / getObjId
+    setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
+    renderer.beginEdge(e, job);
+    renderer.endEdge(e, job);
+  } finally {
+    // pop_obj_state in emit_end_edge (line 3028)
+    job.popObj();
+  }
 }
 
 /** valign codes stored on textlabel_t. @see lib/common/types.h:textlabel_t.valign */
@@ -238,22 +268,40 @@ export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: Ren
   }
 }
 
-/** @see lib/common/emit.c:emit_clusters (single cluster: box, label, then recurse) */
+/**
+ * Render one cluster: box, label, endCluster, then recurse into sub-clusters.
+ * push_obj_state in emit_begin_cluster (3762); pop in emit_end_cluster (3774).
+ * Sub-cluster recursion follows emit_end_cluster (line 3940-3941) — the pop
+ * completes before recursing; sub-clusters are separate pushes on a clean stack.
+ * @see lib/common/emit.c:emit_clusters:3777
+ * @see lib/common/emit.c:emit_begin_cluster:3762
+ * @see lib/common/emit.c:emit_end_cluster:3774
+ */
 function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
-  renderer.beginCluster?.(sg, job);
-  const bb = sg.info.bb!;
-  const rawPts = [
-    { x: bb.ll.x, y: bb.ll.y },
-    { x: bb.ll.x, y: bb.ur.y },
-    { x: bb.ur.x, y: bb.ur.y },
-    { x: bb.ur.x, y: bb.ll.y },
-  ];
-  renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
-  // @see lib/common/emit.c:emit_begin_cluster / getObjId
-  setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
-  renderClusterLabel(sg, renderer, job);
-  renderer.endCluster?.(sg, job);
-  // C lays down clusters before sub-clusters when drawing.
+  // push_obj_state in emit_begin_cluster (line 3762), before beginCluster
+  const obj = createObjState(ObjType.Cluster);
+  obj.emitState = EmitState.CDraw;
+  job.pushObj(obj);
+  try {
+    renderer.beginCluster?.(sg, job);
+    const bb = sg.info.bb!;
+    const rawPts = [
+      { x: bb.ll.x, y: bb.ll.y },
+      { x: bb.ll.x, y: bb.ur.y },
+      { x: bb.ur.x, y: bb.ur.y },
+      { x: bb.ur.x, y: bb.ll.y },
+    ];
+    renderer.polygon(rawPts.map(p => transformPoint(p, job)), false, job);
+    // @see lib/common/emit.c:emit_begin_cluster / getObjId
+    setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
+    renderClusterLabel(sg, renderer, job);
+    renderer.endCluster?.(sg, job);
+  } finally {
+    // pop_obj_state in emit_end_cluster (line 3774), before sub-cluster recursion
+    job.popObj();
+  }
+  // C recurses AFTER emit_end_cluster (line 3940-3941): sub-clusters are drawn
+  // with the parent already popped — each has its own independent push/pop.
   renderClusters(sg, renderer, job);
 }
 
@@ -283,12 +331,21 @@ export function renderClusters(g: Graph, renderer: RendererPlugin, job: RenderJo
  * @see lib/common/emit.c:emit_page (3655-3660)
  */
 export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin): string {
-  renderer.beginGraph(g, job);
-  // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page (3656-3657)
-  renderGraphLabel(g, renderer, job);
-  renderClusters(g, renderer, job);
-  walkNodesAndEdges(g, renderer, job);
-  renderer.endGraph(g, job);
+  // push_obj_state in emit_begin_graph (line 3573), before beginGraph call
+  const obj = createObjState(ObjType.RootGraph);
+  obj.emitState = EmitState.GDraw;
+  job.pushObj(obj);
+  try {
+    renderer.beginGraph(g, job);
+    // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page (3656-3657)
+    renderGraphLabel(g, renderer, job);
+    renderClusters(g, renderer, job);
+    walkNodesAndEdges(g, renderer, job);
+    renderer.endGraph(g, job);
+  } finally {
+    // pop_obj_state in emit_end_graph (line 3586), after endGraph
+    job.popObj();
+  }
   return job.output.join('');
 }
 

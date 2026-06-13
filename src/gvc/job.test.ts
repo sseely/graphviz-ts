@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { RenderJob, ObjType, EmitState, MapShape } from './job.js';
+import { RenderJob, ObjType, EmitState, MapShape, createObjState } from './job.js';
 import type { ObjState } from './job.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import { PenType, FillType } from './context.js';
@@ -165,5 +165,94 @@ describe('RenderJob.popObj', () => {
   it('throws when stack is empty', () => {
     const job = makeJob();
     expect(() => job.popObj()).toThrow();
+  });
+});
+
+
+// ---------------------------------------------------------------------------
+// AC5: createObjState defaults
+// @see lib/common/emit.c:push_obj_state
+// ---------------------------------------------------------------------------
+
+describe('createObjState() defaults', () => {
+  it('returns penColor black', () => {
+    const s = createObjState();
+    expect(s.penColor).toEqual({ type: 'string', s: 'black' });
+  });
+
+  it('returns fillColor white', () => {
+    const s = createObjState();
+    expect(s.fillColor).toEqual({ type: 'string', s: 'white' });
+  });
+
+  it('returns pen Solid, fill None, penWidth 1.0', () => {
+    const s = createObjState();
+    expect(s.pen).toBe(PenType.Solid);
+    expect(s.fill).toBe(FillType.None);
+    expect(s.penWidth).toBe(1.0);
+  });
+
+  it('returns rawStyle empty array', () => {
+    const s = createObjState();
+    expect(s.rawStyle).toEqual([]);
+  });
+
+  it('returns null for url, id, tooltip', () => {
+    const s = createObjState();
+    expect(s.url).toBeNull();
+    expect(s.id).toBeNull();
+    expect(s.tooltip).toBeNull();
+  });
+
+  it('returns false for all explicit* flags', () => {
+    const s = createObjState();
+    expect(s.explicitTooltip).toBe(false);
+    expect(s.explicitTailTooltip).toBe(false);
+    expect(s.explicitHeadTooltip).toBe(false);
+    expect(s.explicitLabelTooltip).toBe(false);
+    expect(s.explicitTailTarget).toBe(false);
+    expect(s.explicitHeadTarget).toBe(false);
+    expect(s.explicitEdgeTarget).toBe(false);
+    expect(s.explicitTailUrl).toBe(false);
+    expect(s.explicitHeadUrl).toBe(false);
+    expect(s.labelEdgeAligned).toBe(false);
+  });
+
+  it('returns empty map arrays', () => {
+    const s = createObjState();
+    expect(s.urlMapPts).toEqual([]);
+    expect(s.urlBsplineMapPts).toEqual([]);
+    expect(s.tailEndMapPts).toEqual([]);
+    expect(s.headEndMapPts).toEqual([]);
+  });
+
+  it('returns a FRESH object each call (independent references)', () => {
+    const a = createObjState();
+    const b = createObjState();
+    expect(a).not.toBe(b);
+    // Mutating a does not affect b
+    a.penWidth = 42;
+    expect(b.penWidth).toBe(1.0);
+  });
+
+  it('uses ObjType.Node as default type', () => {
+    const s = createObjState();
+    expect(s.type).toBe(ObjType.Node);
+  });
+
+  it('honours explicit type param', () => {
+    const s = createObjState(ObjType.Edge);
+    expect(s.type).toBe(ObjType.Edge);
+  });
+
+  it('returns parent null and graphObj null', () => {
+    const s = createObjState();
+    expect(s.parent).toBeNull();
+    expect(s.graphObj).toBeNull();
+  });
+
+  it('returns emitState NDraw', () => {
+    const s = createObjState();
+    expect(s.emitState).toBe(EmitState.NDraw);
   });
 });
