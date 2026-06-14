@@ -14,7 +14,7 @@ no existing golden changes (AD3).
 |----|-------------|-------|--------------------------|---------|------|
 | SR2 | Build the faithful-path input from a dot regular edge: seed `endp.nb` (maximal bbox), fresh `Path`, `ranksep`, in/out edges, `merge`; call `beginPath`/`endPath`; **assemble `P.boxes`** = tail boxes + inter-rank box + head boxes (the missing C `make_regular_edge` glue) | typescript-pro | new `src/layout/dot/edge-route-faithful.ts` + test | SR1 | [x] |
 | SR3 | In **`routeOneEdge`** (AD1 revised), when the edge has a side port, route via `routeSplines(P)` → `clipAndInstall` (+ arrows); else keep the simplified path. Extend `portRouteOf` gate to `.side` | typescript-pro | `edge-route.ts`, `edge-route-faithful.ts` + test | SR2 | [x] |
-| SR4 | Oracle-validate the four sides (`A:n/s/e/w->B`, contradictory compass, record side port) vs dot 15.0.0; classify pass(≤0.5pt)/journal-exclude | orchestrator inline | test + journal | SR3 | [ ] |
+| SR4 | Oracle-validate the four sides (`A:n/s/e/w->B`, contradictory compass, record side port) vs dot 15.0.0; classify pass(≤0.5pt)/journal-exclude | orchestrator inline | test + journal | SR3 | [x] |
 
 > SR1 revised the seam to `routeOneEdge` (makeRegularEdge is dead code) and
 > flagged that `beginPath`/`routeSplines`/`endPath` have NO existing callers
@@ -40,6 +40,14 @@ consumed by `beginPath(...)`/`endPath(...)` exactly as neato's caller does.
 - `A:e->B`/`A:w->B` reproduce dot's lateral bulge within 0.5pt (or journaled).
 - Every existing dot golden is byte-identical (no edge has a side port).
 - `tsc` clean; suite ≥ baseline; write-set respected.
+
+**SR4 outcome (2026-06-14):** all six required cases PASS ≤0.5pt and are pinned
+in `edge-route-faithful-oracle.test.ts` (9 cases). `A:s->B:n` and record
+`A:f0:n->B` match C exactly; `A:s->B:n` clears T8's 11pt blocker. Compound
+both-ends `A:n->B:s` excluded (24pt mid-corridor, SR7-adjacent) — see
+[comparisons/An-Bs-double-steering.md](../comparisons/An-Bs-double-steering.md).
+±1 nudge does NOT survive to output (faithful path = simplified here). Batch 2
+complete (SR2+SR3+SR4).
 
 ## Notes
 

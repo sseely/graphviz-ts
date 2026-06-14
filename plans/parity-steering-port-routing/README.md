@@ -76,7 +76,7 @@ mission start — do NOT trust numbers written here.
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 — recon spike (de-risks 2–4) | [SR1 map the two dot routers + the faithful path's input contract](batch-1/SR1-recon-spike.md) → [findings](batch-1/SR1-findings.md) | [x] **GO** — PoC proved `routeSplines` routes the loop corridor; AD1 revised (seam=`routeOneEdge`; `makeRegularEdge` is dead code); key risk: begin/route/end never assembled before |
-| 2 — wire ported edges through the faithful path (hybrid) | [SR2 build the BeginPath/EndPath context from a dot edge](batch-2/overview.md), SR3 route ported-with-side regular edges via routeSplines+clipAndInstall, SR4 oracle-validate the four sides | [ ] |
+| 2 — wire ported edges through the faithful path (hybrid) | [SR2 build the BeginPath/EndPath context from a dot edge](batch-2/overview.md), SR3 route ported-with-side regular edges via routeSplines+clipAndInstall, SR4 oracle-validate the four sides | [x] **DONE** — SR2 assembled the faithful pipeline; SR3 wired side-port edges live; SR4 oracle-validated all 6 required cases ≤0.5pt vs dot 15.0.0 (`A:s->B:n` + record `A:f0:n->B` exact; T8's 11pt blocker cleared). Compound `A:n->B:s` excluded ([comparison page](comparisons/An-Bs-double-steering.md)). 115 goldens byte-identical; 1767/0 tests |
 | 3 — broaden coverage | SR5 flat-edge (FLATEDGE) ports, SR6 self-edge ports, SR7 multi-rank virtual-chain ports (each gated; journal exclusions) | [ ] |
 | 4 — goldens + decide on full switch | SR8 mint steering-port goldens vs dot 15.0.0; SR9 evaluate routing ALL dot regular edges through the faithful path (the 115-golden re-validation question, AD3) | [ ] |
 
