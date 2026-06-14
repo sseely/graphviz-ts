@@ -19,6 +19,7 @@ import type { Point } from '../../model/geom.js';
 import type { NodeBox } from './edge-route-geom.js';
 import type { EdgeSplineResult, PortRoute } from './edge-route-routing.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
+import { clipAndInstall } from '../../common/splines-clip.js';
 
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
@@ -26,6 +27,8 @@ import { linearBezier } from './edge-route-poly.js';
 import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
 import { routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
+import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
+import { buildDotSinfo } from './self-loop.js';
 
 import {
   nodeBoxOf,
@@ -259,10 +262,39 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
   routeForwardEdge(e, g, tailBox, headBox, pw);
 }
 
+/**
+ * True when either endpoint resolves to an active side-mask port (after dyna
+ * resolution). Such edges route through the faithful box-channel pipeline
+ * (AD2); plain and centre-only-port edges keep the simplified fitter so the
+ * 115 no-side-port goldens stay byte-identical (AD3).
+ * @see lib/common/splines.c:beginpath (sidemask)
+ */
+function hasSidePort(e: GraphEdge): boolean {
+  const tp = resolvePort(e.tail, e.head, e.info.tail_port);
+  const hp = resolvePort(e.head, e.tail, e.info.head_port);
+  return (tp.side ?? 0) !== 0 || (hp.side ?? 0) !== 0;
+}
+
+/**
+ * Route a side-port edge through the faithful `beginPath → routeSplines →
+ * endPath → clipAndInstall` pipeline. Returns false when the faithful path
+ * declines the edge (not an adjacent-rank regular edge), so the caller falls
+ * back to the simplified fitter. clipAndInstall installs the spline and stashes
+ * arrow polygons — do not also call installEdgeSpline/arrowheadPolygon here.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge
+ */
+function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
+  const pts = routeRegularEdgeFaithful(g, e);
+  if (pts === null) return false;
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  return true;
+}
+
 /** Route + install a plain forward edge, attaching declared ports if any. */
 function routeForwardEdge(
   e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
 ): void {
+  if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
     tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),
