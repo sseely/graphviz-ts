@@ -58,7 +58,7 @@ Baseline at mission start: **1466 passed / 0 failed**, 82 goldens
 | 2 (serialized T3→T4 — both write shapes.ts; T4 calls compassPort) | [T3 compassPort + poly_port](batch-2/T3-compassport.md), [T4 map_rec_port + record_port](batch-2/T4-record-port.md) | [x] |
 | 3 (serial — T5 consumes T3; T6 after T5) | [T5 resolvePort + closestSide](batch-3/T5-resolveport.md) [x], [T6 spline attachment — **DESIGN**](batch-3/T6-DESIGN.md) [ ] | [~] T5 done; T6 designed ([T6-DESIGN.md](batch-3/T6-DESIGN.md)). **T6a DONE**: port point + clip-skip + dyna wired into the ACTIVE router (`PortRoute`); compass ports match dot 15.0.0 within 0.5pt, 115 goldens byte-identical (see journal). **T6b BLOCKED** (reverted): side-mask boxes port cleanly but the active fitter (`computeSpline`, monotonic-corridor only) truncates the TOP loop corridor; faithful steering-port routing needs a separate `routesplines` mission (see journal T6b). T6 ships as T6a. Original [T6-spline-attach.md](batch-3/T6-spline-attach.md) superseded. |
 | 4 (T7 gated on html-labels portToTbl) | [T7 html_port + poly_port HTML branch](batch-4/T7-html-port.md) | [ ] |
-| 5 (after 3; T7 optional for T8) | [T8 goldens + C-oracle verify](batch-4/T8-goldens.md) (orchestrator inline) | [ ] |
+| 5 (after 3; T7 optional for T8) | [T8 goldens + C-oracle verify](batch-4/T8-goldens.md) (orchestrator inline) | [→] **DEFERRED to plans/parity-steering-port-routing** (SR8). Oracle verify done: port goldens are un-minteable with the simplified fitter — unclipped port control points diverge ~11pt from C `routesplines`, and the edge `<title>` drops ports (structural). Both fixed by the routesplines mission. T6a behavior pinned by `src/layout/dot/edge-route-port.test.ts`. See journal. |
 
 ## Stop conditions
 

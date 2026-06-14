@@ -13,7 +13,7 @@ comparison-paged, not forced (AD4, carried excluded-case rule).
 | SR5 | Flat-edge (FLATEDGE, same-rank) ports via `BeginFlatSide`/`EndFlatSide` path | typescript-pro | `splines-flat.ts` + test | SR3 | [ ] |
 | SR6 | Self-edge ports (`splines-selfedge.ts` already on faithful path — verify + extend) | typescript-pro | `splines-selfedge.ts` (confirm) + test | SR3 | [ ] |
 | SR7 | Multi-rank virtual-chain ports (`edge-route-chain.ts`) | typescript-pro | `edge-route-chain.ts` + test | SR3 | [ ] |
-| SR8 | Mint steering-port goldens vs dot 15.0.0 (0.5pt class); APPEND manifest; bump suite count; comparison-page any exclusions | orchestrator inline | `test/golden/*`, `plans/.../comparison/*` | SR4–SR7 | [ ] |
+| SR8 | Mint port goldens vs dot 15.0.0 (compass aligned + steering + record/attr), APPEND manifest, bump count; FIRST land the edge-`<title>` port fix (svg-helpers.ts:`svgBeginEdge`) per SCOPE quirks (ports incl., `&#45;` hyphen, compass-replaces-field); comparison-page any exclusions | orchestrator inline | `src/render/svg-helpers.ts`, `test/golden/*`, `plans/.../comparison/*` | SR4–SR7 | [ ] |
 | SR9 | Evaluate routing ALL dot regular edges through the faithful path: re-route the 115 no-port goldens via the faithful fitter, quantify deltas vs refs + vs oracle; recommend hybrid-keep or full-switch (NO ref changes without Scott) | architect-reviewer + inline | findings doc + journal | SR8 | [ ] |
 
 ## Acceptance criteria (batch)

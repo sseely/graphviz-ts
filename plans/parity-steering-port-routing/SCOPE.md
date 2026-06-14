@@ -81,6 +81,37 @@ share the **same graphviz-internal y-up frame** (tail.y > head.y, positive;
 SVG negation is a later pass). So no coordinate flip is needed when feeding
 node geometry into beginPath. (parity-edge-ports T6b verified this.)
 
+## Absorbed from parity-edge-ports T8 (port goldens blocked there)
+
+T8 of parity-edge-ports could not mint C-oracle port goldens, for two
+reasons that this mission resolves — so the port goldens land here:
+
+1. **Geometry (the main blocker).** For an UNCLIPPED port edge
+   (`port.clip=false`), the simplified fitter's spline control points
+   diverge from C's `routesplines` by ~11pt even when the rendered line is
+   visually identical (e.g. `A:s->B:n`: endpoints match within 0.06pt but
+   the interior cubic controls are `27,-57.94` vs C `27,-55.32`/`-60.62`).
+   For a plain (clipped) edge TS matches C exactly — the node clip is what
+   renormalizes the controls. Once dot routes ports through `routeSplines`
+   (this mission), port control points should match C at deterministic
+   tolerance, making compass AND steering port goldens minteable.
+2. **Edge `<title>` parity (separable).** `svgBeginEdge`
+   (src/render/svg-helpers.ts:190) builds the title from node names only.
+   C includes ports and has non-obvious rules — verified vs dot 15.0.0:
+   - `A:s->B:n` → `A:s&#45;&gt;B:n` (ports included; **hyphen escaped as
+     `&#45;`**, TS currently emits `-&gt;`).
+   - `A:f0->B` → `A:f0&#45;&gt;B`; but `A:f0:ne->B` → `A:ne&#45;&gt;B`
+     (**compass replaces the field** when both are present — confirm the
+     agnameof/port-title rule in C: `lib/cgraph/`).
+   This is a small, byte-safe fix (no-port edges have no port attr →
+   unchanged) but must match all three quirks; golden it alongside the
+   geometry. The T6a attachment-point behavior is already guarded by
+   `src/layout/dot/edge-route-port.test.ts` (4 tests).
+
+SR8 mints these port goldens (compass aligned + steering + record/attr +
+the title fix) once SR3 lands the faithful routing; verify the title quirks
+against the oracle.
+
 ## Out of scope (journal as follow-ups if hit)
 
 - neato/fdp/circo/osage edge routing (already on the faithful path).
