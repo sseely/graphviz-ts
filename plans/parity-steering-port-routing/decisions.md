@@ -5,18 +5,25 @@ constraint discovered mid-task is a STOP + journal entry, not a silent
 override. SR1 (recon spike) may refine AD1/AD2 with evidence — if so, record
 the change here and in the journal before proceeding.
 
-## AD1 — Integration seam: finish `makeRegularEdge`, don't graft `routeOneEdge`
+## AD1 — Integration seam: `routeOneEdge` (REVISED by SR1)
 
-Wire the faithful pipeline through `src/layout/dot/splines-route.ts`
-(`makeRegularEdge`), whose header already declares it the deferred
-`make_regular_edge` port, rather than bolting box-corridor logic onto the
-simplified `routeOneEdge`. `routeOneEdge` stays as the fallback/simple path
-until AD3's switch decision.
-- Rationale: `makeRegularEdge` mirrors the C orchestrator's boundaries;
-  parity-edge-ports proved that grafting onto the simplified fitter dead-ends
-  at the monotonic-corridor limit.
-- SR1 confirms dotSplines' actual dispatch and adjusts if `makeRegularEdge`
-  is not reachable for the target edge classes.
+**SR1 finding:** `makeRegularEdge` (splines-route.ts) has ZERO callers — it
+is dead code. The only live router is `dotSplines_ → routeDotEdges →
+routeOneEdge`. So:
+
+Integrate at **`routeOneEdge`** (src/layout/dot/edge-route.ts): when an edge
+has an active side-mask port, route via the faithful pipeline (build
+`endp.nb` → `beginPath`/`endPath` → assemble `P.boxes` → `routeSplines` →
+`clipAndInstall`) instead of `straightEdgeSplineWithRank`. Extend T6a's
+`portRouteOf` to detect `.side` as the gate. Do NOT revive `makeRegularEdge`
+(parallel dead path); consider deleting it in cleanup once the faithful path
+lands.
+- Rationale: routeOneEdge is the live seam and already carries the T6a port
+  plumbing; reviving dead code would add a second path to maintain.
+- Original AD1 (finish makeRegularEdge) is superseded — see SR1-findings.md.
+- NOTE (SR1): `beginPath`/`endPath`/`routeSplines` have NO existing callers
+  anywhere; this mission first-assembles that sequence. Treat the assembly
+  (C `make_regular_edge` glue) as real work, not plumbing.
 
 ## AD2 — Staged rollout: ported-with-side edges first, gated
 

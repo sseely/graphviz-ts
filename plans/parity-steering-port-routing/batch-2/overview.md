@@ -12,9 +12,14 @@ no existing golden changes (AD3).
 
 | ID | Description | Agent | Writes (confirm in SR1) | Depends | Done |
 |----|-------------|-------|--------------------------|---------|------|
-| SR2 | Build a `Path`+`PathendT` (incl. `endp.nb`, `ranksep`, in/out edges, `merge`) from a dot regular edge — the input adapter `beginPath` needs | typescript-pro | `splines-route.ts` (+ a new `splines-route-port.ts` if size forces a split) + test | SR1 | [ ] |
-| SR3 | In `makeRegularEdge`, when the edge has a side port, route via `beginPath`→`routeSplines`→`endPath`→`clipAndInstall` and install the spline + arrows; else keep the simplified path | typescript-pro | `splines-route.ts`, wire-up in `splines.ts`/`edge-route.ts` dispatch (per SR1) + test | SR2 | [ ] |
+| SR2 | Build the faithful-path input from a dot regular edge: seed `endp.nb` (maximal bbox), fresh `Path`, `ranksep`, in/out edges, `merge`; call `beginPath`/`endPath`; **assemble `P.boxes`** = tail boxes + inter-rank box + head boxes (the missing C `make_regular_edge` glue) | typescript-pro | new `src/layout/dot/edge-route-faithful.ts` + test | SR1 | [ ] |
+| SR3 | In **`routeOneEdge`** (AD1 revised), when the edge has a side port, route via `routeSplines(P)` → `clipAndInstall` (+ arrows); else keep the simplified path. Extend `portRouteOf` gate to `.side` | typescript-pro | `edge-route.ts`, `edge-route-faithful.ts` + test | SR2 | [ ] |
 | SR4 | Oracle-validate the four sides (`A:n/s/e/w->B`, contradictory compass, record side port) vs dot 15.0.0; classify pass(≤0.5pt)/journal-exclude | orchestrator inline | test + journal | SR3 | [ ] |
+
+> SR1 revised the seam to `routeOneEdge` (makeRegularEdge is dead code) and
+> flagged that `beginPath`/`routeSplines`/`endPath` have NO existing callers
+> — SR2 first-assembles that sequence. The PoC (`.probes/sr1-poc.ts`) proved
+> `routeSplines` routes the loop corridor. See batch-1/SR1-findings.md.
 
 ## Interface contract (SR2 → SR3)
 
