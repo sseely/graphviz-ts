@@ -11,7 +11,12 @@ import type { Point, Box } from '../model/geom.js';
 import type { Path, PathendT, ShapeDesc } from './types.js';
 import type { Edge } from '../model/edge.js';
 import type { Node } from '../model/node.js';
-import { TOP, BOTTOM, REGULAREDGE, FLATEDGE } from './splines-constants.js';
+import { TOP, BOTTOM, LEFT, RIGHT, REGULAREDGE, FLATEDGE } from './splines-constants.js';
+import { BOTTOM_IX, RIGHT_IX, TOP_IX } from '../layout/dot/position-aux.js';
+import { RANKDIR_LR, RANKDIR_RL, RANKDIR_BT } from '../layout/dot/init.js';
+import { dist2 } from './spline-midpoint.js';
+import { compassPort } from './compass-port.js';
+import { makePort } from '../model/edgeInfo.js';
 
 // ---------------------------------------------------------------------------
 // add_box
@@ -53,16 +58,76 @@ export function concSlope(n: Node, inEdges: Edge[], outEdges: Edge[]): number {
 // resolvePort stub
 // ---------------------------------------------------------------------------
 
+/** Compass strings indexed by BOTTOM_IX, RIGHT_IX, TOP_IX, LEFT_IX. */
+const SIDE_PORT = ['s', 'e', 'n', 'w'] as const;
+const ALL_SIDES = TOP | BOTTOM | LEFT | RIGHT;
+
+/** Convert a point to the rankdir frame. @see lib/common/shapes.c:cvtPt */
+function cvtPt(p: Point, rankdir: number): Point {
+  switch (rankdir) {
+    case RANKDIR_BT: return { x: p.x, y: -p.y };
+    case RANKDIR_LR: return { x: -p.y, y: p.x };
+    case RANKDIR_RL: return { x: p.y, y: p.x };
+    default: return { x: p.x, y: p.y }; // RANKDIR_TB
+  }
+}
+
+/** Flip-aware node bbox in node-local coords. @see shapes.c:closestSide */
+function nodeBoxLocal(n: Node, flip: boolean): Box {
+  const lw = n.info.lw, ht2 = n.info.ht / 2;
+  return flip
+    ? { ll: { x: -ht2, y: -lw }, ur: { x: ht2, y: lw } }
+    : { ll: { x: -lw, y: -ht2 }, ur: { x: lw, y: ht2 } };
+}
+
+/** Midpoint of face `ix` of box b (node-local). @see shapes.c:closestSide */
+function faceMidpoint(b: Box, ix: number): Point {
+  const cx = (b.ll.x + b.ur.x) / 2, cy = (b.ll.y + b.ur.y) / 2;
+  if (ix === BOTTOM_IX) return { x: cx, y: b.ll.y };
+  if (ix === RIGHT_IX) return { x: b.ur.x, y: cy };
+  if (ix === TOP_IX) return { x: cx, y: b.ur.y };
+  return { x: b.ll.x, y: cy }; // LEFT_IX
+}
+
 /**
- * Returns a dynamically resolved port — stub until portfn is fully ported.
- * @see lib/common/splines.c:resolvePort
+ * Best available side for a dynamic port: the exposed face whose midpoint is
+ * closest to the other endpoint. Null → use center.
+ * @see lib/common/shapes.c:closestSide:4248
+ */
+function closestSide(n: Node, other: Node, port: Edge['info']['tail_port']): string | null {
+  const sides = port.side;
+  if (sides === 0 || sides === ALL_SIDES) return null;
+  const rkd = (n.root.info.rankdir ?? 0) & 0x3;
+  const pt = cvtPt(n.info.coord, rkd);
+  const opt = cvtPt(other.info.coord, rkd);
+  const b = port.bp ?? nodeBoxLocal(n, rkd === RANKDIR_LR || rkd === RANKDIR_RL);
+  let rv: string | null = null;
+  let mind = 0;
+  for (let i = 0; i < 4; i++) {
+    if ((sides & (1 << i)) === 0) continue;
+    const m = faceMidpoint(b, i);
+    const d = dist2({ x: m.x + pt.x, y: m.y + pt.y }, opt);
+    if (rv === null || d < mind) { mind = d; rv = SIDE_PORT[i]!; }
+  }
+  return rv;
+}
+
+/**
+ * Resolve a dynamic (`_`) port to a concrete compass point on the side nearest
+ * the other endpoint, then re-run compassPort. Non-dyna ports pass through.
+ * @see lib/common/splines.c:resolvePort:4322
  */
 export function resolvePort(
-  _n: Node,
-  _other: Node,
+  n: Node,
+  other: Node,
   port: Edge['info']['tail_port'],
 ): typeof port {
-  return port;
+  if (!port.dyna) return port;
+  const compass = closestSide(n, other, port);
+  const rv = makePort();
+  rv.name = port.name;
+  compassPort(n, { bp: port.bp, compass: compass ?? '', sides: port.side }, rv);
+  return rv;
 }
 
 // ---------------------------------------------------------------------------

@@ -40,6 +40,20 @@ export function applyAttrs(
   }
 }
 
+/**
+ * The port string a NodeId endpoint contributes to the edge's
+ * tailport/headport attr: "port" or "port:compass". Subgraph endpoints and
+ * port-less nodes contribute nothing. Mirrors C's mkport writing the
+ * tailport/headport attr from `A:port:compass` DOT syntax.
+ * @see lib/cgraph/grammar.y:396 (mkport)
+ */
+function portStringOf(item: NodeId | SubgraphStmt): string {
+  if ('type' in item && item.type === 'subgraph') return '';
+  const ni = item as NodeId;
+  if (ni.port === null || ni.port === '') return '';
+  return ni.compass ? ni.port + ':' + ni.compass : ni.port;
+}
+
 // ── Node registry ─────────────────────────────────────────────────────────────
 
 /** Manages the per-parse node ID counter and node creation. */
@@ -175,10 +189,16 @@ export class StmtProcessor {
     graph: Graph,
     root: Graph,
   ): void {
+    // DOT-syntax ports land in tailport/headport attrs; explicit attrs win.
+    // @see lib/common/utils.c:common_init_edge (reads these via chkPort)
+    const tailPort = portStringOf(tailItem);
+    const headPort = portStringOf(headItem);
     for (const tail of this.resolveEndpoint(tailItem, root)) {
       for (const head of this.resolveEndpoint(headItem, root)) {
         const edge = new Edge(tail, head, '');
         applyAttrs(attrs, edge.attrs);
+        if (tailPort && !edge.attrs.has('tailport')) edge.attrs.set('tailport', tailPort);
+        if (headPort && !edge.attrs.has('headport')) edge.attrs.set('headport', headPort);
         root.edges.push(edge);
         edge.graphSeq = root.edges.length;
         // cgraph: nodes and edges belong to every enclosing graph.

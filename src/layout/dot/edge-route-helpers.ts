@@ -22,7 +22,7 @@ import { linearBezier } from './edge-route-poly.js';
 import { DEFAULT_NODEPENWIDTH } from './edge-route-clip.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { routeWithRank, routeSimple } from './edge-route-routing.js';
-import type { RankEdgeInfo, EdgeSplineResult } from './edge-route-routing.js';
+import type { RankEdgeInfo, EdgeSplineResult, PortRoute } from './edge-route-routing.js';
 
 /**
  * Default `dir` for an edge given the graph's directedness. C uses
@@ -145,8 +145,9 @@ export function straightEdgeSplineWithRank(
   headBox: NodeBox,
   rankInfo: RankEdgeInfo | undefined,
   penwidth = 1.0,
+  port?: PortRoute,
 ): EdgeSplineResult {
   return rankInfo !== undefined
-    ? routeWithRank(tailBox, headBox, rankInfo, penwidth)
+    ? routeWithRank(tailBox, headBox, rankInfo, penwidth, port)
     : routeSimple(tailBox, headBox, routeBezier);
 }
