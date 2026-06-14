@@ -12,7 +12,7 @@ no existing golden changes (AD3).
 
 | ID | Description | Agent | Writes (confirm in SR1) | Depends | Done |
 |----|-------------|-------|--------------------------|---------|------|
-| SR2 | Build the faithful-path input from a dot regular edge: seed `endp.nb` (maximal bbox), fresh `Path`, `ranksep`, in/out edges, `merge`; call `beginPath`/`endPath`; **assemble `P.boxes`** = tail boxes + inter-rank box + head boxes (the missing C `make_regular_edge` glue) | typescript-pro | new `src/layout/dot/edge-route-faithful.ts` + test | SR1 | [ ] |
+| SR2 | Build the faithful-path input from a dot regular edge: seed `endp.nb` (maximal bbox), fresh `Path`, `ranksep`, in/out edges, `merge`; call `beginPath`/`endPath`; **assemble `P.boxes`** = tail boxes + inter-rank box + head boxes (the missing C `make_regular_edge` glue) | typescript-pro | new `src/layout/dot/edge-route-faithful.ts` + test | SR1 | [x] |
 | SR3 | In **`routeOneEdge`** (AD1 revised), when the edge has a side port, route via `routeSplines(P)` → `clipAndInstall` (+ arrows); else keep the simplified path. Extend `portRouteOf` gate to `.side` | typescript-pro | `edge-route.ts`, `edge-route-faithful.ts` + test | SR2 | [ ] |
 | SR4 | Oracle-validate the four sides (`A:n/s/e/w->B`, contradictory compass, record side port) vs dot 15.0.0; classify pass(≤0.5pt)/journal-exclude | orchestrator inline | test + journal | SR3 | [ ] |
 
