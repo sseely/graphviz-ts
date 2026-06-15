@@ -926,5 +926,45 @@
     "input": "test/golden/inputs/dot-node-penwidth-edge-clip.dot",
     "reference": "test/golden/refs/dot-node-penwidth-edge-clip.svg",
     "description": "edge into a thick-bordered (penwidth=2) node clips to the outline; ref: graphviz 15.0.0 dot -Tsvg; fix node-penwidth-edge-clip"
+  },
+  {
+    "id": "dot-port-compass-aligned",
+    "engine": "dot",
+    "toleranceClass": "iterative",
+    "tolerance": 0.5,
+    "input": "test/golden/inputs/dot-port-compass-aligned.dot",
+    "reference": "test/golden/refs/dot-port-compass-aligned.svg",
+    "portReference": "test/golden/refs-port/dot-port-compass-aligned.svg",
+    "description": "aligned compass ports A:s->B:n via faithful routesplines (steering-port SR8; cleared parity T8's 11pt unclipped-port blocker); title carries ports + &#45; hyphen; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
+  },
+  {
+    "id": "dot-port-steering-east",
+    "engine": "dot",
+    "toleranceClass": "iterative",
+    "tolerance": 0.5,
+    "input": "test/golden/inputs/dot-port-steering-east.dot",
+    "reference": "test/golden/refs/dot-port-steering-east.svg",
+    "portReference": "test/golden/refs-port/dot-port-steering-east.svg",
+    "description": "east lateral steering port A:e->B (tail exits the right face, bulges then descends) via faithful routesplines (SR8); ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
+  },
+  {
+    "id": "dot-port-steering-west",
+    "engine": "dot",
+    "toleranceClass": "iterative",
+    "tolerance": 0.5,
+    "input": "test/golden/inputs/dot-port-steering-west.dot",
+    "reference": "test/golden/refs/dot-port-steering-west.svg",
+    "portReference": "test/golden/refs-port/dot-port-steering-west.svg",
+    "description": "west lateral steering port A:w->B (tail exits the left face, bulges then descends) via faithful routesplines (SR8); ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
+  },
+  {
+    "id": "dot-port-record-aligned",
+    "engine": "dot",
+    "toleranceClass": "iterative",
+    "tolerance": 0.5,
+    "input": "test/golden/inputs/dot-port-record-aligned.dot",
+    "reference": "test/golden/refs/dot-port-record-aligned.svg",
+    "portReference": "test/golden/refs-port/dot-port-record-aligned.svg",
+    "description": "record-field port A:f0->B via faithful routesplines (SR8); title carries the field name A:f0->B; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
   }
 ]
