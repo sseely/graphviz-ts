@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Steering-port goldens &amp;amp; the drawing-bbox divergence</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}
+body{margin:2rem auto;max-width:64rem;padding:0 1rem;color:#1a1a1a}
+h1{font-size:1.5rem} h2{font-size:1.1rem;margin-top:2rem;border-bottom:1px solid #eee;padding-bottom:.3rem}
+.status{background:#fdf6e3;border:1px solid #e8d9a0;padding:.6rem 1rem;border-radius:6px}
+.pairs{display:flex;flex-wrap:wrap;gap:2rem;margin:1rem 0}
+.pair{border:1px solid #ddd;border-radius:8px;padding:1rem}
+.pair h3{margin:.2rem 0 1rem;font-size:.95rem;color:#444;text-align:center}
+.cols{display:flex;gap:1.5rem;align-items:flex-start}
+.col{text-align:center}
+.col .lbl{font-size:.8rem;color:#666;margin-bottom:.4rem;font-weight:600}
+.col img{height:300px;width:auto;border:1px dashed #ccc;background:
+  repeating-conic-gradient(#f4f4f4 0% 25%,#fff 0% 50%) 0/16px 16px;padding:4px}
+table{border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{border:1px solid #ddd;padding:.25rem .6rem;text-align:right;font-variant-numeric:tabular-nums}
+th{background:#f7f7f7} td:first-child,th:first-child{text-align:left}
+tr.bad td{background:#fde8e8;font-weight:600}
+.caption{font-size:.85rem;color:#555;margin:.3rem 0}
+p{margin:.6rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px}
+.legend{font-size:.8rem;color:#888}
+</style></head><body>
+<h1>Steering-port goldens &amp;amp; the drawing-bbox divergence</h1>
+<p class="status"><strong>SR8.</strong> 4 steering-port goldens minted (≤0.5pt + 0.01pt drift pins). The remaining steering cases fail the full-SVG golden only on the drawing bbox — the edge path itself is ≤0.5pt.</p>
+<p class="legend">The drawings below are the actual rendered SVGs — the visual match is the test. Backgrounds are a checker pattern so white fills show.</p>
+<div class="pair"><h3>digraph{A:n-&gt;B} (TOP steering)</h3><div class="cols"><div class="col"><div class="lbl">dot 15.0.0</div><img src="port-bbox-An-B-dot1500.svg" alt="dot 15.0.0 — digraph{A:n-&gt;B} (TOP steering)"></div><div class="col"><div class="lbl">graphviz-ts</div><img src="port-bbox-An-B-ts.svg" alt="graphviz-ts — digraph{A:n-&gt;B} (TOP steering)"></div></div></div>
+<h2>Geometry</h2>
+<p class="caption">Minted goldens (APPENDED to manifest).</p><table><tr><th>id</th><th>input</th><th>Δ vs dot 15.0.0</th></tr><tr><td>dot-port-compass-aligned</td><td>A:s-&gt;B:n</td><td>0.000 (exact)</td></tr><tr><td>dot-port-steering-east</td><td>A:e-&gt;B</td><td>≤0.5</td></tr><tr><td>dot-port-steering-west</td><td>A:w-&gt;B</td><td>≤0.5</td></tr><tr><td>dot-port-record-aligned</td><td>A:f0-&gt;B</td><td>0.000 (exact)</td></tr></table>
+<p class="caption">A:n-&gt;B drawing bbox — edge path is ≤0.5pt; only the bbox differs.</p><table><tr><th>attribute</th><th>dot 15.0.0</th><th>graphviz-ts</th><th>Δ</th></tr><tr class="bad"><td>viewBox width</td><td>68.00</td><td>73.00</td><td>5</td></tr><tr class="bad"><td>viewBox / height</td><td>125.00</td><td>129.00</td><td>4</td></tr></table>
+<h2>Diagnosis</h2>
+<p>For the minted four the full SVG (geometry + the title fix: ports, <code>&amp;#45;</code> hyphen, compass-replaces-field) matches dot 15.0.0; each carries a TS portReference drift pin at 0.01pt.</p>
+<p>For TOP-steering / multi-rank / record-steering the <strong>edge path matches dot within 0.5pt</strong> (pinned in the SR4/SR7 oracle tests); the golden fails only on <code>svg/@viewBox</code>, <code>@height</code> and the derived graph transform — TS’s drawing bounding box is ~4–5pt larger for loops bulging beyond the node column.</p>
+<h2>Why excluded (not fixed)</h2>
+<p>A bbox-extent computation difference (position-bbox / postproc), not edge routing and not the svgBeginEdge title seam. Changing it risks the 115 existing no-port goldens. The edge geometry is already pinned by unit tests; only the golden mint is deferred.</p>
+</body></html>

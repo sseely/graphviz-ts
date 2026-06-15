@@ -45,7 +45,7 @@ consumed by `beginPath(...)`/`endPath(...)` exactly as neato's caller does.
 in `edge-route-faithful-oracle.test.ts` (9 cases). `A:s->B:n` and record
 `A:f0:n->B` match C exactly; `A:s->B:n` clears T8's 11pt blocker. Compound
 both-ends `A:n->B:s` excluded (24pt mid-corridor, SR7-adjacent) — see
-[comparisons/An-Bs-double-steering.md](../comparisons/An-Bs-double-steering.md).
+[comparisons/An-Bs-double-steering.html](../comparisons/An-Bs-double-steering.html).
 ±1 nudge does NOT survive to output (faithful path = simplified here). Batch 2
 complete (SR2+SR3+SR4).
 
