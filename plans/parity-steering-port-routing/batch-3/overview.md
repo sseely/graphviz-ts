@@ -10,7 +10,7 @@ comparison-paged, not forced (AD4, carried excluded-case rule).
 
 | ID | Description | Agent | Writes (confirm after batch 2) | Depends | Done |
 |----|-------------|-------|-------------------------------|---------|------|
-| SR5 | Flat-edge (FLATEDGE, same-rank) ports via `BeginFlatSide`/`EndFlatSide` path | typescript-pro | `splines-flat.ts` + test | SR3 | [ ] |
+| SR5 | Flat-edge (FLATEDGE, same-rank) ports — box-channel branch (non-adjacent) via BeginFlatSide/EndFlatSide. A:n->B:n exact, A:e->B:w 0.25pt. Bottom-tail offset + adjacent (make_flat_adj_edges deferred) excluded w/ comparison page | orchestrator inline | `splines-flat.ts`, `edge-route.ts` dispatch, `edge-route-faithful.ts` (additive exports), `splines-flat-oracle.test.ts` | SR3 | [x] |
 | SR6 | Self-edge ports — VERIFIED already faithful via `makeSelfEdge`; seam is `self-loop.ts` not `splines-selfedge.ts` (frozen). Validation+pin only, no production change | orchestrator inline | `self-loop-oracle.test.ts` (self-loop.ts unchanged) | SR3 | [x] |
 | SR7 | Multi-rank virtual-chain ports (`edge-route-chain.ts`) | typescript-pro | `edge-route-chain.ts` + test | SR3 | [ ] |
 | SR8 | Mint port goldens vs dot 15.0.0 (compass aligned + steering + record/attr), APPEND manifest, bump count; FIRST land the edge-`<title>` port fix (svg-helpers.ts:`svgBeginEdge`) per SCOPE quirks (ports incl., `&#45;` hyphen, compass-replaces-field); comparison-page any exclusions | orchestrator inline | `src/render/svg-helpers.ts`, `test/golden/*`, `plans/.../comparison/*` | SR4–SR7 | [ ] |

@@ -55,14 +55,14 @@ const HALFMINW = 8;
  * maximal_bbox / rank_box read.
  * @see lib/dotgen/dotsplines.c:spline_info_t
  */
-interface SplineBounds {
+export interface SplineBounds {
   leftBound: number;
   rightBound: number;
   splinesep: number;
 }
 
 /** Bundled context for the maximal_bbox helpers (keeps params <= 5). */
-interface BboxCtx {
+export interface BboxCtx {
   g: Graph;
   sp: SplineBounds;
 }
@@ -119,7 +119,7 @@ function bboxRightX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | und
  * Build the initial bounding box for begin/endpath at node vn.
  * @see lib/dotgen/dotsplines.c:maximal_bbox
  */
-function maximalBbox(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | undefined): Box {
+export function maximalBbox(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | undefined): Box {
   const llx = bboxLeftX(ctx, vn, ie, oe);
   let urx = bboxRightX(ctx, vn, ie, oe);
   if (isLabeledVirtual(vn)) {
@@ -153,7 +153,7 @@ function makeRegularEnd(b: Box, side: number, y: number): Box {
  * append a makeregularend box if it is non-degenerate.
  * @see lib/dotgen/dotsplines.c:make_regular_edge (b.UR.y/LL.y + makeregularend)
  */
-function appendRegularEnd(nb: Box, endp: PathendT, side: number, y: number): void {
+export function appendRegularEnd(nb: Box, endp: PathendT, side: number, y: number): void {
   const last = endp.boxes[endp.boxn - 1];
   const b: Box = { ll: { x: nb.ll.x, y: last.ll.y }, ur: { x: nb.ur.x, y: last.ur.y } };
   const end = makeRegularEnd(b, side, y);
@@ -264,7 +264,7 @@ function completeRegularPath(parts: RegularPathParts): boolean {
 // ---------------------------------------------------------------------------
 
 /** A fresh path endpoint seeded with its node bounding box. */
-function freshEndp(nb: Box): PathendT {
+export function freshEndp(nb: Box): PathendT {
   return { nb, np: { x: 0, y: 0 }, sidemask: 0, boxn: 0, boxes: [] };
 }
 

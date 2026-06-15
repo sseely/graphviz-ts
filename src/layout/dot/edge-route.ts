@@ -28,6 +28,7 @@ import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
 import { routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
+import { routeFlatEdgeFaithful } from './splines-flat.js';
 import { buildDotSinfo } from './self-loop.js';
 
 import {
@@ -277,14 +278,17 @@ function hasSidePort(e: GraphEdge): boolean {
 
 /**
  * Route a side-port edge through the faithful `beginPath → routeSplines →
- * endPath → clipAndInstall` pipeline. Returns false when the faithful path
- * declines the edge (not an adjacent-rank regular edge), so the caller falls
- * back to the simplified fitter. clipAndInstall installs the spline and stashes
- * arrow polygons — do not also call installEdgeSpline/arrowheadPolygon here.
- * @see lib/dotgen/dotsplines.c:make_regular_edge
+ * endPath → clipAndInstall` pipeline. A same-rank edge routes via the flat
+ * pipeline (make_flat_edge); an adjacent-rank regular edge via
+ * make_regular_edge. Returns false when the faithful path declines the edge,
+ * so the caller falls back to the simplified fitter. clipAndInstall installs
+ * the spline and stashes arrow polygons — do not also call
+ * installEdgeSpline/arrowheadPolygon here.
+ * @see lib/dotgen/dotsplines.c:make_flat_edge, make_regular_edge
  */
 function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
-  const pts = routeRegularEdgeFaithful(g, e);
+  const sameRank = e.tail.info.rank !== undefined && e.tail.info.rank === e.head.info.rank;
+  const pts = sameRank ? routeFlatEdgeFaithful(g, e) : routeRegularEdgeFaithful(g, e);
   if (pts === null) return false;
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
