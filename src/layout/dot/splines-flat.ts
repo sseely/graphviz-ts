@@ -13,12 +13,39 @@
 
 import { Graph } from '../../model/graph.js';
 import type { Edge } from '../../model/edge.js';
+import type { Node } from '../../model/node.js';
+import type { Box, Point } from '../../model/geom.js';
+import type { Path, PathendT } from '../../common/types.js';
 import type { SplineInfo } from './splines-route.js';
 import { dotRank } from './rank.js';
 import { dotMincross } from './mincross.js';
 import { dotPosition } from './position.js';
 import { dotSameports } from './sameport.js';
 import { dotSplines_ } from './splines.js';
+import { makePort } from '../../model/edgeInfo.js';
+import { beginPath } from '../../common/splines-path-begin.js';
+import { endPath } from '../../common/splines-path-end.js';
+import { routeSplines } from '../../common/splines-routespl.js';
+import { addBox, resolvePort } from '../../common/splines-path-shared.js';
+import { TOP, BOTTOM, FLATEDGE } from '../../common/splines-constants.js';
+import {
+  maximalBbox, appendRegularEnd, freshEndp, type BboxCtx,
+} from './edge-route-faithful.js';
+import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
+import { graphRanksep } from './position-aux.js';
+import { EDGE_LABEL } from './rank.js';
+
+/** Bundled args for makeFlatEndBox (keeps params <= 5). Declared here (not
+ * between functions) so lizard's TS parser doesn't fold it into a neighbor. */
+interface FlatEndParts {
+  ctx: BboxCtx;
+  P: Path;
+  e: Edge;
+  n: Node;
+  side: number;
+  ranksep: number;
+  isBegin: boolean;
+}
 
 // ---------------------------------------------------------------------------
 // cloneGraph — build auxiliary graph for flat adj routing
@@ -120,4 +147,162 @@ export function makeFlatEdge(
   if (isAdj) return makeFlatAdjEdges(g, edges, cnt, et);
   // Non-adjacent flat edges: full routing deferred
   return 0;
+}
+
+// ---------------------------------------------------------------------------
+// routeFlatEdgeFaithful — faithful side-port routing for a single flat edge
+// @see lib/dotgen/dotsplines.c:make_flat_edge (non-adjacent, non-labeled,
+//      EDGETYPE_SPLINE: the top-routing branch + make_flat_bottom_edges),
+//      makeFlatEnd / makeBottomFlatEnd
+// ---------------------------------------------------------------------------
+
+/**
+ * makeFlatEnd (side=TOP) / makeBottomFlatEnd (side=BOTTOM): seed the endpoint
+ * box from maximal_bbox, set the side mask, run begin/endpath (FLATEDGE feeds
+ * BeginFlatSide/EndFlatSide), then append the makeregularend box up to (TOP) or
+ * down from (BOTTOM) the node's rank extent.
+ * @see lib/dotgen/dotsplines.c:makeFlatEnd, makeBottomFlatEnd
+ */
+function makeFlatEndBox(parts: FlatEndParts): PathendT {
+  const { ctx, P, e, n, side, ranksep, isBegin } = parts;
+  const endp = freshEndp(maximalBbox(ctx, n, undefined, e));
+  endp.sidemask = side;
+  const args = {
+    P, e, et: FLATEDGE, endp, merge: false,
+    inEdges: [], outEdges: [], ranksep, pboxfn: null,
+  };
+  if (isBegin) beginPath(args); else endPath(args);
+  const ranks = ctx.g.info.rank!;
+  const ht2 = ranks[n.info.rank!].ht2;
+  const y = side === TOP ? n.info.coord.y + ht2 : n.info.coord.y - ht2;
+  appendRegularEnd(endp.nb, endp, side, y);
+  return endp;
+}
+
+/**
+ * The three connecting boxes for the top-routing branch (loop over the top).
+ * @see lib/dotgen/dotsplines.c:make_flat_edge (boxes[], i=0)
+ */
+function topBoxes(tlast: Box, hlast: Box, stepx: number, stepy: number): Box[] {
+  const b0: Box = {
+    ll: { x: tlast.ll.x, y: tlast.ur.y },
+    ur: { x: tlast.ur.x + stepx, y: tlast.ur.y + stepy },
+  };
+  const b1: Box = {
+    ll: { x: tlast.ll.x, y: b0.ur.y },
+    ur: { x: hlast.ur.x, y: b0.ur.y + stepy },
+  };
+  const b2: Box = {
+    ll: { x: hlast.ll.x - stepx, y: hlast.ur.y },
+    ur: { x: hlast.ur.x, y: b0.ur.y },
+  };
+  return [b0, b1, b2];
+}
+
+/**
+ * The three connecting boxes for the bottom-routing branch (loop under).
+ * @see lib/dotgen/dotsplines.c:make_flat_bottom_edges (boxes[], i=0)
+ */
+function bottomBoxes(tlast: Box, hlast: Box, stepx: number, stepy: number): Box[] {
+  const b0: Box = {
+    ll: { x: tlast.ll.x, y: tlast.ll.y - stepy },
+    ur: { x: tlast.ur.x + stepx, y: tlast.ll.y },
+  };
+  const b1: Box = {
+    ll: { x: tlast.ll.x, y: b0.ll.y - stepy },
+    ur: { x: hlast.ur.x, y: b0.ll.y },
+  };
+  const b2: Box = {
+    ll: { x: hlast.ll.x - stepx, y: b0.ll.y },
+    ur: { x: hlast.ur.x, y: hlast.ll.y },
+  };
+  return [b0, b1, b2];
+}
+
+/**
+ * Vertical space available for the loop. Top routing reads the rank above;
+ * bottom routing reads the rank below; either way a node at the graph
+ * boundary falls back to ranksep.
+ * @see lib/dotgen/dotsplines.c:make_flat_edge / make_flat_bottom_edges (vspace)
+ */
+function flatVspace(g: Graph, tn: Node, top: boolean): number {
+  const ranks = g.info.rank!;
+  const r = tn.info.rank!;
+  if (top) {
+    if (r <= 0) return graphRanksep(g);
+    const prevIdx = (g.info.has_labels & EDGE_LABEL) !== 0 ? r - 2 : r - 1;
+    const prev = ranks[prevIdx];
+    return prev.v[0].info.coord.y - prev.ht1 - tn.info.coord.y - ranks[r].ht2;
+  }
+  if (r >= (g.info.maxrank ?? 0)) return graphRanksep(g);
+  const next = ranks[r + 1];
+  return tn.info.coord.y - ranks[r].pht1 - (next.v[0].info.coord.y + next.pht2);
+}
+
+/** A fresh empty path for begin/route/end assembly. */
+function freshFlatPath(): Path {
+  return { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null };
+}
+
+/** Per-caller spline_info bounds (C builds its own `sd` per orchestrator). */
+function flatBboxCtx(g: Graph): BboxCtx {
+  return {
+    g,
+    sp: {
+      leftBound: computeLeftBound(g),
+      rightBound: computeRightBound(g),
+      splinesep: (g.info.nodesep ?? 18) / 2,
+    },
+  };
+}
+
+/**
+ * Routing-side decision: bottom routing fires when a BOTTOM port faces away
+ * from a non-TOP opposite end, exactly as C's
+ * `(tside==BOTTOM && hside!=TOP) || (hside==BOTTOM && tside!=TOP)`.
+ * @see lib/dotgen/dotsplines.c:make_flat_edge (tside/hside test)
+ */
+function flatSide(e: Edge): { bottom: boolean; side: number } {
+  const tside = resolvePort(e.tail, e.head, e.info.tail_port).side ?? 0;
+  const hside = resolvePort(e.head, e.tail, e.info.head_port).side ?? 0;
+  const bottom = (tside === BOTTOM && hside !== TOP) || (hside === BOTTOM && tside !== TOP);
+  return { bottom, side: bottom ? BOTTOM : TOP };
+}
+
+/** Concatenate tail boxes (fwd), the 3 connecting boxes, head boxes (rev). */
+function assembleFlatPath(P: Path, tend: PathendT, hend: PathendT, mid: Box[]): void {
+  for (let i = 0; i < tend.boxn; i++) addBox(P, tend.boxes[i]);
+  for (const b of mid) addBox(P, b);
+  for (let i = hend.boxn - 1; i >= 0; i--) addBox(P, hend.boxes[i]);
+}
+
+/**
+ * Route a single same-rank (flat) edge carrying a side-mask port through the
+ * faithful `beginPath → routeSplines → endPath → clipAndInstall` pipeline.
+ * Returns spline control points in graphviz-internal (y-up) coordinates, or
+ * null when the edge is not a same-rank edge. Does NOT clip or install — the
+ * caller (routeOneEdge) does that via clipAndInstall, mirroring how SR3 wires
+ * the regular faithful path.
+ *
+ * @see lib/dotgen/dotsplines.c:make_flat_edge (cnt=1, non-adjacent spline)
+ */
+export function routeFlatEdgeFaithful(g: Graph, e: Edge): Point[] | null {
+  const tn = e.tail;
+  const r = tn.info.rank;
+  if (g.info.rank === undefined || r === undefined || e.head.info.rank !== r) return null;
+  const { bottom, side } = flatSide(e);
+  const ctx = flatBboxCtx(g);
+  const ranksep = graphRanksep(g);
+  const P = freshFlatPath();
+  const tend = makeFlatEndBox({ ctx, P, e, n: tn, side, ranksep, isBegin: true });
+  const hend = makeFlatEndBox({ ctx, P, e, n: e.head, side, ranksep, isBegin: false });
+  const stepx = (g.info.nodesep ?? 18) / 2;
+  const stepy = flatVspace(g, tn, !bottom) / 2;
+  const tlast = tend.boxes[tend.boxn - 1];
+  const hlast = hend.boxes[hend.boxn - 1];
+  const mid = bottom
+    ? bottomBoxes(tlast, hlast, stepx, stepy)
+    : topBoxes(tlast, hlast, stepx, stepy);
+  assembleFlatPath(P, tend, hend, mid);
+  return routeSplines(P);
 }

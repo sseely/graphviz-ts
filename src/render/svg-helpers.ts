@@ -187,12 +187,36 @@ export function svgEndNode(job: RenderJob): void {
   job.write('</g>\n');
 }
 
+/**
+ * XML-escape an edge title the way C's `gvputs_xml` does (gv_xml_escape with
+ * dash=1): `&`, `<`, `>`, and `-`→`&#45;`. The hyphen escaping is why dot emits
+ * `A&#45;&gt;B`, not `A-&gt;B`.
+ * @see lib/util/xml.c:xml_core (flags.dash)
+ */
+function escapeEdgeTitle(s: string): string {
+  let r = s.replace(/&/g, '&amp;');
+  r = r.replace(/</g, '&lt;');
+  r = r.replace(/>/g, '&gt;');
+  return r.replace(/-/g, '&#45;');
+}
+
+/**
+ * Begin an edge group + `<title>`. The title is `tail[:tport]<sep>head[:hport]`
+ * built raw, then escaped — mirroring C's `\E` substitution (`labels.c`) fed
+ * through `gvputs_xml`. The port string is the resolved port name
+ * (`ED_*_port(e).name`): a compass replaces a record field when both are given
+ * (`A:f0:n` → `A:n`), and the dash escapes to `&#45;`.
+ * @see lib/common/labels.c:strdup_and_subst_obj (case 'E')
+ * @see plugin/core/gvrender_core_svg.c:svg_begin_edge
+ */
 export function svgBeginEdge(e: Edge, job: RenderJob): void {
-  const tid = escapeXml(e.tail.name);
-  const hid = escapeXml(e.head.name);
-  const sep = job.directed ? '-&gt;' : '--';
+  const sep = job.directed ? '->' : '--';
+  const tp = e.info.tail_port?.name;
+  const hp = e.info.head_port?.name;
+  const raw = e.tail.name + (tp ? ':' + tp : '')
+    + sep + e.head.name + (hp ? ':' + hp : '');
   job.write('<g id="edge' + e.graphSeq + '" class="edge">\n');
-  job.write('<title>' + tid + sep + hid + '</title>\n');
+  job.write('<title>' + escapeEdgeTitle(raw) + '</title>\n');
 }
 
 export function svgEndEdge(job: RenderJob): void {

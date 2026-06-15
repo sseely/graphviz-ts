@@ -1,0 +1,1 @@
+digraph{A[shape=record,label="<f0>a|<f1>b"];A:f0->B}

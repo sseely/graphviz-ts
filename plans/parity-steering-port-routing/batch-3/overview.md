@@ -10,11 +10,11 @@ comparison-paged, not forced (AD4, carried excluded-case rule).
 
 | ID | Description | Agent | Writes (confirm after batch 2) | Depends | Done |
 |----|-------------|-------|-------------------------------|---------|------|
-| SR5 | Flat-edge (FLATEDGE, same-rank) ports via `BeginFlatSide`/`EndFlatSide` path | typescript-pro | `splines-flat.ts` + test | SR3 | [ ] |
-| SR6 | Self-edge ports (`splines-selfedge.ts` already on faithful path — verify + extend) | typescript-pro | `splines-selfedge.ts` (confirm) + test | SR3 | [ ] |
-| SR7 | Multi-rank virtual-chain ports (`edge-route-chain.ts`) | typescript-pro | `edge-route-chain.ts` + test | SR3 | [ ] |
-| SR8 | Mint port goldens vs dot 15.0.0 (compass aligned + steering + record/attr), APPEND manifest, bump count; FIRST land the edge-`<title>` port fix (svg-helpers.ts:`svgBeginEdge`) per SCOPE quirks (ports incl., `&#45;` hyphen, compass-replaces-field); comparison-page any exclusions | orchestrator inline | `src/render/svg-helpers.ts`, `test/golden/*`, `plans/.../comparison/*` | SR4–SR7 | [ ] |
-| SR9 | Evaluate routing ALL dot regular edges through the faithful path: re-route the 115 no-port goldens via the faithful fitter, quantify deltas vs refs + vs oracle; recommend hybrid-keep or full-switch (NO ref changes without Scott) | architect-reviewer + inline | findings doc + journal | SR8 | [ ] |
+| SR5 | Flat-edge (FLATEDGE, same-rank) ports — box-channel branch (non-adjacent) via BeginFlatSide/EndFlatSide. A:n->B:n exact, A:e->B:w 0.25pt. Bottom-tail offset + adjacent (make_flat_adj_edges deferred) excluded w/ comparison page | orchestrator inline | `splines-flat.ts`, `edge-route.ts` dispatch, `edge-route-faithful.ts` (additive exports), `splines-flat-oracle.test.ts` | SR3 | [x] |
+| SR6 | Self-edge ports — VERIFIED already faithful via `makeSelfEdge`; seam is `self-loop.ts` not `splines-selfedge.ts` (frozen). Validation+pin only, no production change | orchestrator inline | `self-loop-oracle.test.ts` (self-loop.ts unchanged) | SR3 | [x] |
+| SR7 | Multi-rank virtual-chain ports (`edge-route-chain.ts`) — faithful chain via routeSplines; A:n->C/A:e->C/A:n->D ≤0.32pt. Left-bulge + straight-mode excluded w/ comparison page. Fixed Splinesep=nodesep/4. A:n->B:s re-tested (still adjacent-excluded) | orchestrator inline | `edge-route-chain.ts`, `edge-route-faithful.ts` (additive exports), `edge-route.ts` dispatch, `edge-route-chain-oracle.test.ts` | SR3 | [x] |
+| SR8 | Mint port goldens vs dot 15.0.0 + edge-`<title>` fix | orchestrator inline | `src/render/svg-helpers.ts`, `test/golden/*` (4 appended), `plans/.../comparisons/*` | SR4–SR7 | [x] — title fix matches C on all 10 cases (ports + `&#45;` + compass-replaces-field); 4 goldens minted (aligned/e/w/record, ≤0.5pt + 0.01pt portRef pins); count 115→119; bbox-divergent steering cases comparison-paged. 1779/0 |
+| SR9 | Evaluate full-switch | inline measurement | [SR9-findings.md](../SR9-findings.md) + journal | SR8 | [x] — **recommend KEEP HYBRID**: simplified fitter is byte-exact (0.00pt) to dot 15.0.0 for all no-port goldens; forcing faithful for all perturbs 4/68 (max 1.41pt) with zero fidelity gain. No re-mint; AD3 default holds. No production change |
 
 ## Acceptance criteria (batch)
 

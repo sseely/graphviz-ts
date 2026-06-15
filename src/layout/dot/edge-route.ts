@@ -19,6 +19,7 @@ import type { Point } from '../../model/geom.js';
 import type { NodeBox } from './edge-route-geom.js';
 import type { EdgeSplineResult, PortRoute } from './edge-route-routing.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
+import { clipAndInstall } from '../../common/splines-clip.js';
 
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
@@ -26,6 +27,9 @@ import { linearBezier } from './edge-route-poly.js';
 import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
 import { routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
+import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
+import { routeFlatEdgeFaithful } from './splines-flat.js';
+import { buildDotSinfo } from './self-loop.js';
 
 import {
   nodeBoxOf,
@@ -40,6 +44,7 @@ import {
 import {
   routeBackEdge,
   routeFwdMultiRankEdge,
+  routeMultiRankEdgeFaithful,
 } from './edge-route-chain.js';
 
 // Suppress unused-import warning for re-exported symbols
@@ -253,16 +258,63 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
+    if (hasSidePort(e) && routeFaithfulMultiRank(e, g)) return;
     routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
     return;
   }
   routeForwardEdge(e, g, tailBox, headBox, pw);
 }
 
+/**
+ * Route a multi-rank forward side-port edge through the faithful chain pipeline
+ * (steers the port via REGULAREDGE side boxes, then routeSplines over the full
+ * virtual chain). Returns false when the faithful path declines the edge so the
+ * caller falls back to the simplified multi-rank fitter.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
+ */
+function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
+  const pts = routeMultiRankEdgeFaithful(g, e);
+  if (pts === null) return false;
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  return true;
+}
+
+/**
+ * True when either endpoint resolves to an active side-mask port (after dyna
+ * resolution). Such edges route through the faithful box-channel pipeline
+ * (AD2); plain and centre-only-port edges keep the simplified fitter so the
+ * 115 no-side-port goldens stay byte-identical (AD3).
+ * @see lib/common/splines.c:beginpath (sidemask)
+ */
+function hasSidePort(e: GraphEdge): boolean {
+  const tp = resolvePort(e.tail, e.head, e.info.tail_port);
+  const hp = resolvePort(e.head, e.tail, e.info.head_port);
+  return (tp.side ?? 0) !== 0 || (hp.side ?? 0) !== 0;
+}
+
+/**
+ * Route a side-port edge through the faithful `beginPath → routeSplines →
+ * endPath → clipAndInstall` pipeline. A same-rank edge routes via the flat
+ * pipeline (make_flat_edge); an adjacent-rank regular edge via
+ * make_regular_edge. Returns false when the faithful path declines the edge,
+ * so the caller falls back to the simplified fitter. clipAndInstall installs
+ * the spline and stashes arrow polygons — do not also call
+ * installEdgeSpline/arrowheadPolygon here.
+ * @see lib/dotgen/dotsplines.c:make_flat_edge, make_regular_edge
+ */
+function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
+  const sameRank = e.tail.info.rank !== undefined && e.tail.info.rank === e.head.info.rank;
+  const pts = sameRank ? routeFlatEdgeFaithful(g, e) : routeRegularEdgeFaithful(g, e);
+  if (pts === null) return false;
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  return true;
+}
+
 /** Route + install a plain forward edge, attaching declared ports if any. */
 function routeForwardEdge(
   e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
 ): void {
+  if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
     tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),
