@@ -28,6 +28,117 @@ import {
   nodeBoxOf, edgeRenderPenwidth, edgePenwidthAttr,
   installEdgeSpline, straightEdgeSplineWithRank, routeBezier, defaultEdgeDir,
 } from './edge-route-helpers.js';
+import type { Path, PathendT } from '../../common/types.js';
+import { makePort } from '../../model/edgeInfo.js';
+import { beginPath } from '../../common/splines-path-begin.js';
+import { endPath } from '../../common/splines-path-end.js';
+import { routeSplines } from '../../common/splines-routespl.js';
+import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
+import { splineMerge } from './splines-route.js';
+import { rankHt } from './edge-route-rank.js';
+import { graphRanksep } from './position-aux.js';
+import {
+  maximalBbox, appendRegularEnd, freshEndp, rankBox, completeRegularPath,
+  type BboxCtx,
+} from './edge-route-faithful.js';
+
+// ---------------------------------------------------------------------------
+// Faithful multi-rank side-port routing (make_regular_edge hackflag path)
+// @see lib/dotgen/dotsplines.c:make_regular_edge (forward, abs(rankdiff) > 1)
+// ---------------------------------------------------------------------------
+
+/** Per-call spline bounds. Splinesep = nodesep/4 (C's sd.Splinesep,
+ *  dotsplines.c:267) sets the gap to VIRTUAL neighbors in maximal_bbox, which
+ *  the chain's virtual nodes exercise. */
+function chainBboxCtx(g: Graph): BboxCtx {
+  return {
+    g,
+    sp: {
+      leftBound: computeLeftBound(g),
+      rightBound: computeRightBound(g),
+      splinesep: (g.info.nodesep ?? 18) / 4,
+    },
+  };
+}
+
+/** Segment edges of a forward virtual chain: tail→v1, v1→v2, …, vk→head. */
+function chainSegments(e: GraphEdge): GraphEdge[] {
+  const segs: GraphEdge[] = [];
+  let cur = e.info.to_virt;
+  while (cur !== undefined) {
+    segs.push(cur);
+    if (cur.head === e.head) break;
+    const out = cur.head.info.out;
+    cur = out !== undefined && out.size > 0 ? out.list[0] : undefined;
+  }
+  return segs;
+}
+
+/**
+ * Accumulate the inter-rank box plus, for each non-final segment, the virtual
+ * node's maximal bbox — the body of make_regular_edge's chain `while` loop
+ * (non-straight-mode). The final segment contributes only its rank box.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (while ND_node_type==VIRTUAL)
+ */
+function chainBoxes(ctx: BboxCtx, segs: GraphEdge[]): Box[] {
+  const boxes: Box[] = [];
+  for (let i = 0; i < segs.length; i++) {
+    boxes.push(rankBox(ctx, segs[i].tail.info.rank!));
+    if (i < segs.length - 1) {
+      boxes.push(maximalBbox(ctx, segs[i].head, segs[i], segs[i + 1]));
+    }
+  }
+  return boxes;
+}
+
+/** beginPath/endPath args for a single non-merged REGULAREDGE chain segment. */
+function chainPathArgs(P: Path, e: GraphEdge, endp: PathendT, merge: boolean, ranksep: number) {
+  return { P, e, et: REGULAREDGE, endp, merge, inEdges: [], outEdges: [], ranksep, pboxfn: null };
+}
+
+/**
+ * Assemble the begin → chain boxes → end path for a multi-rank chain, then run
+ * completeRegularPath. Returns the populated Path, or null if it cannot close.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path body)
+ */
+function buildChainPath(g: Graph, e: GraphEdge, segs: GraphEdge[]): Path | null {
+  const ranks = g.info.rank!;
+  const r = e.tail.info.rank!;
+  const rh = e.head.info.rank!;
+  const tn = e.tail;
+  const hn = e.head;
+  const last = segs[segs.length - 1];
+  const ctx = chainBboxCtx(g);
+  const ranksep = graphRanksep(g);
+  const P: Path = { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null };
+  const tend = freshEndp(maximalBbox(ctx, tn, undefined, segs[0]));
+  beginPath(chainPathArgs(P, e, tend, splineMerge(tn), ranksep));
+  appendRegularEnd(tend.nb, tend, BOTTOM, tn.info.coord.y - rankHt(ranks[r].ht1, tn.info.ht));
+  const boxes = chainBoxes(ctx, segs);
+  const hend = freshEndp(maximalBbox(ctx, hn, last, undefined));
+  endPath(chainPathArgs(P, e, hend, splineMerge(hn), ranksep));
+  appendRegularEnd(hend.nb, hend, TOP, hn.info.coord.y + rankHt(ranks[rh].ht2, hn.info.ht));
+  return completeRegularPath({ P, first: segs[0], last, tend, hend, boxes }) ? P : null;
+}
+
+/**
+ * Route a forward edge spanning ≥2 ranks via its virtual-node chain through the
+ * faithful pipeline (REGULAREDGE side boxes steer the port, routeSplines over
+ * the full chain; adjustregularpath inter-rank widening finally fires). Returns
+ * control points in graphviz-internal y-up, or null when the edge is not a
+ * multi-rank chain. Straight-mode runs (straight_len ≥ threshold) are not yet
+ * ported — see decision journal.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
+ */
+export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | null {
+  const r = e.tail.info.rank;
+  const rh = e.head.info.rank;
+  if (g.info.rank === undefined || r === undefined || rh === undefined || rh <= r + 1) return null;
+  const segs = chainSegments(e);
+  if (segs.length < 2) return null;
+  const P = buildChainPath(g, e, segs);
+  return P === null ? null : routeSplines(P);
+}
 
 // ---------------------------------------------------------------------------
 // Chain-walking helpers

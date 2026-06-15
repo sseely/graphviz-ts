@@ -44,6 +44,7 @@ import {
 import {
   routeBackEdge,
   routeFwdMultiRankEdge,
+  routeMultiRankEdgeFaithful,
 } from './edge-route-chain.js';
 
 // Suppress unused-import warning for re-exported symbols
@@ -257,10 +258,25 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
+    if (hasSidePort(e) && routeFaithfulMultiRank(e, g)) return;
     routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
     return;
   }
   routeForwardEdge(e, g, tailBox, headBox, pw);
+}
+
+/**
+ * Route a multi-rank forward side-port edge through the faithful chain pipeline
+ * (steers the port via REGULAREDGE side boxes, then routeSplines over the full
+ * virtual chain). Returns false when the faithful path declines the edge so the
+ * caller falls back to the simplified multi-rank fitter.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
+ */
+function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
+  const pts = routeMultiRankEdgeFaithful(g, e);
+  if (pts === null) return false;
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  return true;
 }
 
 /**

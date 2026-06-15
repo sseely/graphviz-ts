@@ -68,7 +68,7 @@ export interface BboxCtx {
 }
 
 /** Bundled arguments for completeRegularPath (keeps params <= 5). */
-interface RegularPathParts {
+export interface RegularPathParts {
   P: Path;
   first: Edge;
   last: Edge;
@@ -165,7 +165,7 @@ export function appendRegularEnd(nb: Box, endp: PathendT, side: number, y: numbe
  * and rank r+1 (head).
  * @see lib/dotgen/dotsplines.c:rank_box
  */
-function rankBox(ctx: BboxCtx, r: number): Box {
+export function rankBox(ctx: BboxCtx, r: number): Box {
   const ranks = ctx.g.info.rank!;
   const top = ranks[r].v[0];
   const bot = ranks[r + 1].v[0];
@@ -247,7 +247,7 @@ function adjustRegularPath(P: Path, fb: number, lb: number): void {
  * (reversed) into P, then widen. Returns false if a bounding edge is unrouted.
  * @see lib/dotgen/dotsplines.c:completeregularpath
  */
-function completeRegularPath(parts: RegularPathParts): boolean {
+export function completeRegularPath(parts: RegularPathParts): boolean {
   const { P, first, last, tend, hend, boxes } = parts;
   if (!pathBoundsReady(first, last)) return false;
   for (let i = 0; i < tend.boxn; i++) addBox(P, tend.boxes[i]);
