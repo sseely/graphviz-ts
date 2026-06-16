@@ -23,7 +23,8 @@ import { routeSplines, routePolylines } from '../../common/splines-routespl.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP } from '../../common/splines-constants.js';
-import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE } from './splines.js';
+import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE } from './splines.js';
+import { shortestPath, routeSpline, polyBarriers, makePolyline } from '../../pathplan/index.js';
 
 /** Space between stacked flat labels, in points. @see lib/dotgen/dotsplines.c:937 */
 const LBL_SPACE = 6;
@@ -135,32 +136,140 @@ export function makeFlatLabeledEdge(g: Graph, e: Edge): boolean {
 }
 
 /**
- * True when `e` is a single adjacent, same-rank, labeled flat edge with no
- * declared ports — C's make_flat_adj_edges → makeSimpleFlatLabels (no-port)
- * dispatch. Port-bearing adjacent flats route via the aux graph instead.
+ * True when `e` is an adjacent, same-rank flat edge with no declared ports —
+ * C's make_flat_adj_edges no-port dispatch (makeSimpleFlat / makeSimpleFlatLabels).
+ * Port-bearing adjacent flats route via the rotated aux graph instead.
  */
-export function isAdjFlatLabel(e: Edge): boolean {
-  if (e.info.label === undefined || (e.info.adjacent ?? 0) === 0) return false;
+export function isAdjFlatCandidate(e: Edge): boolean {
+  if ((e.info.adjacent ?? 0) === 0) return false;
   if (e.tail.info.rank === undefined || e.tail.info.rank !== e.head.info.rank) return false;
   return !e.info.tail_port.defined && !e.info.head_port.defined;
 }
 
 /**
- * Route an adjacent (no-port) labeled flat edge as a straight tail→head segment
- * and center its label above the edge. Ports the single-edge first block of
- * makeSimpleFlatLabels. Returns false (declining) for any other edge.
- * @see lib/dotgen/dotsplines.c:makeSimpleFlatLabels 967-981
+ * Parallel group: every no-port adjacent flat edge from e's tail to e's head.
+ * Scans g.edges (not flat_out) — parallel siblings live in ND_other, only the
+ * class representative is in flat_out. @see lib/dotgen/flat.c:flat_edges (ND_other)
  */
-export function makeAdjFlatLabeledEdge(e: Edge): boolean {
-  if (!isAdjFlatLabel(e)) return false;
+export function collectAdjFlatGroup(g: Graph, e: Edge): Edge[] {
+  const out: Edge[] = [];
+  for (const f of g.edges) {
+    if (f.tail === e.tail && f.head === e.head && isAdjFlatCandidate(f)) out.push(f);
+  }
+  return out;
+}
+
+/** edgelblcmpfn: labeled first; among labeled, larger dimen (x then y) first. */
+export function edgeLblCmp(a: Edge, b: Edge): number {
+  const la = a.info.label, lb = b.info.label;
+  if (la === undefined) return lb === undefined ? 0 : 1;
+  if (lb === undefined) return -1;
+  if (la.dimen.x !== lb.dimen.x) return la.dimen.x > lb.dimen.x ? -1 : 1;
+  if (la.dimen.y !== lb.dimen.y) return la.dimen.y > lb.dimen.y ? -1 : 1;
+  return 0;
+}
+
+/** Pshortestpath → (make_polyline | Proutespline) over an 8-point boundary poly.
+ *  @see lib/common/routespl.c:simpleSplineRoute */
+function simpleSplineRoute(tp: Point, hp: Point, polyPts: Point[], polyline: boolean): Point[] | null {
+  const route = shortestPath({ ps: polyPts }, [tp, hp]);
+  if (route === null) return null;
+  if (polyline) return makePolyline(route);
+  return routeSpline(polyBarriers([{ ps: polyPts }]), route, [{ x: 0, y: 0 }, { x: 0, y: 0 }]);
+}
+
+/** Running bounds + fixed endpoints for the stacked flat-label boxes. */
+interface FlatStack {
+  miny: number; maxy: number; uminx: number; umaxx: number;
+  lminx: number; lmaxx: number; leftend: number; rightend: number; ctrx: number;
+  tp: Point; hp: Point;
+}
+
+/** Boundary poly for a flat edge routed BELOW the rank (i odd). @see dotsplines.c:1003-1010 */
+function flatDownBox(tp: Point, hp: Point, miny: number, lminx: number, lmaxx: number): Point[] {
+  return [
+    { x: tp.x, y: tp.y }, { x: tp.x, y: miny - LBL_SPACE }, { x: hp.x, y: miny - LBL_SPACE },
+    { x: hp.x, y: hp.y }, { x: lmaxx, y: hp.y }, { x: lmaxx, y: miny },
+    { x: lminx, y: miny }, { x: lminx, y: tp.y },
+  ];
+}
+
+/** Boundary poly for a flat edge routed ABOVE the rank (i even). @see dotsplines.c:1012-1020 */
+function flatUpBox(tp: Point, hp: Point, maxy: number, uminx: number, umaxx: number): Point[] {
+  return [
+    { x: tp.x, y: tp.y }, { x: uminx, y: tp.y }, { x: uminx, y: maxy }, { x: umaxx, y: maxy },
+    { x: umaxx, y: hp.y }, { x: hp.x, y: hp.y }, { x: hp.x, y: maxy + LBL_SPACE },
+    { x: tp.x, y: maxy + LBL_SPACE },
+  ];
+}
+
+/** Box + label-center for stacked edge i (down if odd, up if even); mutates bounds. */
+function stackFlatBox(st: FlatStack, i: number, dim: Point, labeled: boolean): { box: Point[]; ctry: number } {
+  if (i % 2 === 1) {
+    if (i === 1 && labeled) { st.lminx = st.ctrx - dim.x / 2; st.lmaxx = st.ctrx + dim.x / 2; }
+    if (i === 1 && !labeled) { st.lminx = (2 * st.leftend + st.rightend) / 3; st.lmaxx = (st.leftend + 2 * st.rightend) / 3; }
+    st.miny -= LBL_SPACE + dim.y;
+    return { box: flatDownBox(st.tp, st.hp, st.miny, st.lminx, st.lmaxx), ctry: st.miny + dim.y / 2 };
+  }
+  const box = flatUpBox(st.tp, st.hp, st.maxy, st.uminx, st.umaxx);
+  const ctry = st.maxy + dim.y / 2 + LBL_SPACE;
+  st.maxy += dim.y + LBL_SPACE;
+  return { box, ctry };
+}
+
+/** Set an edge label position. */
+function setFlatLabel(e: Edge, x: number, y: number): void {
   const lbl = e.info.label!;
-  const tn = e.tail, hn = e.head;
-  const tp = { x: tn.info.coord.x + e.info.tail_port.p.x, y: tn.info.coord.y + e.info.tail_port.p.y };
-  const hp = { x: hn.info.coord.x + e.info.head_port.p.x, y: hn.info.coord.y + e.info.head_port.p.y };
-  const ctrx = (tp.x + tn.info.rw + (hp.x - hn.info.lw)) / 2;
-  const points = [tp, { x: tp.x, y: tp.y }, hp, { x: hp.x, y: hp.y }];
-  clipAndInstall(e, hn, points, points.length, buildDotSinfo());
-  lbl.pos = { x: ctrx, y: tp.y + (lbl.dimen.y + LBL_SPACE) / 2 };
+  lbl.pos = { x, y };
   lbl.set = true;
+}
+
+/** Route the stacked (i>=1) edges of the group through simpleSplineRoute. */
+function routeStackedFlats(earray: Edge[], nLbls: number, st: FlatStack, et: number): void {
+  for (let i = 1; i < earray.length; i++) {
+    const labeled = i < nLbls;
+    const dim = labeled ? earray[i].info.label!.dimen : { x: 0, y: 0 };
+    const { box, ctry } = stackFlatBox(st, i, dim, labeled);
+    const ps = simpleSplineRoute(st.tp, st.hp, box, et === EDGETYPE_PLINE);
+    if (ps === null || ps.length === 0) return;
+    if (labeled) setFlatLabel(earray[i], st.ctrx, ctry);
+    clipAndInstall(earray[i], earray[i].head, ps, ps.length, buildDotSinfo());
+  }
+}
+
+/**
+ * Route a parallel group of adjacent (no-port) flat edges: the first goes
+ * straight with its label above; the rest stack up/down around the rank, each
+ * routed via simpleSplineRoute. @see lib/dotgen/dotsplines.c:makeSimpleFlatLabels
+ */
+export function makeSimpleFlatLabels(group: Edge[], et: number): void {
+  const earray = [...group].sort(edgeLblCmp);
+  const e0 = earray[0], tn = e0.tail, hn = e0.head;
+  const tp = { x: tn.info.coord.x + e0.info.tail_port.p.x, y: tn.info.coord.y + e0.info.tail_port.p.y };
+  const hp = { x: hn.info.coord.x + e0.info.head_port.p.x, y: hn.info.coord.y + e0.info.head_port.p.y };
+  const leftend = tp.x + tn.info.rw, rightend = hp.x - hn.info.lw;
+  const ctrx = (leftend + rightend) / 2;
+  const nLbls = earray.filter(e => e.info.label !== undefined).length;
+  const dim0 = e0.info.label!.dimen;
+  clipAndInstall(e0, hn, [tp, { ...tp }, hp, { ...hp }], 4, buildDotSinfo());
+  setFlatLabel(e0, ctrx, tp.y + (dim0.y + LBL_SPACE) / 2);
+  const st: FlatStack = {
+    miny: tp.y + LBL_SPACE / 2, maxy: tp.y + LBL_SPACE / 2 + dim0.y,
+    uminx: ctrx - dim0.x / 2, umaxx: ctrx + dim0.x / 2,
+    lminx: 0, lmaxx: 0, leftend, rightend, ctrx, tp, hp,
+  };
+  routeStackedFlats(earray, nLbls, st, et);
+}
+
+/**
+ * Dispatch an adjacent no-port flat edge group that carries at least one label
+ * to makeSimpleFlatLabels (routes the whole parallel group at once). Declines
+ * for any other edge so the caller falls back. @see dotsplines.c:make_flat_adj_edges
+ */
+export function makeAdjFlatLabeledEdge(g: Graph, e: Edge): boolean {
+  if (!isAdjFlatCandidate(e)) return false;
+  const group = collectAdjFlatGroup(g, e);
+  if (!group.some(x => x.info.label !== undefined)) return false;
+  makeSimpleFlatLabels(group, edgeType(g));
   return true;
 }

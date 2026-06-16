@@ -338,7 +338,7 @@ function routeForwardEdge(
   // above (make_flat_adj_edges → makeSimpleFlatLabels). Both decline for every
   // other edge, so only labeled flats are diverted. @see dotsplines.c:1527-1533
   if (makeFlatLabeledEdge(g, e)) return;
-  if (makeAdjFlatLabeledEdge(e)) return;
+  if (makeAdjFlatLabeledEdge(g, e)) return;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
