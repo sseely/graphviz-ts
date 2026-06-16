@@ -293,7 +293,8 @@ export function makeFlatEdge(
   if (cnt === 0 || edges.length === 0) return 0;
   const isAdj = edges.some(e => (e.info.adjacent ?? 0) !== 0);
   if (isAdj) return makeFlatAdjEdges(g, edges, cnt, et);
-  // Non-adjacent flat edges: full routing deferred
+  // C's labeled-flat dispatch lives in the live router here (AD-3): see
+  // edge-route.ts:routeForwardEdge → makeFlatLabeledEdge. Unlabeled: routeFlatEdgeFaithful.
   return 0;
 }
 
@@ -311,7 +312,7 @@ export function makeFlatEdge(
  * down from (BOTTOM) the node's rank extent.
  * @see lib/dotgen/dotsplines.c:makeFlatEnd, makeBottomFlatEnd
  */
-function makeFlatEndBox(parts: FlatEndParts): PathendT {
+export function makeFlatEndBox(parts: FlatEndParts): PathendT {
   const { ctx, P, e, n, side, ranksep, isBegin } = parts;
   const endp = freshEndp(maximalBbox(ctx, n, undefined, e));
   endp.sidemask = side;
@@ -388,12 +389,12 @@ function flatVspace(g: Graph, tn: Node, top: boolean): number {
 }
 
 /** A fresh empty path for begin/route/end assembly. */
-function freshFlatPath(): Path {
+export function freshFlatPath(): Path {
   return { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null };
 }
 
 /** Per-caller spline_info bounds (C builds its own `sd` per orchestrator). */
-function flatBboxCtx(g: Graph): BboxCtx {
+export function flatBboxCtx(g: Graph): BboxCtx {
   return {
     g,
     sp: {
