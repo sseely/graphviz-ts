@@ -67,8 +67,12 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 flat-labeled-edge (G4)](batch-1/T1-flat-labeled-edge.md), [T2 make_regular_edge multi (G1 core)](batch-1/T2-make-regular-edge-multi.md) | [ ] |
+| 1 | [T1 flat-labeled-edge (G4)](batch-1/T1-flat-labeled-edge.md) — **DEFERRED** (ranking-phase vnode creation out of scope; see [comparisons/flat-labeled-edge.html](comparisons/flat-labeled-edge.html)), [T2 make_regular_edge multi (G1 core)](batch-1/T2-make-regular-edge-multi.md) | [ ] |
 | 2 (after T2) | [T3 edge-grouping + opposing pins (G1 wiring)](batch-2/T3-opposing-edge-grouping.md) | [ ] |
+
+> **T1/G4 deferred 2026-06-16** (human decision). The flat label virtual node is
+> created in C's ranking phase (`flat.c:flat_node` + `abomination`), not in
+> `splines-flat.ts`; faithful G4 needs its own mission. G1 (T2/T3) proceeds here.
 
 ## Constraints (stop / push-forward)
 
