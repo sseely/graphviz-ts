@@ -38,6 +38,7 @@ import { cloneNode, cloneEdge, cleanupCloneGraph, transformf } from './splines-c
 import { dotInitNodeEdge } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import { newSpline } from '../../common/splines-clip.js';
+import { updateBbBz } from '../../common/splines-geom.js';
 import { NORMAL, VIRTUAL } from './fastgr.js';
 import { EDGE_LABEL } from './rank.js';
 
@@ -195,7 +196,9 @@ function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
 }
 
 /** transformf the aux edge's spline + arrowhead onto the original edge. */
-function copyOneFlatSpline(orig: Edge, auxe: Edge, del: Point, flip: boolean): void {
+function copyOneFlatSpline(
+  orig: Edge, auxe: Edge, del: Point, flip: boolean, bb: Box | undefined,
+): void {
   const auxbz = auxe.info.spl?.list[0];
   if (auxbz === undefined) return;
   const bz = newSpline(orig, auxbz.list.length);
@@ -204,6 +207,12 @@ function copyOneFlatSpline(orig: Edge, auxe: Edge, del: Point, flip: boolean): v
   bz.sp = transformf(auxbz.sp, del, flip);
   bz.ep = transformf(auxbz.ep, del, flip);
   for (let j = 0; j < auxbz.list.length; j++) bz.list[j] = transformf(auxbz.list[j], del, flip);
+  // Grow the graph bb by each transformed bezier segment. @see dotsplines.c:1270
+  if (bb !== undefined) {
+    for (let j = 0; j + 3 < bz.list.length; j += 3) {
+      updateBbBz(bb, [bz.list[j], bz.list[j + 1], bz.list[j + 2], bz.list[j + 3]]);
+    }
+  }
   const rec = auxe.info as unknown as Record<string, unknown>;
   const arrow = rec._arrowPts as Point[] | undefined;
   if (arrow !== undefined) {
@@ -224,7 +233,7 @@ function copyFlatSplines(g: Graph, edges: Edge[], aux: FlatAux): void {
   for (let i = 0; i < edges.length; i++) {
     const orig = toNormalEdge(edges[i]);
     const auxe = aux.alg.get(orig);
-    if (auxe !== undefined) copyOneFlatSpline(orig, auxe, del, flip);
+    if (auxe !== undefined) copyOneFlatSpline(orig, auxe, del, flip, g.info.bb);
   }
 }
 
