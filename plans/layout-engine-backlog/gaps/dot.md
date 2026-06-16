@@ -59,8 +59,13 @@ Total: ~1,600 LOC across 4-6 files.
 
 ## DOT-2: `make_flat_edge` / flat spline routing
 
-**Status:** Stub — `src/layout/dot/splines-flat.ts:97,121` marks the
-transform as deferred.
+**Status:** LARGELY DONE (2026-06). Side-port flats (`routeFlatEdgeFaithful`),
+adjacent flats (`makeFlatAdjEdges`), non-adjacent labeled flats
+(`make_flat_labeled_edge`, mission dot-flat-labels), and no-port labeled
+adjacent flats incl. parallel stacking (`makeSimpleFlatLabels`) all route via
+the ported pathplan and match dot 15.0.0 byte-exact. Remaining flat sub-gaps
+are tracked separately: DOT-9 (no-port no-label `makeSimpleFlat`) and DOT-10
+(port-bearing adjacent labeled flats). The notes below are historical.
 
 **C reference:** `lib/dotgen/dotsplines.c:make_flat_edge` (line 1502),
 calls `routesplines` (line 1603) and `clip_and_install` (line 1610).
@@ -179,3 +184,99 @@ correctness. Without the cap the algorithm runs to full convergence anyway.
 **Dependencies:** None.
 
 **Estimated size:** ~20 LOC. Inline fix, not a full mission.
+
+## DOT-7: regular (cross-rank) edge routing ignores the edge type
+
+**Status:** Gap — `edgeType(g)` now reflects the `splines` attribute
+(`splines.ts:edgeTypeFromString`, `index.ts:setEdgeTypeFromAttr`, wired
+2026-06-16), and `dot_splines_` honors `EDGETYPE_NONE` (skips routing). But
+the regular cross-rank routers (`edge-route.ts`, `edge-route-faithful.ts`,
+`edge-route-poly.ts`) never branch on `et`: they always emit splines. So
+`splines=line` / `splines=polyline` have **no effect on regular edges**.
+
+**C reference:** `lib/dotgen/dotsplines.c:make_regular_edge` (line 1700)
+dispatches on `et` (EDGETYPE_LINE → straight, EDGETYPE_PLINE → routepolylines,
+EDGETYPE_SPLINE → routesplines).
+
+**TS location:** `src/layout/dot/edge-route.ts:routeForwardEdge` and the
+faithful/simplified routers — none read `edgeType(g)`.
+
+**Reachability:** ATTR — `splines=line` / `polyline` on the graph. Flat
+labeled edges already honor `et` (DOT-2 done); only regular edges are affected.
+
+**Downstream visual impact:** MEDIUM — `splines=line`/`polyline` graphs render
+with curved/spline regular edges instead of straight/polyline. No golden sets
+`splines`, so goldens are unaffected.
+
+**Dependencies:** None (the type is already available via `edgeType(g)`).
+
+**Estimated size:** ~1 mission — touches every regular-edge router; needs
+oracle pins per edge type.
+
+## DOT-8: `splines=ortho` / `curved` / `compound` routing unported
+
+**Status:** Gap — `edgeTypeFromString` now MAPS these values
+(EDGETYPE_ORTHO/CURVED/COMPOUND), but no router implements them. They fall
+through to spline routing.
+
+**C reference:** `lib/dotgen/dotsplines.c:dot_splines_` (EDGETYPE_ORTHO →
+`orthoEdges`, EDGETYPE_CURVED branch); `lib/ortho/` (orthogonal routing).
+
+**TS location:** `src/layout/dot/splines.ts` (constants exist; no dispatch).
+
+**Reachability:** ATTR — `splines=ortho|curved|compound`. `ortho` needs the
+whole `lib/ortho` subsystem (large).
+
+**Downstream visual impact:** MEDIUM for ortho (common request); LOW for
+curved/compound.
+
+**Dependencies:** ortho routing needs `lib/ortho` port; depends on DOT-7.
+
+**Estimated size:** ortho is a multi-mission subsystem; curved is smaller.
+
+## DOT-9: `makeSimpleFlat` (no-port, no-label adjacent flats) unported
+
+**Status:** Gap — C's `make_flat_adj_edges` routes a no-port adjacent flat
+group with NO labels via `makeSimpleFlat` (a stepped fan when cnt>1). The TS
+port handles the LABELED no-port group (`makeSimpleFlatLabels`, done
+2026-06-16) but `makeAdjFlatLabeledEdge` declines when the group has no
+labels, so unlabeled adjacent parallel flats fall back to the simplified
+fitter (single straight line; parallel siblings overlap).
+
+**C reference:** `lib/dotgen/dotsplines.c:makeSimpleFlat` (line ~982).
+
+**TS location:** `src/layout/dot/splines-flat-labeled.ts:makeAdjFlatLabeledEdge`
+(declines no-label groups); `src/layout/dot/splines-flat.ts:244` (comment).
+
+**Reachability:** multiple unlabeled flat edges between adjacent same-rank
+nodes (e.g. `{rank=same a b} a->b; a->b`).
+
+**Downstream visual impact:** LOW-MEDIUM — parallel unlabeled flats overlap
+instead of fanning. Single unlabeled flats are fine.
+
+**Dependencies:** None (pathplan already ported; reuse `simpleSplineRoute`).
+
+**Estimated size:** ~40 LOC — mirror `makeSimpleFlatLabels` without the label
+bookkeeping; pin vs dot.
+
+## DOT-10: port-bearing adjacent labeled flats drop the label
+
+**Status:** Gap — adjacent flat edges WITH declared ports route via the
+rotated auxiliary graph (`makeFlatAdjEdges`), which copies splines back but
+not the label position. Only no-port adjacent labeled flats emit their label
+(`makeSimpleFlatLabels`, done 2026-06-16).
+
+**C reference:** `lib/dotgen/dotsplines.c:make_flat_adj_edges` (the ports
+branch + label handling).
+
+**TS location:** `src/layout/dot/splines-flat.ts:makeFlatAdjEdges`,
+`copyFlatSplines`.
+
+**Reachability:** `{rank=same a b} a:e->b:w[label=x]` (adjacent + ports +
+label).
+
+**Downstream visual impact:** LOW — narrow case (adjacent + ports + label).
+
+**Dependencies:** None.
+
+**Estimated size:** ~30 LOC — set `ED_label.pos` during the aux copy-back.
