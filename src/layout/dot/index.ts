@@ -24,7 +24,7 @@ import { dotPosition } from './position.js';
 import { dotSameports } from './sameport.js';
 import { dotSplines } from './splines.js';
 import { dotCompoundEdges } from './compound.js';
-import { EDGETYPE_SPLINE } from './splines.js';
+import { EDGETYPE_SPLINE, EDGETYPE_NONE, edgeTypeFromString } from './splines.js';
 import {
   dotInitSubg,
   dotInitNodeEdge,
@@ -65,6 +65,20 @@ export function setEdgeType(g: Graph, t: number): void {
   g.info.flags = (g.info.flags & ~0xf) | (t & 0xf);
 }
 
+/**
+ * Set the edge type from the graph's `splines` attribute: unset → defaultValue,
+ * empty string → NONE, otherwise the parsed value. Mirrors C's setEdgeType
+ * (which reads `agget(g, "splines")`). @see lib/common/utils.c:setEdgeType
+ */
+export function setEdgeTypeFromAttr(g: Graph, defaultValue: number): void {
+  const s = g.attrs.get('splines');
+  let et: number;
+  if (s === undefined) et = defaultValue;
+  else if (s === '') et = EDGETYPE_NONE;
+  else et = edgeTypeFromString(s, defaultValue);
+  setEdgeType(g, et);
+}
+
 // ---------------------------------------------------------------------------
 // getAttrInt — attribute reading helper
 // ---------------------------------------------------------------------------
@@ -95,7 +109,7 @@ export function getAttrInt(g: Graph, key: string, defaultVal: number): number {
  */
 export function dotPhaseInit(g: Graph): void {
   dotGraphInit(g);
-  setEdgeType(g, EDGETYPE_SPLINE);
+  setEdgeTypeFromAttr(g, EDGETYPE_SPLINE);
   setAspect(g);
   dotInitSubg(g);
   dotInitNodeEdge(g);

@@ -9,11 +9,10 @@
  * (edge-route.ts:routeForwardEdge). Non-adjacency is forced with an invisible
  * same-rank ordering chain `a->c->b`, placing c between a and b.
  *
- * EDGETYPE_SPLINE (the dot default) is pinned to dot 15.0.0 below — it matches
- * byte-exact. The EDGETYPE_LINE 7-point branch (flatLabeledLinePoints) is unit-
- * tested directly because `splines=line` is not yet wired into edgeType in this
- * port (dotPhaseInit hardcodes EDGETYPE_SPLINE); the full-render line case is
- * quarantined in comparisons/dot-flat-label-line.md (AD-5).
+ * Pinned to dot 15.0.0 below (all byte-exact): the EDGETYPE_SPLINE default, the
+ * adjacent straight case, the `splines=line` 7-point polyline (the `splines`
+ * attribute is now honored — see splines.ts:edgeTypeFromString), and parallel
+ * adjacent labels stacked up/down via makeSimpleFlatLabels + simpleSplineRoute.
  *
  * Oracle: ~/git/graphviz/build/cmd/dot/dot -Tsvg, GVBINDIR=/tmp/gvplugins,
  * graphviz 15.0.0, 2026-06-16.
@@ -68,6 +67,19 @@ function labelXY(svg: string): Pt | null {
 }
 
 const dist = (p: Pt, q: number[]): number => Math.hypot(p.x - q[0], p.y - q[1]);
+
+/** Position of the `<text>{ch}</text>` label element. */
+function labelByText(svg: string, ch: string): Pt {
+  const re = new RegExp('<text[^>]*\\sx=' + Q + '([-0-9.]+)' + Q + '[^>]*\\sy=' + Q + '([-0-9.]+)' + Q + '[^>]*>' + ch + '</text>');
+  const m = svg.match(re);
+  return m ? { x: Number(m[1]), y: Number(m[2]) } : { x: NaN, y: NaN };
+}
+
+/** Assert a path's control points match the oracle within tolerance. */
+function pinPath(ts: Pt[], want: number[][]): void {
+  expect(ts.length).toBe(want.length);
+  for (let i = 0; i < want.length; i++) expect(dist(ts[i], want[i])).toBeLessThanOrEqual(TOL);
+}
 
 const SPLINE_SRC = 'digraph{ {rank=same; a->c->b[style=invis]} a->b[label="x"] }';
 // dot 15.0.0 oracle: label "x" at (117, -57.2); edge spline control points.
@@ -128,9 +140,9 @@ function lineFixture(): { tn: Node; hn: Node; e: Edge } {
   return { tn, hn, e };
 }
 
-// EDGETYPE_LINE branch (quarantined at full render — splines=line is unported;
-// see comparisons/dot-flat-label-line.md): the 7-point polyline is start, start,
-// lp lowered by half label height (x3), end, end.
+// EDGETYPE_LINE branch: the 7-point polyline is start, start, lp lowered by
+// half label height (x3), end, end. The full-render pin below exercises it via
+// `splines=line` (now honored — the prior quarantine is resolved).
 // @see lib/dotgen/dotsplines.c:make_flat_labeled_edge 1335-1347
 describe('T2 — flat label line branch (unit)', () => {
   it('flatLabeledLinePoints builds the faithful 7-point polyline', () => {
@@ -140,5 +152,45 @@ describe('T2 — flat label line branch (unit)', () => {
       { x: 50, y: 23 }, { x: 50, y: 23 }, { x: 50, y: 23 },
       { x: 99, y: 2 }, { x: 99, y: 2 },
     ]);
+  });
+});
+
+const LINE_SRC = 'digraph{ splines=line; {rank=same; a->c->b[style=invis]} a->b[label="x"] }';
+// dot 15.0.0 oracle: label "x" at (117,-57.2); 7-point polyline through the label.
+const LINE_LABEL = [117, -57.2];
+const LINE_PTS = [
+  [50.18, -27.27], [76.84, -37.94], [117, -54], [117, -54], [117, -54],
+  [147.74, -41.7], [173.3, -31.48],
+];
+
+describe('splines=line — non-adjacent flat label vs dot 15.0.0', () => {
+  it('emits the label and routes the 7-point polyline within 0.5pt', () => {
+    const svg = renderSvg(LINE_SRC, 'dot');
+    expect(dist(labelXY(svg)!, LINE_LABEL)).toBeLessThanOrEqual(TOL);
+    const ts = loopPath(svg);
+    expect(ts.length).toBe(LINE_PTS.length);
+    for (let i = 0; i < LINE_PTS.length; i++) {
+      expect(dist(ts[i], LINE_PTS[i])).toBeLessThanOrEqual(TOL);
+    }
+  });
+});
+
+const MULTI_SRC = 'digraph{ {rank=same; a b} a->b[label="x"]; a->b[label="y"] }';
+// dot 15.0.0 oracle: x routes straight above (i=0); y splines below (i=1, down).
+const MULTI_X_PATH = [[54.49, -20.9], [61.99, -20.9], [70.27, -20.9], [78.27, -20.9]];
+const MULTI_Y_PATH = [
+  [47.54, -9.11], [54.07, -5.96], [61.46, -3], [68.62, -1.4], [74.92, 0],
+  [81.46, -0.89], [87.62, -2.9],
+];
+
+describe('parallel adjacent flat labels vs dot 15.0.0', () => {
+  it('stacks two labeled flats (x straight, y splined) within 0.5pt', () => {
+    const svg = renderSvg(MULTI_SRC, 'dot');
+    const paths = allPaths(svg);
+    expect(paths.length).toBe(2);
+    pinPath(paths[0], MULTI_X_PATH);
+    pinPath(paths[1], MULTI_Y_PATH);
+    expect(dist(labelByText(svg, 'x'), [72, -27.1])).toBeLessThanOrEqual(TOL);
+    expect(dist(labelByText(svg, 'y'), [72, -4.6])).toBeLessThanOrEqual(TOL);
   });
 });

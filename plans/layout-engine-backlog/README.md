@@ -43,11 +43,15 @@ Reachability key:
 | Gap | Engine | Reachable via | Visual impact | Est. size | Suggested mission |
 |-----|--------|--------------|--------------|-----------|------------------|
 | DOT-1: `make_regular_edge` / pathplan spline routing | dot | **NEEDS RE-VERIFICATION** (NOT all edges — see note below) | UNCLEAR — standard multi-rank routing already matches C byte-for-byte; deferral likely bites only hard obstacle/port-constrained cases | ~1,200 LOC + pathplan port | `mission-dot-splines` |
-| DOT-2: `make_flat_edge` / flat spline routing | dot | ATTR (`rank=same` + label) | HIGH — labeled flat edges missing Bezier arcs | ~300 LOC (needs DOT-1 first) | `mission-dot-splines` (sub-task) |
+| DOT-2: `make_flat_edge` / flat spline routing | dot | ATTR (`rank=same` + label) | **LARGELY DONE (2026-06)** — flat label routing byte-exact to dot; residue in DOT-9/DOT-10 | done | `mission-dot-flat-labels` |
 | DOT-3: `fillRanks` / `newrank` mode | dot | ATTR (`newrank=true`) | HIGH — rank assignment wrong for compound multi-graph layouts | ~250 LOC (isolated) | `mission-dot-newrank` |
 | DOT-4: `expand_leaves` | dot | ATTR (leafset clusters) | MEDIUM — LEAFSET nodes mispacked in rank slots | ~150 LOC | `mission-dot-newrank` (sub-task) |
 | DOT-5: `checkLabelOrder` / `recResetVlists` | dot | ATTR (flat labeled edges + mincross) | MEDIUM — label-node ordering not corrected; edge crossings may increase | ~200 LOC | `mission-dot-flat-labels` |
 | DOT-6: `nslimit` attribute (nsiter2) | dot | ATTR (`nslimit=N`) | LOW — iteration cap for position NS ignored; slower convergence only | ~20 LOC | inline fix |
+| DOT-7: regular edges ignore edge type | dot | ATTR (`splines=line`/`polyline`) | MEDIUM — cross-rank edges stay splines under `splines=line`; flat edges already honor it | ~1 mission | `mission-dot-edgetype` |
+| DOT-8: `splines=ortho`/`curved`/`compound` routing | dot | ATTR (`splines=ortho` etc.) | MEDIUM (ortho) / LOW — type mapped but unrouted | ortho = multi-mission | `mission-dot-ortho` |
+| DOT-9: `makeSimpleFlat` (no-port no-label adjacent flats) | dot | RARE (parallel unlabeled adjacent flats) | LOW-MEDIUM — parallel unlabeled flats overlap, don't fan | ~40 LOC | inline/sub-task |
+| DOT-10: port-bearing adjacent labeled flats drop label | dot | RARE (`rank=same` + ports + label) | LOW — narrow case | ~30 LOC | inline/sub-task |
 | NEA-1: `MODEL_CIRCUIT` (circuitModel) | neato/sgd | ATTR (`model=circuit`) | HIGH — circuit shortest-path used instead; distances wrong for cyclic graphs | ~200 LOC | `mission-neato-models` |
 | NEA-2: `MODEL_MDS` in SGD | neato/sgd | ATTR (`model=mds` + `mode=sgd`) | MEDIUM — falls back to shortpath; MDS initialization skipped | ~150 LOC | `mission-neato-models` |
 | NEA-3: `smart_init` / sparse subspace (`start=N`) | neato | ATTR (`start=N` integer) | LOW — random init used; positions differ but converge to same quality | ~300 LOC | `mission-neato-models` (sub-task) |
@@ -81,7 +85,7 @@ Reachability key:
 
 ## Files
 
-- [gaps/dot.md](gaps/dot.md) — dot engine gaps (DOT-1 through DOT-6)
+- [gaps/dot.md](gaps/dot.md) — dot engine gaps (DOT-1 through DOT-10)
 - [gaps/neato.md](gaps/neato.md) — neato/sgd gaps (NEA-1 through NEA-6)
 - [gaps/sfdp.md](gaps/sfdp.md) — sfdp gaps (SFDP-1 through SFDP-5)
 - [gaps/twopi-circo.md](gaps/twopi-circo.md) — twopi + circo + fdp gaps
