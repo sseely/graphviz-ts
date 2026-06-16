@@ -22,14 +22,14 @@ p{margin:.6rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px
 .legend{font-size:.8rem;color:#888}
 </style></head><body>
 <h1>A:e-&amp;gt;A:w — lateral self-loop</h1>
-<p class="status"><strong>EXCLUDED at SR6.</strong> Self-edges already route faithfully (plain self-loops are byte-identical; n/s side ports ≤0.32pt). The lateral e/w loop diverges via the frozen <code>selfRightSpace</code> node-width reservation (AD5).</p>
+<p class="status"><strong>FIXED 2026-06-16</strong> (refined-curve bb growth). The ~5.5pt node-region shift was a drawing-bbox artifact, not a width reservation: the loop bulges left of the node, and the control-hull bb over-reserved on the right, shifting the translate. With the adaptive refined-curve <code>updateBbBz</code> the bb matches dot and the shift is gone — loop now matches dot within 0.27pt.</p>
 <p class="legend">The drawings below are the actual rendered SVGs — the visual match is the test. Backgrounds are a checker pattern so white fills show.</p>
 <div class="pair"><h3>digraph{A:e-&gt;A:w; A-&gt;B}</h3><div class="cols"><div class="col"><div class="lbl">dot 15.0.0</div><img src="self-ew-dot1500.svg" alt="dot 15.0.0 — digraph{A:e-&gt;A:w; A-&gt;B}"></div><div class="col"><div class="lbl">graphviz-ts</div><img src="self-ew-ts.svg" alt="graphviz-ts — digraph{A:e-&gt;A:w; A-&gt;B}"></div></div></div>
 <h2>Geometry</h2>
-<p class="caption">Self-loop path control points (graph has ; A-&gt;B to expose the node shift).</p><table><tr><th>pt</th><th>dot 15.0.0</th><th>graphviz-ts</th><th>Δ</th></tr><tr class="bad"><td>0</td><td>65.77,-90.00</td><td>71.01,-90.00</td><td>5.24</td></tr><tr class="bad"><td>1</td><td>83.52,-108.00</td><td>89.01,-108.00</td><td>5.49</td></tr><tr class="bad"><td>3</td><td>38.52,-144.00</td><td>44.01,-144.00</td><td>5.49</td></tr><tr class="bad"><td>5</td><td>-5.44,-118.13</td><td>0.00,-117.89</td><td>5.45</td></tr><tr class="bad"><td>arrow tip</td><td>10.37,-91.22</td><td>16.10,-91.21</td><td>5.73</td></tr></table>
+<p class="caption">Self-loop path control points (graph has ; A-&gt;B to expose any node shift).</p><table><tr><th>pt</th><th>dot 15.0.0</th><th>graphviz-ts</th><th>Δ</th></tr><tr><td>0</td><td>65.77,-90.00</td><td>65.50,-90.00</td><td>0.27</td></tr><tr><td>1</td><td>83.52,-108.00</td><td>83.50,-108.00</td><td>0.02</td></tr><tr><td>3</td><td>38.52,-144.00</td><td>38.50,-144.00</td><td>0.02</td></tr><tr><td>5</td><td>-5.44,-118.13</td><td>-5.51,-117.89</td><td>0.25</td></tr><tr><td>viewBox</td><td>85 x 152</td><td>85 x 152</td><td>0</td></tr></table>
 <h2>Diagnosis</h2>
-<p>The loop <strong>shape is faithful</strong> (same lateral double-bulge, vertical extent to y=-144 exact), but the whole node-A region is translated ~5.5pt in x.</p>
-<p>The incident <code>A-&gt;B</code> edge shifts the same ~5.5pt (start x 38.52 vs 44.01), confirming the cause is node A’s <strong>reserved width</strong> (frozen <code>selfRightSpace</code>), not the loop spline.</p>
-<h2>Why excluded (not fixed)</h2>
-<p>SR6’s seam is self-loop.ts (already faithful). The lateral width reservation is in the AD5-frozen splines-selfedge.ts. Surfaced, not chased.</p>
+<p>The loop shape was always faithful (lateral double-bulge, vertical extent to y=-144). The whole node-A region used to translate ~5.5pt in x — but that was the <strong>drawing bbox</strong>, not a width reservation.</p>
+<p>The lateral loop bulges left of node A (to x≈-5.4). The old control-hull <code>updateBbBz</code> over-reserved bb on the right by the control-point overshoot, shifting the graph transform. The faithful refined-curve bb (emit.c:746) reserves exactly what dot does, so the node region and the incident <code>A-&gt;B</code> edge now sit where dot puts them. viewBox 85x152 matches dot exactly.</p>
+<h2>How it was fixed</h2>
+<p>The selfRightSpace reservation (AD5-frozen splines-selfedge.ts) was never the cause — the divergence was the bb. Pinned as a dot-oracle in steering-port-regression.test.ts.</p>
 </body></html>

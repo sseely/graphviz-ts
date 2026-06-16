@@ -88,6 +88,14 @@ const CASES: OracleCase[] = [
     pts: [[27, -36], [27, -64.25], [139.23, -67.56], [165.53, -45.93]],
   },
   {
+    // True adjacent flat edge (no node between A and B) -> make_flat_adj_edges.
+    // After the per-rank MINW bound fix the arc matches dot 15.0.0 within a
+    // uniform 0.32pt (start-clip renormalization); was ~half magnitude before.
+    label: 'A:n->B:n adjacent (make_flat_adj_edges arc, no middle node)',
+    src: 'digraph{{rank=same; A; B} A:n->B:n}', tol: 0.5,
+    pts: [[27, -37.32], [27, -65.2], [81.63, -68.79], [95.72, -48.1]],
+  },
+  {
     label: 'A:e->B:w (lateral facing, over the middle node)',
     src: 'digraph{' + CHAIN + 'A:e->B:w}', tol: 0.5,
     pts: [[55.25, -18], [63.96, -18], [59.33, -28.1], [63, -36], [66.77, -44.11],
@@ -107,4 +115,17 @@ describe('SR5 — flat-edge side-port geometry vs dot 15.0.0', () => {
       }
     });
   }
+
+  // Regression: the adjacent flat-adj loop rises above the rank, so the
+  // drawing bb must grow to contain it (dotsplines.c:1270 update_bb_bz). A
+  // missing bb-growth clips the top of the loop off the canvas.
+  it('adjacent flat-adj loop is not clipped by the drawing bbox', () => {
+    const svg = renderSvg('digraph{{rank=same; A; B} A:n->B:n}', 'dot');
+    const vb = svg.match(new RegExp('viewBox=' + Q + '([^' + Q + ']+)'))?.[1];
+    const height = Number((vb ?? '0 0 0 0').split(/\s+/)[3]);
+    const apex = Math.max(...loopPath(svg).map(p => -p.y)); // loop top, points up
+    // dot renders height 70; TS matches within 1pt (refined-curve bb).
+    expect(height).toBeGreaterThanOrEqual(apex); // loop top must fit on canvas
+    expect(Math.abs(height - 70)).toBeLessThanOrEqual(1);
+  });
 });

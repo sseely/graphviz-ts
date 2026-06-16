@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<title>Multi-rank left-bulge exclusions</title><style>
+<title>Multi-rank left-bulge</title><style>
 :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}
 body{margin:2rem auto;max-width:64rem;padding:0 1rem;color:#1a1a1a}
 h1{font-size:1.5rem} h2{font-size:1.1rem;margin-top:2rem;border-bottom:1px solid #eee;padding-bottom:.3rem}
@@ -21,16 +21,16 @@ tr.bad td{background:#fde8e8;font-weight:600}
 p{margin:.6rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px}
 .legend{font-size:.8rem;color:#888}
 </style></head><body>
-<h1>Multi-rank left-bulge exclusions</h1>
-<p class="status"><strong>EXCLUDED at SR7.</strong> The faithful multi-rank chain matches dot within 0.32pt for TOP/RIGHT loops up to 3 ranks (pinned). Loops that bulge left past x≈0 clamp at the boundary.</p>
+<h1>Multi-rank left-bulge</h1>
+<p class="status"><strong>FIXED 2026-06-16</strong> (refined-curve bb growth). The left bulge was never clamped in the routing — the loop swings left of the origin exactly as dot does. The old control-hull bb shifted the whole drawing right; the faithful refined-curve <code>updateBbBz</code> reserves the true left extent, so the loop now reaches x≈-21 (and x≈-11 for the 4-rank case) matching dot within 0.15pt.</p>
 <p class="legend">The drawings below are the actual rendered SVGs — the visual match is the test. Backgrounds are a checker pattern so white fills show.</p>
 <div class="pair"><h3>left-lateral: digraph{A:w-&gt;C; A-&gt;B-&gt;C}</h3><div class="cols"><div class="col"><div class="lbl">dot 15.0.0</div><img src="multirank-left-w-dot1500.svg" alt="dot 15.0.0 — left-lateral: digraph{A:w-&gt;C; A-&gt;B-&gt;C}"></div><div class="col"><div class="lbl">graphviz-ts</div><img src="multirank-left-w-ts.svg" alt="graphviz-ts — left-lateral: digraph{A:w-&gt;C; A-&gt;B-&gt;C}"></div></div></div>
 <div class="pair"><h3>deep 4-rank: digraph{A:n-&gt;E; A-&gt;B-&gt;C-&gt;D-&gt;E}</h3><div class="cols"><div class="col"><div class="lbl">dot 15.0.0</div><img src="multirank-left-deep-dot1500.svg" alt="dot 15.0.0 — deep 4-rank: digraph{A:n-&gt;E; A-&gt;B-&gt;C-&gt;D-&gt;E}"></div><div class="col"><div class="lbl">graphviz-ts</div><img src="multirank-left-deep-ts.svg" alt="graphviz-ts — deep 4-rank: digraph{A:n-&gt;E; A-&gt;B-&gt;C-&gt;D-&gt;E}"></div></div></div>
 <h2>Geometry</h2>
-<p class="caption">A:w-&gt;C — X uniformly shifted ~21pt; Y matches (loop bulges left of x=0 in dot).</p><table><tr><th>pt</th><th>dot 15.0.0</th><th>graphviz-ts</th><th>Δ</th></tr><tr class="bad"><td>0</td><td>25.30,-162.00</td><td>46.30,-162.00</td><td>21.00</td></tr><tr class="bad"><td>1</td><td>-21.00,-162.00</td><td>0.00,-162.00</td><td>21.00</td></tr><tr class="bad"><td>2</td><td>7.30,-87.00</td><td>28.10,-87.00</td><td>20.80</td></tr><tr class="bad"><td>3</td><td>26.40,-45.60</td><td>47.10,-45.60</td><td>20.70</td></tr></table>
+<p class="caption">A:w-&gt;C — loop bulges left of x=0; now matches dot.</p><table><tr><th>pt</th><th>dot 15.0.0</th><th>graphviz-ts</th><th>Δ</th></tr><tr><td>0</td><td>25.30,-162.00</td><td>25.35,-162.00</td><td>0.05</td></tr><tr><td>1</td><td>-20.97,-162.00</td><td>-20.91,-162.00</td><td>0.06</td></tr><tr><td>2</td><td>7.27,-86.97</td><td>7.19,-86.97</td><td>0.08</td></tr><tr><td>3</td><td>26.35,-45.61</td><td>26.20,-45.61</td><td>0.15</td></tr><tr class="bad"><td>viewBox</td><td>103 x 188</td><td>102 x 188</td><td>1</td></tr></table>
 <h2>Diagnosis</h2>
-<p>dot’s loop swings to <code>x=-21</code> (left of the origin); TS clamps the left excursion at <code>x=0</code> and the whole loop translates right. The deep 4-rank case shows the same (~11pt).</p>
-<p>The faithful chain assembly is correct for loops within the drawing bounds; the left-extent of the assembled corridor (computeLeftBound / maximal_bbox clamp for the virtual nodes) does not reach as far negative as dot’s. Not a Proutespline numeric divergence (Y and shape are faithful). The straight-mode run optimization is also unported.</p>
-<h2>Why excluded (not fixed)</h2>
-<p>The named steering cases (TOP, RIGHT-lateral, ≤3 ranks) match within 0.32pt and are pinned. Left-extent + straight-mode are larger corridor-assembly changes.</p>
+<p>dot’s loop swings to <code>x≈-21</code> (left of the origin); the routing always did the same. The divergence was the <strong>drawing bbox</strong>: the old control-hull <code>updateBbBz</code> under-reserved on the left (the bulge’s leftmost point is the actual curve, not a control point), so the graph transform shifted the loop right and it looked clamped at x=0.</p>
+<p>The faithful refined-curve bb (emit.c:746 adaptive refinement) reaches the true left extent, so the loop now renders at dot’s negative x. The deep 4-rank case matches the same way (x≈-11). viewBox 102x188 vs dot 103x188 (off-by-one rounding).</p>
+<h2>How it was fixed</h2>
+<p>No corridor-assembly change was needed — the routing was faithful all along; only the bb growth was approximate. Pinned as dot-oracles in steering-port-regression.test.ts.</p>
 </body></html>
