@@ -65,6 +65,13 @@ const DOT_PARALLEL_X3: Pt[][] = [
   [{ x: 38.44, y: -73.46 }, { x: 40.37, y: -65.31 }, { x: 40.95, y: -55.08 }, { x: 40.16, y: -45.7 }],
 ];
 
+/** dot 15.x control points for `digraph{a->b; b->a}` — opposing pair, offset
+ * to opposite sides of centre (a->b left, b->a right). */
+const DOT_OPPOSING: Pt[][] = [
+  [{ x: 21.12, y: -72.05 }, { x: 20.33, y: -64.57 }, { x: 20.08, y: -55.58 }, { x: 20.37, y: -47.14 }],
+  [{ x: 32.86, y: -35.79 }, { x: 33.66, y: -43.25 }, { x: 33.92, y: -52.24 }, { x: 33.64, y: -60.69 }],
+];
+
 /** dot 15.x control points for the labeled edge "1" (bends around its label). */
 const DOT_LABELED_EDGE1: Pt[] = [
   { x: 20.13, y: -88.69 }, { x: 18.14, y: -83.01 }, { x: 16.24, y: -76.57 },
@@ -75,21 +82,24 @@ const DOT_LABELED_EDGE1: Pt[] = [
 
 describe('regular multi-edge routing (G1, dot oracle)', () => {
   it('parallel-x3 stays byte-identical to dot (no regression)', () => {
-    // Plain unlabeled parallel edges keep the simplified offset fitter.
     const paths = edgePaths(renderSvg('digraph{a->b;a->b;a->b}', 'dot'));
     expect(paths.length).toBe(3);
     for (let i = 0; i < 3; i++) expect(maxDelta(paths[i], DOT_PARALLEL_X3[i])).toBeLessThanOrEqual(TOL);
   });
 
+  it('opposing a->b / b->a offset to opposite sides (matches dot)', () => {
+    const paths = edgePaths(renderSvg('digraph{a->b; b->a}', 'dot'));
+    expect(paths.length).toBe(2);
+    for (let i = 0; i < 2; i++) expect(maxDelta(paths[i], DOT_OPPOSING[i])).toBeLessThanOrEqual(TOL);
+  });
+
   it('labeled-parallel edge "1" routes around its label vnode (matches dot)', () => {
-    // The faithful pipeline bends the spline left around the label box; dot exact.
     const paths = edgePaths(renderSvg('digraph{a->b[label="1"]; a->b[label="2"]}', 'dot'));
     expect(paths.length).toBe(2);
     expect(maxDelta(paths[0], DOT_LABELED_EDGE1)).toBeLessThanOrEqual(TOL);
   });
 
   it('labeled-parallel emits both label texts', () => {
-    // Both labels are present (positions are quarantined per AD-4).
     const svg = renderSvg('digraph{a->b[label="1"]; a->b[label="2"]}', 'dot');
     const texts = svg.match(new RegExp('<text', 'g')) ?? [];
     expect(texts.length).toBe(4); // a, b, "1", "2"

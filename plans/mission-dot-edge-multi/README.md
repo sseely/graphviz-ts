@@ -67,8 +67,21 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | [T1 flat-labeled-edge (G4)](batch-1/T1-flat-labeled-edge.md) — **DEFERRED** (ranking-phase vnode creation out of scope; see [comparisons/flat-labeled-edge.html](comparisons/flat-labeled-edge.html)), [T2 make_regular_edge multi (G1 core)](batch-1/T2-make-regular-edge-multi.md) | [ ] |
-| 2 (after T2) | [T3 edge-grouping + opposing pins (G1 wiring)](batch-2/T3-opposing-edge-grouping.md) | [ ] |
+| 1 | [T1 flat-labeled-edge (G4)](batch-1/T1-flat-labeled-edge.md) — **DEFERRED** (ranking-phase vnode creation out of scope; see [comparisons/flat-labeled-edge.html](comparisons/flat-labeled-edge.html)), [T2 make_regular_edge multi (G1 core)](batch-1/T2-make-regular-edge-multi.md) ✓ c2cc600 | [x] |
+| 2 (after T2) | [T3 edge-grouping + opposing pins (G1 wiring)](batch-2/T3-opposing-edge-grouping.md) ✓ | [x] |
+
+### Outcome (2026-06-16)
+
+- **Opposing `a->b; b->a`** — fully fixed, matches dot ≤0.2pt (was one straight +
+  one malformed, pathΔ 53pt). Dedup-by-orig groups it as cnt=2; the back edge
+  installs reversed.
+- **Labeled-parallel** — edge "1" now byte-identical to dot (was wiggly, pathΔ
+  23pt); both labels render. Edge "2" straight-collapse + label x-positions are
+  quarantined (AD-4, [comparisons/labeled-parallel.html](comparisons/labeled-parallel.html))
+  — rooted in unported `smode` + position-phase label-vnode x-assignment.
+- **Plain edges / 115 goldens** — byte-identical (AD-2 held). Suite 1793 / 0.
+- **T1 / G4** — deferred to its own mission (ranking-phase `flat_node` +
+  `abomination`).
 
 > **T1/G4 deferred 2026-06-16** (human decision). The flat label virtual node is
 > created in C's ranking phase (`flat.c:flat_node` + `abomination`), not in

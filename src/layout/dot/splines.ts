@@ -307,9 +307,31 @@ function groupSize(edges: Edge[], ind: number): number {
 function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
 
 /**
+ * Collapse a contiguous main-edge group to one representative per distinct
+ * original edge. A node can carry both the user edge AND a virtual reverse-chain
+ * edge to the same neighbour (the opposing `a->b`/`b->a` case: `a` has two
+ * out-edges, both resolving to main edge `a->b`, while `b->a` sits in `ND_other`
+ * — three collected entries, two distinct originals). C routes one spline per
+ * distinct edge; deduping by `resolveOrigEdge` yields cnt=2 for the opposing
+ * pair while leaving genuine parallels (3 distinct originals) untouched.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (one clip_and_install per orig)
+ */
+function dedupByOrig(group: Edge[]): Edge[] {
+  const seen = new Set<Edge>();
+  const out: Edge[] = [];
+  for (const e of group) {
+    const o = resolveOrigEdge(e);
+    if (seen.has(o)) continue;
+    seen.add(o);
+    out.push(e);
+  }
+  return out;
+}
+
+/**
  * Dispatch one parallel-edge group to the appropriate router.
  * - self-loops  → routeSelfEdgeGroup
- * - cross-rank, cnt > 1 → routeParallelEdgeGroup (Multisep offsets per C)
+ * - cross-rank, distinct-orig cnt > 1 → routeParallelEdgeGroup (Multisep offsets)
  * - other (cnt=1, same-rank) → left for routeDotEdges
  * @see lib/dotgen/dotsplines.c:367-419
  */
@@ -317,13 +339,16 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
   const e0 = group[0];
   if (e0.tail === e0.head) {
     routeSelfEdgeGroup(g, group, group.length, multisep, buildDotSinfo());
-  } else if (group.length > 1 && nodeRankOf(e0.tail) !== nodeRankOf(e0.head)) {
-    // Sort by original seq so the first original edge gets the leftmost offset,
-    // matching C's allocation order (e1 < e2 < e3).
-    // @see lib/dotgen/dotsplines.c:make_regular_edge (lines 1885-1907)
-    group.sort((a, b) => origSeq(a) - origSeq(b));
-    routeParallelEdgeGroup(g, group, multisep);
+    return;
   }
+  if (nodeRankOf(e0.tail) === nodeRankOf(e0.head)) return;
+  const uniq = dedupByOrig(group);
+  if (uniq.length <= 1) return;
+  // Sort by original seq so the first original edge gets the leftmost offset,
+  // matching C's allocation order (e1 < e2 < e3).
+  // @see lib/dotgen/dotsplines.c:make_regular_edge (lines 1885-1907)
+  uniq.sort((a, b) => origSeq(a) - origSeq(b));
+  routeParallelEdgeGroup(g, uniq, multisep);
 }
 
 /**
