@@ -88,6 +88,14 @@ const CASES: OracleCase[] = [
     pts: [[27, -36], [27, -64.25], [139.23, -67.56], [165.53, -45.93]],
   },
   {
+    // True adjacent flat edge (no node between A and B) -> make_flat_adj_edges.
+    // After the per-rank MINW bound fix the arc matches dot 15.0.0 within a
+    // uniform 0.32pt (start-clip renormalization); was ~half magnitude before.
+    label: 'A:n->B:n adjacent (make_flat_adj_edges arc, no middle node)',
+    src: 'digraph{{rank=same; A; B} A:n->B:n}', tol: 0.5,
+    pts: [[27, -37.32], [27, -65.2], [81.63, -68.79], [95.72, -48.1]],
+  },
+  {
     label: 'A:e->B:w (lateral facing, over the middle node)',
     src: 'digraph{' + CHAIN + 'A:e->B:w}', tol: 0.5,
     pts: [[55.25, -18], [63.96, -18], [59.33, -28.1], [63, -36], [66.77, -44.11],
