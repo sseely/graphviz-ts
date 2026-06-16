@@ -21,6 +21,7 @@ import { posClusters, compressGraph } from './position-cluster.js';
 import { setYcoords } from './position-ycoords.js';
 import { setAspect, placeGraphLabel } from './position-bbox.js';
 import { dotConcentrate } from './conc.js';
+import { flatEdges } from './flat.js';
 
 // ---------------------------------------------------------------------------
 // set_xcoords — AD-8 critical: ND_rank holds x-coord; restore to rank index
@@ -175,13 +176,9 @@ export function expandLeaves(_g: Graph): void {
   /* TODO T36: port expand_leaves / flat edge leaf slot adjustment */
 }
 
-// ---------------------------------------------------------------------------
-// flat_edges (stub, T36)
-// ---------------------------------------------------------------------------
-
-/** @see lib/dotgen/flat.c:flat_edges — stub (T36) */
-export function flatEdges(_g: Graph): boolean { return false; }
-
+// flat_edges is imported from ./flat.js (the real driver). Previously a local
+// stub `flatEdges(_g){return false;}` shadowed it, so flatNode/abomination never
+// ran and labeled flat edges dropped their labels. @see lib/dotgen/position.c:139
 
 // ---------------------------------------------------------------------------
 // dot_position — @see lib/dotgen/position.c:dot_position
