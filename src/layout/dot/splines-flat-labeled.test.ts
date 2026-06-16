@@ -34,16 +34,25 @@ const TOL = 0.5;
 
 interface Pt { x: number; y: number; }
 
-/** Edge path control points spanning the largest y-range (the label loop). */
-function loopPath(svg: string): Pt[] {
-  let best: Pt[] = [];
-  let bestRange = -1;
+/** All edge `<path d="M...">` control-point lists in document order. */
+function allPaths(svg: string): Pt[][] {
+  const out: Pt[][] = [];
   let m: RegExpExecArray | null;
   RE_PATH.lastIndex = 0;
   while ((m = RE_PATH.exec(svg)) !== null) {
     const nums = m[1].match(RE_NUM) ?? [];
     const pts: Pt[] = [];
     for (let i = 0; i + 1 < nums.length; i += 2) pts.push({ x: Number(nums[i]), y: Number(nums[i + 1]) });
+    out.push(pts);
+  }
+  return out;
+}
+
+/** Edge path control points spanning the largest y-range (the label loop). */
+function loopPath(svg: string): Pt[] {
+  let best: Pt[] = [];
+  let bestRange = -1;
+  for (const pts of allPaths(svg)) {
     const ys = pts.map(p => p.y);
     const range = Math.max(...ys) - Math.min(...ys);
     if (range > bestRange) { bestRange = range; best = pts; }
@@ -80,6 +89,27 @@ describe('T2 — non-adjacent flat label spline vs dot 15.0.0', () => {
     expect(ts.length).toBe(SPLINE_PTS.length);
     for (let i = 0; i < SPLINE_PTS.length; i++) {
       expect(dist(ts[i], SPLINE_PTS[i])).toBeLessThanOrEqual(TOL);
+    }
+  });
+});
+
+const ADJ_SRC = 'digraph{ {rank=same; a b} a->b[label="x"] }';
+// dot 15.0.0 oracle: straight flat segment + label "x" centered above it.
+const ADJ_LABEL = [72, -24.2];
+const ADJ_PTS = [[54.49, -18], [61.99, -18], [70.27, -18], [78.27, -18]];
+
+describe('T3 — adjacent flat label vs dot 15.0.0', () => {
+  it('emits the label <text>x</text> at dot lp within 0.5pt', () => {
+    const lp = labelXY(renderSvg(ADJ_SRC, 'dot'));
+    expect(lp).not.toBeNull();
+    expect(dist(lp!, ADJ_LABEL)).toBeLessThanOrEqual(TOL);
+  });
+
+  it('routes a straight flat segment matching dot control points', () => {
+    const ts = allPaths(renderSvg(ADJ_SRC, 'dot'))[0];
+    expect(ts.length).toBe(ADJ_PTS.length);
+    for (let i = 0; i < ADJ_PTS.length; i++) {
+      expect(dist(ts[i], ADJ_PTS[i])).toBeLessThanOrEqual(TOL);
     }
   });
 });

@@ -25,6 +25,9 @@ import { buildDotSinfo } from './self-loop.js';
 import { TOP } from '../../common/splines-constants.js';
 import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE } from './splines.js';
 
+/** Space between stacked flat labels, in points. @see lib/dotgen/dotsplines.c:937 */
+const LBL_SPACE = 6;
+
 /**
  * Walk `ED_to_virt(e)` to the end of the chain; the tail of the last edge is the
  * label virtual node `ln`. @see lib/dotgen/dotsplines.c:make_flat_labeled_edge 1328-1330
@@ -128,5 +131,36 @@ export function makeFlatLabeledEdge(g: Graph, e: Edge): boolean {
     : routeFlatLabeledChannel(g, e, ln, et);
   if (ps === null || ps.length === 0) return false;
   clipAndInstall(e, e.head, ps, ps.length, buildDotSinfo());
+  return true;
+}
+
+/**
+ * True when `e` is a single adjacent, same-rank, labeled flat edge with no
+ * declared ports — C's make_flat_adj_edges → makeSimpleFlatLabels (no-port)
+ * dispatch. Port-bearing adjacent flats route via the aux graph instead.
+ */
+export function isAdjFlatLabel(e: Edge): boolean {
+  if (e.info.label === undefined || (e.info.adjacent ?? 0) === 0) return false;
+  if (e.tail.info.rank === undefined || e.tail.info.rank !== e.head.info.rank) return false;
+  return !e.info.tail_port.defined && !e.info.head_port.defined;
+}
+
+/**
+ * Route an adjacent (no-port) labeled flat edge as a straight tail→head segment
+ * and center its label above the edge. Ports the single-edge first block of
+ * makeSimpleFlatLabels. Returns false (declining) for any other edge.
+ * @see lib/dotgen/dotsplines.c:makeSimpleFlatLabels 967-981
+ */
+export function makeAdjFlatLabeledEdge(e: Edge): boolean {
+  if (!isAdjFlatLabel(e)) return false;
+  const lbl = e.info.label!;
+  const tn = e.tail, hn = e.head;
+  const tp = { x: tn.info.coord.x + e.info.tail_port.p.x, y: tn.info.coord.y + e.info.tail_port.p.y };
+  const hp = { x: hn.info.coord.x + e.info.head_port.p.x, y: hn.info.coord.y + e.info.head_port.p.y };
+  const ctrx = (tp.x + tn.info.rw + (hp.x - hn.info.lw)) / 2;
+  const points = [tp, { x: tp.x, y: tp.y }, hp, { x: hp.x, y: hp.y }];
+  clipAndInstall(e, hn, points, points.length, buildDotSinfo());
+  lbl.pos = { x: ctrx, y: tp.y + (lbl.dimen.y + LBL_SPACE) / 2 };
+  lbl.set = true;
   return true;
 }

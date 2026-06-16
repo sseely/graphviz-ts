@@ -55,7 +55,7 @@ Baseline at mission start: **1793 passed / 0 failed, 115 goldens byte-identical*
 |-------|-------|--------|
 | 1 | [T1 flat label vnode (wiring + abomination rewrite)](batch-1/T1-flat-label-vnode.md) | [x] |
 | 2 (after T1) | [T2 make_flat_labeled_edge + dispatch (non-adjacent)](batch-2/T2-make-flat-labeled-edge.md) | [x] |
-| 3 (after T2) | [T3 adjacent flat label + oracle pins](batch-3/T3-adjacent-flat-label.md) | [ ] |
+| 3 (after T2) | [T3 adjacent flat label + oracle pins](batch-3/T3-adjacent-flat-label.md) | [x] |
 
 ## Constraints (stop / push-forward)
 
