@@ -101,6 +101,23 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 - A divergent case reaches dot within tol 0.5 — pin it and move on
 - A case cannot reach parity — quarantine it with a comparison page (see decisions.md) and continue
 
+## Mission summary (2026-06-16)
+
+- **Completed:** T2, T3 (G1). **Deferred:** T1 (G4 — ranking-phase, own mission).
+- **Commits:** `1921ad5` (T1 deferral docs), `c2cc600` (T2), `1ebd36d` (T3) on
+  `feature/dot-edge-multi`. **Not yet merged** — awaiting sign-off.
+- **Gate results:** `tsc --noEmit` exit 0; `vitest run` 1793 passed / 0 failed
+  (1789 baseline + 4 new oracle pins); 115 goldens byte-identical; lizard clean;
+  all writes inside declared write-sets.
+- **Quarantined (AD-4):** flat-labeled-edge (G4) and labeled-parallel edge "2" +
+  label x-positions — comparison pages exist and are referenced in the journal.
+- **Decisions flagged for review:** T1 scope (deferred, human-approved); T3
+  break-conditions consciously scoped down to a targeted dedup to protect the
+  byte gate (see journal).
+- **Follow-ups:** (1) G4 flat-label mission (`flat_node` + `abomination`);
+  (2) `smode` straight-run collapse in `make_regular_edge`; (3) position-phase
+  label-vnode x-assignment for labeled-parallel.
+
 ## Links
 
 - [decisions.md](decisions.md) — architecture decisions
