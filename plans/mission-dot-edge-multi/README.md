@@ -23,6 +23,11 @@ let the port capture the hard-won nuances — do not paraphrase the algorithm.
 `feature/dot-edge-multi` off `main`. Merge back with a **merge commit** (not
 squash) when gates pass.
 
+## Execution model
+
+Run with **opus** (`claude-opus-4-8`). Fable 5 is disabled by Anthropic at this
+time — do not route autonomous execution to it.
+
 ## The hybrid constraint (READ — AD2/AD3)
 
 graphviz-ts routes plain edges with a simplified fitter that is byte-exact to
