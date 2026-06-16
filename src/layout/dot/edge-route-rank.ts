@@ -19,20 +19,33 @@ const MINW = 16;
 
 /** Minimum x extent across all nodes minus MINW. @see lib/dotgen/dotsplines.c:sd.LeftBound */
 export function computeLeftBound(g: Graph): number {
-  let lb = Infinity;
-  for (const n of g.nodes.values()) {
-    lb = Math.min(lb, n.info.coord.x - (n.info.lw > 0 ? n.info.lw : 27));
+  const ranks = g.info.rank;
+  if (ranks === undefined) return -32;
+  const minr = g.info.minrank ?? 0;
+  const maxr = g.info.maxrank ?? ranks.length - 1;
+  let lb = 0;
+  for (let i = minr; i <= maxr; i++) {
+    const n = ranks[i]?.v[0];
+    if (n) lb = Math.min(lb, n.info.coord.x - n.info.lw);
+    lb -= MINW;
   }
-  return lb === Infinity ? -32 : lb - MINW;
+  return lb;
 }
 
 /** Maximum x extent across all nodes plus MINW. @see lib/dotgen/dotsplines.c:sd.RightBound */
 export function computeRightBound(g: Graph): number {
-  let rb = -Infinity;
-  for (const n of g.nodes.values()) {
-    rb = Math.max(rb, n.info.coord.x + (n.info.rw > 0 ? n.info.rw : 27));
+  const ranks = g.info.rank;
+  if (ranks === undefined) return 60;
+  const minr = g.info.minrank ?? 0;
+  const maxr = g.info.maxrank ?? ranks.length - 1;
+  let rb = 0;
+  for (let i = minr; i <= maxr; i++) {
+    const rk = ranks[i];
+    const n = rk !== undefined && rk.n > 0 ? rk.v[rk.n - 1] : undefined;
+    if (n) rb = Math.max(rb, n.info.coord.x + n.info.rw);
+    rb += MINW;
   }
-  return rb === -Infinity ? 60 : rb + MINW;
+  return rb;
 }
 
 /** Default a rank half-height to node half-height when the rank value is unset. */

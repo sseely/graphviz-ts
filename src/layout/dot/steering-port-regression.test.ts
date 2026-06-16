@@ -60,10 +60,13 @@ interface PinCase { label: string; src: string; viewBox?: string; pts: number[][
 // graphviz-ts deterministic output, captured 2026-06-15 (.probes/pin-capture.ts).
 const CASES: PinCase[] = [
   {
-    label: 'An-Bs compound double-steering A:n->B:s (mid-corridor x=70.65)',
-    src: 'digraph{A:n->B:s}', viewBox: '0.00 0.00 79.00 137.00',
+    // Now matches dot 15.0.0 (mid-corridor x=87.3 vs dot 87.5) after the
+    // per-rank MINW bound fix; the SR4 24pt exclusion is resolved. Residual
+    // ~0.65pt is the start-clip renormalization.
+    label: 'An-Bs compound double-steering A:n->B:s (mid-corridor x=87.3, matches dot)',
+    src: 'digraph{A:n->B:s}', viewBox: '0.00 0.00 95.00 137.00',
     pts: [[27, -117.36], [27, -129.37], [45.67, -125.01], [54, -116.36],
-      [70.65, -99.08], [70.65, -25.65], [54, -8.36], [49.44, -3.64],
+      [87.31, -81.8], [87.31, -42.93], [54, -8.36], [49.44, -3.64],
       [41.8, -0.19], [35.8, 0]],
   },
   {
