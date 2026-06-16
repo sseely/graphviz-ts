@@ -33,6 +33,12 @@ import {
 } from './edge-route-faithful.js';
 import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
 import { graphRanksep } from './position-aux.js';
+import { Edge as EdgeClass } from '../../model/edge.js';
+import { cloneNode, cloneEdge, cleanupCloneGraph, transformf } from './splines-clone.js';
+import { dotInitNodeEdge } from './init.js';
+import { gvPostprocess } from '../../common/postproc.js';
+import { newSpline } from '../../common/splines-clip.js';
+import { NORMAL, VIRTUAL } from './fastgr.js';
 import { EDGE_LABEL } from './rank.js';
 
 /** Bundled args for makeFlatEndBox (keeps params <= 5). Declared here (not
@@ -110,20 +116,153 @@ export function runAuxSplines(auxg: Graph): number {
  *
  * @see lib/dotgen/dotsplines.c:make_flat_adj_edges
  */
-export function makeFlatAdjEdges(
-  g: Graph,
-  edges: Edge[],
-  _cnt: number,
-  _et: number,
-): number {
+/** Aux graph + the two cloned endpoints + original→aux edge map. */
+interface FlatAux { auxg: Graph; auxt: Node; auxh: Node; alg: Map<Edge, Edge>; }
+
+/** Walk an edge to its NORMAL original. @see make_flat_adj_edges (ED_to_orig loop) */
+function toNormalEdge(e: Edge): Edge {
+  let cur = e;
+  while ((cur.info.edge_type ?? NORMAL) !== NORMAL && cur.info.to_orig != null) {
+    cur = cur.info.to_orig;
+  }
+  return cur;
+}
+
+/** True when an edge has no declared port on either end. */
+function isPortless(e: Edge): boolean {
+  return !e.info.tail_port.defined && !e.info.head_port.defined;
+}
+
+/** Clone one edge into the aux graph, oriented tail→head from the original. */
+function cloneFlatEdge(auxg: Graph, otn: Node, auxt: Node, auxh: Node, orig: Edge): Edge {
+  return orig.tail === otn
+    ? cloneEdge(auxg, auxt, auxh, orig) : cloneEdge(auxg, auxh, auxt, orig);
+}
+
+/**
+ * Build the rotated auxiliary graph: clone tail/head + each edge, then add a
+ * heavy ordering edge so the pair lands on adjacent ranks.
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges (clone + hvye)
+ */
+function buildFlatAux(g: Graph, edges: Edge[], cnt: number): FlatAux {
+  const otn = edges[0].tail;
+  const flip = g.info.flip ?? false;
   const auxg = cloneGraph(g);
-  const r = runAuxPipeline(auxg);
-  if (r !== 0) return r;
-  const sr = runAuxSplines(auxg);
-  if (sr !== 0) return sr;
-  // Copy splines back — full transform deferred until pathplan is ported
-  void edges;
+  const auxt = cloneNode(auxg, flip ? edges[0].head : otn);
+  const auxh = cloneNode(auxg, flip ? otn : edges[0].head);
+  const alg = new Map<Edge, Edge>();
+  let hvye: Edge | null = null;
+  for (let i = 0; i < cnt; i++) {
+    const orig = toNormalEdge(edges[i]);
+    const auxe = cloneFlatEdge(auxg, otn, auxt, auxh, orig);
+    alg.set(orig, auxe);
+    if (hvye === null && isPortless(orig)) hvye = auxe;
+  }
+  if (hvye === null) { hvye = new EdgeClass(auxt, auxh, ''); auxg.edges.push(hvye); }
+  hvye.info.weight = 10000;
+  return { auxg, auxt, auxh, alg };
+}
+
+/** True if vn is a real (NORMAL) or labeled-virtual node — blocks adjacency. */
+function blocksAdjacency(vn: Node | null): boolean {
+  if (vn === null) return false;
+  const t = vn.info.node_type ?? NORMAL;
+  return t === NORMAL || (t === VIRTUAL && vn.info.label != null);
+}
+
+/** True if no adjacency-blocking node sits strictly between rank orders lo..hi. */
+function noBlockerBetween(v: ReadonlyArray<Node | null>, lo: number, hi: number): boolean {
+  for (let i = lo + 1; i < hi; i++) {
+    if (blocksAdjacency(v[i] ?? null)) return false;
+  }
+  return true;
+}
+
+/** Reposition aux nodes into a frame aligned with the original graph. */
+function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
+  const otn = edges[0].tail, ohn = edges[0].head;
+  const flip = g.info.flip ?? false;
+  const rightx = ohn.info.coord.x, leftx = otn.info.coord.x;
+  const stn = flip ? ohn : otn;
+  const shn = flip ? otn : ohn;
+  const midx = (stn.info.coord.x - stn.info.rw + shn.info.coord.x + shn.info.lw) / 2;
+  const midy = (aux.auxt.info.coord.x + aux.auxh.info.coord.x) / 2;
+  for (const n of aux.auxg.nodes.values()) {
+    if (n === aux.auxt) n.info.coord = { x: midy, y: rightx };
+    else if (n === aux.auxh) n.info.coord = { x: midy, y: leftx };
+    else n.info.coord = { x: n.info.coord.x, y: midx };
+  }
+}
+
+/** transformf the aux edge's spline + arrowhead onto the original edge. */
+function copyOneFlatSpline(orig: Edge, auxe: Edge, del: Point, flip: boolean): void {
+  const auxbz = auxe.info.spl?.list[0];
+  if (auxbz === undefined) return;
+  const bz = newSpline(orig, auxbz.list.length);
+  bz.sflag = auxbz.sflag;
+  bz.eflag = auxbz.eflag;
+  bz.sp = transformf(auxbz.sp, del, flip);
+  bz.ep = transformf(auxbz.ep, del, flip);
+  for (let j = 0; j < auxbz.list.length; j++) bz.list[j] = transformf(auxbz.list[j], del, flip);
+  const rec = auxe.info as unknown as Record<string, unknown>;
+  const arrow = rec._arrowPts as Point[] | undefined;
+  if (arrow !== undefined) {
+    (orig.info as unknown as Record<string, unknown>)._arrowPts =
+      arrow.map(p => transformf(p, del, flip));
+  }
+}
+
+/** Copy every routed aux spline back to its original edge. */
+function copyFlatSplines(g: Graph, edges: Edge[], aux: FlatAux): void {
+  const otn = edges[0].tail;
+  const flip = g.info.flip ?? false;
+  const stn = flip ? edges[0].head : otn;
+  const at = aux.auxt.info.coord;
+  const del = flip
+    ? { x: stn.info.coord.x - at.y, y: stn.info.coord.y + at.x }
+    : { x: stn.info.coord.x - at.x, y: stn.info.coord.y - at.y };
+  for (let i = 0; i < edges.length; i++) {
+    const orig = toNormalEdge(edges[i]);
+    const auxe = aux.alg.get(orig);
+    if (auxe !== undefined) copyOneFlatSpline(orig, auxe, del, flip);
+  }
+}
+
+/**
+ * Route adjacent flat edges (with ports) via a rotated auxiliary layout, then
+ * transform the resulting splines back onto the original edges. Installs splines
+ * directly on the originals (returns 0 on success). Records and the no-port
+ * makeSimpleFlat branch are out of scope (callers gate on a side port).
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges
+ */
+export function makeFlatAdjEdges(g: Graph, edges: Edge[], cnt: number, _et: number): number {
+  const aux = buildFlatAux(g, edges, cnt);
+  dotInitNodeEdge(aux.auxg);
+  dotRank(aux.auxg);
+  if (dotMincross(aux.auxg) !== 0) return 1;
+  if (dotPosition(aux.auxg) !== 0) return 1;
+  repositionFlatAux(g, edges, aux);
+  dotSameports(aux.auxg);
+  dotSplines_(aux.auxg, false);
+  gvPostprocess(aux.auxg);
+  copyFlatSplines(g, edges, aux);
+  cleanupCloneGraph(aux.auxg);
   return 0;
+}
+
+/**
+ * True when a same-rank edge's endpoints are adjacent in rank order (no NORMAL
+ * or labeled-virtual node between them) — the make_flat_adj_edges case.
+ * @see lib/dotgen/flat.c:checkFlatAdjacent
+ */
+export function isFlatAdjacent(g: Graph, e: Edge): boolean {
+  const r = e.tail.info.rank;
+  if (r === undefined || e.head.info.rank !== r) return false;
+  const rank = g.info.rank?.[r];
+  if (rank === undefined) return false;
+  const to = e.tail.info.order ?? 0;
+  const ho = e.head.info.order ?? 0;
+  return noBlockerBetween(rank.v, Math.min(to, ho), Math.max(to, ho));
 }
 
 // ---------------------------------------------------------------------------

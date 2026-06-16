@@ -28,7 +28,8 @@ import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
 import { routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
-import { routeFlatEdgeFaithful } from './splines-flat.js';
+import { routeFlatEdgeFaithful, isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
+import { EDGETYPE_SPLINE } from './splines.js';
 import { buildDotSinfo } from './self-loop.js';
 
 import {
@@ -304,6 +305,11 @@ function hasSidePort(e: GraphEdge): boolean {
  */
 function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
   const sameRank = e.tail.info.rank !== undefined && e.tail.info.rank === e.head.info.rank;
+  // Adjacent flat endpoints route via the rotated-aux pipeline (make_flat_adj_edges),
+  // which installs the spline directly; the box channel handles non-adjacent flats.
+  if (sameRank && isFlatAdjacent(g, e)) {
+    return makeFlatAdjEdges(g, [e], 1, EDGETYPE_SPLINE) === 0 && e.info.spl !== undefined;
+  }
   const pts = sameRank ? routeFlatEdgeFaithful(g, e) : routeRegularEdgeFaithful(g, e);
   if (pts === null) return false;
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());

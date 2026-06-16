@@ -9,9 +9,20 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
+import type { Point } from '../../model/geom.js';
 import { Node as NodeClass } from '../../model/node.js';
 import { Edge as EdgeClass } from '../../model/edge.js';
 import { makePort } from '../../model/edgeInfo.js';
+
+/**
+ * Map a point from the flat-adj auxiliary frame back to the original frame:
+ * un-rotate when the original graph is flipped, then translate by del.
+ * @see lib/dotgen/dotsplines.c:transformf
+ */
+export function transformf(p: Point, del: Point, flip: boolean): Point {
+  const q = flip ? { x: p.y, y: -p.x } : { x: p.x, y: p.y };
+  return { x: q.x + del.x, y: q.y + del.y };
+}
 
 // ---------------------------------------------------------------------------
 // cloneNode
