@@ -61,17 +61,67 @@ export function evalBezier(
 // Bounding box update
 // ---------------------------------------------------------------------------
 
+/** Maximum distance away from the chord, in points. @see lib/common/emit.c:HW */
+const HW = 2.0;
+/** Guard against 0/0 in ptToLine2. @see lib/common/geom.c:SMALL */
+const SMALL = 0.0000000001;
+
 /**
- * Expands bb to contain the cubic Bezier control polygon cp.
- * @see lib/common/render.h:update_bb_bz
+ * Distance from point p to line a-b, squared.
+ * @see lib/common/geom.c:ptToLine2
+ */
+function ptToLine2(a: Point, b: Point, p: Point): number {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  let a2 = (p.y - a.y) * dx - (p.x - a.x) * dy;
+  a2 *= a2; // square — ensures positive
+  if (a2 < SMALL) return 0; // avoid 0/0 problems
+  return a2 / (dx * dx + dy * dy);
+}
+
+/**
+ * True when the quadrilateral cp is nearly collinear (within HW of the chord),
+ * i.e. the bezier segment is sufficiently refined.
+ * @see lib/common/emit.c:check_control_points
+ */
+function checkControlPoints(cp: Point[]): boolean {
+  const dis1 = ptToLine2(cp[0], cp[3], cp[1]);
+  const dis2 = ptToLine2(cp[0], cp[3], cp[2]);
+  return dis1 < HW * HW && dis2 < HW * HW;
+}
+
+/** True when any control point lies outside bb. */
+function anyOutside(bb: Box, cp: Point[]): boolean {
+  return cp.some(p =>
+    p.x > bb.ur.x || p.x < bb.ll.x || p.y > bb.ur.y || p.y < bb.ll.y);
+}
+
+/** Expand bb by the control points cp. */
+function expandByPoints(bb: Box, cp: Point[]): void {
+  for (const p of cp) {
+    if (p.x > bb.ur.x) bb.ur.x = p.x;
+    else if (p.x < bb.ll.x) bb.ll.x = p.x;
+    if (p.y > bb.ur.y) bb.ur.y = p.y;
+    else if (p.y < bb.ll.y) bb.ll.y = p.y;
+  }
+}
+
+/**
+ * Expands bb to contain the cubic Bezier segment cp by adaptively refining the
+ * segment to its true curve extent (not the control hull).
+ * @see lib/common/emit.c:update_bb_bz
  */
 export function updateBbBz(bb: Box, cp: Point[]): void {
-  for (const p of cp) {
-    if (p.x < bb.ll.x) bb.ll.x = p.x;
-    if (p.y < bb.ll.y) bb.ll.y = p.y;
-    if (p.x > bb.ur.x) bb.ur.x = p.x;
-    if (p.y > bb.ur.y) bb.ur.y = p.y;
+  if (!anyOutside(bb, cp)) return;
+  if (checkControlPoints(cp)) {
+    expandByPoints(bb, cp);
+    return;
   }
+  const left: Point[] = [];
+  const right: Point[] = [];
+  evalBezier(cp, 0.5, left, right);
+  updateBbBz(bb, left);
+  updateBbBz(bb, right);
 }
 
 // ---------------------------------------------------------------------------

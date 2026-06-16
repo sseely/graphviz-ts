@@ -124,8 +124,8 @@ describe('SR5 — flat-edge side-port geometry vs dot 15.0.0', () => {
     const vb = svg.match(new RegExp('viewBox=' + Q + '([^' + Q + ']+)'))?.[1];
     const height = Number((vb ?? '0 0 0 0').split(/\s+/)[3]);
     const apex = Math.max(...loopPath(svg).map(p => -p.y)); // loop top, points up
-    // dot renders height 70; TS reserves a few pt more (control-hull bb approx).
+    // dot renders height 70; TS matches within 1pt (refined-curve bb).
     expect(height).toBeGreaterThanOrEqual(apex); // loop top must fit on canvas
-    expect(height).toBeGreaterThanOrEqual(70);
+    expect(Math.abs(height - 70)).toBeLessThanOrEqual(1);
   });
 });

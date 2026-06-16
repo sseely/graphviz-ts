@@ -76,7 +76,7 @@ describe('evalBezier', () => {
 // ---------------------------------------------------------------------------
 
 describe('updateBbBz', () => {
-  it('AC3: expands an empty bb to contain given control points', () => {
+  it('AC3: expands an empty bb to the refined curve extent, not the hull', () => {
     const bb = { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
     const cp = [
       { x: -5, y: -5 },
@@ -85,10 +85,12 @@ describe('updateBbBz', () => {
       { x: 2, y: 1 },
     ];
     updateBbBz(bb, cp);
+    // C update_bb_bz adaptively refines to the actual curve, which stays well
+    // inside the control hull (10,20): the curve never reaches x=10 or y=20.
     expect(bb.ll.x).toBe(-5);
     expect(bb.ll.y).toBe(-5);
-    expect(bb.ur.x).toBe(10);
-    expect(bb.ur.y).toBe(20);
+    expect(bb.ur.x).toBeCloseTo(6.25, 2);
+    expect(bb.ur.y).toBeCloseTo(10.15625, 4);
   });
 });
 

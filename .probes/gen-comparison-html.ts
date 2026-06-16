@@ -110,24 +110,25 @@ const PAGES: Page[] = [
   {
     file: 'self-ew-double-lateral.html',
     title: 'A:e-&gt;A:w — lateral self-loop',
-    status: '<strong>EXCLUDED at SR6.</strong> Self-edges already route faithfully (plain self-loops are byte-identical; n/s side ports ≤0.32pt). The lateral e/w loop diverges via the frozen <code>selfRightSpace</code> node-width reservation (AD5).',
+    status: '<strong>FIXED 2026-06-16</strong> (refined-curve bb growth). The ~5.5pt node-region shift was a drawing-bbox artifact, not a width reservation: the loop bulges left of the node, and the control-hull bb over-reserved on the right, shifting the translate. With the adaptive refined-curve <code>updateBbBz</code> the bb matches dot and the shift is gone — loop now matches dot within 0.27pt.',
     pairs: [{ caption: 'digraph{A:e->A:w; A->B}', dot: 'self-ew-dot1500.svg', ts: 'self-ew-ts.svg' }],
     tables: [{
-      caption: 'Self-loop path control points (graph has ; A->B to expose the node shift).',
+      caption: 'Self-loop path control points (graph has ; A->B to expose any node shift).',
       head: ['pt', 'dot 15.0.0', 'graphviz-ts', 'Δ'], badCol: 3, badThresh: 0.5,
       rows: [
-        ['0', '65.77,-90.00', '71.01,-90.00', '5.24'],
-        ['1', '83.52,-108.00', '89.01,-108.00', '5.49'],
-        ['3', '38.52,-144.00', '44.01,-144.00', '5.49'],
-        ['5', '-5.44,-118.13', '0.00,-117.89', '5.45'],
-        ['arrow tip', '10.37,-91.22', '16.10,-91.21', '5.73'],
+        ['0', '65.77,-90.00', '65.50,-90.00', '0.27'],
+        ['1', '83.52,-108.00', '83.50,-108.00', '0.02'],
+        ['3', '38.52,-144.00', '38.50,-144.00', '0.02'],
+        ['5', '-5.44,-118.13', '-5.51,-117.89', '0.25'],
+        ['viewBox', '85 x 152', '85 x 152', '0'],
       ],
     }],
     diagnosis: [
-      'The loop <strong>shape is faithful</strong> (same lateral double-bulge, vertical extent to y=-144 exact), but the whole node-A region is translated ~5.5pt in x.',
-      'The incident <code>A-&gt;B</code> edge shifts the same ~5.5pt (start x 38.52 vs 44.01), confirming the cause is node A’s <strong>reserved width</strong> (frozen <code>selfRightSpace</code>), not the loop spline.',
+      'The loop shape was always faithful (lateral double-bulge, vertical extent to y=-144). The whole node-A region used to translate ~5.5pt in x — but that was the <strong>drawing bbox</strong>, not a width reservation.',
+      'The lateral loop bulges left of node A (to x≈-5.4). The old control-hull <code>updateBbBz</code> over-reserved bb on the right by the control-point overshoot, shifting the graph transform. The faithful refined-curve bb (emit.c:746) reserves exactly what dot does, so the node region and the incident <code>A-&gt;B</code> edge now sit where dot puts them. viewBox 85x152 matches dot exactly.',
     ],
-    excluded: ['SR6’s seam is self-loop.ts (already faithful). The lateral width reservation is in the AD5-frozen splines-selfedge.ts. Surfaced, not chased.'],
+    closingHeading: 'How it was fixed',
+    excluded: ['The selfRightSpace reservation (AD5-frozen splines-selfedge.ts) was never the cause — the divergence was the bb. Pinned as a dot-oracle in steering-port-regression.test.ts.'],
   },
   {
     file: 'flat-bottom-port-offset.html',
@@ -157,32 +158,34 @@ const PAGES: Page[] = [
   },
   {
     file: 'multirank-left-bulge.html',
-    title: 'Multi-rank left-bulge exclusions',
-    status: '<strong>EXCLUDED at SR7.</strong> The faithful multi-rank chain matches dot within 0.32pt for TOP/RIGHT loops up to 3 ranks (pinned). Loops that bulge left past x≈0 clamp at the boundary.',
+    title: 'Multi-rank left-bulge',
+    status: '<strong>FIXED 2026-06-16</strong> (refined-curve bb growth). The left bulge was never clamped in the routing — the loop swings left of the origin exactly as dot does. The old control-hull bb shifted the whole drawing right; the faithful refined-curve <code>updateBbBz</code> reserves the true left extent, so the loop now reaches x≈-21 (and x≈-11 for the 4-rank case) matching dot within 0.15pt.',
     pairs: [
       { caption: 'left-lateral: digraph{A:w->C; A->B->C}', dot: 'multirank-left-w-dot1500.svg', ts: 'multirank-left-w-ts.svg' },
       { caption: 'deep 4-rank: digraph{A:n->E; A->B->C->D->E}', dot: 'multirank-left-deep-dot1500.svg', ts: 'multirank-left-deep-ts.svg' },
     ],
     tables: [{
-      caption: 'A:w->C — X uniformly shifted ~21pt; Y matches (loop bulges left of x=0 in dot).',
+      caption: 'A:w->C — loop bulges left of x=0; now matches dot.',
       head: ['pt', 'dot 15.0.0', 'graphviz-ts', 'Δ'], badCol: 3, badThresh: 0.5,
       rows: [
-        ['0', '25.30,-162.00', '46.30,-162.00', '21.00'],
-        ['1', '-21.00,-162.00', '0.00,-162.00', '21.00'],
-        ['2', '7.30,-87.00', '28.10,-87.00', '20.80'],
-        ['3', '26.40,-45.60', '47.10,-45.60', '20.70'],
+        ['0', '25.30,-162.00', '25.35,-162.00', '0.05'],
+        ['1', '-20.97,-162.00', '-20.91,-162.00', '0.06'],
+        ['2', '7.27,-86.97', '7.19,-86.97', '0.08'],
+        ['3', '26.35,-45.61', '26.20,-45.61', '0.15'],
+        ['viewBox', '103 x 188', '102 x 188', '1'],
       ],
     }],
     diagnosis: [
-      'dot’s loop swings to <code>x=-21</code> (left of the origin); TS clamps the left excursion at <code>x=0</code> and the whole loop translates right. The deep 4-rank case shows the same (~11pt).',
-      'The faithful chain assembly is correct for loops within the drawing bounds; the left-extent of the assembled corridor (computeLeftBound / maximal_bbox clamp for the virtual nodes) does not reach as far negative as dot’s. Not a Proutespline numeric divergence (Y and shape are faithful). The straight-mode run optimization is also unported.',
+      'dot’s loop swings to <code>x≈-21</code> (left of the origin); the routing always did the same. The divergence was the <strong>drawing bbox</strong>: the old control-hull <code>updateBbBz</code> under-reserved on the left (the bulge’s leftmost point is the actual curve, not a control point), so the graph transform shifted the loop right and it looked clamped at x=0.',
+      'The faithful refined-curve bb (emit.c:746 adaptive refinement) reaches the true left extent, so the loop now renders at dot’s negative x. The deep 4-rank case matches the same way (x≈-11). viewBox 102x188 vs dot 103x188 (off-by-one rounding).',
     ],
-    excluded: ['The named steering cases (TOP, RIGHT-lateral, ≤3 ranks) match within 0.32pt and are pinned. Left-extent + straight-mode are larger corridor-assembly changes.'],
+    closingHeading: 'How it was fixed',
+    excluded: ['No corridor-assembly change was needed — the routing was faithful all along; only the bb growth was approximate. Pinned as dot-oracles in steering-port-regression.test.ts.'],
   },
   {
     file: 'port-golden-bbox.html',
     title: 'Steering-port goldens &amp; the drawing-bbox divergence',
-    status: '<strong>SR8.</strong> 4 steering-port goldens minted (≤0.5pt + 0.01pt drift pins). The remaining steering cases fail the full-SVG golden only on the drawing bbox — the edge path itself is ≤0.5pt.',
+    status: '<strong>Updated 2026-06-16 — drawing bbox now matches dot.</strong> 4 steering-port goldens were minted at SR8. The remaining steering cases previously failed the full-SVG golden only on the drawing bbox (~4-5pt larger); the refined-curve <code>updateBbBz</code> fix closed that — A:n->B now renders 68x125, exactly dot.',
     pairs: [{ caption: 'digraph{A:n->B} (TOP steering)', dot: 'port-bbox-An-B-dot1500.svg', ts: 'port-bbox-An-B-ts.svg' }],
     tables: [
       {
@@ -196,19 +199,20 @@ const PAGES: Page[] = [
         ],
       },
       {
-        caption: 'A:n->B drawing bbox — edge path is ≤0.5pt; only the bbox differs.',
+        caption: 'A:n->B drawing bbox — now matches dot exactly.',
         head: ['attribute', 'dot 15.0.0', 'graphviz-ts', 'Δ'], badCol: 3, badThresh: 0.5,
         rows: [
-          ['viewBox width', '68.00', '73.00', '5'],
-          ['viewBox / height', '125.00', '129.00', '4'],
+          ['viewBox width', '68.00', '68.00', '0'],
+          ['viewBox / height', '125.00', '125.00', '0'],
         ],
       },
     ],
     diagnosis: [
       'For the minted four the full SVG (geometry + the title fix: ports, <code>&amp;#45;</code> hyphen, compass-replaces-field) matches dot 15.0.0; each carries a TS portReference drift pin at 0.01pt.',
-      'For TOP-steering / multi-rank / record-steering the <strong>edge path matches dot within 0.5pt</strong> (pinned in the SR4/SR7 oracle tests); the golden fails only on <code>svg/@viewBox</code>, <code>@height</code> and the derived graph transform — TS’s drawing bounding box is ~4–5pt larger for loops bulging beyond the node column.',
+      'TOP-steering / multi-rank / record-steering previously failed the full-SVG golden only on the drawing bbox — TS reserved ~4-5pt more for loops bulging beyond the node column. <strong>Fixed:</strong> the bbox came from <code>updateBbBz</code> expanding by the bezier control hull instead of the actual curve. Porting C’s adaptive refinement (emit.c:746) makes the bb match dot — A:n->B is now 68x125, byte-for-byte the dot extent. The 115 no-port goldens are unaffected (their splines never leave the node bb, so refinement is a no-op).',
     ],
-    excluded: ['A bbox-extent computation difference (position-bbox / postproc), not edge routing and not the svgBeginEdge title seam. Changing it risks the 115 existing no-port goldens. The edge geometry is already pinned by unit tests; only the golden mint is deferred.'],
+    closingHeading: 'How it was fixed',
+    excluded: ['The bbox divergence is resolved (refined-curve bb). The edge geometry is pinned by steering-port-regression.test.ts as a dot-oracle; minting the remaining full-SVG goldens is the only follow-up and is append-only (AD-C1).'],
   },
 ];
 
