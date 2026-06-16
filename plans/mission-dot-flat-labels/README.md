@@ -82,3 +82,38 @@ Baseline at mission start: **1793 passed / 0 failed, 115 goldens byte-identical*
 - [decision-journal.md](decision-journal.md) — appended during execution
 - [Root-cause note](../../.agent-notes/g4-flat-label-rootcause-2026-06.md)
 - [Corpus findings](../layout-engine-backlog/route-reverification.md) (G4)
+
+## Mission Summary (2026-06-16)
+
+**Status: COMPLETE.** G4 closed — a `rank=same` labeled edge now emits its label
+`<text>` and routes around it, matching dot 15.0.0.
+
+**Tasks: 3/3 complete** (T1, T2, T3), one commit each (28e15c7, 6fbfd52,
+f0b452c).
+
+**Result vs corpus objective:**
+- Adjacent `{rank=same a b} a->b[label=x]`: TS now 3 `<text>` (was 2) = dot 3;
+  label + straight segment **byte-exact** to dot 15.0.0.
+- Non-adjacent `{rank=same a->c->b[invis]} a->b[label=x]`: TS now 4 `<text>`
+  (was 3) = dot 4; label `x` @ (117,-57.2) + 7-point spline **byte-exact**.
+
+**Final gates:** `tsc --noEmit` 0; lizard clean on all changed files; vitest
+**1798 passed / 0 failed**; golden suite **122 passed (115 goldens
+byte-identical)**.
+
+**Quarantine (1):** `splines=line` full-render of the non-adjacent case
+([comparisons/dot-flat-label-line.md](comparisons/dot-flat-label-line.md)) — the
+`splines` graph attribute is unported (`dotPhaseInit` hardcodes
+`EDGETYPE_SPLINE`); the 7-point `EDGETYPE_LINE` branch is ported and unit-tested,
+just unreachable until that attribute is wired (separate task).
+
+**Decisions flagged for review** (see [decision-journal.md](decision-journal.md)):
+write-set extension to `splines-flat-labeled.ts` (new module — `splines-flat.ts`
+hit the 500-line cap) and a guarded `edge-route.ts` live-dispatch diversion
+(the mission's stated write-set listed only `splines-flat.ts`; the task text
+mandated live wiring). Both are golden-safe — they decline for every
+non-labeled-flat edge — and do not touch `mincross-build.ts` (AD-1's no-go).
+
+**Follow-ups:** (1) wire the `splines` attribute → `setEdgeType` to promote the
+line quarantine; (2) port `makeSimpleFlatLabels` multi-label loops +
+`simpleSplineRoute` for parallel labeled adjacent flats (not in corpus).
