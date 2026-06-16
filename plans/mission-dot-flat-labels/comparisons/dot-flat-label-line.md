@@ -1,11 +1,22 @@
-# Quarantine: non-adjacent flat label with `splines=line`
+# RESOLVED (was: Quarantine — non-adjacent flat label with `splines=line`)
 
-**Status (2026-06-16, T2).** The `EDGETYPE_SPLINE` (dot default) case is
-**byte-exact** to dot 15.0.0 and pinned in `splines-flat-labeled.test.ts`. The
-`splines=line` sub-case is **quarantined**: it cannot be exercised end-to-end
-because the `splines` graph attribute is **not yet wired** into the edge type in
-this port — `dotPhaseInit` (`src/layout/dot/index.ts:98`) hardcodes
-`setEdgeType(g, EDGETYPE_SPLINE)`, and `edgeType(g)` never reads `splines`.
+**Status (2026-06-16, follow-up branch `feature/flat-label-followups`).**
+**RESOLVED.** The `splines` graph attribute is now wired into the edge type
+(`setEdgeTypeFromAttr` in `src/layout/dot/index.ts` + `edgeTypeFromString` in
+`splines.ts`, porting `lib/common/utils.c:setEdgeType`/`edgeType`). With
+`splines=line` honored, the non-adjacent flat label now renders the 7-point
+polyline **byte-exact** to dot 15.0.0 and is pinned as a full-render oracle test
+in `splines-flat-labeled.test.ts` (`splines=line — non-adjacent flat label`).
+The historical context below is retained for reference.
+
+---
+
+**Original quarantine (2026-06-16, T2).** The `EDGETYPE_SPLINE` (dot default)
+case is **byte-exact** to dot 15.0.0 and pinned in `splines-flat-labeled.test.ts`.
+The `splines=line` sub-case was **quarantined**: it could not be exercised
+end-to-end because the `splines` graph attribute was **not wired** into the edge
+type — `dotPhaseInit` hardcoded `setEdgeType(g, EDGETYPE_SPLINE)`, and
+`edgeType(g)` never read `splines`.
 
 This is **not** a `make_flat_labeled_edge` geometry-parity failure. The
 `EDGETYPE_LINE` 7-point branch (`flatLabeledLinePoints`) is ported faithfully

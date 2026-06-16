@@ -46,16 +46,39 @@ export const GRAPHTYPEMASK  = 192;
 // @see lib/common/const.h
 // ---------------------------------------------------------------------------
 
-export const EDGETYPE_NONE    = 0;
-export const EDGETYPE_LINE    = 1;
-export const EDGETYPE_CURVED  = 2;
-export const EDGETYPE_PLINE   = 3;
-export const EDGETYPE_ORTHO   = 4;
-export const EDGETYPE_SPLINE  = 5;
+// C encodes these as (n << 1); this port uses the compact ordinal n and stores
+// it in the low nibble of GD_flags (see setEdgeType). Internally consistent.
+export const EDGETYPE_NONE     = 0;
+export const EDGETYPE_LINE     = 1;
+export const EDGETYPE_CURVED   = 2;
+export const EDGETYPE_PLINE    = 3;
+export const EDGETYPE_ORTHO    = 4;
+export const EDGETYPE_SPLINE   = 5;
+export const EDGETYPE_COMPOUND = 6;
 
 /** Read edge type from graph flags. @see lib/common/const.h:EDGE_TYPE */
 export function edgeType(g: Graph): number {
   return g.info.flags & 0xf;
+}
+
+/** Named string → edge type, for the `splines` attribute. @see lib/common/utils.c:edgeType */
+const SPLINES_TYPE_MAP: Record<string, number> = {
+  curved: EDGETYPE_CURVED, compound: EDGETYPE_COMPOUND, false: EDGETYPE_LINE,
+  line: EDGETYPE_LINE, none: EDGETYPE_NONE, no: EDGETYPE_LINE, ortho: EDGETYPE_ORTHO,
+  polyline: EDGETYPE_PLINE, spline: EDGETYPE_SPLINE, true: EDGETYPE_SPLINE, yes: EDGETYPE_SPLINE,
+};
+
+/**
+ * Map a `splines` attribute value to an edge type. `0`/`false`/`line`/`no` →
+ * LINE; a leading digit 1-9 / `true`/`yes`/`spline` → SPLINE; named values per
+ * the map; anything else → defaultValue. @see lib/common/utils.c:edgeType
+ */
+export function edgeTypeFromString(s: string, defaultValue: number): number {
+  if (s === '') return defaultValue;
+  if (s[0] === '0') return EDGETYPE_LINE;
+  if (s[0] >= '1' && s[0] <= '9') return EDGETYPE_SPLINE;
+  const mapped = SPLINES_TYPE_MAP[s.toLowerCase()];
+  return mapped !== undefined ? mapped : defaultValue;
 }
 
 // ---------------------------------------------------------------------------

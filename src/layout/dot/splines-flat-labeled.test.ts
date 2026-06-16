@@ -128,9 +128,9 @@ function lineFixture(): { tn: Node; hn: Node; e: Edge } {
   return { tn, hn, e };
 }
 
-// EDGETYPE_LINE branch (quarantined at full render — splines=line is unported;
-// see comparisons/dot-flat-label-line.md): the 7-point polyline is start, start,
-// lp lowered by half label height (x3), end, end.
+// EDGETYPE_LINE branch: the 7-point polyline is start, start, lp lowered by
+// half label height (x3), end, end. The full-render pin below exercises it via
+// `splines=line` (now honored — the prior quarantine is resolved).
 // @see lib/dotgen/dotsplines.c:make_flat_labeled_edge 1335-1347
 describe('T2 — flat label line branch (unit)', () => {
   it('flatLabeledLinePoints builds the faithful 7-point polyline', () => {
@@ -140,5 +140,25 @@ describe('T2 — flat label line branch (unit)', () => {
       { x: 50, y: 23 }, { x: 50, y: 23 }, { x: 50, y: 23 },
       { x: 99, y: 2 }, { x: 99, y: 2 },
     ]);
+  });
+});
+
+const LINE_SRC = 'digraph{ splines=line; {rank=same; a->c->b[style=invis]} a->b[label="x"] }';
+// dot 15.0.0 oracle: label "x" at (117,-57.2); 7-point polyline through the label.
+const LINE_LABEL = [117, -57.2];
+const LINE_PTS = [
+  [50.18, -27.27], [76.84, -37.94], [117, -54], [117, -54], [117, -54],
+  [147.74, -41.7], [173.3, -31.48],
+];
+
+describe('splines=line — non-adjacent flat label vs dot 15.0.0', () => {
+  it('emits the label and routes the 7-point polyline within 0.5pt', () => {
+    const svg = renderSvg(LINE_SRC, 'dot');
+    expect(dist(labelXY(svg)!, LINE_LABEL)).toBeLessThanOrEqual(TOL);
+    const ts = loopPath(svg);
+    expect(ts.length).toBe(LINE_PTS.length);
+    for (let i = 0; i < LINE_PTS.length; i++) {
+      expect(dist(ts[i], LINE_PTS[i])).toBeLessThanOrEqual(TOL);
+    }
   });
 });
