@@ -259,7 +259,7 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
-    if (hasSidePort(e) && routeFaithfulMultiRank(e, g)) return;
+    if ((hasSidePort(e) || hasMainLabel(e)) && routeFaithfulMultiRank(e, g)) return;
     routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
     return;
   }
@@ -278,6 +278,18 @@ function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
   if (pts === null) return false;
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
+}
+
+/**
+ * True when the edge carries a main label (`ED_label`), which dot routes around
+ * via a label virtual node on an inserted mid-rank. Such edges route through the
+ * faithful chain pipeline so the spline bends around the label box (AD-2); plain
+ * unlabeled edges keep the simplified fitter. Head/tail/xlabels are separate
+ * fields and do not trigger this.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (label-vnode interior routing)
+ */
+function hasMainLabel(e: GraphEdge): boolean {
+  return e.info.label != null;
 }
 
 /**

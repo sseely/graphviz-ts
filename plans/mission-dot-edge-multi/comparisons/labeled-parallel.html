@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Labeled-parallel regular edges (G1) — partial parity</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}
+body{margin:2rem auto;max-width:64rem;padding:0 1rem;color:#1a1a1a}
+h1{font-size:1.5rem} h2{font-size:1.1rem;margin-top:2rem;border-bottom:1px solid #eee;padding-bottom:.3rem}
+.status{background:#eef7ee;border:1px solid #bcdcbc;padding:.6rem 1rem;border-radius:6px}
+.cols{display:flex;gap:1.5rem;align-items:flex-start;margin:1rem 0}
+.col{text-align:center}
+.col .lbl{font-size:.8rem;color:#666;margin-bottom:.4rem;font-weight:600}
+.col img{height:200px;width:auto;border:1px dashed #ccc;background:
+  repeating-conic-gradient(#f4f4f4 0% 25%,#fff 0% 50%) 0/16px 16px;padding:4px}
+table{border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{border:1px solid #ddd;padding:.25rem .6rem;text-align:right;font-variant-numeric:tabular-nums}
+th{background:#f7f7f7} td:first-child,th:first-child{text-align:left}
+tr.ok td{background:#eef7ee} tr.bad td{background:#fde8e8;font-weight:600}
+p{margin:.6rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px}
+.legend{font-size:.8rem;color:#888}
+</style></head><body>
+<h1>Labeled-parallel regular edges (G1) — partial parity</h1>
+<p class="status"><strong>2026-06-16.</strong> <code>digraph{a-&gt;b[label="1"]; a-&gt;b[label="2"]}</code>.
+Corpus baseline: a single wiggly path, pathΔ 23pt. After T2 routes labeled
+multi-rank edges through the faithful pipeline, <strong>edge "1" now matches dot
+byte-for-byte</strong> and both label texts render. The residual — edge "2"'s
+straight-collapse and the label x-positions — is rooted outside this mission's
+write-set and is pinned at TS's actual output (AD-4).</p>
+<p class="legend">The drawings below are the actual rendered SVGs.</p>
+<div class="cols">
+<div class="col"><div class="lbl">dot 15.x</div><img src="labeled-parallel-dot1500.svg" alt="dot — labeled parallel"></div>
+<div class="col"><div class="lbl">graphviz-ts</div><img src="labeled-parallel-ts.svg" alt="graphviz-ts — labeled parallel"></div>
+</div>
+<h2>Geometry</h2>
+<p class="caption">Edge "1" (bends around its label box) — exact.</p>
+<table><tr><th>pt</th><th>dot</th><th>graphviz-ts</th><th>Δ</th></tr>
+<tr class="ok"><td>start</td><td>20.13,-88.69</td><td>20.13,-88.69</td><td>0.00</td></tr>
+<tr class="ok"><td>mid</td><td>14.07,-63.26</td><td>14.07,-63.26</td><td>0.00</td></tr>
+<tr class="ok"><td>end</td><td>16.78,-46.78</td><td>16.78,-46.78</td><td>0.00</td></tr></table>
+<p class="caption">Edge "2" — dot straightens it to 4 points at x=27; TS routes a 10-point near-straight spline ~0.8pt right.</p>
+<table><tr><th></th><th>dot</th><th>graphviz-ts</th></tr>
+<tr class="bad"><td>path</td><td>M27,-88.41 C27,-76.76 27,-61.05 27,-47.52</td><td>M27.45,-88.05 C27.57,-82.45 … 27.66,-47.69 (10 pts)</td></tr></table>
+<p class="caption">Label centres.</p>
+<table><tr><th>label</th><th>dot x</th><th>ts x</th><th>Δ</th></tr>
+<tr class="bad"><td>"1"</td><td>18.62</td><td>15.38</td><td>3.24</td></tr>
+<tr class="bad"><td>"2"</td><td>30.38</td><td>45.38</td><td>15.00</td></tr></table>
+<h2>Diagnosis</h2>
+<p><strong>Edge "1" — fixed.</strong> The corpus wiggle came from the simplified
+multi-rank fitter. Routing labeled multi-rank edges through the faithful chain
+pipeline (<code>routeMultiRankEdgeFaithful</code> → <code>routeSplines</code>,
+gated on <code>ED_label</code> in <code>edge-route.ts</code>) bends the spline
+around the label virtual node exactly as dot does — byte-identical control
+points. This is the G1 routing fix.</p>
+<p><strong>Edge "2" — dot's straight-run collapse is not ported.</strong> dot's
+<code>make_regular_edge</code> detects a straight run of virtual nodes
+(<code>straight_len</code> ≥ threshold → <code>smode</code>,
+<code>dotsplines.c:1773-1834</code>) and emits a single straight 4-point segment
+via <code>straight_path</code>. The faithful chain router routes every segment,
+producing a 10-point near-straight spline ~0.8pt right of dead-centre. Porting
+the smode straight-collapse is follow-up work; the divergence is ≤0.8pt and
+visually indistinguishable.</p>
+<p><strong>Label positions — position-phase, out of scope.</strong> The label
+centres are the x-coordinates dot assigns to the label virtual nodes during
+network-simplex x-assignment (<code>position</code> / <code>mincross</code>). TS
+assigns different x (15.38/45.38 vs 18.62/30.38). That is a position-phase
+divergence outside this mission's write-set (<code>splines.ts</code>,
+<code>splines-route.ts</code>, <code>edge-route*.ts</code>) — a separate
+follow-up. The labels are present and correct in count and text.</p>
+<h2>Status</h2>
+<p>Edge "1" pinned as a dot oracle (exact). Edge "2" + label positions pinned at
+TS's actual output and quarantined here per AD-4. No 115-golden uses a
+labeled-parallel edge, so output stays byte-stable. Opposing (the larger G1
+divergence, pathΔ 53pt) is fully fixed — see the oracle test.</p>
+</body></html>

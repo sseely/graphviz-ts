@@ -305,6 +305,19 @@ function baseSplineForGroup(g: Graph, e0: Edge): Point[] {
   ];
 }
 
+/**
+ * True when the edge's own orientation is opposite the forward (main-edge)
+ * direction — i.e. a back edge in a multi-edge group (e.g. `b->a` paired with
+ * `a->b`). The group's base spline is computed once in forward orientation; a
+ * back-edge member must be reversed before it is clipped to its own tail/head,
+ * so the spline runs tail→head with the arrowhead at the correct end.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE makefwdedge + un-flip)
+ */
+function isBackEdgeMember(e: Edge): boolean {
+  const orig = resolveOrigEdge(e);
+  return nodeRankOf(orig.head) < nodeRankOf(orig.tail);
+}
+
 /** Clip a shifted bezier to node boundaries and install spline + arrowhead. */
 function installShiftedEdge(g: Graph, e: Edge, shifted: Point[]): void {
   // Clip using the edge's own tail/head nodes (virtual edges have physical coords).
@@ -345,7 +358,12 @@ export function routeParallelEdgeGroup(
   let shifted = shiftInteriorPts(base, -dx);
   for (let j = 0; j < cnt; j++) {
     if (j > 0) shifted = shiftInteriorPts(shifted, multisep);
-    installShiftedEdge(g, edges[j]!, shifted);
+    // The base spline runs in forward (main-edge) orientation; a back-edge
+    // member (e.g. b->a paired with a->b) runs the opposite way, so reverse the
+    // points so the installed spline goes tail→head with the arrow at its head.
+    // @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE makefwdedge + un-flip)
+    const oriented = isBackEdgeMember(edges[j]!) ? [...shifted].reverse() : shifted;
+    installShiftedEdge(g, edges[j]!, oriented);
   }
 }
 

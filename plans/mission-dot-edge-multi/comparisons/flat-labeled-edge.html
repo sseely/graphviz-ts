@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Flat labeled edge (G4) — deferred</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}
+body{margin:2rem auto;max-width:64rem;padding:0 1rem;color:#1a1a1a}
+h1{font-size:1.5rem} h2{font-size:1.1rem;margin-top:2rem;border-bottom:1px solid #eee;padding-bottom:.3rem}
+.status{background:#fdf6e3;border:1px solid #e8d9a0;padding:.6rem 1rem;border-radius:6px}
+.cols{display:flex;gap:1.5rem;align-items:flex-start;margin:1rem 0}
+.col{text-align:center}
+.col .lbl{font-size:.8rem;color:#666;margin-bottom:.4rem;font-weight:600}
+.col img{height:160px;width:auto;border:1px dashed #ccc;background:
+  repeating-conic-gradient(#f4f4f4 0% 25%,#fff 0% 50%) 0/16px 16px;padding:4px}
+p{margin:.6rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px}
+.legend{font-size:.8rem;color:#888}
+</style></head><body>
+<h1>Flat labeled edge (G4) — deferred to its own mission</h1>
+<p class="status"><strong>2026-06-16.</strong> <code>digraph{{rank=same a b} a-&gt;b[label="x"]}</code>:
+dot emits 3 <code>&lt;text&gt;</code> (a, b, and the edge label <code>x</code> at
+<code>lp="72,29.25"</code>); graphviz-ts emits 2 — the label is dropped. This case
+is <strong>deferred</strong>: it cannot be fixed inside <code>make_flat_labeled_edge</code>
+alone, because the label virtual node it depends on is never created.</p>
+<p class="legend">The drawings below are the actual rendered SVGs.</p>
+<div class="cols">
+<div class="col"><div class="lbl">dot 15.x (3 texts — has label)</div><img src="flat-labeled-dot1500.svg" alt="dot — flat labeled edge"></div>
+<div class="col"><div class="lbl">graphviz-ts (2 texts — label dropped)</div><img src="flat-labeled-ts.svg" alt="graphviz-ts — flat labeled edge"></div>
+</div>
+<h2>Diagnosis</h2>
+<p><strong>Root cause — the flat label virtual node is never created.</strong>
+<code>make_flat_labeled_edge</code> (<code>dotsplines.c:1314</code>) reaches the label
+node <code>ln</code> by walking the edge's <code>ED_to_virt</code> chain and reads
+<code>ED_label(e)-&gt;pos = ND_coord(ln)</code>. That node is built in C by
+<code>lib/dotgen/flat.c:flat_node</code> (<code>make_vn_slot(g, r-1, place)</code> — it
+places the label vnode on the rank <em>above</em> the flat edge), driven by the
+<code>flat_edges</code> preprocessing (<code>flat.c:~295-330</code>) during the
+ranking/mincross phase. When a flat labeled edge sits at rank 0,
+<code>abomination()</code> (<code>flat.c:187</code>) <em>inserts an entire new rank</em>
+to make room.</p>
+<p>The TS port has none of this: after layout the graph has 2 nodes (both rank 0),
+<code>ED_label.set=false</code>, <code>pos=(0,0)</code>. So
+<code>make_flat_labeled_edge</code> would have no <code>ln</code> to read.</p>
+<h2>Why deferred</h2>
+<p>The mission brief scoped T1's write-set to <code>splines-flat.ts</code> only, on the
+assumption the vnode either already exists or could be created from there. It cannot —
+creation is ranking-phase (<code>flat.ts</code> / <code>mincross</code> / <code>position</code>),
+and <code>abomination</code>'s rank insertion is golden-blast-radius. A faithful G4
+therefore needs its own mission that ports <code>flat_node</code> + <code>abomination</code>
++ the <code>flat_edges</code> driver, then dispatches <code>make_flat_labeled_edge</code>
+from <code>make_flat_edge</code>. The G1 work (T2/T3 — opposing / labeled-parallel regular
+edges) is independent and proceeds in this mission.</p>
+</body></html>

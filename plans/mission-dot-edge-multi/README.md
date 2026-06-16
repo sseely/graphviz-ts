@@ -67,8 +67,25 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 (parallel) | [T1 flat-labeled-edge (G4)](batch-1/T1-flat-labeled-edge.md), [T2 make_regular_edge multi (G1 core)](batch-1/T2-make-regular-edge-multi.md) | [ ] |
-| 2 (after T2) | [T3 edge-grouping + opposing pins (G1 wiring)](batch-2/T3-opposing-edge-grouping.md) | [ ] |
+| 1 | [T1 flat-labeled-edge (G4)](batch-1/T1-flat-labeled-edge.md) — **DEFERRED** (ranking-phase vnode creation out of scope; see [comparisons/flat-labeled-edge.html](comparisons/flat-labeled-edge.html)), [T2 make_regular_edge multi (G1 core)](batch-1/T2-make-regular-edge-multi.md) ✓ c2cc600 | [x] |
+| 2 (after T2) | [T3 edge-grouping + opposing pins (G1 wiring)](batch-2/T3-opposing-edge-grouping.md) ✓ | [x] |
+
+### Outcome (2026-06-16)
+
+- **Opposing `a->b; b->a`** — fully fixed, matches dot ≤0.2pt (was one straight +
+  one malformed, pathΔ 53pt). Dedup-by-orig groups it as cnt=2; the back edge
+  installs reversed.
+- **Labeled-parallel** — edge "1" now byte-identical to dot (was wiggly, pathΔ
+  23pt); both labels render. Edge "2" straight-collapse + label x-positions are
+  quarantined (AD-4, [comparisons/labeled-parallel.html](comparisons/labeled-parallel.html))
+  — rooted in unported `smode` + position-phase label-vnode x-assignment.
+- **Plain edges / 115 goldens** — byte-identical (AD-2 held). Suite 1793 / 0.
+- **T1 / G4** — deferred to its own mission (ranking-phase `flat_node` +
+  `abomination`).
+
+> **T1/G4 deferred 2026-06-16** (human decision). The flat label virtual node is
+> created in C's ranking phase (`flat.c:flat_node` + `abomination`), not in
+> `splines-flat.ts`; faithful G4 needs its own mission. G1 (T2/T3) proceeds here.
 
 ## Constraints (stop / push-forward)
 
@@ -83,6 +100,23 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 - Purely stylistic choice, no behavioral impact
 - A divergent case reaches dot within tol 0.5 — pin it and move on
 - A case cannot reach parity — quarantine it with a comparison page (see decisions.md) and continue
+
+## Mission summary (2026-06-16)
+
+- **Completed:** T2, T3 (G1). **Deferred:** T1 (G4 — ranking-phase, own mission).
+- **Commits:** `1921ad5` (T1 deferral docs), `c2cc600` (T2), `1ebd36d` (T3) on
+  `feature/dot-edge-multi`. **Not yet merged** — awaiting sign-off.
+- **Gate results:** `tsc --noEmit` exit 0; `vitest run` 1793 passed / 0 failed
+  (1789 baseline + 4 new oracle pins); 115 goldens byte-identical; lizard clean;
+  all writes inside declared write-sets.
+- **Quarantined (AD-4):** flat-labeled-edge (G4) and labeled-parallel edge "2" +
+  label x-positions — comparison pages exist and are referenced in the journal.
+- **Decisions flagged for review:** T1 scope (deferred, human-approved); T3
+  break-conditions consciously scoped down to a targeted dedup to protect the
+  byte gate (see journal).
+- **Follow-ups:** (1) G4 flat-label mission (`flat_node` + `abomination`);
+  (2) `smode` straight-run collapse in `make_regular_edge`; (3) position-phase
+  label-vnode x-assignment for labeled-parallel.
 
 ## Links
 
