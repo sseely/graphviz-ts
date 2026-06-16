@@ -92,20 +92,27 @@ function makeAbomGraph() {
   return g;
 }
 
-describe('abomination: minrank decrement (AC4)', () => {
-  it('decrements minrank by 1', () => {
+// AD-2: abomination renumbers 0-based (no negative indices). minrank stays 0,
+// maxrank bumps by 1, a new empty rank is inserted at index 0, and every
+// existing rank shifts up by one index.
+describe('abomination: 0-based renumber (AC4)', () => {
+  it('keeps minrank at 0 and bumps maxrank by 1', () => {
     const g = makeAbomGraph();
     abomination(g);
-    expect(g.info.minrank).toBe(-1);
+    expect(g.info.minrank).toBe(0);
+    expect(g.info.maxrank).toBe(2);
   });
 });
 
 describe('abomination: new rank entry', () => {
-  it('creates an empty rank entry at the new minrank', () => {
+  it('inserts an empty rank at index 0 and shifts existing ranks up', () => {
     const g = makeAbomGraph();
+    const old0 = g.info.rank![0];
+    const old1 = g.info.rank![1];
     abomination(g);
-    const newMin = g.info.minrank!;
-    expect(g.info.rank![newMin]).toBeDefined();
-    expect(g.info.rank![newMin].n).toBe(0);
+    expect(g.info.rank![0].n).toBe(0);
+    expect(g.info.rank![0]).not.toBe(old0);
+    expect(g.info.rank![1]).toBe(old0);
+    expect(g.info.rank![2]).toBe(old1);
   });
 });

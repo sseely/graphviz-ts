@@ -23,8 +23,9 @@ import type { EdgeList } from '../../model/nodeInfo.js';
 import { FLATORDER, virtualNode, virtualEdge } from './fastgr.js';
 import { recSaveVlists } from './mincross.js';
 import {
-  nodeOrder, nodeRank, graphNodesep, graphMaxrank, graphMinrank, graphNCluster, getOrd,
+  nodeOrder, nodeRank, graphMaxrank, graphMinrank, getOrd,
 } from './flat-utils.js';
+import type { TextlabelT } from '../../common/types.js';
 
 // ---------------------------------------------------------------------------
 // make_vn_slot  @see lib/dotgen/flat.c:make_vn_slot
@@ -97,63 +98,92 @@ export function flatLimits(g: Graph, e: Edge): number {
 
 type LabelWithDimen = { dimen?: { x: number; y: number } };
 
-export function applyDimensions(g: Graph, vn: Node, dimen: { x: number; y: number }): void {
-  if (g.info.flip === true) {
-    vn.info.ht = dimen.x;
-    vn.info.rw = dimen.y;
-  } else {
-    vn.info.ht = dimen.y;
-    vn.info.rw = dimen.x;
-  }
-}
-
-export function flatNodeSetDims(g: Graph, vn: Node, e: Edge): void {
-  vn.info.lw = graphNodesep(g);
-  const lbl = e.info.label as (LabelWithDimen | undefined);
-  if (!lbl || !lbl.dimen) return;
-  applyDimensions(g, vn, lbl.dimen);
+export function graphRanksep(g: Graph): number {
+  return g.info.ranksep ?? 0;
 }
 
 /**
- * Create a virtual label node for a non-adjacent labeled flat edge.
- * @see lib/dotgen/flat.c:flat_node
+ * ypos = LL.y of the label box, grabbed before make_vn_slot so the new slot does
+ * not perturb it. @see lib/dotgen/flat.c:flat_node 154-159
  */
-export function flatNode(e: Edge): void {
-  const g = e.tail.root;
-  const pos = flatLimits(g, e);
-  const vn = makeVnSlot(g, nodeRank(e.tail) - 1, pos);
-  vn.info.label = e.info.label;
-  flatNodeSetDims(g, vn, e);
+export function flatLabelYpos(g: Graph, r: number): number {
+  const rank = g.info.rank!;
+  const above = rank[r - 1].v[0];
+  if (above) return above.info.coord.y - rank[r - 1].ht1;
+  const here = rank[r].v[0];
+  return here.info.coord.y + rank[r].ht2 + graphRanksep(g);
+}
+
+/**
+ * Set ht/lw/rw on the label vnode from the label dimen (flip swaps x/y); return
+ * half-height. @see lib/dotgen/flat.c:flat_node 161-167
+ */
+export function flatNodeDims(g: Graph, vn: Node, lbl: TextlabelT): number {
+  let dx = lbl.dimen.x;
+  let dy = lbl.dimen.y;
+  if (g.info.flip === true) { const t = dx; dx = dy; dy = t; }
+  vn.info.ht = dy;
+  vn.info.lw = vn.info.rw = dx / 2;
+  return dy / 2;
+}
+
+/**
+ * Create the two FLATORDER virtual edges (vn→tail, vn→head) with label ports.
+ * @see lib/dotgen/flat.c:flat_node 170-177
+ */
+export function flatNodeEdges(vn: Node, e: Edge): void {
   const et = virtualEdge(vn, e.tail, e);
+  et.info.tail_port.p.x = -vn.info.lw;
+  et.info.head_port.p.x = e.tail.info.rw;
   et.info.edge_type = FLATORDER;
   const eh = virtualEdge(vn, e.head, e);
+  eh.info.tail_port.p.x = vn.info.rw;
+  eh.info.head_port.p.x = e.head.info.lw;
   eh.info.edge_type = FLATORDER;
 }
 
-// ---------------------------------------------------------------------------
-// abomination  @see lib/dotgen/flat.c:abomination
-// ---------------------------------------------------------------------------
+/** Create a VIRTUAL label node (ND_alg → e) above a non-adjacent flat edge.
+ * @see lib/dotgen/flat.c:flat_node */
+export function flatNode(e: Edge): void {
+  const lbl = e.info.label;
+  if (lbl === undefined) return;
+  const g = e.tail.root;
+  const r = nodeRank(e.tail);
+  const place = flatLimits(g, e);
+  const ypos = flatLabelYpos(g, r);
+  const vn = makeVnSlot(g, r - 1, place);
+  const h2 = flatNodeDims(g, vn, lbl);
+  vn.info.label = lbl;
+  vn.info.coord.y = ypos + h2;
+  flatNodeEdges(vn, e);
+  const rk = g.info.rank![r - 1];
+  if (rk.ht1 < h2) rk.ht1 = h2;
+  if (rk.ht2 < h2) rk.ht2 = h2;
+  vn.info.posAlg = e;
+}
 
-/**
- * When labeled non-adjacent flat edges exist at rank 0, shift the entire
- * rank array forward by one to create a new rank at index -1.
- *
- * The name `abomination` is from the C source and must appear in the
- * TypeScript port.
- *
- * @see lib/dotgen/flat.c:abomination
- */
+// abomination  @see lib/dotgen/flat.c:abomination
+
+/** Make room for a flat label vnode below the lowest rank (name from C; AD-2).
+ * @see lib/dotgen/flat.c:abomination */
 export function abomination(g: Graph): void {
+  // C shifts its base pointer so rank[-1] is valid (minrank → -1). JS has no
+  // negative indices, so AD-2 renumbers: insert an empty rank at index 0, shift
+  // ranks up, bump every ND_rank and maxrank by 1, minrank stays 0. The vnode C
+  // places at rank -1 then lands at rank 0. position.ts re-runs setYcoords after.
+  // needsAbomination only fires on rank mn == 0 (C asserts GD_minrank == 0).
   const mx = graphMaxrank(g);
   const rank = g.info.rank!;
   for (let r = mx; r >= 0; r--) rank[r + 1] = rank[r];
-  (g.info.minrank as number)--;
-  const newMin = g.info.minrank!;
-  rank[newMin] = {
+  rank[0] = {
     n: 0, an: 0, v: [], av: [],
     ht1: 1, ht2: 1, pht1: 1, pht2: 1,
     candidate: false, valid: false, cache_nc: 0,
   };
+  for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
+    n.info.rank = (n.info.rank ?? 0) + 1;
+  }
+  g.info.maxrank = mx + 1;
 }
 
 // ---------------------------------------------------------------------------
@@ -226,12 +256,19 @@ export function rankHasNonAdjacentLabel(rk: RankEntry): boolean {
   return false;
 }
 
+/**
+ * AD-1: C gates this on `GD_rank(g)[0].flat || GD_n_cluster(g) > 0` and then
+ * scans for a labeled non-adjacent flat edge on rank mn. In this port the
+ * `rank[mn].flat` adjacency matrix is unreliable at position-time (mincross
+ * builds it before `flat_out` is populated), so we detect the rank-mn labeled
+ * non-adjacent flat edge directly via `flat_out` — which is the real gate. This
+ * only fires for a graph with such an edge on the lowest rank (none of the 115
+ * goldens have one), so it is byte-safe. @see lib/dotgen/flat.c:flat_edges 279
+ */
 export function needsAbomination(g: Graph): boolean {
   const mn = graphMinrank(g);
   const rank = g.info.rank;
-  if (!rank) return false;
-  const hasFlat = (rank[mn] !== undefined && rank[mn].flat !== undefined) || graphNCluster(g) > 0;
-  if (!hasFlat) return false;
+  if (!rank || rank[mn] === undefined) return false;
   return rankHasNonAdjacentLabel(rank[mn]);
 }
 

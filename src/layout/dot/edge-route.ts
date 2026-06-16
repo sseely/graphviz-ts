@@ -29,6 +29,7 @@ import { routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
 import { routeFlatEdgeFaithful, isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
+import { makeFlatLabeledEdge, makeAdjFlatLabeledEdge } from './splines-flat-labeled.js';
 import { EDGETYPE_SPLINE } from './splines.js';
 import { buildDotSinfo } from './self-loop.js';
 
@@ -332,6 +333,12 @@ function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
 function routeForwardEdge(
   e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
 ): void {
+  // Labeled same-rank edges: non-adjacent routes around the flat label vnode
+  // (make_flat_labeled_edge); adjacent no-port routes straight with the label
+  // above (make_flat_adj_edges → makeSimpleFlatLabels). Both decline for every
+  // other edge, so only labeled flats are diverted. @see dotsplines.c:1527-1533
+  if (makeFlatLabeledEdge(g, e)) return;
+  if (makeAdjFlatLabeledEdge(e)) return;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
