@@ -12,21 +12,18 @@
  */
 
 import type { Graph } from '../../model/graph.js';
-import type { Node } from '../../model/node.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point, Box } from '../../model/geom.js';
+import { VIRTUAL } from './fastgr.js';
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
-import { computeSplineMulti } from './edge-route-poly.js';
 import { bezierClipNode, arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
-import { nodeInsideFn, routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
-import { rankEdgeInfoOf, computeLeftBound, computeRightBound } from './edge-route-rank.js';
-import { makeTailBox, makeHeadBox, makeRankBox, makeMaximalBbox } from './edge-route-boxes.js';
-import type { RankBoxParams } from './edge-route-boxes.js';
+import { nodeInsideFn, normalArrowLen } from './edge-route-routing.js';
+import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
 import {
-  nodeBoxOf, edgeRenderPenwidth, edgePenwidthAttr,
-  installEdgeSpline, straightEdgeSplineWithRank, routeBezier, defaultEdgeDir,
+  edgeRenderPenwidth, edgePenwidthAttr,
+  installEdgeSpline, defaultEdgeDir,
 } from './edge-route-helpers.js';
 import type { Path, PathendT } from '../../common/types.js';
 import { makePort } from '../../model/edgeInfo.js';
@@ -141,104 +138,6 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
 }
 
 // ---------------------------------------------------------------------------
-// Chain-walking helpers
-// ---------------------------------------------------------------------------
-
-/** Walk virtual chain from e.head to e.tail (back-edge direction). */
-export function walkVirtChain(e: GraphEdge): Node[] {
-  const nodes: Node[] = [e.head];
-  let cur = e.info.to_virt;
-  while (cur !== undefined && cur.head !== e.tail) {
-    nodes.push(cur.head);
-    const out = cur.head.info.out;
-    cur = (out !== undefined && out.size > 0) ? out.list[0] : undefined;
-  }
-  if (cur !== undefined) nodes.push(e.tail);
-  return nodes;
-}
-
-/** Walk virtual chain from e.tail to e.head (forward-edge direction). */
-export function walkFwdVirtChain(e: GraphEdge): Node[] {
-  const nodes: Node[] = [e.tail];
-  let cur = e.info.to_virt;
-  while (cur !== undefined && cur.head !== e.head) {
-    nodes.push(cur.head);
-    const out = cur.head.info.out;
-    cur = (out !== undefined && out.size > 0) ? out.list[0] : undefined;
-  }
-  nodes.push(e.head);
-  return nodes;
-}
-
-// ---------------------------------------------------------------------------
-// Virtual-node corridor helpers
-// ---------------------------------------------------------------------------
-
-function leftNeighborLLX(v: Node, g: Graph): number {
-  const rankArr = g.info.rank;
-  const r = v.info.rank;
-  if (rankArr === undefined || r === undefined) return -Infinity;
-  const rk = rankArr[r];
-  if (rk === undefined) return -Infinity;
-  const idx = rk.v.indexOf(v);
-  if (idx <= 0) return -Infinity;
-  const nb = rk.v[idx - 1]!;
-  const halfSep = (g.info.nodesep ?? 18) / 2;
-  return nb.info.coord.x + (nb.info.rw > 0 ? nb.info.rw : 27) + halfSep;
-}
-
-/** Rank box for one intermediate virtual node. */
-export function buildBackEdgeVirtBox(v: Node, g: Graph, lb: number, rb: number): Box {
-  const r = v.info.rank!;
-  const rk = g.info.rank![r]!;
-  const cy = v.info.coord.y;
-  const rw = v.info.rw > 0 ? v.info.rw : 9;
-  const rawLLX = leftNeighborLLX(v, g);
-  const llx = rawLLX > -Infinity ? rawLLX : lb;
-  const urx = Math.min(v.info.coord.x + rw + 2, rb);
-  return { ll: { x: llx, y: cy - rk.ht1 }, ur: { x: urx, y: cy + rk.ht2 } };
-}
-
-/** Inter-rank gap box between two consecutive chain nodes. */
-export function buildBackEdgeGapBox(from: Node, to: Node, g: Graph, lb: number, rb: number): Box {
-  const rArr = g.info.rank!;
-  const fromRk = rArr[from.info.rank!]!;
-  const toRk = rArr[to.info.rank!]!;
-  const fromLLX = leftNeighborLLX(from, g);
-  const toLLX = leftNeighborLLX(to, g);
-  const llx = (fromLLX > -Infinity && toLLX > -Infinity)
-    ? Math.min(fromLLX, toLLX) : lb;
-  const rp: RankBoxParams = {
-    llx, urx: rb,
-    tailCy: from.info.coord.y, tailHt1: fromRk.ht1,
-    headCy: to.info.coord.y, headHt2: toRk.ht2,
-  };
-  return makeRankBox(rp);
-}
-
-/** Build corridor boxes for a chain [first, ...intermediates, last]. */
-function buildChainBoxes(chain: Node[], g: Graph): Box[] {
-  const lb = computeLeftBound(g);
-  const rb = computeRightBound(g);
-  const first = chain[0]!;
-  const last = chain[chain.length - 1]!;
-  const firstBox = nodeBoxOf(first, g);
-  const lastBox = nodeBoxOf(last, g);
-  const rArr = g.info.rank!;
-  const firstRk = rArr[first.info.rank!]!;
-  const lastRk = rArr[last.info.rank!]!;
-  const boxes: Box[] = [makeTailBox(makeMaximalBbox(firstBox, firstRk.ht1, firstRk.ht2), first.info.coord.y)];
-  for (let i = 0; i < chain.length - 1; i++) {
-    boxes.push(buildBackEdgeGapBox(chain[i]!, chain[i + 1]!, g, lb, rb));
-    if (i + 1 < chain.length - 1) {
-      boxes.push(buildBackEdgeVirtBox(chain[i + 1]!, g, lb, rb));
-    }
-  }
-  boxes.push(makeHeadBox(makeMaximalBbox(lastBox, lastRk.ht1, lastRk.ht2), last.info.coord.y));
-  return boxes;
-}
-
-// ---------------------------------------------------------------------------
 // Compound bezier clipping
 // ---------------------------------------------------------------------------
 
@@ -329,16 +228,30 @@ function backChainSegments(e: GraphEdge): GraphEdge[] {
 }
 
 /**
- * Synthetic forward view of a back edge: tail/head swapped, fresh (portless)
- * ends. `beginPath`/`endPath` read `e.tail`/`e.head`, so the chain must be
- * driven by an edge that runs low→high rank. @see dotsplines.c:makefwdedge
+ * Forward view of any edge (C `makefwdedge`): tail/head swapped when the edge
+ * runs high→low rank (a back edge), fresh portless ends. `beginPath`/`endPath`
+ * read `e.tail`/`e.head`, so the chain must be driven by an edge that runs
+ * low→high rank. Sets `to_orig`/`edge_type=VIRTUAL` so `clipAndInstall`→
+ * `newSpline` installs the spline on the ORIGINAL edge (its `to_orig` loop) and
+ * the post-routing `swapSpline` pass reverses it back to tail→head. Shares
+ * `attrs`/`root`/`to_virt` with `e`. Consumed by T3 for parallel back-members.
+ * @see lib/dotgen/dotsplines.c:makefwdedge
+ * @see lib/common/splines.c:clip_and_install (to_orig install loop)
  */
-function makeBackFwdEdge(e: GraphEdge): GraphEdge {
+export function makeFwdEdge(e: GraphEdge): GraphEdge {
+  const back = (e.head.info.rank ?? 0) < (e.tail.info.rank ?? 0);
+  const [tail, head] = back ? [e.head, e.tail] : [e.tail, e.head];
   return {
     ...e,
-    tail: e.head,
-    head: e.tail,
-    info: { ...e.info, tail_port: makePort(), head_port: makePort() },
+    tail,
+    head,
+    info: {
+      ...e.info,
+      tail_port: makePort(),
+      head_port: makePort(),
+      to_orig: e,
+      edge_type: VIRTUAL,
+    },
   } as GraphEdge;
 }
 
@@ -351,91 +264,21 @@ function makeBackFwdEdge(e: GraphEdge): GraphEdge {
 function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
-  const P = buildChainPath(g, makeBackFwdEdge(e), segs);
+  const P = buildChainPath(g, makeFwdEdge(e), segs);
   return P === null ? null : routeSplines(P);
 }
 
 /**
- * Route a multi-rank back-edge via its virtual node chain. Routes the forward
- * geometry faithfully (make_regular_edge over the reversed chain) then reverses
- * + clips; falls back to the simplified fitter when the faithful path declines.
+ * Route a multi-rank back-edge via its virtual node chain: route the forward
+ * geometry faithfully (make_regular_edge over the reversed chain) then reverse
+ * + clip. Leaves the edge unrouted only if the faithful path cannot assemble
+ * the chain (it always can for a real multi-rank back edge).
  * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag back-edge path)
  */
 export function routeBackEdge(e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph): void {
   const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
-  const chain = walkVirtChain(e);
-  if (chain.length < 2) {
-    const raw = routeEdgeRaw(tailBox, headBox, undefined, routeBezier);
-    installEdgeSpline(e, raw.bezierPts, raw.arrowTip);
-    return;
-  }
-  const fwd = faithfulBackFwdPoints(g, e) ?? fitterBackFwdPoints(chain, g);
+  const fwd = faithfulBackFwdPoints(g, e);
+  if (fwd === null) return;
   const { clipped, arrowTip, arrowDir } = reverseClipBackChain(fwd, tailBox, headBox);
   applyBackEdgeArrows(e, clipped, arrowTip, arrowDir, dirAttr);
-}
-
-/** Simplified-fitter forward chain spline (fallback for routeBackEdge). */
-function fitterBackFwdPoints(chain: Node[], g: Graph): Point[] {
-  const aNode = chain[0]!;
-  const dNode = chain[chain.length - 1]!;
-  return computeSplineMulti(buildChainBoxes(chain, g),
-    { x: aNode.info.coord.x, y: aNode.info.coord.y - 1 },
-    { x: dNode.info.coord.x, y: dNode.info.coord.y + 1 });
-}
-
-// ---------------------------------------------------------------------------
-// Forward multi-rank edge routing
-// @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
-// ---------------------------------------------------------------------------
-
-/**
- * Clip compound-bezier arrowhead for a forward multi-rank edge and install.
- * arrowTip = node-boundary clip point (C's spl.ep); pts end at arrowhead base.
- */
-function applyFwdEdgeArrow(e: GraphEdge, clipped: Point[], dirAttr: string): void {
-  const arrowTip = clipped[clipped.length - 1] as Point;
-  // dir=none/back draws no head arrow: install the full node-clipped spline.
-  if (dirAttr !== 'forward' && dirAttr !== 'both') {
-    installEdgeSpline(e, clipped, arrowTip);
-    return;
-  }
-  const elen = normalArrowLen(edgePenwidthAttr(e));
-  // arrowEndClipMulti: only last 4 pts are the final segment — using
-  // arrowEndClip on the full array would read the wrong segment.
-  const withBase = arrowEndClipMulti(clipped, arrowTip, elen);
-  // C: arrow_gen(ep, list[size-1]) — direction is last stored pt → ep (tip).
-  // list[size-1] is the arrowBase = withBase[length-1], NOT length-2.
-  const arrowBase = withBase[withBase.length - 1] as Point;
-  const dir = normalizeVec({ x: arrowBase.x - arrowTip.x, y: arrowBase.y - arrowTip.y });
-  (e.info as unknown as Record<string, unknown>)._arrowPts =
-    arrowheadPolygon(arrowTip, dir, edgeRenderPenwidth(e));
-  installEdgeSpline(e, withBase, arrowTip);
-}
-
-/**
- * Route a forward edge spanning more than one rank via its virtual node chain.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag path, forward case)
- */
-export function routeFwdMultiRankEdge(
-  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph, dirAttr: string,
-): void {
-  const wantHead = dirAttr === 'forward' || dirAttr === 'both';
-  const chain = walkFwdVirtChain(e);
-  if (chain.length < 3) {
-    const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
-    const result = straightEdgeSplineWithRank(tailBox, headBox, rankInfo, edgePenwidthAttr(e));
-    installEdgeSpline(e, result.bezierPts, result.arrowTip);
-    if (wantHead) {
-      (e.info as unknown as Record<string, unknown>)._arrowPts =
-        arrowheadPolygon(result.arrowTip, result.arrowDir, edgeRenderPenwidth(e));
-    }
-    return;
-  }
-  const tailNode = chain[0]!;
-  const headNode = chain[chain.length - 1]!;
-  const boxes = buildChainBoxes(chain, g);
-  const pts = computeSplineMulti(boxes,
-    { x: tailNode.info.coord.x, y: tailNode.info.coord.y - 1 },
-    { x: headNode.info.coord.x, y: headNode.info.coord.y + 1 });
-  applyFwdEdgeArrow(e, clipCompoundHead(clipCompoundTail(pts, tailBox), headBox), dirAttr);
 }

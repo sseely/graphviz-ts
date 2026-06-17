@@ -9,16 +9,28 @@ routes through the faithful pathplan path (`routeRegularEdgeFaithful` /
 bugs (wide fan-out/in outer-edge stub collapse; rankdir=LR span drift), oracle-
 pinned in `edge-route-splines.test.ts`. 115 goldens byte-identical.
 
-**Follow-up — DOT-1b: retire the simplified fitter.** The fitter
-(`computeSpline`/`buildRankCorridor`/`computeSplineMulti`/`straightEdgeSplineWithRank`
-+ helpers) survives only in two paths that still need a faithful port before it can
-be deleted: (1) **parallel/opposing multi-edge groups** (`routeParallelEdgeGroup` →
-`baseSplineForGroup`) — each member must route its own tail→head base with the
-Multisep offset, untangling `clipAndInstall` swapEnds vs the `swapSpline` post-pass
-for back members; (2) **adjacent back edges** (b->a, 1 rank) have no faithful path
-(`routeRegularEdgeFaithful` declines back edges; T4 falls back to `routeEdgeRaw` for
-chain<2). Both are latent C divergences (match the oracle on tested cases). See
-`plans/mission-dot-splines/decision-journal.md` (T6) for the full analysis.
+**DOT-1b: retire the simplified fitter — DONE for regular edges
+(mission-dot-1b, merged 2026-06-17).** Every regular dot edge now routes through
+the faithful pathplan path, and the simplified *regular-edge* fitter is deleted:
+- T1: adjacent back edges (b->a, 1 rank) route faithfully via `makeFwdEdge`
+  (C `makefwdedge`) → `routeRegularEdgeFaithful` → `clipAndInstall`.
+- T3: parallel/opposing groups (`routeParallelEdgeGroup`) route the shared base
+  via the faithful primitives; back members install through `makeFwdEdge` and are
+  reversed to tail→head. Opposing `b->a` is byte-exact to the dot oracle.
+- T4: deleted the now-dead regular-edge fitter — `routeFwdMultiRankEdge`,
+  `routeEdgeRaw`, `fitterBackFwdPoints`, `applyEndArrows`, `computeSplineMulti`,
+  the `makeRegularEdge` stub, the `straightEdgeSpline` alias, the chain-corridor
+  helpers (`buildChainBoxes`/`buildBackEdge*Box`/`walk*VirtChain`), and the T1
+  measurement scaffolding — all grep- and suite-proven unreachable.
+
+**Residual (out of DOT-1b's regular-edge scope) — `straightEdgeSplineWithRank` +
+its subtree (`routeWithRank`/`routeSimple`/`buildRankCorridor`/`clipToNodes`/
+`computeSpline`/`routeBezier`/`polyEdgesFromPts`) is KEPT** because the FLAT-edge
+path still uses it: same-rank edges whose faithful flat / side-port routers decline
+(flat side-port loops, non-adjacent flat labels) fall back to it via
+`routeForwardEdge`. No regular edge reaches it (proven by instrumentation: only
+flat-edge unit tests hit that fallback; 115 goldens never do). Retiring the fitter
+for flat edges is a separate flat-routing mission.
 
 **(historical) Original status:** Stub — `makeRegularEdge` in `splines-route.ts:254`
 is a no-op.
