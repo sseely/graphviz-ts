@@ -14,7 +14,8 @@
 import type { Graph } from '../../model/graph.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point, Box } from '../../model/geom.js';
-import { VIRTUAL } from './fastgr.js';
+import type { Node } from '../../model/node.js';
+import { VIRTUAL, NORMAL } from './fastgr.js';
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
@@ -32,7 +33,7 @@ import { endPath } from '../../common/splines-path-end.js';
 import { routeRegularByType } from './splines-route-type.js';
 import { edgeType, EDGETYPE_LINE } from './splines.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
-import { splineMerge, makeLineEdge } from './splines-route.js';
+import { splineMerge, makeLineEdge, resizeVn } from './splines-route.js';
 import { rankHt } from './edge-route-rank.js';
 import { graphRanksep } from './position-aux.js';
 import {
@@ -143,7 +144,33 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
   const segs = chainSegments(e);
   if (segs.length < 2) return null;
   const P = buildChainPath(g, e, segs);
-  return P === null ? null : routeRegularByType(P, et);
+  if (P === null) return null;
+  const pts = routeRegularByType(P, et);
+  recoverSlack(segs, P);
+  return pts;
+}
+
+/**
+ * After splining, reposition each chain virtual node into the routing box that
+ * contains it (boxes run high-y to low-y). Label vnodes are anchored to the
+ * box's right edge (center = box.ur.x + rw); plain vnodes are centred. This is
+ * what aligns a flat-adj aux label vnode onto its spline so the label lands at
+ * the dot position (DOT-12). @see lib/dotgen/dotsplines.c:recover_slack
+ */
+function resizeVnInBox(vn: Node, box: Box): void {
+  if (vn.info.label != null) resizeVn(vn, box.ll.x, box.ur.x, box.ur.x + vn.info.rw);
+  else resizeVn(vn, box.ll.x, (box.ll.x + box.ur.x) / 2, box.ur.x);
+}
+
+function recoverSlack(segs: GraphEdge[], P: Path): void {
+  let b = 0; // skip first rank box
+  for (let i = 0; i < segs.length; i++) {
+    const vn = segs[i].head;
+    if ((vn.info.node_type ?? NORMAL) !== VIRTUAL || splineMerge(vn)) break;
+    while (b < P.nbox && P.boxes[b].ll.y > vn.info.coord.y) b++;
+    if (b >= P.nbox) break;
+    if (P.boxes[b].ur.y >= vn.info.coord.y) resizeVnInBox(vn, P.boxes[b]);
+  }
 }
 
 // ---------------------------------------------------------------------------

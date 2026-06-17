@@ -39,6 +39,7 @@ import { dotInitNodeEdge } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import { newSpline } from '../../common/splines-clip.js';
 import { updateBbBz } from '../../common/splines-geom.js';
+import { placeRegularEdgeLabels } from './splines-label.js';
 import { NORMAL, VIRTUAL } from './fastgr.js';
 import { EDGE_LABEL } from './rank.js';
 
@@ -257,6 +258,11 @@ export function makeFlatAdjEdges(g: Graph, edges: Edge[], cnt: number, _et: numb
   repositionFlatAux(g, edges, aux);
   dotSameports(aux.auxg);
   dotSplines_(aux.auxg, false);
+  // The labeled chain edge routes in routeDotEdges (after dotSplines_'s own
+  // label pass), so recover_slack repositions the label vnode only afterward.
+  // Re-place the aux labels here to read the final vnode coords (DOT-12).
+  // @see lib/dotgen/dotsplines.c:make_regular_edge (recover_slack before place_vnlabel)
+  placeRegularEdgeLabels(aux.auxg);
   gvPostprocess(aux.auxg);
   copyFlatSplines(g, edges, aux);
   cleanupCloneGraph(aux.auxg);
