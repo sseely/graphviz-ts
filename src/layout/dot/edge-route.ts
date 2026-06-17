@@ -27,7 +27,7 @@ import { linearBezier } from './edge-route-poly.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
 import { routeFlatEdgeFaithful, isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
-import { makeFlatLabeledEdge, makeAdjFlatLabeledEdge } from './splines-flat-labeled.js';
+import { makeFlatLabeledEdge, makeAdjFlatNoPortEdge } from './splines-flat-labeled.js';
 import { EDGETYPE_SPLINE, swapEndsP, swapSpline } from './splines.js';
 import { buildDotSinfo } from './self-loop.js';
 
@@ -311,7 +311,7 @@ function routeForwardEdge(
   // above (make_flat_adj_edges → makeSimpleFlatLabels). Both decline for every
   // other edge, so only labeled flats are diverted. @see dotsplines.c:1527-1533
   if (makeFlatLabeledEdge(g, e)) return;
-  if (makeAdjFlatLabeledEdge(g, e)) return;
+  if (makeAdjFlatNoPortEdge(g, e)) return;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
   // T2 (AD-1/AD-2): plain adjacent-rank forward edges route through the faithful
   // pathplan path (make_regular_edge). routeRegularEdgeFaithful declines (null)

@@ -261,15 +261,53 @@ export function makeSimpleFlatLabels(group: Edge[], et: number): void {
   routeStackedFlats(earray, nLbls, st, et);
 }
 
+/** Bezier (SPLINE/LINE) or polyline (PLINE) control points for one flat
+ *  spindle edge at vertical height dy. @see dotsplines.c:makeSimpleFlat 1089-1106 */
+function simpleFlatPoints(tp: Point, hp: Point, dy: number, et: number): Point[] {
+  const a = (2 * tp.x + hp.x) / 3, b = (2 * hp.x + tp.x) / 3;
+  if (et === EDGETYPE_SPLINE || et === EDGETYPE_LINE) {
+    return [{ x: tp.x, y: tp.y }, { x: a, y: dy }, { x: b, y: dy }, { x: hp.x, y: hp.y }];
+  }
+  return [
+    { x: tp.x, y: tp.y }, { x: tp.x, y: tp.y },
+    { x: a, y: dy }, { x: a, y: dy }, { x: a, y: dy },
+    { x: b, y: dy }, { x: b, y: dy }, { x: b, y: dy },
+    { x: hp.x, y: hp.y }, { x: hp.x, y: hp.y },
+  ];
+}
+
 /**
- * Dispatch an adjacent no-port flat edge group that carries at least one label
- * to makeSimpleFlatLabels (routes the whole parallel group at once). Declines
- * for any other edge so the caller falls back. @see dotsplines.c:make_flat_adj_edges
+ * Spindle of splines for a no-port, no-label adjacent flat group: fan the cnt
+ * edges vertically across the tail node's height (stepy = ht/(cnt-1), centred
+ * on tp.y). cnt == 1 yields a single straight line.
+ * @see lib/dotgen/dotsplines.c:makeSimpleFlat (1075)
  */
-export function makeAdjFlatLabeledEdge(g: Graph, e: Edge): boolean {
+export function makeSimpleFlat(group: Edge[], et: number): void {
+  const e0 = group[0], tn = e0.tail, hn = e0.head;
+  const tp = { x: tn.info.coord.x + e0.info.tail_port.p.x, y: tn.info.coord.y + e0.info.tail_port.p.y };
+  const hp = { x: hn.info.coord.x + e0.info.head_port.p.x, y: hn.info.coord.y + e0.info.head_port.p.y };
+  const cnt = group.length;
+  const stepy = cnt > 1 ? tn.info.ht / (cnt - 1) : 0;
+  let dy = tp.y - (cnt > 1 ? tn.info.ht / 2 : 0);
+  for (let i = 0; i < cnt; i++) {
+    const pts = simpleFlatPoints(tp, hp, dy, et);
+    dy += stepy;
+    clipAndInstall(group[i], group[i].head, pts, pts.length, buildDotSinfo());
+  }
+}
+
+/**
+ * Dispatch an adjacent no-port flat edge group (C's `make_flat_adj_edges`
+ * no-port branch): a group with any label routes via makeSimpleFlatLabels, a
+ * group with none via makeSimpleFlat. Both route the whole parallel group at
+ * once. Declines only when `e` is not a no-port adjacent flat.
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges 1156-1166
+ */
+export function makeAdjFlatNoPortEdge(g: Graph, e: Edge): boolean {
   if (!isAdjFlatCandidate(e)) return false;
   const group = collectAdjFlatGroup(g, e);
-  if (!group.some(x => x.info.label !== undefined)) return false;
-  makeSimpleFlatLabels(group, edgeType(g));
+  const et = edgeType(g);
+  if (group.some(x => x.info.label !== undefined)) makeSimpleFlatLabels(group, et);
+  else makeSimpleFlat(group, et);
   return true;
 }
