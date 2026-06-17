@@ -49,7 +49,7 @@ Baseline at mission start: **1810 passed / 0 failed, 115 goldens byte-identical*
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | [T1 adjacent-back faithful](batch-1/T1-adjacent-back-faithful.md) · [T2 measure opposing model](batch-1/T2-measure-opposing-model.md) — **T2 done (spike)** | [ ] |
+| 1 | [T1 adjacent-back faithful](batch-1/T1-adjacent-back-faithful.md) · [T2 measure opposing model](batch-1/T2-measure-opposing-model.md) — **T2 done (spike)** | [x] |
 | 2 (after T1) | [T3 parallel/opposing faithful](batch-2/T3-parallel-opposing-faithful.md) | [ ] |
 | 3 (after T1, T3) | [T4 delete the fitter](batch-3/T4-delete-fitter.md) | [ ] |
 

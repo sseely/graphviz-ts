@@ -20,6 +20,13 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderSvg } from '../../index.js';
+import { parse } from '../../parser/index.js';
+import { GvcContext } from '../../gvc/context.js';
+import { createMeasurer } from '../../common/textmeasure-factory.js';
+import { DOT_LAYOUT_ENGINE } from './index.js';
+import { routeOneEdge } from './edge-route.js';
+import type { Edge as GraphEdge } from '../../model/edge.js';
+import type { Graph } from '../../model/graph.js';
 
 const Q = String.fromCharCode(34);
 const RE_PATH = new RegExp('<path[^>]*\\sd=' + Q + '([^' + Q + ']+)' + Q, 'g');
@@ -212,5 +219,83 @@ describe('T5: rankdir=LR/RL/BT regular edges via faithful pathplan (dot oracle)'
   it('rankdir=BT chain edge a->b matches dot', () => {
     const ab = edgePathByTitle(renderSvg('digraph{rankdir=BT; a->b->c}', 'dot'), 'a', 'b');
     expect(maxDelta(ab, DOT_BT_CHAIN_AB)).toBeLessThanOrEqual(TOL);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T1 (DOT-1b) — faithful adjacent back edge via makefwdedge.
+//
+// A lone adjacent back edge never reaches the single-edge router in a normal
+// render: dot/the TS group router always claims an opposing pair (`a->b; b->a`)
+// as a parallel group (routeParallelEdgeGroup, T3). To exercise the single-edge
+// faithful path here we bypass the group path: lay out the opposing pair to
+// maxphase=3 (ranks + coords, no splines), then route b->a directly via
+// routeOneEdge — which now dispatches to the makefwdedge path (AD-1).
+//
+// The geometry of a centred bottom→top arrow-at-top adjacent edge is exactly
+// dot's rankdir=BT a->b (DOT_BT_CHAIN_AB above): the same 72pt gap, x=27,
+// arrow at the top node. SVG_y = -internal_y for this 2-node graph (node
+// centres a@90→-90, b@18→-18 confirm pure negation, no translate).
+// ---------------------------------------------------------------------------
+
+/** Lay out `src` to maxphase=3 (ranks + coords, before spline routing). */
+function layoutToPosition(src: string): Graph {
+  const g = parse(src);
+  const ctx = new GvcContext(createMeasurer());
+  ctx.register(DOT_LAYOUT_ENGINE);
+  ctx.layout(g, 'dot');
+  return g;
+}
+
+/** Find the edge tail->head among g's out-edges, or undefined. */
+function findEdge(g: Graph, tail: string, head: string): GraphEdge | undefined {
+  for (const n of g.nodes.values()) {
+    for (const e of n.outEdges(g)) {
+      if (e.tail.name === tail && e.head.name === head) return e;
+    }
+  }
+  return undefined;
+}
+
+/** Installed spline control points in the SVG frame (y negated). */
+function splineSvgPts(e: GraphEdge): Pt[] {
+  const spl = e.info.spl!;
+  return spl.list.flatMap(bz => bz.list).map(p => ({ x: p.x, y: -p.y }));
+}
+
+/** The single arrowhead polygon stashed on e (head or tail slot), SVG frame. */
+function arrowPts(e: GraphEdge): Pt[] | undefined {
+  const info = e.info as unknown as Record<string, Pt[] | undefined>;
+  const raw = info._arrowPts ?? info._tailArrowPts;
+  return raw?.map(p => ({ x: p.x, y: -p.y }));
+}
+
+describe('T1 (DOT-1b): faithful adjacent back edge via makefwdedge (dot oracle)', () => {
+  it('b->a routes through the faithful single-edge path with the arrow at a', () => {
+    const g = layoutToPosition('digraph{maxphase=3; a->b; b->a}');
+    const ba = findEdge(g, 'b', 'a');
+    expect(ba).toBeDefined();
+    routeOneEdge(ba!, g);
+    const pts = splineSvgPts(ba!);
+    // Same geometry as dot's rankdir=BT a->b: centred, arrow at the top node.
+    expect(pts.length).toBe(DOT_BT_CHAIN_AB.length);
+    expect(maxDelta(pts, DOT_BT_CHAIN_AB)).toBeLessThanOrEqual(TOL);
+    // Arrowhead emitted at a (top node, SVG y ~ -70, near a's lower boundary).
+    const arr = arrowPts(ba!);
+    expect(arr).toBeDefined();
+    const tipY = Math.min(...arr!.map(p => p.y)); // most-negative = nearest a
+    expect(tipY).toBeLessThan(-66);
+  });
+
+  it('the forward partner a->b still matches the lone-edge dot oracle', () => {
+    const g = layoutToPosition('digraph{maxphase=3; a->b; b->a}');
+    const ab = findEdge(g, 'a', 'b');
+    expect(ab).toBeDefined();
+    routeOneEdge(ab!, g);
+    // Lone `digraph{a->b}` dot 15.x: M27,-71.7 C27,-64.41 27,-55.73 27,-47.54.
+    const oracle: Pt[] = [
+      { x: 27, y: -71.7 }, { x: 27, y: -64.41 }, { x: 27, y: -55.73 }, { x: 27, y: -47.54 },
+    ];
+    expect(maxDelta(splineSvgPts(ab!), oracle)).toBeLessThanOrEqual(TOL);
   });
 });

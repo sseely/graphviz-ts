@@ -15,6 +15,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point, Box } from '../../model/geom.js';
+import { VIRTUAL } from './fastgr.js';
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
@@ -329,16 +330,30 @@ function backChainSegments(e: GraphEdge): GraphEdge[] {
 }
 
 /**
- * Synthetic forward view of a back edge: tail/head swapped, fresh (portless)
- * ends. `beginPath`/`endPath` read `e.tail`/`e.head`, so the chain must be
- * driven by an edge that runs low→high rank. @see dotsplines.c:makefwdedge
+ * Forward view of any edge (C `makefwdedge`): tail/head swapped when the edge
+ * runs high→low rank (a back edge), fresh portless ends. `beginPath`/`endPath`
+ * read `e.tail`/`e.head`, so the chain must be driven by an edge that runs
+ * low→high rank. Sets `to_orig`/`edge_type=VIRTUAL` so `clipAndInstall`→
+ * `newSpline` installs the spline on the ORIGINAL edge (its `to_orig` loop) and
+ * the post-routing `swapSpline` pass reverses it back to tail→head. Shares
+ * `attrs`/`root`/`to_virt` with `e`. Consumed by T3 for parallel back-members.
+ * @see lib/dotgen/dotsplines.c:makefwdedge
+ * @see lib/common/splines.c:clip_and_install (to_orig install loop)
  */
-function makeBackFwdEdge(e: GraphEdge): GraphEdge {
+export function makeFwdEdge(e: GraphEdge): GraphEdge {
+  const back = (e.head.info.rank ?? 0) < (e.tail.info.rank ?? 0);
+  const [tail, head] = back ? [e.head, e.tail] : [e.tail, e.head];
   return {
     ...e,
-    tail: e.head,
-    head: e.tail,
-    info: { ...e.info, tail_port: makePort(), head_port: makePort() },
+    tail,
+    head,
+    info: {
+      ...e.info,
+      tail_port: makePort(),
+      head_port: makePort(),
+      to_orig: e,
+      edge_type: VIRTUAL,
+    },
   } as GraphEdge;
 }
 
@@ -351,7 +366,7 @@ function makeBackFwdEdge(e: GraphEdge): GraphEdge {
 function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
-  const P = buildChainPath(g, makeBackFwdEdge(e), segs);
+  const P = buildChainPath(g, makeFwdEdge(e), segs);
   return P === null ? null : routeSplines(P);
 }
 

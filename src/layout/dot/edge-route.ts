@@ -30,7 +30,7 @@ import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
 import { routeFlatEdgeFaithful, isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
 import { makeFlatLabeledEdge, makeAdjFlatLabeledEdge } from './splines-flat-labeled.js';
-import { EDGETYPE_SPLINE } from './splines.js';
+import { EDGETYPE_SPLINE, swapEndsP, swapSpline } from './splines.js';
 import { buildDotSinfo } from './self-loop.js';
 
 import {
@@ -47,6 +47,7 @@ import {
   routeBackEdge,
   routeFwdMultiRankEdge,
   routeMultiRankEdgeFaithful,
+  makeFwdEdge,
 } from './edge-route-chain.js';
 
 // Suppress unused-import warning for re-exported symbols
@@ -215,6 +216,7 @@ function applyEndArrows(
 function routeEdgeNonForward(
   e: GraphEdge, g: Graph, dirAttr: string, pw: number,
 ): void {
+  if (routeFaithfulAdjacentBack(e, g)) return; // T1 (AD-1): faithful adjacent back edge
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
   if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
@@ -282,6 +284,29 @@ function routeFaithfulRegularPlain(e: GraphEdge, g: Graph): boolean {
   return true;
 }
 
+/**
+ * Route an adjacent-rank back edge (head exactly one rank above tail) through
+ * the faithful pipeline (AD-1). A back edge is the forward edge with swapped
+ * ends (C `makefwdedge`): route the forward view as a plain adjacent edge, then
+ * `clipAndInstall` installs the forward-geometry spline on the ORIGINAL edge
+ * (makeFwdEdge sets `to_orig`/`edge_type`). `dotSplines_` runs `edgeNormalize`
+ * *before* `routeDotEdges`, so the global `swapSpline` pass has already run for
+ * this edge — apply the back-edge swap here so the spline runs tail→head with
+ * the arrow at the head. Returns false when `e` is not an adjacent back edge.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE makefwdedge), edge_normalize
+ */
+function routeFaithfulAdjacentBack(e: GraphEdge, g: Graph): boolean {
+  const tr = e.tail.info.rank;
+  const hr = e.head.info.rank;
+  if (tr === undefined || hr === undefined || tr !== hr + 1) return false;
+  const fwd = makeFwdEdge(e);
+  const pts = routeRegularEdgeFaithful(g, fwd);
+  if (pts === null) return false;
+  clipAndInstall(fwd, fwd.head, pts, pts.length, buildDotSinfo());
+  if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
+  return true;
+}
+
 /** Route and install spline + arrowhead(s) for a single edge. */
 export function routeOneEdge(e: GraphEdge, g: Graph): void {
   const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
@@ -290,6 +315,7 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     routeEdgeNonForward(e, g, dirAttr, pw);
     return;
   }
+  if (routeFaithfulAdjacentBack(e, g)) return; // T1 (AD-1): faithful adjacent back edge
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
   if (isMultiRankBackEdge(e)) {

@@ -7,7 +7,7 @@ code, so it cannot conflict with T1.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Faithful adjacent-back-edge routing; export `makeFwdEdge` | opus | `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route.ts`, `src/layout/dot/edge-route-splines.test.ts` | — | [ ] |
+| T1 | Faithful adjacent-back-edge routing; export `makeFwdEdge` | opus | `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route.ts`, `src/layout/dot/edge-route-splines.test.ts` | — | [x] |
 | T2 | Measure C's opposing/parallel model + `makefwdedge`/swapEnds recipe | opus | `plans/mission-dot-1b/decision-journal.md` | — | [x] (pre-mission spike) |
 
 **T2 is already complete** — a pre-mission feasibility spike instrumented the C
