@@ -404,9 +404,9 @@ export function springElectricalEmbedding(
     step = updateStep(ctrl.adaptiveCooling, step, Fnorm, Fnorm0);
   } while (step > TOL && iter < ctrl.maxiter);
 
-  if (ctrl.beautifyLeaves) {
-    throw new Error('sfdp beautify_leaves not ported (no supported input sets beautify)');
-  }
+  // @see lib/sfdpgen/spring_electrical.c:378 (per multilevel level). A is the
+  // symmetrized, diagonal-free adjacency (AD-3).
+  if (ctrl.beautifyLeaves) beautifyLeaves(dim, A, x);
 
   if (useQT) ctrl.maxQtreeLevel = maxQtreeLevel;
 }
