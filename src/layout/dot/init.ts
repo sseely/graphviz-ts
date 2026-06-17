@@ -13,11 +13,12 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import { commonInitNode, lateInt, layoutMeasurer } from '../../common/nodeinit.js';
 import { nonconstraintEdge } from './classify.js';
-import { NORMAL } from './fastgr.js';
+import { NORMAL, deleteFastNode, removeFromRank } from './fastgr.js';
 import { mapbool } from './rank.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
 import { doGraphLabel } from './graph-label.js';
+import { agsubg, agdelnode, agdelsubg } from '../../model/cgraph-ops.js';
 
 // ---------------------------------------------------------------------------
 // RANKDIR constants
@@ -236,13 +237,28 @@ export function dotInitNodeEdge(g: Graph): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Removes placeholder fill-nodes added by fillRanks for newrank mode.
- * In this port, newrank mode is not fully implemented — no-op is safe.
+ * Deletes the placeholder fill-nodes inserted by fillRanks (NEW_RANK mode)
+ * once positioning is done, so they never render. Looks up the `_new_rank`
+ * subgraph under the root graph; if absent (the common no-newrank case) this
+ * is a no-op. Operates on `g.root` throughout because fillRanks created the
+ * fill nodes and their ranks under the root.
  *
  * @see lib/dotgen/dotinit.c:removeFill
  */
-export function removeFill(_g: Graph): void {
-  // newrank mode not implemented; placeholder fill nodes are not created.
+export function removeFill(g: Graph): void {
+  const sg = agsubg(g.root, '_new_rank', false);
+  if (sg === null) return;
+  // Snapshot first: agdelnode mutates membership (including sg) during the
+  // loop. C's nxt = agnxtnode look-ahead tolerates deleting the current node;
+  // the snapshot is its faithful equivalent.
+  const fillNodes = [...sg.nodes.values()];
+  for (const n of fillNodes) {
+    deleteFastNode(g.root, n);
+    removeFromRank(g.root, n);
+    // dot_cleanup_node has no equivalent in this port (GC reclaims the node).
+    agdelnode(g.root, n);
+  }
+  agdelsubg(g.root, sg);
 }
 
 // ---------------------------------------------------------------------------
