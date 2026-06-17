@@ -118,33 +118,40 @@ export function onedOptimizerNew(i: number): OnedOptimizer {
   return { i, work: new Array<number>(MAX_I + 1).fill(0), direction: OPT_INIT };
 }
 
-/** @see spring_electrical.c:oned_optimizer_train */
-export function onedOptimizerTrain(opt: OnedOptimizer, work: number): void {
-  const i = opt.i;
-  opt.work[i] = work;
-  if (opt.direction === OPT_INIT) {
-    if (opt.i === MAX_I) {
-      opt.direction = OPT_DOWN;
-      opt.i = opt.i - 1;
-    } else {
-      opt.direction = OPT_UP;
-      opt.i = Math.min(MAX_I, opt.i + 1);
-    }
-  } else if (opt.direction === OPT_UP) {
+/** OPT_INIT branch: pick a starting hill-climb direction. */
+function optInit(opt: OnedOptimizer): void {
+  if (opt.i === MAX_I) {
+    opt.direction = OPT_DOWN;
+    opt.i = opt.i - 1;
+  } else {
+    opt.direction = OPT_UP;
+    opt.i = Math.min(MAX_I, opt.i + 1);
+  }
+}
+
+/** OPT_UP / OPT_DOWN branch: continue uphill or reverse. `i` is the pre-step index. */
+function optHill(opt: OnedOptimizer, i: number): void {
+  if (opt.direction === OPT_UP) {
     if (opt.work[i]! < opt.work[i - 1]! && opt.i < MAX_I) {
       opt.i = Math.min(MAX_I, opt.i + 1);
     } else {
       opt.i--;
       opt.direction = OPT_DOWN;
     }
+  } else if (opt.work[i]! < opt.work[i + 1]! && opt.i > 0) {
+    opt.i = Math.max(0, opt.i - 1);
   } else {
-    if (opt.work[i]! < opt.work[i + 1]! && opt.i > 0) {
-      opt.i = Math.max(0, opt.i - 1);
-    } else {
-      opt.i++;
-      opt.direction = OPT_UP;
-    }
+    opt.i++;
+    opt.direction = OPT_UP;
   }
+}
+
+/** @see spring_electrical.c:oned_optimizer_train */
+export function onedOptimizerTrain(opt: OnedOptimizer, work: number): void {
+  const i = opt.i;
+  opt.work[i] = work;
+  if (opt.direction === OPT_INIT) optInit(opt);
+  else optHill(opt, i);
 }
 
 // ---------------------------------------------------------------------------
@@ -249,13 +256,8 @@ function updateStep(
   return 0.99 * step / COOL;
 }
 
-/**
- * pow(dist, 1−p). The reference binary issues a real libm pow() here
- * (runtime exponent); we use the legally clean ARM optimized-routines
- * pow (~0.54 ULP). It is NOT the same libm that produced the macOS
- * golden refs, so chaotic amplification means larger sfdp graphs will
- * not reproduce the refs bit-for-bit — see the mission journal.
- */
+/** pow(dist, 1−p) via ARM optimized-routines pow (~0.54 ULP; the legally clean
+ *  libm, not the macOS one — see the mission journal on golden reproduction). */
 function repulsivePow(dist: number, p: number): number {
   return armPow(dist, 1 - p);
 }
@@ -272,10 +274,21 @@ interface ForceParams {
   CRK: number;
 }
 
+/** Per-run force state shared across the force kernels (A/x/dim/n/fp stable; f
+ *  is the reused per-node accumulator). Bundled only to stay within the 5-param
+ *  limit — values are identical to passing them positionally. */
+interface ForceCtx {
+  A: SpMatrix;
+  x: number[];
+  dim: number;
+  n: number;
+  fp: ForceParams;
+  f: number[];
+}
+
 /** Attractive force over CSR row i. @see spring_electrical.c:599-608 */
-function attractiveForce(
-  A: SpMatrix, x: number[], dim: number, i: number, f: number[], fp: ForceParams,
-): void {
+function attractiveForce(ctx: ForceCtx, i: number): void {
+  const { A, x, dim, fp, f } = ctx;
   const { ia, ja } = A;
   for (let j = ia[i]!; j < ia[i + 1]!; j++) {
     if (ja[j] === i) continue;
@@ -289,9 +302,8 @@ function attractiveForce(
 }
 
 /** All-pairs repulsive force on node i. @see spring_electrical.c:630-638 */
-function repulsiveForceDirect(
-  x: number[], dim: number, n: number, i: number, f: number[], fp: ForceParams,
-): void {
+function repulsiveForceDirect(ctx: ForceCtx, i: number): void {
+  const { x, dim, n, fp, f } = ctx;
   for (let j = 0; j < n; j++) {
     if (j === i) continue;
     const dist = distanceCropped(x, dim, i, j);
@@ -303,10 +315,12 @@ function repulsiveForceDirect(
 
 /** Supernode-approximated repulsion. @see spring_electrical.c:611-629 */
 function repulsiveForceQT(
+  ctx: ForceCtx,
   qt: ReturnType<typeof quadTreeNewFromPointList>,
-  x: number[], dim: number, i: number, f: number[], fp: ForceParams,
+  i: number,
   acc: { nsuperAvg: number; countsAvg: number },
 ): void {
+  const { x, dim, fp, f } = ctx;
   const { nsuper, center, supernodeWgts, distances, counts } =
     quadTreeGetSupernodes(qt, BH, x, i * dim, i);
   acc.countsAvg += counts;
@@ -334,6 +348,56 @@ function moveNode(
   return F;
 }
 
+/** One node's force step: reset the accumulator, attract + repulse (Barnes–Hut
+ *  or all-pairs), normalize and move. Returns |f|. Operation order is identical
+ *  to the inlined C inner loop. @see spring_electrical.c (per-node body) */
+function embedNode(
+  ctx: ForceCtx, i: number, qt: ReturnType<typeof quadTreeNewFromPointList> | null,
+  acc: { nsuperAvg: number; countsAvg: number }, step: number,
+): number {
+  const { x, dim, f } = ctx;
+  for (let k = 0; k < dim; k++) f[k] = 0;
+  attractiveForce(ctx, i);
+  if (qt !== null) repulsiveForceQT(ctx, qt, i, acc);
+  else repulsiveForceDirect(ctx, i);
+  return moveNode(x, dim, i, f, step);
+}
+
+/** Average the supernode/count accumulators and feed the qtree-level optimizer.
+ *  @see spring_electrical.c (nsuper_avg/counts_avg → oned_optimizer_train) */
+function trainOptimizer(
+  optimizer: OnedOptimizer, acc: { nsuperAvg: number; countsAvg: number }, n: number,
+): void {
+  acc.nsuperAvg /= n;
+  acc.countsAvg /= n;
+  // binary: fmadd(nsuper_avg, 5, counts_avg)
+  onedOptimizerTrain(optimizer, fma(acc.nsuperAvg, 5, acc.countsAvg));
+}
+
+/** Adaptive-cooling iteration loop (order matches the original do/while). */
+function springIterate(
+  ctx: ForceCtx, useQT: boolean, optimizer: OnedOptimizer, ctrl: SpringElectricalControl,
+): number {
+  const { dim, n, x } = ctx;
+  let maxQtreeLevel = optimizer.i, step = ctrl.step;
+  let Fnorm = 0, iter = 0;
+  do {
+    iter++;
+    const Fnorm0 = Fnorm;
+    Fnorm = 0;
+    const acc = { nsuperAvg: 0, countsAvg: 0 };
+    let qt = null;
+    if (useQT) {
+      maxQtreeLevel = optimizer.i;
+      qt = quadTreeNewFromPointList(dim, n, maxQtreeLevel, x);
+    }
+    for (let i = 0; i < n; i++) Fnorm += embedNode(ctx, i, qt, acc, step);
+    if (qt !== null) trainOptimizer(optimizer, acc, n);
+    step = updateStep(ctrl.adaptiveCooling, step, Fnorm, Fnorm0);
+  } while (step > TOL && iter < ctrl.maxiter);
+  return maxQtreeLevel;
+}
+
 /**
  * The NORMAL-scheme embedding: per-node attract + repulse (direct or
  * Barnes–Hut above QUADTREE_SIZE), normalized move, adaptive cooling.
@@ -343,71 +407,27 @@ function moveNode(
 export function springElectricalEmbedding(
   dim: number, A0: SpMatrix, ctrl: SpringElectricalControl, x: number[],
 ): void {
-  let A = A0;
-  const n = A.n;
+  const n = A0.n;
   if (n <= 0 || ctrl.maxiter <= 0) return;
   const useQT = n >= QUADTREE_SIZE;
-  let maxQtreeLevel = ctrl.maxQtreeLevel;
-  const optimizer = onedOptimizerNew(maxQtreeLevel);
-
-  A = smSymmetrize(A, true);
-
+  const optimizer = onedOptimizerNew(ctrl.maxQtreeLevel);
+  const A = smSymmetrize(A0, true);
   if (ctrl.randomStart) {
     csrand(ctrl.randomSeed);
     for (let i = 0; i < dim * n; i++) x[i] = cdrand();
   }
-  if (ctrl.K < 0) {
-    ctrl.K = averageEdgeLength(A, dim, x);
-  }
+  if (ctrl.K < 0) ctrl.K = averageEdgeLength(A, dim, x);
   if (ctrl.p >= 0) ctrl.p = -1;
   const fp: ForceParams = {
-    K: ctrl.K,
-    p: ctrl.p,
+    K: ctrl.K, p: ctrl.p,
     KP: Math.pow(ctrl.K, 1 - ctrl.p),
     CRK: Math.pow(C_PARAM, (2 - ctrl.p) / 3) / ctrl.K,
   };
-
-  const f = new Array<number>(dim).fill(0);
-  let step = ctrl.step;
-  let Fnorm = 0;
-  let iter = 0;
-  do {
-    iter++;
-    const Fnorm0 = Fnorm;
-    Fnorm = 0;
-    const acc = { nsuperAvg: 0, countsAvg: 0 };
-
-    let qt = null;
-    if (useQT) {
-      maxQtreeLevel = optimizer.i;
-      qt = quadTreeNewFromPointList(dim, n, maxQtreeLevel, x);
-    }
-
-    for (let i = 0; i < n; i++) {
-      for (let k = 0; k < dim; k++) f[k] = 0;
-      attractiveForce(A, x, dim, i, f, fp);
-      if (qt !== null) {
-        repulsiveForceQT(qt, x, dim, i, f, fp, acc);
-      } else {
-        repulsiveForceDirect(x, dim, n, i, f, fp);
-      }
-      Fnorm += moveNode(x, dim, i, f, step);
-    }
-
-    if (qt !== null) {
-      acc.nsuperAvg /= n;
-      acc.countsAvg /= n;
-      // binary: fmadd(nsuper_avg, 5, counts_avg)
-      onedOptimizerTrain(optimizer, fma(acc.nsuperAvg, 5, acc.countsAvg));
-    }
-
-    step = updateStep(ctrl.adaptiveCooling, step, Fnorm, Fnorm0);
-  } while (step > TOL && iter < ctrl.maxiter);
-
+  const ctx: ForceCtx = { A, x, dim, n, fp, f: new Array<number>(dim).fill(0) };
+  const maxQtreeLevel = springIterate(ctx, useQT, optimizer, ctrl);
   // @see lib/sfdpgen/spring_electrical.c:378 (per multilevel level). A is the
   // symmetrized, diagonal-free adjacency (AD-3).
   if (ctrl.beautifyLeaves) beautifyLeaves(dim, A, x);
-
   if (useQT) ctrl.maxQtreeLevel = maxQtreeLevel;
 }
 
