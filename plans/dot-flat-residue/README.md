@@ -67,7 +67,19 @@ referenced in `decision-journal.md`.
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 (DOT-9), T2 (DOT-10) | [ ] |
+| 1 | T1 (DOT-9) done; T2 (DOT-10) deferred → DOT-11 | [x] T1 / [deferred] T2 |
+
+## Outcome (2026-06-17)
+
+- **T1 (DOT-9):** DONE — `makeSimpleFlat` ported; unlabeled parallel
+  adjacent flats fan byte-exact to dot 15.0.0. Suite 1853 passed, zero
+  golden churn. Merged to main.
+- **T2 (DOT-10):** DEFERRED. The faithful copy-back was implemented and
+  verified, but the emitted label position is not byte-exact: it inherits
+  an upstream divergence in the aux pipeline's layout of a *labeled*
+  cross-rank edge. Re-filed as **DOT-11** in
+  `../layout-engine-backlog/gaps/dot.md`. T2 code reverted; copy-back lands
+  byte-exact once DOT-11 is fixed.
 
 ## Index
 

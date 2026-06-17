@@ -292,8 +292,22 @@ bookkeeping; pin vs dot.
 
 ## DOT-10: port-bearing adjacent labeled flats drop the label
 
-**Status:** Gap — adjacent flat edges WITH declared ports route via the
-rotated auxiliary graph (`makeFlatAdjEdges`), which copies splines back but
+**Status:** Partially diagnosed; BLOCKED on DOT-11 (mission dot-flat-residue,
+2026-06-17). The copy-back itself is a faithful ~10 LOC change (`copyFlatLabel`
+mirroring `dotsplines.c:1273-1277`) and makes the label EMIT instead of drop.
+But the emitted position is NOT byte-exact: it inherits an upstream divergence
+in how the rotated aux pipeline lays out a *labeled* cross-rank edge — see
+DOT-11. A no-port-no-label ported flat is byte-exact to dot 15.0.0
+(`M54,-18C56.75,-18 58.79,-18 60.61,-18`), but the labeled aux edge places the
+label vnode ~22pt too high (aux-y≈59 vs needed ≈37) and bends the spline wider
+(64.24 vs 62.13). The catalogued "~30 LOC: set ED_label.pos during copy-back"
+underestimated this: the copy-back is correct but can only be as accurate as
+the aux layout it copies. Fix DOT-11 first, then DOT-10's copy-back lands
+byte-exact. T2 code for the copy-back was implemented and reverted pending
+DOT-11; it is recorded in `plans/dot-flat-residue/decision-journal.md`.
+
+**(historical) Status:** Gap — adjacent flat edges WITH declared ports route via
+the rotated auxiliary graph (`makeFlatAdjEdges`), which copies splines back but
 not the label position. Only no-port adjacent labeled flats emit their label
 (`makeSimpleFlatLabels`, done 2026-06-16).
 
@@ -308,6 +322,43 @@ label).
 
 **Downstream visual impact:** LOW — narrow case (adjacent + ports + label).
 
-**Dependencies:** None.
+**Dependencies:** DOT-11 (aux pipeline must lay out the labeled cross-rank
+edge byte-exact before the copy-back can land the label correctly).
 
-**Estimated size:** ~30 LOC — set `ED_label.pos` during the aux copy-back.
+**Estimated size:** ~10 LOC for the copy-back (`copyFlatLabel`) once DOT-11
+is fixed. The copy-back alone is implemented+verified-as-faithful but reverted.
+
+## DOT-11: aux pipeline mislays the label vnode for labeled cross-rank edges
+
+**Status:** Gap — discovered 2026-06-17 (mission dot-flat-residue, while
+attempting DOT-10). When `make_flat_adj_edges`'s rotated aux graph routes an
+edge that carries a center label, the aux pipeline positions the label virtual
+node ~22pt too high and bends the spline wider than dot 15.0.0. A *no-label*
+ported flat is byte-exact, so the divergence is label-specific and lives in the
+aux graph's layout of a labeled cross-rank edge (label-vnode sizing / rank
+placement / position phase), upstream of the copy-back.
+
+**Evidence:** input `digraph{ {rank=same; a b} a:e->b:w[label="x"] }`.
+- dot 15.0.0: label (72, -32.91); spline `M54,-18C62.13,-18 60.91,-26.42 68.62,-29...`
+- graphviz-ts: label (77.6, -54.2); spline `M54,-18C64.24,-18 64.32,-26.48 74.25,-29...`
+- aux edge raw: `ED_label.pos = {66.375, 59.25}`, `dimen = {6.75, 16.5}`,
+  `del = {11.25, 0}`, flip = false.
+
+**TS location:** `src/layout/dot/splines-flat.ts:makeFlatAdjEdges` (aux pipeline:
+`dotInitNodeEdge` → `dotRank` → `dotMincross` → `dotPosition` → `dotSplines_`),
+plus the label-vnode placement those phases drive.
+
+**C reference:** `lib/dotgen/dotsplines.c:make_flat_adj_edges` 1200-1232 (the
+recursive `dot_rank`/`dot_mincross`/`dot_position`/`dot_splines_` on `auxg`).
+
+**Reachability:** ATTR — `{rank=same}` + ports + label (same trigger as DOT-10).
+
+**Downstream visual impact:** LOW — narrow case, but blocks DOT-10's byte-exact
+label. Likely also affects any labeled edge routed through a flat-adj aux graph.
+
+**Dependencies:** None outside the dot aux pipeline; depth unknown (may reach
+into the aux graph's label-vnode sizing or the position phase). Needs its own
+investigation before promotion.
+
+**Estimated size:** UNKNOWN — pin the aux label-vnode position to C first; the
+fix could be small (label sizing) or reach into mincross/position.
