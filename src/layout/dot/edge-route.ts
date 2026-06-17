@@ -179,7 +179,9 @@ function dispatchMultiRankNonForward(
     return true;
   }
   if (isMultiRankFwdEdge(e)) {
-    // Curve a multi-rank edge around intervening ranks; arrows gated by dir.
+    // T4: faithful chain pipeline (clipAndInstall gates arrows by dir); the
+    // simplified multi-rank fitter only handles a faithful decline.
+    if (routeFaithfulMultiRank(e, g)) return true;
     routeFwdMultiRankEdge(e, tailBox, headBox, g, dirAttr);
     return true;
   }
@@ -216,6 +218,10 @@ function routeEdgeNonForward(
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
   if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
+  // T4 (AD-1/AD-2): adjacent non-forward edges (dir=back/both/none) route through
+  // the faithful path; clipAndInstall's arrowFlags gate the head/tail arrows by
+  // the dir attribute. Declines (null) for non-adjacent, falling to the fitter.
+  if (routeFaithfulRegularPlain(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const wantHead = dirAttr === 'both';
   const wantTail = dirAttr === 'back' || dirAttr === 'both';

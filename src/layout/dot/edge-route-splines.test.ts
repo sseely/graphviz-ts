@@ -149,3 +149,32 @@ describe('T3: multi-rank forward chains via faithful pathplan (dot oracle)', () 
     expect(maxDelta(ae, DOT_SPAN4_AE)).toBeLessThanOrEqual(TOL);
   });
 });
+
+/** dot 15.x control points for the back edge c->a in `a->b->c; c->a` (SVG frame). */
+const DOT_BACKEDGE_CA: Pt[] = [
+  { x: 57.65, y: -36.09 }, { x: 59.68, y: -46.43 }, { x: 61.98, y: -59.91 },
+  { x: 63, y: -72 }, { x: 64.34, y: -87.94 }, { x: 64.34, y: -92.06 },
+  { x: 63, y: -108 }, { x: 62.32, y: -116.03 }, { x: 61.08, y: -124.67 }, { x: 59.73, y: -132.6 },
+];
+
+/** dot 15.x control points for the dir=both edge a->b. */
+const DOT_DIRBOTH_AB: Pt[] = [
+  { x: 27, y: -60.24 }, { x: 27, y: -56.01 }, { x: 27, y: -51.66 }, { x: 27, y: -47.44 },
+];
+
+describe('T4: back + non-forward edges via faithful pathplan (dot oracle)', () => {
+  it('multi-rank back edge c->a bends back around the chain (matches dot)', () => {
+    const ca = edgePathByTitle(renderSvg('digraph{a->b->c; c->a}', 'dot'), 'c', 'a');
+    expect(ca.length).toBe(DOT_BACKEDGE_CA.length); // 10-pt bending spline
+    expect(maxDelta(ca, DOT_BACKEDGE_CA)).toBeLessThanOrEqual(TOL);
+  });
+
+  it('dir=both edge a->b matches dot and renders both arrowheads', () => {
+    const svg = renderSvg('digraph{a->b[dir=both]}', 'dot');
+    const ab = edgePathByTitle(svg, 'a', 'b');
+    expect(maxDelta(ab, DOT_DIRBOTH_AB)).toBeLessThanOrEqual(TOL);
+    // both ends arrowed: two black arrowhead polygons (head + tail; the only
+    // other polygon is the white background, and nodes are ellipses).
+    expect((svg.match(new RegExp('<polygon fill="black"', 'g')) ?? []).length).toBe(2);
+  });
+});

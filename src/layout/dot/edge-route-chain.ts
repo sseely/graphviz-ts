@@ -103,11 +103,11 @@ function chainPathArgs(P: Path, e: GraphEdge, endp: PathendT, merge: boolean, ra
  */
 function buildChainPath(g: Graph, e: GraphEdge, segs: GraphEdge[]): Path | null {
   const ranks = g.info.rank!;
-  const r = e.tail.info.rank!;
-  const rh = e.head.info.rank!;
-  const tn = e.tail;
-  const hn = e.head;
+  // Begin/end derive from the chain (low→high rank), so this serves forward
+  // edges (tn=e.tail) and back edges (tn=e.head, reversed downstream) alike.
   const last = segs[segs.length - 1];
+  const [tn, hn] = [segs[0].tail, last.head];
+  const [r, rh] = [tn.info.rank!, hn.info.rank!];
   const ctx = chainBboxCtx(g);
   const ranksep = graphRanksep(g);
   const P: Path = { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null };
@@ -313,7 +313,52 @@ function reverseClipBackChain(
 }
 
 /**
- * Route a multi-rank back-edge via its virtual node chain.
+ * Virtual-chain segments of a multi-rank back edge in low-rank → high-rank
+ * order (e.head → e.tail). `chainSegments` cannot be reused: it stops at
+ * e.head, which is the chain's START for a back edge.
+ */
+function backChainSegments(e: GraphEdge): GraphEdge[] {
+  const segs: GraphEdge[] = [];
+  let cur = e.info.to_virt;
+  while (cur !== undefined) {
+    segs.push(cur);
+    if (cur.head === e.tail) break;
+    cur = cur.head.info.out?.list[0];
+  }
+  return segs;
+}
+
+/**
+ * Synthetic forward view of a back edge: tail/head swapped, fresh (portless)
+ * ends. `beginPath`/`endPath` read `e.tail`/`e.head`, so the chain must be
+ * driven by an edge that runs low→high rank. @see dotsplines.c:makefwdedge
+ */
+function makeBackFwdEdge(e: GraphEdge): GraphEdge {
+  return {
+    ...e,
+    tail: e.head,
+    head: e.tail,
+    info: { ...e.info, tail_port: makePort(), head_port: makePort() },
+  } as GraphEdge;
+}
+
+/**
+ * Forward-geometry chain spline for a multi-rank back edge (low→high rank
+ * order, i.e. e.head → e.tail), or null when it cannot be assembled. A back
+ * edge is the forward edge with swapped ends (C makefwdedge); the caller
+ * reverses + clips. @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE)
+ */
+function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
+  const segs = backChainSegments(e);
+  if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
+  const P = buildChainPath(g, makeBackFwdEdge(e), segs);
+  return P === null ? null : routeSplines(P);
+}
+
+/**
+ * Route a multi-rank back-edge via its virtual node chain. Routes the forward
+ * geometry faithfully (make_regular_edge over the reversed chain) then reverses
+ * + clips; falls back to the simplified fitter when the faithful path declines.
  * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag back-edge path)
  */
 export function routeBackEdge(e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph): void {
@@ -324,13 +369,18 @@ export function routeBackEdge(e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, 
     installEdgeSpline(e, raw.bezierPts, raw.arrowTip);
     return;
   }
-  const aNode = chain[0]!;
-  const dNode = chain[chain.length - 1]!;
-  const fwd = computeSplineMulti(buildChainBoxes(chain, g),
-    { x: aNode.info.coord.x, y: aNode.info.coord.y - 1 },
-    { x: dNode.info.coord.x, y: dNode.info.coord.y + 1 });
+  const fwd = faithfulBackFwdPoints(g, e) ?? fitterBackFwdPoints(chain, g);
   const { clipped, arrowTip, arrowDir } = reverseClipBackChain(fwd, tailBox, headBox);
   applyBackEdgeArrows(e, clipped, arrowTip, arrowDir, dirAttr);
+}
+
+/** Simplified-fitter forward chain spline (fallback for routeBackEdge). */
+function fitterBackFwdPoints(chain: Node[], g: Graph): Point[] {
+  const aNode = chain[0]!;
+  const dNode = chain[chain.length - 1]!;
+  return computeSplineMulti(buildChainBoxes(chain, g),
+    { x: aNode.info.coord.x, y: aNode.info.coord.y - 1 },
+    { x: dNode.info.coord.x, y: dNode.info.coord.y + 1 });
 }
 
 // ---------------------------------------------------------------------------

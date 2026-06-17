@@ -7,7 +7,7 @@ back-edge handling).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T4 | Route back + non-forward regular edges via the faithful path; fix golden deltas; pin a back-edge oracle | opus | `src/layout/dot/edge-route.ts`, `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route-splines.test.ts` | T3 | [ ] |
+| T4 | Route back + non-forward regular edges via the faithful path; fix golden deltas; pin a back-edge oracle | opus | `src/layout/dot/edge-route.ts`, `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route-splines.test.ts` | T3 | [x] |
 
 Gate per [../README.md](../README.md). One commit.
 Commit: `feat(T4): route back + non-forward edges through pathplan`.
