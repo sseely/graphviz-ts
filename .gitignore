@@ -26,3 +26,6 @@ test/golden/actual/
 # Claude session artifacts
 .claude/worktrees/
 .claude/settings.local.json
+
+# Local debug/probe scratch scripts
+.probes/
