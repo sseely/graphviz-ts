@@ -264,20 +264,20 @@ export function setForceFaithfulRegular(mode: FaithfulForceMode): FaithfulForceM
   return prev;
 }
 
-/** True when the measurement switch forces adjacent-rank plain edges faithful. */
-function forceAdj(): boolean {
-  return forceFaithfulMode === 'adj' || forceFaithfulMode === 'all';
-}
-
-/** True when the measurement switch forces multi-rank plain chains faithful. */
+/**
+ * True when the measurement switch forces multi-rank plain chains faithful.
+ * Adjacent-rank plain edges route faithfully unconditionally as of T2, so the
+ * `adj` mode no longer gates production — it remains only for harness symmetry
+ * until T3 migrates multi-rank and T6 retires the switch.
+ */
 function forceMr(): boolean {
   return forceFaithfulMode === 'mr' || forceFaithfulMode === 'all';
 }
 
 /**
  * Route a plain adjacent-rank forward edge through the faithful pipeline and
- * install it. Returns false when the faithful path declines (caller falls back
- * to the fitter). Used only under the T1 measurement switch.
+ * install it. Returns false when the faithful path declines (not adjacent-rank),
+ * so the caller falls back to the fitter.
  */
 function routeFaithfulRegularPlain(e: GraphEdge, g: Graph): boolean {
   const pts = routeRegularEdgeFaithful(g, e);
@@ -393,7 +393,10 @@ function routeForwardEdge(
   if (makeFlatLabeledEdge(g, e)) return;
   if (makeAdjFlatLabeledEdge(g, e)) return;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
-  if (forceAdj() && routeFaithfulRegularPlain(e, g)) return;
+  // T2 (AD-1/AD-2): plain adjacent-rank forward edges route through the faithful
+  // pathplan path (make_regular_edge). routeRegularEdgeFaithful declines (null)
+  // for anything not adjacent-rank, so the fitter below only handles declines.
+  if (routeFaithfulRegularPlain(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
     tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),

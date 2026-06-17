@@ -31,6 +31,12 @@ algorithm. Make it the path for ALL adjacent-rank forward edges.
 - `src/layout/dot/edge-route.ts` — dispatch: adjacent-rank forward → faithful
 - `src/layout/dot/edge-route-faithful.ts` — extend `routeRegularEdgeFaithful` for plain adjacent edges
 - `src/layout/dot/edge-route-splines.test.ts` — new oracle pins
+- `src/common/poly-inside.ts` — faithful clip: node-penwidth outline + rankdir
+  rotation/flip (EXPANDED, approved by Scott 2026-06-16; see decision journal)
+- `src/common/nodeinit.ts`, `src/common/types.ts` — plumb resolved node penwidth
+  into the polygon descriptor (needed by the poly-inside penwidth fix)
+- `src/common/splines-clip.ts` — faithful arrow polygon uses the style-aware
+  render penwidth (`style=bold`), matching the fitter (third bug found in T2)
 
 ## Read-set
 

@@ -138,6 +138,8 @@ export function polySizeParamsFromNode(
     ...sizeAttrs(n, g),
     peripheries: lateInt(nodeAttr(n, g, 'peripheries'), poly.peripheries, 0),
     orientation: poly.orientation + lateDouble(nodeAttr(n, g, 'orientation'), 0.0, -360.0),
+    // @see lib/common/shapes.c:poly_init — late_double(n, N_penwidth, 1.0, 0.0)
+    penwidth: lateDouble(nodeAttr(n, g, 'penwidth'), 1.0, 0.0),
     regular: poly.regular || mapbool(nodeAttr(n, g, 'regular')),
     isPlain: shape.name === 'plain',
     flip,
@@ -202,6 +204,7 @@ function effectivePolygon(poly: PolygonT, p: PolySizeParams): PolygonT {
     orientation: p.orientation,
     distortion: p.distortion,
     skew: p.skew,
+    penwidth: p.penwidth ?? 1,
   };
 }
 

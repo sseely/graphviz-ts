@@ -5,12 +5,10 @@
  * (bezier_clip via shape_clip0). Calculations use the unrotated node
  * shape centered on the origin.
  *
- * Deviations from C (documented in the test-parity decision journal):
- * - The rankdir rotation (ccwrotatepf by 90*GD_rankdir) is not applied;
- *   no current engine routes edges with rankdir set.
- * - The polygon segment walk uses the base vertex ring; C walks the
- *   outline ring (outline = base + penwidth/2). The bounding-box
- *   quick-reject does use the outline extents, matching C.
+ * The rankdir rotation (ccwrotatepf by 90*GD_rankdir) and the GD_flip extent
+ * swap ARE applied (mission-dot-splines T2 routes rankdir edges through this
+ * clip). The polygon segment walk uses the outline ring at the node's resolved
+ * penwidth (base + penwidth/2), matching C's outline periphery.
  *
  * @see lib/common/shapes.c:poly_inside
  * @see lib/common/shapes.c:same_side
@@ -21,6 +19,7 @@ import type { Node } from '../model/node.js';
 import type { PolygonT } from './types.js';
 import type { InsideContext } from './splines-geom.js';
 import { polygonOutlineRing } from './poly-sizing.js';
+import { ccwrotatepf } from '../model/geom.js';
 
 /** Test if p0 and p1 are on the same side of the line L0-L1. @see shapes.c:same_side */
 export function sameSide(p0: Point, p1: Point, L0: Point, L1: Point): boolean {
@@ -51,25 +50,27 @@ interface InsideScale {
   boxURy: number;
 }
 
+/** Node size + outline extents (points) for the inside scale. */
+function insideDims(n: Node, poly: PolygonT, xsize: number, ysize: number):
+  { w: number; h: number; ow: number; oh: number } {
+  if (poly.option.fixedshape) {
+    const { w, h } = fixedShapeSize(poly);
+    return { w, h, ow: w, oh: h };
+  }
+  const w = 72 * (n.info.width || xsize / 72);
+  const h = 72 * (n.info.height || ysize / 72);
+  // Nodes that skipped poly_init (no measurer) have no outline dims.
+  return { w, h, ow: 72 * n.info.outline_width || w, oh: 72 * n.info.outline_height || h };
+}
+
 /** @see lib/common/shapes.c:poly_inside (scale setup) */
 function insideScale(n: Node, poly: PolygonT): InsideScale {
-  const xsize = n.info.lw + n.info.rw;
-  const ysize = n.info.ht;
-  let w: number;
-  let h: number;
-  let ow: number;
-  let oh: number;
-  if (poly.option.fixedshape) {
-    ({ w, h } = fixedShapeSize(poly));
-    ow = w;
-    oh = h;
-  } else {
-    w = 72 * (n.info.width || xsize / 72);
-    h = 72 * (n.info.height || ysize / 72);
-    // Nodes that skipped poly_init (no measurer) have no outline dims.
-    ow = 72 * n.info.outline_width || w;
-    oh = 72 * n.info.outline_height || h;
-  }
+  // C swaps the node extents for flipped (LR/RL) layouts. @see poly_inside (GD_flip)
+  const flip = n.root.info.flip === true;
+  const lwrw = n.info.lw + n.info.rw;
+  const xsize = flip ? n.info.ht : lwrw;
+  const ysize = flip ? lwrw : n.info.ht;
+  const { w, h, ow, oh } = insideDims(n, poly, xsize, ysize);
   return {
     scalex: xsize !== 0 ? w / xsize : w,
     scaley: ysize !== 0 ? h / ysize : h,
@@ -118,20 +119,24 @@ function insideShape(n: Node, poly: PolygonT, p: Point): boolean {
   // bisector offsets). @see shapes.c:poly_inside (outp selection)
   const outerStart = (Math.max(poly.peripheries, 1) - 1) * poly.sides;
   const outer = poly.vertices!.slice(outerStart, outerStart + poly.sides);
-  const ring = polygonOutlineRing(outer, poly.sides, 1);
+  const ring = polygonOutlineRing(outer, poly.sides, poly.penwidth ?? 1);
   return polygonWalk(P, ring, poly.sides);
 }
 
 export function polyInside(ctx: InsideContext, p: Point): boolean {
   const n = ctx.node as Node | undefined;
   if (n === undefined) return false;
+  // C rotates the test point by the rank direction before testing against the
+  // node's natural-frame polygon. @see shapes.c:poly_inside (ccwrotatepf)
+  const rankdir = (n.root.info.rankdir ?? 0) & 0x3;
+  const P = rankdir === 0 ? p : ccwrotatepf(p, rankdir * 90);
   if (ctx.bp) {
     const b = ctx.bp;
-    return p.x >= b.ll.x && p.x <= b.ur.x && p.y >= b.ll.y && p.y <= b.ur.y;
+    return P.x >= b.ll.x && P.x <= b.ur.x && P.y >= b.ll.y && P.y <= b.ur.y;
   }
   const poly = n.info.shape_info as PolygonT | undefined;
   if (poly === undefined || poly.vertices === null) return false;
-  return insideShape(n, poly, p);
+  return insideShape(n, poly, P);
 }
 
 /**

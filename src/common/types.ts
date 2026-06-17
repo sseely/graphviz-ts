@@ -251,6 +251,13 @@ export interface PolygonT {
   /** Style flags. @see lib/common/types.h:polygon_t.option */
   option: GraphvizPolygonStyle;
   /**
+   * Resolved node penwidth (default 1). C bakes the half-penwidth outline
+   * periphery into `vertices` in poly_init; the TS `vertices` omit that ring,
+   * so poly_inside reapplies it and needs the value here.
+   * @see lib/common/shapes.c:poly_init (outline periphery)
+   */
+  penwidth?: number;
+  /**
    * Precomputed vertex array, or null when computed at render time.
    * @see lib/common/types.h:polygon_t.vertices
    */
