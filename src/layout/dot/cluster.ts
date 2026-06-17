@@ -232,7 +232,12 @@ export function markClusters(g: Graph): void {
   for (let c = 1; c <= nClust; c++) {
     const clust = g.info.clust![c - 1];
     for (const n of clust.nodes.values()) {
-      if (n.info.ranktype !== 0) continue;
+      // C's ND_ranktype is a calloc-zeroed char defaulting to NORMAL(==0)
+      // (const.h:24, types.h:448); the guard is `!= NORMAL` (cluster.c:317).
+      // TS NodeInfo.ranktype is optional (undefined by default), so coerce
+      // undefined→0 — else every untouched NORMAL node is wrongly skipped and
+      // never receives ND_clust, breaking cross-cluster rank=same under newrank.
+      if ((n.info.ranktype ?? 0) !== 0) continue;
       ufSetname(n, clust.info.leader!);
       n.info.clust = clust;
       n.info.ranktype = CLUSTER;

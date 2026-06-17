@@ -459,7 +459,7 @@ export function dot1Rank(g: Graph): void {
  * @see lib/dotgen/rank.c:dot_rank
  */
 export function dotRank(g: Graph): void {
-  if ((g.info.flags ?? 0) & NEW_RANK) {
+  if (mapbool(g.attrs.get('newrank'))) {
     g.info.flags = (g.info.flags ?? 0) | NEW_RANK;
     dot2Rank(g);
   } else {

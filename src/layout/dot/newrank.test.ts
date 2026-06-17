@@ -1,36 +1,28 @@
 // SPDX-License-Identifier: EPL-2.0
 
 /**
- * T4 — end-to-end newrank rank-reconciliation parity.
+ * T4 — end-to-end newrank rank-reconciliation parity (DONE).
  *
- * STATUS: RESCOPED (see comparisons/newrank.md). The `removeFill` port is
- * complete and faithful (dotinit.c:removeFill), but full newrank parity is
- * unreachable through this task's declared write-set (init.ts + this file)
- * because of two defects that live OUTSIDE the write-set:
+ * `newrank=true` now reconciles a cross-cluster `rank=same` set to match the
+ * dot oracle. The two blockers the prior mission rescoped are fixed:
+ *   1. `dotRank` reads `mapbool(agget(g,"newrank"))` (rank.c:523) — T2.
+ *   2. `markClusters` treats undefined `ranktype` as NORMAL (cluster.c:317) so
+ *      a cross-cluster rank=same node gets `ND_clust` and is installed once,
+ *      not double-installed into the root rank array (which hung furthestNode)
+ *      — T3. See docs/newrank-c-trace.md.
  *
- *   1. `dotRank` (rank.ts) never sets `GD_flags |= NEW_RANK` from the
- *      `newrank` graph attribute. C does `if (mapbool(agget(g,"newrank")))`
- *      (rank.c:521-525); the TS only tests the flag, so `dot2Rank`/`fillRanks`
- *      never run and ranks are never reconciled.
- *   2. Forcing the flag on exposes an infinite loop in `furthestNode`
- *      (mincross-utils.ts:161) during `dotMincross` — the fill-node `order`
- *      indices make `neighborNode` never return undefined. This hang occurs
- *      long before `removeFill` runs, so it is not a removeFill defect.
+ * Pins (1) non-regression invariants — renders without hanging, no placeholder
+ * (`_new_rank` / `__fill_`) or anonymous node reaches the SVG, exactly five
+ * real nodes; and (2) oracle parity — c reconciles onto b's rank, all centers
+ * match the dot binary ≤0.5pt, the flag drives the change, plus a 2nd corpus
+ * case.
  *
- * This test therefore pins the NON-REGRESSION invariants that ARE in scope:
- * the repro renders without hanging, no placeholder (`_new_rank` / `__fill_`)
- * or anonymous node ever reaches the SVG (removeFill / fillRanks naming), and
- * exactly the five real nodes appear. It also records the current TS centers
- * versus the dot oracle so the residual is regression-guarded: when the two
- * upstream defects are fixed, the `RESIDUAL` expectations below flip to the
- * `ORACLE` ones and this file becomes the parity pin.
+ * Oracle (GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot, 2026-06-17):
+ * a=-178 (r0), b=-106 (r1), c=-106 (r1, =b), e=-34 (r2), d=-34 (r2).
  *
- * Oracle (GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot -Tsvg,
- * 2026-06-17): a cy=-178 (rank 0), b cy=-106 (rank 1), c cy=-106 (rank 1,
- * aligned with b), e cy=-34 (rank 2), d cy=-34 (rank 2).
- *
- * @see lib/dotgen/dotinit.c:removeFill
  * @see lib/dotgen/rank.c:dot_rank
+ * @see lib/dotgen/cluster.c:mark_clusters
+ * @see lib/dotgen/dotinit.c:removeFill
  */
 
 import { describe, it, expect } from 'vitest';
@@ -94,20 +86,39 @@ describe('newrank repro — non-regression invariants (T4)', () => {
   });
 });
 
-// RESIDUAL — current TS behaviour, regression-guarded. When the two upstream
-// defects (NEW_RANK flag-set in dotRank + furthestNode hang) are fixed, swap
-// these RESIDUAL assertions for the ORACLE targets noted inline.
-describe('newrank repro — RESCOPED residual vs oracle (T4)', () => {
-  it('c is NOT yet reconciled onto b (oracle: |cy(c)-cy(b)|<=0.5)', () => {
-    const c = nodeCenters(renderSvg(REPRO_NEWRANK, 'dot'));
-    expect(Math.abs(c.c - c.a)).toBeLessThanOrEqual(0.5); // residual: c == a
-    expect(Math.abs(c.c - c.b)).toBeGreaterThan(0.5); // residual: c != b
-  });
+// ORACLE PARITY — c reconciles onto b's rank, matching the dot binary ≤0.5pt.
+// Oracle: a=-178, b=-106, c=-106 (=b), e=-34, d=-34.
+const ORACLE = { a: -178, b: -106, c: -106, e: -34, d: -34 } as const;
+const REPRO_CORPUS2 =
+  'digraph{newrank=true; subgraph cluster0{a->b} ' +
+  'subgraph cluster1{c->d} {rank=same; b; c}}';
 
-  it('the newrank flag is inert vs the plain graph (oracle: it moves c)', () => {
-    // dotRank never reads the `newrank` attribute (rank.c:521 not ported).
+describe('newrank repro — oracle parity (cross-cluster rank=same)', () => {
+  it('every node center matches the dot oracle ≤0.5pt', () => {
+    const c = nodeCenters(renderSvg(REPRO_NEWRANK, 'dot'));
+    for (const k of Object.keys(ORACLE) as (keyof typeof ORACLE)[]) {
+      expect(Math.abs(c[k] - ORACLE[k])).toBeLessThanOrEqual(0.5);
+    }
+    expect(Math.abs(c.c - c.b)).toBeLessThanOrEqual(0.5); // c reconciled onto b
+    expect(Math.abs(c.c - c.a)).toBeGreaterThan(0.5); // c moved off a's rank
+  });
+});
+
+describe('newrank — the flag drives the reconciliation', () => {
+  it('newrank moves c onto b; the plain graph leaves c on a', () => {
     const withFlag = nodeCenters(renderSvg(REPRO_NEWRANK, 'dot'));
     const without = nodeCenters(renderSvg(REPRO_PLAIN, 'dot'));
-    expect(withFlag.c).toBeCloseTo(without.c, 1);
+    expect(Math.abs(withFlag.c - without.c)).toBeGreaterThan(0.5);
+    expect(Math.abs(without.c - without.a)).toBeLessThanOrEqual(0.5);
+  });
+});
+
+describe('newrank corpus — a second cross-cluster rank=same case', () => {
+  it('cluster0{a->b} cluster1{c->d} rank=same b;c → c aligns with b', () => {
+    const c = nodeCenters(renderSvg(REPRO_CORPUS2, 'dot'));
+    expect(c.a).toBeCloseTo(-178, 1);
+    expect(c.b).toBeCloseTo(-106, 1);
+    expect(c.c).toBeCloseTo(-106, 1); // oracle: c aligns with b
+    expect(c.d).toBeCloseTo(-34, 1);
   });
 });
