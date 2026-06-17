@@ -330,7 +330,15 @@ is fixed. The copy-back alone is implemented+verified-as-faithful but reverted.
 
 ## DOT-11: aux pipeline mislays the label vnode for labeled cross-rank edges
 
-**Status:** Gap — discovered 2026-06-17 (mission dot-flat-residue, while
+**Status:** SPLINE FIXED (mission dot-flat-aux-label, 2026-06-17, merged). The
+*wider-spline* half was a reposition bug: `repositionFlatAux` iterated the
+named-node Map and skipped the aux graph's virtual nodes; C iterates `GD_nlist`.
+Switching to the `nlist` walk (`splines-flat.ts:repositionFlatAux`) made the
+labeled-flat spline byte-exact to dot 15.0.0 and corrected the label X. The
+*label-Y* half is split out as **DOT-12** (it is NOT label-vnode sizing — see
+below). DOT-10 remains blocked on DOT-12.
+
+**(historical) Status:** Gap — discovered 2026-06-17 (mission dot-flat-residue, while
 attempting DOT-10). When `make_flat_adj_edges`'s rotated aux graph routes an
 edge that carries a center label, the aux pipeline positions the label virtual
 node ~22pt too high and bends the spline wider than dot 15.0.0. A *no-label*
@@ -362,3 +370,42 @@ investigation before promotion.
 
 **Estimated size:** UNKNOWN — pin the aux label-vnode position to C first; the
 fix could be small (label sizing) or reach into mincross/position.
+
+## DOT-12: gvPostprocess rotates the flat-adj aux label inconsistently with the spline
+
+**Status:** Gap — precisely diagnosed 2026-06-17 (mission dot-flat-aux-label,
+the label-Y residue after DOT-11's spline fix). For a port-bearing adjacent
+labeled flat, the aux edge's label ends ~22pt too high even though the spline
+is byte-exact. Fully traced — NOT a label-sizing or placement bug:
+- `placeVnlabel` (`splines-label.ts`) is byte-identical to C `place_vnlabel`
+  and correctly sets the aux label to `y=72` (co-located with the spline mid
+  at 71.47) BEFORE postprocess.
+- `gvPostprocess(auxg)` then maps spline-mid `71.47 → 29.95` but label
+  `72 → 59.25`. It applies a **rankdir rotation** to the aux graph (nodes
+  `auxt 117→18`, `auxh 27→18` collapse onto one rank); the rotation maps the
+  label via its `pos.x`, which carries the `dimen.y/2` centering offset, so
+  that x-offset rotates into a ~22pt y-error. The spline carries no such
+  offset, so it stays exact. C's `dotneato_postprocess` keeps the two
+  consistent; the TS `gvPostprocess` / aux-flip configuration does not.
+
+**TS location:** `src/common/postproc.ts` (`gvPostprocess` → `translateDrawing`
+→ `mapEdge`/`mapLabelPos` rotation), and the aux graph's flip/rankdir setup in
+`src/layout/dot/splines-flat.ts:makeFlatAdjEdges` / `repositionFlatAux`.
+
+**C reference:** `lib/common/postproc.c:translate_drawing` / `translate_bb`;
+`lib/dotgen/dotsplines.c:make_flat_adj_edges` (reposition + `dotneato_postprocess`).
+
+**Reachability:** ATTR — `{rank=same}` + ports + label (same trigger as DOT-10).
+
+**Downstream visual impact:** LOW — narrow case; blocks DOT-10's byte-exact
+label.
+
+**Dependencies / risk:** `gvPostprocess` is SHARED by every graph. A naive fix
+risks the 1853 regular-edge goldens — the dot-flat-aux-label AD-2 stop fired
+here. Scope a fix to the aux graph's flip config (so postproc rotates label and
+spline consistently) and re-verify ALL goldens; do not change non-aux label
+rotation.
+
+**Estimated size:** UNKNOWN-but-localized — the inconsistency is pinned to the
+postproc label rotation vs spline rotation; the fix is likely in how
+`makeFlatAdjEdges` configures the aux graph for `gvPostprocess`.

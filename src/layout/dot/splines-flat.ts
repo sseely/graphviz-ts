@@ -188,7 +188,11 @@ function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
   const shn = flip ? otn : ohn;
   const midx = (stn.info.coord.x - stn.info.rw + shn.info.coord.x + shn.info.lw) / 2;
   const midy = (aux.auxt.info.coord.x + aux.auxh.info.coord.x) / 2;
-  for (const n of aux.auxg.nodes.values()) {
+  // Iterate the full node list (C's GD_nlist), not just the named-node Map:
+  // virtual label + routing nodes must be repositioned to midx too. Skipping
+  // them (Map only) bends labeled-flat splines and mislays the label.
+  // @see lib/dotgen/dotsplines.c:1215-1232
+  for (let n: Node | undefined = aux.auxg.info.nlist; n; n = n.info.next) {
     if (n === aux.auxt) n.info.coord = { x: midy, y: rightx };
     else if (n === aux.auxh) n.info.coord = { x: midy, y: leftx };
     else n.info.coord = { x: n.info.coord.x, y: midx };
