@@ -159,10 +159,21 @@ class SplineClipHelper {
     return startp;
   }
 
-  /** Edge penwidth attr with C default. */
+  /** Edge penwidth attr with C default (drives arrow LENGTH / spline shorten). */
   static edgePenwidth(e: Edge): number {
     const v = parseFloat(e.attrs.get('penwidth') ?? '');
     return Number.isNaN(v) ? 1.0 : v;
+  }
+
+  /**
+   * Rendered edge penwidth (style-aware): `style=bold` maps to 2.0 even with no
+   * `penwidth` attr. Drives the arrow POLYGON geometry (the longitudinal delta),
+   * matching the fitter's split where arrow length uses the attr penwidth but the
+   * polygon uses the rendered width. @see edge-route-helpers.ts:edgeRenderPenwidth
+   */
+  static renderPenwidth(e: Edge): number {
+    if ((e.attrs.get('style') ?? '') === 'bold') return 2.0;
+    return SplineClipHelper.edgePenwidth(e);
   }
 
   /**
@@ -196,7 +207,7 @@ class SplineClipHelper {
   /** Record an arrow polygon on the edge for svgArrowPolygons. */
   static stashArrow(e: Edge, tip: Point, base: Point, isTail: boolean): void {
     const dir = { x: base.x - tip.x, y: base.y - tip.y };
-    const pts = arrowheadPolygon(tip, dir, SplineClipHelper.edgePenwidth(e));
+    const pts = arrowheadPolygon(tip, dir, SplineClipHelper.renderPenwidth(e));
     const key = isTail ? '_tailArrowPts' : '_arrowPts';
     (e.info as unknown as Record<string, unknown>)[key] = pts;
   }

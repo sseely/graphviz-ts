@@ -179,7 +179,9 @@ function dispatchMultiRankNonForward(
     return true;
   }
   if (isMultiRankFwdEdge(e)) {
-    // Curve a multi-rank edge around intervening ranks; arrows gated by dir.
+    // T4: faithful chain pipeline (clipAndInstall gates arrows by dir); the
+    // simplified multi-rank fitter only handles a faithful decline.
+    if (routeFaithfulMultiRank(e, g)) return true;
     routeFwdMultiRankEdge(e, tailBox, headBox, g, dirAttr);
     return true;
   }
@@ -216,6 +218,10 @@ function routeEdgeNonForward(
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
   if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
+  // T4 (AD-1/AD-2): adjacent non-forward edges (dir=back/both/none) route through
+  // the faithful path; clipAndInstall's arrowFlags gate the head/tail arrows by
+  // the dir attribute. Declines (null) for non-adjacent, falling to the fitter.
+  if (routeFaithfulRegularPlain(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const wantHead = dirAttr === 'both';
   const wantTail = dirAttr === 'back' || dirAttr === 'both';
@@ -245,6 +251,37 @@ function portRouteOf(e: GraphEdge): PortRoute | undefined {
   };
 }
 
+/**
+ * Measurement-only switch (T1, mission-dot-splines). Targets which plain forward
+ * regular edges route through the faithful pathplan path instead of the
+ * simplified fitter: `'adj'` adjacent-rank only, `'mr'` multi-rank chains only,
+ * `'all'` both, `'off'` (default) neither. Default `'off'` keeps committed
+ * behavior unchanged and the 115 goldens byte-identical; the divergence-
+ * inventory harness flips it per pass to attribute shifts to a category. No
+ * committed test reads this.
+ */
+export type FaithfulForceMode = 'off' | 'adj' | 'mr' | 'all';
+let forceFaithfulMode: FaithfulForceMode = 'off';
+
+/** Set the T1 faithful-routing measurement mode; returns the previous value. */
+export function setForceFaithfulRegular(mode: FaithfulForceMode): FaithfulForceMode {
+  const prev = forceFaithfulMode;
+  forceFaithfulMode = mode;
+  return prev;
+}
+
+/**
+ * Route a plain adjacent-rank forward edge through the faithful pipeline and
+ * install it. Returns false when the faithful path declines (not adjacent-rank),
+ * so the caller falls back to the fitter.
+ */
+function routeFaithfulRegularPlain(e: GraphEdge, g: Graph): boolean {
+  const pts = routeRegularEdgeFaithful(g, e);
+  if (pts === null) return false;
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  return true;
+}
+
 /** Route and install spline + arrowhead(s) for a single edge. */
 export function routeOneEdge(e: GraphEdge, g: Graph): void {
   const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
@@ -260,8 +297,7 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
-    if ((hasSidePort(e) || hasMainLabel(e)) && routeFaithfulMultiRank(e, g)) return;
-    routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
+    routeFwdMultiRank(e, tailBox, headBox, g);
     return;
   }
   routeForwardEdge(e, g, tailBox, headBox, pw);
@@ -282,15 +318,19 @@ function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
 }
 
 /**
- * True when the edge carries a main label (`ED_label`), which dot routes around
- * via a label virtual node on an inserted mid-rank. Such edges route through the
- * faithful chain pipeline so the spline bends around the label box (AD-2); plain
- * unlabeled edges keep the simplified fitter. Head/tail/xlabels are separate
- * fields and do not trigger this.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (label-vnode interior routing)
+ * Forward multi-rank dispatch: faithful chain pipeline for side-port / main-
+ * label edges (AD-2), else the simplified multi-rank fitter. Under the T1
+ * measurement switch, plain chains also try the faithful path first.
  */
-function hasMainLabel(e: GraphEdge): boolean {
-  return e.info.label != null;
+function routeFwdMultiRank(
+  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph,
+): void {
+  // T3 (AD-1/AD-2): all multi-rank forward edges route through the faithful
+  // chain pipeline (make_regular_edge over the virtual chain).
+  // routeMultiRankEdgeFaithful declines (null) for non-multi-rank-forward, so
+  // the simplified multi-rank fitter below only handles declines.
+  if (routeFaithfulMultiRank(e, g)) return;
+  routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
 }
 
 /**
@@ -340,6 +380,10 @@ function routeForwardEdge(
   if (makeFlatLabeledEdge(g, e)) return;
   if (makeAdjFlatLabeledEdge(g, e)) return;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
+  // T2 (AD-1/AD-2): plain adjacent-rank forward edges route through the faithful
+  // pathplan path (make_regular_edge). routeRegularEdgeFaithful declines (null)
+  // for anything not adjacent-rank, so the fitter below only handles declines.
+  if (routeFaithfulRegularPlain(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
     tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),

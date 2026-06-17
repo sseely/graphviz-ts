@@ -179,9 +179,29 @@ export function rankBox(ctx: BboxCtx, r: number): Box {
 // completeregularpath / adjustregularpath
 // ---------------------------------------------------------------------------
 
+/**
+ * Mirror of C `getsplinepoints`: walk the `to_orig` chain looking for a routed
+ * spline, stopping at the first edge that has one or at a NORMAL (real) edge.
+ * Returns true when the chain yields no spline. A bound edge's spline often
+ * lives on its `to_orig` original rather than on the virtual edge itself, so a
+ * one-level `ED_spl(e)==NULL` check (the original port) wrongly reported it
+ * missing and made `completeRegularPath` decline plain regular edges whose
+ * bound siblings carry their spline on `to_orig` (wide fan-out/fan-in/merge).
+ * @see lib/common/splines.c:getsplinepoints
+ */
+function boundSplineMissing(e: Edge): boolean {
+  let le: Edge | undefined = e;
+  while (le !== undefined) {
+    if (le.info.spl !== undefined) return false;
+    if ((le.info.edge_type ?? NORMAL) === NORMAL) return true;
+    le = le.info.to_orig;
+  }
+  return true;
+}
+
 /** True if a bound edge exists but has no spline yet (C getsplinepoints==NULL). */
 function boundMissing(e: Edge | undefined): boolean {
-  return e !== undefined && e.info.spl === undefined;
+  return e !== undefined && boundSplineMissing(e);
 }
 
 /**
