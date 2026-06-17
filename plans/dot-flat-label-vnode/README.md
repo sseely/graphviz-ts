@@ -74,7 +74,15 @@ fix needs a file outside the write-set.
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 (DOT-12), T2 (DOT-10) | [ ] |
+| 1 | T1 (DOT-12), T2 (DOT-10) | [x] |
+
+## Outcome (2026-06-17) — DONE
+
+Both DOT-12 and DOT-10 fixed. The port-bearing labeled flat
+`a:e->b:w[label="x"]` now emits its label at **(72, −32.91)**, byte-exact
+to dot 15.0.0. Root cause was the un-ported `recover_slack` (the aux label
+vnode was never repositioned onto its spline). 1856 pass, zero golden
+churn. Merged to main.
 
 ## Index
 

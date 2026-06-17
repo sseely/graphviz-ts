@@ -292,7 +292,14 @@ bookkeeping; pin vs dot.
 
 ## DOT-10: port-bearing adjacent labeled flats drop the label
 
-**Status:** Partially diagnosed; BLOCKED on DOT-11 (mission dot-flat-residue,
+**Status: DONE (mission dot-flat-label-vnode, 2026-06-17, merged).** The
+label is emitted at the dot 15.0.0 position (72, −32.91) byte-exact. The
+fix needed DOT-11a (spline reposition) + DOT-12 (the un-ported
+`recover_slack` that positions the aux label vnode on its spline) + the
+copy-back (`copyFlatLabel`, `dotsplines.c:1273-1277`). Oracle-pinned in
+`splines-flat.test.ts`.
+
+**(historical) Status:** Partially diagnosed; BLOCKED on DOT-11 (mission dot-flat-residue,
 2026-06-17). The copy-back itself is a faithful ~10 LOC change (`copyFlatLabel`
 mirroring `dotsplines.c:1273-1277`) and makes the label EMIT instead of drop.
 But the emitted position is NOT byte-exact: it inherits an upstream divergence
@@ -373,7 +380,19 @@ fix could be small (label sizing) or reach into mincross/position.
 
 ## DOT-12: gvPostprocess rotates the flat-adj aux label inconsistently with the spline
 
-**Status:** Gap — precisely diagnosed 2026-06-17 (mission dot-flat-aux-label,
+**Status: DONE (mission dot-flat-label-vnode, 2026-06-17, merged).** The
+2026-06-17 gvPostprocess hypothesis below was WRONG — proven by C-plugin
+instrumentation: `map_point`/`place_vnlabel`/dispatch are all byte-identical
+to C. The real cause was the un-ported **`recover_slack`** (`dotsplines.c:2054`,
+called in `make_regular_edge`): C repositions each chain virtual node into its
+routing box after splining (label vnodes → box.ur.x), moving the aux label
+vnode onto the spline (33→11.71). TS had `resize_vn` but never `recover_slack`,
+so the aux label vnode stayed at its position-phase x. Ported `recoverSlack`
+into `edge-route-chain.ts:routeMultiRankEdgeFaithful`; because TS routes the
+chain in `routeDotEdges` (after `dotSplines_`'s own label pass), also re-place
+the aux labels in `makeFlatAdjEdges`. Label now byte-exact at (72, −32.91).
+
+**(historical, DISPROVEN) Status:** Gap — precisely diagnosed 2026-06-17 (mission dot-flat-aux-label,
 the label-Y residue after DOT-11's spline fix). For a port-bearing adjacent
 labeled flat, the aux edge's label ends ~22pt too high even though the spline
 is byte-exact. Fully traced — NOT a label-sizing or placement bug:
