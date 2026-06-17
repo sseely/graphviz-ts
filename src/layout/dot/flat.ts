@@ -22,6 +22,7 @@ import type { RankEntry } from '../../model/rankEntry.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
 import { FLATORDER, virtualNode, virtualEdge } from './fastgr.js';
 import { recSaveVlists } from './mincross.js';
+import { checkLabelOrder } from './label-order.js';
 import {
   nodeOrder, nodeRank, graphMaxrank, graphMinrank, getOrd,
 } from './flat-utils.js';
@@ -213,17 +214,6 @@ export function checkFlatAdjacent(e: Edge): void {
   if (!hasInterveningNode(rank[nodeRank(e.tail)], lo, hi)) e.info.adjacent = 1;
 }
 
-// ---------------------------------------------------------------------------
-// checkLabelOrder stub  @see lib/dotgen/mincross.c:checkLabelOrder
-// ---------------------------------------------------------------------------
-
-/**
- * Stub — full implementation requires auxiliary graph construction.
- * @see lib/dotgen/mincross.c:checkLabelOrder
- */
-export function checkLabelOrder(_g: Graph): void {
-  // TODO T39: port lib/dotgen/mincross.c:checkLabelOrder
-}
 
 // ---------------------------------------------------------------------------
 // flatEdges helpers  @see lib/dotgen/flat.c:flat_edges
@@ -315,7 +305,9 @@ export function flatEdges(g: Graph): boolean {
   if (needsAbomination(g)) abomination(g);
   recSaveVlists(g);
   const reset = processNodes(g);
-  // TODO T39: when dotPosition passes a real ctx, call recResetVlists(ctx, g)
+  // C also calls rec_reset_vlists(g) here (flat.c:333); it is cluster-only
+  // (GD_rankleader) and needs a MincrossContext not threaded to this position-
+  // phase call, so it is deferred (DOT-5 AD-4). The reorder itself is wired.
   if (reset) checkLabelOrder(g);
   return reset;
 }
