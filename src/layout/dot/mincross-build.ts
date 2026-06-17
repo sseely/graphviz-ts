@@ -23,6 +23,7 @@ import {
 import { transpose, ncross } from './mincross-cross.js';
 import { CLUSTER, isACluster } from './rank.js';
 import { installCluster, expandCluster, markLowclusters } from './cluster.js';
+import { agnode, agsubg, agsubnode } from '../../model/cgraph-ops.js';
 
 // betweenclust — @see lib/dotgen/mincross.c:betweenclust
 export function betweenclust(e: Edge): boolean {
@@ -255,9 +256,103 @@ export function allocateRanks(g: Graph): void {
   g.info.rank = rt;
 }
 
-// fillRanks — stub, T35
-export function fillRanks(_g: Graph): void {
-  /* TODO T35: port lib/dotgen/mincross.c:fillRanks + realFillRanks */
+// fillRanks — @see lib/dotgen/mincross.c:fillRanks (1013), realFillRanks (976)
+//
+// Inserts placeholder ("fill") nodes into ranks left empty by clustered
+// layout, so cross-cluster ranks reconcile. NEW_RANK-gated; never runs on
+// default graphs. AD-3: synthetic node names `__fill_<rank>_<seq>`.
+
+/**
+ * Monotonic fill-node sequence counter, reset at the top of every
+ * `fillRanks` invocation so each `__fill_<rank>_<seq>` name is globally
+ * unique within a single fill pass (two clusters needing the same rank get
+ * distinct names rather than colliding/deduping by name).
+ */
+let fillSeq = 0;
+
+/**
+ * Create a placeholder fill node in the `_new_rank` subgraph at `rank`.
+ * Mirrors the body of the C `agnode(sg, NULL, 1)` block (mincross.c:999-1006):
+ * synthesize the node, make it a member of `sg`, and initialize the layout
+ * fields. AD-3 mandates the synthetic name `__fill_<rank>_<seq>`; `seq`
+ * guarantees global uniqueness.
+ *
+ * @see lib/dotgen/mincross.c:999
+ */
+function makeFillNode(sg: Graph, rank: number, seq: number): Node {
+  // create=true => non-null; AD-3 synthetic (named, not anonymous) node.
+  const n = agnode(sg, `__fill_${rank}_${seq}`, true)!;
+  // T1's agnode registers in root.nodes only; explicitly add to _new_rank so
+  // removeFill (T4) — which iterates the _new_rank subgraph — can find it.
+  agsubnode(sg, n, true);
+  n.info.rank = rank;
+  n.info.lw = 0.5;
+  n.info.rw = 0.5;
+  n.info.ht = 1;
+  n.info.UF_size = 1;
+  n.info.in = { list: [], size: 0 };
+  n.info.out = { list: [], size: 0 };
+  return n;
+}
+
+/** Mark ranks occupied by a node of `g` or spanned by its out-edges.
+ * @see lib/dotgen/mincross.c:986 (bitarray_clear + node/edge marking loop) */
+function markOccupiedRanks(g: Graph, ranks: boolean[]): void {
+  ranks.fill(false); // bitarray_clear
+  for (const n of g.nodes.values()) {
+    const nr = n.info.rank ?? 0;
+    ranks[nr] = true;
+    for (const e of n.outEdges(g)) {
+      const hr = e.head.info.rank ?? 0;
+      for (let i = nr + 1; i <= hr; i++) ranks[i] = true;
+    }
+  }
+}
+
+/** For each empty rank of `g`, create a placeholder, lazily creating the
+ * `_new_rank` subgraph on the first gap. @see lib/dotgen/mincross.c:994 */
+function fillEmptyRanks(g: Graph, ranks: boolean[], sg: Graph | null): Graph | null {
+  const mn = g.info.minrank ?? 0;
+  const mx = g.info.maxrank ?? 0;
+  for (let i = mn; i <= mx; i++) {
+    if (ranks[i]) continue;
+    if (!sg) sg = agsubg(g.root, '_new_rank', true)!;
+    const n = makeFillNode(sg, i, fillSeq++);
+    agsubnode(g, n, true); // add to cluster g (and ancestors up to root)
+  }
+  return sg;
+}
+
+/**
+ * Recursive cluster walk: fill empty ranks in `g` and its sub-clusters with
+ * placeholder nodes; returns the `_new_rank` subgraph (lazily created).
+ *
+ * DEVIATION (clust indexing): the C loop is `c=1..n_cluster` over the 1-based
+ * `GD_clust(g)[c]`. This port's `g.info.clust` is 0-indexed (populated at
+ * `clust[nc-1]` in rank.ts), so we read `clust[c-1]` for the same cluster.
+ *
+ * @see lib/dotgen/mincross.c:976
+ */
+export function realFillRanks(
+  g: Graph,
+  ranks: boolean[],
+  sg: Graph | null,
+): Graph | null {
+  const nClust = g.info.n_cluster ?? 0;
+  const clust = g.info.clust;
+  for (let c = 1; c <= nClust; c++) {
+    sg = realFillRanks(clust![c - 1], ranks, sg);
+  }
+  if (dotRoot(g) === g) return sg;
+  markOccupiedRanks(g, ranks);
+  return fillEmptyRanks(g, ranks, sg);
+}
+/** @see lib/dotgen/mincross.c:fillRanks (1013) */
+export function fillRanks(g: Graph): void {
+  fillSeq = 0;
+  const rnksSz = (g.info.maxrank ?? 0) + 2;
+  const rnks = new Array<boolean>(rnksSz).fill(false);
+  realFillRanks(g, rnks, null);
 }
 
 // install_in_rank / enqueue_neighbors — @see lib/dotgen/mincross.c
