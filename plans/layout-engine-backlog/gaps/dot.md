@@ -173,7 +173,15 @@ addressed in the same mission.
 
 ## DOT-5: `checkLabelOrder` / `recResetVlists`
 
-**Status:** Stub — `src/layout/dot/flat.ts:194` (`checkLabelOrder` no-op).
+**Status: checkLabelOrder DONE (mission dot-checklabelorder, 2026-06-17,
+merged).** `checkLabelOrder`/`fixLabelOrder` ported in `label-order.ts` and
+wired into `flat.ts`. The reorder is unreachable in normal input (0/300
+corpus graphs; only `tests/2471.dot`), so it is verified against C ground
+truth dumped from that file's rank 9 (MATCH=true) rather than an e2e pin.
+`recResetVlists` (cluster-only, `GD_rankleader`) remains DEFERRED — it needs
+a MincrossContext not threaded to the position-phase `flatEdges` call.
+
+**(historical) Status:** Stub — `src/layout/dot/flat.ts:194` (`checkLabelOrder` no-op).
 
 **C reference:** `lib/dotgen/mincross.c:checkLabelOrder` (line 297),
 called from `lib/dotgen/flat.c:332`.

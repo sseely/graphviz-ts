@@ -57,7 +57,14 @@ write-set.
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 (fixLabelOrder + unit), T2 (checkLabelOrder + wire) | [ ] |
+| 1 | T1 (fixLabelOrder), T2 (checkLabelOrder + wire) | [x] |
+
+## Outcome (2026-06-17) — DONE
+
+`checkLabelOrder`/`fixLabelOrder` ported (`label-order.ts`) and wired into
+`flat.ts` (stub removed). `fixLabelOrder` is C-verified against the only
+corpus trigger (`tests/2471.dot` rank 9, MATCH=true). 1864 pass, zero golden
+churn. `recResetVlists` (cluster-only) deferred per AD-4. Merged to main.
 
 ## Index
 
