@@ -29,9 +29,10 @@ import type { Path, PathendT } from '../../common/types.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
-import { routeSplines } from '../../common/splines-routespl.js';
+import { routeRegularByType } from './splines-route-type.js';
+import { edgeType, EDGETYPE_LINE } from './splines.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
-import { splineMerge } from './splines-route.js';
+import { splineMerge, makeLineEdge } from './splines-route.js';
 import { rankHt } from './edge-route-rank.js';
 import { graphRanksep } from './position-aux.js';
 import {
@@ -131,10 +132,18 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
   const r = e.tail.info.rank;
   const rh = e.head.info.rank;
   if (g.info.rank === undefined || r === undefined || rh === undefined || rh <= r + 1) return null;
+  const et = edgeType(g);
+  // EDGETYPE_LINE: C tries makeLineEdge first (direct tail→head segment),
+  // falling back to the box corridor only when it declines (delr==1, or delr==2
+  // with edge labels). @see lib/dotgen/dotsplines.c:make_regular_edge (1757)
+  if (et === EDGETYPE_LINE) {
+    const line = makeLineEdge(g, e);
+    if (line !== null) return line;
+  }
   const segs = chainSegments(e);
   if (segs.length < 2) return null;
   const P = buildChainPath(g, e, segs);
-  return P === null ? null : routeSplines(P);
+  return P === null ? null : routeRegularByType(P, et);
 }
 
 // ---------------------------------------------------------------------------
@@ -265,7 +274,7 @@ function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
   const P = buildChainPath(g, makeFwdEdge(e), segs);
-  return P === null ? null : routeSplines(P);
+  return P === null ? null : routeRegularByType(P, edgeType(g));
 }
 
 /**

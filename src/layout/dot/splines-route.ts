@@ -18,6 +18,8 @@ import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
 import { routeMultiRankEdgeFaithful, makeFwdEdge } from './edge-route-chain.js';
+import { EDGE_LABEL } from './rank.js';
+import type { TextlabelT } from '../../common/types.js';
 
 // ---------------------------------------------------------------------------
 // SplineInfo
@@ -343,3 +345,75 @@ export function routeParallelEdgeGroup(
 }
 
 export { splineMerge };
+
+// ---------------------------------------------------------------------------
+// makeLineEdge
+// @see lib/dotgen/dotsplines.c:makeLineEdge (1636)
+// ---------------------------------------------------------------------------
+
+/** Sum of two points. @see lib/common/geom.h:add_pointf */
+function addPt(a: Point, b: Point): Point {
+  return { x: a.x + b.x, y: a.y + b.y };
+}
+
+/**
+ * True when p1 is to the left of the directed line p3→p2 (cross-product sign).
+ * @see lib/dotgen/dotsplines.c:leftOf
+ */
+function leftOf(p1: Point, p2: Point, p3: Point): boolean {
+  return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y) > 0;
+}
+
+/**
+ * 7-point straight segment through an offset edge-label position.
+ * @see lib/dotgen/dotsplines.c:makeLineEdge (label branch, 1662-1688)
+ */
+function lineLabelPoints(g: Graph, startp: Point, endp: Point, label: TextlabelT): Point[] {
+  const flip = g.info.flip === true;
+  const width = flip ? label.dimen.y : label.dimen.x;
+  const height = flip ? label.dimen.x : label.dimen.y;
+  const lp = { x: label.pos.x, y: label.pos.y };
+  if (leftOf(endp, startp, lp)) {
+    lp.x += width / 2.0;
+    lp.y -= height / 2.0;
+  } else {
+    lp.x -= width / 2.0;
+    lp.y += height / 2.0;
+  }
+  return [startp, startp, lp, lp, lp, endp, endp];
+}
+
+/**
+ * Direct tail→head line for a multi-rank `EDGETYPE_LINE` edge: a 4-point line
+ * (or 7-point through the edge label). Returns null to decline — `delr === 1`,
+ * or `delr === 2` when the graph carries edge labels — so the box-corridor path
+ * (which straightens its polyline) handles those cases instead.
+ *
+ * @see lib/dotgen/dotsplines.c:makeLineEdge (1636)
+ */
+export function makeLineEdge(g: Graph, fe: Edge): Point[] | null {
+  // Walk the to_orig chain to the underlying NORMAL edge (C: while edge_type
+  // != NORMAL, e = to_orig). resolveOrigEdge stops at the edge with no to_orig,
+  // which is exactly that NORMAL original.
+  const e: Edge = resolveOrigEdge(fe);
+  const tn = e.tail;
+  const hn = e.head;
+  if (tn.info.rank === undefined || hn.info.rank === undefined) return null;
+  const delr = Math.abs(hn.info.rank - tn.info.rank);
+  const hasEdgeLabel = ((g.info.has_labels ?? 0) & EDGE_LABEL) !== 0;
+  if (delr === 1 || (delr === 2 && hasEdgeLabel)) return null;
+
+  let startp: Point;
+  let endp: Point;
+  if (fe.tail === tn) {
+    startp = addPt(tn.info.coord, e.info.tail_port.p);
+    endp = addPt(hn.info.coord, e.info.head_port.p);
+  } else {
+    startp = addPt(hn.info.coord, e.info.head_port.p);
+    endp = addPt(tn.info.coord, e.info.tail_port.p);
+  }
+
+  const label = e.info.label;
+  if (label !== undefined) return lineLabelPoints(g, startp, endp, label);
+  return [startp, startp, endp, endp];
+}
