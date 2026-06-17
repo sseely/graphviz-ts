@@ -175,6 +175,29 @@ describe('splines=line — non-adjacent flat label vs dot 15.0.0', () => {
   });
 });
 
+// DOT-9: a no-port, no-label adjacent flat GROUP fans into a spindle via
+// makeSimpleFlat (dotsplines.c:1075). Two parallel `a->b` flats must route as
+// two distinct splines, not overlap.
+const SIMPLE_FLAT_SRC = 'digraph{ {rank=same; a b} a->b; a->b }';
+// dot 15.0.0 oracle: two fanned 4-point splines (one above, one below the rank).
+const SIMPLE_FLAT_PATHS = [
+  [[48.66, -6.64], [54.49, -4.9], [60.32, -4.22], [66.15, -4.6]],
+  [[48.66, -29.36], [54.49, -31.1], [60.32, -31.78], [66.15, -31.4]],
+];
+
+describe('DOT-9 — unlabeled parallel adjacent flats (makeSimpleFlat) vs dot 15.0.0', () => {
+  it('fans two no-label flats into two distinct splines within 0.5pt', () => {
+    const paths = allPaths(renderSvg(SIMPLE_FLAT_SRC, 'dot'));
+    expect(paths.length).toBe(2);
+    // Order-independent: each oracle spline is matched by exactly one TS path.
+    for (const want of SIMPLE_FLAT_PATHS) {
+      const hit = paths.filter(ts => ts.length === want.length
+        && want.every((q, i) => dist(ts[i], q) <= TOL));
+      expect(hit.length).toBe(1);
+    }
+  });
+});
+
 const MULTI_SRC = 'digraph{ {rank=same; a b} a->b[label="x"]; a->b[label="y"] }';
 // dot 15.0.0 oracle: x routes straight above (i=0); y splines below (i=1, down).
 const MULTI_X_PATH = [[54.49, -20.9], [61.99, -20.9], [70.27, -20.9], [78.27, -20.9]];
