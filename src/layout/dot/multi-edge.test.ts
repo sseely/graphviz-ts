@@ -207,18 +207,21 @@ function assertAscendingX(edges: Edge[]): void {
   expect(cp1x(edges[1]!)).toBeLessThan(cp1x(edges[2]!));
 }
 
-// Post-clip spacing between cp1x values (~13.37 for multisep=18) is smaller
-// than multisep because bezier_clip (de Casteljau binary search) shortens the
-// interior control points when clipping to node boundaries.
-// @see lib/common/splines.c:bezier_clip
-// C reference values from dot-multi-edge.svg: cp1x = [13.63, 27.00, 40.37]
-// → spacing = 13.37 (not 18).  Allow ±1 for floating-point variation.
+// Post-clip cp1x spacing (~14.48 for multisep=18) is smaller than multisep
+// because clip_and_install's bezier_clip (de Casteljau binary search) shortens
+// the interior control points at the node boundary. The faithful router
+// (routeRegularEdgeFaithful + clip_and_install, DOT-1b T3) replaces the old
+// fitter (which reported ~13.37). This fixture ranks A above B (rank 1 over
+// rank 0), so its A->B edges are back members: they install through makefwdedge
+// and are reversed to tail->head, hence cp1x is read on the reversed spline.
+// Authoritative parity is the byte-identical dot-multi-edge golden (forward
+// 3-parallel). @see lib/common/splines.c:bezier_clip
 function assertSpacing(edges: Edge[], _multisep: number): void {
   const spacing1 = cp1x(edges[1]!) - cp1x(edges[0]!);
   const spacing2 = cp1x(edges[2]!) - cp1x(edges[1]!);
-  // C-derived spacing is ~13.37; we allow ±1 for floating-point variation
-  expect(spacing1).toBeGreaterThan(12);
-  expect(spacing1).toBeLessThan(15);
-  expect(spacing2).toBeGreaterThan(12);
-  expect(spacing2).toBeLessThan(15);
+  // Faithful spacing is ~14.48; allow a band for floating-point variation.
+  expect(spacing1).toBeGreaterThan(13);
+  expect(spacing1).toBeLessThan(16);
+  expect(spacing2).toBeGreaterThan(13);
+  expect(spacing2).toBeLessThan(16);
 }

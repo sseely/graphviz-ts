@@ -299,3 +299,39 @@ describe('T1 (DOT-1b): faithful adjacent back edge via makefwdedge (dot oracle)'
     expect(maxDelta(splineSvgPts(ab!), oracle)).toBeLessThanOrEqual(TOL);
   });
 });
+
+// ---------------------------------------------------------------------------
+// T3 (DOT-1b) — parallel/opposing group routing via the faithful pipeline.
+//
+// routeParallelEdgeGroup now routes the shared base via routeRegularEdgeFaithful
+// and installs each member with clip_and_install (no fitter). Back members
+// install through makefwdedge and are reversed to tail→head (AD-2). These pins
+// go through the full render pipeline (the group router owns these cases).
+// ---------------------------------------------------------------------------
+
+/** dot 15.x for `digraph{a->b; b->a}` — opposing pair, offset to opposite sides. */
+const DOT_T3_OPPOSING: Pt[][] = [
+  [{ x: 21.12, y: -72.05 }, { x: 20.33, y: -64.57 }, { x: 20.08, y: -55.58 }, { x: 20.37, y: -47.14 }],
+  [{ x: 32.86, y: -35.79 }, { x: 33.66, y: -43.25 }, { x: 33.92, y: -52.24 }, { x: 33.64, y: -60.69 }],
+];
+
+/** dot 15.x for `digraph{a->b;a->b;a->b}` — 3 parallel forward edges, offset. */
+const DOT_T3_PARALLEL_X3: Pt[][] = [
+  [{ x: 15.56, y: -73.46 }, { x: 13.63, y: -65.31 }, { x: 13.05, y: -55.08 }, { x: 13.84, y: -45.7 }],
+  [{ x: 27, y: -71.7 }, { x: 27, y: -64.41 }, { x: 27, y: -55.73 }, { x: 27, y: -47.54 }],
+  [{ x: 38.44, y: -73.46 }, { x: 40.37, y: -65.31 }, { x: 40.95, y: -55.08 }, { x: 40.16, y: -45.7 }],
+];
+
+describe('T3 (DOT-1b): parallel/opposing groups via faithful pathplan (dot oracle)', () => {
+  it('opposing a->b / b->a offset to opposite sides, back member reversed', () => {
+    const paths = edgePaths(renderSvg('digraph{a->b; b->a}', 'dot'));
+    expect(paths.length).toBe(2);
+    for (let i = 0; i < 2; i++) expect(maxDelta(paths[i], DOT_T3_OPPOSING[i])).toBeLessThanOrEqual(TOL);
+  });
+
+  it('three parallel a->b edges fan out with Multisep offsets (matches dot)', () => {
+    const paths = edgePaths(renderSvg('digraph{a->b;a->b;a->b}', 'dot'));
+    expect(paths.length).toBe(3);
+    for (let i = 0; i < 3; i++) expect(maxDelta(paths[i], DOT_T3_PARALLEL_X3[i])).toBeLessThanOrEqual(TOL);
+  });
+});

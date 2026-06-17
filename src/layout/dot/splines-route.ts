@@ -13,13 +13,11 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Box, Point } from '../../model/geom.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
-import { nodeRankOf, nodeOrderOf, nodeCoordX, splineMerge, resolveOrigEdge } from './splines.js';
-import { buildRankCorridor, clipToNodes } from './edge-route-routing.js';
-import { computeSpline } from './edge-route-poly.js';
-import { nodeBoxOf, installEdgeSpline, edgePenwidthAttr } from './edge-route-helpers.js';
-import { rankEdgeInfoOf } from './edge-route-rank.js';
-import { arrowheadPolygon } from './edge-route-arrow.js';
-import { edgeRenderPenwidth } from './edge-route-helpers.js';
+import { nodeRankOf, nodeOrderOf, nodeCoordX, splineMerge, resolveOrigEdge, swapSpline } from './splines.js';
+import { clipAndInstall } from '../../common/splines-clip.js';
+import { buildDotSinfo } from './self-loop.js';
+import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
+import { routeMultiRankEdgeFaithful, makeFwdEdge } from './edge-route-chain.js';
 
 // ---------------------------------------------------------------------------
 // SplineInfo
@@ -283,54 +281,55 @@ function isInterior(i: number, len: number): boolean {
 }
 
 /**
- * Build the unclipped base bezier for the edge group via rank-corridor,
- * falling back to a linear bezier when rank geometry is unavailable.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (spline computation)
+ * Faithful unclipped base spline (graphviz-internal y-up) for the group's
+ * forward representative, or null when the faithful path declines. C routes ONE
+ * shared path for the forward edge `fe`; each member then shifts its interior
+ * control points and clip_and_installs (make_regular_edge cnt>1). When e0 is a
+ * back edge, route its forward view (makefwdedge) so the geometry runs low→high
+ * rank like the adjacent/multi-rank faithful routers expect.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (shared base for cnt>1)
  */
-function baseSplineForGroup(g: Graph, e0: Edge): Point[] {
-  const tailBox = nodeBoxOf(e0.tail, g);
-  const headBox = nodeBoxOf(e0.head, g);
-  const rankInfo = rankEdgeInfoOf(g, e0.tail, e0.head);
-  if (rankInfo !== undefined) {
-    const corridor = buildRankCorridor(tailBox, headBox, rankInfo);
-    return computeSpline(corridor.boxes, corridor.startPt, corridor.endPt);
-  }
-  const s = e0.tail.info.coord;
-  const d = e0.head.info.coord;
-  return [
-    { x: s.x, y: s.y },
-    { x: s.x + (d.x - s.x) / 3,       y: s.y + (d.y - s.y) / 3 },
-    { x: s.x + 2 * (d.x - s.x) / 3,   y: s.y + 2 * (d.y - s.y) / 3 },
-    { x: d.x, y: d.y },
-  ];
+function baseSplineForGroup(g: Graph, e0: Edge): Point[] | null {
+  const fe = isBackEdgeMember(e0) ? makeFwdEdge(e0) : e0;
+  return routeRegularEdgeFaithful(g, fe) ?? routeMultiRankEdgeFaithful(g, fe);
 }
 
 /**
  * True when the edge's own orientation is opposite the forward (main-edge)
  * direction — i.e. a back edge in a multi-edge group (e.g. `b->a` paired with
- * `a->b`). The group's base spline is computed once in forward orientation; a
- * back-edge member must be reversed before it is clipped to its own tail/head,
- * so the spline runs tail→head with the arrowhead at the correct end.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE makefwdedge + un-flip)
+ * `a->b`). The group's shared base runs in forward orientation; a back-edge
+ * member installs through its forward view (makefwdedge) so clip_and_install
+ * lays the forward geometry on the original edge, then the post-group
+ * edgeNormalize pass reverses it to tail→head with the arrowhead at the head.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE makefwdedge), edge_normalize
  */
 function isBackEdgeMember(e: Edge): boolean {
   const orig = resolveOrigEdge(e);
   return nodeRankOf(orig.head) < nodeRankOf(orig.tail);
 }
 
-/** Clip a shifted bezier to node boundaries and install spline + arrowhead. */
-function installShiftedEdge(g: Graph, e: Edge, shifted: Point[]): void {
-  // Clip using the edge's own tail/head nodes (virtual edges have physical coords).
-  const tBox = nodeBoxOf(e.tail, g);
-  const hBox = nodeBoxOf(e.head, g);
-  const pw = edgePenwidthAttr(e);
-  const { clipped, arrowTip, arrowDir } = clipToNodes(shifted, tBox, hBox, pw);
-  // Install spl on the original NORMAL edge (mirrors C clip_and_install's to_orig loop).
-  // @see lib/common/splines.c:clip_and_install (lines 248-249)
-  const orig = resolveOrigEdge(e);
-  installEdgeSpline(orig, clipped, arrowTip);
-  (orig.info as unknown as Record<string, unknown>)._arrowPts =
-    arrowheadPolygon(arrowTip, arrowDir, edgeRenderPenwidth(orig));
+/**
+ * Install a shifted base spline on one group member via the faithful
+ * clip_and_install. Back members install through their forward view
+ * (makefwdedge), which sets to_orig/edge_type so the spline lands on the
+ * ORIGINAL edge; the post-group edgeNormalize pass reverses it. A FRESH point
+ * copy is passed because clip_and_install mutates its array in place.
+ * @see lib/common/splines.c:clip_and_install; lib/dotgen/dotsplines.c:makefwdedge
+ */
+function installShiftedEdge(e: Edge, shifted: Point[]): void {
+  const copy = shifted.map(p => ({ x: p.x, y: p.y }));
+  const back = isBackEdgeMember(e);
+  const fe = back ? makeFwdEdge(e) : e;
+  clipAndInstall(fe, fe.head, copy, copy.length, buildDotSinfo());
+  // C edge_normalize reverses back edges via agfstout; the TS port iterates
+  // ND_out, but a reversed back edge lives in ND_other and is never reached by
+  // that pass — reverse its installed spline here (once) so it runs tail→head.
+  // The multi-rank back path (routeBackEdge) orients its own splines and is not
+  // routed here, so this never double-reverses. @see dotsplines.c:edge_normalize
+  if (back) {
+    const orig = resolveOrigEdge(e);
+    if (orig.info.spl) swapSpline(orig.info.spl);
+  }
 }
 
 /**
@@ -351,19 +350,17 @@ export function routeParallelEdgeGroup(
   const cnt = edges.length;
   if (cnt === 0) return;
   const base = baseSplineForGroup(g, edges[0]!);
-  if (cnt === 1) { installShiftedEdge(g, edges[0]!, base); return; }
+  if (base === null) return;
+  if (cnt === 1) { installShiftedEdge(edges[0]!, base); return; }
   // dx = Multisep * (cnt-1) / 2 centres the fan on the base path.
   // @see lib/dotgen/dotsplines.c:make_regular_edge:1885
   const dx = multisep * (cnt - 1) / 2;
   let shifted = shiftInteriorPts(base, -dx);
   for (let j = 0; j < cnt; j++) {
     if (j > 0) shifted = shiftInteriorPts(shifted, multisep);
-    // The base spline runs in forward (main-edge) orientation; a back-edge
-    // member (e.g. b->a paired with a->b) runs the opposite way, so reverse the
-    // points so the installed spline goes tail→head with the arrow at its head.
-    // @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE makefwdedge + un-flip)
-    const oriented = isBackEdgeMember(edges[j]!) ? [...shifted].reverse() : shifted;
-    installShiftedEdge(g, edges[j]!, oriented);
+    // Back-edge members install through makefwdedge; the post-group
+    // edgeNormalize pass reverses them. @see make_regular_edge (BWDEDGE)
+    installShiftedEdge(edges[j]!, shifted);
   }
 }
 
