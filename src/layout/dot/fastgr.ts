@@ -309,6 +309,32 @@ export function deleteFastNode(g: Graph, n: Node): void {
 }
 
 /**
+ * Remove node `n` from its rank's ordered node list `v[]`, shifting later
+ * entries down one and decrementing the rank's count. The structural inverse
+ * of install_in_rank / placeInRankSlot.
+ *
+ * Faithful to the C: the scan starts at index 0 (not vStart). For the common
+ * single-component case vStart is 0/undefined, matching C's index-from-0 scan.
+ * @see lib/dotgen/dotinit.c:remove_from_rank
+ */
+export function removeFromRank(g: Graph, n: Node): void {
+  const r = n.info.rank !== undefined ? n.info.rank : 0;
+  const rank = g.info.rank;
+  if (rank === undefined) return;
+  const rk = rank[r];
+  for (let j = 0; j < rk.n; j++) {
+    const v = rk.v[j];
+    if (v === n) {
+      for (j++; j < rk.n; j++) {
+        rk.v[j - 1] = rk.v[j];
+      }
+      rk.n--;
+      break;
+    }
+  }
+}
+
+/**
  * Allocate a virtual (VIRTUAL node_type) node, add it to `g`'s fast graph
  * with pre-allocated in/out edge lists of capacity 4.
  * @see lib/dotgen/fastgr.c:virtual_node
