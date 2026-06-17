@@ -60,3 +60,19 @@ describe('DOT-11a — aux reposition makes labeled flat spline byte-exact', () =
     pinPath(firstPath(renderSvg(PLAIN_SRC, 'dot')), PLAIN_SPLINE);
   });
 });
+
+// DOT-12 + DOT-10: the label vnode is repositioned onto the spline
+// (recover_slack) and copied back, so the label lands at the dot position.
+function labelXY(svg: string): Pt | null {
+  const re = new RegExp('<text[^>]*\\sx=' + Q + '([-0-9.]+)' + Q + '[^>]*\\sy=' + Q + '([-0-9.]+)' + Q + '[^>]*>x</text>');
+  const m = svg.match(re);
+  return m ? { x: Number(m[1]), y: Number(m[2]) } : null;
+}
+
+describe('DOT-12 + DOT-10 — port-bearing labeled flat emits its label', () => {
+  it('places <text>x</text> at the dot 15.0.0 position (72, -32.91)', () => {
+    const lp = labelXY(renderSvg(LABELED_SRC, 'dot'));
+    expect(lp).not.toBeNull();
+    expect(dist(lp!, [72, -32.91])).toBeLessThanOrEqual(TOL);
+  });
+});

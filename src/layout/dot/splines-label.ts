@@ -285,7 +285,7 @@ function writePortlabelPos(
 // ---------------------------------------------------------------------------
 
 /** Expand g.info.bb to include the label's bounding box. */
-function updateBB(g: Graph, l: TextlabelT): void {
+export function updateBB(g: Graph, l: TextlabelT): void {
   const bb = g.info.bb;
   const hw = l.dimen.x / 2;
   const hh = l.dimen.y / 2;

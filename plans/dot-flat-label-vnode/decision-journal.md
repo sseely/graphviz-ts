@@ -1,0 +1,10 @@
+# Decision Journal — dot-flat-label-vnode
+
+| When | Task | Decision / Event | Rationale |
+|------|------|------------------|-----------|
+| 2026-06-17 | — | C deep dive: ruled out placeVnlabel/gvPostprocess/dispatch (all identical to C). Pinned root: TS aux label vnode not repositioned onto spline (C make_regular_edge moves 33→11.71; TS stays 51) | C-instrumented ground truth |
+| 2026-06-17 | — | Fixed C-instrumentation: dot layout lives in gvplugin_dot_layout plugin (GVBINDIR), not libgvc. Rebuild: make dotgen && make gvplugin_dot_layout, copy to /tmp/gvplugins | Build harness now works for ground-truth comparison |
+| 2026-06-17 | — | Baseline: tsc 0, vitest 1855 | Pre-mission green |
+| 2026-06-17 | T1 | Ported `recoverSlack`/`resizeVnInBox` into `edge-route-chain.ts:routeMultiRankEdgeFaithful` (resizeVn already existed). Moved aux vnode 51→29.71 (correct −21.29 delta; the +18 absolute offset washes out via del, like the spline). | DOT-12 reposition mechanism = recover_slack |
+| 2026-06-17 | T1 | Order bug: TS's faithful multi-rank router runs in routeDotEdges, AFTER dotSplines_'s placeRegularEdgeLabels, so the label was placed pre-reposition. Reordering dotSplines_ globally broke DOT-7. Surgical fix: re-call `placeRegularEdgeLabels(aux.auxg)` in makeFlatAdjEdges after dotSplines_. Now aux label post-postproc y = **37.96 = C's 37.96** (x offset 27 absorbed by del). 1855 pass, zero churn. | Scoped to aux pipeline; global reorder rejected (DOT-7 churn) |
+| 2026-06-17 | T1 | **EXACT FIX PINNED.** The vnode move (33→11.71) is `recover_slack(segfirst, P)` inside `make_regular_edge` (dotsplines.c:1822,1872,2054). It walks the edge's virtual chain and calls `resize_vn` to fit each vnode into its routing box; for a LABEL vnode, center x = `box.UR.x` (+ND_rw). TS has `resizeVn` (splines-route.ts:116) but **NEVER ported `recover_slack`** (no definition, no callers anywhere). So TS's regular-edge routing skips the chain reposition entirely. Fix: port `recoverSlack` and call it after routing in the regular-edge path. | resize_vn already exists; recover_slack is the missing call. Gate hard on goldens (shared with all regular labeled edges). |

@@ -39,6 +39,7 @@ import { dotInitNodeEdge } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import { newSpline } from '../../common/splines-clip.js';
 import { updateBbBz } from '../../common/splines-geom.js';
+import { placeRegularEdgeLabels, updateBB } from './splines-label.js';
 import { NORMAL, VIRTUAL } from './fastgr.js';
 import { EDGE_LABEL } from './rank.js';
 
@@ -199,10 +200,27 @@ function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
   }
 }
 
-/** transformf the aux edge's spline + arrowhead onto the original edge. */
-function copyOneFlatSpline(
-  orig: Edge, auxe: Edge, del: Point, flip: boolean, bb: Box | undefined,
-): void {
+/** Transform the aux edge's arrowhead polygon onto the original edge. */
+function copyFlatArrow(orig: Edge, auxe: Edge, del: Point, flip: boolean): void {
+  const arrow = (auxe.info as unknown as Record<string, unknown>)._arrowPts as Point[] | undefined;
+  if (arrow !== undefined) {
+    (orig.info as unknown as Record<string, unknown>)._arrowPts =
+      arrow.map(p => transformf(p, del, flip));
+  }
+}
+
+/** Copy the aux edge's label position back onto the original, growing the
+ *  graph bb. @see lib/dotgen/dotsplines.c:make_flat_adj_edges 1273-1277 */
+function copyFlatLabel(orig: Edge, auxe: Edge, del: Point, flip: boolean, g: Graph): void {
+  const lbl = orig.info.label, auxLbl = auxe.info.label;
+  if (lbl === undefined || auxLbl === undefined || !auxLbl.set) return;
+  lbl.pos = transformf(auxLbl.pos, del, flip);
+  lbl.set = true;
+  if (g.info.bb !== undefined) updateBB(g, lbl);
+}
+
+/** transformf the aux edge's spline + arrowhead + label onto the original edge. */
+function copyOneFlatSpline(orig: Edge, auxe: Edge, del: Point, flip: boolean, g: Graph): void {
   const auxbz = auxe.info.spl?.list[0];
   if (auxbz === undefined) return;
   const bz = newSpline(orig, auxbz.list.length);
@@ -212,17 +230,14 @@ function copyOneFlatSpline(
   bz.ep = transformf(auxbz.ep, del, flip);
   for (let j = 0; j < auxbz.list.length; j++) bz.list[j] = transformf(auxbz.list[j], del, flip);
   // Grow the graph bb by each transformed bezier segment. @see dotsplines.c:1270
+  const bb = g.info.bb;
   if (bb !== undefined) {
     for (let j = 0; j + 3 < bz.list.length; j += 3) {
       updateBbBz(bb, [bz.list[j], bz.list[j + 1], bz.list[j + 2], bz.list[j + 3]]);
     }
   }
-  const rec = auxe.info as unknown as Record<string, unknown>;
-  const arrow = rec._arrowPts as Point[] | undefined;
-  if (arrow !== undefined) {
-    (orig.info as unknown as Record<string, unknown>)._arrowPts =
-      arrow.map(p => transformf(p, del, flip));
-  }
+  copyFlatArrow(orig, auxe, del, flip);
+  copyFlatLabel(orig, auxe, del, flip, g);
 }
 
 /** Copy every routed aux spline back to its original edge. */
@@ -237,7 +252,7 @@ function copyFlatSplines(g: Graph, edges: Edge[], aux: FlatAux): void {
   for (let i = 0; i < edges.length; i++) {
     const orig = toNormalEdge(edges[i]);
     const auxe = aux.alg.get(orig);
-    if (auxe !== undefined) copyOneFlatSpline(orig, auxe, del, flip, g.info.bb);
+    if (auxe !== undefined) copyOneFlatSpline(orig, auxe, del, flip, g);
   }
 }
 
@@ -257,6 +272,11 @@ export function makeFlatAdjEdges(g: Graph, edges: Edge[], cnt: number, _et: numb
   repositionFlatAux(g, edges, aux);
   dotSameports(aux.auxg);
   dotSplines_(aux.auxg, false);
+  // The labeled chain edge routes in routeDotEdges (after dotSplines_'s own
+  // label pass), so recover_slack repositions the label vnode only afterward.
+  // Re-place the aux labels here to read the final vnode coords (DOT-12).
+  // @see lib/dotgen/dotsplines.c:make_regular_edge (recover_slack before place_vnlabel)
+  placeRegularEdgeLabels(aux.auxg);
   gvPostprocess(aux.auxg);
   copyFlatSplines(g, edges, aux);
   cleanupCloneGraph(aux.auxg);
