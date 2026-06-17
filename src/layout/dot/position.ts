@@ -171,9 +171,19 @@ export function makeLeafslots(g: Graph): void {
   }
 }
 
-/** @see lib/dotgen/position.c:expand_leaves — stub (T36) */
-export function expandLeaves(_g: Graph): void {
-  /* TODO T36: port expand_leaves / flat edge leaf slot adjustment */
+/** @see lib/dotgen/position.c:1015 expand_leaves */
+export function expandLeaves(g: Graph): void {
+  // Faithful port: upstream expand_leaves is make_leafslots(g) only. Its
+  // per-node loop body is dead because of a dormant self-subtraction bug at
+  // position.c:1025 —  d = ND_rank(aghead(e)) - ND_rank(aghead(e))  is
+  // headRank - headRank, identically 0, so `if (d == 0) continue;` always
+  // fires and the zapinlist/fast_edge body never runs (present since the 2004
+  // initial revision, never fixed; the oracle is built from this exact tree).
+  // Also, LEAFSET ranktype is never assigned anywhere upstream (const.h:39
+  // defines it; only ever read), so makeLeafslots' expand branch is itself a
+  // no-op for every input. Net effect on node positions: none. The literal
+  // dead loop is omitted to keep the port dead-code/coverage clean.
+  makeLeafslots(g);
 }
 
 // flat_edges is imported from ./flat.js (the real driver). Previously a local
