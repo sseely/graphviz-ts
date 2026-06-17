@@ -71,10 +71,37 @@ byte-identical**. Oracle: `~/git/graphviz/build/cmd/dot/dot` with
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 0 | [T0 split mincross-build.ts](batch-0/T0-split-mincross-build.md) | [ ] |
-| 1 (after T0) | [T1 deep C control-flow trace](batch-1/T1-c-trace.md) | [ ] |
-| 2 (after T1) | [T2 dispatch fix](batch-2/T2-dispatch.md) · [T3 faithful double-install fix](batch-2/T3-faithful-fix.md) | [ ] |
-| 3 (after T2,T3) | [T4 oracle parity + corpus](batch-3/T4-parity.md) | [ ] |
+| 0 | [T0 split mincross-build.ts](batch-0/T0-split-mincross-build.md) | [x] (859aa64 — mincross-flat.ts; 353/206 lines) |
+| 1 (after T0) | [T1 deep C control-flow trace](batch-1/T1-c-trace.md) | [x] (12c3cda — docs/newrank-c-trace.md) |
+| 2 (after T1) | [T2 dispatch fix](batch-2/T2-dispatch.md) · [T3 faithful double-install fix](batch-2/T3-faithful-fix.md) | [x] (d7e457f / 0cd33af) |
+| 3 (after T2,T3) | [T4 oracle parity + corpus](batch-3/T4-parity.md) | [x] (46576f0) |
+
+## Session summary (2026-06-17, opus) — COMPLETE, full parity
+
+**Objective achieved.** `newrank=true` reproduces the dot oracle exactly
+(`a=-178, b=-106, c=-106 (=b), e=-34, d=-34`, ≤0.5pt) with all 122 goldens
+byte-identical. The fix was **2 faithful one-liners**, not a fix-chain.
+
+| Task | Commit | Result |
+|------|--------|--------|
+| T0 | 859aa64 | Split mincross-build.ts → mincross-flat.ts (353/206 lines) |
+| T1 | 12c3cda | C trace → `docs/newrank-c-trace.md`; named the exact divergence |
+| T3 | 0cd33af | `markClusters` undefined ranktype → NORMAL (cluster.c:317) — the hang fix |
+| T2 | d7e457f | `dotRank` reads the `newrank` attr (rank.c:523) |
+| T4 | 46576f0 | Flip residual → oracle parity pins + corpus; closed comparisons/newrank.md |
+
+**Root cause (the faithful win):** C's `ND_ranktype` is a calloc-zeroed char
+defaulting to `NORMAL(0)`; the TS port left `ranktype` optional (undefined), so
+`markClusters`' `!= 0` guard skipped every untouched node and never set
+`ND_clust`. Under newrank that pushed cluster members onto the root nlist, so a
+cross-cluster `rank=same` node was installed twice into the root rank array →
+`furthestNode` hang. Coercing `undefined→NORMAL` restores C exactly; goldens
+unaffected (non-newrank nodes already get `ranktype=0` via `UF_singleton`).
+
+**Gates (final):** tsc 0 · vitest **1842 pass / 0 fail (124 files)** · 122
+goldens byte-identical · lizard clean · all touched files ≤500 lines. AD-3 cap
+not approached (1 logic fix beyond the dispatch). Merged to `main` with a merge
+commit.
 
 ## Constraints (stop / push-forward)
 
