@@ -116,21 +116,34 @@ describe('dot2Rank', () => {
 // dotRank dispatch
 // ---------------------------------------------------------------------------
 
-describe('dotRank dispatch', () => {
-  it('uses dot1Rank when NEW_RANK flag is absent', () => {
-    const [g, [a, b]] = makeRankGraph(2);
-    addRankEdge(g, a, b);
-    g.info.flags = 0;
+function dispatchGraph(): [Graph, Node] {
+  const [g, [a, b]] = makeRankGraph(2);
+  addRankEdge(g, a, b);
+  g.info.flags = 0;
+  return [g, b];
+}
+
+describe('dotRank dispatch — newrank attr drives dot2 (rank.c:523)', () => {
+  it('newrank=true → dot2Rank branch sets NEW_RANK', () => {
+    const [g, b] = dispatchGraph();
+    g.attrs.set('newrank', 'true');
     dotRank(g);
-    expect(a.info.rank).toBe(0);
     expect(b.info.rank).toBe(1);
+    expect((g.info.flags ?? 0) & NEW_RANK).toBe(NEW_RANK);
   });
-  it('uses dot2Rank when NEW_RANK flag is set', () => {
-    const [g, [a, b]] = makeRankGraph(2);
-    addRankEdge(g, a, b);
-    g.info.flags = NEW_RANK;
+});
+
+describe('dotRank dispatch — dot1 when attr absent/false', () => {
+  it('no attr → dot1Rank, NEW_RANK unset', () => {
+    const [g, b] = dispatchGraph();
     dotRank(g);
-    expect(a.info.rank).toBe(0);
     expect(b.info.rank).toBe(1);
+    expect((g.info.flags ?? 0) & NEW_RANK).toBe(0);
+  });
+  it('newrank=false → dot1Rank, NEW_RANK unset', () => {
+    const [g] = dispatchGraph();
+    g.attrs.set('newrank', 'false');
+    dotRank(g);
+    expect((g.info.flags ?? 0) & NEW_RANK).toBe(0);
   });
 });
