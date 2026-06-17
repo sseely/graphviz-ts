@@ -36,11 +36,6 @@ export interface SplineInfo {
   rankBox: Box[];
 }
 
-/** Create a zero-initialized SplineInfo. */
-export function makeSplineInfo(): SplineInfo {
-  return { leftBound: 0, rightBound: 0, splinesep: 0, multisep: 0, rankBox: [] };
-}
-
 // ---------------------------------------------------------------------------
 // Node edge-count accessors (each ?? is its own CCN=2 function)
 // ---------------------------------------------------------------------------
@@ -237,23 +232,6 @@ export function neighbor(
     if (!pathscross(n, vn, ie, oe)) return n;
   }
   return undefined;
-}
-
-// ---------------------------------------------------------------------------
-// make_regular_edge — stub (pathplan not yet ported)
-// @see lib/dotgen/dotsplines.c:make_regular_edge
-// ---------------------------------------------------------------------------
-
-/**
- * Route a regular (non-flat, non-self) edge.
- * Full implementation requires pathplan.ts.
- * @see lib/dotgen/dotsplines.c:make_regular_edge
- */
-export function makeRegularEdge(
-  _g: Graph, _sp: SplineInfo,
-  _edges: Edge[], _cnt: number, _et: number,
-): void {
-  // TODO: implement when pathplan.ts is ported
 }
 
 // ---------------------------------------------------------------------------

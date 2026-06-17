@@ -51,7 +51,7 @@ Baseline at mission start: **1810 passed / 0 failed, 115 goldens byte-identical*
 |-------|-------|--------|
 | 1 | [T1 adjacent-back faithful](batch-1/T1-adjacent-back-faithful.md) · [T2 measure opposing model](batch-1/T2-measure-opposing-model.md) — **T2 done (spike)** | [x] |
 | 2 (after T1) | [T3 parallel/opposing faithful](batch-2/T3-parallel-opposing-faithful.md) | [x] |
-| 3 (after T1, T3) | [T4 delete the fitter](batch-3/T4-delete-fitter.md) | [ ] |
+| 3 (after T1, T3) | [T4 delete the fitter](batch-3/T4-delete-fitter.md) — **regular-edge fitter deleted; flat-edge subtree kept (re-scoped)** | [x] |
 
 **T2 is already complete** — a pre-mission feasibility spike (2026-06-17)
 instrumented the C `make_regular_edge`/`clip_and_install` and captured the exact

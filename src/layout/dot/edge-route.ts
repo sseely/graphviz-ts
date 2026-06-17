@@ -17,15 +17,13 @@ import type { Graph } from '../../model/graph.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
 import type { NodeBox } from './edge-route-geom.js';
-import type { EdgeSplineResult, PortRoute } from './edge-route-routing.js';
+import type { PortRoute } from './edge-route-routing.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 
-import { normalizeVec, negateVec } from './edge-route-geom.js';
+import { normalizeVec } from './edge-route-geom.js';
 import { arrowheadPolygon } from './edge-route-arrow.js';
 import { linearBezier } from './edge-route-poly.js';
-import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
-import { routeEdgeRaw, normalArrowLen } from './edge-route-routing.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
 import { routeFlatEdgeFaithful, isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
@@ -38,14 +36,12 @@ import {
   edgeRenderPenwidth,
   edgePenwidthAttr,
   installEdgeSpline,
-  routeBezier,
   straightEdgeSplineWithRank,
   defaultEdgeDir,
 } from './edge-route-helpers.js';
 
 import {
   routeBackEdge,
-  routeFwdMultiRankEdge,
   routeMultiRankEdgeFaithful,
   makeFwdEdge,
 } from './edge-route-chain.js';
@@ -65,15 +61,14 @@ export {
 } from './edge-route-clip.js';
 export {
   boxesToPolygon, addForwardPolyPts, addReversePolyPts,
-  polyEdgesFromPts, computeSpline, computeSplineMulti,
+  polyEdgesFromPts, computeSpline,
 } from './edge-route-poly.js';
 export { makeTailBox, makeHeadBox, makeMaximalBbox, makeRankBox } from './edge-route-boxes.js';
 export type { RankBoxParams } from './edge-route-boxes.js';
 export {
   buildRankCorridor, clipToNodes, routeWithRank, routeSimple,
-  routeEdgeRaw, normalArrowLen,
+  normalArrowLen,
 } from './edge-route-routing.js';
-export type { RawEdgeRoute } from './edge-route-routing.js';
 export type { EdgeSplineResult, RankEdgeInfo } from './edge-route-routing.js';
 export {
   computeLeftBound, computeRightBound, rankHt, rankEdgeInfoOf,
@@ -87,10 +82,8 @@ export {
   routeBezier, straightEdgeSplineWithRank,
 } from './edge-route-helpers.js';
 export {
-  walkVirtChain, walkFwdVirtChain,
   clipCompoundTail, clipCompoundHead,
-  buildBackEdgeVirtBox, buildBackEdgeGapBox,
-  routeBackEdge, routeFwdMultiRankEdge,
+  routeBackEdge,
 } from './edge-route-chain.js';
 
 // ---------------------------------------------------------------------------
@@ -100,22 +93,6 @@ export {
 /** Straight-line cubic Bezier at 1/3 and 2/3. @see lib/dotgen/dotsplines.c */
 export function buildLinearBezier(p0: Point, p3: Point): Point[] {
   return linearBezier(p0, p3);
-}
-
-// ---------------------------------------------------------------------------
-// straightEdgeSpline — alias kept for backward compatibility
-// ---------------------------------------------------------------------------
-
-/**
- * Compute Bezier control points and arrowhead geometry for a straight edge.
- * @see lib/dotgen/dotsplines.c:make_regular_edge
- */
-export function straightEdgeSpline(
-  tailBox: NodeBox,
-  headBox: NodeBox,
-  penwidth = 1.0,
-): EdgeSplineResult {
-  return straightEdgeSplineWithRank(tailBox, headBox, undefined, penwidth);
 }
 
 // ---------------------------------------------------------------------------
@@ -169,67 +146,33 @@ function isMultiRankFwdEdge(e: GraphEdge): boolean {
 }
 
 /**
- * Route a multi-rank back/forward edge for the non-forward dir path; arrows
- * gated by dirAttr. Returns true when it handled the edge.
+ * Route a multi-rank back/forward edge for the non-forward dir path through the
+ * faithful pipeline (clipAndInstall gates arrows by the dir attribute). Returns
+ * true when it handled the edge.
  */
 function dispatchMultiRankNonForward(
-  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph, dirAttr: string,
+  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph,
 ): boolean {
   if (isMultiRankBackEdge(e)) {
     routeBackEdge(e, tailBox, headBox, g);
     return true;
   }
-  if (isMultiRankFwdEdge(e)) {
-    // T4: faithful chain pipeline (clipAndInstall gates arrows by dir); the
-    // simplified multi-rank fitter only handles a faithful decline.
-    if (routeFaithfulMultiRank(e, g)) return true;
-    routeFwdMultiRankEdge(e, tailBox, headBox, g, dirAttr);
-    return true;
-  }
+  if (isMultiRankFwdEdge(e)) return routeFaithfulMultiRank(e, g);
   return false;
 }
 
-/** Route dir=back/both/none: raw node-clip, selective arrow clips. */
-/** Apply tail/head arrowhead polygons + end-clips to a routed non-forward edge. */
-function applyEndArrows(
-  e: GraphEdge,
-  raw: ReturnType<typeof routeEdgeRaw>,
-  pw: number,
-  wantTail: boolean,
-  wantHead: boolean,
-): Point[] {
-  const elen = normalArrowLen(edgePenwidthAttr(e));
-  let bezPts = raw.bezierPts;
-  if (wantTail) {
-    (e.info as unknown as Record<string, unknown>)._tailArrowPts =
-      arrowheadPolygon(raw.tailTip, negateVec(raw.arrowDir), pw);
-    bezPts = tailArrowEndClip(bezPts, raw.tailTip, elen);
-  }
-  if (wantHead) {
-    bezPts = arrowEndClip(bezPts, raw.arrowTip, elen);
-    (e.info as unknown as Record<string, unknown>)._arrowPts =
-      arrowheadPolygon(raw.arrowTip, raw.arrowDir, pw);
-  }
-  return bezPts;
-}
-
-function routeEdgeNonForward(
-  e: GraphEdge, g: Graph, dirAttr: string, pw: number,
-): void {
+/**
+ * Route a dir=back/both/none edge through the faithful pipeline. Adjacent back
+ * edges go via makefwdedge (T1); multi-rank back/forward via the chain pipeline;
+ * adjacent regular via make_regular_edge. clipAndInstall gates head/tail arrows
+ * by the dir attribute. @see lib/dotgen/dotsplines.c:make_regular_edge
+ */
+function routeEdgeNonForward(e: GraphEdge, g: Graph): void {
   if (routeFaithfulAdjacentBack(e, g)) return; // T1 (AD-1): faithful adjacent back edge
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
-  if (dispatchMultiRankNonForward(e, tailBox, headBox, g, dirAttr)) return;
-  // T4 (AD-1/AD-2): adjacent non-forward edges (dir=back/both/none) route through
-  // the faithful path; clipAndInstall's arrowFlags gate the head/tail arrows by
-  // the dir attribute. Declines (null) for non-adjacent, falling to the fitter.
-  if (routeFaithfulRegularPlain(e, g)) return;
-  const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
-  const wantHead = dirAttr === 'both';
-  const wantTail = dirAttr === 'back' || dirAttr === 'both';
-  const raw = routeEdgeRaw(tailBox, headBox, rankInfo, routeBezier);
-  const bezPts = applyEndArrows(e, raw, pw, wantTail, wantHead);
-  installEdgeSpline(e, bezPts, raw.arrowTip);
+  if (dispatchMultiRankNonForward(e, tailBox, headBox, g)) return;
+  routeFaithfulRegularPlain(e, g);
 }
 
 /**
@@ -251,25 +194,6 @@ function portRouteOf(e: GraphEdge): PortRoute | undefined {
     clipTail: tp.defined ? tp.clip : true,
     clipHead: hp.defined ? hp.clip : true,
   };
-}
-
-/**
- * Measurement-only switch (T1, mission-dot-splines). Targets which plain forward
- * regular edges route through the faithful pathplan path instead of the
- * simplified fitter: `'adj'` adjacent-rank only, `'mr'` multi-rank chains only,
- * `'all'` both, `'off'` (default) neither. Default `'off'` keeps committed
- * behavior unchanged and the 115 goldens byte-identical; the divergence-
- * inventory harness flips it per pass to attribute shifts to a category. No
- * committed test reads this.
- */
-export type FaithfulForceMode = 'off' | 'adj' | 'mr' | 'all';
-let forceFaithfulMode: FaithfulForceMode = 'off';
-
-/** Set the T1 faithful-routing measurement mode; returns the previous value. */
-export function setForceFaithfulRegular(mode: FaithfulForceMode): FaithfulForceMode {
-  const prev = forceFaithfulMode;
-  forceFaithfulMode = mode;
-  return prev;
 }
 
 /**
@@ -312,7 +236,7 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
   const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
   const pw = edgeRenderPenwidth(e);
   if (dirAttr !== 'forward') {
-    routeEdgeNonForward(e, g, dirAttr, pw);
+    routeEdgeNonForward(e, g);
     return;
   }
   if (routeFaithfulAdjacentBack(e, g)) return; // T1 (AD-1): faithful adjacent back edge
@@ -323,17 +247,16 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
-    routeFwdMultiRank(e, tailBox, headBox, g);
+    routeFaithfulMultiRank(e, g); // T3 (AD-2): faithful chain pipeline
     return;
   }
   routeForwardEdge(e, g, tailBox, headBox, pw);
 }
 
 /**
- * Route a multi-rank forward side-port edge through the faithful chain pipeline
- * (steers the port via REGULAREDGE side boxes, then routeSplines over the full
- * virtual chain). Returns false when the faithful path declines the edge so the
- * caller falls back to the simplified multi-rank fitter.
+ * Route a multi-rank forward edge through the faithful chain pipeline (steers
+ * the port via REGULAREDGE side boxes, then routeSplines over the full virtual
+ * chain). Returns false when the faithful path declines the edge.
  * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
  */
 function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
@@ -341,22 +264,6 @@ function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
   if (pts === null) return false;
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
-}
-
-/**
- * Forward multi-rank dispatch: faithful chain pipeline for side-port / main-
- * label edges (AD-2), else the simplified multi-rank fitter. Under the T1
- * measurement switch, plain chains also try the faithful path first.
- */
-function routeFwdMultiRank(
-  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph,
-): void {
-  // T3 (AD-1/AD-2): all multi-rank forward edges route through the faithful
-  // chain pipeline (make_regular_edge over the virtual chain).
-  // routeMultiRankEdgeFaithful declines (null) for non-multi-rank-forward, so
-  // the simplified multi-rank fitter below only handles declines.
-  if (routeFaithfulMultiRank(e, g)) return;
-  routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
 }
 
 /**
