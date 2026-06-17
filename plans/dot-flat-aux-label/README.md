@@ -65,7 +65,19 @@ Input `digraph{ {rank=same; a b} a:e->b:w[label="x"] }`:
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 (DOT-11a), T2 (DOT-11b), T3 (DOT-10) | [ ] |
+| 1 | T1 done; T2/T3 deferred → DOT-12 | [x] T1 / [deferred] T2,T3 |
+
+## Outcome (2026-06-17)
+
+- **T1 (DOT-11a):** DONE — `repositionFlatAux` iterates `nlist`; labeled-flat
+  spline byte-exact to dot 15.0.0, label X correct, no-label flat unchanged.
+  1855 pass, zero churn. Merged to main.
+- **T2 (DOT-11b) / T3 (DOT-10):** DEFERRED. `placeVnlabel` is byte-identical
+  to C; the residual label-Y error is in **shared** `gvPostprocess`, which
+  rotates the aux graph and maps the label inconsistently with the spline
+  (the label's `pos.x` centering offset rotates into a ~22pt y-error).
+  Re-filed as **DOT-12** in `../layout-engine-backlog/gaps/dot.md`. DOT-10
+  remains blocked on it.
 
 ## Index
 
