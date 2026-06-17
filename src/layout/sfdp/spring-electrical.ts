@@ -49,8 +49,6 @@ const TOL = 0.001;
 const COOL = 0.9;
 /** @see lib/sparse/general.h:MINDIST */
 const MINDIST = 1e-15;
-/** @see lib/sparse/general.h:MACHINEACC */
-const MACHINEACC = 1.0e-16;
 
 /** @see lib/sfdpgen/spring_electrical.h:spring_electrical_control */
 export interface SpringElectricalControl {
