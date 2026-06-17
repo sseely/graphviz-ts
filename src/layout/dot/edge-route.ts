@@ -265,16 +265,6 @@ export function setForceFaithfulRegular(mode: FaithfulForceMode): FaithfulForceM
 }
 
 /**
- * True when the measurement switch forces multi-rank plain chains faithful.
- * Adjacent-rank plain edges route faithfully unconditionally as of T2, so the
- * `adj` mode no longer gates production — it remains only for harness symmetry
- * until T3 migrates multi-rank and T6 retires the switch.
- */
-function forceMr(): boolean {
-  return forceFaithfulMode === 'mr' || forceFaithfulMode === 'all';
-}
-
-/**
  * Route a plain adjacent-rank forward edge through the faithful pipeline and
  * install it. Returns false when the faithful path declines (not adjacent-rank),
  * so the caller falls back to the fitter.
@@ -329,21 +319,12 @@ function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
 function routeFwdMultiRank(
   e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph,
 ): void {
-  if ((hasSidePort(e) || hasMainLabel(e)) && routeFaithfulMultiRank(e, g)) return;
-  if (forceMr() && routeFaithfulMultiRank(e, g)) return;
+  // T3 (AD-1/AD-2): all multi-rank forward edges route through the faithful
+  // chain pipeline (make_regular_edge over the virtual chain).
+  // routeMultiRankEdgeFaithful declines (null) for non-multi-rank-forward, so
+  // the simplified multi-rank fitter below only handles declines.
+  if (routeFaithfulMultiRank(e, g)) return;
   routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
-}
-
-/**
- * True when the edge carries a main label (`ED_label`), which dot routes around
- * via a label virtual node on an inserted mid-rank. Such edges route through the
- * faithful chain pipeline so the spline bends around the label box (AD-2); plain
- * unlabeled edges keep the simplified fitter. Head/tail/xlabels are separate
- * fields and do not trigger this.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (label-vnode interior routing)
- */
-function hasMainLabel(e: GraphEdge): boolean {
-  return e.info.label != null;
 }
 
 /**

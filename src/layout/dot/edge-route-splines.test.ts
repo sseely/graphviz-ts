@@ -41,6 +41,18 @@ function edgePaths(svg: string): Pt[][] {
   return paths;
 }
 
+/** The edge `<path>` whose `<title>` matches `a->b` (the SVG entity form). */
+function edgePathByTitle(svg: string, tail: string, head: string): Pt[] {
+  const re = new RegExp(
+    '<title>' + tail + '&#45;&gt;' + head + '</title>\\s*<path[^>]*\\sd=' + Q + '([^' + Q + ']+)' + Q,
+  );
+  const m = svg.match(re);
+  const nums = (m?.[1].match(RE_NUM) ?? []).map(Number);
+  const pts: Pt[] = [];
+  for (let i = 0; i + 1 < nums.length; i += 2) pts.push({ x: nums[i], y: nums[i + 1] });
+  return pts;
+}
+
 /** Max Euclidean control-point delta between two equal-length point lists. */
 function maxDelta(a: Pt[], b: Pt[]): number {
   expect(a.length).toBe(b.length);
@@ -107,5 +119,33 @@ describe('plain adjacent-rank forward edges via faithful pathplan (dot oracle)',
     expect(paths.length).toBe(3);
     for (let i = 0; i < 3; i++) expect(maxDelta(paths[i], DOT_FAN3[i])).toBeLessThanOrEqual(TOL);
     for (const p of paths) expect(span(p)).toBeGreaterThan(10);
+  });
+});
+
+/** dot 15.x control points for the 3-rank span a->d in `a->b->c->d; a->d`. */
+const DOT_LONGSPAN_AD: Pt[] = [
+  { x: 57.65, y: -215.91 }, { x: 59.68, y: -205.57 }, { x: 61.98, y: -192.09 },
+  { x: 63, y: -180 }, { x: 67.03, y: -132.17 }, { x: 67.03, y: -119.83 },
+  { x: 63, y: -72 }, { x: 62.32, y: -63.97 }, { x: 61.08, y: -55.33 }, { x: 59.73, y: -47.4 },
+];
+
+/** dot 15.x control points for the 4-rank span a->e in `a->b->c->d->e; a->e`. */
+const DOT_SPAN4_AE: Pt[] = [
+  { x: 57.65, y: -287.91 }, { x: 59.68, y: -277.57 }, { x: 61.98, y: -264.09 },
+  { x: 63, y: -252 }, { x: 69.72, y: -172.28 }, { x: 69.72, y: -151.72 },
+  { x: 63, y: -72 }, { x: 62.32, y: -63.97 }, { x: 61.08, y: -55.33 }, { x: 59.73, y: -47.4 },
+];
+
+describe('T3: multi-rank forward chains via faithful pathplan (dot oracle)', () => {
+  it('3-rank long-span a->d bends around the b-c-d chain (matches dot)', () => {
+    const ad = edgePathByTitle(renderSvg('digraph{a->b->c->d; a->d}', 'dot'), 'a', 'd');
+    expect(ad.length).toBe(DOT_LONGSPAN_AD.length); // 10-pt bending spline, not a stub
+    expect(maxDelta(ad, DOT_LONGSPAN_AD)).toBeLessThanOrEqual(TOL);
+  });
+
+  it('4-rank span a->e bends around the chain (matches dot)', () => {
+    const ae = edgePathByTitle(renderSvg('digraph{a->b->c->d->e; a->e}', 'dot'), 'a', 'e');
+    expect(ae.length).toBe(DOT_SPAN4_AE.length);
+    expect(maxDelta(ae, DOT_SPAN4_AE)).toBeLessThanOrEqual(TOL);
   });
 });
