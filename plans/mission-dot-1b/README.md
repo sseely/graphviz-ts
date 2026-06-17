@@ -96,3 +96,30 @@ investigation. Batch 1 reduces to T1; T4 is grep-gated dead-code removal.
 - [diagrams/component-map.md](diagrams/component-map.md) — routing dispatch + fitter web
 - [DOT-1 decision journal](../mission-dot-splines/decision-journal.md) — origin (T6)
 - [Backlog DOT-1b](../layout-engine-backlog/gaps/dot.md)
+
+## Mission summary (2026-06-17)
+
+**Status: COMPLETE.** Tasks done: T1, T2 (pre-mission spike), T3, T4 — 3/3
+execution tasks (T2 was a spike). All gates green at every step.
+
+- **T1** (`92c3a01`): exported `makeFwdEdge` (C `makefwdedge`); adjacent back
+  edges route faithfully. +2 oracle pins.
+- **T3** (`da44293`): `routeParallelEdgeGroup` migrated to the faithful pipeline;
+  opposing `b->a` byte-exact to dot. +2 oracle pins; AC4 spacing updated.
+- **T4** (`d019553`): deleted the regular-edge fitter (proven dead by
+  throw-instrumentation + grep). **Partial deletion per AD-3**:
+  `straightEdgeSplineWithRank` + subtree KEPT for FLAT edges (out of scope).
+
+**Quality gates (final):** `npx tsc --noEmit` exit 0; `npx vitest run`
+1814 passed / 0 failed; **115 goldens byte-identical** (AD-3 held — zero golden
+churn); `npx lizard` clean on all changed files.
+
+**Decisions flagged for review (1):** the T4 flat-edge residual — the fitter
+subtree survives only for same-rank flat edges whose faithful flat/side-port
+routers decline. The mission goal ("no non-faithful **regular**-edge router")
+is met; retiring the fitter for **flat** edges is a separate flat-routing
+mission. See decision-journal.md (T4) and gaps/dot.md (DOT-1b residual).
+
+**Outcome:** Every regular dot edge — single, parallel, opposing, adjacent-back,
+multi-rank, all rankdirs — now routes through the faithful pathplan path. The
+simplified fitter no longer routes any regular edge.
