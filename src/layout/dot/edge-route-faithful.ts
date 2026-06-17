@@ -35,7 +35,8 @@ import type { Path, PathendT } from '../../common/types.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
-import { routeSplines } from '../../common/splines-routespl.js';
+import { routeRegularByType } from './splines-route-type.js';
+import { edgeType } from './splines.js';
 import { addBox } from '../../common/splines-path-shared.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
@@ -329,5 +330,5 @@ export function routeRegularEdgeFaithful(g: Graph, e: Edge): Point[] | null {
   appendRegularEnd(hend.nb, hend, TOP, hn.info.coord.y + rankHt(ranks[r + 1].ht2, hn.info.ht));
 
   if (!completeRegularPath({ P, first: e, last: e, tend, hend, boxes })) return null;
-  return routeSplines(P);
+  return routeRegularByType(P, edgeType(g));
 }

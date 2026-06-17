@@ -29,7 +29,8 @@ import type { Path, PathendT } from '../../common/types.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
-import { routeSplines } from '../../common/splines-routespl.js';
+import { routeRegularByType } from './splines-route-type.js';
+import { edgeType } from './splines.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
 import { splineMerge } from './splines-route.js';
 import { rankHt } from './edge-route-rank.js';
@@ -134,7 +135,7 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
   const segs = chainSegments(e);
   if (segs.length < 2) return null;
   const P = buildChainPath(g, e, segs);
-  return P === null ? null : routeSplines(P);
+  return P === null ? null : routeRegularByType(P, edgeType(g));
 }
 
 // ---------------------------------------------------------------------------
@@ -265,7 +266,7 @@ function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
   const P = buildChainPath(g, makeFwdEdge(e), segs);
-  return P === null ? null : routeSplines(P);
+  return P === null ? null : routeRegularByType(P, edgeType(g));
 }
 
 /**
