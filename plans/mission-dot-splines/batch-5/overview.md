@@ -8,7 +8,7 @@ fixes the residual frame handling.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T5 | Verify/fix LR/RL/BT regular edges under faithful routing; pin rankdir oracles | opus | `src/layout/dot/edge-route-faithful.ts`, `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route-splines.test.ts` | T4 | [ ] |
+| T5 | Verify/fix LR/RL/BT regular edges under faithful routing; pin rankdir oracles | opus | `src/layout/dot/edge-route-faithful.ts`, `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route-splines.test.ts` | T4 | [x] |
 
 If T2–T4 already brought LR/RL/BT to parity, T5 collapses to pinning oracle tests
 only (log it). Gate per [../README.md](../README.md). One commit.

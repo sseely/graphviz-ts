@@ -178,3 +178,39 @@ describe('T4: back + non-forward edges via faithful pathplan (dot oracle)', () =
     expect((svg.match(new RegExp('<polygon fill="black"', 'g')) ?? []).length).toBe(2);
   });
 });
+
+/** dot 15.x control points under rankdir (SVG frame). The faithful path routes
+ * in the rotated frame (poly_inside ccwrotatepf + GD_flip), matching dot
+ * exactly — these were the corpus's worst divergences (LR long ~10pt, LR fan
+ * outer-edge collapse) before the migration. */
+const DOT_LR_LONG_AD: Pt[] = [
+  { x: 54.23, y: -15.93 }, { x: 65.26, y: -15.16 }, { x: 78.25, y: -14.38 },
+  { x: 90, y: -14 }, { x: 153.97, y: -11.94 }, { x: 170.03, y: -11.94 },
+  { x: 234, y: -14 }, { x: 241.9, y: -14.25 }, { x: 250.35, y: -14.69 }, { x: 258.39, y: -15.18 },
+];
+const DOT_LR_FAN_AF: Pt[] = [
+  { x: 39.6, y: -109.75 }, { x: 51.69, y: -93.09 }, { x: 71.42, y: -66.62 },
+  { x: 90, y: -45 }, { x: 91.09, y: -43.74 }, { x: 92.22, y: -42.45 }, { x: 93.37, y: -41.17 },
+];
+const DOT_BT_CHAIN_AB: Pt[] = [
+  { x: 27, y: -36.3 }, { x: 27, y: -43.59 }, { x: 27, y: -52.27 }, { x: 27, y: -60.46 },
+];
+
+describe('T5: rankdir=LR/RL/BT regular edges via faithful pathplan (dot oracle)', () => {
+  it('rankdir=LR 3-rank long-span a->d matches dot (was ~10pt off)', () => {
+    const ad = edgePathByTitle(renderSvg('digraph{rankdir=LR; a->b->c->d; a->d}', 'dot'), 'a', 'd');
+    expect(ad.length).toBe(DOT_LR_LONG_AD.length);
+    expect(maxDelta(ad, DOT_LR_LONG_AD)).toBeLessThanOrEqual(TOL);
+  });
+
+  it('rankdir=LR wide fan outer edge a->f matches dot (was a collapsed stub)', () => {
+    const af = edgePathByTitle(renderSvg('digraph{rankdir=LR; a->b;a->c;a->d;a->e;a->f}', 'dot'), 'a', 'f');
+    expect(maxDelta(af, DOT_LR_FAN_AF)).toBeLessThanOrEqual(TOL);
+    expect(span(af)).toBeGreaterThan(10); // not a degenerate stub
+  });
+
+  it('rankdir=BT chain edge a->b matches dot', () => {
+    const ab = edgePathByTitle(renderSvg('digraph{rankdir=BT; a->b->c}', 'dot'), 'a', 'b');
+    expect(maxDelta(ab, DOT_BT_CHAIN_AB)).toBeLessThanOrEqual(TOL);
+  });
+});
