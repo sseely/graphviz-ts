@@ -63,7 +63,14 @@ Baseline at mission start: **1800 passed / 0 failed, 115 goldens byte-identical*
 | 3 (after T2) | [T3 multi-rank forward chains → faithful](batch-3/T3-multirank-forward-faithful.md) | [x] |
 | 4 (after T3) | [T4 back edges + non-forward → faithful](batch-4/T4-back-and-nonforward-faithful.md) | [x] |
 | 5 (after T4) | [T5 rankdir=LR/RL/BT regular edges](batch-5/T5-rankdir-variants.md) | [x] |
-| 6 (after T5) | [T6 delete the simplified fitter](batch-6/T6-retire-simplified-fitter.md) | [ ] |
+| 6 (after T5) | [T6 delete the simplified fitter](batch-6/T6-retire-simplified-fitter.md) | deferred → DOT-1b |
+
+**Outcome (2026-06-17):** T1–T5 complete and merged — every single regular dot edge
+routes faithfully; the fan-out/rankdir divergence is fixed; 115 goldens byte-identical
+(1810 passed). T6 (delete the fitter) is **deferred to follow-up DOT-1b**: the fitter
+survives only in the parallel/opposing multi-edge group router and adjacent-back-edge
+fallbacks, which need faithful `make_regular_edge` ports first (see decision journal T6
++ `gaps/dot.md` DOT-1b).
 
 Batches 2–5 each migrate one category; the T1 inventory may split a batch into
 per-cluster fix-tasks (log the split in the decision journal). A category that

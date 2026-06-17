@@ -17,6 +17,33 @@ Appended during execution (per ~/.claude/rules/autonomous-execution.md).
 | T4 | 2026-06-17 | **DONE — within write-set.** Migrated all three non-forward categories to faithful: adjacent non-forward (routeEdgeNonForward → routeFaithfulRegularPlain), multi-rank-forward non-forward (dispatchMultiRankNonForward → routeFaithfulMultiRank), and multi-rank back edges (routeBackEdge → faithful forward chain + reverse). clipAndInstall's arrowFlags gate head/tail arrows by dir. All 122 goldens byte-identical; back-edge corpus matches oracle Δ=0.00. Pinned back-edge + dir=both oracle tests. 1807 passed / 0 failed. | Back edge = forward edge with swapped ends. | No |
 | T4 | 2026-06-17 | **Key mechanism:** a back edge's `to_virt` chain already runs low→high rank (head→tail), so it routes faithfully as the forward edge with swapped ends. Built a synthetic forward edge (`makeBackFwdEdge`) because `beginPath`/`endPath` read `e.tail`/`e.head`; generalized `buildChainPath` to derive its endpoints from the chain segments (identical for forward edges). `computeSplineMulti` kept as a decline fallback (`fitterBackFwdPoints`) — both retire in T6. | Mirrors C makefwdedge. | No |
 | T5 | 2026-06-17 | **DONE — pins-only, no code fix.** A full rankdir sweep (LR/RL/BT × fan/long/diamond/back/chain) matches the dot oracle EXACTLY (Δ=0.00), including the T1 corpus's worst cases (LR long ~10pt, LR fan stub collapse, lr-fan 0.76 residual). T2's poly_inside ccwrotatepf + GD_flip fix already covers all rankdir routing. Pinned LR long-span, LR fan outer-edge, BT chain oracle tests. 1810 passed / 0 failed. | T5 is verify-and-pin; the residual was already closed in T2. | No |
+| T6 | 2026-06-17 | **DEFERRED to a follow-up mission (Scott approved).** Deleting the fitter requires two faithful PORTS, not cleanup: (1) adjacent back edges (b->a, 1 rank) have no faithful path — `routeRegularEdgeFaithful` declines back edges and T4's `routeBackEdge` falls back to the fitter (`routeEdgeRaw`) for chain<2; (2) parallel/opposing back-members need `clipAndInstall`+back-edge (untangling swapEnds/swapSpline/manual-reverse — T4 deliberately uses `reverseClipBackChain` instead). The parallel FORWARD migration works (dot-multi-edge byte-identical) but `routeEdgeRaw`/`fitterBackFwdPoints`/`computeSplineMulti` stay reachable as adjacent-back fallbacks, so NONE of the fitter is safely deletable until adjacent-back routing is faithful. | Genuine make_regular_edge algorithm work (dot-edge-multi territory) with its own oracle verification — beyond T6's cleanup scope. | **Follow-up** |
+
+## Mission outcome (2026-06-17)
+
+**DOT-1's routing goal is achieved and merged.** Every *single* regular dot edge —
+adjacent / multi-rank / back / non-forward, all rankdirs — now routes through the
+faithful pathplan path (`make_regular_edge` + `routeSplines`). The re-verification's
+core bugs are fixed and oracle-pinned: wide fan-out/fan-in outer-edge stub collapse
+(was ~0.4pt) and rankdir=LR span drift (was ~10pt). 1810 passed / 0 failed; the 115
+goldens stay byte-identical. Five faithful-path bugs were found and fixed along the
+way (getsplinepoints chain-walk, poly_inside node-penwidth, poly_inside rankdir
+rotation/flip, style=bold arrow render-penwidth, back-edge synthetic forward view).
+
+**Follow-up mission (T6 — retire the fitter):** the simplified fitter survives only
+as (a) the parallel/opposing multi-edge group router (`computeSpline`/
+`buildRankCorridor` via `baseSplineForGroup`) and (b) adjacent-back-edge fallbacks
+(`routeEdgeRaw`/`fitterBackFwdPoints`/`computeSplineMulti`). Both are latent C
+divergences (they match the oracle on tested cases). Retiring them needs:
+  1. **Faithful adjacent-back-edge routing** (route b->a's own b→a base; prerequisite
+     for deleting `routeEdgeRaw`/`fitterBackFwdPoints`).
+  2. **Faithful parallel/opposing group routing** — each member routes its own
+     tail→head base with the Multisep offset; untangle `clipAndInstall` swapEnds vs
+     the `swapSpline` post-pass for back members (or route them via the T4 back clip).
+  3. Then delete `computeSpline`/`computeSplineMulti`/`buildRankCorridor`/
+     `clipToNodes`/`straightEdgeSplineWithRank`/`routeWithRank`/`routeSimple`/
+     `routeEdgeRaw`/`applyEndArrows`/`routeFwdMultiRankEdge`/`fitterBackFwdPoints`/
+     `makeRegularEdge` stub + the T1 `FaithfulForceMode` scaffolding + harness.
 
 ## T1 divergence inventory (2026-06-16)
 

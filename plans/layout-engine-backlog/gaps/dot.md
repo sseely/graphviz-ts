@@ -2,7 +2,26 @@
 
 ## DOT-1: `make_regular_edge` / pathplan spline routing
 
-**Status:** Stub — `makeRegularEdge` in `splines-route.ts:254` is a no-op.
+**Status: routing DONE (mission-dot-splines, merged 2026-06-17).** Every *single*
+regular dot edge — adjacent / multi-rank / back / non-forward, all rankdirs — now
+routes through the faithful pathplan path (`routeRegularEdgeFaithful` /
+`routeMultiRankEdgeFaithful` + `routeSplines`). Fixed the re-verification's core
+bugs (wide fan-out/in outer-edge stub collapse; rankdir=LR span drift), oracle-
+pinned in `edge-route-splines.test.ts`. 115 goldens byte-identical.
+
+**Follow-up — DOT-1b: retire the simplified fitter.** The fitter
+(`computeSpline`/`buildRankCorridor`/`computeSplineMulti`/`straightEdgeSplineWithRank`
++ helpers) survives only in two paths that still need a faithful port before it can
+be deleted: (1) **parallel/opposing multi-edge groups** (`routeParallelEdgeGroup` →
+`baseSplineForGroup`) — each member must route its own tail→head base with the
+Multisep offset, untangling `clipAndInstall` swapEnds vs the `swapSpline` post-pass
+for back members; (2) **adjacent back edges** (b->a, 1 rank) have no faithful path
+(`routeRegularEdgeFaithful` declines back edges; T4 falls back to `routeEdgeRaw` for
+chain<2). Both are latent C divergences (match the oracle on tested cases). See
+`plans/mission-dot-splines/decision-journal.md` (T6) for the full analysis.
+
+**(historical) Original status:** Stub — `makeRegularEdge` in `splines-route.ts:254`
+is a no-op.
 
 **C reference:** `lib/dotgen/dotsplines.c:make_regular_edge` (line 1700),
 calls `routesplines` (line 1800, 1850), then
