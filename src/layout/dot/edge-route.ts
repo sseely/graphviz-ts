@@ -245,6 +245,47 @@ function portRouteOf(e: GraphEdge): PortRoute | undefined {
   };
 }
 
+/**
+ * Measurement-only switch (T1, mission-dot-splines). Targets which plain forward
+ * regular edges route through the faithful pathplan path instead of the
+ * simplified fitter: `'adj'` adjacent-rank only, `'mr'` multi-rank chains only,
+ * `'all'` both, `'off'` (default) neither. Default `'off'` keeps committed
+ * behavior unchanged and the 115 goldens byte-identical; the divergence-
+ * inventory harness flips it per pass to attribute shifts to a category. No
+ * committed test reads this.
+ */
+export type FaithfulForceMode = 'off' | 'adj' | 'mr' | 'all';
+let forceFaithfulMode: FaithfulForceMode = 'off';
+
+/** Set the T1 faithful-routing measurement mode; returns the previous value. */
+export function setForceFaithfulRegular(mode: FaithfulForceMode): FaithfulForceMode {
+  const prev = forceFaithfulMode;
+  forceFaithfulMode = mode;
+  return prev;
+}
+
+/** True when the measurement switch forces adjacent-rank plain edges faithful. */
+function forceAdj(): boolean {
+  return forceFaithfulMode === 'adj' || forceFaithfulMode === 'all';
+}
+
+/** True when the measurement switch forces multi-rank plain chains faithful. */
+function forceMr(): boolean {
+  return forceFaithfulMode === 'mr' || forceFaithfulMode === 'all';
+}
+
+/**
+ * Route a plain adjacent-rank forward edge through the faithful pipeline and
+ * install it. Returns false when the faithful path declines (caller falls back
+ * to the fitter). Used only under the T1 measurement switch.
+ */
+function routeFaithfulRegularPlain(e: GraphEdge, g: Graph): boolean {
+  const pts = routeRegularEdgeFaithful(g, e);
+  if (pts === null) return false;
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  return true;
+}
+
 /** Route and install spline + arrowhead(s) for a single edge. */
 export function routeOneEdge(e: GraphEdge, g: Graph): void {
   const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
@@ -260,8 +301,7 @@ export function routeOneEdge(e: GraphEdge, g: Graph): void {
     return;
   }
   if (isMultiRankFwdEdge(e)) {
-    if ((hasSidePort(e) || hasMainLabel(e)) && routeFaithfulMultiRank(e, g)) return;
-    routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
+    routeFwdMultiRank(e, tailBox, headBox, g);
     return;
   }
   routeForwardEdge(e, g, tailBox, headBox, pw);
@@ -279,6 +319,19 @@ function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
   if (pts === null) return false;
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
+}
+
+/**
+ * Forward multi-rank dispatch: faithful chain pipeline for side-port / main-
+ * label edges (AD-2), else the simplified multi-rank fitter. Under the T1
+ * measurement switch, plain chains also try the faithful path first.
+ */
+function routeFwdMultiRank(
+  e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph,
+): void {
+  if ((hasSidePort(e) || hasMainLabel(e)) && routeFaithfulMultiRank(e, g)) return;
+  if (forceMr() && routeFaithfulMultiRank(e, g)) return;
+  routeFwdMultiRankEdge(e, tailBox, headBox, g, 'forward');
 }
 
 /**
@@ -340,6 +393,7 @@ function routeForwardEdge(
   if (makeFlatLabeledEdge(g, e)) return;
   if (makeAdjFlatLabeledEdge(g, e)) return;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
+  if (forceAdj() && routeFaithfulRegularPlain(e, g)) return;
   const rankInfo = rankEdgeInfoOf(g, e.tail, e.head);
   const result = straightEdgeSplineWithRank(
     tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),

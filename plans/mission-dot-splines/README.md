@@ -58,7 +58,7 @@ Baseline at mission start: **1800 passed / 0 failed, 115 goldens byte-identical*
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | [T1 measure-first divergence inventory](batch-1/T1-measure-faithful-routing.md) | [ ] |
+| 1 | [T1 measure-first divergence inventory](batch-1/T1-measure-faithful-routing.md) | [x] |
 | 2 (after T1) | [T2 adjacent-rank forward edges → faithful](batch-2/T2-adjacent-forward-faithful.md) | [ ] |
 | 3 (after T2) | [T3 multi-rank forward chains → faithful](batch-3/T3-multirank-forward-faithful.md) | [ ] |
 | 4 (after T3) | [T4 back edges + non-forward → faithful](batch-4/T4-back-and-nonforward-faithful.md) | [ ] |
