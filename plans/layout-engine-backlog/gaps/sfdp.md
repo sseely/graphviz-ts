@@ -2,7 +2,14 @@
 
 ## SFDP-1: `beautify_leaves`
 
-**Status:** THROWS — `src/layout/sfdp/spring-electrical.ts:356` throws
+**Status: DONE (mission sfdp-beautify-leaves, 2026-06-17, merged).**
+`beautifyLeaves` ported in `spring-electrical.ts` (radial leaf fan, fma at
+set_leaves to match the C fmadd); the throw is replaced by the per-level
+call. Oracle-pinned to sfdp 15.0.0 (6 digits) on a well-connected
+ring+2-leaves graph; bare stars are not oracle-stable (chaotic FP symmetry,
+documented). 1860 pass, zero golden churn.
+
+**(historical) Status:** THROWS — `src/layout/sfdp/spring-electrical.ts:356` throws
 `Error('sfdp beautify_leaves not ported ...')` when `ctrl.beautifyLeaves`
 is true.
 

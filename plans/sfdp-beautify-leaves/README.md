@@ -74,7 +74,13 @@ file outside the write-set.
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 (beautifyLeaves + unit), T2 (wire + oracle pin) | [ ] |
+| 1 | T1 (beautifyLeaves + unit), T2 (wire + oracle pin) | [x] |
+
+## Outcome (2026-06-17) — DONE
+
+`beautify=true` now renders (leaves fanned radially) instead of throwing,
+reproducing sfdp 15.0.0 to 6 digits (oracle-pinned, FMA-faithful). 1860
+pass, zero golden churn. Merged to main.
 
 ## Index
 
