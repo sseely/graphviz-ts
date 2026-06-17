@@ -49,8 +49,8 @@ Baseline at mission start: **1814 passed / 0 failed, 115 goldens byte-identical*
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 | [T1 cgraph primitives](batch-1/T1-cgraph-ops.md) · [T2 removeFromRank](batch-1/T2-remove-from-rank.md) · [T5 expandLeaves](batch-1/T5-expand-leaves.md) | [x] |
-| 2 (after T1) | [T3 fillRanks](batch-2/T3-fill-ranks.md) | [ ] |
-| 3 (after T1,T2,T3) | [T4 removeFill + parity](batch-3/T4-remove-fill.md) | [ ] |
+| 2 (after T1) | [T3 fillRanks](batch-2/T3-fill-ranks.md) | [x] |
+| 3 (after T1,T2,T3) | [T4 removeFill + parity](batch-3/T4-remove-fill.md) | [~] RESCOPED — removeFill ported & green; parity blocked by 2 out-of-scope defects (see [comparisons/newrank.md](../../comparisons/newrank.md)) |
 
 ## Constraints (stop / push-forward)
 
@@ -89,3 +89,47 @@ Baseline at mission start: **1814 passed / 0 failed, 115 goldens byte-identical*
 - [decision-journal.md](decision-journal.md) — appended during execution
 - [diagrams/component-map.md](diagrams/component-map.md) — rank-build dispatch + fill/leaf web
 - [Backlog DOT-3/DOT-4](../layout-engine-backlog/gaps/dot.md)
+
+## Session summary (2026-06-17, opus autonomous)
+
+**Tasks completed vs planned:** 5/5 ported & green; primary objective
+(end-to-end newrank parity) **NOT achieved — rescoped** (AD-4).
+
+| Task | Commit | Result |
+|------|--------|--------|
+| T1 cgraph ops | 5537a0a | DONE — agnode/agsubg/agsubnode/agdelnode/agdelsubg + 9 tests |
+| T2 removeFromRank | 5f91a2d | DONE — faithful inverse of install_in_rank + 4 tests |
+| T5 expandLeaves | 87333d5 | DONE — faithful (reproduces position.c:1025 head−head dormant bug; net = makeLeafslots); LEAFSET ranktype never set anywhere upstream → oracle parity pinned on a leaf-heavy graph (0.0pt) |
+| T3 fillRanks | 4e03a14 | DONE — realFillRanks + makeFillNode + 3 tests; clust 0-index adaptation |
+| T4 removeFill | 7705284 | **RESCOPED** — removeFill ported & green; parity blocked |
+
+**Gates (final, HEAD):** `tsc --noEmit` 0 · `vitest` 1839 pass / 0 fail (123
+files) · **122 goldens byte-identical** · `lizard` 0 warnings on all changed
+files. +25 mission tests. Baseline 1814→1839.
+
+**Why parity is unreachable (orchestrator-verified, both outside all
+write-sets):**
+1. `dotRank` (rank.ts:462) gates on `flags & NEW_RANK` — a bit nothing ever
+   sets — instead of `mapbool(agget(g,"newrank"))` (rank.c:523). So
+   `dot2Rank`/`fillRanks` never run; removeFill is a correct no-op.
+2. Patching the dispatch to read the attribute makes `renderSvg` **hang**
+   (reproduced: `timeout 15` → exit 124) in `furthestNode`
+   (mincross-utils.ts:161) — fill-node `order` indices make the neighbor walk
+   non-terminating, inside `dotMincross` before removeFill.
+
+The two fixes are **coupled**: landing only #1 turns wrong-but-terminating
+output into a hang (a regression), so neither was landed. All five commits are
+additive, non-regressing prerequisites; current default behaviour is unchanged.
+
+**Decisions flagged for review:** T5 (dormant-bug reproduction), T4 (rescope +
+merge-deferral). See decision-journal.md.
+
+**Known issues / follow-ups (next mission):**
+1. Port `mapbool(agget(g,"newrank"))` flag-set into `dotRank` (rank.ts).
+2. Fix `furthestNode` non-termination with fill placeholders present
+   (mincross-utils.ts / fillRanks ordering) — needs real debugging, unbounded.
+3. Flip `newrank.test.ts` residual assertions to the oracle targets (c aligns
+   with b ≤0.5pt).
+
+**Merge status:** `feature/dot-newrank` NOT merged — objective unmet; merge of
+prerequisite work deferred to human decision.
