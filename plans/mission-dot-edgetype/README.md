@@ -73,7 +73,7 @@ Baseline (main @ branch point): tsc 0; vitest **1842 passed / 0 failed**;
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1, T2, T3, T4 (sequential — routers share files) | [ ] |
+| 1 | T1, T2, T3, T4 (sequential — routers share files) | [x] |
 
 ## Links
 

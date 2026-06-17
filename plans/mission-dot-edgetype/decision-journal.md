@@ -8,3 +8,26 @@
 | T3 | makeLineEdge byte-exact | Multi-rank LINE now **byte-identical** to dot 15.0.0: TB a->c, TB deep a->d, LR a->c all match exactly (box-straighten was ~0.2pt off; makeLineEdge center+port endpoints are exact). | Confirms AD-2 — porting makeLineEdge, not relying on box-straighten, was correct. |
 | T3 | back-edge LINE scope | makeLineEdge dispatched on the forward multi-rank path only; multi-rank back-edge LINE uses the box-straighten (still straight). | Forward path is the common case; T4 pins/quarantines back-edge LINE if it diverges. |
 | T3 | labeled delr==2 | `a->c[label=x]` over a->b->c (delr=2 + EDGE_LABEL) declines makeLineEdge per C guard → box path. 7-pt label branch needs delr>=3 + label; T4 exercises it. | Faithful to dotsplines.c:1650. |
+| T4 | all cases byte-exact | All 5 corpus cases (PLINE/LINE × adjacent/multi-rank + 7-pt labeled `a->d[label=x]` over a 3-rank chain) are byte-identical to dot 15.0.0. **Zero quarantines** → no comparison pages required. | Pinned with AD-3 tolerances (LINE 0.06pt, PLINE 0.5pt); margins are 0. |
+
+## Mission Summary (2026-06-17)
+
+**Status: COMPLETE.** DOT-7 closed — regular (cross-rank) edges honor
+`edgeType(g)`. `splines=line` and `splines=polyline` now produce straight /
+polyline regular edges matching dot 15.0.0.
+
+**Tasks: 4/4 complete** (T1, T2, T3, T4), one commit each.
+
+**Result:** all 5 oracle cases byte-identical to dot 15.0.0 — PLINE adjacent +
+multi-rank (via the already-ported `routePolylines`), LINE adjacent (box
+straighten), LINE multi-rank + labeled (via the newly-ported `makeLineEdge`).
+
+**Final gates:** `tsc --noEmit` 0; lizard clean on all changed files; vitest
+**1852 passed / 0 failed**; 122 golden tests (115 goldens byte-identical —
+the default `EDGETYPE_SPLINE` path is an unchanged pass-through).
+
+**Quarantines:** none.
+
+**Follow-ups (out of scope):** DOT-8 (`splines=ortho`/`curved`/`compound` —
+ortho needs `lib/ortho`); multi-rank back-edge LINE uses the box-straighten
+(still straight) rather than makeLineEdge — pin if a divergence is reported.

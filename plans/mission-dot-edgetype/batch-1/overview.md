@@ -7,10 +7,10 @@ fast path; T4 pins everything against the C oracle.
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|------------|------|
-| T1 | `routeRegularByType(P, et)` helper + unit tests | `splines-route-type.ts`, `splines-route-type.test.ts` | — | [ ] |
-| T2 | Wire helper into box-corridor emit points | `edge-route-faithful.ts`, `edge-route-chain.ts` | T1 | [ ] |
-| T3 | Port `makeLineEdge` + multi-rank LINE dispatch | `splines-route.ts`, `edge-route-chain.ts`, `edge-route.ts` | T2 | [ ] |
-| T4 | Oracle pins + comparison pages | `edge-type-oracle.test.ts`, `comparisons/*.md` | T2, T3 | [ ] |
+| T1 | `routeRegularByType(P, et)` helper + unit tests | `splines-route-type.ts`, `splines-route-type.test.ts` | — | [x] |
+| T2 | Wire helper into box-corridor emit points | `edge-route-faithful.ts`, `edge-route-chain.ts` | T1 | [x] |
+| T3 | Port `makeLineEdge` + multi-rank LINE dispatch | `splines-route.ts`, `edge-route-chain.ts`, `edge-route.ts` | T2 | [x] |
+| T4 | Oracle pins + comparison pages | `edge-type-oracle.test.ts`, `comparisons/*.md` | T2, T3 | [x] |
 
 ## Decline-path note (T2/T3)
 
