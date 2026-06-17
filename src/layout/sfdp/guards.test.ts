@@ -80,18 +80,18 @@ describe('sfdp overlap (non-prism0) guard', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Guard 3: sfdp beautifyLeaves  (public API — via beautify graph attribute)
-// tuneControl maps beautify="true" → ctrl.beautifyLeaves = true, which
-// multilevelSpringElectricalEmbedding checks after its main loop.
+// beautifyLeaves (SFDP-1, ported): beautify="true" fans degree-1 leaves
+// radially. tuneControl maps beautify="true" → ctrl.beautifyLeaves = true,
+// applied per multilevel level. Oracle parity is pinned in
+// spring-electrical.test.ts; here we just assert it renders (no longer throws).
 // ---------------------------------------------------------------------------
 
-describe('sfdp beautify_leaves guard', () => {
-  it('throws when beautify="true" is set on the graph', () => {
+describe('sfdp beautify_leaves', () => {
+  it('renders (no throw) when beautify="true" is set on the graph', () => {
     const g = parse(SFDP_SIMPLE);
     g.attrs.set('beautify', 'true');
-    expect(() => sfdpLayout(g)).toThrow(
-      'sfdp beautify_leaves not ported',
-    );
+    expect(() => sfdpLayout(g)).not.toThrow();
+    for (const n of g.nodes.values()) expect(n.info.pos).toBeDefined();
   });
 
   it('does not throw with default attrs (no beautify attribute)', () => {

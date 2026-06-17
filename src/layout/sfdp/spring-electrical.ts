@@ -166,6 +166,58 @@ export function distanceCropped(x: number[], dim: number, i: number, j: number):
   return Math.max(distance(x, dim, i, j), MINDIST);
 }
 
+// ---------------------------------------------------------------------------
+// beautify_leaves — fan a node's degree-1 leaves radially around it
+// @see lib/sfdpgen/spring_electrical.c:beautify_leaves
+// ---------------------------------------------------------------------------
+
+/** Gather parent p's degree-1 leaves (in ja order), marking them checked, and
+ *  return them with their average distance from p. @see beautify_leaves loop */
+function gatherLeaves(
+  A: SpMatrix, p: number, checked: boolean[], x: number[], dim: number,
+): { leaves: number[]; avgDist: number } {
+  const { ia, ja } = A;
+  const leaves: number[] = [];
+  let dist = 0;
+  for (let j = ia[p]!; j < ia[p + 1]!; j++) {
+    const c = ja[j]!;
+    if (ia[c + 1]! - ia[c]! === 1) {
+      checked[c] = true;
+      dist += distance(x, dim, p, c);
+      leaves.push(c);
+    }
+  }
+  return { leaves, avgDist: dist / leaves.length };
+}
+
+/**
+ * Reposition every degree-1 leaf radially around its parent at the parent's
+ * average leaf distance, evenly fanned over `[pad, 2π−pad]` (pad = 0.1). Each
+ * parent is processed once. Assumes A has no diagonal (guaranteed upstream).
+ * @see lib/sfdpgen/spring_electrical.c:beautify_leaves
+ */
+export function beautifyLeaves(dim: number, A: SpMatrix, x: number[]): void {
+  const { ia, ja, m } = A;
+  const checked = new Array<boolean>(m).fill(false);
+  const pad = 0.1;
+  for (let i = 0; i < m; i++) {
+    if (ia[i + 1]! - ia[i]! !== 1 || checked[i]) continue;
+    const p = ja[ia[i]!]!;
+    if (checked[p]) continue;
+    checked[p] = true;
+    const { leaves, avgDist } = gatherLeaves(A, p, checked, x, dim);
+    const cx = x[dim * p]!, cy = x[dim * p + 1]!;
+    let ang = pad;
+    const step = leaves.length > 1 ? (2 * Math.PI - 2 * pad) / leaves.length : 0;
+    for (const leaf of leaves) {
+      // cos/sin·dist + base fused to match the C binary's fmadd (set_leaves).
+      x[dim * leaf] = fma(Math.cos(ang), avgDist, cx);
+      x[dim * leaf + 1] = fma(Math.sin(ang), avgDist, cy);
+      ang += step;
+    }
+  }
+}
+
 /** @see lib/sfdpgen/spring_electrical.c:average_edge_length */
 export function averageEdgeLength(A: SpMatrix, dim: number, coord: number[]): number {
   let dist = 0;
@@ -352,9 +404,9 @@ export function springElectricalEmbedding(
     step = updateStep(ctrl.adaptiveCooling, step, Fnorm, Fnorm0);
   } while (step > TOL && iter < ctrl.maxiter);
 
-  if (ctrl.beautifyLeaves) {
-    throw new Error('sfdp beautify_leaves not ported (no supported input sets beautify)');
-  }
+  // @see lib/sfdpgen/spring_electrical.c:378 (per multilevel level). A is the
+  // symmetrized, diagonal-free adjacency (AD-3).
+  if (ctrl.beautifyLeaves) beautifyLeaves(dim, A, x);
 
   if (useQT) ctrl.maxQtreeLevel = maxQtreeLevel;
 }
