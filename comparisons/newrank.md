@@ -4,11 +4,17 @@
 
 ## Status
 
-**RESCOPED** per AD-4. `removeFill` is fully ported and faithful
-(`lib/dotgen/dotinit.c:removeFill` → `src/layout/dot/init.ts`). Full newrank
-parity is **unreachable through T4's declared write-set** (`init.ts` +
-`newrank.test.ts`) because the two blocking defects live elsewhere. Current
-behaviour is **non-regressed**: 1834 tests pass, 122 goldens byte-identical.
+**RESOLVED** (2026-06-17, `mission-dot-newrank-2`). The two blocking defects
+below are fixed and `newrank=true` now reproduces the oracle exactly
+(`a=-178, b=-106, c=-106 (= b), e=-34, d=-34`, ≤0.5pt), with all 122 goldens
+byte-identical. Fixes: (1) `dotRank` reads `mapbool(agget(g,"newrank"))`
+(rank.c:523) — `fix(T2)`; (2) `markClusters` treats undefined `ranktype` as
+NORMAL (cluster.c:317) so a cross-cluster `rank=same` node gets `ND_clust` and
+is installed once, not double-installed (the `furthestNode` hang) — `fix(T3)`.
+See `docs/newrank-c-trace.md` for the C control-flow trace. Pins:
+`src/layout/dot/newrank.test.ts`.
+
+The original RESCOPED diagnosis is retained below for history.
 
 ## Repro
 
