@@ -56,9 +56,9 @@ write-set needed · 2471 still hangs after the fix attempt.
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [1](batch-1/overview.md) | Re-apply vStart fix + prove it on small windowed repros | [ ] |
-| [2](batch-2/overview.md) | Diagnose the transpose oscillation (root cause doc) | [ ] |
-| [3](batch-3/overview.md) | Apply Layer-2 fix + full 2471 parity verify | [ ] |
+| [1](batch-1/overview.md) | Re-apply vStart fix + prove it on small windowed repros | [x] |
+| [2](batch-2/overview.md) | Diagnose the transpose oscillation (root cause doc) | [x] |
+| [3](batch-3/overview.md) | Apply Layer-2 fix + full 2471 parity verify | [blocked: Layer 3] |
 
 ## Index
 
@@ -68,3 +68,34 @@ write-set needed · 2471 still hangs after the fix attempt.
 - [decision-journal.md](decision-journal.md) — appended during execution
 - **Prior art (read first):** `../mincross-2471-order-parity/faithful-fix.md`
   and `../mincross-2471-order-parity/decision-journal.md`
+- **Layer-2 root cause + Layer-3 blocker:** [batch-2/layer2-root-cause.md](batch-2/layer2-root-cause.md)
+
+## Session summary (2026-06-18)
+
+**Mincross is solved.** Both layers root-caused as the *same bug class* —
+ports that ignore the `vStart` window offset:
+- **Layer 1** (`medians`/`reorder`) — commit `b4e6afb` (T1).
+- **Layer 2** (`saveBest`/`restoreRank`/`restoreBest`) — commit `e6e2029` (T3).
+  The brief's "transpose non-convergence / port.p.x tiebreak" guess was wrong;
+  `restoreBest` desynced node `order` from its absolute slot, and the
+  order-indexed `exchange` made the next `transpose` oscillate.
+
+**Verified:** `maxphase=2` (rank + mincross) render of 2471 = **3.6s** (C ~3s);
+`npm run typecheck` 0 · `npm test` **1876 pass** · `npm run build` OK; C repo
+untouched. Quality gates all green.
+
+**Tasks:** T1 ✅ · T2 ✅ (path B: 2471-structure-only) · T3 ✅ (root cause +
+`layer2-root-cause.md`) · T4 ⛔ blocked.
+
+**Stop reason — Layer 3 (a different subsystem, out of scope).** The now-correct
+order makes `dotPosition`'s x-coordinate **network simplex**
+(`rank(g,2,nsiter2(g))`, `position.ts`/`ns-core.ts`) non-converge → 2471
+end-to-end still hangs in *position*, not mincross. `nsiter2`=INT_MAX is faithful
+to C. Fixing it needs `position.ts`/`ns-core.ts` — outside the AD-5 write-set.
+
+**Decision (human, 2026-06-18):** commit the verified Layer-2 fix on this branch;
+**do NOT merge to main** (end-to-end hang). Layer 3 deferred to a follow-up
+mission (x-coord network-simplex convergence on the correct 2471 order).
+
+**Decisions made:** ~6 logged; the consequential one (commit-vs-revert + scope)
+escalated to the human per stop conditions. **Known follow-up:** Layer 3.

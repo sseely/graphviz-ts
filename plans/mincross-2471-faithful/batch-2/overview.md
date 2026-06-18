@@ -7,7 +7,7 @@ non-convergence. Path depends on T2's classification:
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T3 | Localize the oscillation root cause; write Layer-2 root-cause doc | (inline/opus) | layer2-root-cause.md | T2 | [ ] |
+| T3 | Localize the oscillation root cause; write Layer-2 root-cause doc | (inline/opus) | layer2-root-cause.md | T2 | [x] |
 
 T3 is the research core — run inline so harness + C-oracle state persist across
 probes. **Hard-gated:** if 2 diagnostic rounds don't localize a single C-faithful

@@ -6,8 +6,8 @@ decisive fork for Batch 2.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Re-apply vStart fix to medians/reorder + windowed unit tests | sonnet | mincross-order.ts, mincross-order.test.ts | — | [ ] |
-| T2 | Small multi-component + multi-cluster repros vs C; classify Layer 2 | (inline/opus) | (read-only + plan doc) | T1 | [ ] |
+| T1 | Re-apply vStart fix to medians/reorder + windowed unit tests | sonnet | mincross-order.ts, mincross-order.test.ts | — | [x] |
+| T2 | Small multi-component + multi-cluster repros vs C; classify Layer 2 | (inline/opus) | (read-only + plan doc) | T1 | [x] |
 
 T2 is investigative — run inline (orchestrator), not a fresh subagent, so the
 harness state and C-oracle context carry forward. Its output (the Layer-2
