@@ -156,15 +156,33 @@ function adjacentNode(g: SGraph, e: SEdge, n: SNode): SNode {
   return e.v1 === n.index ? g.nodes[e.v2] : g.nodes[e.v1];
 }
 
-/**
- * Compute the shortest path from `from` to `to` using Dijkstra.
- * Returns 0 on success, 1 on PQ overflow.
- *
- * Distance values are stored NEGATED while pending in the queue.
- * When popped, nVal is flipped positive (multiply by -1).
- *
- * @see lib/ortho/sgraph.c:shortPath
- */
+/** shortPath inner adjacency loop; true on PQ overflow. Extracted only for the
+ * CCN cap — side-effect order preserved. @see lib/ortho/sgraph.c:shortPath */
+function relaxNeighbors(pq: Pq, g: SGraph, n: SNode): boolean {
+  for (let y = 0; y < n.nAdj; y++) {
+    const e = g.edges[n.adjEdgeList[y]];
+    const adjn = adjacentNode(g, e, n);
+    // C uses `< 0` exactly (sgraph.c:164): skips finalized nodes (nVal >= 0).
+    if (adjn.nVal < 0) {
+      const d = -(n.nVal + e.weight);
+      if (adjn.nVal === UNSEEN) {
+        adjn.nVal = d;
+        if (pqInsert(pq, adjn) !== 0) return true;
+        adjn.nDad = n;
+        adjn.nEdge = e;
+      } else if (adjn.nVal < d) {
+        pqUpdate(pq, adjn, d);
+        adjn.nDad = n;
+        adjn.nEdge = e;
+      }
+    }
+  }
+  return false;
+}
+
+/** Dijkstra shortest path from `from` to `to`; 0 on success, 1 on PQ overflow.
+ * Distances stored NEGATED while pending, flipped positive when finalized.
+ * @see lib/ortho/sgraph.c:shortPath */
 export function shortPath(pq: Pq, g: SGraph, from: SNode, to: SNode): number {
   // mark all nodes unseen
   for (let x = 0; x < g.nnodes; x++) {
@@ -180,24 +198,7 @@ export function shortPath(pq: Pq, g: SGraph, from: SNode, to: SNode): number {
   while ((n = pqRemove(pq)) !== null) {
     n.nVal *= -1; // finalize: flip to positive
     if (n === to) break;
-    for (let y = 0; y < n.nAdj; y++) {
-      const e = g.edges[n.adjEdgeList[y]];
-      const adjn = adjacentNode(g, e, n);
-      if (adjn.nVal <= 0) {
-        // still pending or unseen
-        const d = -(n.nVal + e.weight);
-        if (adjn.nVal === UNSEEN) {
-          adjn.nVal = d;
-          if (pqInsert(pq, adjn) !== 0) return 1;
-          adjn.nDad = n;
-          adjn.nEdge = e;
-        } else if (adjn.nVal < d) {
-          pqUpdate(pq, adjn, d);
-          adjn.nDad = n;
-          adjn.nEdge = e;
-        }
-      }
-    }
+    if (relaxNeighbors(pq, g, n)) return 1;
   }
   return 0;
 }
