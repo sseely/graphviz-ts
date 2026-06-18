@@ -22,3 +22,43 @@
 | 2026-06-18 | T3 | **Faithful fix #2 (sgraph createSEdge/reset — ROOT CAUSE, sgraph.ts):** `createSEdge` used `adjEdgeList.push(idx)` (append); C `addEdgeToNode` (sgraph.c:45) writes at index `n_adj` then increments. After `reset()` restores nAdj=saveNAdj, C OVERWRITES the stale temp-edge slot, but TS's push left the new edge BEYOND nAdj — so `relaxNeighbors` (reads `adjEdgeList[0..nAdj)`) followed the STALE previous-edge index. Broke the 2nd+ edge sharing a boundary node: f3chain b→c (routed after a→b) zig-zagged via a→b's edge (4 segs vs C's 1). Confirmed order-dependent (b→c correct in isolation). Fixed createSEdge to index-assign like C; simplified `reset` to match sgraph.c exactly (dropped the push-era adjEdgeList truncation hack). | True root cause of T3 divergence. P1's tests never exercised consecutive shared-node edges, so the push bug survived. |
 | 2026-06-18 | T3 | **Existing-test update (ortho.test.ts AC3, user-approved):** AC3 asserted no UNCLIPPED route point lands inside a node bbox — but C's unclipped endpoints sit at node centres (clip_and_install, the caller's job, clips them; not modelled here). Fix #1 exposed this. Rewrote AC3 to assert endpoints == node centres (faithful) + interior bends clear of nodes. ADR-4 STOP raised to user; user chose "Update AC3 to match C". | AC3 encoded the old bb.LL behaviour, not C's. |
 | 2026-06-18 | T3 | **DONE.** `ortho-route.test.ts` (6 tests: exact route point lists + determinism, all 3 fixtures). Every edge's installed point list matches C EXACTLY (incl. f3branch track split a→b x=-18 / a→c x=+18). Gates: typecheck 0 · full suite 1926 passed (1920 + 6 new; AC3 updated in place, no other baseline change) · build OK · C tree clean. ORDER RISK never materialized — routes matched exactly once the createSEdge root cause was fixed. | segCmp/track assignment validated byte-exact; the hot spot was sound, the bug was in edge-list bookkeeping. |
+
+## Mission summary (2026-06-18)
+
+**Status: COMPLETE.** All 3 batches green; the full ortho render pipeline
+(partition → maze → route) is oracle-pinned byte-for-byte to native
+instrumented `dot` for 3 `splines=ortho` fixtures (f2pair a→b, f3chain
+a→b→c, f3branch a→b/a→c).
+
+**Tasks completed: 3/3** (T1 partition, T2 maze, T3 route).
+
+**Faithful parity fixes (4 — all cite C, all confined to ortho):**
+1. `partition.ts` RNG — MT19937 → POSIX `drand48`/`srand48` (partition.c:195,737).
+2. `partition.ts` `perp` — restored x negation (geomprocs.h:140).
+3. `partition.ts` `collectBoxes` → `monotonateTrapezoids` reachability
+   (monotonate_trapezoids; excludes obstacle interiors).
+4. `index.ts` buildSpline endpoints → node centre (ortho.c:1075); **`sgraph.ts`
+   createSEdge index-assign + reset** (sgraph.c:45 — root cause of multi-edge
+   route corruption).
+
+**Decisions flagged for review:**
+- Branched off the unmerged P1 branch, not `main` (P1 carries the pinned
+  foundation). Merge P1→main, then this branch's base resolves cleanly.
+- Write-set expanded beyond the brief (index.ts, sgraph.ts, ortho.test.ts AC3)
+  under the user's explicit faithfulness mandate + AskUserQuestion approval.
+- T1 partition emits rects in flood-fill order, not C's exact DFS order
+  (`monotonate` chain machinery proven dead for box output). T1/T2 compared
+  order-normalized; T3 routes matched EXACTLY anyway, so the order divergence
+  is cosmetic for the pipeline — but if a future consumer needs C's exact
+  cell/rect order, port traverse_polygon's DFS emission order into partition.
+
+**Quality gates (final, full branch):** typecheck 0 · `npm test` 1926 passed
+(1895 P1 baseline + 31 new: 10 partition, 15 maze, 6 route; AC3 updated in
+place) · build OK · C tree clean (`git -C ~/git/graphviz status lib/` empty) ·
+diff scope `src/ortho/**` + `plans/ortho-p2-render-pipeline/**` only.
+
+**Known issues / follow-ups:** none blocking. Pinned-fixture list for P3:
+f2pair, f3chain, f3branch (gcells/permute/maze/route dumps in `/tmp/ortho-p2/`).
+P3 (`feature/ortho-p3-dot-splines`) wiring goldens should now pass on first try.
+
+**Commits:** `3020a03` (T1), `9751159` (T2), `7bbfd09` (T3).
