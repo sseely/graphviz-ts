@@ -151,6 +151,55 @@ renders end-to-end.
 - Stop conditions hit: *fix needs a file outside the write-set* +
   *implementation contradicts an architecture decision in the brief*.
 
+## DEEPER ROOT CAUSE (post-authorization investigation, 2026-06-18)
+
+After the user authorized applying the fix, deeper probing showed the cause is
+**not** a `keepoutLeft` one-liner — `keepout`'s code is faithful. The cluster
+rank window it reads is itself corrupt in the position phase, and the corruption
+is created upstream in the **mincross cleanup**. Full chain (each step probed):
+
+1. `keepoutLeft` reads `g.info.rank[r].v[0]` / `nodeOrder(v0)` — faithful to C.
+2. But the cluster rank in position has **`vStart = 0`** and its `.v` is the
+   **shared root array** (`sameArr=true`), so `.v[0]` is the *root's* node 0
+   (often not even a member of the cluster). `order` IS absolute and correct
+   (the cluster's real node sits at root index 230 with `order=230`); only the
+   **window offset** is wrong.
+3. `vStart` was correctly `ipos` right after `mergeRanksInstall` (cluster.ts:142;
+   confirmed via a surviving tag on the same rank object). It is **reset** later
+   by `applyVlistReset` (`reset_vlist`, mincross.ts:122) — TS port of C
+   `rec_reset_vlists`, called from `cleanup2` (mincross.ts:304→230).
+4. `applyVlistReset` sets `vStart = ND_order(furthestNode(g, rankleader, -1))`.
+   Probe: for every cluster the **rankleader `g.info.rankleader[r]` has
+   `order = 0`** (and is *not* a member of the cluster — `uIsNorm=false,
+   uIsVn=false`). So `furthestNode(...,-1)` cannot move left and returns the
+   rankleader at order 0; `furthestNode(...,+1)` correctly finds the cluster's
+   right end (`wOrder=230`). The window is computed as `[0, 230]` (n=231,
+   `vStart=0`) instead of the true `[205, 230]`.
+5. `furthestNode`, `neighborNode`, `isNormalNodeOf`, `isVnodeOfEdgeOf` all match
+   C line-by-line. The divergence is the **rankleader's order/identity** at
+   `rec_reset_vlists` time: in C the rankleader is the cluster's representative
+   sitting at its absolute window position; in TS it is at order 0.
+
+### Revised fix location (NOT position-cluster.ts, NOT ns.ts)
+
+The defect is in the **mincross cluster-cleanup rankleader handling** —
+`applyVlistReset`/`recResetVlists` (mincross.ts) and/or how the cluster
+`rankleader[r]` order is maintained through expand/merge/remincross
+(cluster.ts `mergeRanksInstall`/`removeRankleaders`, mincross.ts `saveVlist`).
+This is the SAME `vStart`-window family as mincross Layers 1 & 2 but its true
+home is the mincross cleanup, not the position phase. Fixing it touches the
+committed mincross machinery and **must** be validated against: the Layer 1/2
+mincross fixes (2471 mincross still completes ~3.5s == C, order == C), the full
+golden suite (zero x-coord churn), and the C x-order oracle — i.e. its own
+mission with mincross regression coverage, not a position-phase patch.
+
+**STILL STOPPED** (now for a different, deeper reason): the real fix is in
+committed mincross code (`mincross.ts`/`cluster.ts`), outside even the
+just-authorized `position-cluster.ts`, and carries regression risk to the Layer
+1/2 work. Recommend a dedicated mission: *"2471 x-coord: fix cluster rankleader
+order in rec_reset_vlists"*, write-set `{mincross.ts, cluster.ts, +tests}`, with
+the convergence + x-order-parity + golden-churn gates from this brief.
+
 ## Harness recipe (all reverted)
 
 - TS probes: `globalThis.__ns` (rank2Loop pivot trajectory: iter, sI, slack(f),
