@@ -393,7 +393,7 @@ describe('reorderInner: swaps', () => {
     a.info.order = 0; b.info.order = 1;
     a.info.mval = 3; b.info.mval = 1;
     rootG.info.rank![0].v = [a, b];
-    const changed = reorderInner(ctx, g, [a, b], 2, false);
+    const changed = reorderInner(ctx, g, [a, b], { start: 0, ep: 2 }, false);
     expect(changed).toBe(true);
   });
 });
@@ -411,7 +411,7 @@ describe('reorderInner: no-swap', () => {
     a.info.order = 0; b.info.order = 1;
     a.info.mval = 1; b.info.mval = 3;
     rootG.info.rank![0].v = [a, b];
-    const changed = reorderInner(ctx, g, [a, b], 2, false);
+    const changed = reorderInner(ctx, g, [a, b], { start: 0, ep: 2 }, false);
     expect(changed).toBe(false);
   });
 });

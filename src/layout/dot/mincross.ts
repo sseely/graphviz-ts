@@ -91,7 +91,13 @@ export function saveVlist(g: Graph): void {
   if (!rank) return;
   const mn = g.info.minrank !== undefined ? g.info.minrank : 0;
   const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
-  for (let r = mn; r <= mx; r++) rl[r] = rank[r].v[0];
+  // C reads GD_rank(g)[r].v[0], where .v is the offset window pointer
+  // (= root array + vStart). TS keeps .v as the full root array plus a
+  // separate vStart, so the faithful read is rankGet(rk, 0) = rk.v[vStart].
+  // Reading rk.v[0] grabbed the root's leftmost node for windowed clusters,
+  // corrupting the rankleader → wrong vStart in rec_reset_vlists. Same
+  // vStart-window bug class as mincross Layers 1 & 2. @see mincross.c:save_vlist
+  for (let r = mn; r <= mx; r++) rl[r] = rankGet(rank[r], 0);
 }
 
 /** @see lib/dotgen/mincross.c:rec_save_vlists */

@@ -11,7 +11,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { RankEntry } from '../../model/rankEntry.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
-import { MincrossContext, CONVERGENCE, dotRoot } from './mincross-utils.js';
+import { MincrossContext, CONVERGENCE, dotRoot, rankGet } from './mincross-utils.js';
 import { exchange, left2right, transpose, ncross, val, xpen } from './mincross-cross.js';
 import { buildRanks, flatBreakcycles, flatReorder } from './mincross-build.js';
 
@@ -120,7 +120,11 @@ export function medians(_ctx: MincrossContext, g: Graph, r: number, d: number): 
   const rk = gRank[r];
   let hasfixed = false;
   for (let i = 0; i < rk.n; i++) {
-    const v = rk.v[i];
+    // Faithful to C GD_rank(g)[r].v — the already-offset window pointer.
+    // TS keeps rk.v as the full root array + a separate vStart, so we must
+    // read rk.v[vStart+i] = rankGet(rk,i). transpose already does this;
+    // medians/reorder were ported without it. @see mincross.c:medians
+    const v = rankGet(rk, i);
     if (!v) continue;
     if (mediansProcessNode(v, d)) hasfixed = true;
   }
@@ -139,18 +143,23 @@ export function saveBest(g: Graph): void {
   const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
   for (let r = mn; r <= mx; r++) {
     for (let i = 0; i < rank[r].n; i++) {
-      const n = rank[r].v[i];
+      // Read the offset window: C save_best reads GD_rank(g)[r].v[i] where the
+      // pointer is already advanced by vStart. @see mincross.c:save_best
+      const n = rankGet(rank[r], i);
       n.info.coord.x = n.info.order !== undefined ? n.info.order : 0;
     }
   }
 }
 
 export function restoreRank(rk: RankEntry, rootRk: RankEntry): void {
-  for (let i = 0; i < rk.n; i++) rk.v[i].info.order = rk.v[i].info.coord.x;
-  const sorted = rk.v.slice(0, rk.n).sort(
+  // Restore + re-sort the absolute window [vStart, vStart+n) — C restore_best
+  // qsorts GD_rank(g)[r].v (the offset pointer) over n. @see mincross.c:restore_best
+  const vs = rk.vStart ?? 0;
+  for (let i = 0; i < rk.n; i++) rk.v[vs + i].info.order = rk.v[vs + i].info.coord.x;
+  const sorted = rk.v.slice(vs, vs + rk.n).sort(
     (a, b) => (a.info.order !== undefined ? a.info.order : 0) - (b.info.order !== undefined ? b.info.order : 0),
   );
-  for (let i = 0; i < rk.n; i++) rk.v[i] = sorted[i]!;
+  for (let i = 0; i < rk.n; i++) rk.v[vs + i] = sorted[i]!;
   rootRk.valid = false;
 }
 
@@ -185,9 +194,16 @@ export function reorderFindRp(g: Graph, vlist: Node[], lp: number, ep: number): 
   return { rp: ep, muststay: false };
 }
 
-export function reorderInner(ctx: MincrossContext, g: Graph, vlist: Node[], ep: number, reverse: boolean): boolean {
+export function reorderInner(
+  ctx: MincrossContext,
+  g: Graph,
+  vlist: Node[],
+  win: { start: number; ep: number },
+  reverse: boolean,
+): boolean {
   let changed = false;
-  let lp = 0;
+  const ep = win.ep;
+  let lp = win.start;
   while (lp < ep) {
     lp = reorderFindLp(vlist, lp, ep);
     if (lp >= ep) break;
@@ -203,6 +219,14 @@ export function reorderInner(ctx: MincrossContext, g: Graph, vlist: Node[], ep: 
   return changed;
 }
 
+/**
+ * Absolute window [start, start+n) for a rank — faithful to C reading the
+ * already-offset GD_rank(g)[r].v window pointer. @see mincross.c:reorder
+ */
+function reorderWindow(re: RankEntry): { start: number; n: number } {
+  return { start: re.vStart ?? 0, n: re.n };
+}
+
 /** @see lib/dotgen/mincross.c:reorder */
 export function reorder(ctx: MincrossContext, g: Graph, r: number, reverse: boolean, hasfixed: boolean): void {
   const rootRank = ctx.root.info.rank;
@@ -210,10 +234,11 @@ export function reorder(ctx: MincrossContext, g: Graph, r: number, reverse: bool
   const rk = g.info.rank;
   if (!rk) return;
   const vlist = rk[r].v;
-  let ep = rk[r].n;
+  const { start, n } = reorderWindow(rk[r]);
+  let ep = start + n;
   let changed = false;
-  for (let nelt = ep - 1; nelt >= 0; nelt--) {
-    if (reorderInner(ctx, g, vlist, ep, reverse)) changed = true;
+  for (let nelt = n - 1; nelt >= 0; nelt--) {
+    if (reorderInner(ctx, g, vlist, { start, ep }, reverse)) changed = true;
     if (!hasfixed && !reverse) ep--;
   }
   if (changed) {
