@@ -137,11 +137,19 @@ export function exchange(ctx: MincrossContext, v: Node, w: Node): void {
 // transpose_step / transpose
 // ---------------------------------------------------------------------------
 
-/** @see lib/dotgen/mincross.c:transpose_step */
 /** C transpose_step swap test: strict improvement, or a reverse tie when there
  *  are crossings to redistribute. @see lib/dotgen/mincross.c:transpose_step */
 function shouldSwap(c0: number, c1: number, reverse: boolean): boolean {
   return c1 < c0 || (c0 > 0 && reverse && c1 === c0);
+}
+
+/** Invalidate the ncross cache for the root ranks r, r±1 (C invalidates
+ *  GD_rank(Root), not g, on a transpose swap). @see mincross.c:657-665 */
+function invalidateValid(rootRank: RankEntry[] | undefined, r: number, mn: number, mx: number): void {
+  if (!rootRank) return;
+  rootRank[r]!.valid = false;
+  if (r > mn) rootRank[r - 1]!.valid = false;
+  if (r < mx) rootRank[r + 1]!.valid = false;
 }
 
 /** [minrank, maxrank] with 0 defaults. */
@@ -174,6 +182,7 @@ export function transposeStep(ctx: MincrossContext, g: Graph, r: number, reverse
       exchange(ctx, v, w);
       rv += c0 - c1;
       markCandidates(rank, r, mn, mx);
+      invalidateValid(ctx.root.info.rank, r, mn, mx);
     }
   }
   return rv;
