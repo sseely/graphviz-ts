@@ -12,8 +12,8 @@ import { it, expect, vi, beforeEach } from 'vitest';
 import type { Point } from '../../model/geom.js';
 import type { Path } from '../../common/types.js';
 
-const routeSplines = vi.fn<[Path], Point[] | null>();
-const routePolylines = vi.fn<[Path], Point[] | null>();
+const routeSplines = vi.fn<(p: Path) => Point[] | null>();
+const routePolylines = vi.fn<(p: Path) => Point[] | null>();
 
 vi.mock('../../common/splines-routespl.js', () => ({
   routeSplines: (p: Path) => routeSplines(p),

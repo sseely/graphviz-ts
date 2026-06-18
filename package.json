@@ -11,12 +11,12 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@vitest/coverage-v8": "^1.6.1",
+    "@vitest/coverage-v8": "^4.1.9",
     "@xmldom/xmldom": "^0.9.10",
     "canvas": "^3.2.3",
-    "esbuild": "^0.21.0",
+    "esbuild": "^0.28.1",
     "peggy": "^4.0.0",
     "typescript": "^5.4.0",
-    "vitest": "^1.6.0"
+    "vitest": "^4.1.9"
   }
 }
