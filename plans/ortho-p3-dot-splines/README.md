@@ -32,11 +32,20 @@ remain.
   (link prebuilt `libortho.a`, zero C-tree edits) for any maze/partition drill.
   See `[[ortho-p1-already-ported-fpq-invariant]]`, `[[oracle-native-not-wasm]]`.
 
+## Depends on: ortho P2 (render-pipeline pinning)
+
+**Run `plans/ortho-p2-render-pipeline` first.** P2 oracle-pins
+`partition`/`maze`/`ortho-route` against native C, so by the time this mission
+wires dot, the render pipeline is proven correct. With P2 green, T3 below is
+**validation + golden minting**, not deep pipeline debugging — any residual
+divergence should be dispatch/adapter-level (dot-specific coord/obstacle
+handling), not maze/partition/route logic. If a golden diverges in a way that
+implicates the pipeline, that's a P2 gap — STOP and fix it in P2, not here.
+
 ## Branch
 
-`feature/ortho-p3-dot-splines` (new, off `main`). The ortho-P1 work lives on
-`feature/ortho-p1-foundation`; this mission can branch off `main` or stack on
-P1 — executor's choice, but do not entangle the two PRs.
+`feature/ortho-p3-dot-splines` (new, off `main`, after P2 merges). The ortho-P1
+work lives on `feature/ortho-p1-foundation`; do not entangle the PRs.
 
 ## Constraints
 
@@ -67,7 +76,7 @@ Regression sub-gate: **no existing non-ortho `test/golden/refs/*.svg` changes.**
 |-------|------|--------|
 | [1](batch-1/overview.md) | T1 — dot ortho dispatch + dot-local adapter + `resetRW` (no labels) | [ ] |
 | [2](batch-2/overview.md) | T2 — edge-label positioning in the ortho branch (faithful warn+downgrade) | [ ] |
-| [3](batch-3/overview.md) | T3 — golden fixtures + native-C refs + end-to-end validation (+ reactive maze/partition parity fixes) | [ ] |
+| [3](batch-3/overview.md) | T3 — golden fixtures + native-C refs + end-to-end validation (pipeline pre-pinned by P2; dispatch/adapter fixes only) | [ ] |
 
 ## Index
 

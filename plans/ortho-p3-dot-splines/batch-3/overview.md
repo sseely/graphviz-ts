@@ -1,17 +1,18 @@
 # Batch 3 — golden fixtures + native-C validation (+ reactive parity fixes)
 
 End-to-end proof: TS `dot -Tsvg` matches **native C** `dot -Tsvg` for
-`splines=ortho` graphs. This validates the whole ortho render pipeline
-(`orthoEdges`/`maze`/`partition`/`ortho-route`), which is unpinned beyond P1's
-bottom layer. Divergences are fixed faithfully via the P1 tiny-harness recipe.
+`splines=ortho` graphs. **Precondition: ortho-P2 has pinned the render pipeline**
+(`maze`/`partition`/`ortho-route`), so this is golden minting + validation. A
+divergence should be dispatch/adapter-level (fix in `src/layout/dot/*`); a
+pipeline-level divergence is a **P2 gap — STOP**, do not patch `src/ortho/*` here.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T3 | Ortho golden fixtures + native-C refs + manifest + validate; drill+fix maze/partition on divergence | sonnet | `test/golden/inputs/dot-ortho-*.dot`, `test/golden/refs/dot-ortho-*.svg`, `test/golden/manifest.json`, `src/ortho/*.ts` (only if parity fixes needed) | T2 | [ ] |
+| T3 | Ortho golden fixtures + native-C refs + manifest + validate (pipeline pre-pinned by P2) | sonnet | `test/golden/inputs/dot-ortho-*.dot`, `test/golden/refs/dot-ortho-*.svg`, `test/golden/manifest.json`, `src/layout/dot/*.ts` (dispatch/adapter fixes only) | T2 + **P2 complete** | [ ] |
 
 ## Dependency / file ownership
-- T3 needs T1+T2 (full dispatch incl. labels). Its `src/ortho/*` write-set is
-  disjoint from T1/T2's `src/layout/dot/*` — no conflict.
+- T3 needs T1+T2 (full dispatch incl. labels) **and ortho-P2 green** (pipeline
+  pinned). Fixes here are dispatch/adapter-level in `src/layout/dot/*`.
 - `test/golden/manifest.json` is appended (new ortho entries only). **Do not
   modify existing entries.**
 

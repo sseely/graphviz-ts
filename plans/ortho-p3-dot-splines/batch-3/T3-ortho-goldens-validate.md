@@ -3,9 +3,12 @@
 ## Context
 Faithful TS port (root `CLAUDE.md`). Prove `splines=ortho` renders correctly
 under dot by matching **native C** `dot -Tsvg` (the canonical oracle —
-`[[oracle-native-not-wasm]]`). The render pipeline below `orthoEdges`
-(`maze`/`partition`/`ortho-route`) is unpinned beyond P1; any divergence is a
-faithful bug to fix, not a golden to fudge. Needs T1+T2 (full dispatch).
+`[[oracle-native-not-wasm]]`). **Precondition: ortho-P2 has pinned
+`maze`/`partition`/`ortho-route`**, so the render pipeline is already C-faithful;
+this task is golden minting + validation, and any residual divergence should be
+**dispatch/adapter-level** (dot-specific coord/obstacle handling), not pipeline
+logic. If a divergence implicates `maze`/`partition`/`ortho-route`, that is a
+**P2 gap — STOP and fix it in P2**, not here. Needs T1+T2 (full dispatch).
 
 ## Task
 1. **Fixtures** `test/golden/inputs/dot-ortho-*.dot` — small, deterministic
@@ -23,18 +26,19 @@ faithful bug to fix, not a golden to fudge. Needs T1+T2 (full dispatch).
 3. **Register** new entries in `test/golden/manifest.json` (engine `dot`,
    `toleranceClass` matching existing deterministic dot entries). Do **not**
    touch existing entries.
-4. **Validate**: `npm test` (golden suite). For each diverging fixture, drill the
-   responsible stage with the P1 tiny-harness recipe (dump C `maze`/`partition`/
-   trap/route state, compare to TS) and apply the **faithful** fix in
-   `src/ortho/*.ts`. Re-run until all ortho goldens pass and every non-ortho
-   golden is byte-identical.
+4. **Validate**: `npm test` (golden suite). With P2 green the pipeline is
+   C-faithful, so a divergence should be **dispatch/adapter-level** — fix it in
+   `src/layout/dot/*` (the T1/T2 dot files). If a divergence clearly implicates
+   `maze`/`partition`/`ortho-route`, **STOP**: it is a P2 gap (P2's fixture set
+   missed it) — extend P2, do not patch `src/ortho/*` from this mission. Re-run
+   until all ortho goldens pass and every non-ortho golden is byte-identical.
 
 ## Write-set
 - `test/golden/inputs/dot-ortho-*.dot` (create)
 - `test/golden/refs/dot-ortho-*.svg` (create)
 - `test/golden/manifest.json` (modify — append only)
-- `src/ortho/*.ts` (modify — **only** if a golden diverges; faithful fixes to
-  `maze.ts`/`partition.ts`/`ortho-route.ts`)
+- `src/layout/dot/*.ts` (modify — only for dispatch/adapter-level fixes; **not**
+  `src/ortho/*`, which is P2's domain)
 
 ## Read-set
 - `test/golden/manifest.json` (entry shape), `test/golden/normalize.ts`,
