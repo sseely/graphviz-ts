@@ -70,9 +70,26 @@ the diff.
 
 ## Status
 
-- [ ] Batch 1 — isolate a minimal divergent subgraph from 2471; identify the
-  divergent pass/function with the dump harness.
-- [ ] Batch 2 — apply the C-faithful fix; verify 2471 order==C + zero churn.
+- [x] Batch 1 — **ROOT CAUSE FOUND.** `medians` and `reorder`
+  (`mincross-order.ts`) index `rk.v[i]` ignoring the `vStart` window offset,
+  so for windowed graphs (multi-component comp≥2, all clusters) they process
+  the wrong nodes. `transpose` already uses `rankGet` (correct); the two were
+  ported without it. See `faithful-fix.md` + decision-journal.
+- [~] Batch 2 — **STOPPED. Fix is correct but blocked on a deeper layer.** The
+  faithful fix (`rankGet` in medians; absolute window `[vStart, vStart+n)` in
+  reorder) passes all 41 mincross unit tests + tsc, but once the big clustered
+  component is *properly* reordered, TS `transpose` fails to converge
+  (`while(delta>=1)` oscillates; C converges in 3s) → 2471 hangs. Reverted to
+  not regress 2471 (parity-cardinal). **Layer 2 = transpose convergence /
+  `in_cross`/`out_cross` `port.p.x` model** (the brief's flagged latent gap) is
+  a separate mission. All changes reverted; tree clean (tsc 0, vitest 1874).
+
+## Next mission
+
+`mincross-transpose-convergence` — port C's `in_cross`/`out_cross` `port.p.x`
+crossing model so `transpose` converges on the properly-reordered 2471 (the
+medians/reorder vStart fix in `faithful-fix.md` is a prerequisite, re-apply it
+together).
 
 ## Related
 
