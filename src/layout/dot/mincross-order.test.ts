@@ -233,16 +233,30 @@ describe('mediansCollectDir: skips zero-penalty', () => {
 // ---------------------------------------------------------------------------
 
 describe('mediansProcessNode', () => {
-  it('returns true (hasfixed) for cluster node', () => {
+  // Regression (mincross.c:1646): medians computes a median for EVERY node, no
+  // cluster skip. A clustered node with a non-flat edge must get a real mval
+  // (returns false), else reorderFindLp drops it (undefined->-1) and the cluster
+  // skeleton never reorders. Returned true (mval undefined) before the fix.
+  it('computes a median for a clustered node with edges (no cluster skip)', () => {
     const g = new Graph('g', 'directed');
     const n = makeNode(g, 0, 'n');
+    n.info.rank = 0;
     n.info.clust = g;
-    expect(mediansProcessNode(n, 0)).toBe(true);
+    const m = makeNode(g, 1, 'm');
+    m.info.rank = 1;
+    m.info.order = 0;
+    const e = makeEdge(n, m);
+    e.info.xpenalty = 1;
+    e.info.head_port = { p: { x: 0, y: 0 }, theta: 0, bp: null, defined: false, constrained: false, clip: false, dyna: false, order: 0, side: 0, name: '' };
+    n.info.out = { list: [e], size: 1 }; // d=1 > rank(n)=0 -> out-edge head val
+    expect(mediansProcessNode(n, 1)).toBe(false);
+    expect(n.info.mval).toBe(0);
   });
 
-  it('calls flatMval and returns its result for isolated node', () => {
+  it('calls flatMval and returns its result for an edgeless node', () => {
     const g = new Graph('g', 'directed');
     const n = makeNode(g, 0, 'n');
+    n.info.clust = g; // cluster membership no longer forces fixed; edgelessness does
     expect(mediansProcessNode(n, 0)).toBe(true);
   });
 });

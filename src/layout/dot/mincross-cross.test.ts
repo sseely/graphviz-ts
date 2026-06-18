@@ -9,8 +9,13 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { shouldSwap, transposeCounts } from './mincross-cross.js';
+import {
+  shouldSwap, transposeCounts, left2rightCluster, setReMincross,
+} from './mincross-cross.js';
+import { CLUSTER } from './rank.js';
+import { VIRTUAL } from './fastgr.js';
 import type { Node } from '../../model/node.js';
+import type { Graph } from '../../model/graph.js';
 import type { Edge } from '../../model/edge.js';
 
 describe('shouldSwap — forward', () => {
@@ -45,5 +50,48 @@ describe('transposeCounts', () => {
     expect(transposeCounts(inNode(2), inNode(5))).toEqual([0, 1]);
     // equal source order: no crossing either way.
     expect(transposeCounts(inNode(4), inNode(4))).toEqual([0, 0]);
+  });
+});
+
+/** Node carrying cluster membership + optional ranktype/node_type. */
+function clNode(clust: Graph | undefined, rt?: number, nt?: number): Node {
+  return { info: { clust, ranktype: rt, node_type: nt } } as unknown as Node;
+}
+
+// C left2right cluster guard (mincross.c:557). Non-remincross forces ordering
+// only for pairs whose nodes are BOTH in different clusters, releasing the pair
+// when a cluster skeleton vnode sits on either side. The mc3 cluster-mincross
+// hang came from the old agContainsNode port forcing (cluster, non-cluster)
+// pairs and lacking the skeleton-vnode release.
+const cA = {} as unknown as Graph;
+const cB = {} as unknown as Graph;
+
+describe('left2rightCluster — non-remincross', () => {
+  it('forces two non-skeleton nodes in different clusters', () => {
+    setReMincross(false);
+    expect(left2rightCluster(clNode(cA), clNode(cB))).toBe(1);
+  });
+
+  it('releases the pair when either side is a cluster-skeleton vnode', () => {
+    setReMincross(false);
+    expect(left2rightCluster(clNode(cA, CLUSTER, VIRTUAL), clNode(cB))).toBe(0);
+    expect(left2rightCluster(clNode(cA), clNode(cB, CLUSTER, VIRTUAL))).toBe(0);
+  });
+
+  it('does not force a (cluster, non-cluster) pair — the mc3 reorder swap', () => {
+    setReMincross(false);
+    expect(left2rightCluster(clNode(cA), clNode(undefined))).toBe(0);
+    expect(left2rightCluster(clNode(undefined), clNode(cA))).toBe(0);
+    expect(left2rightCluster(clNode(cA), clNode(cA))).toBe(0); // same cluster
+  });
+});
+
+describe('left2rightCluster — remincross', () => {
+  it('forces any cross-cluster pair, with no skeleton release', () => {
+    setReMincross(true);
+    expect(left2rightCluster(clNode(cA), clNode(cB))).toBe(1);
+    expect(left2rightCluster(clNode(cA), clNode(undefined))).toBe(1);
+    expect(left2rightCluster(clNode(cA, CLUSTER, VIRTUAL), clNode(cB))).toBe(1);
+    setReMincross(false); // restore module global for other tests
   });
 });

@@ -60,7 +60,7 @@ x-coord) as follow-up, not failure (AD-3).
 
 | Batch | Focus | Status |
 |-------|-------|--------|
-| 1 | Localize swap-blocking site (T1) + fix with TDD (T2) | [ ] |
+| 1 | Localize swap-blocking site (T1) + fix with TDD (T2) | [x] |
 | 2 | Regenerate cluster goldens from oracle (T3); per-rank order verify + 2471 re-test (T4) | [ ] |
 
 ## Harness

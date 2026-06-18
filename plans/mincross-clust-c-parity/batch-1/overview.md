@@ -2,8 +2,8 @@
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|-----------|------|
-| T1 | Localize where C makes the crossing-removing move that TS rejects | `decision-journal.md` (+ reverted probe) | — | [ ] |
-| T2 | Fix the localized defect + TDD regression (per-rank order == C) | localized file(s) of `mincross-cross.ts`/`mincross-order.ts`/`mincross-build.ts`/`mincross.ts` + `*.test.ts` | T1 | [ ] |
+| T1 | Localize where C makes the crossing-removing move that TS rejects | `decision-journal.md` (+ reverted probe) | — | [x] |
+| T2 | Fix the localized defect + TDD regression (per-rank order == C) | localized file(s) of `mincross-cross.ts`/`mincross-order.ts`/`mincross-build.ts`/`mincross.ts` + `*.test.ts` | T1 | [x] |
 
 ## Probe-confirmed facts (do not re-derive)
 
