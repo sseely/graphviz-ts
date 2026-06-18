@@ -139,7 +139,7 @@ export function exchange(ctx: MincrossContext, v: Node, w: Node): void {
 
 /** C transpose_step swap test: strict improvement, or a reverse tie when there
  *  are crossings to redistribute. @see lib/dotgen/mincross.c:transpose_step */
-function shouldSwap(c0: number, c1: number, reverse: boolean): boolean {
+export function shouldSwap(c0: number, c1: number, reverse: boolean): boolean {
   return c1 < c0 || (c0 > 0 && reverse && c1 === c0);
 }
 
