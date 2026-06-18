@@ -16,9 +16,9 @@ import {
   newVirtualEdge, flatEdge, findFlatEdge,
 } from './fastgr.js';
 import {
-  MincrossContext, dotRoot,
+  MincrossContext, dotRoot, rankGet,
 } from './mincross-utils.js';
-import { transpose, ncross } from './mincross-cross.js';
+import { transpose, ncross, exchange } from './mincross-cross.js';
 import { CLUSTER, isACluster } from './rank.js';
 import { installCluster, expandCluster, markLowclusters } from './cluster.js';
 import { agnode, agsubg, agsubnode } from '../../model/cgraph-ops.js';
@@ -237,10 +237,13 @@ export function buildRanksFlip(ctx: MincrossContext, g: Graph, mn: number, mx: n
     rootRank[i].valid = false;
     const rk = rank[i];
     if (!g.info.flip || rk.n <= 0) continue;
+    // C reverses each rank via exchange() (mincross.c:1293-1300), which indexes
+    // by absolute ND_order and is multiset-preserving. A manual 0-based reverse
+    // assigning order=j corrupts (duplicates) orders in windowed passes
+    // (vStart>0: RL/flip + multi-component), so mirror C's exchange() exactly.
     const last = rk.n - 1;
     for (let j = 0; j <= last >> 1; j++) {
-      const tmp = rk.v[j]; rk.v[j] = rk.v[last - j]; rk.v[last - j] = tmp;
-      rk.v[j].info.order = j; rk.v[last - j].info.order = last - j;
+      exchange(ctx, rankGet(rk, j), rankGet(rk, last - j));
     }
   }
 }

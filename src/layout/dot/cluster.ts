@@ -133,7 +133,13 @@ export function mergeRanksInstall(subg: Graph, root: Graph, r: number, ipos: num
     deleteFastNode(subg, v);
     fastNode(root, v);
   }
-  subg.info.rank![r].v = root.info.rank![r].v.slice(ipos);
+  // C aliases the cluster's vlist into the root array (merge_ranks:
+  // GD_rank(subg)[r].v = GD_rank(root)[r].v + ipos) so later transpose swaps
+  // (exchange writes the root array) stay visible to the cluster. A .slice copy
+  // detaches the cluster view → cluster transpose never converges. Mirror C: a
+  // shared array reference plus the vStart offset (rankGet adds vStart).
+  subg.info.rank![r].v = root.info.rank![r].v;
+  subg.info.rank![r].vStart = ipos;
   root.info.rank![r].valid = false;
 }
 

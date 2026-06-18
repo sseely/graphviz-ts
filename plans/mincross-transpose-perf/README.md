@@ -71,9 +71,31 @@ complete (>90s in one `transpose()` call; HEAD~1 identical → pre-existing).
 
 | Batch | Focus | Status |
 |-------|-------|--------|
-| 1 | Diagnose + route: measure pass-count vs non-convergence vs constant-factor (T1) | [ ] |
-| 2 | Apply the routed parity-preserving fix (T2) + conditional 2nd axis (T3) | [ ] |
-| 3 | Validate: 2471 completes, order == C, permanent regression + perf smoke (T4) | [ ] |
+| 1 | Diagnose + route: measure pass-count vs non-convergence vs constant-factor (T1) | [x] |
+| 2 | Apply the routed parity-preserving fix (T2) + conditional 2nd axis (T3) | [x] |
+| 3 | Validate: 2471 completes, order == C, permanent regression + perf smoke (T4) | [~] partial — see below |
+
+## Status after Batch 2 — hang CLOSED; 2471 has a residual order divergence
+
+Write-set widening was **authorized**. Both fixes applied + committed:
+
+- T2 `mincross-build.ts:buildRanksFlip` — reverse via C's `exchange()`.
+- T3 `cluster.ts:mergeRanksInstall` — alias root array + `vStart` (not `.slice`).
+
+**Achieved:** the transpose hang is closed — 2471 completes in TS (~49s; C
+3.06s; was infinite). tsc 0; vitest **1873 pass, zero golden churn**. Order ==
+C (per-rank name dump) on mc3, chain_24 (TB), chain_24_rl (RL), port_rl.
+
+**Not yet met (cardinal invariant on 2471):** 2471's within-rank order differs
+from C on ~10/23 (even, real-node) ranks — same node sets, different order. This
+is **not** caused by these fixes (all controlled reproducers match C; zero
+churn) and **not** the crossing tiebreak. It is a distinct, pre-existing
+mincross-ORDER divergence, visible only now that 2471 completes (the prior
+order-parity mission could never see it — 2471 hung). It needs 2471's full
+structure to reproduce (back-edges / flat edges / nested clusters / scale).
+
+**Decision pending** (see decision-journal T4): merge T2/T3 + open a follow-up
+mission for 2471 order parity, vs. keep investigating here.
 
 ## Harness
 
