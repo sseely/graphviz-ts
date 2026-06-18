@@ -70,7 +70,23 @@ golden churn / any passing graph diverges → STOP/revert · file outside write-
 | [2](batch-2/overview.md) | Localize the exact `ns.c` deviation (root-cause doc) | [x] — root cause found OUTSIDE NS write-set → STOP |
 | [3](batch-3/overview.md) | Apply faithful fix + full 2471 end-to-end parity | [ ] — N/A (fix is not in NS; see STOP below) |
 
-## OUTCOME — STOP (root cause is NOT in network simplex)
+## OUTCOME — FIXED (2471 renders end-to-end)
+
+**Resolved (commit 647bbe3).** The diagnostic pass traced the blocker to a
+one-line `vStart`-window bug in `saveVlist` (mincross.ts): it read `rank[r].v[0]`
+instead of `rankGet(rank[r], 0)`, so each cluster's rankleader landed at order 0;
+`rec_reset_vlists` then derived `vStart=0` for the cluster's position-phase rank
+window, emptying `keepout_othernodes`' left scan (333 missing aux edges) and
+under-constraining the x-coord network simplex into degenerate cycling. Fixing
+the read (same pattern as mincross Layers 1 & 2; root vStart=0 unchanged) makes
+the NS converge. **2471 now renders end-to-end ~6s** (was a hang), **1876 tests
+pass (zero golden churn)**, C source untouched, and **22/23 ranks' x-order are
+byte-identical to C**. The single rank-6 within-rank order difference (n264–n273)
+is a **pre-existing, separate mincross-order divergence** — proven independent of
+this fix (mincross order is identical with the fix on or off) — and is the only
+remaining follow-up for full x-order parity.
+
+## (Investigation trail) STOP analyses that led to the fix
 
 Batch 2 **falsified the brief's premise**. The TS network simplex
 (`ns.ts`/`ns-core.ts`/`ns-range.ts`) is **faithful to `ns.c`**. The x-coord
