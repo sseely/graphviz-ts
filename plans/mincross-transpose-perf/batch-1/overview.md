@@ -2,7 +2,25 @@
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|-----------|------|
-| T1 | Measure pass-count vs non-convergence vs constant-factor; route Batch 2 | `decision-journal.md` (+ reverted probes) | — | [ ] |
+| T1 | Measure pass-count vs non-convergence vs constant-factor; route Batch 2 | `decision-journal.md` (+ reverted probes) | — | [x] |
+
+## T1 result (2026-06-17)
+
+Cause = **(b) non-convergence**. Two faithful-port deviations from C, both
+confirmed (probes reverted), both **outside the write-set** → **STOPPED**:
+
+1. `mincross-build.ts:buildRanksFlip` — manual 0-based rank reverse assigning
+   `order=j` ignores `vStart`; C's flip block uses `exchange()`
+   (`mincross.c:1293-1300`). Breaks RL/flip + multi-component (`vStart>0`).
+   Fix: `exchange(ctx, rankGet(rk,j), rankGet(rk,last-j))`. Makes TS transpose
+   byte-identical to C.
+2. `cluster.ts:mergeRanksInstall:136` — `.slice(ipos)` copies the rank array;
+   C aliases (`GD_rank(subg)[r].v = GD_rank(root)[r].v + ipos`). Cluster
+   transpose swaps then never persist → 2nd non-convergence. Fix:
+   `subg.rank[r].v = root.rank[r].v; subg.rank[r].vStart = ipos`.
+
+Both fixes → 2471 completes in TS (44.4s, was infinite). Numbers + evidence in
+`decision-journal.md`. Batch 2 blocked on write-set authorization (see README).
 
 ## Goal
 

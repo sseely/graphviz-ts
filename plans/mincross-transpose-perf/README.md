@@ -71,9 +71,23 @@ complete (>90s in one `transpose()` call; HEAD~1 identical → pre-existing).
 
 | Batch | Focus | Status |
 |-------|-------|--------|
-| 1 | Diagnose + route: measure pass-count vs non-convergence vs constant-factor (T1) | [ ] |
-| 2 | Apply the routed parity-preserving fix (T2) + conditional 2nd axis (T3) | [ ] |
+| 1 | Diagnose + route: measure pass-count vs non-convergence vs constant-factor (T1) | [x] |
+| 2 | Apply the routed parity-preserving fix (T2) + conditional 2nd axis (T3) | [ ] BLOCKED — write-set |
 | 3 | Validate: 2471 completes, order == C, permanent regression + perf smoke (T4) | [ ] |
+
+## ⚠ STOPPED after Batch 1 — write-set authorization needed
+
+Diagnosis is conclusive (cause **b: non-convergence**) and both fixes are
+**confirmed** (2471 completes in TS; root transpose byte-identical to C). But
+both fix sites are **outside the AD-2 write-set**, triggering the brief's STOP
+("the fix needs a file outside the write-set"):
+
+- `src/layout/dot/mincross-build.ts` (`buildRanksFlip`) — surgical, low risk.
+- `src/layout/dot/cluster.ts` (`mergeRanksInstall`) — **broad blast radius**
+  (the `.slice`→alias change affects every clustered graph's rank arrays).
+
+Batch 2 cannot proceed until the write-set is widened to these two files (+
+their tests). See `decision-journal.md` T1 rows for the exact edits and numbers.
 
 ## Harness
 
