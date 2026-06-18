@@ -6,7 +6,7 @@ Extend the T1 ortho branch to the edge-label sub-case of
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T2 | Edge-label positioning + `orthoEdges(g,true)` dispatch | sonnet | `src/layout/dot/splines.ts`, `src/layout/dot/splines-label.ts` (only if a `setEdgeLabelPos` wrapper is needed), `src/layout/dot/ortho-labels.test.ts` | T1 | [ ] |
+| T2 | Edge-label positioning + `orthoEdges(g,true)` dispatch | sonnet | `src/layout/dot/splines.ts`, `src/layout/dot/splines-label.ts` (only if a `setEdgeLabelPos` wrapper is needed), `src/layout/dot/ortho-labels.test.ts` | T1 | [x] |
 
 ## Dependency / file ownership
 - T2 writes `src/layout/dot/splines.ts` (same file as T1) → **must run after T1**

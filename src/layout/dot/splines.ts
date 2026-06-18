@@ -16,13 +16,13 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Bezier, Spline } from '../../model/geom.js';
 import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
-import { IGNORED } from './rank.js';
+import { IGNORED, EDGE_LABEL } from './rank.js';
 import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
 import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
-import { placePortLabels, placeRegularEdgeLabels } from './splines-label.js';
+import { placePortLabels, placeRegularEdgeLabels, setEdgeLabelPos } from './splines-label.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -420,7 +420,16 @@ export function resetRW(g: Graph): void {
  */
 function orthoDispatch(g: Graph): number {
   resetRW(g);
-  dispatchOrthoEdges(g, false);
+  // C: if (GD_has_labels(g->root) & EDGE_LABEL) { setEdgeLabelPos(g);
+  //      orthoEdges(g,true); } else orthoEdges(g,false);
+  // orthoEdges itself warns + downgrades useLbls (ortho/index.ts) — C never
+  // routes edges around labels (ADR-2). We only POSITION the labels here.
+  if (((g.root.info.has_labels ?? 0) & EDGE_LABEL) !== 0) {
+    setEdgeLabelPos(g);
+    dispatchOrthoEdges(g, true);
+  } else {
+    dispatchOrthoEdges(g, false);
+  }
   g.info.edgeLabelsDone = true;
   return 0;
 }

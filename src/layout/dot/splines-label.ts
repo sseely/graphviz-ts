@@ -98,8 +98,17 @@ export function setAlgLabelPos(n: Node): void {
 export function setEdgeLabelPos(g: Graph): void {
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
     if ((n.info.node_type ?? 0) !== VIRTUAL) continue;
-    if (n.info.posAlg) setAlgLabelPos(n);
-    else if (n.info.label) placeVnlabel(n);
+    // C tracks l from the posAlg edge label or the regular vnode label, then
+    // updateBB(g, l). @see lib/dotgen/dotsplines.c:205-216
+    let l: TextlabelT | undefined;
+    if (n.info.posAlg) {
+      setAlgLabelPos(n);
+      l = n.info.posAlg.info.label as TextlabelT | undefined;
+    } else if (n.info.label) {
+      placeVnlabel(n);
+      l = n.info.label as TextlabelT | undefined;
+    }
+    if (l) updateBB(g, l);
   }
 }
 
