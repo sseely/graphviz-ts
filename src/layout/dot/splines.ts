@@ -20,6 +20,7 @@ import { IGNORED } from './rank.js';
 import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
+import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
 import { placePortLabels, placeRegularEdgeLabels } from './splines-label.js';
 
@@ -394,8 +395,40 @@ function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number):
  *
  * @see lib/dotgen/dotsplines.c:dot_splines_
  */
+/**
+ * In position, each node's rw was stored in mval and rw may have been
+ * increased to reflect loops/labels; restore the original rw here.
+ * @see lib/dotgen/dotsplines.c:resetRW
+ */
+export function resetRW(g: Graph): void {
+  for (const n of g.nodes.values()) {
+    // C: if (ND_other(n).list) — non-NULL list iff non-flat/non-tree edges exist
+    if (n.info.other && n.info.other.list.length > 0) {
+      const tmp = n.info.rw;
+      n.info.rw = n.info.mval ?? 0;
+      n.info.mval = tmp;
+    }
+  }
+}
+
+/**
+ * splines=ortho dispatch — mirror dotsplines.c:251-259: resetRW, run the
+ * orthoEdges pipeline (before mark_lowclusters), then the finish semantics
+ * (skip routesplinesterm — not ported in TS; set edgeLabelsDone; return 0).
+ * Edge-label sub-case is T2.
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (EDGETYPE_ORTHO branch)
+ */
+function orthoDispatch(g: Graph): number {
+  resetRW(g);
+  dispatchOrthoEdges(g, false);
+  g.info.edgeLabelsDone = true;
+  return 0;
+}
+
 export function dotSplines_(g: Graph, normalize: boolean): number {
-  if (edgeType(g) === EDGETYPE_NONE) return 0;
+  const et = edgeType(g);
+  if (et === EDGETYPE_NONE) return 0;
+  if (et === EDGETYPE_ORTHO) return orthoDispatch(g);
   markLowclusters(g);
   const edges: Edge[] = [];
   for (const n of g.nodes.values()) collectNodeEdges(n, edges);

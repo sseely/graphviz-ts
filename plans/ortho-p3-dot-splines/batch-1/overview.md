@@ -5,7 +5,7 @@ foundational task; T2 (labels) and T3 (goldens) build on it.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Dot ortho dispatch branch + dot-local adapter + `resetRW` | sonnet | `src/layout/dot/splines.ts`, `src/layout/dot/ortho-adapter.ts`, `src/layout/dot/ortho-dispatch.test.ts` | — | [ ] |
+| T1 | Dot ortho dispatch branch + dot-local adapter + `resetRW` | sonnet | `src/layout/dot/splines.ts`, `src/layout/dot/ortho-adapter.ts`, `src/layout/dot/ortho-dispatch.test.ts` | — | [x] |
 
 ## Gate after batch
 - `npm run typecheck` 0 · `npm test` (new T1 unit test passes; baseline + all
