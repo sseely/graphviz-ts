@@ -64,9 +64,24 @@ it changes internal (non-output) state.
 | Batch | Focus | Status |
 |-------|-------|--------|
 | 1 | Land the 3 transpose correctness fixes (reverse, candidate, valid) | [x] |
-| 2 | C↔TS trajectory harness; surface remaining divergences | [ ] |
-| 3 | Fix each discovered divergence (one component per task) | [ ] |
-| 4 | Performance: profile + optimize hot path so 2471 completes | [ ] |
+| 2 | C↔TS trajectory harness; surface remaining divergences | [x] |
+| 3 | Fix each discovered divergence (one component per task) | superseded |
+| 4 | Performance: profile + optimize hot path so 2471 completes | superseded |
+
+## Batch 2 outcome — mission pivots (2026-06-17)
+
+The trajectory diff + ablation proved the 2471 blocker is **NOT mincross**. It
+is a **cluster-RANKING divergence in dot_rank (upstream of mincross)**: TS ranks
+each cluster locally and never offsets/stacks clusters into global rank space,
+so chained clusters overlap on shared ranks (TS 6 ranks vs C 24 on a 6-cluster
+chain). HTML, RL, self-edges all match C; clusters are the sole trigger.
+ncross+transpose verified correct. See decision-journal.md and the
+`2471-blocker-is-cluster-ranking` memory.
+
+Batch 1 transpose fixes are valid and kept. Batches 3-4 are **superseded** — the
+real next mission is `cluster-rank-c-parity` (dot_rank cluster collapse/leader/
+expand offset in `src/layout/dot/rank.ts` + `cluster.ts`). The B2-T1
+`setMincrossTrace` hook is committed and reusable for that mission's diff.
 
 ## Index
 
