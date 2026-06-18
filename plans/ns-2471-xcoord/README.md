@@ -66,9 +66,28 @@ golden churn / any passing graph diverges → STOP/revert · file outside write-
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [1](batch-1/overview.md) | C x-coord oracle + pivot probe; reproduce; classify cycling vs slow | [ ] |
-| [2](batch-2/overview.md) | Localize the exact `ns.c` deviation (root-cause doc) | [ ] |
-| [3](batch-3/overview.md) | Apply faithful fix + full 2471 end-to-end parity | [ ] |
+| [1](batch-1/overview.md) | C x-coord oracle + pivot probe; reproduce; classify cycling vs slow | [x] |
+| [2](batch-2/overview.md) | Localize the exact `ns.c` deviation (root-cause doc) | [x] — root cause found OUTSIDE NS write-set → STOP |
+| [3](batch-3/overview.md) | Apply faithful fix + full 2471 end-to-end parity | [ ] — N/A (fix is not in NS; see STOP below) |
+
+## OUTCOME — STOP (root cause is NOT in network simplex)
+
+Batch 2 **falsified the brief's premise**. The TS network simplex
+(`ns.ts`/`ns-core.ts`/`ns-range.ts`) is **faithful to `ns.c`**. The x-coord
+**aux graph differs** from C: TS builds **333 fewer edges** (19695 vs 20028),
+all from `keepout_othernodes`' **left scan**, which makes 0 edges (C makes 333)
+because `keepoutLeft`/`keepoutRight` (`position-cluster.ts`) read the cluster
+rank's first node as `.v[0]` **ignoring the `vStart` window offset** — the same
+bug class as mincross Layers 1 & 2, now in the **position phase**. Those missing
+cluster-containment constraints under-constrain the x-coord problem → the
+(faithful) NS degenerate-cycles (≥500k pivots, ~42% degenerate) instead of
+converging like C (24,543 pivots / 2.2 s).
+
+**Fix is in `position-cluster.ts`, outside the write-set `{ns.ts, ns-core.ts}`
+→ STOP for write-set authorization.** Full evidence + proposed fix:
+[batch-2/ns-root-cause.md](batch-2/ns-root-cause.md). NS needs no change; Batch 3
+(NS fix) does not apply. Tree left green + reverted (typecheck 0, 1876 tests,
+build OK, C `lib/` clean).
 
 ## Index
 
