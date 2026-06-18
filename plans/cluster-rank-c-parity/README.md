@@ -51,8 +51,22 @@ cluster + plain/HTML/RL/self-edge graphs already match C.
 
 | Batch | Focus | Status |
 |-------|-------|--------|
-| 1 | Fix recursive local subcluster ranking + TDD unit test | [ ] |
-| 2 | Regenerate clustered goldens from C oracle; ablation + 2471 rank verification | [ ] |
+| 1 | Fix recursive local subcluster ranking + TDD unit test | [x] |
+| 2 | Regenerate clustered goldens (0 churn); ablation + 2471 rank verification | [x] |
+
+## Outcome (2026-06-17)
+
+**Fixed.** `nodeInduce` now ports C `node_induce`'s `agsubedge` step: root-scope
+edges between cluster members are induced into the cluster subgraph, so its
+local ranking sees them. Cluster chains stack correctly — 6-cluster chain
+24r/54n == C; **2471 root rank structure 23r/3213n == C** (was 31/2197). Zero
+golden churn; +2 unit tests (1869 pass); tsc 0.
+
+**Out of scope (AD-3):** 2471 full render still hangs — a *newly-surfaced*
+downstream divergence in cluster-aware mincross (`mincross_clust`: C reduces
+crossings 4→0 on the now-correct graph, TS holds at 4). Recommend a follow-up
+`mincross-clust-c-parity` mission. The `setMincrossTrace` harness + ablation
+reproducers carry over.
 
 ## Verification harness
 
