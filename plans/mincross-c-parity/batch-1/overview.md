@@ -6,9 +6,9 @@ is new. All in `mincross-cross.ts`.
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|-----------|------|
-| T1 | transpose reverse condition + candidate flag (already implemented) — commit + verify | `mincross-cross.ts` | — | [ ] |
-| T2 | transpose_step `valid` invalidation on swap (root ranks r, r±1) | `mincross-cross.ts` | T1 | [ ] |
-| T3 | unit test: transpose reverse tie + candidate convergence vs C ground truth | `mincross-cross.test.ts` | T1, T2 | [ ] |
+| T1 | transpose reverse condition + candidate flag (already implemented) — commit + verify | `mincross-cross.ts` | — | [x] |
+| T2 | transpose_step `valid` invalidation on swap (root ranks r, r±1) | `mincross-cross.ts` | T1 | [x] |
+| T3 | unit test: transpose reverse tie + candidate convergence vs C ground truth | `mincross-cross.test.ts` | T1, T2 | [x] |
 
 ## C spec anchors
 

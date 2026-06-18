@@ -6,3 +6,6 @@
 | 2026-06-17 | — | Found: transpose missing candidate flag + valid invalidation. reorder/main-loop/medians match C. | Systematic C-vs-TS read |
 | 2026-06-17 | T1 | Implemented (working tree): transposeCounts (count-based), shouldSwap, candidate flag, alloc-free. Goldens 1864 green. | Faithful transpose_step port |
 | 2026-06-17 | — | Baseline: tsc 0, vitest 1864 | Pre-mission green |
+| 2026-06-17 | T2 | Committed: valid invalidation on swap (Root ranks r, r±1). Goldens byte-identical (1864). | mincross.c:657-665 |
+| 2026-06-17 | T3 | Committed: unit test for shouldSwap (fwd/reverse tie matrix) + transposeCounts c0/c1 direction. +3 tests → 1867. lizard/tsc clean. | Pins the reverse-bug fix |
+| 2026-06-17 | — | **Batch 1 complete.** All 3 transpose divergences landed + tested, goldens byte-identical. Next: Batch 2 trajectory-diff harness. | — |

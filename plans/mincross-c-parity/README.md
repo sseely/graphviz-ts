@@ -63,7 +63,7 @@ it changes internal (non-output) state.
 
 | Batch | Focus | Status |
 |-------|-------|--------|
-| 1 | Land the 3 transpose correctness fixes (reverse, candidate, valid) | [ ] |
+| 1 | Land the 3 transpose correctness fixes (reverse, candidate, valid) | [x] |
 | 2 | C↔TS trajectory harness; surface remaining divergences | [ ] |
 | 3 | Fix each discovered divergence (one component per task) | [ ] |
 | 4 | Performance: profile + optimize hot path so 2471 completes | [ ] |
