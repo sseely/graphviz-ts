@@ -72,22 +72,30 @@ complete (>90s in one `transpose()` call; HEAD~1 identical → pre-existing).
 | Batch | Focus | Status |
 |-------|-------|--------|
 | 1 | Diagnose + route: measure pass-count vs non-convergence vs constant-factor (T1) | [x] |
-| 2 | Apply the routed parity-preserving fix (T2) + conditional 2nd axis (T3) | [ ] BLOCKED — write-set |
-| 3 | Validate: 2471 completes, order == C, permanent regression + perf smoke (T4) | [ ] |
+| 2 | Apply the routed parity-preserving fix (T2) + conditional 2nd axis (T3) | [x] |
+| 3 | Validate: 2471 completes, order == C, permanent regression + perf smoke (T4) | [~] partial — see below |
 
-## ⚠ STOPPED after Batch 1 — write-set authorization needed
+## Status after Batch 2 — hang CLOSED; 2471 has a residual order divergence
 
-Diagnosis is conclusive (cause **b: non-convergence**) and both fixes are
-**confirmed** (2471 completes in TS; root transpose byte-identical to C). But
-both fix sites are **outside the AD-2 write-set**, triggering the brief's STOP
-("the fix needs a file outside the write-set"):
+Write-set widening was **authorized**. Both fixes applied + committed:
 
-- `src/layout/dot/mincross-build.ts` (`buildRanksFlip`) — surgical, low risk.
-- `src/layout/dot/cluster.ts` (`mergeRanksInstall`) — **broad blast radius**
-  (the `.slice`→alias change affects every clustered graph's rank arrays).
+- T2 `mincross-build.ts:buildRanksFlip` — reverse via C's `exchange()`.
+- T3 `cluster.ts:mergeRanksInstall` — alias root array + `vStart` (not `.slice`).
 
-Batch 2 cannot proceed until the write-set is widened to these two files (+
-their tests). See `decision-journal.md` T1 rows for the exact edits and numbers.
+**Achieved:** the transpose hang is closed — 2471 completes in TS (~49s; C
+3.06s; was infinite). tsc 0; vitest **1873 pass, zero golden churn**. Order ==
+C (per-rank name dump) on mc3, chain_24 (TB), chain_24_rl (RL), port_rl.
+
+**Not yet met (cardinal invariant on 2471):** 2471's within-rank order differs
+from C on ~10/23 (even, real-node) ranks — same node sets, different order. This
+is **not** caused by these fixes (all controlled reproducers match C; zero
+churn) and **not** the crossing tiebreak. It is a distinct, pre-existing
+mincross-ORDER divergence, visible only now that 2471 completes (the prior
+order-parity mission could never see it — 2471 hung). It needs 2471's full
+structure to reproduce (back-edges / flat edges / nested clusters / scale).
+
+**Decision pending** (see decision-journal T4): merge T2/T3 + open a follow-up
+mission for 2471 order parity, vs. keep investigating here.
 
 ## Harness
 
