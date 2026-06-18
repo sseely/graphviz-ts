@@ -6,7 +6,7 @@ gcell set, and search-graph (snode/sedge) structure to native C.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T2 | Oracle-pin `mkMaze` vs native C (cells, gcells, sg nodes/edges) | sonnet | `src/ortho/maze.test.ts`, `src/ortho/maze.ts` (only if parity fix) | T1 | [ ] |
+| T2 | Oracle-pin `mkMaze` vs native C (cells, gcells, sg nodes/edges) | sonnet | `src/ortho/maze.test.ts`, `src/ortho/maze.ts` (only if parity fix) | T1 | [x] |
 
 ## Dependency
 T2 depends on T1 — a maze-cell divergence is often a partition bug; T1 must be
