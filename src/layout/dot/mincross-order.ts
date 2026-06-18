@@ -104,7 +104,6 @@ export function computeMedian(list: number[]): number {
 }
 
 export function mediansProcessNode(v: Node, d: number): boolean {
-  if (v.info.clust) return true;
   const inSize = v.info.in !== undefined ? v.info.in.size : 0;
   const outSize = v.info.out !== undefined ? v.info.out.size : 0;
   if (inSize === 0 && outSize === 0) return flatMval(v);

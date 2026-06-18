@@ -13,10 +13,18 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
 import type { RankEntry } from '../../model/rankEntry.js';
-import { MC_SCALE } from './fastgr.js';
+import { MC_SCALE, VIRTUAL } from './fastgr.js';
+import { CLUSTER } from './rank.js';
 import {
-  MincrossContext, matrixGet, agContainsNode, rankGet,
+  MincrossContext, matrixGet, rankGet,
 } from './mincross-utils.js';
+
+/**
+ * Mirror of C's file-global `ReMincross`. Set true only during the remincross
+ * pass so left2right tightens the cluster constraint. @see mincross.c
+ */
+let reMincross = false;
+export function setReMincross(b: boolean): void { reMincross = b; }
 
 // ---------------------------------------------------------------------------
 // VAL macro / xpenalty helpers
@@ -44,28 +52,35 @@ export function crossContrib(aVal: number, aPen: number, bVal: number, bPen: num
 // left2right helpers
 // ---------------------------------------------------------------------------
 
-/** Both-cluster case. @see lib/dotgen/mincross.c:clust_left2right */
-export function left2rightBothClusted(v: Node, w: Node): number {
-  if (v.info.clust === w.info.clust) return 0;
-  const vOrd = v.info.order !== undefined ? v.info.order : 0;
-  const wOrd = w.info.order !== undefined ? w.info.order : 0;
-  return vOrd < wOrd ? 1 : -1;
+/** Skeleton cluster vnodes may still be swapped. @see mincross.c:left2right */
+function isClusterSkeletonVnode(n: Node): boolean {
+  return n.info.ranktype === CLUSTER && n.info.node_type === VIRTUAL;
 }
 
-/** @see lib/dotgen/mincross.c:clust_left2right */
+/**
+ * Cluster ordering constraint, the guard portion of C's left2right.
+ * Non-remincross: only pairs whose nodes are BOTH in (different) clusters are
+ * forced; a cluster skeleton vnode on either side releases the pair. Remincross:
+ * any cross-cluster pair is forced. Returns 1 = forced (block swap), 0 = defer
+ * to the flat-adjacency matrix. @see lib/dotgen/mincross.c:left2right
+ */
 export function left2rightCluster(v: Node, w: Node): number {
   const vc = v.info.clust;
   const wc = w.info.clust;
-  if (!vc && !wc) return 0;
-  if (vc && !wc) return agContainsNode(vc, w) ? 0 : 1;
-  if (!vc && wc) return agContainsNode(wc, v) ? 0 : -1;
-  return left2rightBothClusted(v, w);
+  if (!reMincross) {
+    if (vc !== wc && vc && wc) {
+      if (isClusterSkeletonVnode(v) || isClusterSkeletonVnode(w)) return 0;
+      return 1;
+    }
+  } else if (vc !== wc) {
+    return 1;
+  }
+  return 0;
 }
 
 /** @see lib/dotgen/mincross.c:left2right */
 export function left2right(g: Graph, v: Node, w: Node): number {
-  const clr = left2rightCluster(v, w);
-  if (clr !== 0) return clr;
+  if (left2rightCluster(v, w) !== 0) return 1;
   const r = v.info.rank !== undefined ? v.info.rank : 0;
   const gRank = g.info.rank;
   if (!gRank) return 0;

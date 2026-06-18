@@ -21,6 +21,7 @@ import {
   agContainsNode, agContainsEdge,
 } from './mincross-utils.js';
 import { mincrossMain } from './mincross-order.js';
+import { setReMincross } from './mincross-cross.js';
 import {
   allocateRanks, fillRanks, orderedEdges, class2,
   flatBreakcycles, flatReorder, expandCluster, markLowclusters,
@@ -144,6 +145,7 @@ export function applyVlistReset(ctx: MincrossContext, g: Graph, r: number): void
 /** @see lib/dotgen/mincross.c:init_mincross */
 export function initMincross(ctx: MincrossContext, g: Graph): void {
   ctx.reMincross = false;
+  setReMincross(false);
   ctx.root = g;
   const edgeCount = dotRoot(g).edges.length + 1;
   ctx.teList = new Array<Edge>(edgeCount).fill(null as unknown as Edge);
@@ -338,6 +340,7 @@ export function runRemincross(ctx: MincrossContext, g: Graph, nc: number): numbe
   if (!doRe) return nc;
   markLowclusters(g);
   ctx.reMincross = true;
+  setReMincross(true);
   const mc = mincrossMain(ctx, g, 2);
   return mc < 0 ? -1 : mc;
 }
