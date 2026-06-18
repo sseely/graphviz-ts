@@ -52,8 +52,17 @@ function buildSpline(
   const pts: OrthoPoint[] = [];
   if (rte.segs.length === 0) return pts;
 
-  const p1 = { x: e.tail.bb.LL.x, y: e.tail.bb.LL.y };
-  const q1 = { x: e.head.bb.LL.x, y: e.head.bb.LL.y };
+  // C: p1 = ND_coord(tail) + ED_tail_port(e).p (ortho.c:1075-1076). The TS
+  // OrthoNode models no ports, so the faithful value is the node centre
+  // (= ND_coord); ports are 0 for plain ortho edges.
+  const p1 = {
+    x: (e.tail.bb.LL.x + e.tail.bb.UR.x) / 2,
+    y: (e.tail.bb.LL.y + e.tail.bb.UR.y) / 2,
+  };
+  const q1 = {
+    x: (e.head.bb.LL.x + e.head.bb.UR.x) / 2,
+    y: (e.head.bb.LL.y + e.head.bb.UR.y) / 2,
+  };
 
   let seg = rte.segs[0];
   let p: OrthoPoint;

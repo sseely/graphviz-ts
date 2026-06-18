@@ -64,7 +64,7 @@ end-to-end.
 |-------|------|--------|
 | [1](batch-1/overview.md) | T1 — oracle-pin `partition.ts` (trapezoid→rect cells) | [x] |
 | [2](batch-2/overview.md) | T2 — oracle-pin `maze.ts` (mkMaze: gcells, cells, search graph) | [x] |
-| [3](batch-3/overview.md) | T3 — oracle-pin `ortho-route.ts` (channels, segs, tracks, route points) | [ ] |
+| [3](batch-3/overview.md) | T3 — oracle-pin `ortho-route.ts` (channels, segs, tracks, route points) | [x] |
 
 ## Index
 
