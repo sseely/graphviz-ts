@@ -143,18 +143,23 @@ export function saveBest(g: Graph): void {
   const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
   for (let r = mn; r <= mx; r++) {
     for (let i = 0; i < rank[r].n; i++) {
-      const n = rank[r].v[i];
+      // Read the offset window: C save_best reads GD_rank(g)[r].v[i] where the
+      // pointer is already advanced by vStart. @see mincross.c:save_best
+      const n = rankGet(rank[r], i);
       n.info.coord.x = n.info.order !== undefined ? n.info.order : 0;
     }
   }
 }
 
 export function restoreRank(rk: RankEntry, rootRk: RankEntry): void {
-  for (let i = 0; i < rk.n; i++) rk.v[i].info.order = rk.v[i].info.coord.x;
-  const sorted = rk.v.slice(0, rk.n).sort(
+  // Restore + re-sort the absolute window [vStart, vStart+n) — C restore_best
+  // qsorts GD_rank(g)[r].v (the offset pointer) over n. @see mincross.c:restore_best
+  const vs = rk.vStart ?? 0;
+  for (let i = 0; i < rk.n; i++) rk.v[vs + i].info.order = rk.v[vs + i].info.coord.x;
+  const sorted = rk.v.slice(vs, vs + rk.n).sort(
     (a, b) => (a.info.order !== undefined ? a.info.order : 0) - (b.info.order !== undefined ? b.info.order : 0),
   );
-  for (let i = 0; i < rk.n; i++) rk.v[i] = sorted[i]!;
+  for (let i = 0; i < rk.n; i++) rk.v[vs + i] = sorted[i]!;
   rootRk.valid = false;
 }
 
