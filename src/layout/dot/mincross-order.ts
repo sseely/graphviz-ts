@@ -19,6 +19,17 @@ type StepBounds = { first: number; last: number; dir: number };
 type CrossState = { cur: number; best: number };
 type ReorderResult = { rp: number; muststay: boolean };
 
+/**
+ * Diagnostic trace hook mirroring C's `if (Verbose) fprintf(...)` in
+ * `mincross()`. Default null = no output, no behavior change (the only cost is
+ * one null check per iter, matching C's Verbose guard). Set by trajectory-diff
+ * harnesses to dump the per-iter crossing trajectory. @see mincross.c:723-727
+ */
+let mincrossTrace: ((line: string) => void) | null = null;
+export function setMincrossTrace(fn: ((line: string) => void) | null): void {
+  mincrossTrace = fn;
+}
+
 // ---------------------------------------------------------------------------
 // flat_mval — @see lib/dotgen/mincross.c:flat_mval
 // ---------------------------------------------------------------------------
@@ -246,9 +257,12 @@ export function mincrossStep(ctx: MincrossContext, g: Graph, pass: number): void
 // ---------------------------------------------------------------------------
 
 /** @see lib/dotgen/mincross.c:mincross (iteration loop) */
-export function mincrossIter(ctx: MincrossContext, g: Graph, maxthispass: number, state: CrossState): void {
+export function mincrossIter(ctx: MincrossContext, g: Graph, maxthispass: number, state: CrossState, pass: number): void {
   let trying = 0;
   for (let iter = 0; iter < maxthispass; iter++) {
+    if (mincrossTrace) {
+      mincrossTrace(`mincross: pass ${pass} iter ${iter} trying ${trying} cur_cross ${state.cur} best_cross ${state.best}`);
+    }
     if (trying++ >= ctx.minQuit) break;
     if (state.cur === 0) break;
     mincrossStep(ctx, g, iter);
@@ -286,7 +300,7 @@ export function mincrossMain(ctx: MincrossContext, g: Graph, startpass: number):
   for (let pass = startpass; pass <= 2; pass++) {
     const maxthispass = mincrossPassSetup(ctx, g, pass, state);
     if (maxthispass < 0) return -1;
-    mincrossIter(ctx, g, maxthispass, state);
+    mincrossIter(ctx, g, maxthispass, state, pass);
     if (state.cur === 0) break;
   }
   if (state.cur > state.best) restoreBest(ctx, g);

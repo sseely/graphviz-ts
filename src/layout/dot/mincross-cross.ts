@@ -84,40 +84,36 @@ export function left2right(g: Graph, v: Node, w: Node): number {
 // in_cross / out_cross
 // ---------------------------------------------------------------------------
 
-/** @see lib/dotgen/mincross.c:in_cross */
-export function inCross(v: Node, w: Node): number {
-  const inV = v.info.in;
-  const inW = w.info.in;
-  if (!inV || !inW) return 0;
-  let cnt = 0;
-  for (let i = 0; i < inV.size; i++) {
-    const e: Edge = inV.list[i];
-    const ePen = xpen(e);
-    for (let j = 0; j < inW.size; j++) {
-      const f: Edge = inW.list[j];
-      cnt += crossContrib(val(e.tail, e.info.tail_port.order), ePen,
-        val(f.tail, f.info.tail_port.order), xpen(f));
+/** Accumulate crossings of v's vs w's edge lists into c=[c0,c1]: c0 counts
+ *  pairs that cross with v before w (eVal>fVal), c1 with w before v (eVal<fVal).
+ *  `head` selects the head (out-edges) or tail (in-edges) endpoint for val.
+ *  Allocation-free — this is the mincross inner loop. @see in_cross/out_cross */
+function accumCross(vl: EdgeList | undefined, wl: EdgeList | undefined, head: boolean, c: [number, number]): void {
+  if (!vl || !wl) return;
+  for (let i = 0; i < vl.size; i++) {
+    const e: Edge = vl.list[i];
+    const ev = head ? val(e.head, e.info.head_port.order) : val(e.tail, e.info.tail_port.order);
+    const ep = xpen(e);
+    for (let j = 0; j < wl.size; j++) {
+      const f: Edge = wl.list[j];
+      const fv = head ? val(f.head, f.info.head_port.order) : val(f.tail, f.info.tail_port.order);
+      if (ev > fv) c[0] += ep * xpen(f);
+      else if (ev < fv) c[1] += ep * xpen(f);
     }
   }
-  return cnt;
 }
 
-/** @see lib/dotgen/mincross.c:out_cross */
-export function outCross(v: Node, w: Node): number {
-  const outV = v.info.out;
-  const outW = w.info.out;
-  if (!outV || !outW) return 0;
-  let cnt = 0;
-  for (let i = 0; i < outV.size; i++) {
-    const e: Edge = outV.list[i];
-    const ePen = xpen(e);
-    for (let j = 0; j < outW.size; j++) {
-      const f: Edge = outW.list[j];
-      cnt += crossContrib(val(e.head, e.info.head_port.order), ePen,
-        val(f.head, f.info.head_port.order), xpen(f));
-    }
-  }
-  return cnt;
+/**
+ * Crossing counts for the pair (v, w): [c0 = crossings with v before w (the
+ * current order), c1 = crossings with w before v (swapped)]. Mirrors
+ * in_cross(v,w)+out_cross(v,w) and in_cross(w,v)+out_cross(w,v) in one pass.
+ * @see lib/dotgen/mincross.c:in_cross, out_cross
+ */
+export function transposeCounts(v: Node, w: Node): [number, number] {
+  const c: [number, number] = [0, 0];
+  accumCross(v.info.in, w.info.in, false, c);
+  accumCross(v.info.out, w.info.out, true, c);
+  return c;
 }
 
 // ---------------------------------------------------------------------------
@@ -141,37 +137,79 @@ export function exchange(ctx: MincrossContext, v: Node, w: Node): void {
 // transpose_step / transpose
 // ---------------------------------------------------------------------------
 
-/** @see lib/dotgen/mincross.c:transpose_step */
-export function transposeStep(ctx: MincrossContext, g: Graph, r: number, reverse: boolean): boolean {
+/** C transpose_step swap test: strict improvement, or a reverse tie when there
+ *  are crossings to redistribute. @see lib/dotgen/mincross.c:transpose_step */
+export function shouldSwap(c0: number, c1: number, reverse: boolean): boolean {
+  return c1 < c0 || (c0 > 0 && reverse && c1 === c0);
+}
+
+/** Invalidate the ncross cache for the root ranks r, r±1 (C invalidates
+ *  GD_rank(Root), not g, on a transpose swap). @see mincross.c:657-665 */
+function invalidateValid(rootRank: RankEntry[] | undefined, r: number, mn: number, mx: number): void {
+  if (!rootRank) return;
+  rootRank[r]!.valid = false;
+  if (r > mn) rootRank[r - 1]!.valid = false;
+  if (r < mx) rootRank[r + 1]!.valid = false;
+}
+
+/** [minrank, maxrank] with 0 defaults. */
+function rankBounds(g: Graph): [number, number] {
+  return [g.info.minrank ?? 0, g.info.maxrank ?? 0];
+}
+
+/** Mark rank r and its neighbours as candidates for re-examination. */
+function markCandidates(rank: RankEntry[], r: number, mn: number, mx: number): void {
+  rank[r]!.candidate = true;
+  if (r > mn) rank[r - 1]!.candidate = true;
+  if (r < mx) rank[r + 1]!.candidate = true;
+}
+
+/** Returns the total crossing reduction over rank r and marks r and its
+ *  neighbours as candidates. @see lib/dotgen/mincross.c:transpose_step */
+export function transposeStep(ctx: MincrossContext, g: Graph, r: number, reverse: boolean): number {
   const rank = g.info.rank;
-  if (!rank) return false;
-  const rk = rank[r];
-  let improved = false;
+  if (!rank) return 0;
+  const rk = rank[r]!;
+  const [mn, mx] = rankBounds(g);
+  rk.candidate = false;
+  let rv = 0;
   for (let i = 0; i < rk.n - 1; i++) {
     const v = rankGet(rk, i);
     const w = rankGet(rk, i + 1);
-    if (!v || !w) continue;
-    if (left2right(g, v, w) !== 0) continue;
-    const cross = inCross(v, w) + outCross(v, w);
-    if (reverse ? cross < 0 : cross > 0) {
+    if (!v || !w || left2right(g, v, w) !== 0) continue;
+    const [c0, c1] = transposeCounts(v, w);
+    if (shouldSwap(c0, c1, reverse)) {
       exchange(ctx, v, w);
-      improved = true;
+      rv += c0 - c1;
+      markCandidates(rank, r, mn, mx);
+      invalidateValid(ctx.root.info.rank, r, mn, mx);
     }
   }
-  return improved;
+  return rv;
 }
 
-/** @see lib/dotgen/mincross.c:transpose */
+/** Set every rank's candidate flag (start-of-transpose). */
+function initCandidates(rank: RankEntry[], mn: number, mx: number): void {
+  for (let r = mn; r <= mx; r++) if (rank[r]) rank[r]!.candidate = true;
+}
+
+/**
+ * Repeatedly transpose adjacent nodes within each rank to remove crossings,
+ * re-examining only candidate ranks until no rank improves (delta < 1).
+ * @see lib/dotgen/mincross.c:transpose
+ */
 export function transpose(ctx: MincrossContext, g: Graph, reverse: boolean): void {
-  const mn = g.info.minrank !== undefined ? g.info.minrank : 0;
-  const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
-  let improved = true;
-  while (improved) {
-    improved = false;
+  const rank = g.info.rank;
+  if (!rank) return;
+  const [mn, mx] = rankBounds(g);
+  initCandidates(rank, mn, mx);
+  let delta: number;
+  do {
+    delta = 0;
     for (let r = mn; r <= mx; r++) {
-      if (transposeStep(ctx, g, r, reverse)) improved = true;
+      if (rank[r]?.candidate) delta += transposeStep(ctx, g, r, reverse);
     }
-  }
+  } while (delta >= 1);
 }
 
 // ---------------------------------------------------------------------------
