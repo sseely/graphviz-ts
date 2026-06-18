@@ -4,11 +4,16 @@ Port the three independent bottom-layer modules of `lib/ortho`, each as a
 faithful one-file port with C-oracle TDD. No interdependencies and disjoint
 write-sets → **all three run in parallel** (single batch, no Batch 2 for P1).
 
+> **Re-scoped 2026-06-18** (see README + journal): the modules were already
+> ported (T17, committed); tasks became "oracle-pin existing port + fix parity",
+> executed inline (not via parallel agents). Test filenames are lowercase to
+> match the existing impl files (`fpq.ts`, not `fPQ.ts`).
+
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Port `rawgraph.c` (adjacency graph + topsort) | sonnet | `src/ortho/rawgraph.ts`, `src/ortho/rawgraph.test.ts` | — | [ ] |
-| T2 | Port `trapezoid.c` (Seidel trapezoidal decomposition) | sonnet | `src/ortho/trapezoid.ts`, `src/ortho/trapezoid.test.ts` | — | [ ] |
-| T3 | Port `sgraph.c` + `fPQ.c` (search graph + PQ + shortPath) | sonnet | `src/ortho/sgraph.ts`, `src/ortho/fPQ.ts`, `src/ortho/sgraph.test.ts`, `src/ortho/fPQ.test.ts` | — | [ ] |
+| T1 | Oracle-pin `rawgraph.ts` (adjacency graph + topsort) | inline | `src/ortho/rawgraph.test.ts` | — | [x] |
+| T2 | Oracle-pin `trapezoid.ts` (Seidel decomposition) | inline | `src/ortho/trapezoid.test.ts` | — | [x] |
+| T3 | Oracle-pin `sgraph.ts` + `fpq.ts` (+`shortPath` parity fix) | inline | `src/ortho/sgraph.ts`, `src/ortho/sgraph.test.ts`, `src/ortho/fpq.test.ts` | — | [x] |
 
 ## Parallelism / file ownership
 - Disjoint write-sets (each task owns distinct files under `src/ortho/`). No

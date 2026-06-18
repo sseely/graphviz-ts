@@ -51,11 +51,38 @@ separate branches/missions.
 - command: git diff --name-only HEAD~1                # pass: only src/ortho/** + plans/** touched
 ```
 
+## ⚠️ Re-scope (2026-06-18)
+
+Pre-flight found `src/ortho/` **already contains a faithful, committed, green
+port** of all three P1 targets (`rawgraph.ts`, `trapezoid.ts`+`trap-*.ts`,
+`sgraph.ts`, `fpq.ts`), committed `f1e615c` (T17, 2026-05-27) — 3 weeks before
+this brief. Typecheck 0, ortho tests green, C tree clean. The original
+"create the modules" framing is therefore **obsolete**. The user-approved
+re-scope (see decision journal): **keep the existing port; add the missing
+C-oracle-pinned unit tests** the brief required, validate the port against
+instrumented native C, fix any parity bugs the tests reveal, and remove the
+temporary `ortho-diag.test.ts`. Tasks below are re-read as "oracle-test +
+parity-fix", not "port from scratch".
+
 ## Batches
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [1](batch-1/overview.md) | Port rawgraph, trapezoid, sgraph+fPQ (parallel; C-oracle TDD) | [ ] |
+| [1](batch-1/overview.md) | Oracle-pin existing rawgraph, trapezoid, sgraph+fPQ ports (C-oracle TDD against committed T17 code); drop temp diagnostic test | [x] |
+
+## Outcome (2026-06-18)
+
+**Complete (re-scoped).** The T17 port was confirmed byte-faithful to native
+C and is now oracle-pinned. Added `rawgraph.test.ts` (`1689adb`),
+`fpq.test.ts`+`sgraph.test.ts` (`b8b0ebf`), `trapezoid.test.ts` (`5f4c6cb`);
+removed the temporary `ortho-diag.test.ts`. Two faithfulness fixes to
+`sgraph.ts` (`shortPath` `<=0`→`<0` per sgraph.c:164; `relaxNeighbors`
+extraction for the CCN cap). No trapezoid/rawgraph parity fix needed.
+Gates: typecheck 0 · `npm test` 1895/1895 · build OK · C tree clean ·
+diff scope = `src/ortho/**`+`plans/**`. Notable: the brief's raw-PQ
+acceptance example is invalid — fPQ's guard sentinel (`n_val=0`) acts as
+`+inf`, so the valid value domain is `≤ 0` (negated distances). See
+decision journal for full detail.
 
 ## Index
 
