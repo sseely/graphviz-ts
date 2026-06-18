@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { Graph } from '../../model/graph.js';
 import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
-import { dot1Rank, dotRank, NEW_RANK } from './rank.js';
+import { dot1Rank, dotRank, NEW_RANK, nodeInduce } from './rank.js';
 import { dot2Rank } from './rank-dot2.js';
 
 // ---------------------------------------------------------------------------
@@ -34,6 +34,43 @@ export function addRankEdge(
   g.edges.push(e);
   return e;
 }
+
+/** Cluster subgraph over 4 nodes chained by TOP-LEVEL edges (the 2471 / cluster
+ *  pattern: nodes declared in the cluster, edges declared at root scope). */
+export function makeTopLevelClusterChain(): [Graph, Graph, Node[]] {
+  const [g, nodes] = makeRankGraph(4);
+  addRankEdge(g, nodes[0], nodes[1]);
+  addRankEdge(g, nodes[1], nodes[2]);
+  addRankEdge(g, nodes[2], nodes[3]);
+  const clust = new Graph('cluster_0', 'directed');
+  clust.root = g;
+  for (const n of nodes) clust.nodes.set(n.name, n);
+  return [g, clust, nodes];
+}
+
+// ---------------------------------------------------------------------------
+// nodeInduce — intra-cluster edge induction (@see rank.c:node_induce agsubedge)
+// ---------------------------------------------------------------------------
+
+describe('nodeInduce — intra-cluster edge induction', () => {
+  it('induces top-level edges between cluster members into the subgraph', () => {
+    const [g, clust] = makeTopLevelClusterChain();
+    expect(clust.edges.length).toBe(0);
+    nodeInduce(g, clust);
+    expect(clust.edges.length).toBe(3);
+  });
+  it('does not induce edges that leave the cluster', () => {
+    const [g, [a, b, x]] = makeRankGraph(3);
+    addRankEdge(g, a, b);
+    addRankEdge(g, b, x);
+    const clust = new Graph('cluster_0', 'directed');
+    clust.root = g;
+    clust.nodes.set(a.name, a);
+    clust.nodes.set(b.name, b);
+    nodeInduce(g, clust);
+    expect(clust.edges.length).toBe(1);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // dot1Rank — chain ranking

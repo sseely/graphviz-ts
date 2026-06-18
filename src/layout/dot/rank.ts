@@ -213,6 +213,26 @@ export function makeNewCluster(g: Graph, subg: Graph): void {
   doGraphLabel(subg, measurer);
 }
 
+/**
+ * Pull every root edge whose tail and head are both members of `clust` into the
+ * cluster subgraph's edge set, so the cluster's local ranking (dot1Rank(subg))
+ * sees its internal edges. Mirrors C node_induce's second loop
+ * (`agsubedge(g, e, 1)`). Without this, edges declared at root scope between
+ * cluster members are invisible to the cluster and it ranks as isolated nodes.
+ * @see lib/dotgen/rank.c:node_induce
+ */
+function induceClusterEdges(clust: Graph): void {
+  const owned = new Set<Edge>(clust.edges);
+  for (const n of clust.nodes.values()) {
+    for (const e of n.outEdges(clust.root)) {
+      if (clust.nodes.get(e.head.name) === e.head && !owned.has(e)) {
+        clust.edges.push(e);
+        owned.add(e);
+      }
+    }
+  }
+}
+
 /** @see lib/dotgen/rank.c:node_induce */
 export function nodeInduce(par: Graph, clust: Graph): void {
   for (const n of clust.nodes.values()) {
@@ -232,6 +252,7 @@ export function nodeInduce(par: Graph, clust: Graph): void {
       }
     }
   }
+  induceClusterEdges(clust);
 }
 
 /** @see lib/dotgen/rank.c:dot_scan_ranks */
