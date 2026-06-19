@@ -322,23 +322,17 @@ function groupSize(edges: Edge[], ind: number): number {
 }
 
 /**
- * Return the original-edge creation seq for parallel-edge ordering.
- * Virtual edges resolve through to_orig; original edges use their own seq.
- * This mirrors C's edgecmp ordering by LE_seq then edge seq — but in TS the
- * virtual edge that represents e1 gets a higher seq than e2/e3 because seq
- * allocation is global; resolving back to the original seq restores C order.
+ * Original-edge creation seq for parallel-edge ordering. Resolving virtuals back
+ * to the original seq restores C's edgecmp order (seq is globally allocated).
  * @see lib/dotgen/dotsplines.c:edgecmp
  */
 function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
 
 /**
- * Collapse a contiguous main-edge group to one representative per distinct
- * original edge. A node can carry both the user edge AND a virtual reverse-chain
- * edge to the same neighbour (the opposing `a->b`/`b->a` case: `a` has two
- * out-edges, both resolving to main edge `a->b`, while `b->a` sits in `ND_other`
- * — three collected entries, two distinct originals). C routes one spline per
- * distinct edge; deduping by `resolveOrigEdge` yields cnt=2 for the opposing
- * pair while leaving genuine parallels (3 distinct originals) untouched.
+ * Collapse a main-edge group to one representative per distinct original edge.
+ * The opposing `a->b`/`b->a` case collects three entries (two out-edges resolving
+ * to main `a->b`, plus `b->a` in ND_other) but two distinct originals; dedup by
+ * `resolveOrigEdge` yields one per original (cnt=2 here, parallels untouched).
  * @see lib/dotgen/dotsplines.c:make_regular_edge (one clip_and_install per orig)
  */
 function dedupByOrig(group: Edge[]): Edge[] {
@@ -377,18 +371,28 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
 }
 
 /**
- * Build the curved edge list for the group starting at `ind`, mirroring
- * dotsplines.c:382-385: index 0 is the main edge, 1..cnt-1 are the raw entries.
- * @see lib/dotgen/dotsplines.c:381-387
+ * Route one curved group via makeStraightEdges. C groups by getmainedge, keeping
+ * opposing edges (`a->b` vs `b->a`) in distinct groups; the TS collection
+ * over-groups them, so we dedup to distinct originals and re-partition by
+ * original direction (same-direction parallels spread together; opposing route
+ * separately), each ordered by seq so index→perp-offset matches C.
+ * @see lib/dotgen/dotsplines.c:356-358, 381-387
  */
-function curvedEdgeList(edges: Edge[], ind: number, cnt: number): Edge[] {
-  const edgelist: Edge[] = [getMainEdge(edges[ind])];
-  for (let ii = 1; ii < cnt; ii++) edgelist.push(edges[ind + ii]);
-  return edgelist;
+function routeCurvedGroup(g: Graph, group: Edge[]): void {
+  const byDir = new Map<string, Edge[]>();
+  for (const e of dedupByOrig(group)) {
+    const o = resolveOrigEdge(e);
+    const key = `${o.tail.id}:${o.head.id}`;
+    (byDir.get(key) ?? byDir.set(key, []).get(key)!).push(e);
+  }
+  for (const part of byDir.values()) {
+    part.sort((a, b) => origSeq(a) - origSeq(b));
+    makeStraightEdges(g, part, part.length, EDGETYPE_CURVED, buildDotSinfo());
+  }
 }
 
 /**
- * Route one group of parallel edges from the sorted edge list.
+ * Route one parallel-edge group from the sorted edge list.
  * Returns the number of edges consumed (cnt). For `splines=curved` the group is
  * routed via `makeStraightEdges` instead of the normal per-group router.
  * @see lib/dotgen/dotsplines.c:343-419
@@ -396,7 +400,7 @@ function curvedEdgeList(edges: Edge[], ind: number, cnt: number): Edge[] {
 function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number, et: number): number {
   const cnt = groupSize(edges, ind);
   if (et === EDGETYPE_CURVED) {
-    makeStraightEdges(g, curvedEdgeList(edges, ind, cnt), cnt, EDGETYPE_CURVED, buildDotSinfo());
+    routeCurvedGroup(g, edges.slice(ind, ind + cnt));
     return cnt;
   }
   dispatchEdgeGroup(g, edges.slice(ind, ind + cnt), multisep);

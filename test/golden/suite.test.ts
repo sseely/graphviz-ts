@@ -62,14 +62,17 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 }
 
 // ---------------------------------------------------------------------------
-// Suite-level check: manifest must have exactly 123 entries
+// Suite-level check: manifest must have exactly 126 entries
 // (82 baseline + 15 render-styling + 12 multicolor-paint
 //  + 2 semicolon split + 3 undirected-edge-clip + 1 node-penwidth-clip
-//  + 4 steering-port goldens SR8 + 4 splines=ortho dot goldens P3-T3)
+//  + 4 steering-port goldens SR8 + 4 splines=ortho dot goldens P3-T3
+//  + 2 splines=curved (single, parallel) + 1 compound (splines) DOT-8 T2;
+//  curved-cycle + compound-lhead quarantined — see plans/dot-curved-compound/
+//  quarantine/*.md)
 // ---------------------------------------------------------------------------
 
-test('manifest has 123 entries', () => {
-  expect(manifest).toHaveLength(123);
+test('manifest has 126 entries', () => {
+  expect(manifest).toHaveLength(126);
 });
 
 // ---------------------------------------------------------------------------

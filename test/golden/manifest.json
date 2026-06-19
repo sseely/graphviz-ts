@@ -998,5 +998,29 @@
     "input": "test/golden/inputs/dot-ortho-label.dot",
     "reference": "test/golden/refs/dot-ortho-label.svg",
     "description": "splines=ortho edge with a label; C positions the label, edge crosses it (no routing around); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-curved-single",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-curved-single.dot",
+    "reference": "test/golden/refs/dot-curved-single.svg",
+    "description": "splines=curved single edge a->b; bent toward cycle centroid (here on-axis \u2192 straight); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-curved-parallel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-curved-parallel.dot",
+    "reference": "test/golden/refs/dot-curved-parallel.svg",
+    "description": "splines=curved 3 parallel a->b; control points spread along the perpendicular (routespl.c:1000-1014); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-compound-splines",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-compound-splines.dot",
+    "reference": "test/golden/refs/dot-compound-splines.svg",
+    "description": "splines=compound; a->b->c routes as a normal spline (EDGETYPE_COMPOUND no special branch); ref: native C dot -Tsvg via gvmine"
   }
 ]

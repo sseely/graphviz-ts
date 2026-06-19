@@ -1,0 +1,1 @@
+digraph { splines=curved; a -> b; }

@@ -24,6 +24,7 @@ import { dotPosition } from './position.js';
 import { dotSameports } from './sameport.js';
 import { dotSplines } from './splines.js';
 import { dotCompoundEdges } from './compound.js';
+import { mapbool } from './rank.js';
 import { EDGETYPE_SPLINE, EDGETYPE_NONE, edgeTypeFromString } from './splines.js';
 import {
   dotInitSubg,
@@ -125,7 +126,9 @@ export function dotPhasePost(g: Graph): void {
   removeFill(g);
   dotSameports(g);
   dotSplines(g);
-  if (g.info.compound) dotCompoundEdges(g);
+  // C: if (mapbool(agget(g, "compound"))) dot_compoundEdges(g);
+  // @see lib/dotgen/dotinit.c:338
+  if (mapbool(g.attrs.get('compound'))) dotCompoundEdges(g);
   gvPostprocess(g);
 }
 

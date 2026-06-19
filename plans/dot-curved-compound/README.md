@@ -74,7 +74,12 @@ Regression sub-gate: **no existing non-curved/non-compound golden changes.**
 | Batch | Goal | Status |
 |-------|------|--------|
 | [1](batch-1/overview.md) | T1 — port `makeStraightEdges`(+`bend`/`get_cycle_centroid`) + curved dispatch + finish guards | [x] |
-| [2](batch-2/overview.md) | T2 — curved + compound goldens vs native C; verify compound, fix on divergence | [ ] |
+| [2](batch-2/overview.md) | T2 — curved + compound goldens vs native C; verify compound, fix on divergence | [x] |
+
+**T2 note:** 3/5 goldens pass byte-exact (curved-single, curved-parallel,
+compound-splines). `dot-curved-cycle` and `dot-compound-lhead` quarantined with
+comparison pages ([quarantine/](quarantine/)) — both blocked on pre-existing
+gaps outside curved routing (multiedge `ED_tail_port`; compound `arrowEndClip`).
 
 ## Index
 
