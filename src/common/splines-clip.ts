@@ -192,6 +192,17 @@ class SplineClipHelper {
     const [sflag, eflag] = SplineClipHelper.resolveArrowFlags(info, hn, fe, orig, j);
     newspl.sflag = sflag;
     newspl.eflag = eflag;
+    // C: ortho edges use arrowOrthoClip (keeps segments axis-aligned), not the
+    // De-Casteljau start/end clips. @see lib/common/splines.c:90
+    if (info.isOrtho) {
+      if (sflag || eflag) {
+        SplineClipHelper.arrowOrthoClip(
+          orig, ps, bounds.start, bounds.end, newspl, sflag, eflag);
+        if (sflag) SplineClipHelper.stashArrow(orig, newspl.sp, ps[bounds.start]!, true);
+        if (eflag) SplineClipHelper.stashArrow(orig, newspl.ep, ps[bounds.end + 3]!, false);
+      }
+      return;
+    }
     if (sflag) {
       bounds.start = SplineClipHelper.arrowStartClip(
         orig, ps, bounds.start, bounds.end, newspl, sflag);
@@ -201,6 +212,64 @@ class SplineClipHelper {
       bounds.end = SplineClipHelper.arrowEndClip(
         orig, ps, bounds.start, bounds.end, newspl, eflag);
       SplineClipHelper.stashArrow(orig, newspl.ep, ps[bounds.end + 3]!, false);
+    }
+  }
+
+  /**
+   * Orthogonal arrow clip: each spline segment is axis-aligned, so shorten the
+   * arrowed end(s) ALONG the axis and rewrite the segment's control points to
+   * the degenerate straight form (P0=P1, P2=P3) — keeping the Bézier
+   * axis-aligned, exactly as native C (vs the De-Casteljau resample the normal
+   * arrow clip would produce). @see lib/common/arrows.c:arrowOrthoClip
+   */
+  static arrowOrthoClip(
+    e: Edge, ps: Point[], startp: number, endp: number, spl: Bezier,
+    sflag: number, eflag: number,
+  ): void {
+    const alen = normalArrowLen(SplineClipHelper.edgePenwidth(e));
+    if (sflag && eflag && endp === startp) {
+      // two arrows on one segment
+      const p = ps[endp]!; const q = ps[endp + 3]!;
+      const d = SplineClipHelper.dist(p, q);
+      let hlen = alen; let tlen = alen;
+      if (hlen + tlen >= d) { hlen = tlen = d / 3.0; }
+      const s = { x: p.x, y: p.y }; const t = { x: q.x, y: q.y };
+      if (p.y === q.y) {
+        s.y = p.y; t.y = p.y;
+        if (p.x < q.x) { t.x = q.x - hlen; s.x = p.x + tlen; }
+        else { t.x = q.x + hlen; s.x = p.x - tlen; }
+      } else {
+        s.x = p.x; t.x = p.x;
+        if (p.y < q.y) { t.y = q.y - hlen; s.y = p.y + tlen; }
+        else { t.y = q.y + hlen; s.y = p.y - tlen; }
+      }
+      ps[endp] = s; ps[endp + 1] = { ...s };
+      ps[endp + 2] = t; ps[endp + 3] = { ...t };
+      spl.sflag = sflag; spl.sp = p;
+      spl.eflag = eflag; spl.ep = q;
+      return;
+    }
+    if (eflag) {
+      let hlen = alen;
+      const p = ps[endp]!; const q = ps[endp + 3]!;
+      const maxd = 0.9 * SplineClipHelper.dist(p, q);
+      if (hlen >= maxd) hlen = maxd;
+      const r = { x: p.x, y: p.y };
+      if (p.y === q.y) { r.y = p.y; r.x = p.x < q.x ? q.x - hlen : q.x + hlen; }
+      else { r.x = p.x; r.y = p.y < q.y ? q.y - hlen : q.y + hlen; }
+      ps[endp + 1] = { ...p }; ps[endp + 2] = r; ps[endp + 3] = { ...r };
+      spl.eflag = eflag; spl.ep = q;
+    }
+    if (sflag) {
+      let tlen = alen;
+      const p = ps[startp]!; const q = ps[startp + 3]!;
+      const maxd = 0.9 * SplineClipHelper.dist(p, q);
+      if (tlen >= maxd) tlen = maxd;
+      const r = { x: p.x, y: p.y };
+      if (p.y === q.y) { r.y = p.y; r.x = p.x < q.x ? p.x + tlen : p.x - tlen; }
+      else { r.x = p.x; r.y = p.y < q.y ? p.y + tlen : p.y - tlen; }
+      ps[startp] = r; ps[startp + 1] = { ...r }; ps[startp + 2] = { ...q };
+      spl.sflag = sflag; spl.sp = p;
     }
   }
 

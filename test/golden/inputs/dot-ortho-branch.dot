@@ -1,0 +1,1 @@
+digraph { splines=ortho; a -> b; a -> c; }
