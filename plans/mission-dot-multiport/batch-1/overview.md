@@ -6,7 +6,7 @@ primary file region, so not parallelizable.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Faithful C-vs-TS diagnosis of G2; confirm `accumCross` tiebreak metric and that `port.p.x` is populated pre-mincross | opus | `docs/dot-g2-trace.md` | — | [x] |
-| T2 | TDD oracle pin + faithful `accumCross` tiebreak fix (`p.x` like C); verify 25/25 corpus + all goldens byte-identical; update status docs | opus | `src/layout/dot/mincross-cross.ts`, `src/layout/dot/mincross-port-order.test.ts` (new), `plans/layout-engine-backlog/route-reverification.md`, `plans/layout-engine-backlog/gaps/dot.md`, `plans/port-catalog/README.md` | T1 | [ ] |
+| T2 | TDD oracle pin + faithful `accumCross` tiebreak fix (`p.x` like C); verify 25/25 corpus + all goldens byte-identical; update status docs | opus | `src/layout/dot/mincross-cross.ts`, `src/layout/dot/mincross-port-order.test.ts` (new), `plans/layout-engine-backlog/route-reverification.md`, `plans/layout-engine-backlog/gaps/dot.md`, `plans/port-catalog/README.md` | T1 | [x] |
 
 ## Dependency summary
 

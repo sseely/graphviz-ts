@@ -36,9 +36,12 @@ describe('shouldSwap — reverse', () => {
   });
 });
 
-/** Node carrying a single in-edge whose tail sits at `srcOrder`. */
+/** Node carrying a single in-edge whose tail sits at `srcOrder`. The tail_port
+ *  carries a complete `p` (every real Port has one — geom.ts:87) so the
+ *  ND_order-then-p.x compare in accumCross can read `p.x`. p.x is 0 here, so the
+ *  ND_order term (srcOrder) drives the result, which is what this test pins. */
 function inNode(srcOrder: number): Node {
-  const e = { tail: { info: { order: srcOrder } }, info: { tail_port: { order: 0 } } } as unknown as Edge;
+  const e = { tail: { info: { order: srcOrder } }, info: { tail_port: { order: 0, p: { x: 0, y: 0 } } } } as unknown as Edge;
   return { info: { in: { list: [e], size: 1 }, out: undefined } } as unknown as Node;
 }
 

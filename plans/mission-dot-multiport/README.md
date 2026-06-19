@@ -73,7 +73,7 @@ Architecture decisions (locked): see [decisions.md](decisions.md).
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose, T2 faithful fix + pins | [ ] |
+| 1 | T1 diagnose, T2 faithful fix + pins | [x] |
 
 - [decisions.md](decisions.md) — locked architecture decisions
 - [batch-1/overview.md](batch-1/overview.md) — task table + stop conditions
