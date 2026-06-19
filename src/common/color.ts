@@ -232,7 +232,18 @@ function setHsvaDirect(color: GVColor, h: number, s: number, v: number, a: numbe
 function setRgbaFromHsv(color: GVColor, h: number, s: number, v: number, a: number): void {
   const c = color as Record<string, unknown>;
   const rgb = hsv2rgb(h, s, v);
-  c['type'] = 'rgba'; c['r'] = rgb.r; c['g'] = rgb.g; c['b'] = rgb.b; c['a'] = a;
+  // C's RGBA_BYTE path stores `(unsigned char)(chan * 255)` — a TRUNCATING cast,
+  // not rounding (lib/common/colxlate.c:292-295). Quantize to that byte (kept as
+  // byte/255 so the round-at-emit in rgbaStr recovers it exactly); otherwise an
+  // HSV value like 0.16 → round(40.8)=41 would diverge from C's 40.
+  c['type'] = 'rgba';
+  c['r'] = byteTrunc(rgb.r); c['g'] = byteTrunc(rgb.g);
+  c['b'] = byteTrunc(rgb.b); c['a'] = byteTrunc(a);
+}
+
+/** Quantize a [0,1] channel to C's RGBA_BYTE value, kept normalized. */
+function byteTrunc(x: number): number {
+  return Math.trunc(x * 255) / 255;
 }
 
 /** Set color to opaque black for the given target type (unknown color fallback). */

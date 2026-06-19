@@ -16,6 +16,7 @@ import { ObjType, EmitState, MapShape } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { FillType, PenType } from '../gvc/context.js';
 import { transformPoint } from '../gvc/device.js';
+import { resolveRenderColor } from '../render/color-resolve.js';
 import {
   BORDER_LEFT,
   BORDER_TOP,
@@ -110,9 +111,9 @@ function penTypeOf(style: string | undefined): PenType {
  */
 export function withHtmlPaint(paint: HtmlPaint, job: RenderJob, drawFn: () => void): void {
   paintObj.fillColor = paint.fill !== undefined
-    ? { type: 'string', s: paint.fill } : { type: 'none' };
+    ? resolveRenderColor(paint.fill) : { type: 'none' };
   paintObj.penColor = paint.pen !== undefined
-    ? { type: 'string', s: paint.pen } : { type: 'string', s: 'transparent' };
+    ? resolveRenderColor(paint.pen) : { type: 'string', s: 'transparent' };
   paintObj.fill = paint.fill !== undefined ? FillType.Solid : FillType.None;
   paintObj.pen = penTypeOf(paint.penStyle);
   paintObj.penWidth = paint.penWidth !== undefined ? paint.penWidth : 1.0;

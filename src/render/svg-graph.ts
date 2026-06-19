@@ -17,6 +17,7 @@ import type { RenderJob } from '../gvc/job.js';
 import { createObjState, ObjType } from '../gvc/job.js';
 import { FillType } from '../gvc/context.js';
 import { escapeXml, SVG_PAD } from './svg-helpers.js';
+import { resolveRenderColor } from './color-resolve.js';
 import { parseGradientSpec } from '../common/htmltable-emit-fill.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import {
@@ -204,8 +205,8 @@ function writeGradientPolygon(bb: Box, id: string, job: RenderJob): void {
 function emitGradientBackground(bb: Box, spec: BgGradientSpec, job: RenderJob): void {
   const obj = createObjState(ObjType.RootGraph);
   obj.id = 'graph0';
-  obj.fillColor = { type: 'string', s: spec.fillColor };
-  obj.stopColor = { type: 'string', s: spec.stopColor };
+  obj.fillColor = resolveRenderColor(spec.fillColor);
+  obj.stopColor = resolveRenderColor(spec.stopColor);
   obj.gradientFrac = spec.frac;
   obj.gradientAngle = spec.angle;
   obj.fill = spec.radial ? FillType.Radial : FillType.Linear;

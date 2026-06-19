@@ -27,6 +27,7 @@ import type { Point, Bezier } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import { HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL } from '../common/emit-types.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
+import { colorPaint, colorOpacity, textFillAttrs } from './color-resolve.js';
 import { PenType, FillType } from '../gvc/context.js';
 import { emitLinearGradient, emitRadialGradient, gradientId } from './svg-gradient.js';
 import { transformPoint } from '../gvc/device.js';
@@ -68,24 +69,8 @@ export function escapeXml(s: string): string {
 // Color helpers
 // ---------------------------------------------------------------------------
 
-export function rgbaStr(r: number, g: number, b: number): string {
-  const rh = Math.round(r * 255).toString(16).padStart(2, '0');
-  const gh = Math.round(g * 255).toString(16).padStart(2, '0');
-  const bh = Math.round(b * 255).toString(16).padStart(2, '0');
-  return '#' + rh + gh + bh;
-}
-
 export function paintStr(obj: ObjState, useFill: boolean): string {
-  const color = useFill ? obj.fillColor : obj.penColor;
-  if (color.type === 'none') return 'none';
-  if (color.type === 'string') {
-    return color.s === 'transparent' ? 'none' : color.s;
-  }
-  if (color.type === 'rgba') {
-    if (color.a === 0) return 'none';
-    return rgbaStr(color.r, color.g, color.b);
-  }
-  return 'black';
+  return colorPaint(useFill ? obj.fillColor : obj.penColor);
 }
 
 // ---------------------------------------------------------------------------
@@ -110,22 +95,34 @@ export function emitPenWidth(job: RenderJob, pw: number): void {
   job.write('"');
 }
 
+/** Emit ` <attr>="<opacity>"` when the color carries partial alpha. */
+function emitOpacity(job: RenderJob, attr: string, color: ObjState['fillColor']): void {
+  const o = colorOpacity(color);
+  if (o !== null) job.write(' ' + attr + '="' + o + '"');
+}
+
+/**
+ * Emit fill/stroke style attributes in C's exact order: fill, fill-opacity,
+ * stroke, stroke-width, stroke-dasharray, stroke-opacity.
+ * @see plugin/core/gvrender_core_svg.c:165-213 svg_grstyle
+ */
 export function emitStyle(job: RenderJob, filled: boolean, gradFillUrl?: string): void {
   const obj = job.obj;
-  let fill: string;
-  if (gradFillUrl !== undefined) {
-    fill = 'url(#' + gradFillUrl + ')';
-  } else {
-    fill = obj !== null && filled ? paintStr(obj, true) : 'none';
-  }
+  const solidFill = obj !== null && filled;
+  const fill = gradFillUrl !== undefined
+    ? 'url(#' + gradFillUrl + ')'
+    : (solidFill ? paintStr(obj, true) : 'none');
+  job.write(' fill="' + fill + '"');
+  if (gradFillUrl === undefined && solidFill) emitOpacity(job, 'fill-opacity', obj.fillColor);
   const stroke = obj !== null ? paintStr(obj, false) : 'black';
-  job.write(' fill="' + fill + '" stroke="' + stroke + '"');
+  job.write(' stroke="' + stroke + '"');
   if (obj === null) return;
   const pw = obj.penWidth;
   if (Math.abs(pw - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
     emitPenWidth(job, pw);
   }
   emitDash(job, obj.pen);
+  emitOpacity(job, 'stroke-opacity', obj.penColor);
 }
 
 // ---------------------------------------------------------------------------
@@ -299,7 +296,7 @@ function textDecorationValue(flags: number): string {
  * Omits each attribute when it is at its default value, matching C exactly.
  * @see plugin/core/gvrender_core_svg.c:svg_textspan lines 495-531
  */
-function emitFontAttrs(flags: number, fontColor: string | null, job: RenderJob): void {
+function emitFontAttrs(flags: number, job: RenderJob): void {
   if (flags & HTML_BF) job.write(' font-weight="bold"');
   if (flags & HTML_IF) job.write(' font-style="italic"');
   const dec = flags & (HTML_UL | HTML_OL | HTML_S)
@@ -307,10 +304,6 @@ function emitFontAttrs(flags: number, fontColor: string | null, job: RenderJob):
   if (dec) job.write(' text-decoration="' + dec + '"');
   if (flags & HTML_SUP) job.write(' baseline-shift="super"');
   if (flags & HTML_SUB) job.write(' baseline-shift="sub"');
-  // Omit fill when null or "black" — C omits when pencolor == "black".
-  if (fontColor !== null && fontColor.toLowerCase() !== 'black') {
-    job.write(' fill="' + escapeXml(fontColor) + '"');
-  }
 }
 
 export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
@@ -326,8 +319,9 @@ export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   job.printDouble(y);
   job.write('"');
   job.write(' font-family="' + escapeXml(fontName) + '"');
-  emitFontAttrs(span.fontFlags, span.fontColor, job);
+  emitFontAttrs(span.fontFlags, job);
   job.write(' font-size="' + span.fontSize.toFixed(2) + '"');
+  job.write(textFillAttrs(span.fontColor));
   job.write('>' + escapeXml(span.str) + '</text>\n');
 }
 

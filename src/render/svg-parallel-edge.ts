@@ -26,6 +26,7 @@ import type { Point, Bezier } from '../model/geom.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
 import { transformPoint } from '../gvc/device.js';
 import { emitBezierPath, emitDash, emitPenWidth } from './svg-helpers.js';
+import { resolveRenderColor, colorPaint } from './color-resolve.js';
 import { parseSegs } from '../common/multicolor.js';
 
 const PENWIDTH_NORMAL = 1.0;
@@ -45,10 +46,11 @@ export interface ParallelEdgeResult {
  */
 function emitOffsetBezier(tmplist: Point[], job: RenderJob, color: string): void {
   const obj = job.obj;
+  const resolved = resolveRenderColor(color);
   if (obj !== null) {
-    obj.penColor = { type: 'string', s: color };
+    obj.penColor = resolved;
   }
-  job.write('<path fill="none" stroke="' + color + '"');
+  job.write('<path fill="none" stroke="' + colorPaint(resolved) + '"');
   if (obj !== null && Math.abs(obj.penWidth - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
     emitPenWidth(job, obj.penWidth);
   }

@@ -28,6 +28,7 @@ import {
   resolvePenWidth,
 } from './style-resolve.js';
 import { stripedBox, wedgedEllipse } from '../render/svg-multicolor.js';
+import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 
 // ---------------------------------------------------------------------------
 // Multicolor test
@@ -250,8 +251,8 @@ function applyGradientFields(
   fill: Extract<ResolvedFill, { kind: 'linear' | 'radial' }>,
 ): void {
   obj.fill = fill.kind === 'radial' ? FillType.Radial : FillType.Linear;
-  obj.fillColor = { type: 'string', s: fill.fillColor };
-  obj.stopColor = { type: 'string', s: fill.stopColor };
+  obj.fillColor = resolveRenderColor(fill.fillColor);
+  obj.stopColor = resolveRenderColor(fill.stopColor);
   obj.gradientFrac = fill.frac;
   obj.gradientAngle = fill.angle;
 }
@@ -277,7 +278,7 @@ function applyFillState(obj: ObjState, n: Node): boolean {
   if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
   if (fillRes.kind === 'solid') {
     obj.fill = FillType.Solid;
-    obj.fillColor = { type: 'string', s: fillRes.color };
+    obj.fillColor = resolveRenderColor(fillRes.color);
     return true;
   }
   applyGradientFields(obj, fillRes);
@@ -288,7 +289,7 @@ function applyFillState(obj: ObjState, n: Node): boolean {
 function applyPenState(obj: ObjState, styleAttr: string | undefined,
   colorAttr: string | undefined, penwidthAttr: string | undefined): void {
   const flags = parseStyleFlags(styleAttr);
-  obj.penColor = { type: 'string', s: resolvePenColor(colorAttr) };
+  obj.penColor = resolveRenderColor(resolvePenColor(colorAttr));
   obj.pen = resolvePenType(flags);
   obj.penWidth = resolvePenWidth(flags, penwidthAttr);
 }
@@ -303,9 +304,13 @@ function applyPenState(obj: ObjState, styleAttr: string | undefined,
 function applyNodeStyle(obj: ObjState, n: Node): boolean {
   const styleAttr = nodeAttr(n, n.root, 'style');
   const colorAttr = nodeAttr(n, n.root, 'color');
-  const filled = applyFillState(obj, n);
-  applyPenState(obj, styleAttr, colorAttr, nodeAttr(n, n.root, 'penwidth'));
-  return filled;
+  // C wraps each node's color block with setColorScheme so a `colorscheme`
+  // attr applies to bare scheme indices. @see lib/common/emit.c:1781/1789
+  return withColorScheme(nodeAttr(n, n.root, 'colorscheme'), () => {
+    const filled = applyFillState(obj, n);
+    applyPenState(obj, styleAttr, colorAttr, nodeAttr(n, n.root, 'penwidth'));
+    return filled;
+  });
 }
 
 /**

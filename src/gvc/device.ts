@@ -39,6 +39,7 @@ import {
   resolvePenWidth,
   resolveClusterFillEx,
 } from '../common/style-resolve.js';
+import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -145,10 +146,12 @@ export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, do
  */
 function setEdgePen(e: Edge, job: RenderJob): void {
   if (job.obj === null) return;
+  const obj = job.obj;
   const flags = parseStyleFlags(e.attrs.get('style'));
-  job.obj.penColor = { type: 'string', s: resolvePenColor(e.attrs.get('color')) };
-  job.obj.pen = resolvePenType(flags);
-  job.obj.penWidth = resolvePenWidth(flags, e.attrs.get('penwidth'));
+  obj.penColor = withColorScheme(e.attrs.get('colorscheme'),
+    () => resolveRenderColor(resolvePenColor(e.attrs.get('color'))));
+  obj.pen = resolvePenType(flags);
+  obj.penWidth = resolvePenWidth(flags, e.attrs.get('penwidth'));
 }
 
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
@@ -312,8 +315,8 @@ function applyClusterGradient(
   fill: Extract<ResolvedFill, { kind: 'linear' | 'radial' }>,
 ): void {
   obj.fill = fill.kind === 'radial' ? FillType.Radial : FillType.Linear;
-  obj.fillColor = { type: 'string', s: fill.fillColor };
-  obj.stopColor = { type: 'string', s: fill.stopColor };
+  obj.fillColor = resolveRenderColor(fill.fillColor);
+  obj.stopColor = resolveRenderColor(fill.stopColor);
   obj.gradientFrac = fill.frac;
   obj.gradientAngle = fill.angle;
 }
@@ -327,7 +330,7 @@ function applyClusterPenState(obj: ObjState, sg: Graph): void {
   const styleAttr = sg.attrs.get('style');
   const flags = parseStyleFlags(styleAttr);
   const pen = sg.attrs.get('pencolor') ?? sg.attrs.get('color');
-  obj.penColor = { type: 'string', s: resolvePenColor(pen) };
+  obj.penColor = resolveRenderColor(resolvePenColor(pen));
   obj.penWidth = resolvePenWidth(flags, sg.attrs.get('penwidth'));
   obj.pen = resolvePenType(flags);
 }
@@ -354,15 +357,18 @@ function applyClusterObjState(sg: Graph, job: RenderJob): boolean {
   const fillRes = resolveClusterFillEx(clusterAttrsOf(sg));
   if (job.obj === null) return false;
   const obj = job.obj;
-  applyClusterPenState(obj, sg);
-  if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
-  if (fillRes.kind === 'solid') {
-    obj.fill = FillType.Solid;
-    obj.fillColor = { type: 'string', s: fillRes.color };
+  // C wraps the cluster color block with setColorScheme. @see emit.c:3800/3943
+  return withColorScheme(sg.attrs.get('colorscheme'), () => {
+    applyClusterPenState(obj, sg);
+    if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
+    if (fillRes.kind === 'solid') {
+      obj.fill = FillType.Solid;
+      obj.fillColor = resolveRenderColor(fillRes.color);
+      return true;
+    }
+    applyClusterGradient(obj, fillRes);
     return true;
-  }
-  applyClusterGradient(obj, fillRes);
-  return true;
+  });
 }
 
 /**
