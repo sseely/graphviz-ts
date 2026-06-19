@@ -95,3 +95,25 @@ N/A — dev/test fidelity work; the browser library's layout/render path is
 unchanged in shape (no SLIs, dashboards, traces, on-call). **Rollback:
 Reversible** (revert the merge commit). No API/schema/contract/backwards-compat
 impact.
+
+## Mission summary (2026-06-19)
+- **Batch 1 — DONE.** T1 diagnosed jcctree as an emission bug (svgEdgePath
+  mapped the over-allocated `bz.list` instead of the first `bz.size` points;
+  the over-allocation is faithful to C `new_spline`+`clip_and_install`). T2
+  fixed svgEdgePath to slice to `bz.size` + added regression test AC-T2.
+  Result: 4 corpus cases improved (graphs/share/windows-jcctree → byte-match,
+  b68 → structural-match), **0 regressions**, 128 goldens byte-identical.
+  p2/pm2way confirmed routing-POSITION (out of scope, logged).
+- **Batch 2 — STOPPED at T3 (no fix).** No isolated issue-numbered dot routing
+  case with a *missing* MR fix exists among the tractable candidates: #2168's
+  MR is fdp/neato ortho (not dot); #241's MR (routespl.c horizontal/vertical)
+  is already ported; the rest are deep subsystems. Per the Batch 2 STOP
+  condition, the routing-position remainder is recommended as a dedicated
+  future mission. No `src/` change in Batch 2.
+- **Quality gates (final):** `tsc --noEmit` 0; `vitest` 1990 passed / 128
+  goldens byte-identical; `lizard` clean; survey per-id delta +4 / −0.
+- **Decisions:** 6 journal rows; 1 STOP, 3 follow-on flags.
+- **Follow-ups:** (a) routing-position bucket as its own mission; (b) latent
+  sibling emit sites (svg-edge-split.ts:68, svg-parallel-edge.ts, map.ts:98)
+  also read `list.length` — bound them to `bz.size` if a multi-color/map
+  corpus case ever exercises a clipped spline.
