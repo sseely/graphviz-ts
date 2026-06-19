@@ -436,7 +436,9 @@ export function svgEdgePath(e: Edge, job: RenderJob): void {
   for (let si = 0; si < spl.size; si++) {
     const bz = spl.list[si] as Bezier | undefined;
     if (bz === undefined || bz.size < 4) continue;
-    const pts = bz.list.map((p) => transformPoint(p, job));
+    // Emit exactly bz.size points: list is over-allocated (calloc'd) to the
+    // pre-clip length; the zeroed tail is never emitted. @see splines.c:new_spline
+    const pts = bz.list.slice(0, bz.size).map((p) => transformPoint(p, job));
     job.write('<path fill="none" stroke="' + stroke + '"');
     if (obj !== null && Math.abs(obj.penWidth - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
       emitPenWidth(job, obj.penWidth);
