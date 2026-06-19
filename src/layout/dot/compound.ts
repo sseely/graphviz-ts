@@ -12,6 +12,11 @@ import type { Edge } from '../../model/edge.js';
 import {
   inBoxf, midPointf, splineIntersectf, boxIntersectf,
 } from './compound-clip.js';
+import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
+import { arrowheadPolygon } from './edge-route-arrow.js';
+import { normalArrowLen } from './edge-route-routing.js';
+import { edgePenwidthAttr, edgeRenderPenwidth } from './edge-route-helpers.js';
+import { dist } from '../../common/arrows-geometry.js';
 
 // Re-export geometry helpers so existing callers (tests) import from one place.
 export {
@@ -46,7 +51,45 @@ export function mkClustMap(g: Graph): Map<string, Graph> {
 // ClipState — shared between head/tail clip helpers
 // ---------------------------------------------------------------------------
 
-interface ClipState { bez: Bezier; size: number; endi: number; starti: number; }
+interface ClipState { e: Edge; bez: Bezier; size: number; endi: number; starti: number; }
+
+// ---------------------------------------------------------------------------
+// Arrowhead clip (index form) — back the spline off to the arrowhead base and
+// record the tip in bez.ep/sp. @see lib/common/arrows.c:arrowEndClip,arrowStartClip
+// ---------------------------------------------------------------------------
+
+/**
+ * Clip the head segment ps[endp..endp+3] to the arrowhead base; set bez.ep/eflag.
+ * Backs up one segment when the last is shorter than the arrow. Returns the new
+ * endp. @see lib/common/arrows.c:arrowEndClip
+ */
+function arrowEndClipIdx(state: ClipState, endp: number): number {
+  const { e, bez } = state;
+  const elen = normalArrowLen(edgePenwidthAttr(e));
+  bez.eflag = bez.eflag || 1;
+  bez.ep = { ...bez.list[endp + 3] };
+  if (endp > state.starti && dist(bez.list[endp], bez.list[endp + 3]) < elen) endp -= 3;
+  const seg = [bez.list[endp], bez.list[endp + 1], bez.list[endp + 2], bez.list[endp + 3]];
+  const clipped = arrowEndClip(seg, bez.ep, elen);
+  for (let k = 0; k < 4; k++) bez.list[endp + k] = clipped[k];
+  return endp;
+}
+
+/**
+ * Clip the tail segment ps[startp..startp+3] to the tail arrowhead base; set
+ * bez.sp/sflag. Symmetric to arrowEndClipIdx. @see lib/common/arrows.c:arrowStartClip
+ */
+function arrowStartClipIdx(state: ClipState, startp: number, endp: number): number {
+  const { e, bez } = state;
+  const slen = normalArrowLen(edgePenwidthAttr(e));
+  bez.sflag = bez.sflag || 1;
+  bez.sp = { ...bez.list[startp] };
+  if (endp > startp && dist(bez.list[startp], bez.list[startp + 3]) < slen) startp += 3;
+  const seg = [bez.list[startp], bez.list[startp + 1], bez.list[startp + 2], bez.list[startp + 3]];
+  const clipped = tailArrowEndClip(seg, bez.sp, slen);
+  for (let k = 0; k < 4; k++) bez.list[startp + k] = clipped[k];
+  return startp;
+}
 
 // ---------------------------------------------------------------------------
 // Head clip
@@ -60,7 +103,9 @@ export function clipHeadDegenerate(state: ClipState, bb: Box, ep: Point): void {
   bez.list[1] = midPointf(p, ep);
   bez.list[0] = midPointf(bez.list[1], ep);
   bez.list[2] = midPointf(bez.list[1], p);
-  state.endi = 3;
+  // C: if (bez->eflag) endi = arrowEndClip(e, list, starti, 0, &nbez, eflag); endi += 3;
+  const endp = bez.eflag ? arrowEndClipIdx(state, 0) : 0;
+  state.endi = endp + 3;
 }
 
 /** Normal head clip: scan forward for first segment exiting cluster bb. */
@@ -76,6 +121,8 @@ export function clipHeadNormal(state: ClipState, bb: Box): void {
   if (state.endi === size - 1 && bez.eflag) {
     bez.ep = boxIntersectf(bez.ep, bez.list[state.endi], bb);
   } else if (state.endi < size - 1) {
+    // C: if (bez->eflag) endi = arrowEndClip(...); endi += 3;
+    if (bez.eflag) state.endi = arrowEndClipIdx(state, state.endi);
     state.endi += 3;
   }
 }
@@ -114,6 +161,8 @@ export function clipTailDegenerate(state: ClipState, bb: Box): void {
   bez.list[si + 2] = midPointf(p, ep);
   bez.list[si + 3] = midPointf(bez.list[si + 2], ep);
   bez.list[si + 1] = midPointf(bez.list[si + 2], p);
+  // C: if (bez->sflag) starti = arrowStartClip(e, list, starti, endi-3, &nbez, sflag);
+  if (bez.sflag) state.starti = arrowStartClipIdx(state, state.starti, state.endi - 3);
 }
 
 /** Normal tail clip: scan backward for last segment exiting cluster bb. */
@@ -130,6 +179,8 @@ export function clipTailNormal(state: ClipState, bb: Box): void {
     bez.sp = boxIntersectf(bez.sp, bez.list[state.starti], bb);
   } else if (state.starti !== 0) {
     state.starti -= 3;
+    // C: if (bez->sflag) starti = arrowStartClip(e, list, starti, endi-3, &nbez, sflag);
+    if (bez.sflag) state.starti = arrowStartClipIdx(state, state.starti, state.endi - 3);
   }
 }
 
@@ -187,14 +238,32 @@ export function applyBezierSlice(state: ClipState): void {
   bez.size = newList.length;
 }
 
+/** Re-stash the cached arrow polygon for the renderer from a clipped tip/base. */
+function restashArrow(e: Edge, tip: Point, base: Point, isTail: boolean): void {
+  const dir: Point = { x: base.x - tip.x, y: base.y - tip.y };
+  const pts = arrowheadPolygon(tip, dir, edgeRenderPenwidth(e));
+  (e.info as unknown as Record<string, unknown>)[isTail ? '_tailArrowPts' : '_arrowPts'] = pts;
+}
+
 /**
- * Clip the spline for edge e against its lhead/ltail cluster bounding boxes.
- *
- * NOTE: clips the spline PATH only. The arrowhead is NOT re-clipped — when an
- * lhead/ltail moves the head/tail endpoint, the cached arrow polygon
- * (e.info._arrowPts) still reflects the original node-boundary tip. Faithful
- * arrow re-clipping needs a port of C's index-form arrowEndClip (arrows.c) with
- * its bezier_clip subdivision; see plans/dot-curved-compound/quarantine/.
+ * Clip head (if lh) then tail (if lt) — in that order, matching C so the head
+ * arrow clip sees the full spline before the tail is trimmed. Returns which
+ * ends clipped. @see lib/dotgen/compound.c:makeCompoundEdge:301-417
+ */
+function clipEnds(
+  e: Edge, state: ClipState, lh: Graph | null, lt: Graph | null,
+): { headClipped: boolean; tailClipped: boolean } {
+  let headClipped = false;
+  if (lh != null) headClipped = clipHead(state, lh.info.bb!, inBoxf(e.head.info.coord, lh.info.bb!));
+  if (!headClipped) state.endi = state.size - 1;
+  const tailClipped = lt != null
+    && clipTail(state, lt.info.bb!, inBoxf(e.tail.info.coord, lt.info.bb!));
+  return { headClipped, tailClipped };
+}
+
+/**
+ * Clip the spline for edge e against its lhead/ltail cluster bounding boxes,
+ * re-clipping the arrowhead(s) to the new cluster-boundary tips.
  * @see lib/dotgen/compound.c:makeCompoundEdge
  */
 export function makeCompoundEdge(e: Edge, clustMap: Map<string, Graph>): void {
@@ -202,15 +271,11 @@ export function makeCompoundEdge(e: Edge, clustMap: Map<string, Graph>): void {
   if (!lh && !lt) return;
   if (!isCompoundEdgeEligible(e)) return;
   const bez = e.info.spl!.list[0];
-  const state: ClipState = { bez, size: bez.size, endi: 0, starti: 0 };
-  if (lh != null) {
-    if (!clipHead(state, lh.info.bb!, inBoxf(e.head.info.coord, lh.info.bb!)))
-      state.endi = state.size - 1;
-  } else {
-    state.endi = state.size - 1;
-  }
-  if (lt != null) clipTail(state, lt.info.bb!, inBoxf(e.tail.info.coord, lt.info.bb!));
+  const state: ClipState = { e, bez, size: bez.size, endi: 0, starti: 0 };
+  const { headClipped, tailClipped } = clipEnds(e, state, lh, lt);
   applyBezierSlice(state);
+  if (headClipped && bez.eflag) restashArrow(e, bez.ep, bez.list[bez.list.length - 1], false);
+  if (tailClipped && bez.sflag) restashArrow(e, bez.sp, bez.list[0], true);
 }
 
 // ---------------------------------------------------------------------------

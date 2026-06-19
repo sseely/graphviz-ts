@@ -8,13 +8,11 @@ divergence is the trigger for any fix, not an assumption.
 |----|-------------|-------|--------|------------|------|
 | T2 | curved + compound fixtures + native-C refs + manifest; validate; fix on divergence | sonnet | `test/golden/inputs/dot-{curved,compound}-*.dot`, `test/golden/refs/dot-{curved,compound}-*.svg`, `test/golden/manifest.json`, `src/layout/dot/splines.ts` (curved group fix), `src/layout/dot/compound.ts`+`index.ts` (compound wiring fix) | T1 | [x] |
 
-**Outcome:** 4 of 5 goldens pass byte-exact vs native C (curved-single,
-curved-parallel, curved-cycle, compound-splines). 1 quarantined with a
-comparison page (`quarantine/`): `dot-compound-lhead` (compound path clips
-correctly after the wiring fix; arrow-clip `arrowEndClip` unported — a
-T38-completion sub-task). The `makeStraightEdges` port is byte-exact to C.
-(`dot-curved-cycle` was briefly quarantined on a wrong hypothesis, then fixed
-via C instrumentation — see decision journal.)
+**Outcome:** **All 5 goldens pass byte-exact** vs native C (curved-single,
+curved-parallel, curved-cycle, compound-splines, compound-lhead). Nothing
+quarantined. `dot-curved-cycle` (grouping bug) and `dot-compound-lhead` (compound
+`arrowEndClip` order) were each briefly quarantined then fixed via C
+instrumentation — see decision journal (2026-06-19, post-merge).
 
 ## Dependency / file ownership
 - T2 needs T1 (curved routing). `manifest.json` appended (new entries only —
