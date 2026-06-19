@@ -51,7 +51,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose regular (#2168), T2 diagnose flat (#241_0) | [ ] |
+| 1 | T1 diagnose regular (#2168), T2 diagnose flat (#241_0) | [x] |
 | 2 | T3 fix regular, T4 fix flat | [ ] |
 
 - [decisions.md](decisions.md) — locked architecture decisions (AD-1..AD-4)

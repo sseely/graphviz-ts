@@ -6,8 +6,8 @@ instruments native C dot and locates the single divergent port function.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Instrument C dot for `2168.dot` (regular edge + head compass ports); dump `ED_head_port.p`, the endpath box, the routed spline; dump the port's; name the divergent fn + root cause | opus | `decision-journal.md` (T1 rows) | — | [ ] |
-| T2 | Same for `241_0.dot` (flat same-rank compass ports): dump begin/endpath ports + flat-edge box + routed spline, port vs C; name the divergent fn + root cause | opus | `decision-journal.md` (T2 rows) | — | [ ] |
+| T1 | Instrument C dot for `2168.dot` (regular edge + head compass ports); dump `ED_head_port.p`, the endpath box, the routed spline; dump the port's; name the divergent fn + root cause | opus | `decision-journal.md` (T1 rows) | — | [x] |
+| T2 | Same for `241_0.dot` (flat same-rank compass ports): dump begin/endpath ports + flat-edge box + routed spline, port vs C; name the divergent fn + root cause | opus | `decision-journal.md` (T2 rows) | — | [x] |
 
 ## Interface (Batch 1 → Batch 2)
 Each task appends a journal row:
