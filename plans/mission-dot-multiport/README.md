@@ -82,6 +82,29 @@ Architecture decisions (locked): see [decisions.md](decisions.md).
 - [diagrams/mincross-flow.md](diagrams/mincross-flow.md)
 - [decision-journal.md](decision-journal.md)
 
+## Session summary (2026-06-19) — COMPLETE
+
+- **Tasks:** 2/2 done (T1 diagnose, T2 fix). Single batch.
+- **Verdict:** T1 CONFIRMED — `tail_port.p.x` populated (±27/0) at mincross
+  time; AD-4 did not fire. (Premise correction: `port.order` is the angular
+  compassPort order 192/64/0, not 0 — the tie was broken by the *wrong* signal,
+  not lost. Same fix.)
+- **Fix:** `accumCross` (`mincross-cross.ts`) now breaks same-`ND_order`
+  successor ties by the geometric port `p.x`, mirroring C `in_cross`/`out_cross`
+  (`mincross.c:593,611`), via 3 cited local helpers. `val()`/`port.order` and
+  `mincross-order.ts` untouched (AD-2).
+- **Result:** corpus `ports both dense` 56.10 → 0.25pt **MATCH**; **25/25, 0
+  DIVERGE**. `a` now at x=99, rank-1 `[c,d,b]` — byte-exact to dot 15.0.0.
+- **Quality gates:** tsc 0; vitest 1951/1951; all goldens byte-identical (AD-3);
+  lizard clean. 2 `near` residuals (compass/record ports) pre-existing, no
+  regression.
+- **Decisions flagged for review:** (1) premise correction `order≠0`; (2) hook
+  CCN-split of `accumCross` into helpers; (3) out-of-write-set fix of an invalid
+  mock `Port` in `mincross-cross.test.ts` (non-behavioral, forced by the `p.x`
+  read) — all in `decision-journal.md`.
+- **Known follow-up:** `crossContrib` (`mincross-cross.ts:45`) is exported but
+  unused — left untouched to stay in scope; candidate for a separate cleanup PR.
+
 ## Operational readiness
 
 N/A — graphviz-ts is a browser layout library, not a service. No SLIs,
