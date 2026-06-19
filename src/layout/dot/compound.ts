@@ -157,12 +157,19 @@ export function clipTail(state: ClipState, bb: Box, tailInBox: boolean): boolean
 // ---------------------------------------------------------------------------
 
 /** Resolve lhead/ltail names to cluster graphs. */
+/** Resolve a cluster name to its subgraph, or null. */
+function resolveCluster(name: string | undefined, clustMap: Map<string, Graph>): Graph | null {
+  return name ? (clustMap.get(name) ?? null) : null;
+}
+
 export function resolveClusterPair(
   e: Edge, clustMap: Map<string, Graph>,
 ): { lh: Graph | null; lt: Graph | null } {
-  const lh = e.info.lhead ? (clustMap.get(e.info.lhead) ?? null) : null;
-  const lt = e.info.ltail ? (clustMap.get(e.info.ltail) ?? null) : null;
-  return { lh, lt };
+  // C reads lhead/ltail via agget(e,...). @see lib/dotgen/compound.c:274-275
+  // The e.info fallback supports unit tests that set the field directly.
+  const lhead = e.attrs.get('lhead') ?? e.info.lhead;
+  const ltail = e.attrs.get('ltail') ?? e.info.ltail;
+  return { lh: resolveCluster(lhead, clustMap), lt: resolveCluster(ltail, clustMap) };
 }
 
 /** Returns false when edge is not eligible for compound clipping. */
@@ -209,7 +216,8 @@ export function makeCompoundEdge(e: Edge, clustMap: Map<string, Graph>): void {
  * @see lib/dotgen/compound.c:dot_compoundEdges
  */
 export function dotCompoundEdges(g: Graph): void {
-  if (!g.info.compound) return;
+  // No internal gate — the caller checks mapbool(agget(g,"compound")), matching
+  // C where dot_compoundEdges itself is unconditional. @see lib/dotgen/compound.c:434
   const clustMap = mkClustMap(g);
   for (const e of g.edges) makeCompoundEdge(e, clustMap);
 }

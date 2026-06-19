@@ -23,6 +23,7 @@ import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loo
 import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
 import { placePortLabels, placeRegularEdgeLabels, setEdgeLabelPos } from './splines-label.js';
+import { makeStraightEdges } from './straight-edges.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -321,23 +322,17 @@ function groupSize(edges: Edge[], ind: number): number {
 }
 
 /**
- * Return the original-edge creation seq for parallel-edge ordering.
- * Virtual edges resolve through to_orig; original edges use their own seq.
- * This mirrors C's edgecmp ordering by LE_seq then edge seq — but in TS the
- * virtual edge that represents e1 gets a higher seq than e2/e3 because seq
- * allocation is global; resolving back to the original seq restores C order.
+ * Original-edge creation seq for parallel-edge ordering. Resolving virtuals back
+ * to the original seq restores C's edgecmp order (seq is globally allocated).
  * @see lib/dotgen/dotsplines.c:edgecmp
  */
 function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
 
 /**
- * Collapse a contiguous main-edge group to one representative per distinct
- * original edge. A node can carry both the user edge AND a virtual reverse-chain
- * edge to the same neighbour (the opposing `a->b`/`b->a` case: `a` has two
- * out-edges, both resolving to main edge `a->b`, while `b->a` sits in `ND_other`
- * — three collected entries, two distinct originals). C routes one spline per
- * distinct edge; deduping by `resolveOrigEdge` yields cnt=2 for the opposing
- * pair while leaving genuine parallels (3 distinct originals) untouched.
+ * Collapse a main-edge group to one representative per distinct original edge.
+ * The opposing `a->b`/`b->a` case collects three entries (two out-edges resolving
+ * to main `a->b`, plus `b->a` in ND_other) but two distinct originals; dedup by
+ * `resolveOrigEdge` yields one per original (cnt=2 here, parallels untouched).
  * @see lib/dotgen/dotsplines.c:make_regular_edge (one clip_and_install per orig)
  */
 function dedupByOrig(group: Edge[]): Edge[] {
@@ -376,12 +371,38 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
 }
 
 /**
- * Route one group of parallel edges from the sorted edge list.
- * Returns the number of edges consumed (cnt).
+ * Route one curved group via makeStraightEdges. C groups by getmainedge, keeping
+ * opposing edges (`a->b` vs `b->a`) in distinct groups; the TS collection
+ * over-groups them, so we dedup to distinct originals and re-partition by
+ * original direction (same-direction parallels spread together; opposing route
+ * separately), each ordered by seq so index→perp-offset matches C.
+ * @see lib/dotgen/dotsplines.c:356-358, 381-387
+ */
+function routeCurvedGroup(g: Graph, group: Edge[]): void {
+  const byDir = new Map<string, Edge[]>();
+  for (const e of dedupByOrig(group)) {
+    const o = resolveOrigEdge(e);
+    const key = `${o.tail.id}:${o.head.id}`;
+    (byDir.get(key) ?? byDir.set(key, []).get(key)!).push(e);
+  }
+  for (const part of byDir.values()) {
+    part.sort((a, b) => origSeq(a) - origSeq(b));
+    makeStraightEdges(g, part, part.length, EDGETYPE_CURVED, buildDotSinfo());
+  }
+}
+
+/**
+ * Route one parallel-edge group from the sorted edge list.
+ * Returns the number of edges consumed (cnt). For `splines=curved` the group is
+ * routed via `makeStraightEdges` instead of the normal per-group router.
  * @see lib/dotgen/dotsplines.c:343-419
  */
-function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number): number {
+function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number, et: number): number {
   const cnt = groupSize(edges, ind);
+  if (et === EDGETYPE_CURVED) {
+    routeCurvedGroup(g, edges.slice(ind, ind + cnt));
+    return cnt;
+  }
   dispatchEdgeGroup(g, edges.slice(ind, ind + cnt), multisep);
   return cnt;
 }
@@ -434,26 +455,39 @@ function orthoDispatch(g: Graph): number {
   return 0;
 }
 
+/**
+ * splines=curved top wiring: restore node rw, and warn (but do NOT downgrade —
+ * curved still routes) when edge labels are present.
+ * @see lib/dotgen/dotsplines.c:241-247 (ADR-3)
+ */
+function curvedTop(g: Graph): void {
+  resetRW(g);
+  if (((g.root.info.has_labels ?? 0) & EDGE_LABEL) !== 0) {
+    console.warn('edge labels with splines=curved not supported in dot - use xlabels\n');
+  }
+}
+
 export function dotSplines_(g: Graph, normalize: boolean): number {
   const et = edgeType(g);
   if (et === EDGETYPE_NONE) return 0;
   if (et === EDGETYPE_ORTHO) return orthoDispatch(g);
+  if (et === EDGETYPE_CURVED) curvedTop(g);
   markLowclusters(g);
   const edges: Edge[] = [];
   for (const n of g.nodes.values()) collectNodeEdges(n, edges);
   edges.sort(edgecmp);
   const multisep = g.info.nodesep ?? 18;
   for (let l = 0; l < edges.length;) {
-    l += routeEdgeGroup(g, edges, l, multisep);
+    l += routeEdgeGroup(g, edges, l, multisep, et);
   }
-  // Place regular edge labels from virtual nodes; expand bb per label.
-  // @see lib/dotgen/dotsplines.c:422-430
+  // Place regular edge labels from virtual nodes. @see dotsplines.c:422-430
   placeRegularEdgeLabels(g);
   if (normalize) edgeNormalize(g);
-  routeDotEdges(g);
+  // Curved routes every group via makeStraightEdges above; skip the regular
+  // spline router (C skips routesplinesterm). @see dotsplines.c:461-465
+  if (et !== EDGETYPE_CURVED) routeDotEdges(g);
   placePortLabels(g);
-  // Mirror lib/dotgen/dotsplines.c:471 — State = GVSPLINES; EdgeLabelsDone = 1
-  g.info.edgeLabelsDone = true;
+  g.info.edgeLabelsDone = true; // @see dotsplines.c:471 (EdgeLabelsDone = 1)
   return 0;
 }
 

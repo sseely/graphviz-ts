@@ -1,0 +1,6 @@
+digraph {
+  compound=true;
+  subgraph clusterA { label="A"; a; }
+  subgraph clusterB { label="B"; b; }
+  a -> b [lhead=clusterB, ltail=clusterA];
+}

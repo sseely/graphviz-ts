@@ -1,0 +1,1 @@
+digraph { splines=compound; a -> b -> c; }
