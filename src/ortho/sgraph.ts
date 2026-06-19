@@ -106,9 +106,14 @@ export function createSEdge(
   const idx = g.nedges++;
   const e: SEdge = { weight: wt, cnt: 0, v1: v1.index, v2: v2.index };
   g.edges[idx] = e;
-  v1.adjEdgeList.push(idx);
-  v2.adjEdgeList.push(idx);
+  // C addEdgeToNode (sgraph.c:45) writes at index n_adj then increments, so
+  // after reset() restores n_adj to save_n_adj the next createSEdge OVERWRITES
+  // the stale temp-edge slot. Using push() here would instead append beyond
+  // nAdj, leaving the stale edge at index nAdj for the next edge's shortPath to
+  // follow (corrupts the 2nd+ edge sharing a boundary node). Index-assign.
+  v1.adjEdgeList[v1.nAdj] = idx;
   v1.nAdj++;
+  v2.adjEdgeList[v2.nAdj] = idx;
   v2.nAdj++;
   return e;
 }
@@ -137,15 +142,11 @@ export function reset(g: SGraph): void {
   for (let i = 0; i < g.nnodes; i++) {
     g.nodes[i].nAdj = g.nodes[i].saveNAdj;
   }
-  // clear the two dummy nodes beyond nnodes.
-  // Must also truncate adjEdgeList — unlike C's fixed arrays, push() appends,
-  // so new edges from the next addNodeEdges call would land after stale entries.
-  // Truncating to length 0 ensures the next iteration writes from position 0.
+  // Zero the two dummy nodes' adjacency. createSEdge index-assigns at nAdj
+  // (like C addEdgeToNode), so the next addNodeEdges overwrites stale slots —
+  // no adjEdgeList truncation needed (matches sgraph.c:reset exactly).
   for (let i = g.nnodes; i < g.nnodes + 2; i++) {
-    if (g.nodes[i]) {
-      g.nodes[i].nAdj = 0;
-      g.nodes[i].adjEdgeList.length = 0;
-    }
+    if (g.nodes[i]) g.nodes[i].nAdj = 0;
   }
 }
 

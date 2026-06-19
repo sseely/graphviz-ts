@@ -54,7 +54,12 @@ describe("ortho acceptance", () => {
   });
 
   // ── AC3: Dijkstra finds shortest orthogonal path ──────────────────────────
-  it("routes a simple two-node graph without entering node bounding boxes", () => {
+  // The unclipped route emitted to clip_and_install starts/ends at the node
+  // CENTRES (C ortho.c:1075-1076: p1 = ND_coord(tail) + port, port 0 here);
+  // clip_and_install — the caller's job, not modelled here — clips those
+  // endpoints to the node boundary. So the endpoints legitimately sit at the
+  // node centres; only the interior bend points must avoid node interiors.
+  it("routes a two-node graph: endpoints at node centres, bends clear of nodes", () => {
     const g = makeTwoNodeGraph();
     const [nodeA, nodeB] = g.nodes;
     const routedPaths: OrthoPoint[][] = [];
@@ -69,8 +74,18 @@ describe("ortho acceptance", () => {
     const pts = routedPaths[0];
     expect(pts.length).toBeGreaterThan(0);
 
-    // No routed point should land inside nodeA or nodeB bounding boxes
-    for (const pt of pts) {
+    const centre = (n: typeof nodeA) => ({
+      x: (n.bb.LL.x + n.bb.UR.x) / 2,
+      y: (n.bb.LL.y + n.bb.UR.y) / 2,
+    });
+    // first/last points are the tail/head centres (faithful to C)
+    expect(pts[0]).toEqual(centre(nodeA));
+    expect(pts[pts.length - 1]).toEqual(centre(nodeB));
+
+    // interior bend points (excluding the duplicated endpoint pairs) must not
+    // land inside either node bounding box
+    for (let i = 2; i < pts.length - 2; i++) {
+      const pt = pts[i];
       const inA =
         pt.x > nodeA.bb.LL.x && pt.x < nodeA.bb.UR.x &&
         pt.y > nodeA.bb.LL.y && pt.y < nodeA.bb.UR.y;

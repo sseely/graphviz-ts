@@ -7,7 +7,12 @@ it is the core of the de-risk.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T3 | Oracle-pin `ortho-route.ts` route points + seg/track assignment vs native C | sonnet | `src/ortho/ortho-route.test.ts`, `src/ortho/ortho-route.ts` (only if parity fix) | T2 | [ ] |
+| T3 | Oracle-pin `ortho-route.ts` route points + seg/track assignment vs native C | sonnet | `src/ortho/ortho-route.test.ts`, `src/ortho/ortho-route.ts` (only if parity fix) | T2 | [x] |
+
+**Write-set expanded (user-authorized):** the root-cause parity fixes also
+touched `index.ts` (buildSpline endpoints) and `sgraph.ts` (createSEdge/reset
+edge-list bookkeeping), and updated `ortho.test.ts` AC3 (user-approved). See
+decision journal T3 rows.
 
 ## Dependency
 T3 depends on T2 (and transitively T1): route logic consumes the maze. Both must

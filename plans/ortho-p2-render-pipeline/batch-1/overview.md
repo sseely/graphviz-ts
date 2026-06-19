@@ -6,7 +6,7 @@ Pinned first because `mkMaze` (T2) consumes its output.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Oracle-pin `partition.ts` vs native C (rect set for fixtures, fixed permute) | sonnet | `src/ortho/partition.test.ts`, `src/ortho/partition.ts` (only if parity fix) | — | [ ] |
+| T1 | Oracle-pin `partition.ts` vs native C (rect set for fixtures, fixed permute) | sonnet | `src/ortho/partition.test.ts`, `src/ortho/partition.ts` (only if parity fix) | — | [x] |
 
 ## Gate after batch
 - `npm run typecheck` 0 · `npm test` (new partition tests pass; baseline
