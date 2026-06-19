@@ -386,6 +386,49 @@ via the FreeType LUT model; only rasterization is excluded.
 
 ---
 
+## Verifying fidelity: the graphviz test corpus
+
+The highest-value correctness net is differential testing against graphviz's own
+test corpus — it is the long-tail edge-case coverage that broke earlier port
+attempts. This is a future mission (not yet scheduled); recorded here so the
+approach is settled before it starts.
+
+### What's actually there
+
+`~/git/graphviz/tests/` is ~1.68M lines total, but that figure is misleading —
+it is dominated by reference-output artifacts, not work:
+
+| Bucket | Count | Use |
+|--------|-------|-----|
+| Input graphs (`.gv` 625, `.dot` 180; + 61 in `graphs/`) | **~800** | the actionable corpus |
+| Reference outputs (`.ps` 213, `.png` 159, `.xdot` 147, `.svg` 101, `.jpg` 12) | — | mostly formats we don't emit; bulk of the line count |
+| Test harnesses (`.cpp` 62, `.c` 30, `.py` 12) | **~100** | mine for intent, don't port |
+| gvpr scripts (`.gvpr` 22) | — | out of scope |
+
+Actionable surface ≈ **800 inputs + 100 harnesses**, and a large slice of both
+is inapplicable (ps/png/jpg references, gvpr, C-API memory/lifecycle tests).
+
+### Approach (settled)
+
+1. **Mine, don't port.** The value in the ~100 cpp/py files is *which edge cases
+   someone pinned* (issue-number-named `.gv` files especially). Extract intent;
+   do not translate assertions verbatim.
+2. **Differential corpus harness, not hand-written tests.** Render each
+   applicable input through the **native binary oracle** (`dot -Tsvg`, etc. —
+   the established oracle pattern) and through graphviz-ts, then diff. Scales to
+   ~800 inputs without authoring ~800 tests.
+3. **Tier the comparison by engine.** `dot` is **byte-targetable** (goldens
+   already byte-exact) → byte-diff is the bar. Force engines (sfdp/neato/fdp)
+   are **not** byte-identical cross-platform (the FP/FMA/`pow` boundary above) →
+   structural/tolerance comparison (same topology, positions within ε), else
+   false failures.
+4. **Sequence dot-first.** The primary consumer (plantuml-js) is dot-centric, so
+   the dot subset of the corpus carries most of the payoff. A tractable first cut
+   is just the `.gv`/`.dot` inputs exercising `dot`, rendered to `-Tsvg`/`-Txdot`.
+5. **Parity dashboard.** Per input: `byte-match | structural-match | diverged |
+   quarantined-inapplicable`. This doubles as the "comparison page for every
+   excluded case" that `CLAUDE.md` requires.
+
 ## Maintenance
 
 When a `[ ]`/`[~]` item is finished, check it here **and** update the matching
