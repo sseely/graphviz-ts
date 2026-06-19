@@ -97,6 +97,30 @@ untouched (AD-1). Backlog buckets in PARITY.md name the follow-on fix missions.
 - [diagrams/survey-flow.md](diagrams/survey-flow.md)
 - [decision-journal.md](decision-journal.md)
 
+## Session summary (2026-06-19)
+
+- **Tasks:** 3/3 complete (T1 enumerate+classify, T2 survey runner, T3 dashboard
+  +triage). One batch, sequential. Merged to `main` via merge commit `734c2e9`
+  (per-task commits `945fda5`, `4b0d4dd`, `157a870` preserved).
+- **Deliverable:** `test/corpus/` harness (`enumerate` → `survey` → `dashboard`)
+  + `corpus-manifest.json`, `parity.json`, `PARITY.md`; linked from the port
+  catalog as the realized comparison page.
+- **Measured (oracle `dot 15.1.0`, 796 applicable):** byte-match 112,
+  structural-match 218, diverged 422, errored 20, timeout 8, oracle-error 16.
+- **Decisions:** 13 journal entries; two were genuine bug fixes the survey
+  forced (process-group SIGKILL for the unkillable tsx grandchild; oracle
+  validity by SVG completeness, not exit code). None flagged for review.
+- **Gates:** tsc 0; vitest 1951 pass (128 curated goldens untouched); meta-gate
+  survey exits 0 + writes parity.json; lizard clean on all 4 new files; AD-5
+  verified (`git diff main -- src/` empty). Survey wall-clock ≈ 1m49s.
+- **Follow-ups (the backlog IS the output):** each PARITY.md bucket is a
+  candidate oracle-pinned fix mission — largest first: diverged element-count
+  157, path-structure 109, color-stroke 56, font-metrics 49; errored parser-gap
+  10 (Latin-1/UTF-8 strictness). Force engines (neato/fdp/sfdp/circo/twopi/
+  osage) remain a deferred follow-on extending the same harness.
+- **No stop conditions triggered.** Cache (87 MB, 780 SVGs) is under the OS
+  tmpdir — gitignored, not committed (AD-3).
+
 ## Operational readiness
 
 N/A — dev/test infrastructure; the browser library is untouched (all new code is
