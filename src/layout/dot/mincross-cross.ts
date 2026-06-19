@@ -99,21 +99,47 @@ export function left2right(g: Graph, v: Node, w: Node): number {
 // in_cross / out_cross
 // ---------------------------------------------------------------------------
 
-/** Accumulate crossings of v's vs w's edge lists into c=[c0,c1]: c0 counts
- *  pairs that cross with v before w (eVal>fVal), c1 with w before v (eVal<fVal).
- *  `head` selects the head (out-edges) or tail (in-edges) endpoint for val.
- *  Allocation-free — this is the mincross inner loop. @see in_cross/out_cross */
+/** `ND_order` of the edge's head (out-edges) or tail (in-edges) endpoint.
+ *  @see lib/dotgen/mincross.c:589,607 (ND_order(aghead/agtail)) */
+function endOrder(e: Edge, head: boolean): number {
+  const n = head ? e.head : e.tail;
+  return n.info.order ?? 0;
+}
+
+/** Geometric port x of the edge's head (out) or tail (in) port — the C
+ *  tiebreak metric. @see lib/dotgen/mincross.c:593,611 (ED_*_port.p.x) */
+function endPx(e: Edge, head: boolean): number {
+  return head ? e.info.head_port.p.x : e.info.tail_port.p.x;
+}
+
+/** Cross direction for an edge pair, mirroring C `in_cross`/`out_cross`: order
+ *  successor `ND_order`, breaking an equal-order tie by port `p.x`. Returns +1
+ *  (e crosses before f → c0), −1 (f before e → c1), or 0 (tie → no signal).
+ *  @see lib/dotgen/mincross.c:592-594,610-612 */
+function crossDir(eOrd: number, ePx: number, fOrd: number, fPx: number): number {
+  if (eOrd > fOrd || (eOrd === fOrd && ePx > fPx)) return 1;
+  if (eOrd < fOrd || (eOrd === fOrd && ePx < fPx)) return -1;
+  return 0;
+}
+
+/** Accumulate crossings of v's vs w's edge lists into c=[c0,c1]: c0 counts pairs
+ *  that cross with v before w, c1 with w before v. `head` selects the head
+ *  (out-edges) or tail (in-edges) endpoint. Ties order by `ND_order` first, then
+ *  the geometric port `p.x` (NOT the angular `port.order` — that is C's VAL macro
+ *  for build_ranks, a different construct). Allocation-free — this is the
+ *  mincross inner loop. @see lib/dotgen/mincross.c:in_cross, out_cross */
 function accumCross(vl: EdgeList | undefined, wl: EdgeList | undefined, head: boolean, c: [number, number]): void {
   if (!vl || !wl) return;
   for (let i = 0; i < vl.size; i++) {
     const e: Edge = vl.list[i];
-    const ev = head ? val(e.head, e.info.head_port.order) : val(e.tail, e.info.tail_port.order);
+    const eOrd = endOrder(e, head);
+    const ePx = endPx(e, head);
     const ep = xpen(e);
     for (let j = 0; j < wl.size; j++) {
       const f: Edge = wl.list[j];
-      const fv = head ? val(f.head, f.info.head_port.order) : val(f.tail, f.info.tail_port.order);
-      if (ev > fv) c[0] += ep * xpen(f);
-      else if (ev < fv) c[1] += ep * xpen(f);
+      const d = crossDir(eOrd, ePx, endOrder(f, head), endPx(f, head));
+      if (d > 0) c[0] += ep * xpen(f);
+      else if (d < 0) c[1] += ep * xpen(f);
     }
   }
 }

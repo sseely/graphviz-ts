@@ -86,6 +86,17 @@ Total: ~1,600 LOC across 4-6 files.
 - The golden refs for dot were generated with the straight-line stub and
   will need to be regenerated after this mission.
 
+**G2 (multi compass-port mincross tiebreak) — DONE (mission-dot-multiport,
+2026-06-19).** The re-verification corpus filed `ports both dense`
+(`digraph{a:e->b; a:w->c; a->d}`) as "DOT-1 residue", but the root cause was
+**not** splines — the splines were already faithful. `accumCross`
+(`mincross-cross.ts`) broke same-`ND_order` ties by the angular `port.order`
+(C's VAL macro / `build_ranks`) instead of the geometric **`p.x`** that C
+`in_cross`/`out_cross` (`mincross.c:593,611`) uses. That swapped rank-1 `c`/`d`
+and mispositioned `a` to x=126 (oracle 99). Fix: tie by `p.x` (head_port for
+out-edges, tail_port for in-edges). Corpus `ports both dense` 56pt → 0.25pt
+MATCH; corpus now 25/25, 0 DIVERGE. Pinned in `mincross-port-order.test.ts`.
+
 ---
 
 ## DOT-2: `make_flat_edge` / flat spline routing

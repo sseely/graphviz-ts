@@ -10,7 +10,13 @@ in /tmp/gvplugins.
 Metric: parse both SVGs, match edges by `<title>`, compare path control points
 (Euclidean), viewBox, and structural counts (paths/polygons/ellipses/texts).
 
-## Result: 17 MATCH, 2 near, 6 DIVERGE (of 25)
+> **Update 2026-06-19:** the corpus is now **23 MATCH, 2 near, 0 DIVERGE
+> (25/25, 0 structural)**. The original 6 divergences have all been closed by
+> follow-on missions; the last, **G2** (`ports both dense`), was closed by
+> `mission-dot-multiport` — a mincross tiebreak fix, not a splines fix (see the
+> G2 row below). The 2 remaining `near` are pre-existing sub-pixel port residuals.
+
+## Result: 17 MATCH, 2 near, 6 DIVERGE (of 25)  *(original 2026-06-16 snapshot)*
 
 MATCH = pathΔ ≤ 0.5pt and viewBox Δ ≤ 1pt and structure identical.
 
@@ -29,7 +35,7 @@ start-clip renorm), record ports (1.0pt). Not new work.
 | Gap | Cases | Evidence | Existing backlog id |
 |-----|-------|----------|---------------------|
 | **G1: opposing / labeled parallel edges not lane-separated** | bidirectional (53pt), multi parallel labeled (23pt) | dot splays `a->b`+`b->a` into two lanes (x=21 / x=33 around center 27); TS draws one straight + one malformed. Plain unlabeled parallel-x3 MATCHES, so it's specifically opposing-direction and label-bearing parallel edges. | new — closest to DOT-2/DOT-5 (label virtual nodes) |
-| **G2: multiple compass ports off one node** | ports both dense (66pt) | `a:w->c` stays at node center x=99 instead of the west face x=70; `a:e` and `a->d` also shift. Extends the steering-port work to the several-ported-out-edges case. | DOT-1 residue (port-constrained) |
+| **G2: multiple compass ports off one node** ✅ **RESOLVED** (mission-dot-multiport, 2026-06-19) | ports both dense (66pt → 0.25pt MATCH) | ~~`a:w->c` stays at node center x=99 instead of the west face x=70~~. **Root cause was not splines** — mincross `accumCross` broke same-`ND_order` ties by the angular `port.order` instead of the geometric `p.x` that C `in_cross`/`out_cross` (`mincross.c:593,611`) uses, swapping rank-1 c/d and mispositioning `a` to x=126. Fix: tie by `p.x`. | DOT-1 residue → done |
 | **G3: nested clusters** | nested cluster (path 53pt, **vbΔ=64**) | node placement + drawing bbox wrong for a cluster inside a cluster; the edge just follows mis-placed nodes. Sibling clusters (two clusters) MATCH — only NESTING breaks. | not a routing gap — cluster layout |
 | **G4: flat labeled edge label dropped** | flat labeled (STRUCT: C 3 texts, TS 2) | TS emits no `<text>` for the label on a `rank=same` labeled edge. | DOT-2 / DOT-5 (`make_flat_labeled_edge`) |
 | (narrow) rankdir=LR skip edge | rankdir LR (8.3pt) | `a->b`,`b->c` byte-identical; only the transitive `a->c` is ~3.5pt off in LR. | low priority |

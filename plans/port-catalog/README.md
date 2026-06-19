@@ -128,7 +128,10 @@ attempts broke. The remaining `[ ]` / `[~]` work, by area:
 
 ### dot engine
 1. `splines=curved` + verify `compound` — **active** (`../dot-curved-compound/`)
-2. `make_regular_edge` obstacle routing (dense corridors, port-constrained ends) — `recommended-sequence.md` §1
+2. `make_regular_edge` obstacle routing (dense corridors) — `recommended-sequence.md` §1.
+   _Multi compass-port ends (G2, `ports both dense`) closed by mission-dot-multiport
+   (2026-06-19): a mincross `accumCross` tiebreak fix (tie by port `p.x`, not the
+   angular `port.order`; C `mincross.c:593,611`), not a splines fix. Corpus 25/25._
 3. `newrank=true`: `fillRanks` + `expand_leaves` — `mission-dot-newrank`
 4. `nslimit` position-NS iteration cap — DOT-6 (inline)
 5. class1/class2 intercluster-edge merging — confirm completeness
