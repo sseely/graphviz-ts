@@ -73,7 +73,7 @@ Regression sub-gate: **no existing non-curved/non-compound golden changes.**
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [1](batch-1/overview.md) | T1 — port `makeStraightEdges`(+`bend`/`get_cycle_centroid`) + curved dispatch + finish guards | [ ] |
+| [1](batch-1/overview.md) | T1 — port `makeStraightEdges`(+`bend`/`get_cycle_centroid`) + curved dispatch + finish guards | [x] |
 | [2](batch-2/overview.md) | T2 — curved + compound goldens vs native C; verify compound, fix on divergence | [ ] |
 
 ## Index

@@ -23,6 +23,7 @@ import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loo
 import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
 import { placePortLabels, placeRegularEdgeLabels, setEdgeLabelPos } from './splines-label.js';
+import { makeStraightEdges } from './straight-edges.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -376,12 +377,28 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
 }
 
 /**
+ * Build the curved edge list for the group starting at `ind`, mirroring
+ * dotsplines.c:382-385: index 0 is the main edge, 1..cnt-1 are the raw entries.
+ * @see lib/dotgen/dotsplines.c:381-387
+ */
+function curvedEdgeList(edges: Edge[], ind: number, cnt: number): Edge[] {
+  const edgelist: Edge[] = [getMainEdge(edges[ind])];
+  for (let ii = 1; ii < cnt; ii++) edgelist.push(edges[ind + ii]);
+  return edgelist;
+}
+
+/**
  * Route one group of parallel edges from the sorted edge list.
- * Returns the number of edges consumed (cnt).
+ * Returns the number of edges consumed (cnt). For `splines=curved` the group is
+ * routed via `makeStraightEdges` instead of the normal per-group router.
  * @see lib/dotgen/dotsplines.c:343-419
  */
-function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number): number {
+function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number, et: number): number {
   const cnt = groupSize(edges, ind);
+  if (et === EDGETYPE_CURVED) {
+    makeStraightEdges(g, curvedEdgeList(edges, ind, cnt), cnt, EDGETYPE_CURVED, buildDotSinfo());
+    return cnt;
+  }
   dispatchEdgeGroup(g, edges.slice(ind, ind + cnt), multisep);
   return cnt;
 }
@@ -434,26 +451,39 @@ function orthoDispatch(g: Graph): number {
   return 0;
 }
 
+/**
+ * splines=curved top wiring: restore node rw, and warn (but do NOT downgrade —
+ * curved still routes) when edge labels are present.
+ * @see lib/dotgen/dotsplines.c:241-247 (ADR-3)
+ */
+function curvedTop(g: Graph): void {
+  resetRW(g);
+  if (((g.root.info.has_labels ?? 0) & EDGE_LABEL) !== 0) {
+    console.warn('edge labels with splines=curved not supported in dot - use xlabels\n');
+  }
+}
+
 export function dotSplines_(g: Graph, normalize: boolean): number {
   const et = edgeType(g);
   if (et === EDGETYPE_NONE) return 0;
   if (et === EDGETYPE_ORTHO) return orthoDispatch(g);
+  if (et === EDGETYPE_CURVED) curvedTop(g);
   markLowclusters(g);
   const edges: Edge[] = [];
   for (const n of g.nodes.values()) collectNodeEdges(n, edges);
   edges.sort(edgecmp);
   const multisep = g.info.nodesep ?? 18;
   for (let l = 0; l < edges.length;) {
-    l += routeEdgeGroup(g, edges, l, multisep);
+    l += routeEdgeGroup(g, edges, l, multisep, et);
   }
-  // Place regular edge labels from virtual nodes; expand bb per label.
-  // @see lib/dotgen/dotsplines.c:422-430
+  // Place regular edge labels from virtual nodes. @see dotsplines.c:422-430
   placeRegularEdgeLabels(g);
   if (normalize) edgeNormalize(g);
-  routeDotEdges(g);
+  // Curved routes every group via makeStraightEdges above; skip the regular
+  // spline router (C skips routesplinesterm). @see dotsplines.c:461-465
+  if (et !== EDGETYPE_CURVED) routeDotEdges(g);
   placePortLabels(g);
-  // Mirror lib/dotgen/dotsplines.c:471 — State = GVSPLINES; EdgeLabelsDone = 1
-  g.info.edgeLabelsDone = true;
+  g.info.edgeLabelsDone = true; // @see dotsplines.c:471 (EdgeLabelsDone = 1)
   return 0;
 }
 
