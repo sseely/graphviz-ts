@@ -1,0 +1,101 @@
+<!-- SPDX-License-Identifier: EPL-2.0 -->
+
+# Dot corpus parity survey
+
+A **differential parity survey** over the real graphviz **dot** test corpus.
+It renders every dot-targetable input through the native `dot` oracle and
+through graphviz-ts, diffs the two SVGs, and reports a parity dashboard plus a
+triaged divergence backlog.
+
+This is a **report, not a gate**. Hundreds of inputs legitimately diverge — that
+is the data. It is intentionally **separate** from the curated must-pass golden
+suite (`test/golden/suite.test.ts`): the survey never adds inputs to, or turns
+red, that suite (mission decision AD-1). All survey code is Node-only under
+`test/corpus/` and is never imported by `src/index.ts`.
+
+> Mission brief: `plans/mission-dot-corpus-harness/`.
+
+## Pipeline
+
+| Stage | Script | Output |
+|-------|--------|--------|
+| T1 enumerate + classify | `enumerate.ts` | `corpus-manifest.json` |
+| T2 survey (oracle vs port) | `survey.ts` (+ `render-one.ts`) | `parity.json` |
+| T3 dashboard + triage | `dashboard.ts` | `PARITY.md` |
+
+```
+enumerate.ts ──▶ corpus-manifest.json ──▶ survey.ts ──▶ parity.json ──▶ dashboard.ts ──▶ PARITY.md
+```
+
+## Running it
+
+```sh
+# T1 — classify every .gv/.dot under the corpus root, write corpus-manifest.json
+npx tsx test/corpus/enumerate.ts [corpusRoot]
+
+# T2 — render + diff every applicable input, write parity.json
+npx tsx test/corpus/survey.ts
+
+# T3 — render parity.json into the PARITY.md dashboard
+npx tsx test/corpus/dashboard.ts
+```
+
+### Configuration (env / argv)
+
+| Variable | Default | Meaning |
+|----------|---------|---------|
+| `CORPUS_ROOT` (or `enumerate.ts` argv[1]) | `~/git/graphviz/tests` | Corpus input tree to walk. |
+| `DOT_BIN` | `~/git/graphviz/build/cmd/dot/dot` | Native oracle binary (15.0.0). |
+| `GVBINDIR` | `/tmp/gvplugins` | Oracle plugin dir. |
+| `ORACLE_CACHE` | a `/tmp` dir | Gitignored cache of oracle SVGs (AD-3). |
+| `RENDER_TIMEOUT_MS` | 20000 | Per-render wall-clock timeout (port + oracle). |
+
+Oracle reference SVGs are generated on demand by the local native binary into a
+**gitignored** cache and reused across runs. They are **never committed** — only
+the manifest, `parity.json`, `PARITY.md`, and the harness code are (AD-3).
+
+## Classification (T1)
+
+`enumerate.ts` walks the corpus root, collects every `*.gv` / `*.dot` file, and
+classifies each with cheap structural checks (no rendering — that is T2):
+
+- **applicable** — a single default-engine DOT graph; the survey renders it.
+- **quarantined** — recorded with an explicit `reason`, **not** surveyed this
+  mission:
+
+| reason | meaning |
+|--------|---------|
+| `engine-deferred` | selects a non-dot engine via `layout=neato\|fdp\|sfdp\|circo\|twopi\|osage\|patchwork` (dot-first scope, AD-4). A follow-on mission extends the harness to force engines. |
+| `multi-graph` | file defines more than one top-level graph (a CLI multi-document concern). |
+| `gvpr` | gvpr script / graph-stream transform (out of scope). |
+| `include` / `non-graph` | `#include`, shape file, or not a DOT graph. |
+| `raster-only-ref` | only meaningful against a raster format the port does not emit. |
+| `parse-unsupported` | the parser legitimately rejects the input (usually surfaced by T2 as `errored`; feeds the parser-gap backlog). |
+
+### Current totals
+
+Run `npx tsx test/corpus/enumerate.ts` to regenerate. As of the last run over
+`~/git/graphviz/tests` (corpus 805 files):
+
+- **applicable: 796**
+- quarantined: `engine-deferred` 6, `multi-graph` 3
+
+## Verdicts (T2)
+
+Each applicable input gets one verdict in `parity.json`:
+
+| verdict | meaning |
+|---------|---------|
+| `byte-match` | port SVG matches oracle within the `deterministic` tolerance (0.01). |
+| `structural-match` | same element tree; only numeric coordinate diffs above tolerance. |
+| `diverged` | a structural difference (missing/extra node, wrong tag, text mismatch). |
+| `errored` | the port threw (e.g. unported attribute, parser gap) — message captured. |
+| `timeout` | the port hung and was killed after the wall-clock timeout. |
+| `oracle-error` | the native oracle failed to render — excluded from port scoring. |
+
+The survey isolates every port render in a **spawned subprocess with a timeout**
+(AD-2): the port has no CLI and some inputs trigger synchronous infinite loops
+that cannot be interrupted in-process. One bad input can never abort the survey
+— it is recorded and the survey continues, exiting 0 even when inputs diverge
+(divergence is data; only a harness fault — missing oracle, unreadable manifest
+— exits nonzero).
