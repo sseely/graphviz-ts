@@ -9,7 +9,18 @@ A gap is worth promoting to a mission when:
 
 ## Top-priority missions (promote now)
 
-### 1. `mission-dot-splines` — DOT-1 + DOT-2 — **RE-SCOPE FIRST**
+### 1. `mission-dot-splines` — DOT-1 + DOT-2 — ✅ **COMPLETE (2026-06-19)**
+
+**✅ DONE — do NOT promote.** The REQUIRED pre-step (corpus diff vs the C
+binary) was run; the diverging subset was driven to zero by follow-on missions.
+The routing re-verification corpus (`.probes/route-corpus.ts`) is now **23 MATCH
++ 2 near + 0 DIVERGE = 25/25 byte-exact** vs `dot` 15.0.0. DOT-1 (`make_regular_edge`
++ pathplan), DOT-1b (fitter retired), DOT-2 (flat edges), and the residue gaps
+(G1 opposing/labeled-parallel, G3 nested clusters, rankdir-LR, **G2** multi
+compass-port mincross tiebreak via `mission-dot-multiport`) are all closed and
+oracle-pinned. The 2 remaining `near` (compass/record ports) are pre-existing
+sub-pixel residuals, not gaps. See `route-reverification.md` and `gaps/dot.md`.
+The historical scoping below is retained for context only.
 
 **Correction (2026-06-13):** The original "DOT-1 is DEFAULT/CRITICAL — all
 edges are straight lines" rationale was disproven by an oracle check —
@@ -54,12 +65,32 @@ downstream missions that add labels to edges (DOT-2, NEA-5, etc.).
 
 ### 2. `mission-neato-overlap` — NEA-6 + TWO-1 + CIR-1 + SFDP-3 + FDP-3
 
-**Why second:** NEA-6 (`adjustNodes` / VPSC) is shared infrastructure that
-unblocks 4 other gaps (TWO-1, CIR-1, SFDP-3, FDP-3). The prism path for
-fdp (FDP-3) is a DEFAULT-risk throw: for any fdp graph where 9 tries of
-`x_layout` do not converge, the port throws rather than applying the
-prism fallback. Addressing VPSC+prism in one mission eliminates all of
-these at once.
+**⚠️ STALE — disproven by oracle verification (2026-06-17). Do NOT
+promote as written.** Evidence from a 5-engine corpus (fdp/sfdp/twopi/
+circo/neato × dense graphs) diffed against the C binary (15.1):
+- **VPSC is already complete** (`src/vpsc/` — VPSC/IncVPSC/Solver/
+  Rectangle), not "scaffolded." NEA-6's `removeOverlap` (X+Y VPSC passes)
+  is implemented and wired in `neato/index.ts`.
+- **No default crash.** fdp/sfdp/twopi/circo/neato throw on ZERO default
+  inputs. FDP-3's "default-risk throw" is false — the prism/`ntry` throw
+  is attr-gated and unreachable at defaults (x_layout converges; comments
+  in `fdp/xlayout.ts`, `sfdp/spring-driver.ts` are correct).
+- **Defaults are faithful.** fdp/sfdp/twopi/circo produce 0 overlapping
+  pairs; neato keeps overlaps at default AND matches C byte-for-byte.
+- **The real (smaller) gap:** neato overlap-removal *modes* diverge — TS
+  maps every `overlap=` value to VPSC, but C uses distinct methods
+  (`false`/`prism` → prism scaling, `voronoi`, `scalexy`, `scan`). On
+  `neato K6 overlap=prism` C puts b at x≈300 vs TS x≈116. **ATTR-gated,
+  medium value.** Re-scope to a focused "neato overlap modes" mission
+  (port `lib/neatogen/adjust.c` prism/voronoi/scan/scalexy) if/when
+  non-default neato overlap layouts matter. The original 5-gap framing
+  below is obsolete.
+
+**Why second (ORIGINAL, obsolete):** NEA-6 (`adjustNodes` / VPSC) is shared
+infrastructure that unblocks 4 other gaps (TWO-1, CIR-1, SFDP-3, FDP-3). The
+prism path for fdp (FDP-3) is a DEFAULT-risk throw: for any fdp graph where
+9 tries of `x_layout` do not converge, the port throws rather than applying
+the prism fallback.
 
 **Scope:**
 1. Complete the VPSC solver integration (`src/lib/vpsc/` was scaffolded in T11).
@@ -146,13 +177,21 @@ for a LOW-impact gap. Consider changing the throw to a `console.warn`
 
 ## Dependency ordering for multi-mission sequencing
 
+The dot-engine routing track is **complete** (corpus 25/25). Remaining open work
+is off-dot or quick inline fixes.
+
 ```
-mission-dot-splines        (no deps — start here)
-mission-neato-overlap      (no deps — can run in parallel with dot-splines)
-mission-dot-newrank        (no deps — can run in parallel)
-mission-sfdp-beautify      (no deps — quick win, can be done any time)
-mission-neato-models       (no deps — can run in parallel)
-mission-fdp-clusters       (no deps — can run in parallel)
-mission-neato-xlabels      (no deps — can run in parallel)
-mission-dot-flat-labels    (should follow dot-splines for pathplan)
+mission-dot-splines        ✅ DONE (2026-06-19) — corpus 25/25, incl. G2 multiport
+mission-dot-newrank        ✅ DONE (2026-06-17) — newrank parity merged
+mission-dot-flat-labels    ✅ DONE — DOT-9/10/11/12 flat residue merged
+mission-neato-overlap      STALE as written — re-scope to "neato overlap modes"
+mission-sfdp-beautify      DONE (SFDP-1 beautify_leaves)
+mission-neato-models       open (no deps) — circuit/mds/smart_init, ATTR-gated
+mission-fdp-clusters       open (no deps) — FDP-1 cluster-endpoint edges
+mission-neato-xlabels      open (no deps) — NEA-5 edge xlabel placement
 ```
+
+**Next-mission candidates (2026-06-19):** with dot routing closed, the highest-
+leverage remaining work is the differential corpus harness (~800 real graphviz
+inputs vs the oracle — the project's long-tail net) or the off-dot neato/sfdp
+gaps above. dot itself has only DOT-6 `nslimit` (trivial inline) left.
