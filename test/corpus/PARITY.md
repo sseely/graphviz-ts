@@ -11,22 +11,22 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 796
-- **byte-match:** 115 · **structural-match:** 238 → 353/796 structurally equal (44.3%)
-- **diverged:** 399 · **errored:** 20 · **timeout:** 8 · **oracle-error:** 16
+- **byte-match:** 142 · **structural-match:** 238 → 380/796 structurally equal (47.7%)
+- **diverged:** 373 · **errored:** 20 · **timeout:** 7 · **oracle-error:** 16
 - **Quarantined (not surveyed, from corpus-manifest.json):** engine-deferred 6, multi-graph 3
 
-## byte-match (115)
+## byte-match (142)
 
 Port SVG matches the oracle within the `deterministic` tolerance (0.01).
 
-`1425` `1425_1` `1585_0` `1585_1` `165` `165_2` `165_3` `1702` `1865` `1909` `1925` `2168_5` `2225` `2257` `2285` `2295` `2352` `2352_1` `2352_2` `2391` `2391_1` `2436` `2457_1` `2457_2` `2460` `2484` `2564` `2572` `2609` `2614` `2619` `2636` `2636_1` `2636_2` `2639` `2699` `2727` `813` `graphs-a` `graphs-b146` `graphs-b22` `graphs-b3` `graphs-b491` `graphs-b73` `graphs-b73a` `graphs-b77` `graphs-b786` `graphs-b993` `graphs-bad` `graphs-center` `graphs-clover` `graphs-clustlabel` `graphs-color` `graphs-colors` `graphs-d` `graphs-dir` `graphs-edgeclip` `graphs-ordering` `graphs-pack` `graphs-ps` `graphs-ps_user_shapes` `graphs-rowcolsep` `graphs-sides` `graphs-tree` `graphs-trivial` `linux.i386-trivial_dot` `linux.x86-edgeclip_dot` `linux.x86-ordering_dot` `linux.x86-pack_neato` `linux.x86-trivial_dot` `macosx-edgeclip_dot` `macosx-ordering_dot` `macosx-trivial_dot` `negative-dpi` `nshare-edgeclip_dot` `nshare-ordering_dot` `nshare-pack_neato` `nshare-trivial_dot` `reference-test_reference-001.001` `regression_tests-shapes-reference-box` `regression_tests-shapes-reference-circle` `regression_tests-shapes-reference-diamond` `regression_tests-shapes-reference-doublecircle` `regression_tests-shapes-reference-doubleoctagon` `regression_tests-shapes-reference-egg` `regression_tests-shapes-reference-ellipse` `regression_tests-shapes-reference-hexagon` `regression_tests-shapes-reference-house` `regression_tests-shapes-reference-invhouse` `regression_tests-shapes-reference-invtrapezium` `regression_tests-shapes-reference-invtriangle` `regression_tests-shapes-reference-none` `regression_tests-shapes-reference-octagon` `regression_tests-shapes-reference-oval` `regression_tests-shapes-reference-parallelogram` `regression_tests-shapes-reference-pentagon` `regression_tests-shapes-reference-plaintext` `regression_tests-shapes-reference-polygon` `regression_tests-shapes-reference-rect` `regression_tests-shapes-reference-rectangle` `regression_tests-shapes-reference-septagon` `regression_tests-shapes-reference-square` `regression_tests-shapes-reference-trapezium` `regression_tests-shapes-reference-triangle` `regression_tests-shapes-reference-tripleoctagon` `share-a1` `share-a2` `share-a3` `share-b491` `share-b786` `share-record2` `usershape` `windows-b491` `windows-record2` `windows-trivial_dot`
+`1425` `1425_1` `1585_0` `1585_1` `165` `165_2` `165_3` `1702` `1865` `1909` `1925` `2168_5` `2222` `2225` `2257` `2285` `2295` `2352` `2352_1` `2352_2` `2391` `2391_1` `2436` `2457_1` `2457_2` `2460` `2484` `2564` `2572` `2609` `2614` `2619` `2636` `2636_1` `2636_2` `2639` `2699` `2727` `813` `graphs-a` `graphs-b146` `graphs-b22` `graphs-b3` `graphs-b491` `graphs-b73` `graphs-b73a` `graphs-b77` `graphs-b786` `graphs-b993` `graphs-bad` `graphs-center` `graphs-clover` `graphs-clustlabel` `graphs-color` `graphs-colors` `graphs-d` `graphs-dir` `graphs-edgeclip` `graphs-ordering` `graphs-pack` `graphs-ps` `graphs-ps_user_shapes` `graphs-rowcolsep` `graphs-sides` `graphs-tree` `graphs-trivial` `linux.i386-trivial_dot` `linux.x86-edgeclip_dot` `linux.x86-ordering_dot` `linux.x86-pack_neato` `linux.x86-trivial_dot` `macosx-edgeclip_dot` `macosx-ordering_dot` `macosx-trivial_dot` `negative-dpi` `nshare-edgeclip_dot` `nshare-ordering_dot` `nshare-pack_neato` `nshare-trivial_dot` `reference-test_reference-001.001` `regression_tests-shapes-reference-assembly` `regression_tests-shapes-reference-box` `regression_tests-shapes-reference-box3d` `regression_tests-shapes-reference-cds` `regression_tests-shapes-reference-circle` `regression_tests-shapes-reference-component` `regression_tests-shapes-reference-cylinder` `regression_tests-shapes-reference-diamond` `regression_tests-shapes-reference-doublecircle` `regression_tests-shapes-reference-doubleoctagon` `regression_tests-shapes-reference-egg` `regression_tests-shapes-reference-ellipse` `regression_tests-shapes-reference-fivepoverhang` `regression_tests-shapes-reference-folder` `regression_tests-shapes-reference-hexagon` `regression_tests-shapes-reference-house` `regression_tests-shapes-reference-insulator` `regression_tests-shapes-reference-invhouse` `regression_tests-shapes-reference-invtrapezium` `regression_tests-shapes-reference-invtriangle` `regression_tests-shapes-reference-larrow` `regression_tests-shapes-reference-lpromoter` `regression_tests-shapes-reference-none` `regression_tests-shapes-reference-note` `regression_tests-shapes-reference-noverhang` `regression_tests-shapes-reference-octagon` `regression_tests-shapes-reference-oval` `regression_tests-shapes-reference-parallelogram` `regression_tests-shapes-reference-pentagon` `regression_tests-shapes-reference-plaintext` `regression_tests-shapes-reference-polygon` `regression_tests-shapes-reference-primersite` `regression_tests-shapes-reference-promoter` `regression_tests-shapes-reference-proteasesite` `regression_tests-shapes-reference-proteinstab` `regression_tests-shapes-reference-rarrow` `regression_tests-shapes-reference-rect` `regression_tests-shapes-reference-rectangle` `regression_tests-shapes-reference-restrictionsite` `regression_tests-shapes-reference-ribosite` `regression_tests-shapes-reference-rnastab` `regression_tests-shapes-reference-rpromoter` `regression_tests-shapes-reference-septagon` `regression_tests-shapes-reference-signature` `regression_tests-shapes-reference-square` `regression_tests-shapes-reference-tab` `regression_tests-shapes-reference-terminator` `regression_tests-shapes-reference-threepoverhang` `regression_tests-shapes-reference-trapezium` `regression_tests-shapes-reference-triangle` `regression_tests-shapes-reference-tripleoctagon` `regression_tests-shapes-reference-utr` `share-a1` `share-a2` `share-a3` `share-b491` `share-b786` `share-record2` `usershape` `windows-b491` `windows-record2` `windows-trivial_dot`
 
 ## structural-match (238)
 
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). These are near-misses — sub-pixel-to-modest position drift.
 
-## diverged (399) — worst-first
+## diverged (373) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
@@ -59,7 +59,7 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-sr_circle` | 3957.65 | `svg/g[1][childCount]` |
 | `graphs-st_circle_dbl` | 3760.00 | `svg/g[1][childCount]` |
 | `graphs-st_circle` | 3756.00 | `svg/g[1][childCount]` |
-| `1447_1` | 3479.75 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
+| `1447_1` | 3526.38 | `svg/g[1]/g[5]/polygon[1]` |
 | `linux.i386-b106` | 3407.07 | `svg/g[1]/g[10]/path[1]/@d` |
 | `share-b106` | 3407.02 | `svg/g[1]/g[10]/path[1]/@d` |
 | `1436` | 3283.00 | `svg/g[1][childCount]` |
@@ -91,7 +91,7 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-st_box` | 1964.00 | `svg/g[1][childCount]` |
 | `42` | 1933.77 | `svg/g[1]/g[1]/@class` |
 
-_… and 339 more diverged inputs (see parity.json + the buckets below)._
+_… and 313 more diverged inputs (see parity.json + the buckets below)._
 
 ## errored (20)
 
@@ -118,13 +118,12 @@ _… and 339 more diverged inputs (see parity.json + the buckets below)._
 | `share-Latin1` | `share/Latin1.gv` | Expected "#", "-", ".", "/*", "//", "<", "\"", [ \t\r\n], [0-9], or [A-Za-z_\x80-ÿ] but "�" found. |
 | `windows-Latin1` | `windows/Latin1.gv` | Expected "#", "-", ".", "/*", "//", "<", "\"", [ \t\r\n], [0-9], or [A-Za-z_\x80-ÿ] but "�" found. |
 
-## timeout (8)
+## timeout (7)
 
 | id | path | message |
 |---|---|---|
 | `1221` | `1221.dot` |  |
 | `1718` | `1718.dot` |  |
-| `2222` | `2222.dot` |  |
 | `2721` | `2721.dot` |  |
 | `2743` | `2743.dot` |  |
 | `2782` | `2782.dot` |  |
@@ -163,14 +162,14 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `element-count` | 157 | `1323`, `1323_1`, `1436` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `path-structure` | 155 | `1213-1`, `1213-2`, `1447` | edge path has a different command sequence or point count — spline routing structure |
-| `attr-or-tag` | 36 | `1453`, `1622_0`, `1880` | element tag or a non-coordinate attribute differs |
+| `element-count` | 136 | `1323`, `1323_1`, `1436` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
+| `attr-or-tag` | 37 | `1447_1`, `1453`, `1622_0` | element tag or a non-coordinate attribute differs |
 | `color-stroke` | 27 | `1408`, `1896`, `2082` | fill/stroke value differs — color resolution or default styling |
 | `text-content` | 9 | `1990`, `241_1`, `graphs-Latin1` | rendered text string differs — label content, escaping, or character encoding |
 | `font-metrics` | 7 | `1435`, `2592`, `graphs-b33` | font-size/family differs — text-metric model or label sizing |
-| `polygon-points` | 7 | `2490`, `regression_tests-shapes-reference-cds`, `regression_tests-shapes-reference-folder` | polygon vertex count differs — node-shape or arrowhead geometry |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
+| `polygon-points` | 1 | `2490` | polygon vertex count differs — node-shape or arrowhead geometry |
 
 ### errored — by thrown message
 

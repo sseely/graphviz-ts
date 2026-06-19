@@ -9,6 +9,7 @@
 import type { PolygonT } from './types.js';
 import type { Point } from '../model/geom.js';
 import { polygonVertices, polygonRingOffsets, GAP } from './poly-sizing.js';
+import { CYLINDER } from './shapeData.js';
 
 /** Compute vertices for an ellipse/circle (sides <= 2). */
 export function ellipseVertices(w: number, h: number): Point[] {
@@ -16,6 +17,27 @@ export function ellipseVertices(w: number, h: number): Point[] {
     { x: -w / 2, y: -h / 2 },
     { x:  w / 2, y:  h / 2 },
   ];
+}
+
+/**
+ * Cylinder control polygon: 19 Bézier control points (origin-centred), ported
+ * verbatim from C's cylinder_vertices. Drawn as a bezier outline, not a polygon.
+ * @see lib/common/shapes.c:4159 cylinder_vertices
+ */
+export function cylinderVertices(w: number, h: number): Point[] {
+  const x = w / 2, y = h / 2, yr = h / 11;
+  const r = (1 - 0.551784) * yr;
+  const yflip = (p: Point): Point => ({ x: p.x, y: -p.y });
+  // v0..v6: top-right corner, top cap arc, top-left corner.
+  const v: Point[] = [
+    { x, y: y - yr }, { x, y: y - r }, { x: 0.551784 * x, y },
+    { x: 0, y }, { x: -0.551784 * x, y }, { x: -x, y: y - r }, { x: -x, y: y - yr },
+  ];
+  v.push(v[6]!, { x: -x, y: yr - y }); // v7=v6, v8 (left side down)
+  v.push(v[8]!); // v9=v8
+  for (let k = 5; k >= 0; k--) v.push(yflip(v[k]!)); // v10..v15: bottom = yflip(v5..v0)
+  v.push(v[15]!, v[0]!, v[0]!); // v16=v15, v17=v18=v0
+  return v;
 }
 
 /**
@@ -122,6 +144,8 @@ export function computeVertices(
   base?: { w: number; h: number },
 ): Point[] {
   const sides = poly.sides;
+  // Cylinder is a 19-point bezier control polygon, not a regular 19-gon.
+  if (poly.option.shape === CYLINDER) return cylinderVertices(w, h);
   // C generates one ring even for peripheries=0 (outp >= 1); the draw
   // loop is what skips it. @see lib/common/shapes.c:poly_init (outp)
   const peripheries = Math.max(poly.peripheries, 1);

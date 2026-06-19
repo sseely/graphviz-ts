@@ -29,6 +29,7 @@ import {
 } from './style-resolve.js';
 import { stripedBox, wedgedEllipse } from '../render/svg-multicolor.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
+import { drawSpecialShape } from './poly-shapes.js';
 
 // ---------------------------------------------------------------------------
 // Multicolor test
@@ -80,6 +81,7 @@ interface RingCtx {
   job: RenderJob;
   style: PolyStyleFlags;
   fillcolor: string;
+  shape: number;
 }
 
 /**
@@ -112,6 +114,10 @@ function renderEllipseRing(
 function renderPolyRing(
   ring: Point[], coord: Point, filled: boolean, j: number, ctx: RingCtx,
 ): void {
+  if (ctx.shape !== 0 && !ctx.style.striped) {
+    drawSpecialShape(ctx.shape, ring, coord, filled, ctx); // @see shapes.c:3049
+    return;
+  }
   if (ctx.style.striped && j === 0) {
     // Build absolute SVG-space points for the polygon ring.
     const af = ring.map(
@@ -350,6 +356,7 @@ function resolveNodeDrawCtx(job: RenderJob, n: Node): NodeDrawCtx | null {
     job,
     style: parseStyleFlags(styleAttr),
     fillcolor: nodeAttr(n, n.root, 'fillcolor') ?? '',
+    shape: drawPoly.option.shape,
   };
   return { poly: drawPoly, coord, filled, ringCtx };
 }

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-19T19:21:46.361Z",
+  "generatedAt": "2026-06-19T20:00:59.286Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 115,
+    "byte-match": 142,
     "structural-match": 238,
-    "diverged": 399,
+    "diverged": 373,
     "errored": 20,
-    "timeout": 8,
+    "timeout": 7,
     "oracle-error": 16
   },
   "results": [
@@ -148,8 +148,8 @@
       "id": "1447_1",
       "path": "1447_1.dot",
       "verdict": "diverged",
-      "maxDelta": 3479.75,
-      "firstDiffPath": "svg/g[1]/g[1]/g[1]/a[1][childCount]"
+      "maxDelta": 3526.38,
+      "firstDiffPath": "svg/g[1]/g[5]/polygon[1]"
     },
     {
       "id": "144_no_ortho",
@@ -543,7 +543,7 @@
     {
       "id": "2222",
       "path": "2222.dot",
-      "verdict": "timeout"
+      "verdict": "byte-match"
     },
     {
       "id": "2225",
@@ -3310,9 +3310,7 @@
     {
       "id": "regression_tests-shapes-reference-assembly",
       "path": "regression_tests/shapes/reference/assembly.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-box",
@@ -3322,16 +3320,12 @@
     {
       "id": "regression_tests-shapes-reference-box3d",
       "path": "regression_tests/shapes/reference/box3d.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-cds",
       "path": "regression_tests/shapes/reference/cds.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@points"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-circle",
@@ -3341,16 +3335,12 @@
     {
       "id": "regression_tests-shapes-reference-component",
       "path": "regression_tests/shapes/reference/component.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-cylinder",
       "path": "regression_tests/shapes/reference/cylinder.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-diamond",
@@ -3380,16 +3370,12 @@
     {
       "id": "regression_tests-shapes-reference-fivepoverhang",
       "path": "regression_tests/shapes/reference/fivepoverhang.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-folder",
       "path": "regression_tests/shapes/reference/folder.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@points"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-hexagon",
@@ -3404,9 +3390,7 @@
     {
       "id": "regression_tests-shapes-reference-insulator",
       "path": "regression_tests/shapes/reference/insulator.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-invhouse",
@@ -3426,16 +3410,12 @@
     {
       "id": "regression_tests-shapes-reference-larrow",
       "path": "regression_tests/shapes/reference/larrow.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@points"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-lpromoter",
       "path": "regression_tests/shapes/reference/lpromoter.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@points"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-none",
@@ -3445,16 +3425,12 @@
     {
       "id": "regression_tests-shapes-reference-note",
       "path": "regression_tests/shapes/reference/note.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-noverhang",
       "path": "regression_tests/shapes/reference/noverhang.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-octagon",
@@ -3502,37 +3478,27 @@
     {
       "id": "regression_tests-shapes-reference-primersite",
       "path": "regression_tests/shapes/reference/primersite.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-promoter",
       "path": "regression_tests/shapes/reference/promoter.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-proteasesite",
       "path": "regression_tests/shapes/reference/proteasesite.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-proteinstab",
       "path": "regression_tests/shapes/reference/proteinstab.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-rarrow",
       "path": "regression_tests/shapes/reference/rarrow.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@points"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-rect",
@@ -3547,30 +3513,22 @@
     {
       "id": "regression_tests-shapes-reference-restrictionsite",
       "path": "regression_tests/shapes/reference/restrictionsite.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-ribosite",
       "path": "regression_tests/shapes/reference/ribosite.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-rnastab",
       "path": "regression_tests/shapes/reference/rnastab.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-rpromoter",
       "path": "regression_tests/shapes/reference/rpromoter.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@points"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-septagon",
@@ -3580,9 +3538,7 @@
     {
       "id": "regression_tests-shapes-reference-signature",
       "path": "regression_tests/shapes/reference/signature.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-square",
@@ -3598,23 +3554,17 @@
     {
       "id": "regression_tests-shapes-reference-tab",
       "path": "regression_tests/shapes/reference/tab.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-terminator",
       "path": "regression_tests/shapes/reference/terminator.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-threepoverhang",
       "path": "regression_tests/shapes/reference/threepoverhang.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-trapezium",
@@ -3641,9 +3591,7 @@
     {
       "id": "regression_tests-shapes-reference-utr",
       "path": "regression_tests/shapes/reference/utr.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "share-ER",
