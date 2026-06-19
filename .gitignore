@@ -29,3 +29,8 @@ test/golden/actual/
 
 # Local debug/probe scratch scripts
 .probes/
+
+# Corpus survey transient log + any in-repo oracle SVG cache (AD-3: cache is
+# gitignored; default cache lives under the OS tmpdir, outside the repo)
+survey.log
+test/corpus/oracle-cache/
