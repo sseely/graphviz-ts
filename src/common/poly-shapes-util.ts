@@ -19,6 +19,8 @@ export interface ShapeCtx {
 
 /** @see lib/common/shapes.c:30 RBCONST */
 const RBCONST = 12;
+/** @see lib/common/shapes.c:31 RBCURVE (rounded-corner curve offset) */
+const RBCURVE = 0.5;
 
 /** @see lib/common/geomprocs.h interpolate_pointf: p + t*(q-p) */
 export function interpolatePoint(t: number, p: Point, q: Point): Point {
@@ -71,12 +73,15 @@ function nextV(af: Point[], seg: number, sides: number): Point {
 }
 
 /**
- * Build the bevel/inset polygon B[] (3*sides+3 points): per side, the corner
- * p0 and the interpolated points at parameter t and 1-t; then the first three
- * points are repeated as a wrap.
- * @see lib/common/shapes.c:566 alloc_interpolation_points (rounded=false)
+ * Build the bevel/inset polygon B[]: per side, the corner (or, when `rounded`,
+ * an inset curve start) plus the interpolated points at t and 1-t (and, when
+ * rounded, a trailing 1-RBCURVE*t point); then the first three points are
+ * repeated as a wrap. Non-rounded → 3*sides+3 points; rounded → 4*sides+3.
+ * @see lib/common/shapes.c:566 alloc_interpolation_points
  */
-export function interpolationPoints(af: Point[], sides: number, shape: number): Point[] {
+export function interpolationPoints(
+  af: Point[], sides: number, shape: number, rounded = false,
+): Point[] {
   let rbconst = RBCONST;
   for (let seg = 0; seg < sides; seg++) {
     const p0 = af[seg]!;
@@ -90,7 +95,9 @@ export function interpolationPoints(af: Point[], sides: number, shape: number): 
     let t = rbconst / Math.hypot(p1.x - p0.x, p1.y - p0.y);
     if (shape === BOX3D || shape === COMPONENT) t /= 3;
     else if (shape === DOGEAR) t /= 2;
-    b.push(p0, interpolatePoint(t, p0, p1), interpolatePoint(1 - t, p0, p1));
+    b.push(rounded ? interpolatePoint(RBCURVE * t, p0, p1) : p0);
+    b.push(interpolatePoint(t, p0, p1), interpolatePoint(1 - t, p0, p1));
+    if (rounded) b.push(interpolatePoint(1 - RBCURVE * t, p0, p1));
   }
   b.push(b[0]!, b[1]!, b[2]!);
   return b;

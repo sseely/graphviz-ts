@@ -10,7 +10,7 @@ import type { Node } from '../model/node.js';
 import type { Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
-import type { PolygonT, TextlabelT } from './types.js';
+import type { PolygonT, TextlabelT, GraphvizPolygonStyle } from './types.js';
 import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml } from './htmltable-pos.js';
 import type { ObjState } from '../gvc/job.js';
@@ -29,7 +29,7 @@ import {
 } from './style-resolve.js';
 import { stripedBox, wedgedEllipse } from '../render/svg-multicolor.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
-import { drawSpecialShape } from './poly-shapes.js';
+import { drawRoundCorners, mcircleHack, underlineDraw } from './poly-shapes.js';
 
 // ---------------------------------------------------------------------------
 // Multicolor test
@@ -63,15 +63,9 @@ export function renderEllipse(
 
 /** Render one polygon periphery ring for a node. */
 export function renderPolygon(
-  ring: Point[],
-  coord: Point,
-  renderer: RendererPlugin,
-  job: RenderJob,
-  filled: boolean,
+  ring: Point[], coord: Point, renderer: RendererPlugin, job: RenderJob, filled: boolean,
 ): void {
-  const pts = ring.map(
-    (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, job),
-  );
+  const pts = ring.map((v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, job));
   renderer.polygon(pts, filled, job);
 }
 
@@ -82,6 +76,9 @@ interface RingCtx {
   style: PolyStyleFlags;
   fillcolor: string;
   shape: number;
+  diagonals: boolean;
+  rounded: boolean;
+  underline: boolean;
 }
 
 /**
@@ -93,17 +90,16 @@ function renderEllipseRing(
   ring: Point[], coord: Point, filled: boolean, j: number, ctx: RingCtx,
 ): void {
   if (ctx.style.wedged && j === 0 && isMulticolor(ctx.fillcolor)) {
-    // Build absolute SVG-space bounding-box points for the ellipse.
     const pf = ring.map(
       (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, ctx.job),
     );
     wedgedEllipse(ctx.job, pf, ctx.fillcolor, ctx.renderer);
-    // Boundary ellipse drawn unfilled (filled reset to 0 after wedge).
-    // @see lib/common/shapes.c:poly_gencode :3031 (filled = 0)
-    renderEllipse(ring, coord, ctx.renderer, ctx.job, false);
-    return;
+    renderEllipse(ring, coord, ctx.renderer, ctx.job, false); // boundary unfilled
+  } else {
+    renderEllipse(ring, coord, ctx.renderer, ctx.job, filled);
   }
-  renderEllipse(ring, coord, ctx.renderer, ctx.job, filled);
+  // Mcircle: two chords after the ellipse. @see lib/common/shapes.c:3034
+  if (ctx.diagonals) mcircleHack(ring, coord, ctx);
 }
 
 /**
@@ -111,25 +107,23 @@ function renderEllipseRing(
  * style.striped + j==0.
  * @see lib/common/shapes.c:poly_gencode :3037-3043
  */
+/** Striped j===0 ring: the multicolor box plus an unfilled boundary polygon. */
+function renderStripedRing(ring: Point[], coord: Point, ctx: RingCtx): void {
+  const af = ring.map((v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, ctx.job));
+  stripedBox(ctx.job, af, ctx.fillcolor, true, ctx.renderer);
+  renderPolygon(ring, coord, ctx.renderer, ctx.job, false); // boundary unfilled
+}
+
 function renderPolyRing(
   ring: Point[], coord: Point, filled: boolean, j: number, ctx: RingCtx,
 ): void {
-  if (ctx.shape !== 0 && !ctx.style.striped) {
-    drawSpecialShape(ctx.shape, ring, coord, filled, ctx); // @see shapes.c:3049
-    return;
-  }
-  if (ctx.style.striped && j === 0) {
-    // Build absolute SVG-space points for the polygon ring.
-    const af = ring.map(
-      (v) => transformPoint({ x: v.x + coord.x, y: v.y + coord.y }, ctx.job),
-    );
-    stripedBox(ctx.job, af, ctx.fillcolor, true, ctx.renderer);
-    // Boundary polygon drawn unfilled.
-    // @see lib/common/shapes.c:poly_gencode :3043 gvrender_polygon(job, AF, sides, 0)
-    renderPolygon(ring, coord, ctx.renderer, ctx.job, false);
-    return;
-  }
-  renderPolygon(ring, coord, ctx.renderer, ctx.job, filled);
+  // C dispatch order: striped, underline, SPECIAL_CORNERS, plain.
+  // @see lib/common/shapes.c:poly_gencode :3037-3052
+  if (ctx.style.striped && j === 0) renderStripedRing(ring, coord, ctx);
+  else if (ctx.underline) underlineDraw(ring, coord, filled, ctx);
+  else if (ctx.shape !== 0 || ctx.diagonals || ctx.rounded) {
+    drawRoundCorners(ring, coord, filled, ctx);
+  } else renderPolygon(ring, coord, ctx.renderer, ctx.job, filled);
 }
 
 /**
@@ -350,15 +344,30 @@ function resolveNodeDrawCtx(job: RenderJob, n: Node): NodeDrawCtx | null {
   const obj = job.obj;
   const filled = obj !== null && applyNodeStyle(obj, n);
   const drawPoly = obj !== null ? prepareDrawPoly(poly, filled, obj) : poly;
-  const styleAttr = nodeAttr(n, n.root, 'style');
+  const styleFlags = parseStyleFlags(nodeAttr(n, n.root, 'style'));
   const ringCtx: RingCtx = {
     renderer: job.renderer!,
     job,
-    style: parseStyleFlags(styleAttr),
+    style: styleFlags,
     fillcolor: nodeAttr(n, n.root, 'fillcolor') ?? '',
-    shape: drawPoly.option.shape,
+    ...specialCornerFlags(drawPoly.option, styleFlags),
   };
   return { poly: drawPoly, coord, filled, ringCtx };
+}
+
+/**
+ * Combine the shape's polygon-option flags with the style-attribute flags, as
+ * C does (checkStyle: istyle = style_or(istyle, poly->option)).
+ */
+function specialCornerFlags(
+  opt: GraphvizPolygonStyle, style: PolyStyleFlags,
+): { shape: number; diagonals: boolean; rounded: boolean; underline: boolean } {
+  return {
+    shape: opt.shape,
+    diagonals: opt.diagonals || style.diagonals,
+    rounded: opt.rounded || style.rounded,
+    underline: opt.underline || style.underline,
+  };
 }
 
 /**

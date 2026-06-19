@@ -41,6 +41,7 @@ export interface PolyStyleFlags {
   radial: boolean;
   striped: boolean;
   wedged: boolean;
+  underline: boolean;
 }
 
 /**
@@ -129,6 +130,7 @@ const TOKEN_FLAG: Readonly<Record<string, keyof PolyStyleFlags>> = {
   rounded: 'rounded',
   striped: 'striped',
   wedged: 'wedged',
+  underline: 'underline',
 };
 
 // ---------------------------------------------------------------------------
@@ -140,7 +142,7 @@ function zeroFlags(): PolyStyleFlags {
   return {
     filled: false, dashed: false, dotted: false, bold: false,
     invis: false, diagonals: false, rounded: false,
-    radial: false, striped: false, wedged: false,
+    radial: false, striped: false, wedged: false, underline: false,
   };
 }
 

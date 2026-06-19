@@ -40,4 +40,24 @@ describe('special node shapes (round_corners port)', () => {
     const polys = shapeSvg('box').match(/<polygon/g) ?? [];
     expect(polys.length).toBe(2);
   });
+
+  it('Mdiamond/Msquare add corner-diagonal polylines', () => {
+    expect(shapeSvg('Mdiamond')).toContain('<polyline');
+    expect(shapeSvg('Msquare')).toContain('<polyline');
+  });
+
+  it('Mcircle draws the two ellipse chords', () => {
+    const lines = shapeSvg('Mcircle').match(/<polyline/g) ?? [];
+    expect(lines.length).toBe(2);
+  });
+
+  it('shape=underline strokes only the bottom edge', () => {
+    const svg = shapeSvg('underline');
+    expect(svg).toContain('<polyline');
+  });
+
+  it('style=rounded renders a bezier <path>, not a polygon box', () => {
+    const svg = renderSvg('graph G { a [shape=box, style=rounded, label="hi"]; }', 'dot');
+    expect(svg).toContain('<path');
+  });
 });

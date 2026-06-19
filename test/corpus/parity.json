@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-19T20:00:59.286Z",
+  "generatedAt": "2026-06-19T20:19:51.629Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 142,
+    "byte-match": 146,
     "structural-match": 238,
-    "diverged": 373,
+    "diverged": 369,
     "errored": 20,
     "timeout": 7,
     "oracle-error": 16
@@ -379,7 +379,7 @@
       "id": "1880",
       "path": "1880.dot",
       "verdict": "diverged",
-      "maxDelta": 460.8,
+      "maxDelta": 460.80000000000007,
       "firstDiffPath": "svg/g[1]/polygon[1]"
     },
     {
@@ -3289,23 +3289,17 @@
     {
       "id": "regression_tests-shapes-reference-Mcircle",
       "path": "regression_tests/shapes/reference/Mcircle.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-Mdiamond",
       "path": "regression_tests/shapes/reference/Mdiamond.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-Msquare",
       "path": "regression_tests/shapes/reference/Msquare.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-assembly",
@@ -3584,9 +3578,7 @@
     {
       "id": "regression_tests-shapes-reference-underline",
       "path": "regression_tests/shapes/reference/underline.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-utr",
