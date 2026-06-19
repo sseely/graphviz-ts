@@ -80,7 +80,14 @@ cached on-demand under a gitignored temp dir — **do not commit ~800 SVGs**
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 enumerate+classify, T2 survey runner, T3 dashboard+triage | [ ] |
+| 1 | T1 enumerate+classify, T2 survey runner, T3 dashboard+triage | [x] |
+
+**Done (2026-06-19).** Harness under `test/corpus/` (`enumerate` → `survey` →
+`dashboard`). Headline over **796 applicable** dot inputs (oracle `dot 15.1.0`):
+byte-match 112, structural-match 218, diverged 422, errored 20, timeout 8,
+oracle-error 16. Dashboard: [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md),
+linked from the port catalog. No `src/` change (AD-5); curated golden gate
+untouched (AD-1). Backlog buckets in PARITY.md name the follow-on fix missions.
 
 - [decisions.md](decisions.md) — locked architecture decisions
 - [batch-1/overview.md](batch-1/overview.md) — task table + stop conditions

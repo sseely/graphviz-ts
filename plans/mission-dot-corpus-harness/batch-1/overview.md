@@ -8,7 +8,7 @@ dependency forces order.
 |----|-------------|-------|--------|------------|------|
 | T1 | Enumerate the corpus; classify dot-applicable vs quarantined (with reasons) | opus | `test/corpus/enumerate.ts`, `test/corpus/corpus-manifest.json` (generated), `test/corpus/README.md` | — | [x] |
 | T2 | Isolated render worker + survey runner; classify byte/structural/diverged/errored/timeout; emit `parity.json` | opus | `test/corpus/render-one.ts`, `test/corpus/survey.ts` | T1 | [x] |
-| T3 | Dashboard from `parity.json`; triage divergences into counted buckets = next-mission backlog; link from port-catalog | opus | `test/corpus/PARITY.md` (generated), `test/corpus/dashboard.ts`, `plans/port-catalog/README.md` | T2 | [ ] |
+| T3 | Dashboard from `parity.json`; triage divergences into counted buckets = next-mission backlog; link from port-catalog | opus | `test/corpus/PARITY.md` (generated), `test/corpus/dashboard.ts`, `plans/port-catalog/README.md` | T2 | [x] |
 
 ## Reuse (read-only)
 

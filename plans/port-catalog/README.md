@@ -393,8 +393,39 @@ via the FreeType LUT model; only rasterization is excluded.
 
 The highest-value correctness net is differential testing against graphviz's own
 test corpus — it is the long-tail edge-case coverage that broke earlier port
-attempts. This is a future mission (not yet scheduled); recorded here so the
-approach is settled before it starts.
+attempts. The approach below is settled, and the **dot-first** slice is now
+**realized** — see the dashboard.
+
+### Realized: dot parity dashboard → [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md)
+
+The differential corpus harness lives under `test/corpus/` (`enumerate.ts` →
+`survey.ts` → `dashboard.ts`); see [`test/corpus/README.md`](../../test/corpus/README.md).
+It is the realized **comparison page / parity dashboard** `CLAUDE.md` requires,
+and is a **report, not a gate** — kept separate from the curated golden suite.
+
+Headline, dot engine, oracle `dot 15.1.0`, **796 applicable** inputs
+(805 corpus `.gv`/`.dot` − 9 quarantined: 6 engine-deferred, 3 multi-graph):
+
+| verdict | count | |
+|---------|------:|---|
+| byte-match | 112 | port == oracle within 0.01 |
+| structural-match | 218 | same tree, coordinate drift only |
+| **diverged** | **422** | structural difference (the backlog) |
+| errored | 20 | port threw |
+| timeout | 8 | port hung (killed) |
+| oracle-error | 16 | no oracle reference (excluded) |
+
+`byte-match + structural-match = 330/796 (41.5%)` structurally equal. The
+`diverged` + `errored` sets are triaged into named buckets in PARITY.md — that
+bucket list is the prioritized backlog for follow-on oracle-pinned fix missions
+(largest first: element-count 157, path-structure 109, color-stroke 56,
+font-metrics 49; parser-gap 10). Force engines (neato/fdp/sfdp/circo/twopi/
+osage) remain a deferred follow-on (the harness's `iterative` tolerance class
+already exists).
+
+The dot-first slice above is done; the **force-engine** extension (neato/fdp/
+sfdp/circo/twopi/osage, structural-tolerance comparison) remains a future mission
+— recorded here so the approach stays settled before it starts.
 
 ### What's actually there
 
@@ -430,7 +461,8 @@ is inapplicable (ps/png/jpg references, gvpr, C-API memory/lifecycle tests).
    is just the `.gv`/`.dot` inputs exercising `dot`, rendered to `-Tsvg`/`-Txdot`.
 5. **Parity dashboard.** Per input: `byte-match | structural-match | diverged |
    quarantined-inapplicable`. This doubles as the "comparison page for every
-   excluded case" that `CLAUDE.md` requires.
+   excluded case" that `CLAUDE.md` requires. **Realized** for dot at
+   [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md) (see headline above).
 
 ## Maintenance
 
