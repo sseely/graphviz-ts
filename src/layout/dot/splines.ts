@@ -371,23 +371,23 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
 }
 
 /**
- * Route one curved group via makeStraightEdges. C groups by getmainedge, keeping
- * opposing edges (`a->b` vs `b->a`) in distinct groups; the TS collection
- * over-groups them, so we dedup to distinct originals and re-partition by
- * original direction (same-direction parallels spread together; opposing route
- * separately), each ordered by seq so index→perp-offset matches C.
- * @see lib/dotgen/dotsplines.c:356-358, 381-387
+ * Route one curved group via makeStraightEdges. C routes the whole same-endpoint
+ * group at once — parallels AND opposing edges (`a->b`/`b->a`) together (verified
+ * by C instrumentation: a 2-cycle is one cnt=2 group, ports (0,0); the visible
+ * separation is the perp-spread clipped to the node). The TS collection adds
+ * virtual duplicates, so dedup to distinct originals; sort by creation seq so the
+ * index→perp-offset order matches C (first → +perp). makeStraightEdges reverses
+ * the control points for the opposing edge via its head==group-head check.
+ * @see lib/dotgen/dotsplines.c:381-387, lib/common/routespl.c:1000-1041
  */
 function routeCurvedGroup(g: Graph, group: Edge[]): void {
-  const byDir = new Map<string, Edge[]>();
-  for (const e of dedupByOrig(group)) {
-    const o = resolveOrigEdge(e);
-    const key = `${o.tail.id}:${o.head.id}`;
-    (byDir.get(key) ?? byDir.set(key, []).get(key)!).push(e);
-  }
-  for (const part of byDir.values()) {
-    part.sort((a, b) => origSeq(a) - origSeq(b));
-    makeStraightEdges(g, part, part.length, EDGETYPE_CURVED, buildDotSinfo());
+  const uniq = dedupByOrig(group);
+  uniq.sort((a, b) => origSeq(a) - origSeq(b));
+  makeStraightEdges(g, uniq, uniq.length, EDGETYPE_CURVED, buildDotSinfo());
+  // Reversed back edges live in ND_other, which edgeNormalize() skips; swap them
+  // here (no double-swap), mirroring the non-curved back-edge router (edge-route.ts).
+  for (const e of uniq) {
+    if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
   }
 }
 

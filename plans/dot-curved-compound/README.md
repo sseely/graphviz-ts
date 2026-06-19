@@ -76,10 +76,11 @@ Regression sub-gate: **no existing non-curved/non-compound golden changes.**
 | [1](batch-1/overview.md) | T1 — port `makeStraightEdges`(+`bend`/`get_cycle_centroid`) + curved dispatch + finish guards | [x] |
 | [2](batch-2/overview.md) | T2 — curved + compound goldens vs native C; verify compound, fix on divergence | [x] |
 
-**T2 note:** 3/5 goldens pass byte-exact (curved-single, curved-parallel,
-compound-splines). `dot-curved-cycle` and `dot-compound-lhead` quarantined with
-comparison pages ([quarantine/](quarantine/)) — both blocked on pre-existing
-gaps outside curved routing (multiedge `ED_tail_port`; compound `arrowEndClip`).
+**T2 note:** 4/5 goldens pass byte-exact (curved-single, curved-parallel,
+curved-cycle, compound-splines). Only `dot-compound-lhead` is quarantined
+([quarantine/](quarantine/)) — compound path clips correctly, but the arrowhead
+clip (`arrowEndClip` + `ep`/`eflag`) is unported. (`dot-curved-cycle` was briefly
+quarantined on a wrong hypothesis, then fixed — see the decision journal.)
 
 ## Index
 
@@ -110,15 +111,17 @@ never populated). 6 curved unit tests; 3 new native-C goldens pass byte-exact.
 every baseline golden byte-identical) · build OK · C tree clean · diff confined
 to `src/layout/dot/**`, `test/golden/**`, `plans/**`.
 
-**Quarantined (comparison pages in [quarantine/](quarantine/)):**
-- `dot-curved-cycle` — needs multiedge `ED_tail_port` offsets (the TS pipeline
-  computes them lazily in its non-curved router; default-splines 2-cycle is
-  byte-exact to C). Port-assignment phase unported — outside curved scope.
+**Quarantined (comparison page in [quarantine/](quarantine/)):**
 - `dot-compound-lhead` — compound path now clips correctly (wiring fixed); the
   arrowhead clip (`arrowEndClip` + `ep`/`eflag`, `compound.c:345-348`) is
   unported in `clipHeadNormal`. T38-completion sub-task beyond ADR-2 scope.
 
-**Follow-ups (for a future mission):** (1) port multiedge `ED_tail_port`
-assignment so curved opposing/adjacent edges separate; (2) port
-`arrows.c:arrowEndClip` + `ep`/`eflag` into compound `clipHeadNormal`. Both
-quarantined goldens are minted and ready to re-promote once those land.
+**Follow-up (for a future mission):** port `arrows.c:arrowEndClip` + `ep`/`eflag`
+into compound `clipHeadNormal` so the arrowhead follows the cluster clip. The
+quarantined golden is minted and ready to re-promote once that lands.
+
+**Post-merge correction:** `dot-curved-cycle` was initially quarantined on a wrong
+root-cause hypothesis (multiedge ports). C instrumentation showed the 2-cycle is
+one `cnt=2` group with ports `(0,0)`; the bug was a direction-partition in the
+curved dispatch. Fixed (drop partition + back-edge swap) and re-promoted —
+byte-exact to C. See the decision journal (2026-06-19, post-merge).

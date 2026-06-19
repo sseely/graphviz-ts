@@ -1022,5 +1022,13 @@
     "input": "test/golden/inputs/dot-compound-splines.dot",
     "reference": "test/golden/refs/dot-compound-splines.svg",
     "description": "splines=compound; a->b->c routes as a normal spline (EDGETYPE_COMPOUND no special branch); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-curved-cycle",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-curved-cycle.dot",
+    "reference": "test/golden/refs/dot-curved-cycle.svg",
+    "description": "splines=curved 2-cycle a->b->a; one cnt=2 group, perp-spread clipped + back-edge swap; ref: native C dot -Tsvg via gvmine"
   }
 ]
