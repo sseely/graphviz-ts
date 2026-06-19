@@ -181,6 +181,27 @@ function testEdgePathAttrOrder(): void {
   expect(dPos).toBeGreaterThan(dashPos);
 }
 
+/**
+ * AC-T2: an over-allocated bezier (list calloc'd to the pre-clip length, with
+ * bz.size lowered by clip_and_install) must emit ONLY bz.size points — never the
+ * zeroed tail. Mirrors C: new_spline calloc's list to sz, clip_and_install sets
+ * size=end-start+4, gvrender_beziercurve emits exactly bez->size.
+ * @see lib/common/splines.c:new_spline,clip_and_install; lib/gvc/gvrender.c:579
+ */
+function testEdgeOverAllocatedBezier(): void {
+  const job = makeEdgeJob();
+  job.pushObj(makeEdgeObj('black', PenType.Solid, 1.0));
+  const e = makeStyledEdge();
+  // size=4 (one cubic), but list over-allocated to 7 with a zeroed tail.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- C-interop: spl runtime-dynamic
+  (e.info as any).spl.list[0].list.push({ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 });
+  svgEdgePath(e, job);
+  const out = job.output.join('');
+  // The four real points are emitted; the zeroed tail is not.
+  expect(out).toContain(' d="M0,0C10,-20 30,-20 40,0"/>');
+  expect(out).not.toContain('0,0 0,0 0,0');
+}
+
 // ---------------------------------------------------------------------------
 // describe / it registrations
 // ---------------------------------------------------------------------------
@@ -194,4 +215,5 @@ describe('T4: edge graphics read job.obj', () => {
   it('AC-T4-F: bold resolves to penwidth 2 — stroke-width="2"', testEdgeBold);
   it('AC-T4-G: colored arrowhead uses pen color not hardcoded black', testEdgeColoredArrowhead);
   it('AC-T4-H: attribute order fill→stroke→width→dash→d', testEdgePathAttrOrder);
+  it('AC-T2: over-allocated bezier emits only bz.size points', testEdgeOverAllocatedBezier);
 });
