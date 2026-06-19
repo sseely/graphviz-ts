@@ -93,3 +93,32 @@ gaps outside curved routing (multiedge `ED_tail_port`; compound `arrowEndClip`).
   381-387, 461-465` (dispatch+finish), `~/git/graphviz/lib/dotgen/compound.c`
 - **Oracle:** `[[oracle-native-not-wasm]]`, `[[recover-slack-and-c-harness]]`,
   `/tmp/gvmine`
+
+## Session summary (2026-06-19)
+
+**Tasks completed:** T1 ✅, T2 ✅ (both batches). 2 commits:
+`feat(T1)` (5bb43bc), `test(T2)` (690ce1d).
+
+**Delivered:** `splines=curved` routes under the dot engine via a faithful port
+of `makeStraightEdges` (+`bend`/`get_cycle_centroid`/cycle helpers) in new
+`straight-edges.ts`, dispatched from `dotSplines_` with the resetRW + non-
+downgrading label warning (ADR-3) and the curved finish guard. Also fixed
+previously-unwired compound clipping (`g.info.compound` + `lhead`/`ltail` were
+never populated). 6 curved unit tests; 3 new native-C goldens pass byte-exact.
+
+**Quality gates:** typecheck 0 · 1947 tests pass / 141 files (0 regressions,
+every baseline golden byte-identical) · build OK · C tree clean · diff confined
+to `src/layout/dot/**`, `test/golden/**`, `plans/**`.
+
+**Quarantined (comparison pages in [quarantine/](quarantine/)):**
+- `dot-curved-cycle` — needs multiedge `ED_tail_port` offsets (the TS pipeline
+  computes them lazily in its non-curved router; default-splines 2-cycle is
+  byte-exact to C). Port-assignment phase unported — outside curved scope.
+- `dot-compound-lhead` — compound path now clips correctly (wiring fixed); the
+  arrowhead clip (`arrowEndClip` + `ep`/`eflag`, `compound.c:345-348`) is
+  unported in `clipHeadNormal`. T38-completion sub-task beyond ADR-2 scope.
+
+**Follow-ups (for a future mission):** (1) port multiedge `ED_tail_port`
+assignment so curved opposing/adjacent edges separate; (2) port
+`arrows.c:arrowEndClip` + `ep`/`eflag` into compound `clipHeadNormal`. Both
+quarantined goldens are minted and ready to re-promote once those land.
