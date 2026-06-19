@@ -26,6 +26,7 @@ import type { Edge } from '../model/edge.js';
 import type { Point, Bezier } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import { HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL } from '../common/emit-types.js';
+import { fontFamilyAttrs } from '../common/ps-fontalias.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
 import { colorPaint, colorOpacity, textFillAttrs } from './color-resolve.js';
 import { PenType, FillType } from '../gvc/context.js';
@@ -291,14 +292,13 @@ function textDecorationValue(flags: number): string {
 }
 
 /**
- * Emit HTML font-flag SVG attributes (font-weight, font-style,
- * text-decoration, baseline-shift) and fill color for a text span.
- * Omits each attribute when it is at its default value, matching C exactly.
- * @see plugin/core/gvrender_core_svg.c:svg_textspan lines 495-531
+ * Emit the HTML-flag SVG attributes (bold/italic from markup, text-decoration,
+ * baseline-shift). bold/italic are skipped when the font alias already set them.
+ * @see plugin/core/gvrender_core_svg.c:496-516 svg_textspan flag block
  */
-function emitFontAttrs(flags: number, job: RenderJob): void {
-  if (flags & HTML_BF) job.write(' font-weight="bold"');
-  if (flags & HTML_IF) job.write(' font-style="italic"');
+function emitFontAttrs(flags: number, job: RenderJob, alias: { weight: boolean; style: boolean }): void {
+  if (flags & HTML_BF && !alias.weight) job.write(' font-weight="bold"');
+  if (flags & HTML_IF && !alias.style) job.write(' font-style="italic"');
   const dec = flags & (HTML_UL | HTML_OL | HTML_S)
     ? textDecorationValue(flags) : '';
   if (dec) job.write(' text-decoration="' + dec + '"');
@@ -308,18 +308,18 @@ function emitFontAttrs(flags: number, job: RenderJob): void {
 
 export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   const anchor = textAnchor(span.just);
-  // C writes: p.y += yoffset_centerline; then gvprintdouble(job, -p.y)
-  // → SVG y = -(graphviz_y + yoffset_centerline)
+  // C: p.y += yoffset_centerline; gvprintdouble(-p.y) → SVG y = -(y + offset)
   const y = -(pos.y + span.yoffset_centerline);
-  const fontName = span.fontName ?? 'Times,serif';
   job.write('<text xml:space="preserve" text-anchor="' + anchor + '"');
   job.write(' x="');
   job.printDouble(pos.x);
   job.write('" y="');
   job.printDouble(y);
   job.write('"');
-  job.write(' font-family="' + escapeXml(fontName) + '"');
-  emitFontAttrs(span.fontFlags, job);
+  const ff = fontFamilyAttrs(span.fontName);
+  if (ff !== null) job.write(ff.attrs);
+  else job.write(' font-family="' + escapeXml(span.fontName ?? 'Times,serif') + '"');
+  emitFontAttrs(span.fontFlags, job, ff ?? { weight: false, style: false });
   job.write(' font-size="' + span.fontSize.toFixed(2) + '"');
   job.write(textFillAttrs(span.fontColor));
   job.write('>' + escapeXml(span.str) + '</text>\n');
