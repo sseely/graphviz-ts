@@ -8,7 +8,12 @@ pipeline-level divergence is a **P2 gap — STOP**, do not patch `src/ortho/*` h
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T3 | Ortho golden fixtures + native-C refs + manifest + validate (pipeline pre-pinned by P2) | sonnet | `test/golden/inputs/dot-ortho-*.dot`, `test/golden/refs/dot-ortho-*.svg`, `test/golden/manifest.json`, `src/layout/dot/*.ts` (dispatch/adapter fixes only) | T2 + **P2 complete** | [ ] |
+| T3 | Ortho golden fixtures + native-C refs + manifest + validate (pipeline pre-pinned by P2) | sonnet | `test/golden/inputs/dot-ortho-*.dot`, `test/golden/refs/dot-ortho-*.svg`, `test/golden/manifest.json`, `src/layout/dot/*.ts` (dispatch/adapter fixes only) | T2 + **P2 complete** | [x] |
+
+**Write-set expanded (flagged, user faithfulness mandate):** the parity fix
+landed in `src/common/splines-clip.ts` (`arrowOrthoClip` port, `isOrtho`-gated),
+a shared-clip faithful gap — not dot-dispatch, not the P2 pipeline. All 119
+pre-existing goldens stayed byte-identical. See decision journal T3 rows.
 
 ## Dependency / file ownership
 - T3 needs T1+T2 (full dispatch incl. labels) **and ortho-P2 green** (pipeline

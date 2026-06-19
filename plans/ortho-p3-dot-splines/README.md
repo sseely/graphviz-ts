@@ -74,9 +74,9 @@ Regression sub-gate: **no existing non-ortho `test/golden/refs/*.svg` changes.**
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [1](batch-1/overview.md) | T1 — dot ortho dispatch + dot-local adapter + `resetRW` (no labels) | [ ] |
-| [2](batch-2/overview.md) | T2 — edge-label positioning in the ortho branch (faithful warn+downgrade) | [ ] |
-| [3](batch-3/overview.md) | T3 — golden fixtures + native-C refs + end-to-end validation (pipeline pre-pinned by P2; dispatch/adapter fixes only) | [ ] |
+| [1](batch-1/overview.md) | T1 — dot ortho dispatch + dot-local adapter + `resetRW` (no labels) | [x] |
+| [2](batch-2/overview.md) | T2 — edge-label positioning in the ortho branch (faithful warn+downgrade) | [x] |
+| [3](batch-3/overview.md) | T3 — golden fixtures + native-C refs + end-to-end validation (pipeline pre-pinned by P2; dispatch/adapter fixes only) | [x] |
 
 ## Index
 

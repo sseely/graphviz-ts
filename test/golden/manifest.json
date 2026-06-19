@@ -966,5 +966,37 @@
     "reference": "test/golden/refs/dot-port-record-aligned.svg",
     "portReference": "test/golden/refs-port/dot-port-record-aligned.svg",
     "description": "record-field port A:f0->B via faithful routesplines (SR8); title carries the field name A:f0->B; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
+  },
+  {
+    "id": "dot-ortho-chain",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-ortho-chain.dot",
+    "reference": "test/golden/refs/dot-ortho-chain.svg",
+    "description": "splines=ortho 3-node linear chain (single vertical corridor); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-ortho-branch",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-ortho-branch.dot",
+    "reference": "test/golden/refs/dot-ortho-branch.svg",
+    "description": "splines=ortho branch (a->b, a->c); channel split / track separation; ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-ortho-multirank",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-ortho-multirank.dot",
+    "reference": "test/golden/refs/dot-ortho-multirank.svg",
+    "description": "splines=ortho 4-rank chain with a->d skip edge (virtual-node corridor); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-ortho-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-ortho-label.dot",
+    "reference": "test/golden/refs/dot-ortho-label.svg",
+    "description": "splines=ortho edge with a label; C positions the label, edge crosses it (no routing around); ref: native C dot -Tsvg via gvmine"
   }
 ]
