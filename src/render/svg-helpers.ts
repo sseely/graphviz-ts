@@ -168,6 +168,7 @@ export function textAnchor(just: 'l' | 'n' | 'r'): string {
 export {
   graphGroupId, emitSvgTag, emitGraphGroupOpen, emitGraphTitle,
   emitGraphBackground, svgBeginGraph, svgEndGraph,
+  svgBeginPage, svgEndPage, svgBeginLayer, svgEndLayer,
 } from './svg-graph.js';
 
 // ---------------------------------------------------------------------------
@@ -176,8 +177,10 @@ export {
 
 export function svgBeginNode(n: Node, job: RenderJob): void {
   // C ids use the object's creation sequence (AGSEQ), not emission order.
-  // @see lib/common/emit.c:getObjId
-  job.write('<g id="node' + (n.id + 1) + '" class="node">\n');
+  // The layer prefix/suffix are empty unless rendering layers (layerNum>1).
+  // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_begin_node
+  job.write('<g id="' + job.idLayerPrefix() + 'node' + (n.id + 1) + job.idLayerSuffix()
+    + '" class="node">\n');
   job.write('<title>' + escapeXml(n.name) + '</title>\n');
 }
 
@@ -213,7 +216,9 @@ export function svgBeginEdge(e: Edge, job: RenderJob): void {
   const hp = e.info.head_port?.name;
   const raw = e.tail.name + (tp ? ':' + tp : '')
     + sep + e.head.name + (hp ? ':' + hp : '');
-  job.write('<g id="edge' + e.graphSeq + '" class="edge">\n');
+  // Edges get the layer prefix only — no per-object suffix (svg_begin_edge
+  // passes idx=NULL, unlike svg_begin_node).
+  job.write('<g id="' + job.idLayerPrefix() + 'edge' + e.graphSeq + '" class="edge">\n');
   job.write('<title>' + escapeEdgeTitle(raw) + '</title>\n');
 }
 

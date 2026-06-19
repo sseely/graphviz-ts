@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-19T20:19:51.629Z",
+  "generatedAt": "2026-06-19T20:59:54.119Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 146,
+    "byte-match": 149,
     "structural-match": 238,
-    "diverged": 369,
+    "diverged": 366,
     "errored": 20,
     "timeout": 7,
     "oracle-error": 16
@@ -2144,23 +2144,17 @@
     {
       "id": "graphs-layer",
       "path": "graphs/layer.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg[childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-layer2",
       "path": "graphs/layer2.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg[childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-layers",
       "path": "graphs/layers.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg[childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-ldbxtried",

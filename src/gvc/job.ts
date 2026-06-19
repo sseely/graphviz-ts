@@ -290,8 +290,10 @@ export class RenderJob {
   translation: Point = { x: 0, y: 0 };
   devscale: Point = { x: 1, y: 1 };
   flags: number = 0;
-  numLayers: number = 0;
-  layerNum: number = 0;
+  numLayers: number = 1;
+  layerNum: number = 1;
+  /** Layer names indexed 1..numLayers (set when rendering a layered graph). */
+  layerIDs: (string | null)[] = [];
   nodeId: number = 0;
   edgeId: number = 0;
   clusterId: number = 0;
@@ -312,6 +314,18 @@ export class RenderJob {
   constructor(format: string, measurer: TextMeasurer) {
     this.format = format;
     this.measurer = measurer;
+  }
+
+  /** Layer id prefix for layers after the first (C layerPagePrefix).
+   * @see lib/common/emit.c:197 */
+  idLayerPrefix(): string {
+    return this.layerNum > 1 ? this.layerIDs[this.layerNum] + '_' : '';
+  }
+
+  /** Layer id suffix appended to node/edge group ids (svg_begin_node idx).
+   * @see plugin/core/gvrender_core_svg.c svg_begin_node/edge */
+  idLayerSuffix(): string {
+    return this.layerNum > 1 ? '_' + this.layerIDs[this.layerNum] : '';
   }
 
   /** Top of the object-state stack, or null if empty. */

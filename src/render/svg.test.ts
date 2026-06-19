@@ -87,7 +87,10 @@ export function testFactory(): void {
 export function testBeginGraph(): void {
   const r = new SvgRenderer();
   const job = makeJob();
-  r.beginGraph(makeGraph(), job);
+  const g = makeGraph();
+  // beginGraph emits the document prologue; the group/title moved to beginPage.
+  r.beginGraph(g, job);
+  r.beginPage(g, job);
   const out = job.output.join('');
   expect(out).toContain('<?xml version="1.0"');
   expect(out).toContain('<svg');

@@ -11,7 +11,8 @@ import { escapeXml } from './svg-helpers.js';
 
 export function svgBeginCluster(sg: Graph, job: RenderJob): void {
   job.clusterId++;
-  job.write('<g id="clust' + job.clusterId + '" class="cluster">\n');
+  // Layer prefix only (no per-object suffix for graph/cluster ids). @see getObjId
+  job.write('<g id="' + job.idLayerPrefix() + 'clust' + job.clusterId + '" class="cluster">\n');
   job.write('<title>' + escapeXml(sg.name) + '</title>\n');
 }
 

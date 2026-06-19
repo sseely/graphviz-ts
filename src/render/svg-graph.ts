@@ -274,14 +274,35 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
   job.write(SVG_DOCTYPE);
   job.write(SVG_GENERATOR_COMMENT);
   emitSvgTag(job);
+}
+
+/**
+ * Per-page content: the graph group, title, and background — re-emitted per
+ * layer. The group id carries the layer prefix (e.g. `pvt_graph0`).
+ * @see plugin/core/gvrender_core_svg.c:svg_begin_page
+ */
+export function svgBeginPage(g: Graph, job: RenderJob): void {
   const bb = job.bb;
   // gvPostprocess zeroes bb.ll before render; tx is simply the padding.
   const tx = SVG_PAD;
   const ty = bb.ur.y + SVG_PAD;
-  emitGraphGroupOpen(graphGroupId(g.name), tx, ty, job);
+  emitGraphGroupOpen(job.idLayerPrefix() + graphGroupId(g.name), tx, ty, job);
   emitGraphTitle(g, job);
-  const bgcolorAttr = g.attrs.get('bgcolor');
-  emitBgcolorBackground(g, bb, bgcolorAttr, job);
+  emitBgcolorBackground(g, bb, g.attrs.get('bgcolor'), job);
+}
+
+/** Close the graph `<g>` group. @see svg_end_page */
+export function svgEndPage(job: RenderJob): void {
+  job.write('</g>\n');
+}
+
+/** `<g id="<layer>" class="layer">` — only emitted when numLayers > 1. */
+export function svgBeginLayer(name: string, job: RenderJob): void {
+  job.write('<g id="' + escapeXml(name) + '" class="layer">\n');
+}
+
+export function svgEndLayer(job: RenderJob): void {
+  job.write('</g>\n');
 }
 
 /**
@@ -289,6 +310,5 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
  * @see plugin/core/gvrender_core_svg.c:svg_end_graph
  */
 export function svgEndGraph(job: RenderJob): void {
-  job.write('</g>\n');
   job.write('</svg>\n');
 }

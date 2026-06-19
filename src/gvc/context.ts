@@ -60,6 +60,13 @@ export interface RendererPlugin {
 
   beginGraph(g: Graph, job: RenderJob): void;
   endGraph(g: Graph, job: RenderJob): void;
+  /** Per-layer group (only called when numLayers > 1). @see svg_begin_layer */
+  beginLayer?(name: string, job: RenderJob): void;
+  endLayer?(job: RenderJob): void;
+  /** Per-page content (graph group + background); split from beginGraph so it
+   * can be re-emitted per layer. @see svg_begin_page */
+  beginPage?(g: Graph, job: RenderJob): void;
+  endPage?(g: Graph, job: RenderJob): void;
   beginNode(n: Node, job: RenderJob): void;
   endNode(n: Node, job: RenderJob): void;
   beginEdge(e: Edge, job: RenderJob): void;

@@ -27,6 +27,10 @@ import { renderEdgeLabels } from '../gvc/device.js';
 import {
   svgBeginGraph,
   svgEndGraph,
+  svgBeginPage,
+  svgEndPage,
+  svgBeginLayer,
+  svgEndLayer,
   svgBeginNode,
   svgEndNode,
   svgBeginEdge,
@@ -81,6 +85,10 @@ export class SvgRenderer implements RendererPlugin {
 
   beginGraph(g: Graph, job: RenderJob): void { svgBeginGraph(g, job); }
   endGraph(_g: Graph, job: RenderJob): void { svgEndGraph(job); }
+  beginPage(g: Graph, job: RenderJob): void { svgBeginPage(g, job); }
+  endPage(_g: Graph, job: RenderJob): void { svgEndPage(job); }
+  beginLayer(name: string, job: RenderJob): void { svgBeginLayer(name, job); }
+  endLayer(job: RenderJob): void { svgEndLayer(job); }
   beginNode(n: Node, job: RenderJob): void { svgBeginNode(n, job); }
   endNode(_n: Node, job: RenderJob): void { svgEndNode(job); }
   beginEdge(e: Edge, job: RenderJob): void { svgBeginEdge(e, job); }
