@@ -1,0 +1,10 @@
+# Decision Journal — spline-segmentation
+
+Appended during execution (per `~/.claude/rules/autonomous-execution.md`).
+
+| Task | Date | Decision | Rationale | Flagged |
+|------|------|----------|-----------|---------|
+| T1 | 2026-06-19 | jcctree is an **emission** bug, not segmentation-fit. | Instrumented the port: edge `SET1->CLOSE1` has `bz.size=7` but `bz.list.length=10` (3 trailing `{0,0}`). The 7 real points byte-match the oracle exactly. `svgEdgePath` (svg-helpers.ts:439) maps the **entire** `bz.list` instead of the first `bz.size`. | — |
+| T1 | 2026-06-19 | The over-allocated list is **faithful** to C; the emitter is the only divergence. | C `new_spline(e,sz)` does `rv->list = gv_calloc(sz); rv->size = sz`, then `clip_and_install` sets `newspl->size = end-start+4` (clipped, smaller) leaving the calloc'd tail as zeros. `gvrender_beziercurve(job,af,n)` is called with `n = bez->size`. So C over-allocates the list and emits `size`; the port's `makeEmptyBz(sz)`+`copyToBezier` replicate this exactly. Fix = emit `bz.size` (NOT trim the build, which would diverge from C's model). cRef: lib/common/splines.c:new_spline / clip_and_install:79; lib/gvc/gvrender.c:579. | — |
+| T1 | 2026-06-19 | **p2** and **pm2way** are routing-POSITION differences → OUT OF SCOPE. | Their diverging edges have different coordinates and a different routed corridor (p2 routes through vertical x=125 in 4 beziers; port takes a 2-bezier diagonal). Not a bezier-count/emission issue. Per README STOP condition, reported as a separate follow-on; scope NOT expanded. | ⚑ follow-on |
+| T1 | 2026-06-19 | Sibling emit sites share the same latent contract but are not exercised. | `drawSplitSpline` (svg-edge-split.ts:68 `cnt=(list.length-1)/3`), `buildOffsetLists` (svg-parallel-edge.ts), and `map.ts:98` also read `bz.list` length. They only misbehave on a multi-color/map edge that is ALSO clipped (size<length); no diverged corpus case hits that intersection. T2 fixes `svgEdgePath` (the only in-scope case); siblings logged as a faithful follow-on to keep the commit reviewable and the write-set honored. | ⚑ follow-on |
