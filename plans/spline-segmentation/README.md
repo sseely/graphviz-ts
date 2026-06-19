@@ -53,12 +53,20 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 | T1 diagnose (instrument C), T2 fix segmentation | [x] |
-| 2 | T3 diagnose (issue+MR), T4 fix routing case | [ ] |
+| 2 | T3 diagnose (issue+MR), T4 fix routing case | STOP |
 
 > Batch 1 result: only jcctree was a segmentation/emission bug (svgEdgePath
 > emitted the over-allocated bz.list instead of bz.size). Fixed → 4 cases
 > byte/structural-match, 0 regressions. p2/pm2way were routing-POSITION
 > divergences (out of scope per STOP condition; logged as follow-on).
+>
+> Batch 2 STOPPED at T3 (no fix applied): no isolated issue-numbered dot
+> routing case with a *missing* MR fix exists. The smallest candidates are
+> poor fits — #2168's MR is fdp/neato ortho (not dot); #241's MR
+> (routespl.c horizontal/vertical) is already ported (splines-routespl.ts).
+> The rest are deep subsystems (ortho/cluster/compound/known-hang). Per the
+> Batch 2 STOP condition, the routing-position remainder is recommended as a
+> dedicated future mission. See decision-journal.md T3 rows.
 
 - [decisions.md](decisions.md) — locked architecture decisions
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-diagnose.md) · [T2](batch-1/T2-fix.md)
