@@ -189,6 +189,12 @@ export function applyBezierSlice(state: ClipState): void {
 
 /**
  * Clip the spline for edge e against its lhead/ltail cluster bounding boxes.
+ *
+ * NOTE: clips the spline PATH only. The arrowhead is NOT re-clipped — when an
+ * lhead/ltail moves the head/tail endpoint, the cached arrow polygon
+ * (e.info._arrowPts) still reflects the original node-boundary tip. Faithful
+ * arrow re-clipping needs a port of C's index-form arrowEndClip (arrows.c) with
+ * its bezier_clip subdivision; see plans/dot-curved-compound/quarantine/.
  * @see lib/dotgen/compound.c:makeCompoundEdge
  */
 export function makeCompoundEdge(e: Edge, clustMap: Map<string, Graph>): void {

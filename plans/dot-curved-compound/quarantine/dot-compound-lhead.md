@@ -50,17 +50,36 @@ The TS `compound.ts:clipHeadNormal` trims the control points (`splineIntersectf`
 / `boxIntersectf` are ported) but does **not** call `arrowEndClip` nor update
 `bez.ep`/`eflag` — so the renderer draws the arrow from the pre-clip endpoint.
 
-## Why not fixed here
+## Why not fixed here (C-instrumented findings, 2026-06-19)
 
-Full parity needs porting `arrows.c:arrowEndClip` (the `(e, list, starti, endi,
-nbez, eflag)` form — distinct from the already-ported
-`edge-route-clip.ts:arrowEndClip(pts, tip, elen)`) plus the `ep`/`eflag` →
-renderer interaction. That is a substantial T38-completion sub-task beyond the
-curved mission's "verify, fix on divergence" (ADR-2) scope. The wiring fix is
-kept as faithful partial progress (path clips correctly).
+An attempt re-stashed the arrow polygon at the cluster-clipped tip and reused the
+existing `edge-route-clip.ts:arrowEndClip(pts, tip, elen)` to back the path off.
+Result: **the arrow polygon matched native C byte-for-byte**, but the spline path
+diverged. Instrumenting C's `makeCompoundEdge`/`arrowEndClip` for this fixture
+showed (layout coords):
+
+- elen (`arrow_length`) = **11.5135**, ports `(0,0)`.
+- cluster-clipped segment into `arrowEndClip`: `[(43,92.004) … (43,76.499)]`.
+- C output path: `[(43,84.5),(43,82.5),(43,80.5),(43,78.5)]`, `ep=(43,76.499)`.
+
+C's `arrowEndClip` (`arrows.c:285`) does NOT shorten by a straight `elen`: it sets
+`ep = ps[endp+3]`, optionally backs up a whole segment when the last one is
+shorter than `elen` (`endp -= 3`), then runs `bezier_clip` — a recursive de
+Casteljau subdivision — against a sphere of radius `elen` about the tip. The
+resulting control points (`84.5/82.5/80.5/78.5`) are subdivision outputs, not a
+linear backoff, and the reused 4-point wrapper produces a different (collapsing)
+result on this short, fully-inside-sphere segment.
+
+Full parity therefore needs a faithful port of the **index-form**
+`arrowEndClip(e, ps, startp, endp, spl, eflag)` driven by C's `bezier_clip`
+subdivision (the existing pure 4-point wrapper is insufficient), plus the
+`ep`/`eflag` bookkeeping. This is a real T38-completion sub-task beyond the curved
+mission's ADR-2 "verify, fix on divergence" scope. Reverted the attempt; kept the
+wiring fix (path clips to the cluster boundary, the faithful path portion).
 
 ## Re-promotion
 
-When compound arrow clipping lands (arrowEndClip + `ep`/`eflag` in
-`clipHeadNormal`), re-add this entry to `manifest.json` and bump the suite
-count. The C ref is minted and ready.
+Port C's index-form `arrowEndClip` + `bezier_clip` into the compound head/tail
+clip (set `bez.ep`/`eflag`, re-stash `_arrowPts`/`_tailArrowPts`), then re-add
+this entry to `manifest.json` and bump the suite count. The C ref is minted and
+ready; the arrow polygon is already known to match once the path math is faithful.
