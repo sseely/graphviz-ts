@@ -52,8 +52,13 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose (instrument C), T2 fix segmentation | [ ] |
+| 1 | T1 diagnose (instrument C), T2 fix segmentation | [x] |
 | 2 | T3 diagnose (issue+MR), T4 fix routing case | [ ] |
+
+> Batch 1 result: only jcctree was a segmentation/emission bug (svgEdgePath
+> emitted the over-allocated bz.list instead of bz.size). Fixed → 4 cases
+> byte/structural-match, 0 regressions. p2/pm2way were routing-POSITION
+> divergences (out of scope per STOP condition; logged as follow-on).
 
 - [decisions.md](decisions.md) — locked architecture decisions
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-diagnose.md) · [T2](batch-1/T2-fix.md)

@@ -5,8 +5,8 @@ ground-truth control-point dumps).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Instrument C; dump the spline control-point list (count+coords) for jcctree & p2; locate the exact port function whose fit diverges | opus | `plans/spline-segmentation/decision-journal.md` (findings only; read-only to `src/`) | — | [ ] |
-| T2 | Faithfully port the C spline-fit branch so jcctree/p2/pm2way reach byte/structural-match; add a test | opus | `src/layout/dot/<file from T1>` + a colocated `*.test.ts` | T1 | [ ] |
+| T1 | Instrument C; dump the spline control-point list (count+coords) for jcctree & p2; locate the exact port function whose fit diverges | opus | `plans/spline-segmentation/decision-journal.md` (findings only; read-only to `src/`) | — | [x] |
+| T2 | Faithfully port the C spline-fit branch so jcctree/p2/pm2way reach byte/structural-match; add a test | opus | `src/render/svg-helpers.ts` (emission fix — see journal; T1 found build is faithful) | T1 | [x] |
 
 ## Interface (T1 → T2)
 T1 writes to the decision journal:
