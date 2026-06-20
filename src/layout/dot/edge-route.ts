@@ -26,7 +26,10 @@ import { arrowheadPolygon } from './edge-route-arrow.js';
 import { linearBezier } from './edge-route-poly.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
-import { routeFlatEdgeFaithful, isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
+import { isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
+import {
+  collectNonAdjacentFlatGroup, routeFlatEdgeGroupFaithful,
+} from './splines-flat-multi.js';
 import { makeFlatLabeledEdge, makeAdjFlatNoPortEdge } from './splines-flat-labeled.js';
 import { EDGETYPE_SPLINE, swapEndsP, swapSpline } from './splines.js';
 import { buildDotSinfo } from './self-loop.js';
@@ -328,7 +331,16 @@ function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
     return makeFlatAdjEdges(g, group, group.length, EDGETYPE_SPLINE) === 0
       && e.info.spl !== undefined;
   }
-  const pts = sameRank ? routeFlatEdgeFaithful(g, e) : routeRegularEdgeFaithful(g, e);
+  // Non-adjacent flats: C groups identical-port siblings into ONE make_flat_edge
+  // call and nests their splines (cnt-loop). Collect the group and route once;
+  // the group router clip-installs every sibling, so the main loop skips them.
+  // cnt=1 reduces to the former single routeFlatEdgeFaithful path (AD-1).
+  // @see lib/dotgen/dotsplines.c:make_flat_edge, make_flat_bottom_edges
+  if (sameRank) {
+    const group = collectNonAdjacentFlatGroup(e, g);
+    return routeFlatEdgeGroupFaithful(g, group, group.length) && e.info.spl !== undefined;
+  }
+  const pts = routeRegularEdgeFaithful(g, e);
   if (pts === null) return false;
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
