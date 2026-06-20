@@ -81,6 +81,35 @@ red test (Batch 1) is the target; it goes green when the fix lands.
 - [batch-2/T2-implement.md](batch-2/T2-implement.md) · [batch-2/T3-regression.md](batch-2/T3-regression.md)
 - [decision-journal.md](decision-journal.md)
 - [findings-diagnosis.md](findings-diagnosis.md) — the proven pre-mission evidence
+- [findings-mirror-mechanism.md](findings-mirror-mechanism.md) — T1 sub-step pin
+- [findings-regression.md](findings-regression.md) — T3 corpus sweep result
+
+## Mission summary — COMPLETE (2026-06-20)
+**`#241_0` FULLY CLOSED: structural-match → byte-match.** All tasks done; merged to
+`main` via merge commit (per-task IDs preserved).
+
+- **Root cause (T1):** the mirror was in the FIT (`routeSpline`), not the funnel
+  (`shortestPath`, proven equivariant). Exact line: `route.ts:findMaxDev` max-
+  deviation tie-break. The symmetric channel makes the two split deviations an exact
+  geometric tie; C computes them bit-identically and its strict `>` keeps the first
+  (tail), but the port's absolute-coordinate bezier eval carries ~1e-14 cancellation
+  noise whose sign depends on absolute x → the tie flipped to the head at the edge's
+  own frame (`+27` from C). NOT the `+27` offset itself (benign elsewhere); NOT
+  `mkspline` (C shares the same asymmetric cp).
+- **Fix (T2):** one comparison line — `if (d > maxd)` → `if (d > maxd*(1+1e-10)+1e-10)`
+  — absorbing sub-ULP noise so a true tie keeps the first index, matching C's
+  exact-arithmetic intent. No special-case (AD-2). Equivariance unit test green.
+- **Regression (T3, the crux):** 1995/1995 curated goldens pass, zero out-of-family
+  flips; corpus survey: exactly 2 ids changed, both improved, zero regressed
+  (`241_0` → byte-match; `2413_1` maxDelta 68.25→48.05). `241_0` SVG drawing content
+  byte-identical to native dot; knot now svg x=432 (tail). Oracle restored native.
+- **Quality gates:** `tsc` clean · `vitest` 1995 pass · `lizard` clean · survey
+  zero new diverges.
+- **Decisions:** 3 logged (T1/T2/T3), none flagged for review.
+- **Follow-up (not this mission):** latent `routeFlatEdgeFaithful` step-size bug
+  (`stepx=nodesep/2` vs C `Multisep/(cnt+1)`) for cnt≥2 non-adjacent multi-flats —
+  untouched by this fix (5:ne->8:nw is cnt=1); a separate mission if a cnt≥2 case
+  surfaces in the corpus.
 
 ## Stop conditions
 - Batch 1 cannot pin the mirror to a SINGLE sub-step (funnel vs fit vs constraint
