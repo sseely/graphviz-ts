@@ -279,6 +279,33 @@ function hasSidePort(e: GraphEdge): boolean {
   return (tp.side ?? 0) !== 0 || (hp.side ?? 0) !== 0;
 }
 
+/** True when x is an unrouted adjacent same-rank side-port flat edge. */
+function isGroupableFlat(x: GraphEdge, g: Graph): boolean {
+  return x.info.spl === undefined
+    && x.tail.info.rank === x.head.info.rank
+    && isFlatAdjacent(g, x) && hasSidePort(x);
+}
+
+/**
+ * Collect all unrouted adjacent same-rank side-port flat edges between e's two
+ * endpoints (either direction), ordered so group[0].tail is the lower-order
+ * (left) node. C groups every adjacent flat between a node pair into one
+ * make_flat_adj_edges call and normalizes its lead edge forward (makefwdedge) so
+ * tn = the left node; the port's buildFlatAux derives otn from edges[0].tail, so
+ * the lead edge must be forward for the reversed back edge to clone auxh->auxt
+ * and curl (size 7) instead of straight (size 4).
+ * @see lib/dotgen/dotsplines.c:make_flat_edge (makefwdedge of *edges), dot_splines_
+ */
+function collectAdjacentFlatGroup(e: GraphEdge, g: Graph): GraphEdge[] {
+  const u = e.tail, v = e.head;
+  const lo = (u.info.order ?? 0) <= (v.info.order ?? 0) ? u : v;
+  const sharesPair = (x: GraphEdge): boolean =>
+    (x.tail === u && x.head === v) || (x.tail === v && x.head === u);
+  const group = g.edges.filter(x => sharesPair(x) && isGroupableFlat(x, g));
+  group.sort((a, b) => Number(b.tail === lo) - Number(a.tail === lo) || a.seq - b.seq);
+  return group;
+}
+
 /**
  * Route a side-port edge through the faithful `beginPath → routeSplines →
  * endPath → clipAndInstall` pipeline. A same-rank edge routes via the flat
@@ -293,8 +320,13 @@ function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
   const sameRank = e.tail.info.rank !== undefined && e.tail.info.rank === e.head.info.rank;
   // Adjacent flat endpoints route via the rotated-aux pipeline (make_flat_adj_edges),
   // which installs the spline directly; the box channel handles non-adjacent flats.
+  // C groups ALL adjacent flats between a node pair into ONE aux call (cnt=N);
+  // route the whole group so the reversed back edge clones auxh->auxt and curls.
+  // @see lib/dotgen/dotsplines.c:dot_splines_ (ED_adjacent edge-group loop)
   if (sameRank && isFlatAdjacent(g, e)) {
-    return makeFlatAdjEdges(g, [e], 1, EDGETYPE_SPLINE) === 0 && e.info.spl !== undefined;
+    const group = collectAdjacentFlatGroup(e, g);
+    return makeFlatAdjEdges(g, group, group.length, EDGETYPE_SPLINE) === 0
+      && e.info.spl !== undefined;
   }
   const pts = sameRank ? routeFlatEdgeFaithful(g, e) : routeRegularEdgeFaithful(g, e);
   if (pts === null) return false;
