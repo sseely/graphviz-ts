@@ -61,10 +61,8 @@ const MID_X = (START.x + END.x) / 2; // ~495
 const SHIFT = 27;
 
 describe('routeSplines translation-equivariance (#241_0 5:ne->8:nw)', () => {
-  // RED until T2: on current `main` the dx=0 fit mirrors the knot to the head
-  // side, so neither equivariance nor the tail-side knot holds. `it.fails`
-  // asserts the test currently FAILS; T2 removes `.fails` when the fix lands.
-  it.fails('is translation-equivariant: routeSplines(channel+27) === routeSplines(channel)+27', () => {
+  // Green since T2: the tolerant findMaxDev tie-break restores equivariance.
+  it('is translation-equivariant: routeSplines(channel+27) === routeSplines(channel)+27', () => {
     const psA = routeSplines(channelPath(0));
     const psB = routeSplines(channelPath(SHIFT));
     expect(psA).not.toBeNull();
@@ -76,7 +74,7 @@ describe('routeSplines translation-equivariance (#241_0 5:ne->8:nw)', () => {
     }
   });
 
-  it.fails('places the two-bezier knot on the TAIL side (matching native dot)', () => {
+  it('places the two-bezier knot on the TAIL side (matching native dot)', () => {
     const ps = routeSplines(channelPath(0));
     expect(ps).not.toBeNull();
     // 7 control points = two cubic beziers; ps[3] is the join (knot).
