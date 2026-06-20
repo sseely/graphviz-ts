@@ -8,8 +8,8 @@ commit) — log the decision.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T3 | Faithfully port the regular-edge compass-port branch (from T1); add a colocated regression test | opus | `src/<T1 file>` + `src/<T1 file>.test.ts` | T1 | [ ] |
-| T4 | Faithfully port the flat-edge compass-port branch (from T2); add a colocated regression test | opus | `src/<T2 file>` + `src/<T2 file>.test.ts` | T2 | [ ] |
+| T3 | Faithfully port the regular-edge compass-port branch (from T1); add a colocated regression test | opus | `src/<T1 file>` + `src/<T1 file>.test.ts` | T1 | [x] |
+| T4 | Faithfully port the flat-edge compass-port branch (from T2); add a colocated regression test | opus | (collapsed into T3 — same fn) | T2 | [x] |
 
 ## Parallelism / write-set rule
 Before launching T3+T4 together, confirm `git diff --name-only` write-sets are
