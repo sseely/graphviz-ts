@@ -74,7 +74,7 @@ red test (Batch 1) is the target; it goes green when the fix lands.
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 | T1 diagnose: build the translation-equivariance repro (pure `routeSplines`), dump the intermediate polyline `pl` vs C `Pshortestpath`, pin the exact sub-step + line where the mirror enters (funnel vs fit vs constraint-vectors vs absolute-bound), and the minimal fix. RED equivariance test added. | [x] PINNED: `routeSpline`/`findMaxDev` tie-break (fit, not funnel); fix=tolerant tie-break, confirmed on repro |
-| 2 | T2 implement the pinned fix (equivariance test + `5:ne->8:nw` go green); T3 full-corpus regression sweep (zero new diverges — the crux) | [ ] |
+| 2 | T2 implement the pinned fix (equivariance test + `5:ne->8:nw` go green); T3 full-corpus regression sweep (zero new diverges — the crux) | [x] DONE: #241_0 byte-match; 1995/1995 goldens; 0 new diverges; 2413_1 also improved |
 
 - [decisions.md](decisions.md) — AD-1..AD-5
 - [batch-1/T1-diagnose.md](batch-1/T1-diagnose.md)
