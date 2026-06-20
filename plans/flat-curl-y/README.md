@@ -53,7 +53,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose non-adjacent curl, T2 diagnose adjacent curl | [ ] |
+| 1 | T1 diagnose non-adjacent curl, T2 diagnose adjacent curl | [x] |
 | 2 | T3 fix the isolated cause(s) + test | [ ] |
 
 - [decisions.md](decisions.md) — locked architecture decisions (AD-1..AD-5)
