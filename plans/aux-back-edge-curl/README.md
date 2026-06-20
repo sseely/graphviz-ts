@@ -82,8 +82,8 @@ Run with **opus** (`claude-opus-4-8`, 1M). TDD: the xfail tripwire is the target
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose: instrument C `make_regular_edge` + port back-edge path on the SAME aux back edge; name the exact mechanism + port line; confirm the minimal gating condition | [ ] |
-| 2 | T2 implement the gated fix (xfail flips green); T3 full-corpus regression sweep (zero new diverges) | [ ] |
+| 1 | T1 diagnose: instrument C `make_regular_edge` + port back-edge path on the SAME aux back edge; name the exact mechanism + port line; confirm the minimal gating condition | [x] |
+| 2 | T2 implement the gated fix (xfail flips green); T3 full-corpus regression sweep (zero new diverges) | [x] |
 
 - [decisions.md](decisions.md) — AD-1..AD-5
 - [batch-1/T1-diagnose-curl.md](batch-1/T1-diagnose-curl.md)
@@ -118,3 +118,32 @@ Lesson banked (memory `flat-edge-241-is-y-only`): "grouping alone suffices" was
 an UNTESTED hypothesis that cost this mission a stop. **Never declare a fix
 sufficient without running the actual fixed config against the oracle.** Batch 1
 must prove the mechanism, not assume it.
+
+## Mission summary (2026-06-20 — COMPLETE)
+**Tasks: 3/3 done (T1, T2, T3).** `#241_0` adjacent back-edge curl CLOSED to the
+oracle.
+
+- **Mechanism (T1):** `makeFwdEdge` (`edge-route-chain.ts`) reset the swapped
+  edge's ports to empty, where C `makefwdedge` SWAPS `tail_port↔head_port`. The
+  stripped ports made `routeRegularEdgeFaithful` straighten the reversed
+  `3:sw->2:se` clone (size 4) where C curls it (size 7). Proven by source + an
+  actual-config throwaway run (AD-1), not assumed. C plugin rebuild skipped
+  (push-forward; source + cached oracle already establish C=7).
+- **Fix 1 (T2):** `makeFwdEdge` swaps the ports like C. Naturally gated by port
+  presence (port-less back edges swap empty ports = no change); no extra gate
+  needed. Curl now byte-matches the oracle.
+- **Fix 2 (T3):** verification surfaced a pre-existing second defect — the reversed
+  clone stashed its head arrow under `_tailArrowPts` (j-swap) before `swapSpline`,
+  but `copyFlatArrow` only transferred `_arrowPts`, dropping the arrowhead.
+  `copyFlatArrow` now recovers it (gated by `eflag` + absent `_arrowPts`). Arrow
+  now byte-matches.
+- **Quality gates:** `tsc` 0; `vitest` 147 files / 1993 pass (xfail flipped to a
+  normal passing test; zero out-of-family golden churn); `lizard` clean; corpus
+  survey **diverged 357→356**, `#241_0` **diverged→structural-match**, ZERO new
+  diverges (AD-4). Oracle restored native (AD-5; C tree never modified).
+- **Residual (out of scope):** `#241_0` is `structural-match` (not `byte-match`)
+  only because of the unrelated `5:ne->8:nw` **non-adjacent flat edge**
+  (box-channel routing, maxDelta 126) — a separate pre-existing mechanism.
+  Recommend a follow-up mission. See `findings-regression.md`.
+- **Commits:** `docs(diag)` (T1) · `fix(flat): swap ports in makeFwdEdge` (T2) ·
+  `fix(flat): recover back-edge head arrow` (T3) · `test(flat): regression sweep`.
