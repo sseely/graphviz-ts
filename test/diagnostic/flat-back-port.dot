@@ -1,0 +1,10 @@
+digraph G {
+  // Minimal same-rank back-edge with compass ports that exercises
+  // the make_flat_adj_edges → rotated-aux pipeline.
+  // Node 1 anchors the rank above so 2 and 3 land on rank 1.
+  1 -> 2
+  1 -> 3
+  { rank=same; 2; 3 }
+  2:ne -> 3:nw
+  3:sw -> 2:se
+}
