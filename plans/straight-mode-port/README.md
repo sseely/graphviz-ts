@@ -72,7 +72,7 @@ HEAD:test/corpus/parity.json` before edits.
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| [batch-1](batch-1/overview.md) | T1 straightPath, T2a no-op refactor | [ ] |
+| [batch-1](batch-1/overview.md) | T1 straightPath, T2a no-op refactor | [x] |
 | [batch-2](batch-2/overview.md) | T2b straight-mode segmentation | [ ] |
 | [batch-3](batch-3/overview.md) | T3 goldens + parity verification | [ ] |
 

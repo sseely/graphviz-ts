@@ -6,8 +6,8 @@ prerequisites for the behavioral change in T2b (batch-2).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Port `straightPath`; regression-pin `straightLen` | implementation | `src/layout/dot/splines-route.ts`, `src/layout/dot/splines-route.test.ts` | — | [ ] |
-| T2a | Refactor chain routing into `routeChainSegmented` (single-segment, byte-identical) | implementation | `src/layout/dot/edge-route-chain.ts` | — | [ ] |
+| T1 | Port `straightPath`; regression-pin `straightLen` | implementation | `src/layout/dot/splines-route.ts`, `src/layout/dot/splines-route.test.ts` | — | [x] |
+| T2a | Refactor chain routing into `routeChainSegmented` (single-segment, byte-identical) | implementation | `src/layout/dot/edge-route-chain.ts` | — | [x] |
 
 T1 and T2a touch different files → no write conflict. Execute solo per
 `parallelism.md` (delicate port; default single-agent).
