@@ -51,8 +51,8 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose regular (#2168), T2 diagnose flat (#241_0) | [ ] |
-| 2 | T3 fix regular, T4 fix flat | [ ] |
+| 1 | T1 diagnose regular (#2168), T2 diagnose flat (#241_0) | [x] |
+| 2 | T3+T4 fix compass-port ictxt (collapsed) | [x] |
 
 - [decisions.md](decisions.md) — locked architecture decisions (AD-1..AD-4)
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-diagnose-regular.md) · [T2](batch-1/T2-diagnose-flat.md)
@@ -84,3 +84,22 @@ N/A — dev/test fidelity work; the browser library's layout/render path is
 unchanged in shape (no SLIs, dashboards, traces, on-call). **Rollback:
 Reversible** (revert the merge commit). No API/schema/contract/backwards-compat
 impact.
+
+## Mission summary (2026-06-19)
+- **Batch 1 — DONE.** T1/T2 diagnosed both #2168 (regular) and #241_0 (flat) to
+  one root cause: `compassPort` deferred the C `ictxt` path and placed every
+  compass port at the node bbox corner instead of the shape boundary.
+- **Batch 2 — DONE (collapsed T3+T4).** Ported `compassPoint` (ray from centre →
+  `bezierClip` vs the node `insidefn`) + the ictxt branch into
+  `src/common/compass-port.ts`, gated to whole-node directional ports.
+  - **Result:** survey **+8 / −0** — `#2168`+`2168_1..4` (diverged →
+    byte/structural), bonus `1444`, `1444-2`, `graphs-b123`. 128→ goldens green
+    (1991 tests). `steering-east/west` now **byte-identical to the C ref** →
+    promoted `iterative 0.5pt` → `deterministic`, retired their `portReference`
+    drift-pins (user-approved; `refs-port/` files deleted).
+- **Follow-up (AD-4):** `#241_0` flat compass-port edges now have correct
+  endpoints but the **flat-edge routing** between them still diverges
+  (`splines-flat.ts`/make_flat_edge) — a separate branch; recommend a dedicated
+  flat-edge-routing mission.
+- **Quality gates (final):** tsc 0; vitest 1991 / 128 goldens; lizard clean;
+  survey +8 / 0 regressions (2222 timeout was a concurrency flake).
