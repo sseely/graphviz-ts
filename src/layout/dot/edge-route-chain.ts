@@ -283,8 +283,13 @@ export function makeFwdEdge(e: GraphEdge): GraphEdge {
     head,
     info: {
       ...e.info,
-      tail_port: makePort(),
-      head_port: makePort(),
+      // C makefwdedge SWAPS the ports (does not strip them): a back edge keeps
+      // its corner ports across the forward view so make_regular_edge curls it
+      // (e.g. #241_0 aux back-edge clone sw/se → size 7). Stripping to an empty
+      // Center port straightened every port-bearing back edge (size 4).
+      // @see lib/dotgen/dotsplines.c:makefwdedge (ED_tail_port(new)=ED_head_port(old))
+      tail_port: e.info.head_port ?? makePort(),
+      head_port: e.info.tail_port ?? makePort(),
       to_orig: e,
       edge_type: VIRTUAL,
     },

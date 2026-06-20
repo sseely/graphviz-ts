@@ -162,15 +162,13 @@ describe('flat-group #241_0 — adjacent flat edges 2↔3', () => {
     assertFwdCurl(renderSvg(DOT_241_0, 'dot'));
   });
 
-  // XFAIL (expected-fail tripwire): grouping (T2) landed and is golden-neutral,
-  // but a SECOND divergence blocks the curl — the aux back-edge clone (auxh->auxt,
-  // a regular adjacent-rank back edge in the aux) is routed straight by
-  // routeFaithfulAdjacentBack, which does not honor its corner ports, where C's
-  // make_regular_edge curls it (size 7). Fix is OUT OF SCOPE here (core back-edge
-  // routing, not the adjacent-flat dispatch — AD-2/scope-creep STOP). When that
-  // fix lands, assertBackCurl will pass and this `.fails` flips RED — un-fail it.
-  // @see plans/group-adjacent-flats/findings-second-divergence.md
-  it.fails('XFAIL: 3:sw->2:se back edge stays straight — blocked on aux back-edge port-curl', () => {
+  // GREEN (closed): the aux back-edge clone (auxh->auxt, a regular adjacent-rank
+  // back edge in the aux) now curls (size 7). Root fix: makeFwdEdge SWAPS the
+  // ports instead of stripping them, matching C makefwdedge, so the sw/se corner
+  // ports survive into the forward view and make_regular_edge curls the spline.
+  // @see lib/dotgen/dotsplines.c:makefwdedge
+  // @see plans/aux-back-edge-curl/findings-curl-mechanism.md
+  it('3:sw->2:se back edge is a curl — 7 pts AND Y-range > 10pt', () => {
     assertBackCurl(renderSvg(DOT_241_0, 'dot'));
   });
 });
