@@ -49,6 +49,8 @@ function duplicatePairs(pts: Pt[]): number {
 const L5 = 'digraph { a->b->c->d->e->f; a->f; }';
 const L4 = 'digraph { a->b->c->d->e; a->e; }';
 const L3 = 'digraph { a->b->c->d; a->d; }';
+const POLY_L5 = 'digraph { graph [splines=polyline]; a->b->c->d->e->f; a->f; }';
+const POLY_L4 = 'digraph { graph [splines=polyline]; a->b->c->d->e; a->e; }';
 
 it('smode splits the L5 long edge: duplicate straight-middle points at corridor x', () => {
   const pts = pathPoints(edgePath(renderSvg(L5, 'dot'), 'a', 'f'));
@@ -76,4 +78,36 @@ it('L5 long-edge spline byte-matches the canonical oracle geometry', () => {
     'M59.53,-360.16C67.69,-333.79 82,-280.98 82,-235 82,-235 82,-235 82,-161 '
     + '82,-120.59 70.95,-74.9 62.73,-46.52';
   expect(edgePath(renderSvg(L5, 'dot'), 'a', 'f')).toBe(oracle);
+});
+
+// ---------------------------------------------------------------------------
+// splines=polyline (EDGETYPE_PLINE): smode dispatches per-segment via
+// routepolylines (make_regular_edge !is_spline branch). The shared chain
+// router gives polyline the same corridor-hugging segmentation as spline.
+// ---------------------------------------------------------------------------
+
+it('smode segments a polyline long edge with a corridor-pinned straight middle', () => {
+  const pts = pathPoints(edgePath(renderSvg(POLY_L5, 'dot'), 'a', 'f'));
+  expect(duplicatePairs(pts)).toBeGreaterThanOrEqual(1);
+  const dup = pts.find((p, i) => i > 0 && p.x === pts[i - 1].x && p.y === pts[i - 1].y)!;
+  expect(dup.x).toBe(Math.max(...pts.map((p) => p.x)));
+});
+
+it('polyline L4 stays below threshold: single polyline byte-matches the oracle', () => {
+  // Below threshold → one routepolylines call; the run hugs the bow x=63, not a
+  // segmented corridor. (Polylines always encode straight runs as duplicate
+  // control points, so the dup-pair heuristic cannot distinguish smode here —
+  // the oracle byte-match is the authoritative below-threshold check.)
+  const oracle =
+    'M56.95,-287.65C59.57,-272.19 63,-252 63,-252 63,-252 63,-72 63,-72 63,-72 '
+    + '60.99,-60.17 58.87,-47.68';
+  expect(edgePath(renderSvg(POLY_L4, 'dot'), 'a', 'e')).toBe(oracle);
+});
+
+it('polyline L5 long edge byte-matches the canonical oracle geometry', () => {
+  // Pinned from GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot (15.1.0).
+  const oracle =
+    'M57.38,-359.87C64.82,-322.1 82,-235 82,-235 82,-235 82,-235 82,-161 82,-161 '
+    + '67.77,-88.84 59.6,-47.4';
+  expect(edgePath(renderSvg(POLY_L5, 'dot'), 'a', 'f')).toBe(oracle);
 });

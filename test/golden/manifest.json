@@ -1050,5 +1050,13 @@
     "input": "test/golden/inputs/dot-long-edge-p2.dot",
     "reference": "test/golden/refs/dot-long-edge-p2.svg",
     "description": "corpus winner p2.gv (kernel--runmem long edge): smode corridor-hugging segmentation; all 37 edge paths byte-match the oracle; ref: native C dot -Tsvg"
+  },
+  {
+    "id": "dot-long-edge-polyline",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-long-edge-polyline.dot",
+    "reference": "test/golden/refs/dot-long-edge-polyline.svg",
+    "description": "splines=polyline long edge (a->f over 5 ranks): straight-mode segmentation routes each piece via routepolylines (make_regular_edge !is_spline branch); byte-matches the oracle, locking polyline smode (AD-3 follow-up)"
   }
 ]
