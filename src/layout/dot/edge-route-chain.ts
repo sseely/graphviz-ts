@@ -121,12 +121,29 @@ function buildChainPath(g: Graph, e: GraphEdge, segs: GraphEdge[]): Path | null 
 }
 
 /**
+ * Route a virtual-node chain (begin → boxes → end → route → recover_slack),
+ * accumulating the make_regular_edge spline points. Emits ONE segment for now
+ * (byte-identical to the prior buildChainPath+route+recoverSlack sequence).
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (chain while-loop)
+ */
+function routeChainSegmented(g: Graph, e: GraphEdge, segs: GraphEdge[]): Point[] | null {
+  // Shared by forward (routeMultiRankEdgeFaithful) and back (faithfulBackFwdPoints,
+  // via a makefwdedge view) chains. T2b extends this walk with the straight-mode
+  // (smode) branch that splits a long collinear vnode run into spline-top +
+  // straight-middle + spline-bottom.
+  const P = buildChainPath(g, e, segs);
+  if (P === null) return null;
+  const pts = routeRegularByType(P, edgeType(g));
+  recoverSlack(segs, P);
+  return pts;
+}
+
+/**
  * Route a forward edge spanning ≥2 ranks via its virtual-node chain through the
  * faithful pipeline (REGULAREDGE side boxes steer the port, routeSplines over
- * the full chain; adjustregularpath inter-rank widening finally fires). Returns
+ * the chain; adjustregularpath inter-rank widening finally fires). Returns
  * control points in graphviz-internal y-up, or null when the edge is not a
- * multi-rank chain. Straight-mode runs (straight_len ≥ threshold) are not yet
- * ported — see decision journal.
+ * multi-rank chain.
  * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path)
  */
 export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | null {
@@ -143,11 +160,7 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
   }
   const segs = chainSegments(e);
   if (segs.length < 2) return null;
-  const P = buildChainPath(g, e, segs);
-  if (P === null) return null;
-  const pts = routeRegularByType(P, et);
-  recoverSlack(segs, P);
-  return pts;
+  return routeChainSegmented(g, e, segs);
 }
 
 /**
@@ -305,6 +318,11 @@ export function makeFwdEdge(e: GraphEdge): GraphEdge {
 function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
+  // NOTE: back edges deliberately omit recoverSlack here (preserving the prior
+  // single-pass behavior byte-for-byte). C runs recover_slack on the makefwdedge
+  // view too; folding the back caller into routeChainSegmented (which would add
+  // that call) is a behavioral change deferred to T2b, where the smode loop owns
+  // per-segment recover_slack and the 0-regression rule applies.
   const P = buildChainPath(g, makeFwdEdge(e), segs);
   return P === null ? null : routeRegularByType(P, edgeType(g));
 }
