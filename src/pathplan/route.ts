@@ -189,7 +189,14 @@ class RouteHelper {
       const px = RouteHelper.B0(t)*p0.x + RouteHelper.B1(t)*cp1.x + RouteHelper.B2(t)*cp2.x + RouteHelper.B3(t)*p1.x;
       const py = RouteHelper.B0(t)*p0.y + RouteHelper.B1(t)*cp1.y + RouteHelper.B2(t)*cp2.y + RouteHelper.B3(t)*p1.y;
       const d = RouteHelper.ptDist({ x: px, y: py }, inps[i]);
-      if (d > maxd) { maxd = d; maxi = i; }
+      // C `reallyroutespline` uses `if (d > maxd)` (strict): on equal deviations
+      // the FIRST index wins. That tie-break is only translation-equivariant in
+      // exact arithmetic — the absolute-coordinate bezier eval above carries
+      // ~1e-14 cancellation noise whose sign depends on absolute position, which
+      // flips a true geometric tie (e.g. #241_0 5:ne->8:nw). Absorb that noise so
+      // a tie deterministically keeps the first index, matching C.
+      // @see lib/pathplan/route.c:reallyroutespline (max-deviation split)
+      if (d > maxd * (1 + 1e-10) + 1e-10) { maxd = d; maxi = i; }
     }
     return maxi;
   }
