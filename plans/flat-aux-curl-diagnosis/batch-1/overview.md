@@ -6,8 +6,8 @@ disjoint files and may run in parallel.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Build + canary the aux rank/chain dump harness on a minimal synthetic repro | debugger | `test/diagnostic/flat-aux-dump.ts`, `test/diagnostic/flat-back-port.dot`, `plans/flat-aux-curl-diagnosis/findings-harness.md` | — | [ ] |
-| T2 | Static input-parity diff: C `make_flat_adj_edges` construction vs port `buildFlatAux`/`cloneGraph` | debugger | `plans/flat-aux-curl-diagnosis/findings-input-parity.md` | — | [ ] |
+| T1 | Build + canary the aux rank/chain dump harness on a minimal synthetic repro | debugger | `test/diagnostic/flat-aux-dump.ts`, `test/diagnostic/flat-back-port.dot`, `plans/flat-aux-curl-diagnosis/findings-harness.md` | — | [x] |
+| T2 | Static input-parity diff: C `make_flat_adj_edges` construction vs port `buildFlatAux`/`cloneGraph` | debugger | `plans/flat-aux-curl-diagnosis/findings-input-parity.md` | — | [x] |
 
 Both append a row to `decision-journal.md` **via the orchestrator after the
 batch** (not from inside the parallel agents — one writer per file).

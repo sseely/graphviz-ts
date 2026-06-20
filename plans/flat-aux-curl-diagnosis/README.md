@@ -59,7 +59,7 @@ so `parity.json` must be unchanged. T3 confirms 0 delta as its own criterion.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 build+canary aux dump harness (synthetic repro); T2 static input-parity diff | [ ] |
+| 1 | T1 build+canary aux dump harness (synthetic repro); T2 static input-parity diff | [x] |
 | 2 | T3 runtime rank/chain dump → name the divergent line | [ ] |
 
 - [decisions.md](decisions.md) — locked decisions (AD-1..AD-6)
