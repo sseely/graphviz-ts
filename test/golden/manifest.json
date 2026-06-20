@@ -1034,5 +1034,21 @@
     "input": "test/golden/inputs/dot-compound-lhead.dot",
     "reference": "test/golden/refs/dot-compound-lhead.svg",
     "description": "compound=true; a->b with lhead/ltail clipping splines + arrowheads to cluster bboxes (compound.c makeCompoundEdge + arrowEndClip); ref: native C dot -Tsvg via gvmine"
+  },
+  {
+    "id": "dot-long-edge-straight",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-long-edge-straight.dot",
+    "reference": "test/golden/refs/dot-long-edge-straight.svg",
+    "description": "straight-mode segmentation: a->f spans 5 ranks over a collinear vnode run >= threshold, split into spline-top + straight-middle + spline-bottom (make_regular_edge smode); ref: native C dot -Tsvg"
+  },
+  {
+    "id": "dot-long-edge-p2",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-long-edge-p2.dot",
+    "reference": "test/golden/refs/dot-long-edge-p2.svg",
+    "description": "corpus winner p2.gv (kernel--runmem long edge): smode corridor-hugging segmentation; all 37 edge paths byte-match the oracle; ref: native C dot -Tsvg"
   }
 ]
