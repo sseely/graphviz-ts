@@ -200,12 +200,23 @@ function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
   }
 }
 
-/** Transform the aux edge's arrowhead polygon onto the original edge. */
+/** Transform the aux edge's head-arrow polygon onto the original edge.
+ * C regenerates the arrowhead at emit time from the spline's eflag/ep; the port
+ * pre-stashes the polygon during routing. A reversed back-edge clone
+ * (routeFaithfulAdjacentBack) stashes its arrow as `_tailArrowPts` (sflag side)
+ * BEFORE swapSpline flips the spline to a head arrow (eflag), so its head polygon
+ * lives under the tail key — recover it when the swapped spline carries eflag but
+ * `_arrowPts` is absent (e.g. #241_0 `3:sw->2:se`).
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges */
 function copyFlatArrow(orig: Edge, auxe: Edge, del: Point, flip: boolean): void {
-  const arrow = (auxe.info as unknown as Record<string, unknown>)._arrowPts as Point[] | undefined;
-  if (arrow !== undefined) {
+  const einfo = auxe.info as unknown as Record<string, unknown>;
+  const head = (einfo._arrowPts as Point[] | undefined)
+    ?? (auxe.info.spl?.list[0]?.eflag
+      ? einfo._tailArrowPts as Point[] | undefined
+      : undefined);
+  if (head !== undefined) {
     (orig.info as unknown as Record<string, unknown>)._arrowPts =
-      arrow.map(p => transformf(p, del, flip));
+      head.map(p => transformf(p, del, flip));
   }
 }
 
