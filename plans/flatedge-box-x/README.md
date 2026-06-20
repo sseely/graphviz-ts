@@ -51,8 +51,8 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose: pin the FLATEDGE box-x line (instrument C) | [ ] |
-| 2 | T2 fix: FLATEDGE-gate the box-x to C + test | [ ] |
+| 1 | T1 diagnose: pin the FLATEDGE box-x line (instrument C) | [x] |
+| 2 | T2 fix | STOP (premise invalid — see below) |
 
 - [decisions.md](decisions.md) — locked architecture decisions (AD-1..AD-5)
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-diagnose.md)
@@ -88,3 +88,21 @@ N/A — dev/test fidelity work; the browser library's layout/render path is
 unchanged in shape (no SLIs, dashboards, traces, on-call). **Rollback:
 Reversible** (revert the merge commit). No API/schema/contract/backwards-compat
 impact.
+
+## Mission outcome (2026-06-19) — STOPPED at T1: premise invalid
+T1 (no `src/` change) dumped C `ND_coord(n).x` directly and found the port's
+internal node x-coords are **uniformly +27** vs C (node1: 72 in C, 99 in port;
+likewise all nodes). Both compute the flat-end box `LL.x = coord.x + rw` with
+the SAME formula — so the +27 box-x delta this mission targeted is a
+**compensating internal-frame offset**, cancelled by the emit-time translate,
+NOT a bug. Proof: `1:se->6:sw`'s final X is byte-identical to the oracle
+(`M114.02 ... 374.6 ... 432.62`); only **Y** differs (0 vs -7.88).
+
+**Correction to the prior diagnosis:** flat-edge-routing-241 T1 read internal
+box coords (`[99,109]` vs `[126,136]`) and mis-attributed the +27 to a box-x
+bug; it is the node-frame offset.
+
+**Recommendation:** the real #241_0 divergence is **Y-only** (bbox height /
+curl extent), dominated by the adjacent `make_flat_adj_edges` curl. Replace
+follow-ons #1 and #2 with a SINGLE mission targeting flat-edge Y/curl geometry.
+See decision-journal.md T1 rows.
