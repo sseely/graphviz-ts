@@ -70,10 +70,10 @@ Run with **opus** (`claude-opus-4-8`, 1M). TDD: synthetic cnt=2/cnt=3 (top) + cn
 ## Batches
 | Batch | Task | Status |
 |-------|------|--------|
-| 1 | T1 generalize `topBoxes`/`bottomBoxes` (separate end/mid steps) + export helpers; cnt=1 byte-identical | [ ] |
-| 2 | T2 create `splines-flat-multi.ts` (group collect + cnt-loop router, top+bottom) + unit tests byte-match oracle | [ ] |
-| 3 | T3 wire `routeFaithfulSidePort` dispatch to collect+route the group; end-to-end synthetic byte-match | [ ] |
-| 4 | T4 full-corpus regression sweep (zero new diverges, 74 cnt=1 unchanged) + oracle restore + close | [ ] |
+| 1 | T1 generalize `topBoxes`/`bottomBoxes` (separate end/mid steps) + export helpers; cnt=1 byte-identical | [x] |
+| 2 | T2 create `splines-flat-multi.ts` (group collect + cnt-loop router, top+bottom) + unit tests byte-match oracle | [x] |
+| 3 | T3 wire `routeFaithfulSidePort` dispatch to collect+route the group; end-to-end synthetic byte-match | [x] |
+| 4 | T4 full-corpus regression sweep (zero new diverges, 74 cnt=1 unchanged) + oracle restore + close | [x] |
 
 - [decisions.md](decisions.md) — AD-1..AD-5
 - [findings-diagnosis.md](findings-diagnosis.md) — the proven pre-mission evidence
@@ -107,6 +107,34 @@ N/A — offline browser layout library. **Behavior change confined to the
 non-adjacent flat path of the SHARED box-channel router; cnt=1 is byte-identical by
 construction, and the T4 corpus gate is the safety net.** **Rollback: Reversible**
 (revert the merge commit). No API/schema/contract impact (internal geometry).
+
+## Mission summary (CLOSED 2026-06-20)
+**Done: all 4 tasks.** C `make_flat_edge`/`make_flat_bottom_edges` cnt-loop is
+now faithfully ported for cnt≥2 non-adjacent flats.
+- **T1** generalized `topBoxes`/`bottomBoxes` to `(endStepX,endStepY,midStepY)`
+  + exported the flat helpers (pure refactor, cnt=1 byte-identical).
+- **T2** new `splines-flat-multi.ts`: `collectNonAdjacentFlatGroup` (identical-port
+  group key, C portcmp) + `routeFlatEdgeGroupFaithful` (shared makeFlatEnd, edge i
+  nested `(i+1)*step`). Found + fixed a latent hazard: `routeSplines` mutates its
+  boxes in place and the port aliases them (C copies by value), so the cnt-loop
+  needs a per-iteration `copyPathEnd` deep-copy. 4 byte-match-vs-oracle tests.
+- **T3** wired `routeFaithfulSidePort` to collect+route the group once.
+- **T4** regression sweep below.
+
+**Results:** synthetic top cnt=2/cnt=3 + bottom cnt=2 byte-match native `dot`
+15.1.0~dev.20260610.0127 (distinct nested splines; viewBox grows with the bulge);
+cnt=1 byte-identical. vitest **1999** (1995 unchanged + 4 new). Corpus survey:
+**ZERO new diverges** (diverged 356→356, structural 237→237); only flip is the
+flaky `2222` byte-match↔timeout (13 s render vs 20 s timeout under concurrency 8;
+SVG proven byte-identical to main) — `parity.json` left at baseline. C oracle
+clean (no instrumentation used). Decisions: AD-1..AD-5 all upheld. See
+[findings-regression.md](findings-regression.md).
+
+**Tasks completed vs planned:** 4/4. **Decisions flagged for review:** 1 —
+`routeFlatEdgeFaithful` is now dead (comment-referenced only), retained as the
+cnt=1 reference; removable in a follow-up that touches `splines-flat.ts`.
+**Quality gates:** tsc 0, lizard clean, all changed `.ts` <500 lines, vitest 1999.
+**Rollback:** revert the merge commit.
 
 ## Context — read first
 Lessons banked across the `#241_0` saga (memory `flat-edge-241-is-y-only`,
