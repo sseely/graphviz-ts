@@ -83,7 +83,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M). Fable 5 disabled (memory
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 pin C group membership+order+auxt contract; write the failing (red) #241_0 oracle test | [ ] |
+| 1 | T1 pin C group membership+order+auxt contract; write the failing (red) #241_0 oracle test | [x] |
 | 2 | T2 implement caller-side grouping (green); T3 full regression sweep (goldens byte-identical + survey net-improve) | [ ] |
 
 - [decisions.md](decisions.md) — locked decisions (AD-1..AD-5)
