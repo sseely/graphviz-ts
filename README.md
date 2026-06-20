@@ -1,0 +1,160 @@
+<!-- SPDX-License-Identifier: EPL-2.0 -->
+
+# graphviz-ts
+
+A faithful TypeScript port of [Graphviz](https://graphviz.org/) — the
+graph-visualization toolkit originally written in C at AT&T Research and Lucent
+Bell Labs. It parses the DOT language, runs Graphviz's layout engines, and emits
+SVG.
+
+The defining property: **pure TypeScript.** No Java, no native binary, no WASM.
+It runs in a browser or in Node with zero external dependencies at runtime. The
+goal is bit-for-bit fidelity to the C implementation, which is treated as the
+canonical specification (see [`CLAUDE.md`](./CLAUDE.md)).
+
+> **Status: `0.1.0` — in active development.** The port is mature enough to lay
+> out and render real graphs across all engines, but it is not yet published to
+> npm and the C feature surface is not 100% covered. The `dot` engine is the
+> primary fidelity target. See [Status & coverage](#status--coverage) below.
+
+## Why this exists
+
+Existing ways to render DOT/PlantUML in a JS environment shell out to a Graphviz
+binary, a PlantUML server, or a Java install — none of which run in a browser
+and all of which add deployment friction. graphviz-ts removes that dependency
+entirely: the layout engine *is* TypeScript.
+
+## Install & build
+
+Not yet on npm. For now, clone and build:
+
+```bash
+git clone <repo-url> graphviz-ts
+cd graphviz-ts
+npm install
+npm run build        # → dist/index.js (ESM bundle, via esbuild)
+```
+
+`npm run build` produces a single bundled ES module at `dist/index.js`. (Type
+declarations are not yet emitted by the build — see
+[Known limitations](#known-limitations).)
+
+## Quick start
+
+```ts
+import { renderSvg } from 'graphviz-ts';
+
+const dot = `
+  digraph {
+    a -> b;
+    b -> c;
+    a -> c;
+  }
+`;
+
+const svg = renderSvg(dot, 'dot');
+console.log(svg); // <svg ...>...</svg>
+```
+
+`renderSvg(dotSource, engine)` parses the DOT source, runs the named layout
+engine, renders to SVG, and returns the SVG string.
+
+## Layout engines
+
+All eight Graphviz layout engines are registered. Pass the name as the second
+argument to `renderSvg`:
+
+| Engine       | Layout style                                  |
+|--------------|-----------------------------------------------|
+| `dot`        | Hierarchical / layered directed graphs        |
+| `neato`      | Spring-model (Kamada–Kawai)                   |
+| `fdp`        | Force-directed                                |
+| `sfdp`       | Multiscale force-directed (large graphs)      |
+| `circo`      | Circular                                      |
+| `twopi`      | Radial                                        |
+| `osage`      | Clustered                                     |
+| `patchwork`  | Squarified treemap                            |
+
+`dot` receives the most fidelity attention because the primary consumer is
+DOT-centric. Per-engine coverage against the C source is tracked in the
+[port catalog](./plans/port-catalog/README.md).
+
+## Browser usage
+
+The library uses no Node-only APIs and is safe to bundle for the browser. One
+caller-supplied hook may be required:
+
+- **Image sizing.** When a graph references external images (e.g.
+  `node [image="foo.png"]`), Graphviz needs each image's intrinsic dimensions.
+  Because the library cannot read the filesystem, provide a sizer via
+  `setImageSizer`:
+
+  ```ts
+  import { setImageSizer } from 'graphviz-ts';
+
+  setImageSizer((src) => ({ w: 64, h: 64 })); // return null if unknown
+  ```
+
+Text measurement is handled internally with a built-in metric model, so no font
+files are required for layout.
+
+## Public API
+
+```ts
+// Primary entry point.
+function renderSvg(dotSource: string, engine: string): string;
+
+// Parse DOT into the in-memory graph model (without laying it out).
+function parse(dotSource: string): Graph;
+
+// Supply intrinsic dimensions for external image references (browser/Node).
+function setImageSizer(sizer: ImageSizer | null): void;
+type ImageSizer = (src: string) => { w: number; h: number } | null;
+
+// Lower-level orchestration, for callers that need engine/render control.
+class GvcContext { /* register engines/renderers, layout, render */ }
+function render(ctx: GvcContext, graph: Graph, format: string): string;
+```
+
+Most callers only need `renderSvg`. `parse`, `GvcContext`, and `render` are
+exposed for advanced use — e.g. inspecting the parsed model, or driving layout
+and rendering as separate steps.
+
+## Development
+
+```bash
+npm test            # run the test suite (vitest)
+npm run coverage    # run with coverage (v8)
+npm run typecheck   # tsc --noEmit, strict mode, zero errors required
+npm run build       # bundle to dist/index.js
+```
+
+The test suite verifies port fidelity by comparing generated SVG against output
+from the canonical C Graphviz. New behavior is pinned to the C source — see
+[`CLAUDE.md`](./CLAUDE.md) for the porting rules and the
+[port catalog](./plans/port-catalog/README.md) for status.
+
+## Status & coverage
+
+- **What works:** parsing, all eight layout engines, SVG output, and the
+  intermediate `json` / `xdot` / `dot` / imagemap text formats.
+- **What's tracked:** every C algorithm and its port status is inventoried in
+  the [port catalog](./plans/port-catalog/README.md). Items marked `[ ]` there
+  are real gaps, not footnotes.
+- **Known behavioral divergences from C** (where output differs in a documented,
+  bounded way) are listed in [`docs/known-divergences.md`](./docs/known-divergences.md).
+
+## Known limitations
+
+- **Not yet published to npm.** No package entry points (`main`/`module`/
+  `types`/`exports`) are declared yet, and the esbuild `build` step does not emit
+  `.d.ts` declarations. Both are tracked follow-ups before a `1.0` consumer
+  release.
+- **Feature coverage is incomplete.** The C source defines completeness; gaps
+  are tracked in the port catalog rather than hidden.
+
+## License
+
+[Eclipse Public License v2.0](https://www.eclipse.org/legal/epl-2.0/) (EPL-2.0),
+matching upstream Graphviz. Every source file carries an
+`SPDX-License-Identifier: EPL-2.0` header.
