@@ -48,8 +48,8 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 diagnose flat-edge routing (instrument C) | [ ] |
-| 2 | T2 fix the divergent flat-routing branch + test | [ ] |
+| 1 | T1 diagnose flat-edge routing (instrument C) | [x] |
+| 2 | T2 fix | STOP (AD-4: multi-cause) |
 
 - [decisions.md](decisions.md) — locked architecture decisions (AD-1..AD-5)
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-diagnose.md)
@@ -79,3 +79,20 @@ N/A — dev/test fidelity work; the browser library's layout/render path is
 unchanged in shape (no SLIs, dashboards, traces, on-call). **Rollback:
 Reversible** (revert the merge commit). No API/schema/contract/backwards-compat
 impact.
+
+## Mission outcome (2026-06-19) — STOPPED at T1 per AD-4
+T1 diagnosis (no `src/` change): #241_0's flat-edge divergence is **multi-cause
+across two code paths**, not an isolated branch:
+1. **Non-adjacent** edges (`1:se->6:sw`, `5:ne->8:nw`): `make_flat_edge` TOP
+   path. vspace/stepx/stepy MATCH C (36/9/18); the **FLATEDGE end-box is
+   x-shifted by ~rw (27)** — C places it at the node centre, the port at the
+   node edge (`makeFlatEnd`->`maximal_bbox`->begin/endpath FLATEDGE clip).
+2. **Adjacent** edges (`2:ne->3:nw`, `3:sw->2:se`): the separate
+   `make_flat_adj_edges` aux-graph path (curl-vs-straight) — not yet pinned.
+Nodes + cardinal edges match C exactly; the visible 7.88 shift is the bbox
+absorbing these two routing differences.
+
+**Recommendation:** split into two focused follow-on missions — (1) FLATEDGE
+end-box x-placement; (2) make_flat_adj_edges curl geometry. Each is isolated;
+together they are a multi-cause rewrite that AD-4 says not to attempt in one
+shot. See decision-journal.md T1 rows for the C/port dumps.
