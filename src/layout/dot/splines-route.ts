@@ -107,6 +107,22 @@ export function straightLen(n: Node): number {
   return cnt;
 }
 
+/**
+ * Advance `cnt` head-out hops along the straight run from `e`, then append two
+ * copies of `pts`'s last point — emitting the straight middle of a smode
+ * segment as a degenerate (collinear) bezier piece. Mutates `pts` (+2 entries,
+ * each a value-copy of the prior last point, matching C's pointf-by-value
+ * appends); returns the edge `cnt` hops downstream.
+ * @see lib/dotgen/dotsplines.c:straight_path
+ */
+export function straightPath(e: Edge, cnt: number, pts: Point[]): Edge {
+  let f = e;
+  for (let i = 0; i < cnt; i++) f = f.head.info.out!.list[0];
+  const last = pts[pts.length - 1];
+  pts.push({ x: last.x, y: last.y }, { x: last.x, y: last.y });
+  return f;
+}
+
 // ---------------------------------------------------------------------------
 // resize_vn
 // @see lib/dotgen/dotsplines.c:resize_vn
