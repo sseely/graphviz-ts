@@ -33,7 +33,9 @@ import { endPath } from '../../common/splines-path-end.js';
 import { routeRegularByType } from './splines-route-type.js';
 import { edgeType, EDGETYPE_LINE } from './splines.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
-import { splineMerge, makeLineEdge, resizeVn } from './splines-route.js';
+import { splineMerge, makeLineEdge, resizeVn, straightLen, straightPath } from './splines-route.js';
+import { EDGE_LABEL } from './rank.js';
+import type { RankEntry } from '../../model/rankEntry.js';
 import { rankHt } from './edge-route-rank.js';
 import { graphRanksep } from './position-aux.js';
 import {
@@ -73,69 +75,146 @@ function chainSegments(e: GraphEdge): GraphEdge[] {
   return segs;
 }
 
-/**
- * Accumulate the inter-rank box plus, for each non-final segment, the virtual
- * node's maximal bbox — the body of make_regular_edge's chain `while` loop
- * (non-straight-mode). The final segment contributes only its rank box.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (while ND_node_type==VIRTUAL)
- */
-function chainBoxes(ctx: BboxCtx, segs: GraphEdge[]): Box[] {
-  const boxes: Box[] = [];
-  for (let i = 0; i < segs.length; i++) {
-    boxes.push(rankBox(ctx, segs[i].tail.info.rank!));
-    if (i < segs.length - 1) {
-      boxes.push(maximalBbox(ctx, segs[i].head, segs[i], segs[i + 1]));
-    }
-  }
-  return boxes;
-}
-
 /** beginPath/endPath args for a single non-merged REGULAREDGE chain segment. */
 function chainPathArgs(P: Path, e: GraphEdge, endp: PathendT, merge: boolean, ranksep: number) {
   return { P, e, et: REGULAREDGE, endp, merge, inEdges: [], outEdges: [], ranksep, pboxfn: null };
 }
 
-/**
- * Assemble the begin → chain boxes → end path for a multi-rank chain, then run
- * completeRegularPath. Returns the populated Path, or null if it cannot close.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag forward path body)
- */
-function buildChainPath(g: Graph, e: GraphEdge, segs: GraphEdge[]): Path | null {
-  const ranks = g.info.rank!;
-  // Begin/end derive from the chain (low→high rank), so this serves forward
-  // edges (tn=e.tail) and back edges (tn=e.head, reversed downstream) alike.
-  const last = segs[segs.length - 1];
-  const [tn, hn] = [segs[0].tail, last.head];
-  const [r, rh] = [tn.info.rank!, hn.info.rank!];
-  const ctx = chainBboxCtx(g);
-  const ranksep = graphRanksep(g);
-  const P: Path = { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null };
-  const tend = freshEndp(maximalBbox(ctx, tn, undefined, segs[0]));
-  beginPath(chainPathArgs(P, e, tend, splineMerge(tn), ranksep));
-  appendRegularEnd(tend.nb, tend, BOTTOM, tn.info.coord.y - rankHt(ranks[r].ht1, tn.info.ht));
-  const boxes = chainBoxes(ctx, segs);
-  const hend = freshEndp(maximalBbox(ctx, hn, last, undefined));
-  endPath(chainPathArgs(P, e, hend, splineMerge(hn), ranksep));
-  appendRegularEnd(hend.nb, hend, TOP, hn.info.coord.y + rankHt(ranks[rh].ht2, hn.info.ht));
-  return completeRegularPath({ P, first: segs[0], last, tend, hend, boxes }) ? P : null;
+/** True when n is a non-merged virtual chain node (the C while-loop guard). */
+function isChainVirtual(n: Node): boolean {
+  return (n.info.node_type ?? NORMAL) === VIRTUAL && !splineMerge(n);
 }
 
 /**
- * Route a virtual-node chain (begin → boxes → end → route → recover_slack),
- * accumulating the make_regular_edge spline points. Emits ONE segment for now
- * (byte-identical to the prior buildChainPath+route+recoverSlack sequence).
- * @see lib/dotgen/dotsplines.c:make_regular_edge (chain while-loop)
+ * straight_len smode threshold: a collinear run is segmented once it is ≥ 5
+ * (4+1) with edge labels on the root graph, else ≥ 3 (2+1).
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (GD_has_labels & EDGE_LABEL)
+ */
+function smodeThreshold(g: Graph): number {
+  return ((g.root.info.has_labels ?? 0) & EDGE_LABEL) ? 5 : 3;
+}
+
+/** Mutable state threaded through the make_regular_edge chain walk. */
+interface ChainWalk {
+  ctx: BboxCtx;
+  ranks: RankEntry[];
+  ranksep: number;
+  et: number;
+  P: Path;
+  pts: Point[];
+  boxes: Box[];
+  segfirst: GraphEdge;
+  tend: PathendT;
+}
+
+function newChainWalk(g: Graph, segs: GraphEdge[]): ChainWalk {
+  return {
+    ctx: chainBboxCtx(g), ranks: g.info.rank!, ranksep: graphRanksep(g), et: edgeType(g),
+    P: { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null },
+    pts: [], boxes: [], segfirst: segs[0],
+    tend: freshEndp({ ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } }),
+  };
+}
+
+/**
+ * Open a segment: build the tail box from `chainEdge` (real chain geometry),
+ * beginPath on `portEdge` (carries the real tail port for segment 0; the
+ * virtual segment edge thereafter), and append the BOTTOM regular end.
+ * `constrain` forces the straight-middle exit slope on post-straight segments.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (beginpath + makeregularend BOTTOM)
+ */
+function beginSeg(
+  w: ChainWalk, portEdge: GraphEdge, chainEdge: GraphEdge, ie: GraphEdge | undefined, constrain: boolean,
+): void {
+  const tn = chainEdge.tail;
+  w.tend = freshEndp(maximalBbox(w.ctx, tn, ie, chainEdge));
+  beginPath(chainPathArgs(w.P, portEdge, w.tend, splineMerge(tn), w.ranksep));
+  appendRegularEnd(w.tend.nb, w.tend, BOTTOM, tn.info.coord.y - rankHt(w.ranks[tn.info.rank!].ht1, tn.info.ht));
+  if (constrain) { w.P.start.theta = -Math.PI / 2; w.P.start.constrained = true; }
+}
+
+/**
+ * Close a segment: build the head box from `chainEdge`, endPath on `portEdge`
+ * (the real head port for the final segment; the virtual segment edge for an
+ * smode top), append the TOP regular end, optionally constrain the entry slope
+ * (smode top), then complete + route the path and append the control points.
+ * Returns false when the path cannot be assembled.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (endpath + completeregularpath + routesplines)
+ */
+function endSeg(
+  w: ChainWalk, portEdge: GraphEdge, chainEdge: GraphEdge, oe: GraphEdge | undefined, constrain: boolean,
+): boolean {
+  const hn = chainEdge.head;
+  const hend = freshEndp(maximalBbox(w.ctx, hn, chainEdge, oe));
+  endPath(chainPathArgs(w.P, portEdge, hend, splineMerge(hn), w.ranksep));
+  appendRegularEnd(hend.nb, hend, TOP, hn.info.coord.y + rankHt(w.ranks[hn.info.rank!].ht2, hn.info.ht));
+  if (constrain) { w.P.end.theta = Math.PI / 2; w.P.end.constrained = true; }
+  if (!completeRegularPath({ P: w.P, first: w.segfirst, last: chainEdge, tend: w.tend, hend, boxes: w.boxes })) {
+    return false;
+  }
+  const seg = routeRegularByType(w.P, w.et);
+  if (seg === null) return false;
+  for (const p of seg) w.pts.push(p);
+  return true;
+}
+
+/**
+ * Close an smode top segment at `segs[ci]` (constrained entry slope), emit the
+ * straight middle as duplicate points, recover slack, then open the next
+ * segment at the post-straight edge with a constrained exit slope. Returns the
+ * chain index of the next segment's first edge, or -1 when routing fails.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (smode close + straight_path)
+ */
+function closeSmodeSeg(w: ChainWalk, segs: GraphEdge[], ci: number, sl: number, segFirst: number): number {
+  if (!endSeg(w, segs[ci], segs[ci], segs[ci + 1], true)) return -1;
+  straightPath(segs[ci + 1], sl, w.pts);
+  recoverSlack(segs.slice(segFirst), w.P);
+  const next = ci + 1 + sl;
+  w.segfirst = segs[next];
+  w.boxes = [];
+  beginSeg(w, segs[next], segs[next], segs[next].tail.info.in!.list[0], true);
+  return next;
+}
+
+/** Route the final (post-loop) chain segment, ending at the real head node. */
+function finishChain(
+  w: ChainWalk, portEdge: GraphEdge, lastEdge: GraphEdge, segFirst: number, segs: GraphEdge[],
+): boolean {
+  w.boxes.push(rankBox(w.ctx, lastEdge.tail.info.rank!));
+  if (!endSeg(w, portEdge, lastEdge, undefined, false)) return false;
+  recoverSlack(segs.slice(segFirst), w.P);
+  return true;
+}
+
+/**
+ * Route a virtual-node chain through the faithful pipeline, accumulating the
+ * make_regular_edge spline points. Below the straight_len threshold this emits a
+ * single segment (byte-identical to the prior single-pass routing); a long
+ * collinear vnode run is split into spline-top + straight-middle + spline-bottom
+ * via successive beginpath/endpath/routesplines calls, hugging the corridor.
+ * `e` carries the real end ports (first beginpath, final endpath); the chain
+ * edges drive the box geometry.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (1771-1873 smode loop)
  */
 function routeChainSegmented(g: Graph, e: GraphEdge, segs: GraphEdge[]): Point[] | null {
-  // Shared by forward (routeMultiRankEdgeFaithful) and back (faithfulBackFwdPoints,
-  // via a makefwdedge view) chains. T2b extends this walk with the straight-mode
-  // (smode) branch that splits a long collinear vnode run into spline-top +
-  // straight-middle + spline-bottom.
-  const P = buildChainPath(g, e, segs);
-  if (P === null) return null;
-  const pts = routeRegularByType(P, edgeType(g));
-  recoverSlack(segs, P);
-  return pts;
+  const w = newChainWalk(g, segs);
+  const thr = smodeThreshold(g);
+  beginSeg(w, e, segs[0], undefined, false);
+  let ei = 0, segFirst = 0, smode = false, si = false, sl = 0;
+  while (isChainVirtual(segs[ei].head)) {
+    w.boxes.push(rankBox(w.ctx, segs[ei].tail.info.rank!));
+    if (!smode) { sl = straightLen(segs[ei].head); if (sl >= thr) { smode = true; si = true; sl -= 2; } }
+    if (smode && !si) {
+      ei = closeSmodeSeg(w, segs, ei, sl, segFirst);
+      if (ei < 0) return null;
+      segFirst = ei; smode = false;
+      continue;
+    }
+    si = false;
+    w.boxes.push(maximalBbox(w.ctx, segs[ei].head, segs[ei], segs[ei + 1]));
+    ei++;
+  }
+  return finishChain(w, e, segs[ei], segFirst, segs) ? w.pts : null;
 }
 
 /**
@@ -318,13 +397,9 @@ export function makeFwdEdge(e: GraphEdge): GraphEdge {
 function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
-  // NOTE: back edges deliberately omit recoverSlack here (preserving the prior
-  // single-pass behavior byte-for-byte). C runs recover_slack on the makefwdedge
-  // view too; folding the back caller into routeChainSegmented (which would add
-  // that call) is a behavioral change deferred to T2b, where the smode loop owns
-  // per-segment recover_slack and the 0-regression rule applies.
-  const P = buildChainPath(g, makeFwdEdge(e), segs);
-  return P === null ? null : routeRegularByType(P, edgeType(g));
+  // Shares routeChainSegmented (C runs make_regular_edge on the makefwdedge view),
+  // so back edges now also get smode segmentation and per-segment recover_slack.
+  return routeChainSegmented(g, makeFwdEdge(e), segs);
 }
 
 /**
