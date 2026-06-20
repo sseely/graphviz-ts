@@ -5,7 +5,7 @@ sessions deferred, then names the exact divergent structural decision.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T3 | Stage-by-stage aux rank/chain dump (C vs port) on the suspect; name the first divergent decision; confirm on #241_0 | debugger | `plans/flat-aux-curl-diagnosis/findings-structural-dump.md` | T1, T2 | [ ] |
+| T3 | Stage-by-stage aux rank/chain dump (C vs port) on the suspect; name the first divergent decision; confirm on #241_0 | debugger | `plans/flat-aux-curl-diagnosis/findings-structural-dump.md` | T1, T2 | [x] |
 
 Dependency: needs T1's validated harness (interface contract) and T2's
 suspect-ranked input list.

@@ -60,7 +60,7 @@ so `parity.json` must be unchanged. T3 confirms 0 delta as its own criterion.
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 | T1 build+canary aux dump harness (synthetic repro); T2 static input-parity diff | [x] |
-| 2 | T3 runtime rank/chain dump → name the divergent line | [ ] |
+| 2 | T3 runtime rank/chain dump → name the divergent line | [x] |
 
 - [decisions.md](decisions.md) — locked decisions (AD-1..AD-6)
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-harness-canary.md) · [T2](batch-1/T2-input-parity.md)
@@ -100,3 +100,38 @@ dump those stops kept deferring. Memory: `flat-edge-241-is-y-only`,
 N/A — dev/test diagnosis; no source behavior change, no SLIs/dashboards/traces/
 on-call. **Rollback: Reversible** (revert the merge commit). No API / schema /
 contract / backwards-compat impact.
+
+## Mission summary (COMPLETE — 2026-06-20)
+**Tasks:** 3/3 completed (T1 ‖ T2, then T3). Run with opus, debugger subagents.
+
+**Named divergent structural decision (the deliverable):** edge **GROUPING**.
+- **C** (`dotsplines.c:356-360`): `dot_splines_` groups *all* adjacent flat
+  edges between a node pair into ONE `make_flat_adj_edges` call (the
+  `if (ED_adjacent(e0)) continue;` loop). On `#241_0` that is `cnt=3` for the
+  2↔3 pair. The reversed `3:sw->2:se` clones as `auxh(3)→auxt(2)` — a BACK edge
+  (rank 1→0) — and `dot_splines_` curls it: **aux spline size 7**.
+- **Port** (`edge-route.ts:297`): the live router routes each adjacent flat in
+  its own isolated `makeFlatAdjEdges(g, [e], 1, …)` call (`cnt=1`). `3:sw->2:se`
+  clones as `auxt(3)→auxh(2)` — FORWARD (rank 0→1) — and routes straight:
+  **aux spline size 4**.
+- **NOT the `rank=source` pin** (the prior prime suspect). T2 confirmed that gap
+  is real (port `buildFlatAux` never populates `auxg.subgraphs`, so the ported
+  `collapseSets` machinery is unreachable) but it is **secondary**: maxrank=1,
+  no virtual nodes — the curl comes from the back-edge route, not a rank gap.
+  Grouping alone is necessary and sufficient for the `#241_0` curl.
+
+**Chain:** grouping (cnt N vs 1) ⇒ clone direction of `3->2` (back vs forward)
+⇒ `dot_splines_` curl vs straight ⇒ aux size 7 vs 4 ⇒ bb.ll.y ⇒ the +7.88
+up-shift / cardinal `:e->:w` misses (memory `flat-edge-241-is-y-only`).
+
+**Fix scope (NEXT mission — not done here, AD-1):** make the port group adjacent
+flat edges between a pair (keyed by unordered {u,v}) into one `makeFlatAdjEdges`
+call replicating C's `dot_splines_` collection loop (`dotsplines.c:344-411`), so
+the back edge clones `auxh→auxt` and curls. Predicted: `3->2` aux size 4→7,
+bb.ll.y matches C, residual closes; canary `2:ne->3:nw` unaffected.
+
+**Decisions:** 0 flagged for blocking review; the DELIVERABLE row is marked
+`review` (it hands the named line to the fix mission). **Quality gates:** tsc 0,
+vitest 1991/1991 byte-identical (no `src/` change), lizard clean, C oracle
+restored native (AD-6). **Known issue / follow-up:** the fix mission; T2's
+`rank=source` port gap remains a latent correctness gap for more complex graphs.
