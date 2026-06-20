@@ -45,7 +45,7 @@ import { EDGE_LABEL } from './rank.js';
 
 /** Bundled args for makeFlatEndBox (keeps params <= 5). Declared here (not
  * between functions) so lizard's TS parser doesn't fold it into a neighbor. */
-interface FlatEndParts {
+export interface FlatEndParts {
   ctx: BboxCtx;
   P: Path;
   e: Edge;
@@ -365,19 +365,23 @@ export function makeFlatEndBox(parts: FlatEndParts): PathendT {
 
 /**
  * The three connecting boxes for the top-routing branch (loop over the top).
- * @see lib/dotgen/dotsplines.c:make_flat_edge (boxes[], i=0)
+ * END boxes offset by `endStepX`/`endStepY` (C `(i+1)·step`); MIDDLE box keeps
+ * height `midStepY` (C plain `stepy`). cnt=1 ⇒ all three = step (original).
+ * @see lib/dotgen/dotsplines.c:make_flat_edge (boxes[], loop body)
  */
-function topBoxes(tlast: Box, hlast: Box, stepx: number, stepy: number): Box[] {
+export function topBoxes(
+  tlast: Box, hlast: Box, endStepX: number, endStepY: number, midStepY: number,
+): Box[] {
   const b0: Box = {
     ll: { x: tlast.ll.x, y: tlast.ur.y },
-    ur: { x: tlast.ur.x + stepx, y: tlast.ur.y + stepy },
+    ur: { x: tlast.ur.x + endStepX, y: tlast.ur.y + endStepY },
   };
   const b1: Box = {
     ll: { x: tlast.ll.x, y: b0.ur.y },
-    ur: { x: hlast.ur.x, y: b0.ur.y + stepy },
+    ur: { x: hlast.ur.x, y: b0.ur.y + midStepY },
   };
   const b2: Box = {
-    ll: { x: hlast.ll.x - stepx, y: hlast.ur.y },
+    ll: { x: hlast.ll.x - endStepX, y: hlast.ur.y },
     ur: { x: hlast.ur.x, y: b0.ur.y },
   };
   return [b0, b1, b2];
@@ -385,19 +389,22 @@ function topBoxes(tlast: Box, hlast: Box, stepx: number, stepy: number): Box[] {
 
 /**
  * The three connecting boxes for the bottom-routing branch (loop under).
- * @see lib/dotgen/dotsplines.c:make_flat_bottom_edges (boxes[], i=0)
+ * END/MIDDLE step semantics mirror `topBoxes`; cnt=1 ⇒ all = step (original).
+ * @see lib/dotgen/dotsplines.c:make_flat_bottom_edges (boxes[], loop body)
  */
-function bottomBoxes(tlast: Box, hlast: Box, stepx: number, stepy: number): Box[] {
+export function bottomBoxes(
+  tlast: Box, hlast: Box, endStepX: number, endStepY: number, midStepY: number,
+): Box[] {
   const b0: Box = {
-    ll: { x: tlast.ll.x, y: tlast.ll.y - stepy },
-    ur: { x: tlast.ur.x + stepx, y: tlast.ll.y },
+    ll: { x: tlast.ll.x, y: tlast.ll.y - endStepY },
+    ur: { x: tlast.ur.x + endStepX, y: tlast.ll.y },
   };
   const b1: Box = {
-    ll: { x: tlast.ll.x, y: b0.ll.y - stepy },
+    ll: { x: tlast.ll.x, y: b0.ll.y - midStepY },
     ur: { x: hlast.ur.x, y: b0.ll.y },
   };
   const b2: Box = {
-    ll: { x: hlast.ll.x - stepx, y: b0.ll.y },
+    ll: { x: hlast.ll.x - endStepX, y: b0.ll.y },
     ur: { x: hlast.ur.x, y: hlast.ll.y },
   };
   return [b0, b1, b2];
@@ -409,7 +416,7 @@ function bottomBoxes(tlast: Box, hlast: Box, stepx: number, stepy: number): Box[
  * boundary falls back to ranksep.
  * @see lib/dotgen/dotsplines.c:make_flat_edge / make_flat_bottom_edges (vspace)
  */
-function flatVspace(g: Graph, tn: Node, top: boolean): number {
+export function flatVspace(g: Graph, tn: Node, top: boolean): number {
   const ranks = g.info.rank!;
   const r = tn.info.rank!;
   if (top) {
@@ -446,7 +453,7 @@ export function flatBboxCtx(g: Graph): BboxCtx {
  * `(tside==BOTTOM && hside!=TOP) || (hside==BOTTOM && tside!=TOP)`.
  * @see lib/dotgen/dotsplines.c:make_flat_edge (tside/hside test)
  */
-function flatSide(e: Edge): { bottom: boolean; side: number } {
+export function flatSide(e: Edge): { bottom: boolean; side: number } {
   const tside = resolvePort(e.tail, e.head, e.info.tail_port).side ?? 0;
   const hside = resolvePort(e.head, e.tail, e.info.head_port).side ?? 0;
   const bottom = (tside === BOTTOM && hside !== TOP) || (hside === BOTTOM && tside !== TOP);
@@ -454,7 +461,7 @@ function flatSide(e: Edge): { bottom: boolean; side: number } {
 }
 
 /** Concatenate tail boxes (fwd), the 3 connecting boxes, head boxes (rev). */
-function assembleFlatPath(P: Path, tend: PathendT, hend: PathendT, mid: Box[]): void {
+export function assembleFlatPath(P: Path, tend: PathendT, hend: PathendT, mid: Box[]): void {
   for (let i = 0; i < tend.boxn; i++) addBox(P, tend.boxes[i]);
   for (const b of mid) addBox(P, b);
   for (let i = hend.boxn - 1; i >= 0; i--) addBox(P, hend.boxes[i]);
@@ -485,8 +492,8 @@ export function routeFlatEdgeFaithful(g: Graph, e: Edge): Point[] | null {
   const tlast = tend.boxes[tend.boxn - 1];
   const hlast = hend.boxes[hend.boxn - 1];
   const mid = bottom
-    ? bottomBoxes(tlast, hlast, stepx, stepy)
-    : topBoxes(tlast, hlast, stepx, stepy);
+    ? bottomBoxes(tlast, hlast, stepx, stepy, stepy)
+    : topBoxes(tlast, hlast, stepx, stepy, stepy);
   assembleFlatPath(P, tend, hend, mid);
   return routeSplines(P);
 }
