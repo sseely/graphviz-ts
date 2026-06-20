@@ -83,8 +83,18 @@ Run with **opus** (`claude-opus-4-8`, native 1M). Fable 5 disabled (memory
 ## Batches
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| 1 | T1 pin C group membership+order+auxt contract; write the failing (red) #241_0 oracle test | [ ] |
-| 2 | T2 implement caller-side grouping (green); T3 full regression sweep (goldens byte-identical + survey net-improve) | [ ] |
+| 1 | T1 pin C group membership+order+auxt contract; write the failing (red) #241_0 oracle test | [x] |
+| 2 | T2 implement caller-side grouping (done, golden-neutral); T3 regression — **STOPPED**: grouping insufficient, second divergence found | [~] |
+
+> **MISSION STOPPED (honest stop) — 2026-06-20.** Grouping (T2) is correct and
+> golden-neutral but does NOT close the curl. A second divergence blocks it: the
+> aux back-edge clone (`auxh->auxt`, regular adjacent-rank back edge) is routed
+> straight by `routeFaithfulAdjacentBack`, ignoring its corner ports, where C's
+> `make_regular_edge` curls it. That fix is core back-edge routing — outside this
+> mission's scope (AD-2 / scope-creep STOP). Work banked on
+> `fix/group-adjacent-flats` (NOT merged). See
+> [findings-second-divergence.md](findings-second-divergence.md). Next mission:
+> aux back-edge port-curl, built on this branch.
 
 - [decisions.md](decisions.md) — locked decisions (AD-1..AD-5)
 - [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-ordering-contract.md)

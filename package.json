@@ -7,7 +7,10 @@
     "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "docs:dev": "vitepress dev docs-site",
+    "docs:build": "vitepress build docs-site",
+    "docs:preview": "vitepress preview docs-site"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -17,6 +20,7 @@
     "esbuild": "^0.28.1",
     "peggy": "^4.0.0",
     "typescript": "^5.4.0",
+    "vitepress": "^1.6.0",
     "vitest": "^4.1.9"
   },
   "volta": {

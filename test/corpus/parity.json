@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-19T22:26:13.121Z",
+  "generatedAt": "2026-06-20T14:38:32.362Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
     "byte-match": 159,
-    "structural-match": 237,
-    "diverged": 357,
-    "errored": 22,
-    "timeout": 6,
+    "structural-match": 238,
+    "diverged": 356,
+    "errored": 20,
+    "timeout": 8,
     "oracle-error": 15
   },
   "results": [
@@ -667,9 +667,8 @@
     {
       "id": "241_0",
       "path": "241_0.dot",
-      "verdict": "diverged",
-      "maxDelta": 126,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 126
     },
     {
       "id": "241_1",
@@ -985,14 +984,12 @@
     {
       "id": "2743",
       "path": "2743.dot",
-      "verdict": "errored",
-      "errMsg": "Warning: no hard-coded metrics for 'Times,serif'.  Falling back to 'Times' metrics"
+      "verdict": "timeout"
     },
     {
       "id": "2782",
       "path": "2782.dot",
-      "verdict": "errored",
-      "errMsg": "Warning: no hard-coded metrics for 'Times,serif'.  Falling back to 'Times' metrics"
+      "verdict": "timeout"
     },
     {
       "id": "2796",
@@ -2606,7 +2603,7 @@
       "id": "graphs-triedds",
       "path": "graphs/triedds.gv",
       "verdict": "diverged",
-      "maxDelta": 271.53,
+      "maxDelta": 160.25,
       "firstDiffPath": "svg/g[1]/g[3]/@id"
     },
     {
@@ -4235,7 +4232,7 @@
       "id": "share-triedds",
       "path": "share/triedds.gv",
       "verdict": "diverged",
-      "maxDelta": 275.27,
+      "maxDelta": 163.75,
       "firstDiffPath": "svg/g[1]/g[3]/@id"
     },
     {
@@ -4931,7 +4928,7 @@
       "id": "windows-triedds",
       "path": "windows/triedds.gv",
       "verdict": "diverged",
-      "maxDelta": 275.21,
+      "maxDelta": 163.75,
       "firstDiffPath": "svg/g[1]/g[3]/@id"
     },
     {

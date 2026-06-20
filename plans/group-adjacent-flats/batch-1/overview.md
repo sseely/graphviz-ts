@@ -6,7 +6,7 @@ test that the implementation must turn green.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Instrument C to pin `#241_0` 2↔3 group membership/order/auxt; write the red `3:sw->2:se` aux-size-7 oracle test | debugger | `src/layout/dot/splines-flat-group.test.ts` (red), `plans/group-adjacent-flats/findings-ordering-contract.md` | — | [ ] |
+| T1 | Instrument C to pin `#241_0` 2↔3 group membership/order/auxt; write the red `3:sw->2:se` aux-size-7 oracle test | debugger | `src/layout/dot/splines-flat-group.test.ts` (red), `plans/group-adjacent-flats/findings-ordering-contract.md` | — | [x] |
 
 The journal row is written by the orchestrator after the batch (one writer).
 
