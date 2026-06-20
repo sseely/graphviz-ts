@@ -16,10 +16,18 @@
 import type { Point, Box } from '../model/geom.js';
 import type { Port } from '../model/geom.js';
 import type { Node } from '../model/node.js';
+import { ccwrotatepf } from '../model/geom.js';
 import { makePort } from '../model/edgeInfo.js';
 import { BOTTOM, RIGHT, TOP, LEFT } from './splines-constants.js';
 import { MC_SCALE } from '../layout/dot/fastgr.js';
 import { RANKDIR_LR, RANKDIR_BT, RANKDIR_RL } from '../layout/dot/init.js';
+import { bezierClip } from './splines-geom.js';
+import type { InsideContext } from './splines-geom.js';
+
+/** Node shape inside-function (poly_inside / record_inside). @see inside_t */
+type ShapeHost = {
+  shape?: { fns?: { insidefn?: ((c: InsideContext, p: Point) => boolean) | null } | null } | null;
+};
 
 // ---------------------------------------------------------------------------
 // RANKDIR helpers
@@ -247,11 +255,55 @@ function applyDir(pp: Port, bp: Box | null, dir: DirectionResult, rd: number, de
   pp.clip = dir.clip; pp.dyna = dir.dyna;
 }
 
+/** Node shape inside-function, or null. @see inside_t.s.n / ND_shape(n)->fns->insidefn */
+function nodeInsideFn(n: Node): ((c: InsideContext, p: Point) => boolean) | null {
+  return (n.info as unknown as ShapeHost).shape?.fns?.insidefn ?? null;
+}
+
+/**
+ * Find the point on the node's shape boundary along the ray from the node
+ * centre toward (xArg, yArg) by clipping a straight Bézier against the shape's
+ * inside-function. The C `ictxt` path; without it, compassPort falls back to
+ * bbox corners (wrong for diagonal compass points on non-box shapes).
+ * @see lib/common/shapes.c:compassPoint
+ */
+function compassPoint(
+  n: Node, insideFn: (c: InsideContext, p: Point) => boolean,
+  yArg: number, xArg: number, rd: number,
+): Point {
+  let p: Point = { x: xArg, y: yArg };
+  if (rd) p = cwrotatepf(p, 90 * rd);
+  // Straight (degenerate) Bézier from centre (inside) to the far target.
+  const curve: Point[] = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: p.x, y: p.y }, { x: p.x, y: p.y }];
+  const ctx: InsideContext = { nodeCoord: n.info.coord, rw: n.info.rw, bp: null, node: n };
+  bezierClip(ctx, insideFn, curve, true);
+  return rd ? ccwrotatepf(curve[0], 90 * rd) : curve[0];
+}
+
+/**
+ * For a directional compass on a shaped node (whole-node, bp=null), replace the
+ * bbox-corner point with the actual shape-boundary point. C derives the
+ * compassPoint target from the same per-direction axes the bbox point uses;
+ * dir.p.x/y were assigned literally from b.ur/b.ll/ctr, so === is exact.
+ * @see lib/common/shapes.c:compassPort (ictxt branch)
+ */
+function applyIctxt(n: Node, dir: DirectionResult, b: Box, ctr: Point): void {
+  if (dir.rv !== 0 || !dir.constrain) return;
+  const insideFn = nodeInsideFn(n);
+  if (insideFn === null) return;
+  const maxv = 4 * Math.max(b.ur.x, b.ur.y);
+  const xArg = dir.p.x === b.ur.x ? maxv : dir.p.x === b.ll.x ? -maxv : ctr.x;
+  const yArg = dir.p.y === b.ur.y ? maxv : dir.p.y === b.ll.y ? -maxv : ctr.y;
+  dir.p = compassPoint(n, insideFn, yArg, xArg, gdRankdir(n));
+}
+
 /** Attach compass point to pp. Returns 1 if compass unrecognized. @see lib/common/shapes.c:compassPort (line 2698) */
 export function compassPort(n: Node, args: CompassArgs, pp: Port): number {
   const { bp, compass, sides } = args;
   const { b, p, defined: defBp } = compassBbox(n, bp);
   const dir = compassDirection(compass, b, p, sides);
+  // ictxt path: whole-node compass on a shaped node uses the real boundary.
+  if (bp === null) applyIctxt(n, dir, b, p);
   const defFinal = dir.rv === 1 ? defBp : (dir.defined || defBp);
   applyDir(pp, bp, dir, gdRankdir(n), defFinal);
   return dir.rv;
