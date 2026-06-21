@@ -31,13 +31,21 @@ const DEFAULT_RW = 27;
 const DEFAULT_HT = 36;
 
 /**
- * Read attribute from node attrs → graph nodeDefaults → root nodeDefaults.
- * Matches graphviz attribute inheritance: lib/cgraph/attr.c:agxget
+ * Read a node attribute with default inheritance: the node's own value, then
+ * the node-defaults (`node [...]`) of the subgraph the node was declared in and
+ * each enclosing graph up to the root. A `node [style=filled]` set inside a
+ * cluster therefore applies to nodes declared in that cluster, as the oracle
+ * does. Falls back to the passed graph `g` when the node has no declaring
+ * subgraph. Matches graphviz attribute inheritance: lib/cgraph/attr.c:agxget
  */
 export function nodeAttr(n: Node, g: Graph, key: string): string | undefined {
-  return n.attrs.get(key)
-    ?? g.nodeDefaults.get(key)
-    ?? (g !== g.root ? g.root.nodeDefaults.get(key) : undefined);
+  const own = n.attrs.get(key);
+  if (own !== undefined) return own;
+  for (let s: Graph | null = n.subg ?? g; s !== null; s = s.parent) {
+    const v = s.nodeDefaults.get(key);
+    if (v !== undefined) return v;
+  }
+  return n.root.nodeDefaults.get(key);
 }
 
 /** Read label-font attributes from node, falling back to defaults. */

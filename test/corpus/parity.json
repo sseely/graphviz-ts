@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-21T12:07:11.786Z",
+  "generatedAt": "2026-06-21T12:31:57.428Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 167,
-    "structural-match": 252,
-    "diverged": 336,
+    "byte-match": 172,
+    "structural-match": 255,
+    "diverged": 328,
     "errored": 20,
     "timeout": 6,
     "oracle-error": 15
@@ -93,7 +93,7 @@
       "path": "1408.dot",
       "verdict": "diverged",
       "maxDelta": 2.519999999999996,
-      "firstDiffPath": "svg/g[1]/g[3]/polygon[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[5]/polygon[1]"
     },
     {
       "id": "1411",
@@ -1072,7 +1072,7 @@
       "id": "graphs-ER",
       "path": "graphs/ER.gv",
       "verdict": "diverged",
-      "maxDelta": 117,
+      "maxDelta": 100,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1551,7 +1551,7 @@
       "path": "graphs/clust4.gv",
       "verdict": "diverged",
       "maxDelta": 136,
-      "firstDiffPath": "svg/g[1]/g[3]/ellipse[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "graphs-clust5",
@@ -1565,7 +1565,7 @@
       "path": "graphs/clusters.gv",
       "verdict": "diverged",
       "maxDelta": 136,
-      "firstDiffPath": "svg/g[1]/g[3]/ellipse[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "graphs-clustlabel",
@@ -1585,9 +1585,7 @@
     {
       "id": "graphs-colorscheme",
       "path": "graphs/colorscheme.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@fill"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-compound",
@@ -1687,9 +1685,7 @@
     {
       "id": "graphs-grdangles",
       "path": "graphs/grdangles.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[8]/defs[1]/linearGradient[1]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-grdcluster",
@@ -1727,9 +1723,7 @@
     {
       "id": "graphs-grdlinear_node",
       "path": "graphs/grdlinear_node.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-grdradial",
@@ -1748,16 +1742,12 @@
     {
       "id": "graphs-grdradial_node",
       "path": "graphs/grdradial_node.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-grdshapes",
       "path": "graphs/grdshapes.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-hashtable",
@@ -2280,8 +2270,8 @@
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 1436,
-      "firstDiffPath": "svg/g[1]/g[1]/ellipse[1]"
+      "maxDelta": 1753,
+      "firstDiffPath": "svg/g[1]/g[28]/path[1]/@d"
     },
     {
       "id": "graphs-pm2way",
@@ -2301,8 +2291,8 @@
       "id": "graphs-polypoly",
       "path": "graphs/polypoly.gv",
       "verdict": "diverged",
-      "maxDelta": 7629.76,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]"
+      "maxDelta": 12501.16,
+      "firstDiffPath": "svg/g[1]/g[1][childCount]"
     },
     {
       "id": "graphs-ports",
@@ -2351,8 +2341,8 @@
       "id": "graphs-rd_rules",
       "path": "graphs/rd_rules.gv",
       "verdict": "diverged",
-      "maxDelta": 102.72000000000003,
-      "firstDiffPath": "svg/g[1]/g[5][childCount]"
+      "maxDelta": 338,
+      "firstDiffPath": "svg/g[1]/g[5]/polygon[35]"
     },
     {
       "id": "graphs-record",
@@ -2487,9 +2477,8 @@
     {
       "id": "graphs-sq_rules",
       "path": "graphs/sq_rules.gv",
-      "verdict": "diverged",
-      "maxDelta": 102.72000000000003,
-      "firstDiffPath": "svg/g[1]/g[5][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 338
     },
     {
       "id": "graphs-sr_box",
@@ -2578,8 +2567,8 @@
       "id": "graphs-trapeziumlr",
       "path": "graphs/trapeziumlr.gv",
       "verdict": "diverged",
-      "maxDelta": 738.56,
-      "firstDiffPath": "svg/g[1]/g[1]/ellipse[1]"
+      "maxDelta": 711,
+      "firstDiffPath": "svg/g[1]/g[33]/path[1]/@d"
     },
     {
       "id": "graphs-tree",
@@ -2711,7 +2700,7 @@
       "id": "linux.i386-ER",
       "path": "linux.i386/ER.gv",
       "verdict": "diverged",
-      "maxDelta": 8,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -3546,7 +3535,7 @@
       "id": "share-ER",
       "path": "share/ER.gv",
       "verdict": "diverged",
-      "maxDelta": 8,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -3706,7 +3695,7 @@
       "path": "share/clust4.gv",
       "verdict": "diverged",
       "maxDelta": 136,
-      "firstDiffPath": "svg/g[1]/g[3]/ellipse[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "share-clust5",
@@ -4091,8 +4080,8 @@
       "id": "share-newarrows",
       "path": "share/newarrows.gv",
       "verdict": "diverged",
-      "maxDelta": 140,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "maxDelta": 144,
+      "firstDiffPath": "svg/g[1]/g[3][childCount]"
     },
     {
       "id": "share-ngk10_4",
@@ -4112,8 +4101,8 @@
       "id": "share-pgram",
       "path": "share/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 1894,
-      "firstDiffPath": "svg/g[1]/g[14]/ellipse[1]"
+      "maxDelta": 2102,
+      "firstDiffPath": "svg/g[1]/g[28]/path[1]/@d"
     },
     {
       "id": "share-pm2way",
@@ -4131,9 +4120,8 @@
     {
       "id": "share-polypoly",
       "path": "share/polypoly.gv",
-      "verdict": "diverged",
-      "maxDelta": 9859,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]"
+      "verdict": "structural-match",
+      "maxDelta": 10830
     },
     {
       "id": "share-proc3d",
@@ -4170,8 +4158,8 @@
       "id": "share-shells",
       "path": "share/shells.gv",
       "verdict": "diverged",
-      "maxDelta": 352.31999999999994,
-      "firstDiffPath": "svg/g[1]/g[4][childCount]"
+      "maxDelta": 648,
+      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
     },
     {
       "id": "share-states",
@@ -4198,7 +4186,7 @@
       "path": "share/trapeziumlr.gv",
       "verdict": "diverged",
       "maxDelta": 1010,
-      "firstDiffPath": "svg/g[1]/g[14]/ellipse[1]"
+      "firstDiffPath": "svg/g[1]/g[32]/path[1]/@d"
     },
     {
       "id": "share-tree",
@@ -4263,7 +4251,7 @@
       "id": "windows-ER",
       "path": "windows/ER.gv",
       "verdict": "diverged",
-      "maxDelta": 8,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -4397,7 +4385,7 @@
       "path": "windows/clust4.gv",
       "verdict": "diverged",
       "maxDelta": 136,
-      "firstDiffPath": "svg/g[1]/g[3]/ellipse[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "windows-clust5",
@@ -4776,8 +4764,8 @@
       "id": "windows-newarrows",
       "path": "windows/newarrows.gv",
       "verdict": "diverged",
-      "maxDelta": 140,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "maxDelta": 144,
+      "firstDiffPath": "svg/g[1]/g[3][childCount]"
     },
     {
       "id": "windows-ngk10_4",
@@ -4797,8 +4785,8 @@
       "id": "windows-pgram",
       "path": "windows/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 1894,
-      "firstDiffPath": "svg/g[1]/g[14]/ellipse[1]"
+      "maxDelta": 2102,
+      "firstDiffPath": "svg/g[1]/g[28]/path[1]/@d"
     },
     {
       "id": "windows-pm2way",
@@ -4817,9 +4805,8 @@
     {
       "id": "windows-polypoly",
       "path": "windows/polypoly.gv",
-      "verdict": "diverged",
-      "maxDelta": 9897,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]"
+      "verdict": "structural-match",
+      "maxDelta": 10849
     },
     {
       "id": "windows-proc3d",
@@ -4863,8 +4850,8 @@
       "id": "windows-shells",
       "path": "windows/shells.gv",
       "verdict": "diverged",
-      "maxDelta": 352.31999999999994,
-      "firstDiffPath": "svg/g[1]/g[4][childCount]"
+      "maxDelta": 648,
+      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
     },
     {
       "id": "windows-states",
@@ -4891,7 +4878,7 @@
       "path": "windows/trapeziumlr.gv",
       "verdict": "diverged",
       "maxDelta": 1009,
-      "firstDiffPath": "svg/g[1]/g[14]/ellipse[1]"
+      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
     },
     {
       "id": "windows-tree",
