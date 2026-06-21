@@ -58,7 +58,7 @@ a follow-on brief (ADR-7); string attribute get/set (ADR-8).
 | [1](batch-1/overview.md) | Foundations | T1 default-context, T2 addEdge, T3 geometry snapshot | [x] |
 | [2](batch-2/overview.md) | Public surfaces | T4 builder, T5 render(), T6 xdot draw-ops | [x]\* |
 | [3](batch-3/overview.md) | Entry points + wiring | T7 api barrel, T8 render barrel, T9 root + package.json | [x] |
-| [4](batch-4/overview.md) | Docs + follow-on | T10 capability guides, T11 pack/pathplan brief | [ ] |
+| [4](batch-4/overview.md) | Docs + follow-on | T10 capability guides, T11 pack/pathplan brief | [x] |
 
 \* Batch 2: T6 wrapper shipped; the underlying xdot renderer is
 integration-incomplete (edges/colors) — fix deferred to a follow-on mission
@@ -73,3 +73,57 @@ mission"). T11 will scaffold the xdot-renderer follow-on alongside pack/pathplan
 ## Decision journal
 
 Appended during execution: [decision-journal.md](decision-journal.md).
+
+---
+
+## Mission summary (2026-06-21)
+
+**Status: COMPLETE.** All 4 batches, 11 tasks done. Branch
+`feature/expose-library-api`, 17 commits (merge to main with a merge commit per
+the brief — do NOT squash; per-task commit IDs are referenced above).
+
+### Tasks completed vs planned: 11 / 11
+- **Batch 1** — T1 `createDefaultContext` (74b6b14), T2 `addEdge` (40617c4),
+  T3 `getLayout` (2683f48).
+- **Batch 2** — T4 builder (518e3d6), T5 `render()` (2ec3627), T6 `getDrawOps`
+  (d457615) — wrapper shipped; xdot-renderer fix deferred (see below).
+- **Batch 3** — T7 api barrel (08f5347), T8 render barrel (c4d1149), T9 root
+  wiring + package exports (bfedb07); fix renderWithContext (514053c).
+- **Batch 4** — T10 docs (0003125), T11 follow-on briefs (4b06640).
+
+### Public surface delivered
+- `graphviz-ts` (root) — existing `renderSvg`/`tryRenderSvg`/`parse`/errors
+  (unchanged) **plus** re-exports of everything below + `renderWithContext`.
+- `graphviz-ts/api` — `createGraph` builder (typed `GvNode`/`GvEdge` handles),
+  `getLayout` geometry snapshot (`yAxis` flip, points), `addEdge`, opaque
+  `Graph` type.
+- `graphviz-ts/render` — `render(g, format, opts?)` over 8 formats,
+  `getDrawOps` typed xdot draw-ops.
+- `package.json` `exports` map (`.` / `./api` / `./render`); 3-bundle build.
+
+### Decisions flagged for review
+1. **Deferred xdot-renderer fix (user-approved).** T6 exposed that
+   `createXdotRenderer` is integration-incomplete (edges emit no draw-ops,
+   custom node colors ignored, node draw coords swapped). The geometry IS
+   computed (SVG renders correctly); only the xdot emission path is incomplete.
+   User chose "defer xdot fix; finish mission". `getDrawOps` ships as a correct
+   thin wrapper with a documented limitation; the fix is scaffolded at
+   `plans/fix-xdot-renderer/README.md`.
+2. **`render` collision resolution.** Root `render` is now the public
+   `render(g, format, opts?)`; the low-level device render is re-exported as
+   `renderWithContext` (preserves the GvcContext workflow that guide/api.md
+   documents).
+3. **getLayout needs render() first** — no standalone public `layout()`; the
+   verified invariant "freeLayout preserves coord/width/height" makes
+   `render() → getLayout()` the supported geometry workflow.
+
+### Quality gate results (final)
+`npm run typecheck` exit 0 · `npm test` 2176 pass (163 files) · `npm run build`
+3 bundles · `npm run docs:build` exit 0. Baseline was 2090 tests (156 files);
+net +86 tests across the new surface.
+
+### Known issues / follow-ups
+- `plans/fix-xdot-renderer/README.md` — complete the xdot renderer emission.
+- `plans/expose-pack-pathplan/README.md` — ADR-7 pack + pathplan exposure.
+- `.d.ts` type declarations are still not emitted by the build (pre-existing;
+  noted in guide/api.md) — a future `tsc --emitDeclarationOnly` step.

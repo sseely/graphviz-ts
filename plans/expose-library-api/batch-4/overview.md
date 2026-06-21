@@ -5,8 +5,8 @@ pack/pathplan mission. Independent → parallel. Depend on Batch 3 (stable API).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T10 | Capability guide pages | documentation-engineer | `docs-site/guide/*` (new pages) | T9 | [ ] |
-| T11 | pack/pathplan follow-on brief scaffold | (orchestrator) | `plans/expose-pack-pathplan/README.md` | — | [ ] |
+| T10 | Capability guide pages | documentation-engineer | `docs-site/guide/*` (new pages) | T9 | [x] |
+| T11 | pack/pathplan follow-on brief scaffold | (orchestrator) | `plans/expose-pack-pathplan/README.md` (+ `plans/fix-xdot-renderer/README.md`) | — | [x] |
 
 ## Notes
 
