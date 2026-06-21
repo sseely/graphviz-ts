@@ -1,0 +1,18 @@
+{
+  "//": "Declaration-emit build for the published package. Emits .d.ts only",
+  "//2": "(esbuild produces the .js bundles). rootDir=src so the entry types",
+  "//3": "land at dist/index.d.ts, dist/api/index.d.ts, dist/render/index.d.ts,",
+  "//4": "matching the package.json exports `types` conditions. Tests excluded.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"]
+}

@@ -125,5 +125,7 @@ net +86 tests across the new surface.
 ### Known issues / follow-ups
 - `plans/fix-xdot-renderer/README.md` — complete the xdot renderer emission.
 - `plans/expose-pack-pathplan/README.md` — ADR-7 pack + pathplan exposure.
-- `.d.ts` type declarations are still not emitted by the build (pre-existing;
-  noted in guide/api.md) — a future `tsc --emitDeclarationOnly` step.
+- ~~`.d.ts` type declarations are still not emitted by the build~~ — DONE
+  (branch `chore/emit-declarations`): `build:types` runs
+  `tsc -p tsconfig.build.json`; `exports` map carries `types` conditions for
+  all three entries; verified by consumer self-reference type-check.

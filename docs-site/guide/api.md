@@ -2,9 +2,14 @@
 
 The public surface is intentionally small. Most callers only need `renderSvg`.
 
-> Type declarations (`.d.ts`) are not yet emitted by the build — the signatures
-> below are the source of truth until they are. See
-> [Known divergences](/divergences).
+> Type declarations (`.d.ts`) are emitted by `npm run build` (the `build:types`
+> step runs `tsc -p tsconfig.build.json`). The `package.json` `exports` map
+> wires `types` conditions for each entry, so `graphviz-ts`, `graphviz-ts/api`,
+> and `graphviz-ts/render` all resolve types in editors and downstream builds.
+>
+> The build also emits declaration maps (`.d.ts.map`) and JS source maps, and
+> the package ships its `src/` sources — so "go to definition" jumps straight
+> to the real TypeScript, making it easy to read the code and open a PR.
 
 ## `renderSvg`
 

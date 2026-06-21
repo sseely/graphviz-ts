@@ -5,13 +5,30 @@
   "license": "EPL-2.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.ts"
+  ],
   "exports": {
-    ".": "./dist/index.js",
-    "./api": "./dist/api.js",
-    "./render": "./dist/render.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "default": "./dist/api.js"
+    },
+    "./render": {
+      "types": "./dist/render/index.d.ts",
+      "default": "./dist/render.js"
+    }
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js && esbuild src/api/index.ts --bundle --format=esm --outfile=dist/api.js && esbuild src/render/index.ts --bundle --format=esm --outfile=dist/render.js",
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "esbuild src/index.ts --bundle --format=esm --sourcemap --outfile=dist/index.js && esbuild src/api/index.ts --bundle --format=esm --sourcemap --outfile=dist/api.js && esbuild src/render/index.ts --bundle --format=esm --sourcemap --outfile=dist/render.js",
+    "build:types": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
