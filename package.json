@@ -3,8 +3,15 @@
   "version": "0.1.0",
   "type": "module",
   "license": "EPL-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./api": "./dist/api.js",
+    "./render": "./dist/render.js"
+  },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
+    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js && esbuild src/api/index.ts --bundle --format=esm --outfile=dist/api.js && esbuild src/render/index.ts --bundle --format=esm --outfile=dist/render.js",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
