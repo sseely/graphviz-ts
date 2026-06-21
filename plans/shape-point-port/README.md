@@ -75,8 +75,8 @@ Oracle for goldens: `~/git/graphviz/build/cmd/dot/dot` with
 
 | Batch | Tasks | Status |
 |-------|-------|--------|
-| [batch-1](batch-1/overview.md) | T1 shape=point sizing + fill + label suppression | [ ] |
-| [batch-2](batch-2/overview.md) | T2 golden + parity verification | [ ] |
+| [batch-1](batch-1/overview.md) | T1 shape=point sizing + fill + label suppression | [x] |
+| [batch-2](batch-2/overview.md) | T2 golden + parity verification | [x] |
 
 ## Index
 
@@ -84,3 +84,22 @@ Oracle for goldens: `~/git/graphviz/build/cmd/dot/dot` with
 - [diagrams/data-flow.md](diagrams/data-flow.md)
 - [diagrams/component-map.md](diagrams/component-map.md)
 - [decision-journal.md](decision-journal.md)
+
+## Mission summary (complete — 2026-06-20)
+
+- **Tasks:** 2/2 complete (T1 sizing+fill+label, T2 golden+parity). Commits
+  `b2f5d75` (feat T1), `<test T2>`, on branch `fix/shape-point`.
+- **Outcome:** `shape=point` renders as C's small filled dot — DEF_POINT
+  (rx 1.8pt), default-black fill (explicit color/fillcolor wins), no label.
+  Sizing bypasses the label; the resolved sides=2 polygon reuses the ellipse
+  vertex/inside/clip path (AD-5, no `poly-inside.ts` change).
+- **Decisions:** 7 logged; none contradicted AD-1…AD-5. AD-5 contingency
+  (poly-inside port) not needed.
+- **Quality gates:** `npx vitest run` 2029 pass; `npx tsc --noEmit` clean;
+  complexity hook clean; golden `dot-point-shape` byte-matches dot 15.1.0
+  (manifest 132). Parity per-id deltas vs branch-point baseline: **IMPROVED 4**
+  (graphs/shapes, linux.x86/shapes_dot, nshare/shapes_dot,
+  regression_tests/shapes/reference/point), **REGRESSED 0**.
+- **Known follow-ups:** none. `point [peripheries=0]` borderless-pen edge case
+  (point_gencode sets pen=fill vs the generic transparent-pen path) is out of
+  AD scope and untested by any corpus case; revisit only if a future case hits.

@@ -7,7 +7,7 @@ break on a partial state. Kept whole, committed working.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | shape=point: SH_POINT sizing (`nodeinit.ts`) + filled-black + label suppression (`poly-gencode.ts`) | implementation | `src/common/nodeinit.ts`, `src/common/poly-gencode.ts`, the modules' existing `*.test.ts` (check first), and `src/common/poly-inside.ts` ONLY under the AD-5 contingency | — | [ ] |
+| T1 | shape=point: SH_POINT sizing (`nodeinit.ts`) + filled-black + label suppression (`poly-gencode.ts`) | implementation | `src/common/nodeinit.ts`, `src/common/poly-gencode.ts`, the modules' existing `*.test.ts` (check first), and `src/common/poly-inside.ts` ONLY under the AD-5 contingency | — | [x] |
 
 Execute solo (delicate faithful port; default single-agent).
 
