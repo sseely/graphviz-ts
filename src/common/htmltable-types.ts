@@ -9,11 +9,22 @@
 // Error
 // ---------------------------------------------------------------------------
 
+import type { GvError } from '../errors.js';
+import { friendlyMessageFor } from '../errors.js';
+
 /**
  * Thrown when an unrecognized HTML tag is encountered during parsing.
+ *
+ * Implements the structured {@link GvError} contract additively: the `(tag)`
+ * constructor and the existing message are unchanged. HTML labels carry no
+ * parser position here, so `location`/`expected` are omitted.
+ *
  * @see lib/common/htmllex.c:lexerror
  */
-export class HtmlParseError extends Error {
+export class HtmlParseError extends Error implements GvError {
+  readonly type = 'semantic';
+  readonly code = 'HTML_PARSE_ERROR';
+  readonly friendlyMessage = friendlyMessageFor('HTML_PARSE_ERROR');
   readonly tag: string;
 
   constructor(tag: string) {

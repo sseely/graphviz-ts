@@ -14,19 +14,44 @@ import type { Edge } from '../model/edge.js';
 import { isHtmlValue, htmlValueContent } from '../common/html-string.js';
 import { buildFromAst } from './builder.js';
 import type { ParsedGraph } from './ast.js';
+import type { GvError, GvErrorCode, GvExpectation } from '../errors.js';
+import { friendlyMessageFor } from '../errors.js';
 
 // ── ParseError ────────────────────────────────────────────────────────────────
 
-/** Thrown for syntax errors or edge-direction violations. */
-export class ParseError extends Error {
-  readonly line: number;
-  readonly column: number;
+/**
+ * Thrown for syntax errors or edge-direction violations.
+ *
+ * Implements the structured {@link GvError} contract: `location` is primary;
+ * `line`/`column` are convenience getters that delegate to it.
+ */
+export class ParseError extends Error implements GvError {
+  readonly type = 'syntax';
+  readonly code: GvErrorCode;
+  readonly friendlyMessage: string;
+  readonly location: { line: number; column: number; offset?: number };
+  readonly expected?: GvExpectation[];
 
-  constructor(message: string, line: number, column: number) {
+  constructor(
+    message: string,
+    code: GvErrorCode,
+    location: { line: number; column: number; offset?: number },
+    expected?: GvExpectation[],
+  ) {
     super(message);
     this.name = 'ParseError';
-    this.line = line;
-    this.column = column;
+    this.code = code;
+    this.location = location;
+    this.friendlyMessage = friendlyMessageFor(code);
+    if (expected !== undefined) this.expected = expected;
+  }
+
+  get line(): number {
+    return this.location.line;
+  }
+
+  get column(): number {
+    return this.location.column;
   }
 }
 
@@ -63,18 +88,22 @@ export function stripCommentsAndStrings(src: string): string {
 export function offsetToLineCol(
   src: string,
   idx: number,
-): { line: number; column: number } {
+): { line: number; column: number; offset: number } {
   const before = src.slice(0, idx);
   const lines = before.split('\n');
-  return { line: lines.length, column: (lines[lines.length - 1]?.length ?? 0) + 1 };
+  return {
+    line: lines.length,
+    column: (lines[lines.length - 1]?.length ?? 0) + 1,
+    offset: idx,
+  };
 }
 
 export function findEdgeOp(
   src: string,
   pattern: RegExp,
-): { line: number; column: number } {
+): { line: number; column: number; offset: number } {
   const idx = Stripper.strip(src).search(pattern);
-  return idx === -1 ? { line: 1, column: 1 } : offsetToLineCol(src, idx);
+  return idx === -1 ? { line: 1, column: 1, offset: 0 } : offsetToLineCol(src, idx);
 }
 
 /** @throws ParseError if the wrong edge operator is found. */
@@ -84,23 +113,27 @@ export function validateEdgeOperators(src: string, directed: boolean): void {
     const loc = findEdgeOp(src, /--(?!>)/);
     throw new ParseError(
       "undirected edge operator '--' is not allowed in a digraph; use '->'",
-      loc.line, loc.column,
+      'EDGE_OP_UNDIRECTED_IN_DIRECTED',
+      loc,
     );
   }
   if (!directed && /->/.test(stripped)) {
     const loc = findEdgeOp(src, /->/);
     throw new ParseError(
       "directed edge operator '->' is not allowed in an undirected graph; use '--'",
-      loc.line, loc.column,
+      'EDGE_OP_DIRECTED_IN_UNDIRECTED',
+      loc,
     );
   }
 }
 
 // ── Peggy error unwrapping ────────────────────────────────────────────────────
 
-export function isPeggyError(
-  err: unknown,
-): err is { location: { start: { line: number; column: number } } } {
+export function isPeggyError(err: unknown): err is {
+  location: { start: { line: number; column: number; offset: number } };
+  expected: GvExpectation[];
+  found: string | null;
+} {
   if (err === null || typeof err !== 'object') return false;
   const e = err as Record<string, unknown>;
   if (typeof e['location'] !== 'object' || e['location'] === null) return false;
@@ -119,10 +152,14 @@ export function parse(src: string): Graph {
     ast = peggyParse(src) as ParsedGraph;
   } catch (err: unknown) {
     if (isPeggyError(err)) {
-      const loc = err.location.start;
+      const start = err.location.start;
+      const code: GvErrorCode =
+        err.found === null ? 'SYNTAX_UNEXPECTED_EOF' : 'SYNTAX_ERROR';
       throw new ParseError(
         err instanceof Error ? err.message : String(err),
-        loc.line, loc.column,
+        code,
+        { line: start.line, column: start.column, offset: start.offset },
+        err.expected,
       );
     }
     throw err;
