@@ -118,3 +118,31 @@ describe('record_gencode fill + pen', () => {
     expect(svg).toContain('<polygon fill="none" stroke="black"');
   });
 });
+
+// Pen width and pen style (dashed/dotted/bold) also flow through the shared
+// applyNodeStyle resolver — onto the box AND the field dividers — matching
+// C's stylenode. Oracle-verified (dot 15.1.0). Locks the shared pen path.
+describe('record_gencode pen width + style', () => {
+  it('penwidth=3 record → stroke-width="3" on the box and divider', () => {
+    const svg = renderSvg('digraph{a[shape=record,penwidth=3,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polygon fill="none" stroke="black" stroke-width="3"');
+    expect(svg).toContain('<polyline fill="none" stroke="black" stroke-width="3"');
+  });
+
+  it('style=dashed record → stroke-dasharray on the box and divider', () => {
+    const svg = renderSvg('digraph{a[shape=record,style=dashed,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polygon fill="none" stroke="black" stroke-dasharray="5,2"');
+    expect(svg).toContain('<polyline fill="none" stroke="black" stroke-dasharray="5,2"');
+  });
+
+  it('style=bold record → stroke-width="2" (bold maps to penwidth 2)', () => {
+    const svg = renderSvg('digraph{a[shape=record,style=bold,label="x|y"]}', 'dot');
+    expect(svg).toContain('stroke-width="2"');
+  });
+
+  it('Mrecord style=dotted penwidth=2 → both attrs on the rounded <path>', () => {
+    const svg = renderSvg(
+      'digraph{a[shape=Mrecord,style=dotted,penwidth=2,label="x|y"]}', 'dot');
+    expect(svg).toContain('<path fill="none" stroke="black" stroke-width="2" stroke-dasharray="1,5"');
+  });
+});
