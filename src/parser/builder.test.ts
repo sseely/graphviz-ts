@@ -11,6 +11,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { parse } from './index.js';
+import { nodeAttr } from '../common/poly-init.js';
 
 function firstEdge(src: string) {
   return parse(src).edges[0]!;
@@ -43,5 +44,34 @@ describe('edge port/compass → tailport/headport attrs', () => {
   it('explicit tailport= attr alone is preserved', () => {
     const e = firstEdge('digraph { A -> B [tailport="e"]; }');
     expect(e.attrs.get('tailport')).toBe('e');
+  });
+});
+
+// A `node [...]` default set inside a subgraph applies to nodes declared there,
+// resolved by walking the node's declaring subgraph up to root. @see nodeAttr
+describe('subgraph-scoped node-attribute defaults', () => {
+  it('records the declaring subgraph on nodes created via an edge stmt', () => {
+    const g = parse('digraph{subgraph cluster_0{node[style=filled];a->b}}');
+    const a = g.nodes.get('a')!;
+    expect(a.subg).toBe(g.subgraphs.get('cluster_0'));
+    expect(nodeAttr(a, g, 'style')).toBe('filled');
+  });
+
+  it('inner subgraph default overrides the root default', () => {
+    const g = parse(
+      'digraph{node[color=black];subgraph cluster_0{node[color=white];a->b}}');
+    expect(nodeAttr(g.nodes.get('a')!, g, 'color')).toBe('white');
+  });
+
+  it('a node at root scope ignores a cluster-only default', () => {
+    const g = parse('digraph{subgraph cluster_0{node[style=filled];a}b}');
+    expect(g.nodes.get('b')!.subg).toBeUndefined();
+    expect(nodeAttr(g.nodes.get('b')!, g, 'style')).toBeUndefined();
+  });
+
+  it("an explicit node attr still wins over the subgraph default", () => {
+    const g = parse(
+      'digraph{subgraph cluster_0{node[shape=box];a[shape=ellipse]}}');
+    expect(nodeAttr(g.nodes.get('a')!, g, 'shape')).toBe('ellipse');
   });
 });

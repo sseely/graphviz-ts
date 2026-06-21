@@ -52,6 +52,14 @@ export class Node {
    */
   readonly root: Graph;
 
+  /**
+   * Innermost subgraph in which this node was first created. Node-attribute
+   * defaults (`node [...]`) set in that scope and its ancestors apply to the
+   * node, so attribute resolution walks `subg` -> root, not just root.
+   * Undefined for nodes created directly at the root scope (resolve at root).
+   */
+  subg?: Graph;
+
   /** @see lib/cgraph/node.c:agnode */
   constructor(id: number, name: string, root: Graph) {
     this.id = id;

@@ -64,10 +64,13 @@ export class NodeRegistry {
     this.nextId = 0;
   }
 
-  ensure(name: string, root: Graph): Node {
+  ensure(name: string, root: Graph, scope: Graph = root): Node {
     const existing = root.nodes.get(name);
     if (existing !== undefined) return existing;
     const node = new Node(this.nextId++, name, root);
+    // Record the declaring subgraph so node-attribute defaults set in that
+    // scope (and ancestors) resolve for this node. @see nodeAttr (poly-init).
+    if (scope !== root) node.subg = scope;
     root.nodes.set(name, node);
     return node;
   }
@@ -123,7 +126,7 @@ export class StmtProcessor {
   }
 
   processNodeStmt(stmt: NodeStmt, graph: Graph, root: Graph): void {
-    const node = this.registry.ensure(stmt.id.id, root);
+    const node = this.registry.ensure(stmt.id.id, root, graph);
     applyAttrs(stmt.attrs, node.attrs);
     // cgraph: a node in a subgraph is a member of every enclosing graph.
     // @see lib/cgraph/node.c:agnode
@@ -173,13 +176,13 @@ export class StmtProcessor {
     }
   }
 
-  private resolveEndpoint(item: NodeId | SubgraphStmt, root: Graph): Node[] {
+  private resolveEndpoint(item: NodeId | SubgraphStmt, root: Graph, scope: Graph): Node[] {
     if ('type' in item && item.type === 'subgraph') {
       return NameCollector.fromStmts(item.stmts).map(
-        (n) => this.registry.ensure(n, root),
+        (n) => this.registry.ensure(n, root, scope),
       );
     }
-    return [this.registry.ensure((item as NodeId).id, root)];
+    return [this.registry.ensure((item as NodeId).id, root, scope)];
   }
 
   private processEdgePair(
@@ -193,8 +196,8 @@ export class StmtProcessor {
     // @see lib/common/utils.c:common_init_edge (reads these via chkPort)
     const tailPort = portStringOf(tailItem);
     const headPort = portStringOf(headItem);
-    for (const tail of this.resolveEndpoint(tailItem, root)) {
-      for (const head of this.resolveEndpoint(headItem, root)) {
+    for (const tail of this.resolveEndpoint(tailItem, root, graph)) {
+      for (const head of this.resolveEndpoint(headItem, root, graph)) {
         const edge = new Edge(tail, head, '');
         applyAttrs(attrs, edge.attrs);
         if (tailPort && !edge.attrs.has('tailport')) edge.attrs.set('tailport', tailPort);
