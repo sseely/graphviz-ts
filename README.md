@@ -57,7 +57,47 @@ console.log(svg); // <svg ...>...</svg>
 ```
 
 `renderSvg(dotSource, engine)` parses the DOT source, runs the named layout
-engine, renders to SVG, and returns the SVG string.
+engine, renders to SVG, and returns the SVG string. On failure it throws a
+structured error — see [Error handling](#error-handling).
+
+## Error handling
+
+`renderSvg` throws on any failure; for a result-style alternative that never
+throws, use `tryRenderSvg`:
+
+```ts
+import { tryRenderSvg } from 'graphviz-ts';
+
+const result = tryRenderSvg('digraph { a ->', 'dot');
+if (result.svg) {
+  // success
+} else {
+  const err = result.errors[0];
+  console.error(err.code, err.friendlyMessage, err.location);
+  // 'SYNTAX_UNEXPECTED_EOF' · 'The DOT source ended unexpectedly …' · { line, column, offset }
+}
+```
+
+A `RenderResult` is `{ svg }` **or** `{ errors }` (never both); `errors` holds at
+most the first failure. Each entry is a plain, JSON-serializable `GvError`:
+
+| Field | Meaning |
+|-------|---------|
+| `type` | `'syntax'` · `'semantic'` · `'render'` |
+| `code` | Stable machine key (an i18n key) — branch on this |
+| `message` | Concise technical text |
+| `friendlyMessage` | Approachable, non-localized English for end users |
+| `location?` | `{ line, column, offset? }` — the real error position |
+| `expected?` | Parser expectation list, for syntax errors only |
+
+The `code` values are a closed union: `SYNTAX_ERROR`, `SYNTAX_UNEXPECTED_EOF`,
+`EDGE_OP_DIRECTED_IN_UNDIRECTED`, `EDGE_OP_UNDIRECTED_IN_DIRECTED`,
+`HTML_PARSE_ERROR`, `RENDER_ERROR`, `GENERIC_ERROR`.
+
+The throwing `renderSvg` raises the same structured values as real `Error`
+subclasses — `ParseError` (syntax) and `RenderError` (render) — each carrying
+`code`, `type`, `friendlyMessage`, and (for `ParseError`) `location`/`expected`.
+Branch on `.code`/`.type` rather than `instanceof` per subclass.
 
 ## Layout engines
 
@@ -101,8 +141,19 @@ files are required for layout.
 ## Public API
 
 ```ts
-// Primary entry point.
+// Primary entry point. Throws a structured GvError (ParseError / RenderError).
 function renderSvg(dotSource: string, engine: string): string;
+
+// Result-style entry point: returns { svg } or { errors: [GvError] }, never throws.
+function tryRenderSvg(dotSource: string, engine: string): RenderResult;
+
+// Structured error contract (see "Error handling").
+interface GvError { type; code; message; friendlyMessage; location?; expected?; }
+interface RenderResult { svg?: string; errors?: GvError[]; }
+type GvErrorType = 'syntax' | 'semantic' | 'render';
+type GvErrorCode = 'SYNTAX_ERROR' | 'SYNTAX_UNEXPECTED_EOF' | /* …7 total */ 'GENERIC_ERROR';
+class ParseError extends Error implements GvError { /* type:'syntax' */ }
+class RenderError extends Error implements GvError { /* type:'render' */ }
 
 // Parse DOT into the in-memory graph model (without laying it out).
 function parse(dotSource: string): Graph;
@@ -116,9 +167,10 @@ class GvcContext { /* register engines/renderers, layout, render */ }
 function render(ctx: GvcContext, graph: Graph, format: string): string;
 ```
 
-Most callers only need `renderSvg`. `parse`, `GvcContext`, and `render` are
-exposed for advanced use — e.g. inspecting the parsed model, or driving layout
-and rendering as separate steps.
+Most callers only need `renderSvg` (or `tryRenderSvg` for result-style error
+handling). `parse`, `GvcContext`, and `render` are exposed for advanced use —
+e.g. inspecting the parsed model, or driving layout and rendering as separate
+steps.
 
 ## Development
 
