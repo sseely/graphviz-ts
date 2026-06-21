@@ -89,3 +89,30 @@ Oracle for goldens: `~/git/graphviz/build/cmd/dot/dot` with
 - [diagrams/data-flow.md](diagrams/data-flow.md)
 - [diagrams/component-map.md](diagrams/component-map.md)
 - [decision-journal.md](decision-journal.md)
+
+## Session summary (2026-06-20 — COMPLETE)
+
+- **Tasks:** 2/2 complete (T1 render fix, T2 golden + parity). Branch
+  `fix/rounded-clusters-mrecord` (off docs/rounded-brief = main + brief), 2
+  commits (`185ec0f` feat, `2fa83d8` test). Merge to main with a **merge
+  commit** (not squash) per convention — left unmerged for review.
+- **What changed:** extracted `emitRoundedBezier` (poly-shapes.ts, AD-1) and
+  wired it into the cluster boundary (device.ts `renderClusterBox`, AD-2) and
+  the record/Mrecord outer box (record.ts `drawRecordBox`, AD-3). All three —
+  poly nodes, clusters, records — now route rounded corners through one
+  emitter, mirroring C's single `round_corners`. Rendering-only (AD-4).
+- **Decisions (5, all logged):** branch base; helper home (write-set forced
+  poly-shapes.ts); record box stays `filled=false` (port has no record-fill
+  path — separate pre-existing gap); record SPECIAL_CORNERS gated on `rounded`
+  only (diagonals/shape unreachable for records); two helpers extracted +
+  stale JSDoc removed for the complexity hook.
+- **Quality gates:** `npx vitest run` 2042 pass · `npx tsc --noEmit` clean ·
+  complexity hook clean · golden `dot-rounded-clusters-mrecord` passes at
+  `deterministic` (manifest 133) · per-id parity **IMPROVED=1 / REGRESSED=0**
+  (925 diverged→structural-match) · each commit diff = its write-set only.
+- **No quarantines/exclusions.** No stop conditions hit.
+- **Known follow-up (out of scope):** records are drawn unfilled; C resolves
+  node fill in record_gencode but the port has no record fill-resolution path,
+  so a `style="record,filled"` (or filled Mrecord) box renders `fill="none"`.
+  A future mission can port findFill/gradient for records (would also fill the
+  non-rounded record polygon).
