@@ -39,6 +39,7 @@ import {
   resolvePenWidth,
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
+import { emitRoundedBezier } from '../common/poly-shapes.js';
 import { renderClusterLabel, applyClusterObjState } from './device-cluster.js';
 export { renderClusterLabel } from './device-cluster.js';
 
@@ -293,17 +294,30 @@ export function walkNodesAndEdges(g: Graph, renderer: RendererPlugin, job: Rende
 // ---------------------------------------------------------------------------
 
 /**
- * @see lib/common/emit.c:emit_clusters (label text spans and html branch)
- * Exported for testing (AC12).
+ * Draw a cluster boundary: a rounded bezier `<path>` when `style=rounded`,
+ * else the sharp `<polygon>`. Rounded mirrors emit.c's round_corners AF order
+ * LL,(UR.x,LL.y),UR,(LL.x,UR.y); sharp keeps gvrender_box's order.
+ * @see lib/common/emit.c:3877-3892 / lib/gvc/gvrender.c:gvrender_box
  */
+function renderClusterBox(
+  sg: Graph, filled: boolean, renderer: RendererPlugin, job: RenderJob,
+): void {
+  const { ll, ur } = sg.info.bb!;
+  if (parseStyleFlags(sg.attrs.get('style')).rounded) {
+    const af = [{ x: ll.x, y: ll.y }, { x: ur.x, y: ll.y }, { x: ur.x, y: ur.y }, { x: ll.x, y: ur.y }];
+    emitRoundedBezier(af, { x: 0, y: 0 }, filled, { renderer, job });
+    return;
+  }
+  const rawPts = [{ x: ll.x, y: ll.y }, { x: ll.x, y: ur.y }, { x: ur.x, y: ur.y }, { x: ur.x, y: ll.y }];
+  renderer.polygon(rawPts.map(p => transformPoint(p, job)), filled, job);
+}
+
 /**
  * Render one cluster: box, label, endCluster, then recurse into sub-clusters.
  * push_obj_state in emit_begin_cluster (3762); pop in emit_end_cluster (3774).
  * Sub-cluster recursion follows emit_end_cluster (line 3940-3941) — the pop
  * completes before recursing; sub-clusters are separate pushes on a clean stack.
  * @see lib/common/emit.c:emit_clusters:3777
- * @see lib/common/emit.c:emit_begin_cluster:3762
- * @see lib/common/emit.c:emit_end_cluster:3774
  */
 function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
   // push_obj_state in emit_begin_cluster (line 3762), before beginCluster
@@ -319,14 +333,7 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     // @see lib/common/emit.c:209 getObjId (AGRAPH/cluster: pfx="clust")
     renderer.beginCluster?.(sg, job);
     if (job.obj !== null) job.obj.id = 'clust' + job.clusterId;
-    const bb = sg.info.bb!;
-    const rawPts = [
-      { x: bb.ll.x, y: bb.ll.y },
-      { x: bb.ll.x, y: bb.ur.y },
-      { x: bb.ur.x, y: bb.ur.y },
-      { x: bb.ur.x, y: bb.ll.y },
-    ];
-    renderer.polygon(rawPts.map(p => transformPoint(p, job)), filled, job);
+    renderClusterBox(sg, filled, renderer, job);
     // @see lib/common/emit.c:emit_begin_cluster / getObjId
     setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
     renderClusterLabel(sg, renderer, job);

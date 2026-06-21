@@ -62,7 +62,7 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 }
 
 // ---------------------------------------------------------------------------
-// Suite-level check: manifest must have exactly 132 entries
+// Suite-level check: manifest must have exactly 133 entries
 // (82 baseline + 15 render-styling + 12 multicolor-paint
 //  + 2 semicolon split + 3 undirected-edge-clip + 1 node-penwidth-clip
 //  + 4 steering-port goldens SR8 + 4 splines=ortho dot goldens P3-T3
@@ -70,11 +70,12 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //  + 2 compound (splines, lhead/ltail) DOT-8
 //  + 2 long-edge straight-mode (synthetic L5 + corpus p2)
 //  + 1 long-edge polyline straight-mode (AD-3 follow-up)
-//  + 1 shape=point (point_init/point_gencode))
+//  + 1 shape=point (point_init/point_gencode)
+//  + 1 rounded clusters + Mrecord (round_corners render))
 // ---------------------------------------------------------------------------
 
-test('manifest has 132 entries', () => {
-  expect(manifest).toHaveLength(132);
+test('manifest has 133 entries', () => {
+  expect(manifest).toHaveLength(133);
 });
 
 // ---------------------------------------------------------------------------

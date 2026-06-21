@@ -1066,5 +1066,13 @@
     "input": "test/golden/inputs/dot-point-shape.dot",
     "reference": "test/golden/refs/dot-point-shape.svg",
     "description": "shape=point (point_init/point_gencode port): bare point (DEF_POINT rx 1.8, fill black, no label), sized point (width=0.2 -> rx 7.2), and colored point (color=red fills+strokes red); byte-matches the oracle"
+  },
+  {
+    "id": "dot-rounded-clusters-mrecord",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-rounded-clusters-mrecord.dot",
+    "reference": "test/golden/refs/dot-rounded-clusters-mrecord.svg",
+    "description": "rounded cluster rendering (round_corners): a rounded,filled cluster (fill #f2f2f2 bezier <path>), a style=rounded cluster (steelblue <path>), and a shape=Mrecord node (rounded <path> outer box + field-divider <polyline>) connected by an edge; byte-matches the oracle"
   }
 ]

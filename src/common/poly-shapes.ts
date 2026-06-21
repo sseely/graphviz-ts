@@ -125,6 +125,22 @@ function diagonalsDraw(ring: Point[], coord: Point, filled: boolean, ctx: ShapeC
 /** rounded: a Bézier outline through the per-corner inset curve points.
  * @see lib/common/shapes.c rounded_draw */
 function roundedDraw(ring: Point[], coord: Point, filled: boolean, ctx: ShapeCtx): void {
+  emitRoundedBezier(ring, coord, filled, ctx);
+}
+
+/**
+ * Emit one rounded boundary as a single Bézier `<path>`, the reusable core of
+ * C's `rounded_draw` (the rounded branch of `round_corners`). `ring` is the
+ * periphery corner polygon in the same frame `renderShapeBezier` expects — i.e.
+ * relative to `coord`; cluster and record sites pass absolute corners with
+ * `coord = {0,0}`. Shared by poly nodes (`roundedDraw`), rounded clusters
+ * (`renderOneCluster`), and rounded records/Mrecord (`recordGencode`), matching
+ * C's single `round_corners` call from poly_gencode/record_gencode/emit_clusters.
+ * @see lib/common/shapes.c:643 rounded_draw
+ */
+export function emitRoundedBezier(
+  ring: Point[], coord: Point, filled: boolean, ctx: ShapeCtx,
+): void {
   const sides = ring.length;
   const b = interpolationPoints(ring, sides, 0, true);
   const pts: Point[] = [];

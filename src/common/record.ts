@@ -22,6 +22,8 @@ import { makeLabel, makeAnyLabel } from './make-label.js';
 import { nodeAttr, readFontAttrs } from './poly-init.js';
 import { renderLabel } from './poly-gencode.js';
 import { transformPoint } from '../gvc/device.js';
+import { emitRoundedBezier } from './poly-shapes.js';
+import { parseStyleFlags } from './style-resolve.js';
 
 // Parse-mode bits. @see lib/common/shapes.c
 const HASTEXT = 1;
@@ -464,12 +466,26 @@ export function recordGencode(rawJob: unknown, rawNode: unknown): void {
   const coord = n.info.coord ?? { x: 0, y: 0 };
   const ll = { x: f.b.ll.x + coord.x, y: f.b.ll.y + coord.y };
   const ur = { x: f.b.ur.x + coord.x, y: f.b.ur.y + coord.y };
-  const pts = [
-    { x: ll.x, y: ll.y },
-    { x: ll.x, y: ur.y },
-    { x: ur.x, y: ur.y },
-    { x: ur.x, y: ll.y },
-  ].map((q) => transformPoint(q, job));
-  job.renderer.polygon(pts, false, job);
+  drawRecordBox(job, n, ll, ur);
   genFields(job, n, f);
+}
+
+/**
+ * Draw the record outer box: a rounded bezier `<path>` when the node is Mrecord
+ * or `style=rounded` (C's SPECIAL_CORNERS branch, with AF order LL, (UR.x,LL.y),
+ * UR, (LL.x,UR.y)), else the sharp `<polygon>` (gvrender_box order). C passes
+ * `filled` here; the port draws the box unfilled, unchanged for both branches.
+ * @see lib/common/shapes.c:record_gencode
+ */
+function drawRecordBox(job: RenderJob, n: Node, ll: Point, ur: Point): void {
+  const isMrecord = nodeAttr(n, n.root, 'shape') === 'Mrecord';
+  const rounded = isMrecord || parseStyleFlags(nodeAttr(n, n.root, 'style')).rounded;
+  if (rounded) {
+    const af = [{ x: ll.x, y: ll.y }, { x: ur.x, y: ll.y }, { x: ur.x, y: ur.y }, { x: ll.x, y: ur.y }];
+    emitRoundedBezier(af, { x: 0, y: 0 }, false, { renderer: job.renderer!, job });
+    return;
+  }
+  const pts = [{ x: ll.x, y: ll.y }, { x: ll.x, y: ur.y }, { x: ur.x, y: ur.y }, { x: ur.x, y: ll.y }]
+    .map((q) => transformPoint(q, job));
+  job.renderer!.polygon(pts, false, job);
 }
