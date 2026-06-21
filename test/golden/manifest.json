@@ -1058,5 +1058,13 @@
     "input": "test/golden/inputs/dot-long-edge-polyline.dot",
     "reference": "test/golden/refs/dot-long-edge-polyline.svg",
     "description": "splines=polyline long edge (a->f over 5 ranks): straight-mode segmentation routes each piece via routepolylines (make_regular_edge !is_spline branch); byte-matches the oracle, locking polyline smode (AD-3 follow-up)"
+  },
+  {
+    "id": "dot-point-shape",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-point-shape.dot",
+    "reference": "test/golden/refs/dot-point-shape.svg",
+    "description": "shape=point (point_init/point_gencode port): bare point (DEF_POINT rx 1.8, fill black, no label), sized point (width=0.2 -> rx 7.2), and colored point (color=red fills+strokes red); byte-matches the oracle"
   }
 ]

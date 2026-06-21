@@ -1,0 +1,6 @@
+digraph {
+  a [shape=point];
+  b [shape=point, width=0.2];
+  c [shape=point, color=red];
+  a -> b -> c;
+}

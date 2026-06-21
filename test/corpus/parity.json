@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-20T22:07:53.163Z",
+  "generatedAt": "2026-06-21T00:04:04.563Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 162,
+    "byte-match": 166,
     "structural-match": 250,
-    "diverged": 343,
+    "diverged": 339,
     "errored": 20,
     "timeout": 6,
     "oracle-error": 15
@@ -115,7 +115,7 @@
       "id": "1435",
       "path": "1435.dot",
       "verdict": "diverged",
-      "maxDelta": 379,
+      "maxDelta": 479,
       "firstDiffPath": "svg/g[1]/g[1]/text[1]/@font-size"
     },
     {
@@ -167,7 +167,7 @@
       "id": "1453",
       "path": "1453.dot",
       "verdict": "diverged",
-      "maxDelta": 1152.2,
+      "maxDelta": 1148.92,
       "firstDiffPath": "svg/g[1]/g[1]/@id"
     },
     {
@@ -391,7 +391,7 @@
       "id": "1898",
       "path": "1898.dot",
       "verdict": "diverged",
-      "maxDelta": 76.98000000000002,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -759,7 +759,7 @@
       "id": "2497",
       "path": "2497.dot",
       "verdict": "diverged",
-      "maxDelta": 367,
+      "maxDelta": 376,
       "firstDiffPath": "svg/g[1]/g[1]/@id"
     },
     {
@@ -847,7 +847,7 @@
       "id": "2613",
       "path": "2613.dot",
       "verdict": "diverged",
-      "maxDelta": 1012,
+      "maxDelta": 1083,
       "firstDiffPath": "svg/g[1]/g[1]/@id"
     },
     {
@@ -2439,9 +2439,7 @@
     {
       "id": "graphs-shapes",
       "path": "graphs/shapes.gv",
-      "verdict": "diverged",
-      "maxDelta": 21.099999999999994,
-      "firstDiffPath": "svg/g[1]/g[8][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-shells",
@@ -2965,9 +2963,7 @@
     {
       "id": "linux.x86-shapes_dot",
       "path": "linux.x86/shapes_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 22.67999999999998,
-      "firstDiffPath": "svg/g[1]/g[8][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-trivial_dot",
@@ -3234,9 +3230,7 @@
     {
       "id": "nshare-shapes_dot",
       "path": "nshare/shapes_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 22.5,
-      "firstDiffPath": "svg/g[1]/g[8][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-trivial_dot",
@@ -3429,9 +3423,7 @@
     {
       "id": "regression_tests-shapes-reference-point",
       "path": "regression_tests/shapes/reference/point.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/ellipse[1]/@fill"
+      "verdict": "byte-match"
     },
     {
       "id": "regression_tests-shapes-reference-polygon",
