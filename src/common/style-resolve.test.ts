@@ -65,22 +65,46 @@ describe('parseStyleFlags — remaining flags and edge cases', () => {
     expect(f.wedged).toBe(true);
   });
 
-  it('ignores setlinewidth(3) token', () => {
-    const f = parseStyleFlags('filled,setlinewidth(3)');
-    expect(f.filled).toBe(true);
-    expect(f.bold).toBe(false);
-  });
-
-  it('skips parens content, keeps trailing flags', () => {
-    const f = parseStyleFlags('setlinewidth(2),dashed');
-    expect(f.dashed).toBe(true);
-    expect(f.filled).toBe(false);
-  });
-
   it('trims whitespace around tokens', () => {
     const f = parseStyleFlags(' filled , dashed ');
     expect(f.filled).toBe(true);
     expect(f.dashed).toBe(true);
+  });
+});
+
+describe('parseStyleFlags — setlinewidth + FUNLIMIT', () => {
+  it('captures setlinewidth(3) pen width and keeps other flags', () => {
+    // lib/gvc/gvrender.c:501 — setlinewidth → atof of paren argument
+    const f = parseStyleFlags('filled,setlinewidth(3)');
+    expect(f.filled).toBe(true);
+    expect(f.bold).toBe(false);
+    expect(f.setLineWidth).toBe(3);
+  });
+
+  it('captures setlinewidth and keeps trailing flags', () => {
+    const f = parseStyleFlags('setlinewidth(2),dashed');
+    expect(f.dashed).toBe(true);
+    expect(f.filled).toBe(false);
+    expect(f.setLineWidth).toBe(2);
+  });
+
+  it('ignores unknown parenthesized tokens (not setlinewidth)', () => {
+    const f = parseStyleFlags('filled,tapered(4)');
+    expect(f.filled).toBe(true);
+    expect(f.setLineWidth).toBeNull();
+  });
+});
+
+describe('parseStyleFlags — FUNLIMIT truncation', () => {
+  it('truncates to an empty style list at FUNLIMIT (64) tokens', () => {
+    // lib/common/emit.c:4046 — parse_style returns early at the 64th token,
+    // skipping the list-construction loop → no flags apply.
+    const f63 = parseStyleFlags(Array(63).fill('filled').join(','));
+    expect(f63.filled).toBe(true);
+    const f64 = parseStyleFlags(Array(64).fill('filled').join(','));
+    expect(f64.filled).toBe(false);
+    const f65 = parseStyleFlags(Array(65).fill('filled').join(','));
+    expect(f65.filled).toBe(false);
   });
 });
 

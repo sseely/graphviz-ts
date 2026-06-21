@@ -42,6 +42,11 @@ export interface PolyStyleFlags {
   striped: boolean;
   wedged: boolean;
   underline: boolean;
+  /**
+   * Pen width from a `setlinewidth(N)` style token, or null when absent.
+   * @see lib/gvc/gvrender.c:501 gvrender_set_style (atof of paren argument)
+   */
+  setLineWidth: number | null;
 }
 
 /**
@@ -113,13 +118,18 @@ const PENWIDTH_BOLD = 2.0;
 // Token → flag lookup (replaces switch to keep CCN ≤ 10)
 // ---------------------------------------------------------------------------
 
+/** Keys of PolyStyleFlags whose value is boolean (excludes setLineWidth). */
+type BoolFlagKey = {
+  [K in keyof PolyStyleFlags]: PolyStyleFlags[K] extends boolean ? K : never;
+}[keyof PolyStyleFlags];
+
 /**
- * Direct-mapped tokens: token string → PolyStyleFlags key.
+ * Direct-mapped tokens: token string → PolyStyleFlags boolean key.
  * "radial" is absent here because it also sets filled=true (handled inline).
  * @see lib/gvc/gvrender.c:481 gvrender_set_style
  * @see lib/common/shapes.c:checkStyle
  */
-const TOKEN_FLAG: Readonly<Record<string, keyof PolyStyleFlags>> = {
+const TOKEN_FLAG: Readonly<Record<string, BoolFlagKey>> = {
   filled: 'filled',
   dashed: 'dashed',
   dotted: 'dotted',
@@ -143,7 +153,24 @@ function zeroFlags(): PolyStyleFlags {
     filled: false, dashed: false, dotted: false, bold: false,
     invis: false, diagonals: false, rounded: false,
     radial: false, striped: false, wedged: false, underline: false,
+    setLineWidth: null,
   };
+}
+
+/** C parse_style truncates the style list at FUNLIMIT tokens. @see lib/common/emit.c:4001 */
+const FUNLIMIT = 64;
+
+/**
+ * Extract the numeric argument of a `setlinewidth(N)` token, or null if the
+ * token is not a setlinewidth form. Mirrors gvrender_set_style reading
+ * `atof` of the parenthesized argument (atof → 0.0 on a non-numeric arg).
+ * @see lib/gvc/gvrender.c:501
+ */
+function parseSetLineWidth(token: string): number | null {
+  const m = /^setlinewidth\s*\(\s*([^)]*)\)\s*$/.exec(token);
+  if (m === null) return null;
+  const v = parseFloat(m[1]);
+  return Number.isNaN(v) ? 0 : v;
 }
 
 /**
@@ -179,15 +206,29 @@ function firstSolidColor(raw: string): string {
 
 /**
  * Parse a graphviz style attribute string into a flag set.
- * Splits on commas, trims whitespace, skips tokens containing '('.
- * @see lib/common/emit.c:4010 parse_style
- * @see lib/gvc/gvrender.c:481 gvrender_set_style
+ *
+ * Splits on commas and trims. A `setlinewidth(N)` token captures its pen-width
+ * argument; other tokens containing '(' are ignored. When the non-empty token
+ * count reaches FUNLIMIT (64), C's parse_style returns early before building
+ * the style list — the observable effect is an empty style list (no flags
+ * applied), which we reproduce by returning zeroFlags().
+ *
+ * @see lib/common/emit.c:4010 parse_style (FUNLIMIT truncation)
+ * @see lib/gvc/gvrender.c:481 gvrender_set_style (setlinewidth → penwidth)
  */
 export function parseStyleFlags(style: string | undefined): PolyStyleFlags {
   const flags = zeroFlags();
   if (!style) return flags;
+  let fun = 0;
   for (const raw of style.split(',')) {
     const token = raw.trim();
+    if (token.length === 0) continue;
+    // C truncates at the FUNLIMIT-th token, skipping the pointer-construction
+    // loop → the returned list is empty → no flags apply.
+    if (fun === FUNLIMIT - 1) return zeroFlags();
+    fun++;
+    const lw = parseSetLineWidth(token);
+    if (lw !== null) { flags.setLineWidth = lw; continue; }
     if (!token.includes('(')) applyToken(flags, token);
   }
   return flags;
@@ -206,8 +247,13 @@ export function resolvePenType(flags: PolyStyleFlags): PenType {
 
 /**
  * Resolve pen width from flags and the raw penwidth attribute string.
- * Precedence: explicit attr → bold flag (2.0) → default (1.0).
+ * Precedence: explicit `penwidth` attr → `setlinewidth(N)` style →
+ * `bold` flag (2.0) → default (1.0). The explicit attr wins because stylenode
+ * applies N_penwidth after gvrender_set_style. (When both `bold` and
+ * `setlinewidth` appear in one style string, C is order-dependent; that rare
+ * combination is not modelled here — setlinewidth wins.)
  * @see lib/common/shapes.c:539 stylenode
+ * @see lib/gvc/gvrender.c:500 gvrender_set_style (bold/setlinewidth)
  * @see lib/gvc/gvcjob.h:41 PENWIDTH_BOLD = 2.0
  */
 export function resolvePenWidth(
@@ -218,6 +264,7 @@ export function resolvePenWidth(
     const v = parseFloat(penwidthAttr);
     if (isFinite(v)) return v;
   }
+  if (flags.setLineWidth !== null) return flags.setLineWidth;
   if (flags.bold) return PENWIDTH_BOLD;
   return 1.0;
 }

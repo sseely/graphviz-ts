@@ -1090,5 +1090,45 @@
     "input": "test/golden/inputs/dot-record-fill-pen.dot",
     "reference": "test/golden/refs/dot-record-fill-pen.svg",
     "description": "record/Mrecord fill + pen (record_gencode stylenode/penColor/findFill): style=filled record (solid lightyellow polygon), style=filled Mrecord (lightblue rounded <path>), and color=red record (red box + red field divider); byte-matches the oracle"
+  },
+  {
+    "id": "dot-bgcolor-x11name",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-bgcolor-x11name.dot",
+    "reference": "test/golden/refs/dot-bgcolor-x11name.svg",
+    "description": "graph bgcolor with an X11-only color name (lightcyan1) canonicalized to #e0ffff via gvrender_resolve_color in emit_background; byte-matches the oracle (parity color-stroke group A)"
+  },
+  {
+    "id": "dot-node-setlinewidth",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-setlinewidth.dot",
+    "reference": "test/golden/refs/dot-node-setlinewidth.svg",
+    "description": "node style=setlinewidth(3) sets stroke-width=3 via gvrender_set_style atof of the paren argument; byte-matches the oracle (parity color-stroke group B1)"
+  },
+  {
+    "id": "dot-style-funlimit",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-style-funlimit.dot",
+    "reference": "test/golden/refs/dot-style-funlimit.svg",
+    "description": "node style with 65 tokens hits parse_style FUNLIMIT (64) truncation → empty style list → unfilled (fill=none); byte-matches the oracle (parity color-stroke group B2)"
+  },
+  {
+    "id": "dot-edge-fontcolor-scheme",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-edge-fontcolor-scheme.dot",
+    "reference": "test/golden/refs/dot-edge-fontcolor-scheme.svg",
+    "description": "edge label fontcolor numeric index (fontcolor=2 with colorscheme=paired12) resolved against the edge colorscheme window in emit_edge; byte-matches the oracle (parity color-stroke group C)"
+  },
+  {
+    "id": "dot-cluster-peripheries0",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-peripheries0.dot",
+    "reference": "test/golden/refs/dot-cluster-peripheries0.svg",
+    "description": "cluster peripheries=0 suppresses the boundary stroke (pencolor transparent → stroke none) per emit_clusters; byte-matches the oracle (parity color-stroke group D)"
   }
 ]

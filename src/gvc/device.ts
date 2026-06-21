@@ -40,7 +40,7 @@ import {
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
-import { renderClusterLabel, applyClusterObjState, clusterStyle } from './device-cluster.js';
+import { renderClusterLabel, applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
 export { renderClusterLabel } from './device-cluster.js';
 
 // ---------------------------------------------------------------------------
@@ -168,8 +168,14 @@ export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): v
   try {
     // @see lib/common/emit.c:emit_begin_edge / getObjId
     setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
-    renderer.beginEdge(e, job);
-    renderer.endEdge(e, job);
+    // Activate the edge's colorscheme around the whole emission so label
+    // textspans resolve numeric color indices (e.g. fontcolor=2) against it,
+    // mirroring C's setColorScheme window in emit_edge.
+    // @see lib/common/emit.c:emit_edge (begin/end color context)
+    withColorScheme(e.attrs.get('colorscheme'), () => {
+      renderer.beginEdge(e, job);
+      renderer.endEdge(e, job);
+    });
   } finally {
     // pop_obj_state in emit_end_edge (line 3028)
     job.popObj();
@@ -333,7 +339,12 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     // @see lib/common/emit.c:209 getObjId (AGRAPH/cluster: pfx="clust")
     renderer.beginCluster?.(sg, job);
     if (job.obj !== null) job.obj.id = 'clust' + job.clusterId;
-    renderClusterBox(sg, filled, renderer, job);
+    // C draws the boundary box only when peripheries != 0, or (peripheries == 0
+    // and the cluster is filled). peripheries=0 + unfilled emits nothing.
+    // @see lib/common/emit.c:3907-3917
+    if (clusterPeripheries(sg) !== 0 || filled) {
+      renderClusterBox(sg, filled, renderer, job);
+    }
     // @see lib/common/emit.c:emit_begin_cluster / getObjId
     setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
     renderClusterLabel(sg, renderer, job);

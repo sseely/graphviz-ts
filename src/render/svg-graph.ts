@@ -17,7 +17,7 @@ import type { RenderJob } from '../gvc/job.js';
 import { createObjState, ObjType } from '../gvc/job.js';
 import { FillType } from '../gvc/context.js';
 import { escapeXml, SVG_PAD } from './svg-helpers.js';
-import { resolveRenderColor } from './color-resolve.js';
+import { resolveRenderColor, colorPaint } from './color-resolve.js';
 import { parseGradientSpec } from '../common/htmltable-emit-fill.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import {
@@ -117,7 +117,12 @@ export function resolveGraphBgcolor(bgcolorAttr: string | undefined): string {
   if (!bgcolorAttr || bgcolorAttr.length === 0) return 'white';
   if (bgcolorAttr === 'transparent') return BGCOLOR_TRANSPARENT;
   const grad = parseGradientSpec(bgcolorAttr);
-  return grad !== null ? grad[0] : bgcolorAttr;
+  const solid = grad !== null ? grad[0] : bgcolorAttr;
+  // Canonicalize through the standard resolve path (lowercase #rrggbb, X11-only
+  // names → #rrggbb) exactly as C's emit_background does via
+  // gvrender_resolve_color before painting the background.
+  // @see lib/gvc/gvrender.c:188 gvrender_resolve_color
+  return colorPaint(resolveRenderColor(solid));
 }
 
 /**
