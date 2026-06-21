@@ -123,6 +123,49 @@ describe('ParseError', () => {
   });
 });
 
+// ── ParseError structured contract ───────────────────────────────────────────
+
+function parseErr(src: string): ParseError {
+  try { parse(src); } catch (e) { return e as ParseError; }
+  throw new Error('expected parse to throw');
+}
+
+describe('ParseError syntax classification', () => {
+  it('classifies an unexpected-EOF syntax error with offset', () => {
+    const err = parseErr('digraph { a ->');
+    expect(err.type).toBe('syntax');
+    expect(err.code).toBe('SYNTAX_UNEXPECTED_EOF');
+    expect(typeof err.location.offset).toBe('number');
+    expect(err.friendlyMessage.length).toBeGreaterThan(0);
+  });
+
+  it('classifies a token-level syntax error and surfaces peggy expected[]', () => {
+    const err = parseErr('digraph { @ }');
+    expect(err.code).toBe('SYNTAX_ERROR');
+    expect(Array.isArray(err.expected)).toBe(true);
+    expect(typeof err.expected![0]!.type).toBe('string');
+  });
+
+  it('mirrors line/column getters onto location', () => {
+    const err = parseErr('digraph { a ->');
+    expect(err.line).toBe(err.location.line);
+    expect(err.column).toBe(err.location.column);
+  });
+});
+
+describe('ParseError edge-operator classification', () => {
+  it('codes the edge-op directed-in-undirected case with offset', () => {
+    const err = parseErr('graph g { a -> b }');
+    expect(err.code).toBe('EDGE_OP_DIRECTED_IN_UNDIRECTED');
+    expect(typeof err.location.offset).toBe('number');
+  });
+
+  it('codes the edge-op undirected-in-directed case', () => {
+    const err = parseErr('digraph g { a -- b }');
+    expect(err.code).toBe('EDGE_OP_UNDIRECTED_IN_DIRECTED');
+  });
+});
+
 // ── Edge direction validation ────────────────────────────────────────────────
 
 describe('edge direction validation', () => {
