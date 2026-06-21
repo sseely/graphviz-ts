@@ -25,11 +25,26 @@ function readLabelPos(sg: Graph): number {
   return loc && loc[0] === 'b' ? 0 : 1;
 }
 
+/**
+ * Read a graph attribute with subgraph→root inheritance, mirroring C's
+ * agxget (late_nnstring(sg, agfindgraphattr(sg, key), ...) in do_graph_label):
+ * a cluster inherits `fontname`/`fontsize`/`fontcolor` set on an ancestor
+ * (e.g. root `graph[fontname=Arial]`) when it sets none of its own.
+ * @see lib/common/input.c:do_graph_label
+ */
+function graphAttrInherited(sg: Graph, key: string): string | undefined {
+  for (let g: Graph | null = sg; g !== null; g = g.parent) {
+    const v = g.attrs.get(key);
+    if (v !== undefined) return v;
+  }
+  return undefined;
+}
+
 function readFontParams(sg: Graph): { fontsize: number; fontname: string; fontcolor: string } {
   return {
-    fontsize: parseFloat(sg.attrs.get('fontsize') ?? '') || DEFAULT_FONTSIZE,
-    fontname: sg.attrs.get('fontname') ?? DEFAULT_FONTNAME,
-    fontcolor: sg.attrs.get('fontcolor') ?? DEFAULT_COLOR,
+    fontsize: parseFloat(graphAttrInherited(sg, 'fontsize') ?? '') || DEFAULT_FONTSIZE,
+    fontname: graphAttrInherited(sg, 'fontname') ?? DEFAULT_FONTNAME,
+    fontcolor: graphAttrInherited(sg, 'fontcolor') ?? DEFAULT_COLOR,
   };
 }
 
