@@ -5,9 +5,9 @@ Batches 2–3 depend on these.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | `createDefaultContext()` registering all engines + all renderers | typescript-pro | `src/gvc/default-context.ts`, `src/gvc/default-context.test.ts` | — | [ ] |
-| T2 | Safe `addEdge` helper (ports builder insertion) | typescript-pro | `src/api/edge-ops.ts`, `src/api/edge-ops.test.ts` | — | [ ] |
-| T3 | `getLayout()` geometry snapshot + types + y-flip | typescript-pro | `src/api/geometry.ts`, `src/api/geometry.test.ts` | — | [ ] |
+| T1 | `createDefaultContext()` registering all engines + all renderers | typescript-pro | `src/gvc/default-context.ts`, `src/gvc/default-context.test.ts` | — | [x] |
+| T2 | Safe `addEdge` helper (ports builder insertion) | typescript-pro | `src/api/edge-ops.ts`, `src/api/edge-ops.test.ts` | — | [x] |
+| T3 | `getLayout()` geometry snapshot + types + y-flip | typescript-pro | `src/api/geometry.ts`, `src/api/geometry.test.ts` | — | [x] |
 
 ## Interface outputs (consumed downstream)
 
