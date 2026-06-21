@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-21T01:47:14.145Z",
+  "generatedAt": "2026-06-21T11:28:46.748Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -1360,7 +1360,7 @@
       "path": "graphs/b57.gv",
       "verdict": "diverged",
       "maxDelta": 605.7799999999997,
-      "firstDiffPath": "svg/g[1]/g[4]/polygon[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[39]/path[1]/@d"
     },
     {
       "id": "graphs-b58",

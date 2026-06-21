@@ -89,3 +89,32 @@ describe('record_gencode rounded outer box', () => {
     expect(svg).not.toContain('<path');
   });
 });
+
+// record_gencode fill + pen: C resolves node style (stylenode/penColor/findFill)
+// for records exactly as for poly nodes. Pre-fix the port drew every record box
+// fill="none" stroke="black"; now style=filled fills and color= strokes the box
+// AND the field dividers. @see lib/common/shapes.c:record_gencode
+describe('record_gencode fill + pen', () => {
+  it('style=filled record → solid fill on the box polygon', () => {
+    const svg = renderSvg(
+      'digraph{a[shape=record,style=filled,fillcolor=lightyellow,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polygon fill="lightyellow" stroke="black"');
+  });
+
+  it('style=filled Mrecord → fill on the rounded <path>', () => {
+    const svg = renderSvg(
+      'digraph{a[shape=Mrecord,style=filled,fillcolor=lightblue,label="x|y"]}', 'dot');
+    expect(svg).toContain('<path fill="lightblue" stroke="black"');
+  });
+
+  it('color=red record → red stroke on both the box and the field divider', () => {
+    const svg = renderSvg('digraph{a[shape=record,color=red,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polygon fill="none" stroke="red"');
+    expect(svg).toContain('<polyline fill="none" stroke="red"');
+  });
+
+  it('plain record stays fill="none" stroke="black" (no regression)', () => {
+    const svg = renderSvg('digraph{a[shape=record,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polygon fill="none" stroke="black"');
+  });
+});

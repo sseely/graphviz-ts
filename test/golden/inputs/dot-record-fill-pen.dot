@@ -1,0 +1,6 @@
+digraph {
+  a [shape=record, style=filled, fillcolor=lightyellow, label="x|y"];
+  b [shape=Mrecord, style=filled, fillcolor=lightblue, label="p|q"];
+  c [shape=record, color=red, label="m|n"];
+  a -> b -> c;
+}
