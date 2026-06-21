@@ -5,9 +5,9 @@ Assemble the two subpath entries and wire the root. T7/T8 are independent
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T7 | `graphviz-ts/api` barrel | typescript-pro | `src/api/index.ts` | T2, T3, T4 | [ ] |
-| T8 | `graphviz-ts/render` barrel | typescript-pro | `src/render/index.ts` | T5, T6 | [ ] |
-| T9 | Root wiring + package exports + build | typescript-pro | `src/index.ts` (mod), `package.json` (mod), `src/entry.test.ts` | T7, T8 | [ ] |
+| T7 | `graphviz-ts/api` barrel | typescript-pro | `src/api/index.ts` | T2, T3, T4 | [x] |
+| T8 | `graphviz-ts/render` barrel | typescript-pro | `src/render/index.ts` | T5, T6 | [x] |
+| T9 | Root wiring + package exports + build | typescript-pro | `src/index.ts` (mod), `package.json` (mod), `src/entry.test.ts` | T7, T8 | [x] |
 
 ## Notes
 
