@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-21T12:31:57.428Z",
+  "generatedAt": "2026-06-21T12:39:18.502Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 172,
-    "structural-match": 255,
-    "diverged": 328,
+    "byte-match": 173,
+    "structural-match": 257,
+    "diverged": 325,
     "errored": 20,
     "timeout": 6,
     "oracle-error": 15
@@ -153,15 +153,15 @@
       "id": "144_no_ortho",
       "path": "144_no_ortho.dot",
       "verdict": "diverged",
-      "maxDelta": 63.22999999999999,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 54.000000000000014,
+      "firstDiffPath": "svg/g[1]/g[3]/polygon[2]/@points"
     },
     {
       "id": "144_ortho",
       "path": "144_ortho.dot",
       "verdict": "diverged",
-      "maxDelta": 63.22999999999999,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 96,
+      "firstDiffPath": "svg/g[1]/g[3]/polygon[2]/@points"
     },
     {
       "id": "1453",
@@ -422,7 +422,7 @@
       "id": "1949",
       "path": "1949.dot",
       "verdict": "diverged",
-      "maxDelta": 173.37,
+      "maxDelta": 159.37,
       "firstDiffPath": "svg/g[1]/g[1][childCount]"
     },
     {
@@ -441,9 +441,8 @@
     {
       "id": "2082",
       "path": "2082.dot",
-      "verdict": "diverged",
-      "maxDelta": 380,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@stroke"
+      "verdict": "structural-match",
+      "maxDelta": 380
     },
     {
       "id": "2087",
@@ -524,9 +523,8 @@
     {
       "id": "2193",
       "path": "2193.dot",
-      "verdict": "diverged",
-      "maxDelta": 122.38999999999987,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@stroke"
+      "verdict": "structural-match",
+      "maxDelta": 132.08999999999992
     },
     {
       "id": "2222",
@@ -618,7 +616,7 @@
       "id": "2368",
       "path": "2368.dot",
       "verdict": "diverged",
-      "maxDelta": 372.78,
+      "maxDelta": 364,
       "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
@@ -674,7 +672,7 @@
       "path": "241_1.dot",
       "verdict": "diverged",
       "maxDelta": 648,
-      "firstDiffPath": "svg/g[1]/g[4]/title[1]/text()[1]"
+      "firstDiffPath": "svg/g[1]/g[4][childCount]"
     },
     {
       "id": "2436",
@@ -780,7 +778,7 @@
       "path": "2521.dot",
       "verdict": "diverged",
       "maxDelta": 269,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@stroke"
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "2521_1",
@@ -977,7 +975,7 @@
       "id": "2734",
       "path": "2734.dot",
       "verdict": "diverged",
-      "maxDelta": 30.700000000000003,
+      "maxDelta": 1,
       "firstDiffPath": "svg/g[1]/g[1]/@class"
     },
     {
@@ -1175,15 +1173,15 @@
       "id": "graphs-arrows",
       "path": "graphs/arrows.gv",
       "verdict": "diverged",
-      "maxDelta": 342.54,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 149.79999999999998,
+      "firstDiffPath": "svg/g[1]/g[11]/polygon[1]"
     },
     {
       "id": "graphs-arrowsize",
       "path": "graphs/arrowsize.gv",
       "verdict": "diverged",
-      "maxDelta": 342.47,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 153.01,
+      "firstDiffPath": "svg/g[1]/g[7]/path[1]/@d"
     },
     {
       "id": "graphs-awilliams",
@@ -1421,9 +1419,7 @@
     {
       "id": "graphs-b76",
       "path": "graphs/b76.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2]/title[1]/text()[1]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b77",
@@ -1759,8 +1755,8 @@
       "id": "graphs-honda-tokoro",
       "path": "graphs/honda-tokoro.gv",
       "verdict": "diverged",
-      "maxDelta": 307.42,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 314.76,
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "graphs-html",
@@ -2142,21 +2138,21 @@
       "path": "graphs/lsunix1.gv",
       "verdict": "diverged",
       "maxDelta": 560,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@stroke-dasharray"
+      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
       "id": "graphs-lsunix2",
       "path": "graphs/lsunix2.gv",
       "verdict": "diverged",
       "maxDelta": 560,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@stroke-dasharray"
+      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
       "id": "graphs-lsunix3",
       "path": "graphs/lsunix3.gv",
       "verdict": "diverged",
       "maxDelta": 560,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@stroke"
+      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
       "id": "graphs-mike",
@@ -2182,8 +2178,8 @@
       "id": "graphs-newarrows",
       "path": "graphs/newarrows.gv",
       "verdict": "diverged",
-      "maxDelta": 342.54,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 149.79999999999998,
+      "firstDiffPath": "svg/g[1]/g[11]/polygon[1]"
     },
     {
       "id": "graphs-ngk10_4",
@@ -2431,8 +2427,8 @@
       "id": "graphs-shells",
       "path": "graphs/shells.gv",
       "verdict": "diverged",
-      "maxDelta": 188,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "maxDelta": 648,
+      "firstDiffPath": "svg/g[1]/g[1][childCount]"
     },
     {
       "id": "graphs-sides",
@@ -2766,8 +2762,8 @@
       "id": "linux.x86-arrows_dot",
       "path": "linux.x86/arrows_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 342.54,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 149.79999999999998,
+      "firstDiffPath": "svg/g[1]/g[11]/polygon[1]"
     },
     {
       "id": "linux.x86-compound_dot",
@@ -2966,8 +2962,8 @@
       "id": "macosx-arrows_dot",
       "path": "macosx/arrows_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 342.54,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 149.79999999999998,
+      "firstDiffPath": "svg/g[1]/g[11]/polygon[1]"
     },
     {
       "id": "macosx-compound_dot",
@@ -3033,8 +3029,8 @@
       "id": "nshare-arrows_dot",
       "path": "nshare/arrows_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 342.54,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 149.79999999999998,
+      "firstDiffPath": "svg/g[1]/g[11]/polygon[1]"
     },
     {
       "id": "nshare-compound_dot",
@@ -4080,8 +4076,8 @@
       "id": "share-newarrows",
       "path": "share/newarrows.gv",
       "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 144.54000000000002,
+      "firstDiffPath": "svg/g[1]/g[15]/path[1]/@d"
     },
     {
       "id": "share-ngk10_4",
@@ -4764,8 +4760,8 @@
       "id": "windows-newarrows",
       "path": "windows/newarrows.gv",
       "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "maxDelta": 144.54000000000002,
+      "firstDiffPath": "svg/g[1]/g[15]/path[1]/@d"
     },
     {
       "id": "windows-ngk10_4",

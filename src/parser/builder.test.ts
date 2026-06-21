@@ -75,3 +75,28 @@ describe('subgraph-scoped node-attribute defaults', () => {
     expect(nodeAttr(g.nodes.get('a')!, g, 'shape')).toBe('ellipse');
   });
 });
+
+// edge[...] defaults are snapshot onto each edge at creation, in statement
+// order, so a later edge[color=...] in the same scope only affects subsequent
+// edges. Edges read attrs from their own map only. @see snapshotEdgeDefaults
+describe('edge-attribute defaults snapshot at creation', () => {
+  it('root edge[color=red] colors all edges', () => {
+    const g = parse('digraph{edge[color=red];a->b;c->d}');
+    expect(g.edges.every((e) => e.attrs.get('color') === 'red')).toBe(true);
+  });
+
+  it('a re-declared edge default only affects edges created after it', () => {
+    const g = parse('digraph{edge[color=red];a->b;edge[color=blue];c->d}');
+    const byTail = (t: string) => g.edges.find((e) => e.tail.name === t)!;
+    expect(byTail('a').attrs.get('color')).toBe('red');
+    expect(byTail('c').attrs.get('color')).toBe('blue');
+  });
+
+  it('subgraph edge default overrides the root default; explicit attr wins', () => {
+    const g = parse(
+      'digraph{edge[color=red];subgraph c0{edge[color=green];a->b;x->y[color=blue]}}');
+    const byTail = (t: string) => g.edges.find((e) => e.tail.name === t)!;
+    expect(byTail('a').attrs.get('color')).toBe('green'); // inherited subgraph
+    expect(byTail('x').attrs.get('color')).toBe('blue');  // explicit wins
+  });
+});

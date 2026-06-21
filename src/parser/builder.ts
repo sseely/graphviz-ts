@@ -176,6 +176,21 @@ export class StmtProcessor {
     }
   }
 
+  /**
+   * Snapshot the edge-attribute defaults active in `scope` at edge creation:
+   * walk scope -> root (inner overriding outer), filling only keys the edge
+   * does not set explicitly. Edges read attrs from their own map only, and
+   * DOT's edge[...] defaults apply to edges created after the statement in that
+   * scope, so the snapshot must happen at creation, in statement order.
+   */
+  private snapshotEdgeDefaults(edge: Edge, scope: Graph): void {
+    for (let g: Graph | null = scope; g !== null; g = g.parent) {
+      for (const [k, v] of g.edgeDefaults) {
+        if (!edge.attrs.has(k)) edge.attrs.set(k, v);
+      }
+    }
+  }
+
   private resolveEndpoint(item: NodeId | SubgraphStmt, root: Graph, scope: Graph): Node[] {
     if ('type' in item && item.type === 'subgraph') {
       return NameCollector.fromStmts(item.stmts).map(
@@ -200,6 +215,7 @@ export class StmtProcessor {
       for (const head of this.resolveEndpoint(headItem, root, graph)) {
         const edge = new Edge(tail, head, '');
         applyAttrs(attrs, edge.attrs);
+        this.snapshotEdgeDefaults(edge, graph);
         if (tailPort && !edge.attrs.has('tailport')) edge.attrs.set('tailport', tailPort);
         if (headPort && !edge.attrs.has('headport')) edge.attrs.set('headport', headPort);
         root.edges.push(edge);
