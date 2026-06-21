@@ -11,7 +11,7 @@
 
 import { describe, it, expect } from 'vitest';
 import type { TextMeasurer } from './textmeasure.js';
-import type { TextlabelT } from './types.js';
+import type { PolygonT, TextlabelT } from './types.js';
 import { Graph } from '../model/graph.js';
 import { Node } from '../model/node.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
@@ -128,6 +128,68 @@ describe('commonInitNode — NODE_XLABEL bit', () => {
     commonInitNode(n1, g);
     commonInitNode(n2, g);
     expect((g.info.has_labels ?? 0) & NODE_XLABEL).toBeTruthy();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// shape=point sizing — @see lib/common/shapes.c:point_init
+// ---------------------------------------------------------------------------
+
+/** Init a `shape=point` node with the given extra attrs. */
+function pointNode(attrs: Record<string, string> = {}): Node {
+  const g = makeGraph();
+  const n = addNode(g, 'A', { shape: 'point', ...attrs });
+  commonInitNode(n, g);
+  return n;
+}
+
+describe('commonInitNode — shape=point default size', () => {
+  it('defaults to DEF_POINT (0.05in) ignoring the label', () => {
+    const n = pointNode();
+    // AC1: ND_width == ND_height == 0.05in (rx 1.8pt).
+    expect(n.info.width).toBeCloseTo(0.05, 9);
+    expect(n.info.height).toBeCloseTo(0.05, 9);
+  });
+
+  it('sets lw/rw/ht to the 3.6pt dot (rx 1.8pt)', () => {
+    const n = pointNode();
+    expect(n.info.lw).toBeCloseTo(1.8, 9);
+    expect(n.info.rw).toBeCloseTo(1.8, 9);
+    expect(n.info.ht).toBeCloseTo(3.6, 9);
+  });
+
+  it('keeps the label object (suppressed at render, not deleted)', () => {
+    expect(pointNode().info.label).toBeDefined();
+  });
+});
+
+describe('commonInitNode — shape=point set width/height', () => {
+  it('honors the min of set width/height, not DEF_POINT (AC4)', () => {
+    const n = pointNode({ width: '0.2' });
+    expect(n.info.width).toBeCloseTo(0.2, 9);
+    expect(n.info.height).toBeCloseTo(0.2, 9);
+    expect(n.info.lw).toBeCloseTo(7.2, 9);
+  });
+
+  it('uses the smaller of width and height', () => {
+    expect(pointNode({ width: '0.5', height: '0.1' }).info.width).toBeCloseTo(0.1, 9);
+  });
+});
+
+describe('commonInitNode — shape=point polygon rings', () => {
+  it('installs a sides=2 ellipse polygon with the 1.8pt inner ring', () => {
+    const poly = pointNode().info.shape_info as PolygonT;
+    expect(poly.sides).toBe(2);
+    expect(poly.peripheries).toBe(1);
+    expect(poly.vertices![0]).toEqual({ x: -1.8, y: -1.8 });
+    expect(poly.vertices![1]).toEqual({ x: 1.8, y: 1.8 });
+  });
+
+  it('grows by GAP per extra periphery (peripheries=2 → outer rx 5.8)', () => {
+    const poly = pointNode({ peripheries: '2' }).info.shape_info as PolygonT;
+    expect(poly.peripheries).toBe(2);
+    expect(poly.vertices![1]!.x).toBeCloseTo(1.8, 9);
+    expect(poly.vertices![3]!.x).toBeCloseTo(5.8, 9);
   });
 });
 

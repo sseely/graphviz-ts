@@ -10,7 +10,8 @@ import type { Node } from '../model/node.js';
 import type { Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
-import type { PolygonT, TextlabelT, GraphvizPolygonStyle } from './types.js';
+import type { PolygonT, TextlabelT, GraphvizPolygonStyle, ShapeDesc } from './types.js';
+import { ShapeKind } from './types.js';
 import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml } from './htmltable-pos.js';
 import type { ObjState } from '../gvc/job.js';
@@ -257,6 +258,23 @@ function applyGradientFields(
   obj.gradientAngle = fill.angle;
 }
 
+/** True when the node's bound shape is `shape=point`. @see types.h:SH_POINT */
+function isPointNode(n: Node): boolean {
+  return (n.info.shape as ShapeDesc | undefined)?.kind === ShapeKind.SH_POINT;
+}
+
+/**
+ * Default fill color for a point: fillcolor, else color, else "black".
+ * @see lib/common/shapes.c:findFillDflt (point_gencode passes "black")
+ */
+function findFillDflt(n: Node): string {
+  const fillcolor = nodeAttr(n, n.root, 'fillcolor');
+  if (fillcolor !== undefined && fillcolor !== '') return fillcolor;
+  const color = nodeAttr(n, n.root, 'color');
+  if (color !== undefined && color !== '') return color;
+  return 'black';
+}
+
 /**
  * Apply fill state to obj using the discriminated resolveNodeFillEx.
  * Sets obj.id to the node's SVG id (nodeN) so emitGradientDefs can
@@ -269,6 +287,12 @@ function applyFillState(obj: ObjState, n: Node): boolean {
   // Set obj.id so gradient prefix matches C's getObjId result ("nodeN").
   // @see lib/common/emit.c:209 getObjId (AGNODE case: pfx="node", idnum=AGSEQ)
   obj.id = 'node' + (n.id + 1);
+  // point_gencode always fills, defaulting to black (AD-4).
+  if (isPointNode(n)) {
+    obj.fill = FillType.Solid;
+    obj.fillColor = resolveRenderColor(findFillDflt(n));
+    return true;
+  }
   const fillRes = resolveNodeFillEx({
     style: nodeAttr(n, n.root, 'style'),
     fillcolor: nodeAttr(n, n.root, 'fillcolor'),
@@ -384,6 +408,7 @@ export function polyGencode(rawJob: unknown, rawNode: unknown): void {
   if (ctx === null) return;
   const inAnchor = beginNodeAnchor(n, renderer, job);
   renderPeripheries(ctx.poly, ctx.coord, ctx.filled, ctx.ringCtx);
-  renderNodeLabel(n, ctx.coord, renderer, job);
+  // point_gencode never emits a label (AD-3).
+  if (!isPointNode(n)) renderNodeLabel(n, ctx.coord, renderer, job);
   if (inAnchor) renderer.endAnchor?.(job);
 }
