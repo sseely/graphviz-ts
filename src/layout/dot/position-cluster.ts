@@ -10,7 +10,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import { VIRTUAL, NORMAL, virtualNode, findFastEdge } from './fastgr.js';
 import { agContainsNode } from './mincross-utils.js';
-import { dotRoot } from './mincross-utils.js';
+import { dotRoot, rankGet } from './mincross-utils.js';
 import { SLACKNODE } from './rank.js';
 import {
   CL_OFFSET, BOTTOM_IX, RIGHT_IX, TOP_IX, LEFT_IX,
@@ -81,11 +81,16 @@ export function makeLrvn(g: Graph): void {
 export function containNodesRank(g: Graph, r: number, ln: Node, rn: Node): void {
   const rk = g.info.rank![r];
   if (rk.n === 0) return;
-  const first = rk.v[0];
+  // C's GD_rank(clust)[i].v is the offset window pointer (merge_ranks aliases
+  // it to GD_rank(root)[i].v + ipos), so v[0]/v[n-1] are cluster-local. TS keeps
+  // .v as the full root array plus a separate vStart, so cluster members must be
+  // read via rankGet (= rk.v[vStart+i]); a raw rk.v[0] reads the root's leftmost
+  // node, not the cluster's. Same vStart-window bug class as mincross Layers 1-2.
+  const first = rankGet(rk, 0);
   if (!first) return;
   const margin = graphMargin(g);
   makeAuxEdge(ln, first, nodeLw(first) + margin + borderLeft(g), 0);
-  const last = rk.v[rk.n - 1];
+  const last = rankGet(rk, rk.n - 1);
   makeAuxEdge(last, rn, nodeRw(last) + margin + borderRight(g), 0);
 }
 

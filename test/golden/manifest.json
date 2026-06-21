@@ -32,6 +32,14 @@
     "description": "6-node digraph with 2 subgraph clusters"
   },
   {
+    "id": "dot-cluster-external-edge",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-external-edge.dot",
+    "reference": "test/golden/refs/dot-cluster-external-edge.svg",
+    "description": "External edge into a cluster mid-chain node; pins cluster x-containment (contain_nodes vStart window)"
+  },
+  {
     "id": "dot-nested-cluster",
     "engine": "dot",
     "toleranceClass": "deterministic",

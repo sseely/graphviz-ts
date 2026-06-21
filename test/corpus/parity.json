@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-21T12:50:03.340Z",
+  "generatedAt": "2026-06-21T18:39:31.530Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 173,
-    "structural-match": 258,
-    "diverged": 324,
-    "errored": 20,
-    "timeout": 6,
+    "byte-match": 237,
+    "structural-match": 196,
+    "diverged": 320,
+    "errored": 19,
+    "timeout": 9,
     "oracle-error": 15
   },
   "results": [
@@ -23,14 +23,14 @@
       "id": "1213-1",
       "path": "1213-1.dot",
       "verdict": "diverged",
-      "maxDelta": 264,
+      "maxDelta": 326,
       "firstDiffPath": "svg/g[1]/g[12]/path[1]/@d"
     },
     {
       "id": "1213-2",
       "path": "1213-2.dot",
       "verdict": "diverged",
-      "maxDelta": 280,
+      "maxDelta": 261.23,
       "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
     },
     {
@@ -60,14 +60,14 @@
       "id": "1323",
       "path": "1323.dot",
       "verdict": "diverged",
-      "maxDelta": 245,
+      "maxDelta": 283,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
       "id": "1323_1",
       "path": "1323_1.dot",
       "verdict": "diverged",
-      "maxDelta": 157,
+      "maxDelta": 26.5,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -115,14 +115,14 @@
       "id": "1435",
       "path": "1435.dot",
       "verdict": "diverged",
-      "maxDelta": 574,
+      "maxDelta": 731,
       "firstDiffPath": "svg/g[1]/g[16][childCount]"
     },
     {
       "id": "1436",
       "path": "1436.dot",
       "verdict": "diverged",
-      "maxDelta": 3283,
+      "maxDelta": 1292,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -223,7 +223,7 @@
       "id": "162",
       "path": "162.dot",
       "verdict": "structural-match",
-      "maxDelta": 150
+      "maxDelta": 148.44
     },
     {
       "id": "1622_0",
@@ -257,7 +257,7 @@
       "id": "1624",
       "path": "1624.dot",
       "verdict": "diverged",
-      "maxDelta": 106,
+      "maxDelta": 29.52,
       "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
@@ -370,14 +370,14 @@
       "id": "1879",
       "path": "1879.dot",
       "verdict": "diverged",
-      "maxDelta": 24045,
+      "maxDelta": 20897.66,
       "firstDiffPath": "svg/g[1]/g[99]/g[1]/a[1][childCount]"
     },
     {
       "id": "1880",
       "path": "1880.dot",
       "verdict": "diverged",
-      "maxDelta": 460.80000000000007,
+      "maxDelta": 570.0000000000001,
       "firstDiffPath": "svg/g[1]/polygon[1]"
     },
     {
@@ -415,14 +415,14 @@
       "id": "1939",
       "path": "1939.dot",
       "verdict": "diverged",
-      "maxDelta": 348,
-      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
+      "maxDelta": 275.95,
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "1949",
       "path": "1949.dot",
       "verdict": "diverged",
-      "maxDelta": 159.37,
+      "maxDelta": 144.44,
       "firstDiffPath": "svg/g[1]/g[1][childCount]"
     },
     {
@@ -510,7 +510,7 @@
       "id": "2183",
       "path": "2183.dot",
       "verdict": "diverged",
-      "maxDelta": 263,
+      "maxDelta": 182.16,
       "firstDiffPath": "svg/g[1]/g[1]/@class"
     },
     {
@@ -529,7 +529,7 @@
     {
       "id": "2222",
       "path": "2222.dot",
-      "verdict": "byte-match"
+      "verdict": "timeout"
     },
     {
       "id": "2225",
@@ -546,7 +546,7 @@
       "id": "2242",
       "path": "2242.dot",
       "verdict": "diverged",
-      "maxDelta": 396,
+      "maxDelta": 387,
       "firstDiffPath": "svg/g[1]/g[2]/@id"
     },
     {
@@ -712,15 +712,13 @@
       "id": "2470",
       "path": "2470.dot",
       "verdict": "diverged",
-      "maxDelta": 39613,
+      "maxDelta": 35390.51,
       "firstDiffPath": "svg/g[1]/polygon[1]/@fill"
     },
     {
       "id": "2471",
       "path": "2471.dot",
-      "verdict": "diverged",
-      "maxDelta": 14143,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "verdict": "timeout"
     },
     {
       "id": "2475_1",
@@ -731,14 +729,13 @@
     {
       "id": "2475_2",
       "path": "2475_2.dot",
-      "verdict": "errored",
-      "errMsg": "Maximum call stack size exceeded"
+      "verdict": "timeout"
     },
     {
       "id": "2476",
       "path": "2476.dot",
       "verdict": "diverged",
-      "maxDelta": 2798,
+      "maxDelta": 2127,
       "firstDiffPath": "svg/g[1]/g[14]/path[1]/@d"
     },
     {
@@ -757,7 +754,7 @@
       "id": "2497",
       "path": "2497.dot",
       "verdict": "diverged",
-      "maxDelta": 376,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/g[1]/@id"
     },
     {
@@ -777,7 +774,7 @@
       "id": "2521",
       "path": "2521.dot",
       "verdict": "diverged",
-      "maxDelta": 269,
+      "maxDelta": 311,
       "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
@@ -857,8 +854,8 @@
       "id": "2615",
       "path": "2615.dot",
       "verdict": "diverged",
-      "maxDelta": 134,
-      "firstDiffPath": "svg/g[1]/g[7]/path[1]/@d"
+      "maxDelta": 148.44,
+      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
     },
     {
       "id": "2619",
@@ -883,7 +880,7 @@
       "id": "2620",
       "path": "2620.dot",
       "verdict": "diverged",
-      "maxDelta": 5330.99,
+      "maxDelta": 10834.5,
       "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
@@ -941,7 +938,7 @@
       "id": "2683",
       "path": "2683.dot",
       "verdict": "structural-match",
-      "maxDelta": 425
+      "maxDelta": 622
     },
     {
       "id": "2699",
@@ -952,7 +949,7 @@
       "id": "2717",
       "path": "2717.dot",
       "verdict": "diverged",
-      "maxDelta": 129,
+      "maxDelta": 589,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -994,7 +991,7 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "diverged",
-      "maxDelta": 322.0799999999999,
+      "maxDelta": 1192,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1040,7 +1037,7 @@
       "id": "705",
       "path": "705.dot",
       "verdict": "diverged",
-      "maxDelta": 134,
+      "maxDelta": 140.19,
       "firstDiffPath": "svg/g[1]/g[1]/@id"
     },
     {
@@ -1089,8 +1086,8 @@
       "id": "graphs-KW91",
       "path": "graphs/KW91.gv",
       "verdict": "diverged",
-      "maxDelta": 115.47999999999999,
-      "firstDiffPath": "svg/g[1]/g[7]/path[1]/@d"
+      "maxDelta": 144.16,
+      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
       "id": "graphs-Latin1",
@@ -1275,7 +1272,7 @@
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
       "verdict": "diverged",
-      "maxDelta": 172,
+      "maxDelta": 205.37,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1331,7 +1328,7 @@
       "path": "graphs/b51.gv",
       "verdict": "diverged",
       "maxDelta": 1065.5,
-      "firstDiffPath": "svg/g[1]/g[32]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
     },
     {
       "id": "graphs-b53",
@@ -1397,7 +1394,7 @@
       "id": "graphs-b7",
       "path": "graphs/b7.gv",
       "verdict": "diverged",
-      "maxDelta": 134,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/g[2]/@id"
     },
     {
@@ -1520,47 +1517,46 @@
       "id": "graphs-clust",
       "path": "graphs/clust.gv",
       "verdict": "diverged",
-      "maxDelta": 156,
+      "maxDelta": 214,
       "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "graphs-clust1",
       "path": "graphs/clust1.gv",
       "verdict": "structural-match",
-      "maxDelta": 102
+      "maxDelta": 39
     },
     {
       "id": "graphs-clust2",
       "path": "graphs/clust2.gv",
       "verdict": "structural-match",
-      "maxDelta": 13.230000000000004
+      "maxDelta": 9.170000000000002
     },
     {
       "id": "graphs-clust3",
       "path": "graphs/clust3.gv",
-      "verdict": "diverged",
-      "maxDelta": 86,
-      "firstDiffPath": "svg/g[1]/g[15]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 74
     },
     {
       "id": "graphs-clust4",
       "path": "graphs/clust4.gv",
       "verdict": "diverged",
-      "maxDelta": 136,
+      "maxDelta": 57.000000000000014,
       "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "graphs-clust5",
       "path": "graphs/clust5.gv",
       "verdict": "diverged",
-      "maxDelta": 380,
-      "firstDiffPath": "svg/g[1]/g[12]/path[1]/@d"
+      "maxDelta": 288.78,
+      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
     },
     {
       "id": "graphs-clusters",
       "path": "graphs/clusters.gv",
       "verdict": "diverged",
-      "maxDelta": 136,
+      "maxDelta": 57.000000000000014,
       "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
@@ -1587,8 +1583,8 @@
       "id": "graphs-compound",
       "path": "graphs/compound.gv",
       "verdict": "diverged",
-      "maxDelta": 214,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 142,
+      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
     },
     {
       "id": "graphs-crazy",
@@ -1649,8 +1645,8 @@
       "id": "graphs-fdp",
       "path": "graphs/fdp.gv",
       "verdict": "diverged",
-      "maxDelta": 306,
-      "firstDiffPath": "svg/g[1]/g[14]/path[1]/@d"
+      "maxDelta": 233.85,
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "graphs-fig6",
@@ -1687,7 +1683,7 @@
       "id": "graphs-grdcluster",
       "path": "graphs/grdcluster.gv",
       "verdict": "diverged",
-      "maxDelta": 69,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/g[2]/polygon[1]/@stroke"
     },
     {
@@ -1820,290 +1816,266 @@
     {
       "id": "graphs-labelclust-fbc",
       "path": "graphs/labelclust-fbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-fbd",
       "path": "graphs/labelclust-fbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-fbl",
       "path": "graphs/labelclust-fbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "graphs-labelclust-fbr",
       "path": "graphs/labelclust-fbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "graphs-labelclust-fdc",
       "path": "graphs/labelclust-fdc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-fdd",
       "path": "graphs/labelclust-fdd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-fdl",
       "path": "graphs/labelclust-fdl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.62
     },
     {
       "id": "graphs-labelclust-fdr",
       "path": "graphs/labelclust-fdr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "graphs-labelclust-ftc",
       "path": "graphs/labelclust-ftc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-ftd",
       "path": "graphs/labelclust-ftd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-ftl",
       "path": "graphs/labelclust-ftl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.62
     },
     {
       "id": "graphs-labelclust-ftr",
       "path": "graphs/labelclust-ftr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "graphs-labelclust-nbc",
       "path": "graphs/labelclust-nbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-nbd",
       "path": "graphs/labelclust-nbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-nbl",
       "path": "graphs/labelclust-nbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "graphs-labelclust-nbr",
       "path": "graphs/labelclust-nbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "graphs-labelclust-ndc",
       "path": "graphs/labelclust-ndc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-ndd",
       "path": "graphs/labelclust-ndd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-ndl",
       "path": "graphs/labelclust-ndl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "graphs-labelclust-ndr",
       "path": "graphs/labelclust-ndr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "graphs-labelclust-ntc",
       "path": "graphs/labelclust-ntc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-ntd",
       "path": "graphs/labelclust-ntd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-ntl",
       "path": "graphs/labelclust-ntl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "graphs-labelclust-ntr",
       "path": "graphs/labelclust-ntr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "graphs-labelroot-fbc",
       "path": "graphs/labelroot-fbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-fbd",
       "path": "graphs/labelroot-fbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-fbl",
       "path": "graphs/labelroot-fbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "graphs-labelroot-fbr",
       "path": "graphs/labelroot-fbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "graphs-labelroot-fdc",
       "path": "graphs/labelroot-fdc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-fdd",
       "path": "graphs/labelroot-fdd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-fdl",
       "path": "graphs/labelroot-fdl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "graphs-labelroot-fdr",
       "path": "graphs/labelroot-fdr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "graphs-labelroot-ftc",
       "path": "graphs/labelroot-ftc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-ftd",
       "path": "graphs/labelroot-ftd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-ftl",
       "path": "graphs/labelroot-ftl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "graphs-labelroot-ftr",
       "path": "graphs/labelroot-ftr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "graphs-labelroot-nbc",
       "path": "graphs/labelroot-nbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-nbd",
       "path": "graphs/labelroot-nbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-nbl",
       "path": "graphs/labelroot-nbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "graphs-labelroot-nbr",
       "path": "graphs/labelroot-nbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "graphs-labelroot-ndc",
       "path": "graphs/labelroot-ndc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-ndd",
       "path": "graphs/labelroot-ndd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-ndl",
       "path": "graphs/labelroot-ndl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "graphs-labelroot-ndr",
       "path": "graphs/labelroot-ndr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "graphs-labelroot-ntc",
       "path": "graphs/labelroot-ntc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-ntd",
       "path": "graphs/labelroot-ntd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelroot-ntl",
       "path": "graphs/labelroot-ntl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "graphs-labelroot-ntr",
       "path": "graphs/labelroot-ntr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "graphs-layer",
@@ -2336,7 +2308,7 @@
       "id": "graphs-rd_rules",
       "path": "graphs/rd_rules.gv",
       "verdict": "diverged",
-      "maxDelta": 338,
+      "maxDelta": 607,
       "firstDiffPath": "svg/g[1]/g[5]/polygon[35]"
     },
     {
@@ -2368,8 +2340,7 @@
     {
       "id": "graphs-rootlabel",
       "path": "graphs/rootlabel.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-rowcolsep",
@@ -2473,7 +2444,7 @@
       "id": "graphs-sq_rules",
       "path": "graphs/sq_rules.gv",
       "verdict": "structural-match",
-      "maxDelta": 338
+      "maxDelta": 612
     },
     {
       "id": "graphs-sr_box",
@@ -2548,7 +2519,7 @@
       "id": "graphs-style",
       "path": "graphs/style.gv",
       "verdict": "diverged",
-      "maxDelta": 722,
+      "maxDelta": 438.17,
       "firstDiffPath": "svg/g[1]/g[5]/ellipse[1]/@stroke-width"
     },
     {
@@ -2613,7 +2584,7 @@
       "id": "graphs-url",
       "path": "graphs/url.gv",
       "verdict": "diverged",
-      "maxDelta": 16,
+      "maxDelta": 148,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -2768,8 +2739,8 @@
       "id": "linux.x86-compound_dot",
       "path": "linux.x86/compound_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 214,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 142,
+      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
     },
     {
       "id": "linux.x86-dotsplines_dot",
@@ -2826,7 +2797,7 @@
       "id": "linux.x86-nestedclust_dot",
       "path": "linux.x86/nestedclust_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 16,
+      "maxDelta": 22,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -2968,8 +2939,8 @@
       "id": "macosx-compound_dot",
       "path": "macosx/compound_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 214,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 142,
+      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
     },
     {
       "id": "macosx-edgeclip_dot",
@@ -2980,7 +2951,7 @@
       "id": "macosx-nestedclust_dot",
       "path": "macosx/nestedclust_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 16,
+      "maxDelta": 22,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -3035,8 +3006,8 @@
       "id": "nshare-compound_dot",
       "path": "nshare/compound_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 214,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 142,
+      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
     },
     {
       "id": "nshare-dotsplines_dot",
@@ -3093,7 +3064,7 @@
       "id": "nshare-nestedclust_dot",
       "path": "nshare/nestedclust_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 16,
+      "maxDelta": 22,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -3543,8 +3514,8 @@
       "id": "share-KW91",
       "path": "share/KW91.gv",
       "verdict": "diverged",
-      "maxDelta": 115.47999999999999,
-      "firstDiffPath": "svg/g[1]/g[18]/path[1]/@d"
+      "maxDelta": 144.16,
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "share-Latin1",
@@ -3638,7 +3609,7 @@
       "id": "share-b51",
       "path": "share/b51.gv",
       "verdict": "diverged",
-      "maxDelta": 728.96,
+      "maxDelta": 740.96,
       "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
@@ -3663,41 +3634,40 @@
       "id": "share-clust",
       "path": "share/clust.gv",
       "verdict": "diverged",
-      "maxDelta": 156,
+      "maxDelta": 214,
       "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "share-clust1",
       "path": "share/clust1.gv",
       "verdict": "structural-match",
-      "maxDelta": 102
+      "maxDelta": 39
     },
     {
       "id": "share-clust2",
       "path": "share/clust2.gv",
       "verdict": "structural-match",
-      "maxDelta": 13.230000000000004
+      "maxDelta": 9.170000000000002
     },
     {
       "id": "share-clust3",
       "path": "share/clust3.gv",
-      "verdict": "diverged",
-      "maxDelta": 86,
-      "firstDiffPath": "svg/g[1]/g[15]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 74
     },
     {
       "id": "share-clust4",
       "path": "share/clust4.gv",
       "verdict": "diverged",
-      "maxDelta": 136,
+      "maxDelta": 57,
       "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "share-clust5",
       "path": "share/clust5.gv",
       "verdict": "diverged",
-      "maxDelta": 316,
-      "firstDiffPath": "svg/g[1]/g[16]/path[1]/@d"
+      "maxDelta": 258.82,
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "share-crazy",
@@ -3766,218 +3736,202 @@
     {
       "id": "share-labelclust-fbc",
       "path": "share/labelclust-fbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-fbd",
       "path": "share/labelclust-fbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-fbl",
       "path": "share/labelclust-fbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "share-labelclust-fbr",
       "path": "share/labelclust-fbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "share-labelclust-fdc",
       "path": "share/labelclust-fdc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-fdd",
       "path": "share/labelclust-fdd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-fdl",
       "path": "share/labelclust-fdl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.62
     },
     {
       "id": "share-labelclust-fdr",
       "path": "share/labelclust-fdr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "share-labelclust-ftc",
       "path": "share/labelclust-ftc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-ftd",
       "path": "share/labelclust-ftd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-ftl",
       "path": "share/labelclust-ftl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.62
     },
     {
       "id": "share-labelclust-ftr",
       "path": "share/labelclust-ftr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "share-labelclust-nbc",
       "path": "share/labelclust-nbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-nbd",
       "path": "share/labelclust-nbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-nbl",
       "path": "share/labelclust-nbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "share-labelclust-nbr",
       "path": "share/labelclust-nbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "share-labelclust-ndc",
       "path": "share/labelclust-ndc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-ndd",
       "path": "share/labelclust-ndd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-ndl",
       "path": "share/labelclust-ndl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "share-labelclust-ndr",
       "path": "share/labelclust-ndr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "share-labelclust-ntc",
       "path": "share/labelclust-ntc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-ntd",
       "path": "share/labelclust-ntd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-ntl",
       "path": "share/labelclust-ntl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "share-labelclust-ntr",
       "path": "share/labelclust-ntr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "share-labelroot-fbc",
       "path": "share/labelroot-fbc.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "share-labelroot-fbd",
       "path": "share/labelroot-fbd.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "share-labelroot-fbl",
       "path": "share/labelroot-fbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "share-labelroot-fbr",
       "path": "share/labelroot-fbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "share-labelroot-fdc",
       "path": "share/labelroot-fdc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-fdd",
       "path": "share/labelroot-fdd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-fdl",
       "path": "share/labelroot-fdl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "share-labelroot-fdr",
       "path": "share/labelroot-fdr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "share-labelroot-ftc",
       "path": "share/labelroot-ftc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-ftd",
       "path": "share/labelroot-ftd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-ftl",
       "path": "share/labelroot-ftl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "share-labelroot-ftr",
       "path": "share/labelroot-ftr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "share-labelroot-nbc",
@@ -4006,50 +3960,46 @@
     {
       "id": "share-labelroot-ndc",
       "path": "share/labelroot-ndc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-ndd",
       "path": "share/labelroot-ndd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-ndl",
       "path": "share/labelroot-ndl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "share-labelroot-ndr",
       "path": "share/labelroot-ndr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "share-labelroot-ntc",
       "path": "share/labelroot-ntc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-ntd",
       "path": "share/labelroot-ntd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelroot-ntl",
       "path": "share/labelroot-ntl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "share-labelroot-ntr",
       "path": "share/labelroot-ntr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "share-ldbxtried",
@@ -4259,8 +4209,8 @@
       "id": "windows-KW91",
       "path": "windows/KW91.gv",
       "verdict": "diverged",
-      "maxDelta": 115.47999999999999,
-      "firstDiffPath": "svg/g[1]/g[18]/path[1]/@d"
+      "maxDelta": 144.16,
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "windows-Latin1",
@@ -4339,7 +4289,7 @@
       "id": "windows-b51",
       "path": "windows/b51.gv",
       "verdict": "diverged",
-      "maxDelta": 722.91,
+      "maxDelta": 1677.5,
       "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
@@ -4353,41 +4303,40 @@
       "id": "windows-clust",
       "path": "windows/clust.gv",
       "verdict": "diverged",
-      "maxDelta": 156,
+      "maxDelta": 214,
       "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "windows-clust1",
       "path": "windows/clust1.gv",
       "verdict": "structural-match",
-      "maxDelta": 102
+      "maxDelta": 39
     },
     {
       "id": "windows-clust2",
       "path": "windows/clust2.gv",
       "verdict": "structural-match",
-      "maxDelta": 13.230000000000004
+      "maxDelta": 9.170000000000002
     },
     {
       "id": "windows-clust3",
       "path": "windows/clust3.gv",
-      "verdict": "diverged",
-      "maxDelta": 86,
-      "firstDiffPath": "svg/g[1]/g[15]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 74
     },
     {
       "id": "windows-clust4",
       "path": "windows/clust4.gv",
       "verdict": "diverged",
-      "maxDelta": 136,
+      "maxDelta": 57,
       "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "windows-clust5",
       "path": "windows/clust5.gv",
       "verdict": "diverged",
-      "maxDelta": 316,
-      "firstDiffPath": "svg/g[1]/g[16]/path[1]/@d"
+      "maxDelta": 258.82,
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "windows-crazy",
@@ -4450,218 +4399,202 @@
     {
       "id": "windows-labelclust-fbc",
       "path": "windows/labelclust-fbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-fbd",
       "path": "windows/labelclust-fbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-fbl",
       "path": "windows/labelclust-fbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "windows-labelclust-fbr",
       "path": "windows/labelclust-fbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "windows-labelclust-fdc",
       "path": "windows/labelclust-fdc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-fdd",
       "path": "windows/labelclust-fdd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-fdl",
       "path": "windows/labelclust-fdl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.62
     },
     {
       "id": "windows-labelclust-fdr",
       "path": "windows/labelclust-fdr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "windows-labelclust-ftc",
       "path": "windows/labelclust-ftc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-ftd",
       "path": "windows/labelclust-ftd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 85
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-ftl",
       "path": "windows/labelclust-ftl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.62
     },
     {
       "id": "windows-labelclust-ftr",
       "path": "windows/labelclust-ftr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "windows-labelclust-nbc",
       "path": "windows/labelclust-nbc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-nbd",
       "path": "windows/labelclust-nbd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-nbl",
       "path": "windows/labelclust-nbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "windows-labelclust-nbr",
       "path": "windows/labelclust-nbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "windows-labelclust-ndc",
       "path": "windows/labelclust-ndc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-ndd",
       "path": "windows/labelclust-ndd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-ndl",
       "path": "windows/labelclust-ndl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "windows-labelclust-ndr",
       "path": "windows/labelclust-ndr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "windows-labelclust-ntc",
       "path": "windows/labelclust-ntc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-ntd",
       "path": "windows/labelclust-ntd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-ntl",
       "path": "windows/labelclust-ntl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "windows-labelclust-ntr",
       "path": "windows/labelclust-ntr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.619999999999997
     },
     {
       "id": "windows-labelroot-fbc",
       "path": "windows/labelroot-fbc.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "windows-labelroot-fbd",
       "path": "windows/labelroot-fbd.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "windows-labelroot-fbl",
       "path": "windows/labelroot-fbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "windows-labelroot-fbr",
       "path": "windows/labelroot-fbr.gv",
       "verdict": "structural-match",
-      "maxDelta": 85
+      "maxDelta": 52.5
     },
     {
       "id": "windows-labelroot-fdc",
       "path": "windows/labelroot-fdc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-fdd",
       "path": "windows/labelroot-fdd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-fdl",
       "path": "windows/labelroot-fdl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "windows-labelroot-fdr",
       "path": "windows/labelroot-fdr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "windows-labelroot-ftc",
       "path": "windows/labelroot-ftc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-ftd",
       "path": "windows/labelroot-ftd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 60
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-ftl",
       "path": "windows/labelroot-ftl.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.62
     },
     {
       "id": "windows-labelroot-ftr",
       "path": "windows/labelroot-ftr.gv",
       "verdict": "structural-match",
-      "maxDelta": 60
+      "maxDelta": 50.620000000000005
     },
     {
       "id": "windows-labelroot-nbc",
@@ -4690,50 +4623,46 @@
     {
       "id": "windows-labelroot-ndc",
       "path": "windows/labelroot-ndc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-ndd",
       "path": "windows/labelroot-ndd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-ndl",
       "path": "windows/labelroot-ndl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "windows-labelroot-ndr",
       "path": "windows/labelroot-ndr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "windows-labelroot-ntc",
       "path": "windows/labelroot-ntc.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-ntd",
       "path": "windows/labelroot-ntd.gv",
-      "verdict": "structural-match",
-      "maxDelta": 78
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelroot-ntl",
       "path": "windows/labelroot-ntl.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "windows-labelroot-ntr",
       "path": "windows/labelroot-ntr.gv",
       "verdict": "structural-match",
-      "maxDelta": 78
+      "maxDelta": 5.6200000000000045
     },
     {
       "id": "windows-ldbxtried",

@@ -1,0 +1,5 @@
+digraph G {
+  x -> b;
+  subgraph cluster_big { p -> q -> r; }
+  b -> q;
+}
