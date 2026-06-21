@@ -94,6 +94,28 @@ export interface RendererPlugin {
 }
 
 // ---------------------------------------------------------------------------
+// Engine names
+// ---------------------------------------------------------------------------
+
+/**
+ * The layout engines bundled by the default context (see makeContext in
+ * src/index.ts — the source of truth for what `renderSvg` registers).
+ * Mirrors the `const char *engine` plugin keys of C's gvLayout.
+ * @see lib/gvc/gvc.h:gvLayout
+ */
+export type BuiltinEngine =
+  | 'dot' | 'neato' | 'fdp' | 'sfdp' | 'circo' | 'twopi' | 'osage' | 'patchwork';
+
+/**
+ * A layout-engine name. The registry is open — callers may `register` custom
+ * engines — so any string is accepted; `(string & {})` keeps editor
+ * autocomplete for the built-ins without closing the set. Unknown names throw
+ * at `layout`/`freeLayout` time, mirroring C's gvLayout error on a missing
+ * plugin.
+ */
+export type EngineName = BuiltinEngine | (string & {});
+
+// ---------------------------------------------------------------------------
 // LayoutEngine interface
 // ---------------------------------------------------------------------------
 
@@ -104,7 +126,7 @@ export interface RendererPlugin {
  */
 export interface LayoutEngine {
   /** Engine name, e.g. "dot", "neato". */
-  readonly type: string;
+  readonly type: EngineName;
   layout(g: Graph): void;
   cleanup(g: Graph): void;
 }
@@ -186,7 +208,7 @@ export class GvcContext {
    * @throws Error if the engine is not registered
    * @see lib/gvc/gvlayout.c:gvLayoutJobs
    */
-  layout(g: Graph, engineName: string): void {
+  layout(g: Graph, engineName: EngineName): void {
     const engine = this.layouts.get(engineName);
     if (engine === undefined) {
       throw new Error(`no layout engine registered: ${engineName}`);
@@ -201,7 +223,7 @@ export class GvcContext {
    * @throws Error if the engine is not registered
    * @see lib/gvc/gvlayout.c:gvFreeLayout
    */
-  freeLayout(g: Graph, engineName: string): void {
+  freeLayout(g: Graph, engineName: EngineName): void {
     const engine = this.layouts.get(engineName);
     if (engine === undefined) {
       throw new Error(`no layout engine registered: ${engineName}`);

@@ -10,7 +10,7 @@
  */
 
 import { parse } from './parser/index.js';
-import { GvcContext } from './gvc/context.js';
+import { GvcContext, type EngineName } from './gvc/context.js';
 import { render } from './gvc/device.js';
 import { createSvgRenderer } from './render/svg.js';
 import { createMeasurer } from './common/textmeasure-factory.js';
@@ -41,13 +41,14 @@ function makeContext(): GvcContext {
  * Render a DOT-language string to SVG using the specified layout engine.
  *
  * @param dotSource - DOT-language graph source
- * @param engine    - layout engine name: 'dot', 'neato', 'fdp', 'sfdp',
- *                    'circo', 'twopi', 'osage', or 'patchwork'
+ * @param engine    - layout engine name ({@link EngineName}): a built-in
+ *                    ('dot', 'neato', 'fdp', 'sfdp', 'circo', 'twopi',
+ *                    'osage', 'patchwork') or any custom-registered name
  * @returns SVG string
  * @throws ParseError if dotSource is not valid DOT
  * @throws Error if engine is not registered
  */
-export function renderSvg(dotSource: string, engine: string): string {
+export function renderSvg(dotSource: string, engine: EngineName): string {
   const g = parse(dotSource);
   const ctx = makeContext();
   ctx.layout(g, engine);
@@ -61,4 +62,5 @@ export { parse } from './parser/index.js';
 export { setImageSizer } from './gvc/usershape.js';
 export type { ImageSizer } from './common/htmltable-types.js';
 export { GvcContext } from './gvc/context.js';
+export type { BuiltinEngine, EngineName } from './gvc/context.js';
 export { render } from './gvc/device.js';
