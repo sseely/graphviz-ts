@@ -12,32 +12,9 @@
 import { parse } from './parser/index.js';
 import { RenderError } from './errors.js';
 import type { GvError, RenderResult } from './errors.js';
-import { GvcContext, type EngineName } from './gvc/context.js';
-import { render } from './gvc/device.js';
-import { createSvgRenderer } from './render/svg.js';
-import { createMeasurer } from './common/textmeasure-factory.js';
-import { DOT_LAYOUT_ENGINE } from './layout/dot/index.js';
-import { NEATO_LAYOUT_ENGINE } from './layout/neato/index.js';
-import { fdpEngine } from './layout/fdp/index.js';
-import { SFDP_LAYOUT_ENGINE } from './layout/sfdp/index.js';
-import { CIRCO_LAYOUT_ENGINE } from './layout/circo/index.js';
-import { TWOPI_LAYOUT_ENGINE } from './layout/twopi/index.js';
-import { OSAGE_LAYOUT_ENGINE } from './layout/osage/index.js';
-import { PATCHWORK_LAYOUT_ENGINE } from './layout/patchwork/index.js';
-
-function makeContext(): GvcContext {
-  const ctx = new GvcContext(createMeasurer());
-  ctx.register(DOT_LAYOUT_ENGINE);
-  ctx.register(NEATO_LAYOUT_ENGINE);
-  ctx.register(fdpEngine);
-  ctx.register(SFDP_LAYOUT_ENGINE);
-  ctx.register(CIRCO_LAYOUT_ENGINE);
-  ctx.register(TWOPI_LAYOUT_ENGINE);
-  ctx.register(OSAGE_LAYOUT_ENGINE);
-  ctx.register(PATCHWORK_LAYOUT_ENGINE);
-  ctx.register(createSvgRenderer());
-  return ctx;
-}
+import type { EngineName } from './gvc/context.js';
+import { render as deviceRender } from './gvc/device.js';
+import { createDefaultContext } from './gvc/default-context.js';
 
 /**
  * Duck-type a thrown value as a {@link GvError}: an object carrying a string
@@ -98,10 +75,10 @@ function classifyError(err: unknown): GvError {
  */
 export function renderSvg(dotSource: string, engine: EngineName): string {
   const g = parse(dotSource);
-  const ctx = makeContext();
+  const ctx = createDefaultContext();
   try {
     ctx.layout(g, engine);
-    const svg = render(ctx, g, 'svg');
+    const svg = deviceRender(ctx, g, 'svg');
     // C: gvFreeLayout runs after gvRenderJobs; cleanup is destructive.
     ctx.freeLayout(g, engine);
     return svg;
@@ -141,4 +118,20 @@ export { setImageSizer } from './gvc/usershape.js';
 export type { ImageSizer } from './common/htmltable-types.js';
 export { GvcContext } from './gvc/context.js';
 export type { BuiltinEngine, EngineName } from './gvc/context.js';
-export { render } from './gvc/device.js';
+
+// Lower-level renderer-pipeline primitive: render a graph against a
+// caller-built `GvcContext`. The root `render` name is taken by the new
+// public `render(g, format, opts?)` (collision resolution below), so this
+// is namespaced as `renderWithContext` to preserve the GvcContext workflow.
+export { render as renderWithContext } from './gvc/device.js';
+
+// Discoverable root re-exports of the api + render surfaces (ADR-2): root
+// `graphviz-ts` exposes everything from `graphviz-ts/api` and
+// `graphviz-ts/render` for one-import discoverability.
+//
+// Collision resolution: the root `render` is the new public
+// `render(g, format, opts?)` from `./render`. The low-level
+// `render(ctx, g, format)` is re-exported as `renderWithContext` (above)
+// rather than `render`. See decisions.md ADR-5 and the decision journal.
+export * from './api/index.js';
+export * from './render/index.js';

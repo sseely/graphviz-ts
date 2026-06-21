@@ -43,6 +43,61 @@ referenced by a node (e.g. `image="logo.png"`). Return `null` when the size is
 unknown. Pass `null` to clear a previously-set sizer. See
 [Browser usage](/guide/browser).
 
+## Library API — new in Batch 3
+
+Four functions cover programmatic construction, geometry readout, multi-format
+rendering, and custom draw-op access. Each has a dedicated guide page.
+
+### `createGraph`
+
+```ts
+function createGraph(opts?: {
+  directed?: boolean;
+  strict?:   boolean;
+  name?:     string;
+}): GvGraphBuilder;
+```
+
+Build a graph in code without writing DOT. Returns a `GvGraphBuilder` with
+`addNode`, `addEdge`, `addSubgraph`, `setAttr`, `getAttr`, and a `.graph`
+property for handoff to `render` / `getLayout` / `getDrawOps`. See
+[Build a graph in code](/guide/build-a-graph).
+
+### `render`
+
+```ts
+function render(
+  g:      Graph,
+  format: OutputFormat,
+  opts?:  { engine?: string },
+): string;
+```
+
+Lay out and render a graph to the requested format. `OutputFormat` is
+`'svg' | 'dot' | 'xdot' | 'json' | 'plain' | 'plain-ext' | 'imap' | 'cmapx'`.
+Engine defaults to `'dot'`. See [Render to other formats](/guide/render-formats).
+
+### `getLayout`
+
+```ts
+function getLayout(g: Graph, opts?: { yAxis?: 'up' | 'down' }): LayoutSnapshot;
+```
+
+Return a plain, JSON-serializable snapshot of the graph's computed geometry
+(node positions, edge spline points, bounding box). Call after `render` has run.
+Default `yAxis: 'down'` gives screen coordinates (origin top-left). See
+[Read computed geometry](/guide/geometry).
+
+### `getDrawOps`
+
+```ts
+function getDrawOps(g: Graph, opts?: { engine?: string }): XdotOp[];
+```
+
+Lay out a graph, render to xdot, and return a flat typed draw-op array for
+feeding a custom renderer. Switch on `op.kind` to dispatch each operation. See
+[Custom rendering with xdot draw-ops](/guide/xdot-drawops).
+
 ## Lower-level orchestration
 
 For callers that need to drive layout and rendering as separate steps, the
@@ -56,11 +111,12 @@ class GvcContext {
   freeLayout(g: Graph, engineName: string): void;
 }
 
-function render(ctx: GvcContext, g: Graph, format: string): string;
+function renderWithContext(ctx: GvcContext, g: Graph, format: string): string;
 ```
 
 `renderSvg` is a convenience wrapper over this: it constructs a context,
 registers the eight engines and the SVG renderer, lays out, renders, and frees.
-Reach for `GvcContext` / `render` directly only when you need that control —
-for example, to register a subset of engines or to render the same laid-out
-graph to multiple formats.
+The root `render(g, format, opts?)` does the same but accepts any registered
+output format. Reach for `GvcContext` / `renderWithContext` directly only when
+you need that control — for example, to register a subset of engines or to
+render the same laid-out graph to multiple formats without re-running layout.
