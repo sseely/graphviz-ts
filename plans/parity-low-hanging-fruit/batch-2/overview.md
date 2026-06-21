@@ -6,11 +6,21 @@ module never contend. Each task fixes its bucket's **confirmed-simple** cases.
 
 | ID | Bucket fixes | Reads | Writes (primary) | Depends On | Done |
 |----|--------------|-------|------------------|------------|------|
-| T6 | color-stroke | `triage/color-stroke.md` | `src/render/color-resolve.ts` (+ test, goldens) | B1 | [ ] |
-| T7 | text-content | `triage/text-content.md` | text-emit module (+ goldens) | T6 | [ ] |
-| T8 | attr-or-tag | `triage/attr-or-tag-1.md`, `-2.md` | per triage (+ goldens) | T7 | [ ] |
-| T9 | polygon-points | `triage/polygon-points.md` | poly/arrow module (+ goldens) | T8 | [ ] |
-| T10 | parser-gap | `triage/parser-gap.md` | `src/parser/dot.pegjs` (+ `dot.js`, goldens) | T9 | [ ] |
+| T6 | color-stroke | `triage/color-stroke.md` | svg-graph/style-resolve/device/device-cluster (+ tests, goldens) | B1 | [x] |
+| T7 | text-content | `triage/text-content.md` | xml-escape/make-label/dot.pegjs (+ goldens) | T6 | [x] |
+| T8 | attr-or-tag | `triage/attr-or-tag-1.md`, `-2.md` | svg-id/job/svg-* (+ goldens) | T7 | [x] |
+| T9 | polygon-points | `triage/polygon-points.md` | (all deep → comparison pages only) | T8 | [x] |
+| T10 | parser-gap | `triage/parser-gap.md` | `src/parser/dot.pegjs` (+ `dot.js`, goldens) | T9 | [x] |
+
+## Batch 2 outcome (2026-06-21)
+
+Simple fixes landed (commits 229ceaf T6, e01d906 T7, 8731c28 T8, 68185ec T10;
+c019616 deep comparison pages). Byte-match goldens added: 146 total (+11). T9
+had 0 simple cases (all crow/vee arrowhead geometry → deep). 38 deep cases each
+have a comparison page under `comparisons/`. Gate: tsc 0, 2202 tests, build 0.
+Per-id wins (full byte-match): graphs-b155, 2325, 2801, graphs-grdcluster
+(color); 2497, 2563 (attr); + improvements (errored/diverged→closer) on
+1896/style/proc3d, 1990/b81, 2682/2108/russian, 2184/2258/2613/2734/2183/triedds.
 
 `Writes` is finalized by each agent FROM its triage doc. If a fix needs a module
 already written by an earlier sequential task, that is fine (sequential) — but it

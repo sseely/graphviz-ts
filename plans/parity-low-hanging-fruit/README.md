@@ -64,8 +64,8 @@ regeneration is the success metric (ADR-6).
 | Batch | Theme | Tasks | Status |
 |-------|-------|-------|--------|
 | [1](batch-1/overview.md) | Triage (parallel, read-only) | T1 color-stroke, T2 text-content, T3a/T3b attr-or-tag, T4 polygon-points, T5 parser-gap | [x] |
-| [2](batch-2/overview.md) | Fixes (sequential) | T6 color, T7 text, T8 attr, T9 polygon, T10 parser | [ ] |
-| [3](batch-3/overview.md) | Regenerate + finalize | T11 survey/dashboard, 0-regression check, comparison pages, memory | [ ] |
+| [2](batch-2/overview.md) | Fixes (sequential) | T6 color, T7 text, T8 attr, T9 polygon, T10 parser | [x] |
+| [3](batch-3/overview.md) | Regenerate + finalize | T11 survey/dashboard, 0-regression check, comparison pages, memory | [x] |
 
 ## Diagrams
 
