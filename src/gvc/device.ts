@@ -40,8 +40,9 @@ import {
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
-import { renderClusterLabel, applyClusterObjState, clusterStyle } from './device-cluster.js';
+import { renderClusterLabel, applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
 export { renderClusterLabel } from './device-cluster.js';
+import { svgNodeId, svgEdgeId, svgClusterId, svgGraphId } from '../render/svg-id.js';
 
 // ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
@@ -102,7 +103,7 @@ function labelTextOf(lp: unknown): string | null {
  * @see lib/common/emit.c:emit_begin_node:1654
  */
 function emitNodeBody(n: Node, renderer: RendererPlugin, job: RenderJob): void {
-  setHtmlAnchorObj('node' + (n.id + 1), labelTextOf(n.info.label));
+  setHtmlAnchorObj(svgNodeId(n, job), labelTextOf(n.info.label));
   setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
@@ -167,9 +168,15 @@ export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): v
   setEdgePen(e, job);
   try {
     // @see lib/common/emit.c:emit_begin_edge / getObjId
-    setHtmlAnchorObj('edge' + e.graphSeq, labelTextOf(e.info.label));
-    renderer.beginEdge(e, job);
-    renderer.endEdge(e, job);
+    setHtmlAnchorObj(svgEdgeId(e, job), labelTextOf(e.info.label));
+    // Activate the edge's colorscheme around the whole emission so label
+    // textspans resolve numeric color indices (e.g. fontcolor=2) against it,
+    // mirroring C's setColorScheme window in emit_edge.
+    // @see lib/common/emit.c:emit_edge (begin/end color context)
+    withColorScheme(e.attrs.get('colorscheme'), () => {
+      renderer.beginEdge(e, job);
+      renderer.endEdge(e, job);
+    });
   } finally {
     // pop_obj_state in emit_end_edge (line 3028)
     job.popObj();
@@ -257,7 +264,7 @@ export function renderNodeXLabel(n: Node, renderer: RendererPlugin, job: RenderJ
  */
 export function renderGraphLabel(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
   // @see lib/common/emit.c:emit_begin_graph / getObjId (root graph → graph0)
-  setHtmlAnchorObj('graph0', labelTextOf(g.info.label));
+  setHtmlAnchorObj(svgGraphId(g, job), labelTextOf(g.info.label));
   renderOneLabel(g.info.label as TextlabelT | undefined, renderer, job);
 }
 
@@ -332,10 +339,15 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     // after so emitGradientDefs prefixes gradient id as "clustN_l_0".
     // @see lib/common/emit.c:209 getObjId (AGRAPH/cluster: pfx="clust")
     renderer.beginCluster?.(sg, job);
-    if (job.obj !== null) job.obj.id = 'clust' + job.clusterId;
-    renderClusterBox(sg, filled, renderer, job);
+    if (job.obj !== null) job.obj.id = svgClusterId(sg, job);
+    // C draws the boundary box only when peripheries != 0, or (peripheries == 0
+    // and the cluster is filled). peripheries=0 + unfilled emits nothing.
+    // @see lib/common/emit.c:3907-3917
+    if (clusterPeripheries(sg) !== 0 || filled) {
+      renderClusterBox(sg, filled, renderer, job);
+    }
     // @see lib/common/emit.c:emit_begin_cluster / getObjId
-    setHtmlAnchorObj('clust' + job.clusterId, labelTextOf(sg.info.label));
+    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label));
     renderClusterLabel(sg, renderer, job);
     renderer.endCluster?.(sg, job);
   } finally {

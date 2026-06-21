@@ -305,6 +305,21 @@ export class RenderJob {
   radialGradId: number = 0;
   /** Whether the graph being rendered is directed (edge titles use -> vs --). */
   directed: boolean = true;
+  /** Root graph's `id` attribute (GD_drawing(root)->id), '' if unset. Used as
+   * the `<gid>_` prefix for non-root object ids. @see lib/common/emit.c:getObjId */
+  drawingId: string = '';
+
+  /**
+   * Resolve an object's SVG id like C's getObjId (steps after layerPagePrefix):
+   * a non-empty DOT `id` attr wins verbatim; otherwise non-root objects are
+   * prefixed with `<drawingId>_` when the root graph has an id.
+   * @see lib/common/emit.c:getObjId:209
+   */
+  objId(idAttr: string | undefined, defaultId: string, isRoot = false): string {
+    if (idAttr !== undefined && idAttr.length > 0) return idAttr;
+    if (!isRoot && this.drawingId.length > 0) return this.drawingId + '_' + defaultId;
+    return defaultId;
+  }
 
   /** Active renderer plugin; set by render() before walkNodes. */
   renderer?: RendererPlugin;

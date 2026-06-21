@@ -1,0 +1,15 @@
+strict digraph
+{
+    a -> b[ colorscheme=x11      fontcolor=red        labelfontcolor=blue      label="label" taillabel="tail" headlabel="head" ];
+    c -> d[ colorscheme=svg      fontcolor=blueviolet labelfontcolor=limegreen label="label" taillabel="tail" headlabel="head" ];
+    e -> f[ colorscheme=paired12 fontcolor=2          labelfontcolor=10        label="label" taillabel="tail" headlabel="head" ];
+
+    a [ label="colorscheme=x11" ];
+    b [ label="colorscheme=x11" ];
+
+    c [ label="colorscheme=svg" ];
+    d [ label="colorscheme=svg" ];
+    
+    e [ label="colorscheme=paired12" ];
+    f [ label="colorscheme=paired12" ];
+}

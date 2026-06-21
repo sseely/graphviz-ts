@@ -197,6 +197,33 @@ describe('attribute string coercion', () => {
   });
 });
 
+// ── NAME char class + string concatenation (parity parser-gap) ────────────────
+
+describe('non-Latin (Cyrillic) node names', () => {
+  it('parses code points above U+00FF as NAME chars', () => {
+    // scan.l treats any byte >= 0x80 as a NAME char; on UTF-8 that is any
+    // non-ASCII code point. Cyrillic is U+0400+.
+    const g = parse('digraph { Контрагенты -> Банк }');
+    expect(g.nodes.has('Контрагенты')).toBe(true);
+    expect(g.nodes.has('Банк')).toBe(true);
+  });
+});
+
+describe('no implicit quoted-string concatenation (QAtom)', () => {
+  it('treats two adjacent quoted strings as separate tokens', () => {
+    // C only concatenates quoted strings with the '+' operator.
+    const g = parse('digraph { "a" "b" }');
+    expect(g.nodes.has('a')).toBe(true);
+    expect(g.nodes.has('b')).toBe(true);
+    expect(g.nodes.has('ab')).toBe(false);
+  });
+
+  it('still concatenates with the + operator', () => {
+    const g = parse('digraph { x [label="a" + "b"] }');
+    expect(g.nodes.get('x')?.attrs.get('label')).toBe('ab');
+  });
+});
+
 // ── strict and directed flags ────────────────────────────────────────────────
 
 describe('strict digraph', () => {

@@ -17,7 +17,8 @@ import type { RenderJob } from '../gvc/job.js';
 import { createObjState, ObjType } from '../gvc/job.js';
 import { FillType } from '../gvc/context.js';
 import { escapeXml, SVG_PAD } from './svg-helpers.js';
-import { resolveRenderColor } from './color-resolve.js';
+import { resolveRenderColor, colorPaint } from './color-resolve.js';
+import { svgGraphId, svgGraphClass } from './svg-id.js';
 import { parseGradientSpec } from '../common/htmltable-emit-fill.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import {
@@ -49,11 +50,6 @@ interface BgGradientSpec {
   radial: boolean;
 }
 
-/** Root graph group id always matches C's GD_graph_id counter. */
-export function graphGroupId(_name: string): string {
-  return 'graph0';
-}
-
 /** Emit SVG tag. ViewBox starts at (0,0); group translate absorbs bb.ll offset. */
 export function emitSvgTag(job: RenderJob): void {
   const bb = job.bb;
@@ -79,11 +75,12 @@ export function emitSvgTag(job: RenderJob): void {
  */
 export function emitGraphGroupOpen(
   graphId: string,
+  classStr: string,
   tx: number,
   ty: number,
   job: RenderJob,
 ): void {
-  job.write('<g id="' + graphId + '" class="graph"' +
+  job.write('<g id="' + graphId + '" ' + classStr +
     ' transform="scale(1 1) rotate(0) translate(');
   job.printDouble(tx);
   job.write(' ');
@@ -117,7 +114,12 @@ export function resolveGraphBgcolor(bgcolorAttr: string | undefined): string {
   if (!bgcolorAttr || bgcolorAttr.length === 0) return 'white';
   if (bgcolorAttr === 'transparent') return BGCOLOR_TRANSPARENT;
   const grad = parseGradientSpec(bgcolorAttr);
-  return grad !== null ? grad[0] : bgcolorAttr;
+  const solid = grad !== null ? grad[0] : bgcolorAttr;
+  // Canonicalize through the standard resolve path (lowercase #rrggbb, X11-only
+  // names → #rrggbb) exactly as C's emit_background does via
+  // gvrender_resolve_color before painting the background.
+  // @see lib/gvc/gvrender.c:188 gvrender_resolve_color
+  return colorPaint(resolveRenderColor(solid));
 }
 
 /**
@@ -270,7 +272,16 @@ function emitBgcolorBackground(g: Graph, bb: Box, bgcolorAttr: string | undefine
 export function svgBeginGraph(g: Graph, job: RenderJob): void {
   job.devscale = { x: 1, y: -1 };
   job.directed = g.kind === 'directed' || g.kind === 'strict-directed';
+  // GD_drawing(root)->id — used as the `<gid>_` prefix for non-root object ids.
+  job.drawingId = g.attrs.get('id') ?? '';
   job.write(SVG_XML_DECL);
+  // C svg_begin_job emits the stylesheet PI (raw href) between the XML
+  // declaration and the DOCTYPE when the graph has a `stylesheet` attribute.
+  // @see plugin/core/gvrender_core_svg.c:svg_begin_job
+  const stylesheet = g.attrs.get('stylesheet');
+  if (stylesheet !== undefined && stylesheet.length > 0) {
+    job.write('<?xml-stylesheet href="' + stylesheet + '" type="text/css"?>\n');
+  }
   job.write(SVG_DOCTYPE);
   job.write(SVG_GENERATOR_COMMENT);
   emitSvgTag(job);
@@ -286,7 +297,11 @@ export function svgBeginPage(g: Graph, job: RenderJob): void {
   // gvPostprocess zeroes bb.ll before render; tx is simply the padding.
   const tx = SVG_PAD;
   const ty = bb.ur.y + SVG_PAD;
-  emitGraphGroupOpen(job.idLayerPrefix() + graphGroupId(g.name), tx, ty, job);
+  emitGraphGroupOpen(
+    job.idLayerPrefix() + svgGraphId(g, job),
+    svgGraphClass(g),
+    tx, ty, job,
+  );
   emitGraphTitle(g, job);
   emitBgcolorBackground(g, bb, g.attrs.get('bgcolor'), job);
 }

@@ -1,0 +1,4 @@
+digraph {
+  node [shape=ellipse, style="setlinewidth(3)"];
+  a -> b;
+}

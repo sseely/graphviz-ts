@@ -73,11 +73,18 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //  + 1 shape=point (point_init/point_gencode)
 //  + 1 rounded clusters + Mrecord (round_corners render)
 //  + 1 record/Mrecord fill + pen (record_gencode stylenode/penColor/findFill)
-//  + 1 cluster external-edge (contain_nodes vStart window))
+//  + 1 cluster external-edge (contain_nodes vStart window)
+//  + 5 parity color-stroke (bgcolor X11 name, setlinewidth, FUNLIMIT,
+//    edge fontcolor colorscheme, cluster peripheries=0)
+//  + 2 parity text-content (XML-entity decode + textspan escaping;
+//    QAtom no-implicit-concat)
+//  + 3 parity attr-or-tag (cluster id attr; node class attr; graph/node/edge
+//    id attr + gid prefix + stylesheet PI)
+//  + 1 parity parser-gap (non-Latin/Cyrillic NAME char class))
 // ---------------------------------------------------------------------------
 
-test('manifest has 135 entries', () => {
-  expect(manifest).toHaveLength(135);
+test('manifest has 146 entries', () => {
+  expect(manifest).toHaveLength(146);
 });
 
 // ---------------------------------------------------------------------------

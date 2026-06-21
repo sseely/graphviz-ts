@@ -50,21 +50,11 @@ const PENWIDTH_THRESHOLD = 0.005;
  */
 export const SVG_PAD = 4;
 
-// Regex for double-quote: /"/g breaks Lizard's quote-tracker.
-// Use this named pattern instead to avoid the parser bug.
-const RE_DQUOTE = new RegExp('"', 'g');
-
-// ---------------------------------------------------------------------------
-// XML escaping
-// ---------------------------------------------------------------------------
-
-export function escapeXml(s: string): string {
-  let r = s.replace(/&/g, '&amp;');
-  r = r.replace(/</g, '&lt;');
-  r = r.replace(/>/g, '&gt;');
-  r = r.replace(RE_DQUOTE, '&quot;');
-  return r;
-}
+// XML escaping moved to ./xml-escape.ts (gv_xml_escape port); imported for
+// local use and re-exported so existing import sites keep resolving here.
+import { escapeXml, escapeXmlText } from './xml-escape.js';
+export { escapeXml, escapeXmlText };
+import { svgNodeId, svgEdgeId, svgNodeClass, svgEdgeClass } from './svg-id.js';
 
 // ---------------------------------------------------------------------------
 // Color helpers
@@ -166,7 +156,7 @@ export function textAnchor(just: 'l' | 'n' | 'r'): string {
 // ---------------------------------------------------------------------------
 
 export {
-  graphGroupId, emitSvgTag, emitGraphGroupOpen, emitGraphTitle,
+  emitSvgTag, emitGraphGroupOpen, emitGraphTitle,
   emitGraphBackground, svgBeginGraph, svgEndGraph,
   svgBeginPage, svgEndPage, svgBeginLayer, svgEndLayer,
 } from './svg-graph.js';
@@ -176,11 +166,12 @@ export {
 // ---------------------------------------------------------------------------
 
 export function svgBeginNode(n: Node, job: RenderJob): void {
-  // C ids use the object's creation sequence (AGSEQ), not emission order.
-  // The layer prefix/suffix are empty unless rendering layers (layerNum>1).
+  // Id from getObjId (DOT `id` attr / gid prefix / node<seq>); layer
+  // prefix/suffix are empty unless rendering layers (layerNum>1). The DOT
+  // `class` attr is appended to the SVG class string (svg_print_id_class).
   // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_begin_node
-  job.write('<g id="' + job.idLayerPrefix() + 'node' + (n.id + 1) + job.idLayerSuffix()
-    + '" class="node">\n');
+  job.write('<g id="' + job.idLayerPrefix() + svgNodeId(n, job) + job.idLayerSuffix()
+    + '" ' + svgNodeClass(n) + '>\n');
   job.write('<title>' + escapeXml(n.name) + '</title>\n');
 }
 
@@ -217,8 +208,9 @@ export function svgBeginEdge(e: Edge, job: RenderJob): void {
   const raw = e.tail.name + (tp ? ':' + tp : '')
     + sep + e.head.name + (hp ? ':' + hp : '');
   // Edges get the layer prefix only — no per-object suffix (svg_begin_edge
-  // passes idx=NULL, unlike svg_begin_node).
-  job.write('<g id="' + job.idLayerPrefix() + 'edge' + e.graphSeq + '" class="edge">\n');
+  // passes idx=NULL, unlike svg_begin_node). DOT `id`/`class` attrs apply.
+  job.write('<g id="' + job.idLayerPrefix() + svgEdgeId(e, job)
+    + '" ' + svgEdgeClass(e) + '>\n');
   job.write('<title>' + escapeEdgeTitle(raw) + '</title>\n');
 }
 
@@ -242,7 +234,9 @@ export function emitAnchorAttrs(
     job.write(' xlink:href="' + escapeXml(href) + '"');
   }
   if (tooltip.length > 0) {
-    job.write(' xlink:title="' + escapeXml(tooltip) + '"');
+    // C svg_begin_anchor uses flags {raw, dash, nbsp} for the tooltip.
+    // @see plugin/core/gvrender_core_svg.c:416
+    job.write(' xlink:title="' + escapeXmlText(tooltip) + '"');
   }
   if (target.length > 0) {
     job.write(' target="' + escapeXml(target) + '"');
@@ -327,7 +321,7 @@ export function svgTextspan(pos: Point, span: TextSpan, job: RenderJob): void {
   emitFontAttrs(span.fontFlags, job, ff ?? { weight: false, style: false });
   job.write(' font-size="' + span.fontSize.toFixed(2) + '"');
   job.write(textFillAttrs(span.fontColor));
-  job.write('>' + escapeXml(span.str) + '</text>\n');
+  job.write('>' + escapeXmlText(span.str) + '</text>\n');
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+digraph G {
+  id="G";
+  stylesheet="theme.css";
+  a [id="myA"];
+  b;
+  subgraph cluster1 { id="myclust"; c -> d; }
+  a -> b [id="myedge"];
+}

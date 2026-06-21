@@ -469,7 +469,7 @@ export function recordGencode(rawJob: unknown, rawNode: unknown): void {
   // C resolves node style for records exactly as for poly nodes: stylenode +
   // penColor + (style.filled ? findFill). This sets obj fill/pen so the box
   // and the field dividers stroke/fill correctly. @see shapes.c:record_gencode
-  const filled = job.obj !== null && applyNodeStyle(job.obj, n);
+  const filled = job.obj !== null && applyNodeStyle(job.obj, n, job);
   drawRecordBox(job, n, ll, ur, filled);
   genFields(job, n, f);
 }

@@ -19,6 +19,40 @@ export const DEFAULT_FONTSIZE = 14.0;
 export const DEFAULT_FONTNAME = 'Times,serif';
 export const DEFAULT_COLOR = 'black';
 
+/** The five basic XML/HTML entities → code point. */
+const BASIC_ENTITIES: Readonly<Record<string, number>> = {
+  amp: 0x26, lt: 0x3c, gt: 0x3e, quot: 0x22, apos: 0x27,
+};
+
+/** Decode one entity body (`amp`, `#123`, `#x1F`) to its code point, or null. */
+function entityValue(body: string): number | null {
+  if (body[0] === '#') {
+    const v = body[1] === 'x' || body[1] === 'X'
+      ? parseInt(body.slice(2), 16)
+      : parseInt(body.slice(1), 10);
+    return Number.isFinite(v) && v > 0 && v <= 0x10ffff ? v : null;
+  }
+  const v = BASIC_ENTITIES[body];
+  return v ?? null;
+}
+
+/**
+ * Decode the five basic XML entities and numeric entities (&#NNN; / &#xHH;) to
+ * their characters, leaving unrecognized entities (e.g. named HTML like
+ * `&alpha;`) literal. This is the UTF-8 (non-latin1) branch of C's make_label.
+ * The full named-entity table and the latin1 branch are deferred (Symbol /
+ * charset cases are deep).
+ * @see lib/common/utils.c:htmlEntityUTF8 / htmlEntity
+ * @see lib/common/labels.c:make_label (CHAR_LATIN1 vs default)
+ */
+export function htmlEntityUTF8(s: string): string {
+  if (s.indexOf('&') < 0) return s;
+  return s.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|[A-Za-z]+);/g, (m, body: string) => {
+    const v = entityValue(body);
+    return v === null ? m : String.fromCodePoint(v);
+  });
+}
+
 /** Font attributes bundle — mirrors C fontinfo_t fields used in label init. */
 export interface FontInfo {
   fontname: string;
@@ -162,7 +196,9 @@ export function makeAnyLabel(
   }
   // Plain path: resolve \G \N \E \T \H \L against the owning object
   // BEFORE measuring, as C does (labels.c:169, escBackslash=0; the
-  // formatting escapes \n \l \r are handled separately).
-  const text = obj !== undefined ? substObj(content, obj, false) : content;
+  // formatting escapes \n \l \r are handled separately), then decode HTML
+  // entities (labels.c:174 htmlEntityUTF8, UTF-8 default branch).
+  const subst = obj !== undefined ? substObj(content, obj, false) : content;
+  const text = htmlEntityUTF8(subst);
   return makePlainLabel(text, font, measurer);
 }

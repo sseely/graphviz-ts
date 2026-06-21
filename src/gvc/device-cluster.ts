@@ -78,12 +78,29 @@ export function clusterStyle(sg: Graph): string | undefined {
   return clusterAttr(sg, 'style');
 }
 
+/**
+ * Cluster `peripheries`, mirroring `late_int(sg, G_peripheries, 1, 0)`:
+ * default 1, non-numeric → default, clamped to a minimum of 0.
+ * @see lib/common/emit.c:3878
+ */
+export function clusterPeripheries(sg: Graph): number {
+  const raw = clusterAttr(sg, 'peripheries');
+  if (raw === undefined || raw.length === 0) return 1;
+  const v = parseInt(raw, 10);
+  if (Number.isNaN(v)) return 1;
+  return v < 0 ? 0 : v;
+}
+
 /** Apply pen state (color, width, type) to a cluster obj from attrs.
- * @see lib/common/emit.c:emit_clusters:3835-3840 */
+ * `peripheries=0` suppresses the boundary stroke: C sets pencolor
+ * "transparent" (the box is still drawn for fill).
+ * @see lib/common/emit.c:emit_clusters:3835-3840, 3907-3917 */
 function applyClusterPenState(obj: ObjState, sg: Graph): void {
   const flags = parseStyleFlags(clusterStyle(sg));
   const pen = clusterAttr(sg, 'pencolor') ?? clusterAttr(sg, 'color');
-  obj.penColor = resolveRenderColor(resolvePenColor(pen));
+  obj.penColor = clusterPeripheries(sg) === 0
+    ? resolveRenderColor('transparent')
+    : resolveRenderColor(resolvePenColor(pen));
   obj.penWidth = resolvePenWidth(flags, clusterAttr(sg, 'penwidth'));
   obj.pen = resolvePenType(flags);
 }

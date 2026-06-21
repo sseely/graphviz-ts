@@ -156,11 +156,13 @@ Atom
     { return rest.length > 0 ? first + rest.join("") : first; }
   / PlainAtom
 
-// grammar.y: qatom : T_qatom  (quoted string, possibly concatenated)
-// scan.l: string concatenation uses '+' operator between T_qatom tokens
+// grammar.y: qatom : T_qatom  (a single quoted string or HTML string).
+// Concatenation is ONLY via the '+' operator (handled by `Atom`,
+// grammar.y: qatom '+' T_qatom). Two adjacent quoted strings with no '+'
+// are NOT concatenated — they are separate tokens (e.g. `a="x" "B"->c`),
+// so QAtom must not implicitly join them.
 QAtom
-  = s:QuotedString rest:( _ s2:QuotedString { return s2; } )*
-    { return rest.length > 0 ? s + rest.join("") : s; }
+  = QuotedString
   / HtmlString
 
 // scan.l: ["] begins qstring state; ["] ends it → T_qatom
@@ -206,8 +208,11 @@ PlainAtom
 
 // scan.l: NAME = {LETTER}({LETTER}|{DIGIT})*
 // scan.l: LETTER = [A-Za-z_\200-\377]  (underscore + ASCII letters + high bytes)
+// scan.l treats any byte >= 0x80 as a NAME character; on UTF-8 input that is
+// any non-ASCII code point, so the class spans \x80–￿ (the BMP: Cyrillic,
+// CJK, etc.), not just the Latin-1 \x80–\xFF range.
 Name
-  = first:[A-Za-z_\x80-\xFF] rest:[A-Za-z_0-9\x80-\xFF]*
+  = first:[A-Za-z_\x80-￿] rest:[A-Za-z_0-9\x80-￿]*
     { return first + rest.join(""); }
 
 // scan.l: NUMBER = [-]?(({DIGIT}+(\.{DIGIT}*)?)|(\.{DIGIT}+))
@@ -226,7 +231,7 @@ NodeKw     = [Nn][Oo][Dd][Ee]            !NameContinue
 EdgeKw     = [Ee][Dd][Gg][Ee]            !NameContinue
 SubgraphKw = [Ss][Uu][Bb][Gg][Rr][Aa][Pp][Hh] !NameContinue
 
-NameContinue = [A-Za-z_0-9\x80-\xFF]
+NameContinue = [A-Za-z_0-9\x80-￿]
 
 // Reserved word set — used to exclude keywords from PlainAtom
 ReservedWord
