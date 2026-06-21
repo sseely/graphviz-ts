@@ -153,3 +153,37 @@ describe('AC-CF5: penwidth and color independently', () => {
     expect(svg).toContain('stroke-width="3"');
   });
 });
+
+// ---------------------------------------------------------------------------
+// AC-RC: style=rounded clusters draw a rounded bezier <path>, not a sharp
+// <polygon> (mission rounded-clusters-mrecord, AC1/AC2/AC4). The bb here is
+// ll=(10,10) ur=(90,70): rbconst=12, t=12/80 on the 80-wide bottom edge, so
+// the path opens at B[1]=(22,10) → device M22,-10. @see emit.c:3877 round_corners
+// ---------------------------------------------------------------------------
+
+describe('AC-RC: rounded cluster boundary', () => {
+  it('style=rounded → bezier <path> boundary (no sharp polygon), fill=none', () => {
+    const svg = renderClusterSvg(makeGraphWithCluster({ style: 'rounded' }));
+    expect(svg).toContain('<path');
+    expect(svg).not.toContain('<polygon');
+    expect(svg).toContain('d="M22,-10C');
+    expect(svg).toContain('fill="none"');
+    expect(svg).toContain('stroke="black"');
+  });
+
+  it('style="rounded,filled" fillcolor=grey95 → one filled rounded <path>', () => {
+    const svg = renderClusterSvg(
+      makeGraphWithCluster({ style: 'rounded,filled', fillcolor: 'grey95' }),
+    );
+    expect(svg).toContain('<path');
+    expect(svg).not.toContain('<polygon');
+    expect(svg).toContain('fill="#f2f2f2"'); // grey95
+    expect(svg).toContain('stroke="black"');
+  });
+
+  it('plain cluster (no style) stays a sharp <polygon>, no <path>', () => {
+    const svg = renderClusterSvg(makeGraphWithCluster({}));
+    expect(svg).toContain('<polygon');
+    expect(svg).not.toContain('<path');
+  });
+});

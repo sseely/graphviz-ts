@@ -9,7 +9,7 @@ helper interface mid-mission for no benefit. Kept whole, committed working.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Extract shared rounded-box path helper (`poly-shapes.ts`); wire cluster boundary (`device.ts`) and Mrecord/record box (`record.ts`); unit tests | implementation | `src/common/poly-shapes.ts`, `src/gvc/device.ts`, `src/common/record.ts`, and the modules' existing `*.test.ts` (check first) | — | [ ] |
+| T1 | Extract shared rounded-box path helper (`poly-shapes.ts`); wire cluster boundary (`device.ts`) and Mrecord/record box (`record.ts`); unit tests | implementation | `src/common/poly-shapes.ts`, `src/gvc/device.ts`, `src/common/record.ts`, and the modules' existing `*.test.ts` (check first) | — | [x] |
 
 Execute solo (delicate faithful render port; default single-agent).
 

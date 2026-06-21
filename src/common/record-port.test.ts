@@ -9,6 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { renderSvg } from '../index.js';
 import { recordPort, mapRecPort } from './record-port.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
 import { TOP } from './splines-constants.js';
@@ -64,5 +65,27 @@ describe('recordPort', () => {
 
   it('empty portname → default Center port', () => {
     expect(recordPort(recordNode(), '', '').defined).toBe(false);
+  });
+});
+
+// record_gencode outer box rounding (mission rounded-clusters-mrecord, AC3/AC4).
+// C forces style.rounded for Mrecord and takes the SPECIAL_CORNERS branch, so
+// the outer box is a rounded <path>; the field divider stays a <polyline>.
+// @see lib/common/shapes.c:record_gencode
+describe('record_gencode rounded outer box', () => {
+  it('Mrecord box is a rounded <path> byte-matching the oracle; divider unchanged', () => {
+    const svg = renderSvg('digraph{a[shape=Mrecord,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polyline'); // field divider unchanged
+    expect(svg).toContain(
+      'd="M12,-0.5C12,-0.5 42,-0.5 42,-0.5 48,-0.5 54,-6.5 54,-12.5 54,-12.5 ' +
+      '54,-24.5 54,-24.5 54,-30.5 48,-36.5 42,-36.5 42,-36.5 12,-36.5 12,-36.5 ' +
+      '6,-36.5 0,-30.5 0,-24.5 0,-24.5 0,-12.5 0,-12.5 0,-6.5 6,-0.5 12,-0.5"',
+    );
+  });
+
+  it('plain record outer box stays a sharp <polygon>, no rounded <path>', () => {
+    const svg = renderSvg('digraph{a[shape=record,label="x|y"]}', 'dot');
+    expect(svg).toContain('<polygon');
+    expect(svg).not.toContain('<path');
   });
 });
