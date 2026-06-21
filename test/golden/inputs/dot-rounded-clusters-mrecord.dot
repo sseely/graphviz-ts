@@ -1,0 +1,13 @@
+digraph {
+  subgraph cluster_0 {
+    style="rounded,filled";
+    fillcolor=grey95;
+    a [shape=Mrecord, label="x|y"];
+  }
+  subgraph cluster_1 {
+    style=rounded;
+    color=steelblue;
+    b;
+  }
+  a -> b;
+}

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-21T00:04:04.563Z",
+  "generatedAt": "2026-06-21T01:47:14.145Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
     "byte-match": 166,
-    "structural-match": 250,
-    "diverged": 339,
+    "structural-match": 251,
+    "diverged": 338,
     "errored": 20,
     "timeout": 6,
     "oracle-error": 15
@@ -1053,9 +1053,8 @@
     {
       "id": "925",
       "path": "925.dot",
-      "verdict": "diverged",
-      "maxDelta": 392,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]"
+      "verdict": "structural-match",
+      "maxDelta": 392
     },
     {
       "id": "graphs-AvantGarde",
@@ -1698,7 +1697,7 @@
       "path": "graphs/grdcluster.gv",
       "verdict": "diverged",
       "maxDelta": 69,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]"
+      "firstDiffPath": "svg/g[1]/g[2]/polygon[1]/@stroke"
     },
     {
       "id": "graphs-grdcolors",
@@ -2568,8 +2567,8 @@
       "id": "graphs-style",
       "path": "graphs/style.gv",
       "verdict": "diverged",
-      "maxDelta": 92,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]"
+      "maxDelta": 722,
+      "firstDiffPath": "svg/g[1]/g[5]/ellipse[1]/@stroke-width"
     },
     {
       "id": "graphs-train11",

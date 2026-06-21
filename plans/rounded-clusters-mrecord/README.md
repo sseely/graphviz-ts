@@ -81,7 +81,7 @@ Oracle for goldens: `~/git/graphviz/build/cmd/dot/dot` with
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | [batch-1](batch-1/overview.md) | T1 shared rounded-box helper + wire cluster + wire Mrecord/record | [x] |
-| [batch-2](batch-2/overview.md) | T2 golden + parity verification | [ ] |
+| [batch-2](batch-2/overview.md) | T2 golden + parity verification | [x] |
 
 ## Index
 
