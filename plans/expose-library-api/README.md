@@ -56,9 +56,14 @@ a follow-on brief (ADR-7); string attribute get/set (ADR-8).
 | Batch | Theme | Tasks | Status |
 |-------|-------|-------|--------|
 | [1](batch-1/overview.md) | Foundations | T1 default-context, T2 addEdge, T3 geometry snapshot | [x] |
-| [2](batch-2/overview.md) | Public surfaces | T4 builder, T5 render(), T6 xdot draw-ops | [ ] |
+| [2](batch-2/overview.md) | Public surfaces | T4 builder, T5 render(), T6 xdot draw-ops | [x]\* |
 | [3](batch-3/overview.md) | Entry points + wiring | T7 api barrel, T8 render barrel, T9 root + package.json | [ ] |
 | [4](batch-4/overview.md) | Docs + follow-on | T10 capability guides, T11 pack/pathplan brief | [ ] |
+
+\* Batch 2: T6 wrapper shipped; the underlying xdot renderer is
+integration-incomplete (edges/colors) — fix deferred to a follow-on mission
+per the decision journal (user decision 2026-06-21: "defer xdot fix; finish
+mission"). T11 will scaffold the xdot-renderer follow-on alongside pack/pathplan.
 
 ## Diagrams
 

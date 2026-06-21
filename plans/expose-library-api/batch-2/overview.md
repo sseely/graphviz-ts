@@ -5,9 +5,9 @@ Depend on Batch 1 interfaces.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T4 | Graph builder + `GvNode`/`GvEdge` handles | typescript-pro | `src/api/builder.ts`, `src/api/builder.test.ts` | T2 | [ ] |
-| T5 | `render(graph, format, opts?)` over all formats | typescript-pro | `src/render/public.ts`, `src/render/public.test.ts` | T1, T3 | [ ] |
-| T6 | Structured xdot draw-op access | typescript-pro | `src/render/xdot-public.ts`, `src/render/xdot-public.test.ts` | T1 | [ ] |
+| T4 | Graph builder + `GvNode`/`GvEdge` handles | typescript-pro | `src/api/builder.ts`, `src/api/builder.test.ts` | T2 | [x] |
+| T5 | `render(graph, format, opts?)` over all formats | typescript-pro | `src/render/public.ts`, `src/render/public.test.ts` | T1, T3 | [x] |
+| T6 | Structured xdot draw-op access | typescript-pro | `src/render/xdot-public.ts`, `src/render/xdot-public.test.ts` | T1 | [x] (wrapper done; xdot-renderer fix deferred — see journal) |
 
 ## Interface outputs (consumed downstream)
 
