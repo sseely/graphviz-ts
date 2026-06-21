@@ -214,3 +214,35 @@ describe('cluster style inheritance from the graph', () => {
     expect(svg).toContain('stroke-dasharray="5,2"');
   });
 });
+
+// Every cluster graph-attribute inherits from an ancestor (agxget), not just
+// style: bgcolor/color/pencolor/fillcolor/penwidth set on the root reach the
+// cluster boundary. Oracle-verified (dot 15.1.0). @see lib/common/emit.c
+describe('cluster color/pen inheritance from the graph', () => {
+  /** The cluster boundary polygon line (skips the stroke="none" page bg). */
+  function clusterPoly(svg: string): string {
+    return svg.split('\n').find(
+      (l) => l.includes('<polygon') && !l.includes('stroke="none"')) ?? '';
+  }
+
+  it('graph bgcolor=blue → cluster fills blue (backward-compat bgcolor)', () => {
+    const p = clusterPoly(renderSvg('digraph{bgcolor=blue;subgraph cluster_0{a}}', 'dot'));
+    expect(p).toContain('fill="blue"');
+  });
+
+  it('graph color=red → cluster boundary stroke="red"', () => {
+    const p = clusterPoly(renderSvg('digraph{color=red;subgraph cluster_0{a}}', 'dot'));
+    expect(p).toContain('stroke="red"');
+  });
+
+  it('graph fillcolor + style=filled → cluster fills with the inherited color', () => {
+    const p = clusterPoly(
+      renderSvg('digraph{fillcolor=yellow;style=filled;subgraph cluster_0{a}}', 'dot'));
+    expect(p).toContain('fill="yellow"');
+  });
+
+  it('graph penwidth=4 → cluster boundary stroke-width="4"', () => {
+    const p = clusterPoly(renderSvg('digraph{penwidth=4;subgraph cluster_0{a}}', 'dot'));
+    expect(p).toContain('stroke-width="4"');
+  });
+});

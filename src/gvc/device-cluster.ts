@@ -58,39 +58,46 @@ function applyClusterGradient(
 }
 
 /**
- * Cluster `style` resolved with graph-attr inheritance (agxget): a cluster with
- * no style of its own inherits an ancestor's `graph[style=...]`, so a root-level
- * style=bold/filled/dashed/dotted/rounded applies to the cluster boundary as the
- * oracle does. @see lib/common/emit.c:emit_clusters (style via agxget)
+ * Read a cluster graph-attribute with ancestor inheritance (agxget): a cluster
+ * with no value of its own inherits an ancestor's `graph[key=...]`. C resolves
+ * every cluster attr this way (late_string(sg, agfindgraphattr(sg, key), ...)),
+ * so a root-level style/color/pencolor/fillcolor/bgcolor/penwidth/gradientangle
+ * applies to the cluster boundary as the oracle does.
+ * @see lib/common/emit.c:emit_clusters (cluster attrs via agxget)
  */
-export function clusterStyle(sg: Graph): string | undefined {
+export function clusterAttr(sg: Graph, key: string): string | undefined {
   for (let g: Graph | null = sg; g !== null; g = g.parent) {
-    const v = g.attrs.get('style');
+    const v = g.attrs.get(key);
     if (v !== undefined) return v;
   }
   return undefined;
+}
+
+/** Cluster `style` with ancestor inheritance. @see clusterAttr */
+export function clusterStyle(sg: Graph): string | undefined {
+  return clusterAttr(sg, 'style');
 }
 
 /** Apply pen state (color, width, type) to a cluster obj from attrs.
  * @see lib/common/emit.c:emit_clusters:3835-3840 */
 function applyClusterPenState(obj: ObjState, sg: Graph): void {
   const flags = parseStyleFlags(clusterStyle(sg));
-  const pen = sg.attrs.get('pencolor') ?? sg.attrs.get('color');
+  const pen = clusterAttr(sg, 'pencolor') ?? clusterAttr(sg, 'color');
   obj.penColor = resolveRenderColor(resolvePenColor(pen));
-  obj.penWidth = resolvePenWidth(flags, sg.attrs.get('penwidth'));
+  obj.penWidth = resolvePenWidth(flags, clusterAttr(sg, 'penwidth'));
   obj.pen = resolvePenType(flags);
 }
 
-/** Build the ClusterAttrs bag from a subgraph's attrs map. */
+/** Build the ClusterAttrs bag from a subgraph's attrs, with inheritance. */
 function clusterAttrsOf(sg: Graph): ClusterAttrs {
   return {
     style: clusterStyle(sg),
-    color: sg.attrs.get('color'),
-    pencolor: sg.attrs.get('pencolor'),
-    fillcolor: sg.attrs.get('fillcolor'),
-    bgcolor: sg.attrs.get('bgcolor'),
-    penwidth: sg.attrs.get('penwidth'),
-    gradientangle: sg.attrs.get('gradientangle'),
+    color: clusterAttr(sg, 'color'),
+    pencolor: clusterAttr(sg, 'pencolor'),
+    fillcolor: clusterAttr(sg, 'fillcolor'),
+    bgcolor: clusterAttr(sg, 'bgcolor'),
+    penwidth: clusterAttr(sg, 'penwidth'),
+    gradientangle: clusterAttr(sg, 'gradientangle'),
   };
 }
 
@@ -103,7 +110,7 @@ export function applyClusterObjState(sg: Graph, job: RenderJob): boolean {
   if (job.obj === null) return false;
   const obj = job.obj;
   // C wraps the cluster color block with setColorScheme. @see emit.c:3800/3943
-  return withColorScheme(sg.attrs.get('colorscheme'), () => {
+  return withColorScheme(clusterAttr(sg, 'colorscheme'), () => {
     applyClusterPenState(obj, sg);
     if (fillRes.kind === 'none') { obj.fill = FillType.None; return false; }
     if (fillRes.kind === 'solid') {
