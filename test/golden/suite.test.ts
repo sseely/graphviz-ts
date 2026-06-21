@@ -75,11 +75,13 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //  + 1 record/Mrecord fill + pen (record_gencode stylenode/penColor/findFill)
 //  + 1 cluster external-edge (contain_nodes vStart window)
 //  + 5 parity color-stroke (bgcolor X11 name, setlinewidth, FUNLIMIT,
-//    edge fontcolor colorscheme, cluster peripheries=0))
+//    edge fontcolor colorscheme, cluster peripheries=0)
+//  + 2 parity text-content (XML-entity decode + textspan escaping;
+//    QAtom no-implicit-concat))
 // ---------------------------------------------------------------------------
 
-test('manifest has 140 entries', () => {
-  expect(manifest).toHaveLength(140);
+test('manifest has 142 entries', () => {
+  expect(manifest).toHaveLength(142);
 });
 
 // ---------------------------------------------------------------------------

@@ -1130,5 +1130,21 @@
     "input": "test/golden/inputs/dot-cluster-peripheries0.dot",
     "reference": "test/golden/refs/dot-cluster-peripheries0.svg",
     "description": "cluster peripheries=0 suppresses the boundary stroke (pencolor transparent → stroke none) per emit_clusters; byte-matches the oracle (parity color-stroke group D)"
+  },
+  {
+    "id": "dot-label-xml-entity",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-label-xml-entity.dot",
+    "reference": "test/golden/refs/dot-label-xml-entity.svg",
+    "description": "label XML-entity decode (htmlEntityUTF8: &lt;/&gt;/&amp;/&#65;) + textspan escaping flags {raw,dash,nbsp} (apostrophe→&#39;, dash→&#45;); fixedsize pins geometry; byte-matches the oracle (parity text-content group b81/1990)"
+  },
+  {
+    "id": "dot-string-no-concat",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-string-no-concat.dot",
+    "reference": "test/golden/refs/dot-string-no-concat.svg",
+    "description": "adjacent quoted strings are NOT implicitly concatenated (QAtom: only '+' concatenates) — \"a\" \"b\" yields two nodes; byte-matches the oracle (parity parser-gap 2682/1990)"
   }
 ]

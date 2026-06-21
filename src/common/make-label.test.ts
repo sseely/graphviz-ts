@@ -10,7 +10,7 @@
 
 import { describe, it, expect } from 'vitest';
 import type { TextMeasurer } from './textmeasure.js';
-import { makeLabel, makeAnyLabel } from './make-label.js';
+import { makeLabel, makeAnyLabel, htmlEntityUTF8 } from './make-label.js';
 
 const stubMeasurer: TextMeasurer = { measure: () => ({ w: 20, h: 10 }) };
 const ARIAL = { fontname: 'Arial', fontsize: 12, fontcolor: 'black' };
@@ -154,5 +154,27 @@ describe('makeAnyLabel — font attrs', () => {
   it('fontcolor is set', () => {
     const r = makeAnyLabel('hi', false, HELV, stubMeasurer);
     expect(r.fontcolor).toBe('red');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// htmlEntityUTF8 — basic XML + numeric entity decode (UTF-8 branch)
+// ---------------------------------------------------------------------------
+
+describe('htmlEntityUTF8', () => {
+  it('decodes the five basic XML entities', () => {
+    expect(htmlEntityUTF8('&lt;&gt;&amp;&quot;&apos;')).toBe('<>&"\'');
+  });
+
+  it('decodes decimal and hex numeric entities', () => {
+    expect(htmlEntityUTF8('&#65;&#x42;')).toBe('AB');
+  });
+
+  it('leaves unrecognized named entities literal', () => {
+    expect(htmlEntityUTF8('&alpha; x')).toBe('&alpha; x');
+  });
+
+  it('returns the input unchanged when there is no &', () => {
+    expect(htmlEntityUTF8('plain text')).toBe('plain text');
   });
 });

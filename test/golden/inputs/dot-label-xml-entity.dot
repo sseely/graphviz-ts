@@ -1,0 +1,5 @@
+digraph {
+  node [shape=box, fixedsize=true, width=3, height=1];
+  a [label="&lt;tag&gt; &amp; &#65;"];
+  a -> b [label="O'Brien-Smith"];
+}

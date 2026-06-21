@@ -156,11 +156,13 @@ Atom
     { return rest.length > 0 ? first + rest.join("") : first; }
   / PlainAtom
 
-// grammar.y: qatom : T_qatom  (quoted string, possibly concatenated)
-// scan.l: string concatenation uses '+' operator between T_qatom tokens
+// grammar.y: qatom : T_qatom  (a single quoted string or HTML string).
+// Concatenation is ONLY via the '+' operator (handled by `Atom`,
+// grammar.y: qatom '+' T_qatom). Two adjacent quoted strings with no '+'
+// are NOT concatenated — they are separate tokens (e.g. `a="x" "B"->c`),
+// so QAtom must not implicitly join them.
 QAtom
-  = s:QuotedString rest:( _ s2:QuotedString { return s2; } )*
-    { return rest.length > 0 ? s + rest.join("") : s; }
+  = QuotedString
   / HtmlString
 
 // scan.l: ["] begins qstring state; ["] ends it → T_qatom

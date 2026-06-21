@@ -48,7 +48,9 @@ describe('node label/anchor substitution end-to-end (C-verified)', () => {
   });
 
   it('edge label \\E renders tail->head', () => {
-    expect(renderSvg('digraph { A -> B [label="\\E"] }', 'dot')).toContain('>A-&gt;B</text>');
+    // C svg_textspan escapes text with flags {raw,dash,nbsp}: '-' → &#45;.
+    // @see plugin/core/gvrender_core_svg.c:546
+    expect(renderSvg('digraph { A -> B [label="\\E"] }', 'dot')).toContain('>A&#45;&gt;B</text>');
   });
 
   it('node href anchor with \\N substitution + label-default tooltip', () => {
