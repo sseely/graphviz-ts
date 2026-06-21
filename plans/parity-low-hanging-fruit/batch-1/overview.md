@@ -5,12 +5,29 @@ Six independent read-only tasks, one per bucket (attr-or-tag split in two). NO
 
 | ID | Bucket | Cases | Writes | Depends On | Done |
 |----|--------|------|--------|------------|------|
-| T1 | color-stroke | 9 | `plans/parity-low-hanging-fruit/triage/color-stroke.md` | — | [ ] |
-| T2 | text-content | 7 | `plans/parity-low-hanging-fruit/triage/text-content.md` | — | [ ] |
-| T3a | attr-or-tag (1/2) | 17 | `plans/parity-low-hanging-fruit/triage/attr-or-tag-1.md` | — | [ ] |
-| T3b | attr-or-tag (2/2) | 16 | `plans/parity-low-hanging-fruit/triage/attr-or-tag-2.md` | — | [ ] |
-| T4 | polygon-points | 3 | `plans/parity-low-hanging-fruit/triage/polygon-points.md` | — | [ ] |
-| T5 | parser-gap | 10 | `plans/parity-low-hanging-fruit/triage/parser-gap.md` | — | [ ] |
+| T1 | color-stroke | 9 | `plans/parity-low-hanging-fruit/triage/color-stroke.md` | — | [x] |
+| T2 | text-content | 7 | `plans/parity-low-hanging-fruit/triage/text-content.md` | — | [x] |
+| T3a | attr-or-tag (1/2) | 17 | `plans/parity-low-hanging-fruit/triage/attr-or-tag-1.md` | — | [x] |
+| T3b | attr-or-tag (2/2) | 16 | `plans/parity-low-hanging-fruit/triage/attr-or-tag-2.md` | — | [x] |
+| T4 | polygon-points | 3 | `plans/parity-low-hanging-fruit/triage/polygon-points.md` | — | [x] |
+| T5 | parser-gap | 10 | `plans/parity-low-hanging-fruit/triage/parser-gap.md` | — | [x] |
+
+## Triage result (2026-06-21)
+
+24 simple, 38 deep across the 62 cases. Simple groups → Batch 2 fix tasks:
+- **T6 color** (9): graph bgcolor resolve (`svg-graph.ts`); `setlinewidth(N)` +
+  FUNLIMIT=64 (`style-resolve.ts`); edge fontcolor colorscheme (`device.ts`);
+  cluster `peripheries=0` (`device-cluster.ts`).
+- **T7 text** (2): QAtom implicit-concat + XML-escape apostrophe/entity-decode
+  (`dot.pegjs`, `make-label.ts`, svg escape helper). 1990 + b81.
+- **T8 attr** (7+4): DOT `id=`/`class=`/`stylesheet=` emission (svg id/class
+  helpers) + edge/cluster AGSEQ ids (`svg-id.ts`). Reconcile AGSEQ vs T3a "deep".
+- **T9 polygon** (0): all deep (crow/vee + dot/odot arrowhead geometry).
+- **T10 parser** (2): QAtom drop-rest (shared w/ T7) + widen NAME char class
+  (`dot.pegjs`). 2682 + russian.
+
+Cross-bucket: 2682 (T10) and 1990 (T7) both touch `dot.pegjs` QAtom →
+single grammar fix, sequenced once. AGSEQ id generation spans T3a/T3b.
 
 ## Shared triage methodology (all tasks)
 
