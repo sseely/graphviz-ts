@@ -160,10 +160,10 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 131 | `1213-1`, `1213-2`, `1447` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 132 | `1213-1`, `1213-2`, `1447` | edge path has a different command sequence or point count — spline routing structure |
 | `element-count` | 127 | `1323`, `1323_1`, `1436` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `attr-or-tag` | 34 | `1447_1`, `1453`, `1622_0` | element tag or a non-coordinate attribute differs |
-| `color-stroke` | 28 | `1408`, `1896`, `2082` | fill/stroke value differs — color resolution or default styling |
+| `color-stroke` | 27 | `1408`, `1896`, `2082` | fill/stroke value differs — color resolution or default styling |
 | `text-content` | 9 | `1990`, `241_1`, `graphs-Latin1` | rendered text string differs — label content, escaping, or character encoding |
 | `font-metrics` | 7 | `1435`, `2592`, `graphs-b33` | font-size/family differs — text-metric model or label sizing |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |

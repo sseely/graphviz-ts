@@ -1074,5 +1074,13 @@
     "input": "test/golden/inputs/dot-rounded-clusters-mrecord.dot",
     "reference": "test/golden/refs/dot-rounded-clusters-mrecord.svg",
     "description": "rounded cluster rendering (round_corners): a rounded,filled cluster (fill #f2f2f2 bezier <path>), a style=rounded cluster (steelblue <path>), and a shape=Mrecord node (rounded <path> outer box + field-divider <polyline>) connected by an edge; byte-matches the oracle"
+  },
+  {
+    "id": "dot-record-fill-pen",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-record-fill-pen.dot",
+    "reference": "test/golden/refs/dot-record-fill-pen.svg",
+    "description": "record/Mrecord fill + pen (record_gencode stylenode/penColor/findFill): style=filled record (solid lightyellow polygon), style=filled Mrecord (lightblue rounded <path>), and color=red record (red box + red field divider); byte-matches the oracle"
   }
 ]

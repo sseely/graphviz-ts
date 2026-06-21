@@ -323,9 +323,10 @@ function applyPenState(obj: ObjState, styleAttr: string | undefined,
  * Returns true when the node should be rendered as filled.
  *
  * Gradient fills: Linear/Radial FillType + fillColor/stopColor/frac/angle set.
+ * Shared with record_gencode (records resolve style identically in C).
  * @see lib/common/shapes.c:poly_gencode (~2981-3007)
  */
-function applyNodeStyle(obj: ObjState, n: Node): boolean {
+export function applyNodeStyle(obj: ObjState, n: Node): boolean {
   const styleAttr = nodeAttr(n, n.root, 'style');
   const colorAttr = nodeAttr(n, n.root, 'color');
   // C wraps each node's color block with setColorScheme so a `colorscheme`
