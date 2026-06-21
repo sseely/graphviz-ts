@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-21T11:55:05.744Z",
+  "generatedAt": "2026-06-21T12:07:11.786Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 166,
+    "byte-match": 167,
     "structural-match": 252,
-    "diverged": 337,
+    "diverged": 336,
     "errored": 20,
     "timeout": 6,
     "oracle-error": 15
@@ -1689,7 +1689,7 @@
       "path": "graphs/grdangles.gv",
       "verdict": "diverged",
       "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[8]/defs[1]/linearGradient[1]"
     },
     {
       "id": "graphs-grdcluster",
@@ -1701,9 +1701,7 @@
     {
       "id": "graphs-grdcolors",
       "path": "graphs/grdcolors.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@fill"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-grdfillcolor",
@@ -1730,7 +1728,7 @@
       "id": "graphs-grdlinear_node",
       "path": "graphs/grdlinear_node.gv",
       "verdict": "diverged",
-      "maxDelta": 111.5,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/g[2][childCount]"
     },
     {
@@ -1759,7 +1757,7 @@
       "path": "graphs/grdshapes.gv",
       "verdict": "diverged",
       "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@fill"
+      "firstDiffPath": "svg/g[1]/g[2][childCount]"
     },
     {
       "id": "graphs-hashtable",
@@ -3657,7 +3655,7 @@
       "path": "share/b51.gv",
       "verdict": "diverged",
       "maxDelta": 728.96,
-      "firstDiffPath": "svg/g[1]/g[3]/polygon[1]/@stroke"
+      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
       "id": "share-b545",
@@ -4359,7 +4357,7 @@
       "path": "windows/b51.gv",
       "verdict": "diverged",
       "maxDelta": 722.91,
-      "firstDiffPath": "svg/g[1]/g[3]/polygon[1]/@stroke"
+      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
       "id": "windows-b94",
