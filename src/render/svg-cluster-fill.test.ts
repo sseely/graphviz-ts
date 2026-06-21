@@ -16,6 +16,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { renderSvg } from '../index.js';
 import { Graph as GraphClass } from '../model/graph.js';
 import { Node } from '../model/node.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
@@ -185,5 +186,31 @@ describe('AC-RC: rounded cluster boundary', () => {
     const svg = renderClusterSvg(makeGraphWithCluster({}));
     expect(svg).toContain('<polygon');
     expect(svg).not.toContain('<path');
+  });
+});
+
+// A cluster with no style of its own inherits a graph-level graph[style=...]
+// (agxget), matching the oracle: style=bold/dashed/rounded set on the root
+// apply to the cluster boundary. @see lib/common/emit.c:emit_clusters
+describe('cluster style inheritance from the graph', () => {
+  it('graph style=bold → cluster boundary stroke-width="2"', () => {
+    const svg = renderSvg('digraph{style=bold;subgraph cluster_0{a}}', 'dot');
+    expect(svg).toContain('stroke-width="2"');
+  });
+
+  it('graph style=rounded → cluster boundary is a bezier <path>', () => {
+    const svg = renderSvg('digraph{style=rounded;subgraph cluster_0{a}}', 'dot');
+    expect(svg).toContain('<path');
+  });
+
+  it('graph style=dashed → cluster boundary stroke-dasharray="5,2"', () => {
+    const svg = renderSvg('digraph{style=dashed;subgraph cluster_0{a}}', 'dot');
+    expect(svg).toContain('stroke-dasharray="5,2"');
+  });
+
+  it('cluster overrides the inherited graph style', () => {
+    const svg = renderSvg(
+      'digraph{style=bold;subgraph cluster_0{style=dashed;a}}', 'dot');
+    expect(svg).toContain('stroke-dasharray="5,2"');
   });
 });
