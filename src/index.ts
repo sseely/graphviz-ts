@@ -119,14 +119,19 @@ export type { ImageSizer } from './common/htmltable-types.js';
 export { GvcContext } from './gvc/context.js';
 export type { BuiltinEngine, EngineName } from './gvc/context.js';
 
+// Lower-level renderer-pipeline primitive: render a graph against a
+// caller-built `GvcContext`. The root `render` name is taken by the new
+// public `render(g, format, opts?)` (collision resolution below), so this
+// is namespaced as `renderWithContext` to preserve the GvcContext workflow.
+export { render as renderWithContext } from './gvc/device.js';
+
 // Discoverable root re-exports of the api + render surfaces (ADR-2): root
 // `graphviz-ts` exposes everything from `graphviz-ts/api` and
 // `graphviz-ts/render` for one-import discoverability.
 //
 // Collision resolution: the root `render` is the new public
 // `render(g, format, opts?)` from `./render`. The low-level
-// `render(ctx, g, format)` from `./gvc/device` is no longer re-exported at
-// root (it is an internal renderer-pipeline primitive). See decisions.md
-// ADR-5 and the decision journal.
+// `render(ctx, g, format)` is re-exported as `renderWithContext` (above)
+// rather than `render`. See decisions.md ADR-5 and the decision journal.
 export * from './api/index.js';
 export * from './render/index.js';
