@@ -93,3 +93,44 @@ describe('doGraphLabel — html label', () => {
     expect((g.root.info.has_labels ?? 0) & GRAPH_LABEL).toBeTruthy();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Font inheritance — a cluster (subgraph) with no fontname of its own inherits
+// the ancestor's fontname/fontsize/fontcolor, mirroring C's agxget in
+// do_graph_label (late_nnstring(sg, agfindgraphattr(sg, "fontname"), ...)).
+// Pre-fix the cluster label fell back to the Times,serif default.
+// ---------------------------------------------------------------------------
+
+/** A cluster subgraph parented to (and rooted at) `root`. */
+function makeCluster(root: Graph, attrs: Record<string, string> = {}): Graph {
+  const sg = new Graph('cluster_0', 'directed');
+  sg.parent = root;
+  sg.root = root;
+  for (const [k, v] of Object.entries(attrs)) sg.attrs.set(k, v);
+  return sg;
+}
+
+describe('doGraphLabel — font inheritance', () => {
+  it('cluster inherits root fontname/fontsize/fontcolor when it sets none', () => {
+    const root = makeGraph({ fontname: 'Helvetica', fontsize: '20', fontcolor: 'blue' });
+    const sg = makeCluster(root, { label: 'C' });
+    doGraphLabel(sg, stubMeasurer);
+    const lab = sg.info.label as TextlabelT;
+    expect(lab.fontname).toBe('Helvetica');
+    expect(lab.fontsize).toBe(20);
+    expect(lab.fontcolor).toBe('blue');
+  });
+
+  it('cluster fontname overrides the inherited ancestor value', () => {
+    const root = makeGraph({ fontname: 'Helvetica' });
+    const sg = makeCluster(root, { label: 'C', fontname: 'Courier' });
+    doGraphLabel(sg, stubMeasurer);
+    expect((sg.info.label as TextlabelT).fontname).toBe('Courier');
+  });
+
+  it('root label with no fontname keeps the Times,serif default', () => {
+    const g = makeGraph({ label: 'G' });
+    doGraphLabel(g, stubMeasurer);
+    expect((g.info.label as TextlabelT).fontname).toBe('Times,serif');
+  });
+});
