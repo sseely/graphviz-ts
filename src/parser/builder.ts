@@ -56,6 +56,22 @@ function portStringOf(item: NodeId | SubgraphStmt): string {
 
 // ── Node registry ─────────────────────────────────────────────────────────────
 
+/**
+ * Collect the node-attribute defaults in effect at `scope`: walk scope -> root,
+ * inner overriding outer (first-found wins). Returns a fresh map so later
+ * node[...] statements that mutate a graph's nodeDefaults do not change an
+ * already-created node's snapshot.
+ */
+function effectiveNodeDefaults(scope: Graph): Map<string, string> {
+  const eff = new Map<string, string>();
+  for (let g: Graph | null = scope; g !== null; g = g.parent) {
+    for (const [k, v] of g.nodeDefaults) {
+      if (!eff.has(k)) eff.set(k, v);
+    }
+  }
+  return eff;
+}
+
 /** Manages the per-parse node ID counter and node creation. */
 export class NodeRegistry {
   private nextId = 0;
@@ -68,9 +84,10 @@ export class NodeRegistry {
     const existing = root.nodes.get(name);
     if (existing !== undefined) return existing;
     const node = new Node(this.nextId++, name, root);
-    // Record the declaring subgraph so node-attribute defaults set in that
-    // scope (and ancestors) resolve for this node. @see nodeAttr (poly-init).
-    if (scope !== root) node.subg = scope;
+    // Snapshot the node-attribute defaults active in this scope at creation, in
+    // statement order — a node[...] declared later does not apply to this node.
+    // @see nodeAttr (poly-init), snapshotEdgeDefaults (edges do the same).
+    node.nodeDefaultsSnapshot = effectiveNodeDefaults(scope);
     root.nodes.set(name, node);
     return node;
   }

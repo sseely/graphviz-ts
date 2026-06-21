@@ -47,14 +47,12 @@ describe('edge port/compass → tailport/headport attrs', () => {
   });
 });
 
-// A `node [...]` default set inside a subgraph applies to nodes declared there,
-// resolved by walking the node's declaring subgraph up to root. @see nodeAttr
+// A `node [...]` default is snapshot onto each node at creation, in statement
+// order — from the declaring subgraph up to root. @see effectiveNodeDefaults
 describe('subgraph-scoped node-attribute defaults', () => {
-  it('records the declaring subgraph on nodes created via an edge stmt', () => {
+  it('a subgraph node default reaches nodes created via an edge stmt', () => {
     const g = parse('digraph{subgraph cluster_0{node[style=filled];a->b}}');
-    const a = g.nodes.get('a')!;
-    expect(a.subg).toBe(g.subgraphs.get('cluster_0'));
-    expect(nodeAttr(a, g, 'style')).toBe('filled');
+    expect(nodeAttr(g.nodes.get('a')!, g, 'style')).toBe('filled');
   });
 
   it('inner subgraph default overrides the root default', () => {
@@ -65,7 +63,6 @@ describe('subgraph-scoped node-attribute defaults', () => {
 
   it('a node at root scope ignores a cluster-only default', () => {
     const g = parse('digraph{subgraph cluster_0{node[style=filled];a}b}');
-    expect(g.nodes.get('b')!.subg).toBeUndefined();
     expect(nodeAttr(g.nodes.get('b')!, g, 'style')).toBeUndefined();
   });
 
@@ -73,6 +70,12 @@ describe('subgraph-scoped node-attribute defaults', () => {
     const g = parse(
       'digraph{subgraph cluster_0{node[shape=box];a[shape=ellipse]}}');
     expect(nodeAttr(g.nodes.get('a')!, g, 'shape')).toBe('ellipse');
+  });
+
+  it('a node[...] declared after a node does not apply to it (snapshot order)', () => {
+    const g = parse('digraph{a;node[shape=box];b}');
+    expect(nodeAttr(g.nodes.get('a')!, g, 'shape')).toBeUndefined(); // default
+    expect(nodeAttr(g.nodes.get('b')!, g, 'shape')).toBe('box');
   });
 });
 

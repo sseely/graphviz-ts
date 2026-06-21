@@ -31,21 +31,22 @@ const DEFAULT_RW = 27;
 const DEFAULT_HT = 36;
 
 /**
- * Read a node attribute with default inheritance: the node's own value, then
- * the node-defaults (`node [...]`) of the subgraph the node was declared in and
- * each enclosing graph up to the root. A `node [style=filled]` set inside a
- * cluster therefore applies to nodes declared in that cluster, as the oracle
- * does. Falls back to the passed graph `g` when the node has no declaring
- * subgraph. Matches graphviz attribute inheritance: lib/cgraph/attr.c:agxget
+ * Read a node attribute: the node's own value, else the node-attribute defaults
+ * (`node [...]`) captured from the node's declaring scope up to root *at the
+ * time the node was created*. The snapshot makes a `node [...]` declared after
+ * the node — at any scope — correctly not apply, and lets a cluster-scoped
+ * default reach nodes declared in that cluster, as the oracle does.
+ *
+ * Programmatically created nodes have no snapshot; they fall back to the live
+ * defaults of the passed graph `g` and root.
+ * @see lib/cgraph/attr.c:agxget; src/parser/builder.ts:effectiveNodeDefaults
  */
 export function nodeAttr(n: Node, g: Graph, key: string): string | undefined {
   const own = n.attrs.get(key);
   if (own !== undefined) return own;
-  for (let s: Graph | null = n.subg ?? g; s !== null; s = s.parent) {
-    const v = s.nodeDefaults.get(key);
-    if (v !== undefined) return v;
-  }
-  return n.root.nodeDefaults.get(key);
+  if (n.nodeDefaultsSnapshot !== undefined) return n.nodeDefaultsSnapshot.get(key);
+  return g.nodeDefaults.get(key)
+    ?? (g !== g.root ? g.root.nodeDefaults.get(key) : undefined);
 }
 
 /** Read label-font attributes from node, falling back to defaults. */

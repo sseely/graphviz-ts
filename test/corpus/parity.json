@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-21T12:39:18.502Z",
+  "generatedAt": "2026-06-21T12:50:03.340Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
     "byte-match": 173,
-    "structural-match": 257,
-    "diverged": 325,
+    "structural-match": 258,
+    "diverged": 324,
     "errored": 20,
     "timeout": 6,
     "oracle-error": 15
@@ -281,8 +281,8 @@
       "id": "1658",
       "path": "1658.dot",
       "verdict": "diverged",
-      "maxDelta": 282,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "maxDelta": 452.89,
+      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
     },
     {
       "id": "165_2",
@@ -546,7 +546,7 @@
       "id": "2242",
       "path": "2242.dot",
       "verdict": "diverged",
-      "maxDelta": 418,
+      "maxDelta": 396,
       "firstDiffPath": "svg/g[1]/g[2]/@id"
     },
     {
@@ -1070,7 +1070,7 @@
       "id": "graphs-ER",
       "path": "graphs/ER.gv",
       "verdict": "diverged",
-      "maxDelta": 100,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1669,8 +1669,8 @@
       "id": "graphs-fsm",
       "path": "graphs/fsm.gv",
       "verdict": "diverged",
-      "maxDelta": 148.30999999999995,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "maxDelta": 164.30999999999995,
+      "firstDiffPath": "svg/g[1]/g[22]/path[1]/@d"
     },
     {
       "id": "graphs-grammar",
@@ -2266,7 +2266,7 @@
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 1753,
+      "maxDelta": 1714,
       "firstDiffPath": "svg/g[1]/g[28]/path[1]/@d"
     },
     {
@@ -2286,9 +2286,8 @@
     {
       "id": "graphs-polypoly",
       "path": "graphs/polypoly.gv",
-      "verdict": "diverged",
-      "maxDelta": 12501.16,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 11472.960000000001
     },
     {
       "id": "graphs-ports",
@@ -2428,7 +2427,7 @@
       "path": "graphs/shells.gv",
       "verdict": "diverged",
       "maxDelta": 648,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "firstDiffPath": "svg/g[1]/g[29]/path[1]/@d"
     },
     {
       "id": "graphs-sides",
