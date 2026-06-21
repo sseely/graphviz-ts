@@ -1,0 +1,4 @@
+digraph {
+  node [shape=box, fixedsize=true, width=2, height=0.8];
+  "Контрагенты" -> "Банк";
+}

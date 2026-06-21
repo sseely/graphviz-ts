@@ -202,8 +202,8 @@ function peg$parse(input, options) {
   var peg$r0 = /^[;,]/;
   var peg$r1 = /^[^"\\]/;
   var peg$r2 = /^[^<>]/;
-  var peg$r3 = /^[A-Za-z_\x80-\xFF]/;
-  var peg$r4 = /^[A-Za-z_0-9\x80-\xFF]/;
+  var peg$r3 = /^[A-Za-z_\x80-\uFFFF]/;
+  var peg$r4 = /^[A-Za-z_0-9\x80-\uFFFF]/;
   var peg$r5 = /^[0-9]/;
   var peg$r6 = /^[eE]/;
   var peg$r7 = /^[+\-]/;
@@ -246,8 +246,8 @@ function peg$parse(input, options) {
   var peg$e18 = peg$literalExpectation("<", false);
   var peg$e19 = peg$literalExpectation(">", false);
   var peg$e20 = peg$classExpectation(["<", ">"], true, false);
-  var peg$e21 = peg$classExpectation([["A", "Z"], ["a", "z"], "_", ["\x80", "\xFF"]], false, false);
-  var peg$e22 = peg$classExpectation([["A", "Z"], ["a", "z"], "_", ["0", "9"], ["\x80", "\xFF"]], false, false);
+  var peg$e21 = peg$classExpectation([["A", "Z"], ["a", "z"], "_", ["\x80", "\uFFFF"]], false, false);
+  var peg$e22 = peg$classExpectation([["A", "Z"], ["a", "z"], "_", ["0", "9"], ["\x80", "\uFFFF"]], false, false);
   var peg$e23 = peg$literalExpectation("-", false);
   var peg$e24 = peg$classExpectation([["0", "9"]], false, false);
   var peg$e25 = peg$literalExpectation(".", false);

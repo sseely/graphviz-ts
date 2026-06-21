@@ -208,8 +208,11 @@ PlainAtom
 
 // scan.l: NAME = {LETTER}({LETTER}|{DIGIT})*
 // scan.l: LETTER = [A-Za-z_\200-\377]  (underscore + ASCII letters + high bytes)
+// scan.l treats any byte >= 0x80 as a NAME character; on UTF-8 input that is
+// any non-ASCII code point, so the class spans \x80–￿ (the BMP: Cyrillic,
+// CJK, etc.), not just the Latin-1 \x80–\xFF range.
 Name
-  = first:[A-Za-z_\x80-\xFF] rest:[A-Za-z_0-9\x80-\xFF]*
+  = first:[A-Za-z_\x80-￿] rest:[A-Za-z_0-9\x80-￿]*
     { return first + rest.join(""); }
 
 // scan.l: NUMBER = [-]?(({DIGIT}+(\.{DIGIT}*)?)|(\.{DIGIT}+))
@@ -228,7 +231,7 @@ NodeKw     = [Nn][Oo][Dd][Ee]            !NameContinue
 EdgeKw     = [Ee][Dd][Gg][Ee]            !NameContinue
 SubgraphKw = [Ss][Uu][Bb][Gg][Rr][Aa][Pp][Hh] !NameContinue
 
-NameContinue = [A-Za-z_0-9\x80-\xFF]
+NameContinue = [A-Za-z_0-9\x80-￿]
 
 // Reserved word set — used to exclude keywords from PlainAtom
 ReservedWord

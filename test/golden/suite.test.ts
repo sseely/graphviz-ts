@@ -79,11 +79,12 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //  + 2 parity text-content (XML-entity decode + textspan escaping;
 //    QAtom no-implicit-concat)
 //  + 3 parity attr-or-tag (cluster id attr; node class attr; graph/node/edge
-//    id attr + gid prefix + stylesheet PI))
+//    id attr + gid prefix + stylesheet PI)
+//  + 1 parity parser-gap (non-Latin/Cyrillic NAME char class))
 // ---------------------------------------------------------------------------
 
-test('manifest has 145 entries', () => {
-  expect(manifest).toHaveLength(145);
+test('manifest has 146 entries', () => {
+  expect(manifest).toHaveLength(146);
 });
 
 // ---------------------------------------------------------------------------

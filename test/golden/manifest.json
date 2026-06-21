@@ -1170,5 +1170,13 @@
     "input": "test/golden/inputs/dot-id-stylesheet.dot",
     "reference": "test/golden/refs/dot-id-stylesheet.svg",
     "description": "graph/node/edge `id` attr + `<gid>_` prefix on objects without an id (getObjId) and the `<?xml-stylesheet?>` PI for `stylesheet=`; byte-matches the oracle (parity attr-or-tag 2184/2258/triedds/2183)"
+  },
+  {
+    "id": "dot-unicode-name",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-unicode-name.dot",
+    "reference": "test/golden/refs/dot-unicode-name.svg",
+    "description": "non-Latin (Cyrillic) node names parse via the widened NAME char class (\\x80–\\uFFFF, matching scan.l's byte>=0x80); fixedsize pins geometry; byte-matches the oracle (parity parser-gap graphs-russian)"
   }
 ]
