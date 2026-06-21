@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-21T11:45:16.083Z",
+  "generatedAt": "2026-06-21T11:55:05.744Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -1092,7 +1092,7 @@
       "path": "graphs/KW91.gv",
       "verdict": "diverged",
       "maxDelta": 115.47999999999999,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@stroke-width"
+      "firstDiffPath": "svg/g[1]/g[7]/path[1]/@d"
     },
     {
       "id": "graphs-Latin1",
@@ -3562,7 +3562,7 @@
       "path": "share/KW91.gv",
       "verdict": "diverged",
       "maxDelta": 115.47999999999999,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@stroke-width"
+      "firstDiffPath": "svg/g[1]/g[18]/path[1]/@d"
     },
     {
       "id": "share-Latin1",
@@ -4279,7 +4279,7 @@
       "path": "windows/KW91.gv",
       "verdict": "diverged",
       "maxDelta": 115.47999999999999,
-      "firstDiffPath": "svg/g[1]/g[1]/polygon[1]/@stroke-width"
+      "firstDiffPath": "svg/g[1]/g[18]/path[1]/@d"
     },
     {
       "id": "windows-Latin1",

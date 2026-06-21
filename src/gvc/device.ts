@@ -40,7 +40,7 @@ import {
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
-import { renderClusterLabel, applyClusterObjState } from './device-cluster.js';
+import { renderClusterLabel, applyClusterObjState, clusterStyle } from './device-cluster.js';
 export { renderClusterLabel } from './device-cluster.js';
 
 // ---------------------------------------------------------------------------
@@ -303,7 +303,7 @@ function renderClusterBox(
   sg: Graph, filled: boolean, renderer: RendererPlugin, job: RenderJob,
 ): void {
   const { ll, ur } = sg.info.bb!;
-  if (parseStyleFlags(sg.attrs.get('style')).rounded) {
+  if (parseStyleFlags(clusterStyle(sg)).rounded) {
     const af = [{ x: ll.x, y: ll.y }, { x: ur.x, y: ll.y }, { x: ur.x, y: ur.y }, { x: ll.x, y: ur.y }];
     emitRoundedBezier(af, { x: 0, y: 0 }, filled, { renderer, job });
     return;
