@@ -53,12 +53,15 @@ export class Node {
   readonly root: Graph;
 
   /**
-   * Innermost subgraph in which this node was first created. Node-attribute
-   * defaults (`node [...]`) set in that scope and its ancestors apply to the
-   * node, so attribute resolution walks `subg` -> root, not just root.
-   * Undefined for nodes created directly at the root scope (resolve at root).
+   * Frozen snapshot of the node-attribute defaults (`node [...]`) in effect —
+   * from the declaring subgraph up through its ancestors — at the moment this
+   * node was first created. Captured at creation (not read live at render) so
+   * that a `node [...]` declared *after* this node in the same or an ancestor
+   * scope does not retroactively apply, matching DOT semantics. Present on
+   * parser-built nodes (even when empty); undefined on programmatically created
+   * nodes, which fall back to live graph defaults in `nodeAttr`.
    */
-  subg?: Graph;
+  nodeDefaultsSnapshot?: Map<string, string>;
 
   /** @see lib/cgraph/node.c:agnode */
   constructor(id: number, name: string, root: Graph) {
