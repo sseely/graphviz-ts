@@ -21,6 +21,7 @@ import { isHtmlValue, htmlValueContent } from './html-string.js';
 import { NODE_XLABEL } from '../layout/dot/rank.js';
 import { recordNodeInit } from './record.js';
 import {
+  GAP,
   gvNodesize,
   polySize,
   type PolySizeParams,
@@ -38,6 +39,16 @@ const MIN_NODEWIDTH = 0.01;
 /** @see lib/common/const.h:DEFAULT_NODEHEIGHT / MIN_NODEHEIGHT */
 const DEFAULT_NODEHEIGHT = 0.5;
 const MIN_NODEHEIGHT = 0.02;
+
+/** Points per inch. @see lib/common/geom.h:POINTS_PER_INCH */
+const POINTS_PER_INCH = 72;
+/** Default point size in inches (3.6pt). @see lib/common/shapes.c:42 DEF_POINT */
+const DEF_POINT = 0.05;
+/** Minimum point size in inches. @see lib/common/shapes.c:47 MIN_POINT */
+const MIN_POINT = 0.0003;
+/** Default / minimum node penwidth. @see lib/common/const.h DEFAULT_NODEPENWIDTH */
+const DEFAULT_NODEPENWIDTH = 1;
+const MIN_NODEPENWIDTH = 0;
 
 /** Parse a double attr with default and minimum. @see lib/common/utils.c:late_double */
 export function lateDouble(
@@ -163,6 +174,50 @@ function initNodeXLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
 }
 
 /**
+ * Point diameter in inches per point_init: w = min(width, height); if
+ * neither attr is user-set use DEF_POINT, else clamp positive widths to
+ * MIN_POINT. The (suppressed) label never drives the size.
+ * @see lib/common/shapes.c:point_init (width/height block)
+ */
+function pointWidthInches(n: Node, g: Graph): number {
+  const w = lateDouble(nodeAttr(n, g, 'width'), Number.MAX_VALUE, MIN_NODEWIDTH);
+  const h = lateDouble(nodeAttr(n, g, 'height'), Number.MAX_VALUE, MIN_NODEHEIGHT);
+  const m = Math.min(w, h);
+  if (m === Number.MAX_VALUE) return DEF_POINT; // neither width nor height set
+  return m > 0.0 ? Math.max(m, MIN_POINT) : m;
+}
+
+/**
+ * point_init's size math: the dot diameter `sz0` grown by GAP per extra
+ * periphery, plus the outline ring at half the penwidth each side.
+ * @see lib/common/shapes.c:point_init (periphery/outline blocks)
+ */
+function pointSizeResult(sz0: number, peripheries: number, penwidth: number): PolySizeResult {
+  const sz = peripheries > 1 ? sz0 + 2 * GAP * (peripheries - 1) : sz0;
+  const szOutline = peripheries >= 1 && penwidth > 0 ? sz + penwidth : sz;
+  return {
+    ...gvNodesize(sz, sz, false),
+    outlineW: szOutline, outlineH: szOutline, baseW: sz0, baseH: sz0,
+  };
+}
+
+/**
+ * Size a `shape=point` node per point_init: a filled dot, DEF_POINT (or
+ * the min set width/height) wide, bypassing label-driven sizing. Reuses
+ * the ellipse vertex/periphery path (AD-5): the resolved sides=2 polygon
+ * renders via the existing `sides<=2` ellipse branch.
+ * @see lib/common/shapes.c:point_init
+ */
+function initPointSize(n: Node, g: Graph, shape: ShapeDesc & { polygon: PolygonT }): void {
+  const flip = g.root.info.flip === true;
+  const peripheries = lateInt(nodeAttr(n, g, 'peripheries'), shape.polygon.peripheries, 0);
+  const penwidth = lateDouble(nodeAttr(n, g, 'penwidth'), DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+  const sz0 = pointWidthInches(n, g) * POINTS_PER_INCH;
+  storeNodeSize(n, pointSizeResult(sz0, peripheries, penwidth), flip);
+  assignShapeInfo(n, { ...shape.polygon, peripheries, sides: 2, penwidth, vertices: null });
+}
+
+/**
  * Build the label and size the node from it, mirroring
  * common_init_node + the shape initfn. Returns false when the shape
  * has no polygon descriptor to size against.
@@ -179,6 +234,11 @@ function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
   initNodeXLabel(n, g, measurer);
   const poly = shape.polygon;
   if (poly === null) return false;
+  if (shape.kind === ShapeKind.SH_POINT) {
+    // point_init overrides sizing independent of the label (AD-2).
+    initPointSize(n, g, { ...shape, polygon: poly });
+    return true;
+  }
   const label = n.info.label as TextlabelT;
   const flip = g.root.info.flip === true;
   const params = polySizeParamsFromNode(n, g, { ...shape, polygon: poly }, label.dimen, flip);

@@ -18,6 +18,11 @@ import { renderSvg } from '../index.js';
 const ellipses = (svg: string): string[] =>
   (svg.match(/<ellipse[^>]*\/>/g) ?? []);
 
+/** Count <text> elements in an SVG. */
+function texts(svg: string): number {
+  return svg.split('<text').length - 1;
+}
+
 /**
  * Extract node-boundary <polygon .../> tags from SVG, skipping the page
  * background polygon (the only one emitted with stroke="none"; node
@@ -211,6 +216,42 @@ describe('peripheries=0 + style=filled — borderless filled node', () => {
 });
 
 // ---------------------------------------------------------------------------
+// shape=point — filled-black default, explicit color wins, no label
+// Oracle-verified against C graphviz 15.1.0 (dot -Tsvg)
+// @see lib/common/shapes.c:point_gencode
+// ---------------------------------------------------------------------------
+
+describe('shape=point — fill (point_gencode)', () => {
+  it('bare point → one ellipse fill="black" stroke="black", no text (AC2)', () => {
+    const svg = svgNode('', 'point');
+    const els = ellipses(svg);
+    expect(els).toHaveLength(1);
+    expect(els[0]).toContain('fill="black"');
+    expect(els[0]).toContain('stroke="black"');
+    expect(els[0]).toContain('rx="1.8"');
+    expect(texts(svg)).toBe(0);
+  });
+
+  it('point color=red → fill="red" stroke="red" (explicit color wins, AC3)', () => {
+    const [el] = ellipses(svgNode('color=red', 'point'));
+    expect(el).toContain('fill="red"');
+    expect(el).toContain('stroke="red"');
+  });
+
+  it('point fillcolor=blue color=red → fill="blue" stroke="red"', () => {
+    const [el] = ellipses(svgNode('fillcolor=blue color=red', 'point'));
+    expect(el).toContain('fill="blue"');
+    expect(el).toContain('stroke="red"');
+  });
+});
+
+describe('shape=point — label suppression (point_gencode)', () => {
+  it('point with a label still emits no text', () => {
+    expect(texts(svgNode('label="hi"', 'point'))).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // S1: style=striped multicolor — wire into poly_gencode
 // Oracle-verified against C graphviz 15.0.0 (dot -Tsvg)
 // ---------------------------------------------------------------------------
@@ -240,7 +281,9 @@ describe('S1: style=striped multicolor — poly_gencode dispatch', () => {
     expect(bnd).toBeDefined();
     expect(bnd).not.toContain('stroke-width');
   });
+});
 
+describe('S1: style=striped multicolor — band coordinates', () => {
   it('oracle byte-match: red band points="0,0 18,0 18,-36 0,-36 0,0"', () => {
     const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
     const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
