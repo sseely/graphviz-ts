@@ -1146,5 +1146,29 @@
     "input": "test/golden/inputs/dot-string-no-concat.dot",
     "reference": "test/golden/refs/dot-string-no-concat.svg",
     "description": "adjacent quoted strings are NOT implicitly concatenated (QAtom: only '+' concatenates) — \"a\" \"b\" yields two nodes; byte-matches the oracle (parity parser-gap 2682/1990)"
+  },
+  {
+    "id": "dot-cluster-id-attr",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-id-attr.dot",
+    "reference": "test/golden/refs/dot-cluster-id-attr.svg",
+    "description": "cluster SVG id from the DOT `id` attribute (getObjId step 2); byte-matches the oracle (parity attr-or-tag 2497)"
+  },
+  {
+    "id": "dot-node-class-attr",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-node-class-attr.dot",
+    "reference": "test/golden/refs/dot-node-class-attr.svg",
+    "description": "DOT `class` attr (node default) appended to the SVG class string (svg_print_id_class → class=\"node node\"); byte-matches the oracle (parity attr-or-tag 2563)"
+  },
+  {
+    "id": "dot-id-stylesheet",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-id-stylesheet.dot",
+    "reference": "test/golden/refs/dot-id-stylesheet.svg",
+    "description": "graph/node/edge `id` attr + `<gid>_` prefix on objects without an id (getObjId) and the `<?xml-stylesheet?>` PI for `stylesheet=`; byte-matches the oracle (parity attr-or-tag 2184/2258/triedds/2183)"
   }
 ]

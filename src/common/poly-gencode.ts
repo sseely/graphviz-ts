@@ -30,6 +30,7 @@ import {
 } from './style-resolve.js';
 import { stripedBox, wedgedEllipse } from '../render/svg-multicolor.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
+import { svgNodeId } from '../render/svg-id.js';
 import { drawRoundCorners, mcircleHack, underlineDraw } from './poly-shapes.js';
 
 // ---------------------------------------------------------------------------
@@ -232,7 +233,7 @@ function beginNodeAnchor(n: Node, renderer: RendererPlugin, job: RenderJob): boo
     url !== undefined ? substObjAnchor(url, n) : '',
     resolveTooltip(n, tooltip),
     anchorAttr(n, 'target') ?? '',
-    'node' + (n.id + 1),
+    svgNodeId(n, job),
     job,
   );
   return true;
@@ -283,10 +284,10 @@ function findFillDflt(n: Node): string {
  * @see lib/common/shapes.c:2981-2999 GRADIENT/RGRADIENT/FILL/0 block
  * @see plugin/core/gvrender_core_svg.c:572 svg_gradstyle (id prefix from obj->id)
  */
-function applyFillState(obj: ObjState, n: Node): boolean {
-  // Set obj.id so gradient prefix matches C's getObjId result ("nodeN").
-  // @see lib/common/emit.c:209 getObjId (AGNODE case: pfx="node", idnum=AGSEQ)
-  obj.id = 'node' + (n.id + 1);
+function applyFillState(obj: ObjState, n: Node, job: RenderJob): boolean {
+  // Set obj.id so gradient prefix matches C's getObjId result (DOT `id` attr,
+  // or "<gid>_node<seq>"). @see lib/common/emit.c:209 getObjId (AGNODE case)
+  obj.id = svgNodeId(n, job);
   // point_gencode always fills, defaulting to black (AD-4).
   if (isPointNode(n)) {
     obj.fill = FillType.Solid;
@@ -326,13 +327,13 @@ function applyPenState(obj: ObjState, styleAttr: string | undefined,
  * Shared with record_gencode (records resolve style identically in C).
  * @see lib/common/shapes.c:poly_gencode (~2981-3007)
  */
-export function applyNodeStyle(obj: ObjState, n: Node): boolean {
+export function applyNodeStyle(obj: ObjState, n: Node, job: RenderJob): boolean {
   const styleAttr = nodeAttr(n, n.root, 'style');
   const colorAttr = nodeAttr(n, n.root, 'color');
   // C wraps each node's color block with setColorScheme so a `colorscheme`
   // attr applies to bare scheme indices. @see lib/common/emit.c:1781/1789
   return withColorScheme(nodeAttr(n, n.root, 'colorscheme'), () => {
-    const filled = applyFillState(obj, n);
+    const filled = applyFillState(obj, n, job);
     applyPenState(obj, styleAttr, colorAttr, nodeAttr(n, n.root, 'penwidth'));
     return filled;
   });
@@ -367,7 +368,7 @@ function resolveNodeDrawCtx(job: RenderJob, n: Node): NodeDrawCtx | null {
   if (poly === undefined || poly.vertices === undefined) return null;
   const coord = n.info.coord ?? { x: 0, y: 0 };
   const obj = job.obj;
-  const filled = obj !== null && applyNodeStyle(obj, n);
+  const filled = obj !== null && applyNodeStyle(obj, n, job);
   const drawPoly = obj !== null ? prepareDrawPoly(poly, filled, obj) : poly;
   const styleFlags = parseStyleFlags(nodeAttr(n, n.root, 'style'));
   const ringCtx: RingCtx = {

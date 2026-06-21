@@ -1,0 +1,8 @@
+graph "test_graph" {
+  overlap="scale"
+  node[class="node", shape="ellipse", width="1", height="1", fixedsize="true"];
+  edge[class="edge"];
+  "node_0" -- "node_1"
+  "node_0" -- "node_2"
+  "node_0" -- "node_3"
+} 

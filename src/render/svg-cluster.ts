@@ -8,11 +8,15 @@
 import type { Graph } from '../model/graph.js';
 import type { RenderJob } from '../gvc/job.js';
 import { escapeXml } from './svg-helpers.js';
+import { svgClusterId, svgClusterClass } from './svg-id.js';
 
 export function svgBeginCluster(sg: Graph, job: RenderJob): void {
   job.clusterId++;
-  // Layer prefix only (no per-object suffix for graph/cluster ids). @see getObjId
-  job.write('<g id="' + job.idLayerPrefix() + 'clust' + job.clusterId + '" class="cluster">\n');
+  // Id from getObjId (DOT `id` attr / gid prefix / clust<seq>); layer prefix
+  // only (no per-object suffix for graph/cluster ids). DOT `class` is appended.
+  // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_print_id_class
+  job.write('<g id="' + job.idLayerPrefix() + svgClusterId(sg, job)
+    + '" ' + svgClusterClass(sg) + '>\n');
   job.write('<title>' + escapeXml(sg.name) + '</title>\n');
 }
 
