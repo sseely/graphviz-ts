@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T02:08:53.249Z",
+  "generatedAt": "2026-06-22T13:29:13.650Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -7,17 +7,18 @@
   "counts": {
     "byte-match": 249,
     "structural-match": 222,
-    "diverged": 288,
-    "errored": 13,
-    "timeout": 9,
-    "oracle-error": 15
+    "diverged": 293,
+    "errored": 8,
+    "timeout": 8,
+    "oracle-error": 16
   },
   "results": [
     {
       "id": "121",
       "path": "121.dot",
-      "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading 'info')"
+      "verdict": "diverged",
+      "maxDelta": 238,
+      "firstDiffPath": "svg/g[1]/g[2]/@id"
     },
     {
       "id": "1213-1",
@@ -80,7 +81,7 @@
       "id": "1332",
       "path": "1332.dot",
       "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading 'head')"
+      "errMsg": "Cannot read properties of undefined (reading '5')"
     },
     {
       "id": "1367",
@@ -454,7 +455,8 @@
     {
       "id": "2095_1",
       "path": "2095_1.dot",
-      "verdict": "timeout"
+      "verdict": "oracle-error",
+      "errMsg": "oracle exit null"
     },
     {
       "id": "2108",
@@ -531,8 +533,9 @@
     {
       "id": "2239",
       "path": "2239.dot",
-      "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading 'info')"
+      "verdict": "diverged",
+      "maxDelta": 7556.150000000001,
+      "firstDiffPath": "svg/g[1]/g[2][childCount]"
     },
     {
       "id": "2242",
@@ -800,8 +803,9 @@
     {
       "id": "258",
       "path": "258.dot",
-      "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading 'info')"
+      "verdict": "diverged",
+      "maxDelta": 238,
+      "firstDiffPath": "svg/g[1]/g[2]/@id"
     },
     {
       "id": "2592",
@@ -1461,14 +1465,16 @@
     {
       "id": "graphs-big",
       "path": "graphs/big.gv",
-      "verdict": "errored",
-      "errMsg": "undirected edge operator '--' is not allowed in a digraph; use '->'"
+      "verdict": "diverged",
+      "maxDelta": 650.9200000000001,
+      "firstDiffPath": "svg/g[1]/g[4][childCount]"
     },
     {
       "id": "graphs-biglabel",
       "path": "graphs/biglabel.gv",
-      "verdict": "errored",
-      "errMsg": "undirected edge operator '--' is not allowed in a digraph; use '->'"
+      "verdict": "diverged",
+      "maxDelta": 131.41000000000008,
+      "firstDiffPath": "svg/g[1]/g[4][childCount]"
     },
     {
       "id": "graphs-cairo",

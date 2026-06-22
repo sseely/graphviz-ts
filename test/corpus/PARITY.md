@@ -12,7 +12,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 796
 - **byte-match:** 249 · **structural-match:** 222 → 471/796 structurally equal (59.2%)
-- **diverged:** 288 · **errored:** 13 · **timeout:** 9 · **oracle-error:** 15
+- **diverged:** 293 · **errored:** 8 · **timeout:** 8 · **oracle-error:** 16
 - **Quarantined (not surveyed, from corpus-manifest.json):** engine-deferred 6, multi-graph 3
 
 ## byte-match (249)
@@ -26,7 +26,7 @@ Port SVG matches the oracle within the `deterministic` tolerance (0.01).
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). These are near-misses — sub-pixel-to-modest position drift.
 
-## diverged (288) — worst-first
+## diverged (293) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
@@ -39,6 +39,7 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-badvoro` | 8811.09 | `svg/g[1]/g[16]/path[1]/@d` |
 | `linux.x86-root_circo` | 8156.80 | `svg/g[1]/g[5]/path[1]/@d` |
 | `linux.x86-root_twopi` | 8156.80 | `svg/g[1]/g[5]/path[1]/@d` |
+| `2239` | 7556.15 | `svg/g[1]/g[2][childCount]` |
 | `graphs-b103` | 6118.17 | `svg/g[1]/g[3]/path[1]/@d` |
 | `nshare-root_circo` | 5445.40 | `svg/g[1]/g[5]/path[1]/@d` |
 | `nshare-root_twopi` | 5445.40 | `svg/g[1]/g[5]/path[1]/@d` |
@@ -89,35 +90,28 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `linux.i386-crazy` | 1240.00 | `svg/g[1][childCount]` |
 | `graphs-Symbol` | 1227.00 | `svg/g[1]/g[1]/text[1]/text()[1]` |
 | `graphs-b106` | 1193.64 | `svg/g[1]/g[10]/path[1]/@d` |
-| `2796` | 1192.00 | `svg/g[1][childCount]` |
 
-_… and 228 more diverged inputs (see parity.json + the buckets below)._
+_… and 233 more diverged inputs (see parity.json + the buckets below)._
 
-## errored (13)
+## errored (8)
 
 | id | path | message |
 |---|---|---|
-| `121` | `121.dot` | Cannot read properties of undefined (reading 'info') |
 | `1308_1` | `1308_1.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "}" found. |
-| `1332` | `1332.dot` | Cannot read properties of undefined (reading 'head') |
+| `1332` | `1332.dot` | Cannot read properties of undefined (reading '5') |
 | `1474` | `1474.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "L" found. |
 | `1489` | `1489.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "�" found. |
 | `1494` | `1494.dot` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_0-9\x80-￿], [A-Za-z_\x80-￿], [Ee], [Gg], [Nn], [Ss], or edge operator but "," found. |
 | `1676` | `1676.dot` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_\x80-￿], [Ee], [Gg], [Nn], [Ss], or edge operator but "," found. |
 | `1767` | `1767.dot` | Cannot read properties of undefined (reading 'info') |
-| `2239` | `2239.dot` | Cannot read properties of undefined (reading 'info') |
-| `258` | `258.dot` | Cannot read properties of undefined (reading 'info') |
 | `graphs-b53` | `graphs/b53.gv` | Cannot read properties of undefined (reading 'head') |
-| `graphs-big` | `graphs/big.gv` | undirected edge operator '--' is not allowed in a digraph; use '->' |
-| `graphs-biglabel` | `graphs/biglabel.gv` | undirected edge operator '--' is not allowed in a digraph; use '->' |
 
-## timeout (9)
+## timeout (8)
 
 | id | path | message |
 |---|---|---|
 | `1221` | `1221.dot` |  |
 | `1718` | `1718.dot` |  |
-| `2095_1` | `2095_1.dot` |  |
 | `2108` | `2108.dot` |  |
 | `2222` | `2222.dot` |  |
 | `2471` | `2471.dot` |  |
@@ -125,7 +119,7 @@ _… and 228 more diverged inputs (see parity.json + the buckets below)._
 | `graphs-b100` | `graphs/b100.gv` |  |
 | `graphs-b104` | `graphs/b104.gv` |  |
 
-## oracle-error (15) — excluded from port scoring
+## oracle-error (16) — excluded from port scoring
 
 The native oracle did not emit a complete SVG (usually a hard syntax error
 it rejects entirely); there is no reference to compare against.
@@ -137,6 +131,7 @@ it rejects entirely); there is no reference to compare against.
 | `1783` | `1783.dot` | Error: overflow when calculating virtual weight of edge |
 | `1864` | `1864.dot` | oracle exit null |
 | `2064` | `2064.dot` | oracle exit null |
+| `2095_1` | `2095_1.dot` | oracle exit null |
 | `2343` | `2343.dot` | oracle exit null |
 | `2371` | `2371.dot` | oracle exit null |
 | `2475_1` | `2475_1.dot` | oracle exit null |
@@ -157,8 +152,8 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
 | `path-structure` | 182 | `1213-1`, `1213-2`, `1447` | edge path has a different command sequence or point count — spline routing structure |
-| `element-count` | 86 | `1323`, `1323_1`, `1367` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
-| `attr-or-tag` | 11 | `1453`, `1622_0`, `1880` | element tag or a non-coordinate attribute differs |
+| `element-count` | 89 | `1323`, `1323_1`, `1367` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
+| `attr-or-tag` | 13 | `121`, `1453`, `1622_0` | element tag or a non-coordinate attribute differs |
 | `text-content` | 7 | `graphs-Latin1`, `graphs-Symbol`, `graphs-b34` | rendered text string differs — label content, escaping, or character encoding |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
 | `color-stroke` | 1 | `2184` | fill/stroke value differs — color resolution or default styling |
@@ -168,7 +163,7 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
 | `parser-gap` | 5 | `1308_1`, `1474`, `1489` | peggy parser rejects DOT the native parser accepts — parser-gap backlog |
-| `undefined-info` | 4 | `121`, `1767`, `2239` | null/undefined access on .info during layout — unported field or invariant gap |
-| `undefined-head` | 2 | `1332`, `graphs-b53` | null/undefined access on .head during layout — unported field or invariant gap |
-| `undirected-edge-operator-is` | 2 | `graphs-big`, `graphs-biglabel` | port threw — see message; group for a focused fix |
+| `undefined-5` | 1 | `1332` | null/undefined access on .5 during layout — unported field or invariant gap |
+| `undefined-info` | 1 | `1767` | null/undefined access on .info during layout — unported field or invariant gap |
+| `undefined-head` | 1 | `graphs-b53` | null/undefined access on .head during layout — unported field or invariant gap |
 
