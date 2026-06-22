@@ -8,9 +8,13 @@
  */
 
 import type { Point } from '../model/geom.js';
+import type { ResolvedArrow } from './arrows-types.js';
 import {
   ARROW_NAMES_TABLE, ARROW_SYNONYMS, ARROW_MODS,
-  ARR_MOD_OPEN, ARR_MOD_LEFT, ARR_MOD_RIGHT,
+  ARR_MOD_OPEN, ARR_MOD_INV, ARR_MOD_LEFT, ARR_MOD_RIGHT,
+  ARR_TYPE_NORM, ARR_TYPE_CROW, ARR_TYPE_TEE, ARR_TYPE_BOX,
+  ARR_TYPE_DIAMOND, ARR_TYPE_DOT, ARR_TYPE_CURVE, ARR_TYPE_GAP,
+  ARR_TYPE_MASK, ARR_LENFACT_BY_TYPE,
 } from './arrows-constants.js';
 
 // ---------------------------------------------------------------------------
@@ -129,6 +133,59 @@ export function parseArrow(str: string): ArrowComponent[] {
   }
   if (result.length === 0) result.push({ name: 'normal', open: false, left: false, right: false });
   return result;
+}
+
+// ---------------------------------------------------------------------------
+// resolveArrowType — parsed component → dispatch info
+// @see lib/common/arrows.c:Arrownames, Arrowsynonyms, Arrowtypes
+// ---------------------------------------------------------------------------
+
+/**
+ * User-visible base name → full type flag (type code + ARR_MOD_INV where the
+ * name implies inversion). Mirrors Arrownames[]/Arrowsynonyms[], but keyed by
+ * the resolved user-facing names produced by {@link parseArrow} (e.g. 'open',
+ * 'empty', 'invempty') rather than the internal kludge fragments ('pen',
+ * 'mpty'). Open/left/right modifiers are tracked on the component itself, so
+ * only the type code and INV bit are encoded here.
+ *
+ * @see lib/common/arrows.c:Arrownames
+ */
+const NAME_TO_FLAG: ReadonlyMap<string, number> = new Map([
+  ['normal', ARR_TYPE_NORM],
+  ['crow', ARR_TYPE_CROW],
+  ['tee', ARR_TYPE_TEE],
+  ['box', ARR_TYPE_BOX],
+  ['diamond', ARR_TYPE_DIAMOND],
+  ['dot', ARR_TYPE_DOT],
+  ['none', ARR_TYPE_GAP],
+  ['inv', ARR_TYPE_NORM | ARR_MOD_INV],
+  ['vee', ARR_TYPE_CROW | ARR_MOD_INV],
+  ['open', ARR_TYPE_CROW | ARR_MOD_INV], // "pen" kludge: open == vee
+  ['empty', ARR_TYPE_NORM],              // "mpty" kludge: empty == open normal
+  ['curve', ARR_TYPE_CURVE],
+  ['icurve', ARR_TYPE_CURVE | ARR_MOD_INV],
+  ['invempty', ARR_TYPE_NORM | ARR_MOD_INV], // synonym (OPEN tracked on comp)
+]);
+
+/**
+ * Resolve a parsed arrow component to its dispatch info: ARR_TYPE_* code (with
+ * ARR_MOD_INV OR'd in for inv/vee/icurve), the open/side modifiers, and the
+ * type's length factor. An unknown name resolves to ARR_TYPE_NORM, matching the
+ * C default when no name fragment matches.
+ *
+ * @see lib/common/arrows.c:Arrowtypes (lenfact column)
+ */
+export function resolveArrowType(comp: ArrowComponent): ResolvedArrow {
+  const flag = NAME_TO_FLAG.get(comp.name) ?? ARR_TYPE_NORM;
+  const typeCode = flag & ARR_TYPE_MASK;
+  const inv = (flag & ARR_MOD_INV) !== 0;
+  return {
+    type: typeCode | (inv ? ARR_MOD_INV : 0),
+    open: comp.open,
+    left: comp.left,
+    right: comp.right,
+    lenfact: ARR_LENFACT_BY_TYPE[typeCode] ?? ARR_LENFACT_BY_TYPE[ARR_TYPE_NORM],
+  };
 }
 
 // ---------------------------------------------------------------------------

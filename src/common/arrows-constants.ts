@@ -50,6 +50,50 @@ export const ARR_TYPE_CURVE = 7;
 export const ARR_TYPE_GAP = 8;
 
 // ---------------------------------------------------------------------------
+// Per-type length factors (ratio of this arrow type's length to the standard
+// ARROW_LENGTH). @see lib/common/arrows.c:Arrowtypes (lenfact column)
+// ---------------------------------------------------------------------------
+
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_NORM lenfact */
+export const ARR_LENFACT_NORM = 1.0;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_CROW lenfact */
+export const ARR_LENFACT_CROW = 1.0;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_TEE lenfact */
+export const ARR_LENFACT_TEE = 0.5;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_BOX lenfact */
+export const ARR_LENFACT_BOX = 1.0;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_DIAMOND lenfact */
+export const ARR_LENFACT_DIAMOND = 1.2;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_DOT lenfact */
+export const ARR_LENFACT_DOT = 0.8;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_CURVE lenfact */
+export const ARR_LENFACT_CURVE = 1.0;
+/** @see lib/common/arrows.c:Arrowtypes ARR_TYPE_GAP lenfact */
+export const ARR_LENFACT_GAP = 0.5;
+
+/**
+ * Length factor indexed by ARR_TYPE_* code. ARR_TYPE_NONE (0) has no shape;
+ * it maps to 0 so a none-arrow contributes no clip length.
+ * @see lib/common/arrows.c:Arrowtypes
+ */
+export const ARR_LENFACT_BY_TYPE: readonly number[] = (() => {
+  const t: number[] = [];
+  t[ARR_TYPE_NONE] = 0;
+  t[ARR_TYPE_NORM] = ARR_LENFACT_NORM;
+  t[ARR_TYPE_CROW] = ARR_LENFACT_CROW;
+  t[ARR_TYPE_TEE] = ARR_LENFACT_TEE;
+  t[ARR_TYPE_BOX] = ARR_LENFACT_BOX;
+  t[ARR_TYPE_DIAMOND] = ARR_LENFACT_DIAMOND;
+  t[ARR_TYPE_DOT] = ARR_LENFACT_DOT;
+  t[ARR_TYPE_CURVE] = ARR_LENFACT_CURVE;
+  t[ARR_TYPE_GAP] = ARR_LENFACT_GAP;
+  return t;
+})();
+
+/** Mask selecting the type-code portion (low BITS_PER_ARROW_TYPE bits). */
+export const ARR_TYPE_MASK = (1 << BITS_PER_ARROW_TYPE) - 1;
+
+// ---------------------------------------------------------------------------
 // Arrow modifier flags (upper 4 bits of each arrow slot)
 // ---------------------------------------------------------------------------
 
