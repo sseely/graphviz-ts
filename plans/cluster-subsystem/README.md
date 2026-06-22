@@ -31,7 +31,7 @@ are also fixed. This mission lands all of them as one coherent change.
 |--------|------|-------|--------|
 | **A** membership | `markClusters` must `agdelete` already-claimed (foreign) nodes from a cluster's node set | all cluster graphs | **implemented** (branch, commit c923f1a) |
 | **B** skeleton count | `buildSkeletonEdgeCounts` fixed `rl=rankleader[ND_rank(v)]` not `rankleader[r]` | 1767 | **implemented** (c923f1a) |
-| **C** expansion | single-node leaf clusters never expanded → no `info.rank` → broken intercluster chain | 1332 | not started — `plans/cluster-expansion-recursion/` |
+| **C** expansion | `markClusterNode` agdeleted a foreign node from `clust.nodes` but left its incident edge in `clust.edges`; `agContainsEdge` then made `interclexp` skip a crossing edge, orphaning its chain (NOT "leaf clusters never expanded" — that was a symptom) | 1332 | **implemented** — `agDeleteFromCluster` mirrors C `agdelnode`; `plans/cluster-expansion-recursion/` |
 | **D** edge routing | faithful edge router has no cluster support; intra-cluster chain vnode gets corrupt rank (-183) | b53, 2825 | not started — `plans/cluster-edge-routing/` |
 | **D2** position | empty-cluster (post-agdelete) clobbers shared root rank via vStart aliasing → null `rank.v[0]` | 1221, 2721 | **implemented** (commit 99e17d3) — `removeEmptyClusters` in dotMincross |
 
@@ -72,7 +72,7 @@ native dot, revert C instrumentation + rebuild before finishing.
 |-------|--------|--------|
 | — | A + B (membership + skeleton) | [x] implemented (c923f1a, unmerged) |
 | 1 | D2 (position null v[0]) | [x] implemented (99e17d3) — 1221, 2721 render |
-| 2 | C (cluster expansion recursion) | [ ] |
+| 2 | C (cluster expansion recursion) | [x] implemented — `markClusterNode` agdelete edge cleanup; 1332 renders |
 | 3 | D (cluster-aware edge routing) | [ ] |
 | 4 | merge gate (parity 0-regression) + merge | [ ] |
 

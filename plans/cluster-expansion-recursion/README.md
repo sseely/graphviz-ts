@@ -177,11 +177,14 @@ Append non-trivial calls here during execution.
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-06-22 | brief created; C ground truth captured (native expands all 3 leaf clusters; port none); re-read `n_cluster` ruled out | hand-off to a fresh session to avoid context bloat |
+| 2026-06-22 | **brief hypothesis disproven; true root cause found.** The 3 leaf clusters miss `info.rank` only as a *consequence*: the mincross expansion loop crashes at an earlier sibling (clusterc5359, index 21) before reaching them (indices 22/23). Crash is `interclexp(clusterc5359)→mapPath` walking a broken virtual chain for edge `c0->c5359`. | instrumented port (collapse/expand/recursion/deleteFastEdge) + native C (map_path/interclexp/remove_rankleaders) |
+| 2026-06-22 | Root cause: `markClusterNode` deletes a foreign (first-cluster-wins) node from `clust.nodes` but NOT its incident edges from `clust.edges`. C's `agdelete`/`agdelnode` removes both. `clusterc0` is a root **sibling** of `cluster_6754` (source lines 9–10), but `node_induce` induces `c0->c5359` into `cluster_6754.edges`. After A's agdelete drops `c0` from the node set, the edge lingers → `agContainsEdge(cluster_6754, c0->c5359)`=true → `interclexp(cluster_6754)` skips it → chain through cluster_6754's rank-15 rankleader is never restored → `removeRankleaders` orphans it. | C `agcontains(cluster_6754, c0->c5359)`=0 (processes) vs port=true (skips); matches defect-A findings note "mirror agdelete's edge cleanup as C does" (omitted in impl) |
+| 2026-06-22 | Fix: `agDeleteFromCluster` mirrors `agdelnode` — drop the node AND its incident edges from the cluster's edge set. One commit + colocated unit test (fails without the fix). | minimal, in-scope (cluster.ts), faithful to C; 1332 renders, all 72 clusters get `info.rank`, 1767/1221/2721 unregressed, suite 2259 green |
 
 ## Status
 | Phase | Status |
 |-------|--------|
 | Instrument C expansion recursion vs port | [x] C expands all 3; port expands none |
-| Root-cause port registration/re-parenting timing | [ ] |
-| Fix | [ ] |
-| Verify (1332 renders) + suite green | [ ] |
+| Root-cause port registration/re-parenting timing | [x] disproven — real cause is `markClusterNode` not removing incident edges of agdeleted foreign nodes (`agContainsEdge` then skips a crossing edge in `interclexp`, orphaning its chain) |
+| Fix | [x] `agDeleteFromCluster` mirrors C `agdelnode` edge cleanup (cluster.ts) |
+| Verify (1332 renders) + suite green | [x] 1332 renders, 72/72 clusters get `info.rank`, 1767/1221/2721 render, typecheck 0, suite 2259, build 0 |

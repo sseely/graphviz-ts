@@ -239,15 +239,28 @@ export function markClustersVnodes(clust: Graph, n: Node): void {
  *
  * A node already claimed by an earlier cluster (or in a rankset) is REMOVED from
  * this cluster's node set — C does agdelete(clust, n) (first-cluster-wins).
- * agdelete removes from the subgraph only, not from root/ancestors, so this is a
- * direct clust.nodes.delete (NOT agdelnode, which walks up to root). Without it,
- * foreign nodes leak into the cluster and surface as out-of-[minrank,maxrank]
+ * cgraph agdelete on a subgraph removes the node from that subgraph only (not
+ * root/ancestors) AND deletes its incident edges from the subgraph (agdelnode).
+ * node_induce induces root edges whose endpoints are (transiently) cluster
+ * members into clust.edges, so deleting only the node leaves the edge behind:
+ * agContainsEdge() then still reports the edge internal and interclexp skips it,
+ * breaking the intercluster virtual chain (1332: c0->c5359 routed through
+ * cluster_6754's rankleader is never restored, so removeRankleaders orphans it).
+ * Without the node removal, foreign nodes also surface as out-of-[minrank,maxrank]
  * crashes in build_skeleton / contain_nodes.
  *
  * @see lib/dotgen/cluster.c:mark_clusters
  */
+export function agDeleteFromCluster(clust: Graph, n: Node): void {
+  clust.nodes.delete(n.name);
+  const edges = clust.edges;
+  for (let i = edges.length - 1; i >= 0; i--) {
+    if (edges[i].tail === n || edges[i].head === n) edges.splice(i, 1);
+  }
+}
+
 export function markClusterNode(clust: Graph, n: Node): void {
-  if ((n.info.ranktype ?? 0) !== 0) { clust.nodes.delete(n.name); return; }
+  if ((n.info.ranktype ?? 0) !== 0) { agDeleteFromCluster(clust, n); return; }
   ufSetname(n, clust.info.leader!);
   n.info.clust = clust;
   n.info.ranktype = CLUSTER;

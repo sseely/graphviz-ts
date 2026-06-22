@@ -10,7 +10,8 @@
 import { describe, it, expect } from 'vitest';
 import { Graph } from '../../model/graph.js';
 import { Node } from '../../model/node.js';
-import { markClusters } from './cluster.js';
+import { Edge } from '../../model/edge.js';
+import { markClusters, markClusterNode } from './cluster.js';
 import { CLUSTER } from './rank.js';
 import { parse } from '../../parser/index.js';
 import { renderSvg } from '../../index.js';
@@ -88,6 +89,34 @@ describe('markClusters — first-cluster-wins (C agdelete)', () => {
     expect(c0.nodes.has('shared')).toBe(true);
     expect(c1.nodes.has('shared')).toBe(false);
     expect(g.nodes.get('shared')!.info.clust).toBe(c0); // still in root, owned by c0
+  });
+});
+
+describe('markClusterNode — agdelete also drops incident edges (1332 defect C)', () => {
+  it('removes a foreign node AND its induced edge from the cluster edge set', () => {
+    // node_induce pulls a root edge whose endpoints are transient cluster
+    // members into clust.edges. When the node is later dropped (first-cluster-
+    // wins), C's agdelnode removes the incident edge too; node-only delete
+    // leaves the edge behind, so agContainsEdge() reports it internal and
+    // interclexp skips it, orphaning the intercluster chain (1332 mapPath crash).
+    const g = new Graph('root', 'directed');
+    const clust = new Graph('cluster1', 'directed');
+    clust.parent = g;
+    clust.root = g;
+    const foreign = new Node(0, 'a', g); // claimed by an earlier sibling cluster
+    const inside = new Node(1, 'b', g);
+    foreign.info.ranktype = CLUSTER;       // already claimed → must be dropped
+    const crossing = new Edge(foreign, inside, '');
+    clust.nodes.set('a', foreign);
+    clust.nodes.set('b', inside);
+    clust.edges.push(crossing);            // induced into the cluster edge set
+    clust.info.leader = inside;
+
+    markClusterNode(clust, foreign);
+
+    expect(clust.nodes.has('a')).toBe(false);
+    expect(clust.edges.includes(crossing)).toBe(false); // edge dropped with node
+    expect(clust.nodes.has('b')).toBe(true);            // owned node untouched
   });
 });
 
