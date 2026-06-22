@@ -66,6 +66,46 @@ describe('anonymous subgraphs get distinct names', () => {
   });
 });
 
+// cgraph names each anonymous object `%(2*counter+1)` from one parse-wide
+// counter advanced by: the unnamed root graph, every anonymous subgraph (at
+// open), and every keyless edge. The port must reproduce that numbering so
+// cluster <title>s match native (e.g. 2475_2: %3, %9, %17 …). Oracle values
+// confirmed against `dot -Tsvg` in plans/anon-subgraph-naming/probes.
+// @see lib/cgraph/id.c:idmap
+const anonKeys = (g: { subgraphs: Map<string, unknown> }) =>
+  [...g.subgraphs.keys()].filter((k) => k.startsWith('%'));
+
+describe('anonymous %N numbering matches cgraph', () => {
+  it('unnamed root consumes id 1 → first anon subgraph %3 (root,sg,edge)', () => {
+    expect(anonKeys(parse('strict digraph { subgraph {a->b} }'))).toEqual(['%3']);
+  });
+
+  it('named root does not advance the counter → first anon subgraph %1', () => {
+    expect(anonKeys(parse('strict digraph G { subgraph {a->b} }'))).toEqual(['%1']);
+  });
+
+  it('keyless edges advance the counter: sg1 %3, +1 edge → sg2 %7', () => {
+    expect(anonKeys(parse('strict digraph { subgraph {a->b} subgraph {c->d e->f} }')))
+      .toEqual(['%3', '%7']);
+  });
+
+  it('a multi-hop a->b->c counts as two edges → sg2 %9', () => {
+    expect(anonKeys(parse('strict digraph { subgraph {a->b->c} subgraph {d->e} }')))
+      .toEqual(['%3', '%9']);
+  });
+
+  it('nodes do not advance the counter → sg2 %5', () => {
+    expect(anonKeys(parse('strict digraph { subgraph {a} subgraph {b} }')))
+      .toEqual(['%3', '%5']);
+  });
+
+  it('a nested anon subgraph is numbered after preceding edges → %7', () => {
+    const g = parse('strict digraph { subgraph {a->b subgraph {c->d}} }');
+    expect(anonKeys(g)).toEqual(['%3']);
+    expect(anonKeys([...g.subgraphs.values()][0])).toEqual(['%7']);
+  });
+});
+
 // A `node [...]` default is snapshot onto each node at creation, in statement
 // order — from the declaring subgraph up to root. @see effectiveNodeDefaults
 describe('subgraph-scoped node-attribute defaults', () => {

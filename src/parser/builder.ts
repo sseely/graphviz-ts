@@ -126,10 +126,37 @@ export class NameCollector {
 
 /** Processes individual parsed statements into graph model objects. */
 export class StmtProcessor {
-  /** Sequence for naming anonymous subgraphs uniquely (cgraph's `%N`). */
-  private anonSeq = 0;
+  /**
+   * cgraph's anonymous-object id counter, shared across the whole parse. Every
+   * anonymous object — the unnamed root graph, each anonymous subgraph, and each
+   * keyless edge — consumes `id = 2*counter+1` in creation order and advances
+   * the counter; named objects (named graphs/subgraphs/nodes, keyed edges) get
+   * pointer-based even ids and do NOT advance it. The id is only materialized as
+   * a `%N` name for subgraphs (the sole anon objects that surface a `<title>` in
+   * SVG); edges and the root advance the counter silently so siblings get
+   * cgraph's exact numbering (e.g. 2475_2: %3, %9, %17 … as keyless edges fall
+   * between the cluster subgraphs).
+   * @see lib/cgraph/id.c:idmap (anon branch `*id = st->counter*2+1; ++counter`)
+   * @see lib/cgraph/id.c:agnameof (`'%' + id`)
+   */
+  private anonCounter = 0;
 
   constructor(private readonly registry: NodeRegistry) {}
+
+  /** Consume one anonymous id, returning cgraph's `2*counter+1`. */
+  private nextAnonId(): number {
+    return this.anonCounter++ * 2 + 1;
+  }
+
+  /**
+   * Advance the shared anon-id counter without materializing a name — the
+   * unnamed root graph and each keyless edge consume an id slot so later
+   * anonymous subgraphs land on cgraph's exact `%N`.
+   * @see lib/cgraph/id.c:idmap
+   */
+  advanceAnonId(): void {
+    this.anonCounter++;
+  }
 
   processAssign(stmt: AssignStmt, graph: Graph): void {
     graph.attrs.set(stmt.key, normaliseAttrValue(stmt.value));
@@ -177,9 +204,12 @@ export class StmtProcessor {
     // name would collide in graph.subgraphs (a Map), silently dropping all but
     // the last — e.g. `subgraph {…} subgraph {…}` losing the first and any
     // cluster nested in it (nestedclust: cluster_ss81). The `%` prefix is not a
-    // valid DOT identifier start, so it cannot clash with a user name.
-    // @see lib/cgraph/graph.c:agsubg (anonymous name generation)
-    const sgName = stmt.id ?? `%${this.anonSeq++}`;
+    // valid DOT identifier start, so it cannot clash with a user name. The id is
+    // cgraph's shared anonymous counter (2*counter+1), allocated when the
+    // subgraph opens (before its body), so keyless edges parsed earlier in the
+    // enclosing scope have already advanced it — matching native's %N exactly.
+    // @see lib/cgraph/graph.c:agsubg, lib/cgraph/id.c:idmap
+    const sgName = stmt.id ?? `%${this.nextAnonId()}`;
     const sg = new Graph(sgName, graph.kind);
     sg.parent = graph;
     sg.root = root;
@@ -234,12 +264,12 @@ export class StmtProcessor {
     root: Graph,
   ): void {
     // DOT-syntax ports land in tailport/headport attrs; explicit attrs win.
-    // @see lib/common/utils.c:common_init_edge (reads these via chkPort)
     const tailPort = portStringOf(tailItem);
     const headPort = portStringOf(headItem);
     for (const tail of this.resolveEndpoint(tailItem, root, graph)) {
       for (const head of this.resolveEndpoint(headItem, root, graph)) {
         const edge = new Edge(tail, head, '');
+        this.advanceAnonId(); // keyless edge = anonymous cgraph id (see method)
         applyAttrs(attrs, edge.attrs);
         this.snapshotEdgeDefaults(edge, graph);
         if (tailPort && !edge.attrs.has('tailport')) edge.attrs.set('tailport', tailPort);
@@ -283,6 +313,11 @@ export function buildFromAst(ast: ParsedGraph): Graph {
   else if (ast.strict) kind = 'strict-undirected';
   else kind = 'undirected';
   const graph = new Graph(ast.id ?? '', kind);
+  // An unnamed root graph is itself anonymous in cgraph (agopen with no name),
+  // consuming anon id 1 before any statement — so the first anonymous subgraph is
+  // %3, not %1 (a named root leaves the counter at 0 → first subgraph %1).
+  // @see lib/cgraph/graph.c:agopen, lib/cgraph/id.c:idmap
+  if (!ast.id) processor.advanceAnonId();
   buildGraph(ast.stmts, graph, graph, ast.directed, processor);
   return graph;
 }
