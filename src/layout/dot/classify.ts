@@ -15,6 +15,7 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
+import { buildOutEdgeIndex } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import {
   VIRTUAL,
@@ -400,9 +401,9 @@ function class2OneEdge(
   return class2EdgeSameRep(g, e);
 }
 
-function class2ProcessNodeEdges(g: Graph, n: Node): void {
+function class2ProcessNodeEdges(g: Graph, oes: Edge[]): void {
   let prev: Edge | undefined;
-  for (const e of n.outEdges(g)) {
+  for (const e of oes) {
     const next = class2OneEdge(g, e, prev);
     prev = next !== undefined ? next : prev;
   }
@@ -414,18 +415,23 @@ function incrWeightClass(n: Node): void {
 }
 
 function class2WeightClasses(g: Graph): void {
-  for (const n of g.nodes.values()) {
-    for (const e of n.outEdges(g)) {
-      incrWeightClass(e.head);
-      incrWeightClass(e.tail);
-    }
+  // weight_class counts incident edges per node (capped at 3); the count is
+  // order-independent, so one pass over g.edges replaces the O(N·E) per-node
+  // outEdges walk. Self-loops bump tail and head (same node) twice, as before.
+  for (const e of g.edges) {
+    incrWeightClass(e.head);
+    incrWeightClass(e.tail);
   }
 }
 
 function class2ProcessNodes(g: Graph): void {
+  // class2 reads original out-edges in sorted order (prev-chaining is order-
+  // sensitive) but only writes the fast/virtual graph, never g.edges — so a
+  // single out-edge index is safe and replaces O(N·E) outEdges calls.
+  const outIdx = buildOutEdgeIndex(g);
   for (const n of g.nodes.values()) {
     if (n.info.clust === undefined && n === ufFind(n)) fastNode(g, n);
-    class2ProcessNodeEdges(g, n);
+    class2ProcessNodeEdges(g, outIdx.get(n) ?? []);
   }
 }
 

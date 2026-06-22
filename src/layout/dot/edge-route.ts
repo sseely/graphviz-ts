@@ -15,6 +15,7 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { Edge as GraphEdge } from '../../model/edge.js';
+import { buildOutEdgeIndex } from '../../model/node.js';
 import type { Point } from '../../model/geom.js';
 import type { NodeBox } from './edge-route-geom.js';
 import type { PortRoute } from './edge-route-routing.js';
@@ -374,8 +375,12 @@ function routeForwardEdge(
  * @see lib/dotgen/dotsplines.c:dot_splines_
  */
 export function routeDotEdges(g: Graph): void {
+  // One out-edge index instead of n.outEdges(g) per node (O(N·E) → O(E log E));
+  // routing only writes per-edge splines, never g.edges, and the index keeps
+  // outEdges' sorted order so spline output is unchanged.
+  const outIdx = buildOutEdgeIndex(g);
   for (const n of g.nodes.values()) {
-    for (const e of n.outEdges(g)) {
+    for (const e of outIdx.get(n) ?? []) {
       if (e.info.spl !== undefined) continue;
       if (e.tail === e.head) continue;
       if (!hasValidCoords(e)) continue;

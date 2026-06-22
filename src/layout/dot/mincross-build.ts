@@ -51,15 +51,19 @@ export function allocateRanksCount(g: Graph, cn: number[]): void {
   // construction, so they contribute nothing to intermediate-rank counts.
   // Real edges carry the original tail→head rank span (e.g. minlen=2 makes
   // A.rank=0, B.rank=2 → intermediate rank 1 needs a slot).
+  // Per-node rank tally, then per-edge intermediate-rank spans. The edge pass
+  // is a pure count, independent of per-node edge order, so iterate g.edges once
+  // (O(N+E)) rather than n.outEdges(g) per node (O(N·E)). Self-loops have
+  // lo==hi and contribute nothing — matching the original outEdges walk.
   for (const n of g.nodes.values()) {
     const r = n.info.rank !== undefined ? n.info.rank : 0;
     cn[r]++;
-    for (const e of n.outEdges(g)) {
-      let lo = e.tail.info.rank !== undefined ? e.tail.info.rank : 0;
-      let hi = e.head.info.rank !== undefined ? e.head.info.rank : 0;
-      if (lo > hi) { const tmp = lo; lo = hi; hi = tmp; }
-      for (let r2 = lo + 1; r2 < hi; r2++) cn[r2]++;
-    }
+  }
+  for (const e of g.edges) {
+    let lo = e.tail.info.rank !== undefined ? e.tail.info.rank : 0;
+    let hi = e.head.info.rank !== undefined ? e.head.info.rank : 0;
+    if (lo > hi) { const tmp = lo; lo = hi; hi = tmp; }
+    for (let r2 = lo + 1; r2 < hi; r2++) cn[r2]++;
   }
 }
 

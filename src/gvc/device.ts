@@ -14,6 +14,7 @@
 import type { Point } from '../model/geom.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
+import { buildOutEdgeIndex } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
@@ -287,9 +288,13 @@ function edgeShown(info: LayerInfo | undefined, job: RenderJob, e: Edge): boolea
 
 export function walkNodesAndEdges(g: Graph, renderer: RendererPlugin, job: RenderJob, info?: LayerInfo): void {
   const done = new Set<Node>();
+  // One out-edge index instead of n.outEdges(g) per node (O(N·E) → O(E log E));
+  // emission only writes the render device, never g.edges, and the index keeps
+  // outEdges' sorted order so element emission order is unchanged.
+  const outIdx = buildOutEdgeIndex(g);
   for (const n of g.nodes.values()) {
     if (nodeShown(info, job, n, g)) renderNode(n, renderer, job, done);
-    for (const e of n.outEdges(g)) {
+    for (const e of outIdx.get(n) ?? []) {
       if (nodeShown(info, job, e.head, g)) renderNode(e.head, renderer, job, done);
       if (edgeShown(info, job, e)) renderEdge(e, renderer, job);
     }
