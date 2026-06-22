@@ -115,10 +115,14 @@ Oracle: native dot 15.1.0 at `~/git/graphviz/build/cmd/dot/dot`,
 - **Batch 2 (C+D): deeper than estimated** — both root-found and confirmed to be
   cluster-infrastructure sub-missions, not localized batches.
 
-## Final status (2026-06-22)
-- **Batch 1 (A+B) shipped** → 1767.dot fixed. Merged to main.
-- **Batch 2 paused + split into two follow-on missions** (user decision):
-  - `plans/cluster-edge-routing/` — defect D (b53, cluster-aware edge routing).
-  - `plans/cluster-expansion-recursion/` — defect C (1332, expand single-node
-    leaf clusters).
-  Both seeded with the exact findings here so they don't start cold.
+## Final status (2026-06-22) — superseded by the unified cluster mission
+- **Batch 1 (A+B) implemented but NOT merged.** A parity survey showed it is a
+  **net regression**: it fixes 1767 but the load-bearing membership fix exposes
+  downstream cluster defects in graphs that previously rendered —
+  `2825` diverged→errored, `1221`/`2721` timeout→errored (errored 8→10).
+- **Decision (user): unify.** Membership can't ship alone; all cluster defects
+  land together under **`plans/cluster-subsystem/`** (the single mission), which
+  gates merge on parity 0-regression. The A+B code stays unmerged on
+  `feature/cluster-membership-fix`. The two follow-on briefs
+  (`cluster-edge-routing/`, `cluster-expansion-recursion/`) are now sub-refs of
+  it; a new defect D2 (position null `v[0]`, 1221/2721) is added.

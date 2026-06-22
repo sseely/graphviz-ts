@@ -1,10 +1,14 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: cluster-edge-routing — cluster-aware faithful edge routing (defect D)
 
+> **Now a sub-reference of the unified `plans/cluster-subsystem/` mission.**
+> Defect D cannot merge alone — the membership fix it depends on is load-bearing
+> and exposes other defects; everything lands together under cluster-subsystem.
+
 ## Type: fix (investigation-led)
 
 Spun out of `cluster-membership-fix` Batch 2 (2026-06-22). Fixes **graphs/b53.gv**
-(and likely other cluster graphs once they reach edge routing).
+and **2825.dot** (and likely other cluster graphs once they reach edge routing).
 
 ## Why this exists
 

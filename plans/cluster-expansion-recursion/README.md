@@ -1,6 +1,10 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: cluster-expansion-recursion — expand single-node leaf clusters (defect C)
 
+> **Now a sub-reference of the unified `plans/cluster-subsystem/` mission.**
+> Defect C lands together with membership (A/B), edge routing (D), and position
+> (D2) — they are interdependent and gate merge on parity 0-regression.
+
 ## Type: fix (investigation-led)
 
 Spun out of `cluster-membership-fix` Batch 2 (2026-06-22). Fixes **1332.dot**.
