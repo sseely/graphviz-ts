@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-22T17:59:58.012Z",
+  "generatedAt": "2026-06-22T18:07:07.216Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
     "byte-match": 251,
-    "structural-match": 227,
-    "diverged": 291,
+    "structural-match": 228,
+    "diverged": 290,
     "errored": 5,
     "timeout": 6,
     "oracle-error": 16
@@ -1109,9 +1109,8 @@
     {
       "id": "graphs-Symbol",
       "path": "graphs/Symbol.gv",
-      "verdict": "diverged",
-      "maxDelta": 1227,
-      "firstDiffPath": "svg/g[1]/g[1]/text[1]/text()[1]"
+      "verdict": "structural-match",
+      "maxDelta": 62.980000000000004
     },
     {
       "id": "graphs-Times",

@@ -14,6 +14,7 @@ import type { TextMeasurer, TextSize } from './textmeasure.js';
 import type { TextSpan } from './emit-types.js';
 import { makeHtmlLabel } from './htmltable-pos.js';
 import { substObj, type GraphObj } from './subst.js';
+import { HTML_ENTITIES } from './html-entities.js';
 
 export const DEFAULT_FONTSIZE = 14.0;
 export const DEFAULT_FONTNAME = 'Times,serif';
@@ -24,24 +25,28 @@ const BASIC_ENTITIES: Readonly<Record<string, number>> = {
   amp: 0x26, lt: 0x3c, gt: 0x3e, quot: 0x22, apos: 0x27,
 };
 
-/** Decode one entity body (`amp`, `#123`, `#x1F`) to its code point, or null. */
-function entityValue(body: string): number | null {
-  if (body[0] === '#') {
-    const v = body[1] === 'x' || body[1] === 'X'
-      ? parseInt(body.slice(2), 16)
-      : parseInt(body.slice(1), 10);
-    return Number.isFinite(v) && v > 0 && v <= 0x10ffff ? v : null;
-  }
-  const v = BASIC_ENTITIES[body];
-  return v ?? null;
+/** Decode a numeric entity body (`#123`, `#x1F`) to its code point, or null. */
+function numericEntityValue(body: string): number | null {
+  const hex = body[1] === 'x' || body[1] === 'X';
+  const v = hex ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
+  return Number.isFinite(v) && v > 0 && v <= 0x10ffff ? v : null;
 }
 
 /**
- * Decode the five basic XML entities and numeric entities (&#NNN; / &#xHH;) to
- * their characters, leaving unrecognized entities (e.g. named HTML like
- * `&alpha;`) literal. This is the UTF-8 (non-latin1) branch of C's make_label.
- * The full named-entity table and the latin1 branch are deferred (Symbol /
- * charset cases are deep).
+ * Decode one entity body (`amp`, `alpha`, `#123`, `#x1F`) to its code point, or
+ * null for an unknown name. Named entities cover the five basic XML entities
+ * plus the full HTML 4 table (Symbol etc.). @see lib/common/utils.c:htmlEntity
+ */
+function entityValue(body: string): number | null {
+  if (body[0] === '#') return numericEntityValue(body);
+  return BASIC_ENTITIES[body] ?? HTML_ENTITIES[body] ?? null;
+}
+
+/**
+ * Decode XML/numeric (&#NNN; / &#xHH;) and HTML 4 named (`&alpha;`) entities to
+ * their characters, leaving unknown names literal — C's make_label UTF-8 branch.
+ * Latin-1 inputs are decoded at the byte->string boundary by the caller (the
+ * survey's render-one), so this UTF-8 branch covers them too.
  * @see lib/common/utils.c:htmlEntityUTF8 / htmlEntity
  * @see lib/common/labels.c:make_label (CHAR_LATIN1 vs default)
  */

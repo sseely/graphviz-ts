@@ -11,8 +11,8 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 796
-- **byte-match:** 251 · **structural-match:** 227 → 478/796 structurally equal (60.1%)
-- **diverged:** 291 · **errored:** 5 · **timeout:** 6 · **oracle-error:** 16
+- **byte-match:** 251 · **structural-match:** 228 → 479/796 structurally equal (60.2%)
+- **diverged:** 290 · **errored:** 5 · **timeout:** 6 · **oracle-error:** 16
 - **Quarantined (not surveyed, from corpus-manifest.json):** engine-deferred 6, multi-graph 3
 
 ## byte-match (251)
@@ -21,12 +21,12 @@ Port SVG matches the oracle within the `deterministic` tolerance (0.01).
 
 `1221` `1408` `1425` `1425_1` `1444-2` `1444` `1585_0` `1585_1` `165` `165_2` `165_3` `1702` `1865` `1879-2` `1909` `1925` `2168` `2168_2` `2168_3` `2168_4` `2168_5` `2225` `2257` `2285` `2295` `2325` `2342` `2352` `2352_1` `2352_2` `2391` `2391_1` `2406` `241_0` `2436` `2457_1` `2457_2` `2460` `2484` `2490` `2497` `2563` `2564` `2572` `2609` `2614` `2619` `2636` `2636_1` `2636_2` `2639` `2699` `2721` `2727` `2743` `2801` `813` `graphs-a` `graphs-b123` `graphs-b146` `graphs-b155` `graphs-b22` `graphs-b3` `graphs-b491` `graphs-b73` `graphs-b73a` `graphs-b76` `graphs-b77` `graphs-b786` `graphs-b993` `graphs-bad` `graphs-center` `graphs-clover` `graphs-clustlabel` `graphs-color` `graphs-colors` `graphs-colorscheme` `graphs-d` `graphs-dir` `graphs-edgeclip` `graphs-grdangles` `graphs-grdcluster` `graphs-grdcolors` `graphs-grdlinear_node` `graphs-grdradial_node` `graphs-grdshapes` `graphs-jcctree` `graphs-labelclust-fbc` `graphs-labelclust-fbd` `graphs-labelclust-fdc` `graphs-labelclust-fdd` `graphs-labelclust-ftc` `graphs-labelclust-ftd` `graphs-labelclust-nbc` `graphs-labelclust-nbd` `graphs-labelclust-ndc` `graphs-labelclust-ndd` `graphs-labelclust-ntc` `graphs-labelclust-ntd` `graphs-labelroot-fbc` `graphs-labelroot-fbd` `graphs-labelroot-fdc` `graphs-labelroot-fdd` `graphs-labelroot-ftc` `graphs-labelroot-ftd` `graphs-labelroot-nbc` `graphs-labelroot-nbd` `graphs-labelroot-ndc` `graphs-labelroot-ndd` `graphs-labelroot-ntc` `graphs-labelroot-ntd` `graphs-layer` `graphs-layer2` `graphs-layers` `graphs-ordering` `graphs-p2` `graphs-pack` `graphs-ps` `graphs-ps_user_shapes` `graphs-rootlabel` `graphs-rowcolsep` `graphs-shapes` `graphs-sides` `graphs-sr_circle` `graphs-tree` `graphs-trivial` `linux.i386-trivial_dot` `linux.x86-edgeclip_dot` `linux.x86-ordering_dot` `linux.x86-pack_neato` `linux.x86-shapes_dot` `linux.x86-trivial_dot` `macosx-edgeclip_dot` `macosx-ordering_dot` `macosx-trivial_dot` `negative-dpi` `nshare-edgeclip_dot` `nshare-ordering_dot` `nshare-pack_neato` `nshare-shapes_dot` `nshare-trivial_dot` `reference-test_reference-001.001` `regression_tests-shapes-reference-Mcircle` `regression_tests-shapes-reference-Mdiamond` `regression_tests-shapes-reference-Msquare` `regression_tests-shapes-reference-assembly` `regression_tests-shapes-reference-box` `regression_tests-shapes-reference-box3d` `regression_tests-shapes-reference-cds` `regression_tests-shapes-reference-circle` `regression_tests-shapes-reference-component` `regression_tests-shapes-reference-cylinder` `regression_tests-shapes-reference-diamond` `regression_tests-shapes-reference-doublecircle` `regression_tests-shapes-reference-doubleoctagon` `regression_tests-shapes-reference-egg` `regression_tests-shapes-reference-ellipse` `regression_tests-shapes-reference-fivepoverhang` `regression_tests-shapes-reference-folder` `regression_tests-shapes-reference-hexagon` `regression_tests-shapes-reference-house` `regression_tests-shapes-reference-insulator` `regression_tests-shapes-reference-invhouse` `regression_tests-shapes-reference-invtrapezium` `regression_tests-shapes-reference-invtriangle` `regression_tests-shapes-reference-larrow` `regression_tests-shapes-reference-lpromoter` `regression_tests-shapes-reference-none` `regression_tests-shapes-reference-note` `regression_tests-shapes-reference-noverhang` `regression_tests-shapes-reference-octagon` `regression_tests-shapes-reference-oval` `regression_tests-shapes-reference-parallelogram` `regression_tests-shapes-reference-pentagon` `regression_tests-shapes-reference-plaintext` `regression_tests-shapes-reference-point` `regression_tests-shapes-reference-polygon` `regression_tests-shapes-reference-primersite` `regression_tests-shapes-reference-promoter` `regression_tests-shapes-reference-proteasesite` `regression_tests-shapes-reference-proteinstab` `regression_tests-shapes-reference-rarrow` `regression_tests-shapes-reference-rect` `regression_tests-shapes-reference-rectangle` `regression_tests-shapes-reference-restrictionsite` `regression_tests-shapes-reference-ribosite` `regression_tests-shapes-reference-rnastab` `regression_tests-shapes-reference-rpromoter` `regression_tests-shapes-reference-septagon` `regression_tests-shapes-reference-signature` `regression_tests-shapes-reference-square` `regression_tests-shapes-reference-tab` `regression_tests-shapes-reference-terminator` `regression_tests-shapes-reference-threepoverhang` `regression_tests-shapes-reference-trapezium` `regression_tests-shapes-reference-triangle` `regression_tests-shapes-reference-tripleoctagon` `regression_tests-shapes-reference-underline` `regression_tests-shapes-reference-utr` `share-a1` `share-a2` `share-a3` `share-b491` `share-b786` `share-jcctree` `share-labelclust-fbc` `share-labelclust-fbd` `share-labelclust-fdc` `share-labelclust-fdd` `share-labelclust-ftc` `share-labelclust-ftd` `share-labelclust-nbc` `share-labelclust-nbd` `share-labelclust-ndc` `share-labelclust-ndd` `share-labelclust-ntc` `share-labelclust-ntd` `share-labelroot-fdc` `share-labelroot-fdd` `share-labelroot-ftc` `share-labelroot-ftd` `share-labelroot-ndc` `share-labelroot-ndd` `share-labelroot-ntc` `share-labelroot-ntd` `share-record2` `usershape` `windows-b491` `windows-jcctree` `windows-labelclust-fbc` `windows-labelclust-fbd` `windows-labelclust-fdc` `windows-labelclust-fdd` `windows-labelclust-ftc` `windows-labelclust-ftd` `windows-labelclust-nbc` `windows-labelclust-nbd` `windows-labelclust-ndc` `windows-labelclust-ndd` `windows-labelclust-ntc` `windows-labelclust-ntd` `windows-labelroot-fdc` `windows-labelroot-fdd` `windows-labelroot-ftc` `windows-labelroot-ftd` `windows-labelroot-ndc` `windows-labelroot-ndd` `windows-labelroot-ntc` `windows-labelroot-ntd` `windows-record2` `windows-trivial_dot`
 
-## structural-match (227)
+## structural-match (228)
 
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). These are near-misses — sub-pixel-to-modest position drift.
 
-## diverged (291) — worst-first
+## diverged (290) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
@@ -89,9 +89,9 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `windows-crazy` | 1251.00 | `svg/g[1][childCount]` |
 | `share-crazy` | 1243.00 | `svg/g[1][childCount]` |
 | `linux.i386-crazy` | 1240.00 | `svg/g[1][childCount]` |
-| `graphs-Symbol` | 1227.00 | `svg/g[1]/g[1]/text[1]/text()[1]` |
+| `graphs-b106` | 1193.64 | `svg/g[1]/g[10]/path[1]/@d` |
 
-_… and 231 more diverged inputs (see parity.json + the buckets below)._
+_… and 230 more diverged inputs (see parity.json + the buckets below)._
 
 ## errored (5)
 
@@ -151,7 +151,6 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 | `attr-or-tag` | 14 | `121`, `1332`, `1453` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
 | `color-stroke` | 1 | `2184` | fill/stroke value differs — color resolution or default styling |
-| `text-content` | 1 | `graphs-Symbol` | rendered text string differs — label content, escaping, or character encoding |
 
 ### errored — by thrown message
 

@@ -170,8 +170,12 @@ describe('htmlEntityUTF8', () => {
     expect(htmlEntityUTF8('&#65;&#x42;')).toBe('AB');
   });
 
-  it('leaves unrecognized named entities literal', () => {
-    expect(htmlEntityUTF8('&alpha; x')).toBe('&alpha; x');
+  it('decodes HTML 4 named entities (Symbol/Greek, copyright)', () => {
+    expect(htmlEntityUTF8('&alpha;&beta;&omega; &copy;')).toBe('αβω ©');
+  });
+
+  it('leaves genuinely unknown named entities literal', () => {
+    expect(htmlEntityUTF8('&notarealentity; x')).toBe('&notarealentity; x');
   });
 
   it('returns the input unchanged when there is no &', () => {
