@@ -116,3 +116,23 @@ export class Node {
       .sort((a, b) => (a.tail.id - b.tail.id) || (a.seq - b.seq));
   }
 }
+
+/**
+ * Build a tail→out-edges index for graph `g`. Each list is byte-identical to
+ * `node.outEdges(g)` (tail === node, self-loops included, sorted by head.id then
+ * seq), but the whole index is O(E log E) instead of O(N·E log E) from calling
+ * outEdges once per node. Use at sites that loop every node's out-edges and do
+ * not mutate `g.edges` during the loop. @see Node.outEdges
+ */
+export function buildOutEdgeIndex(g: Graph): Map<Node, Edge[]> {
+  const m = new Map<Node, Edge[]>();
+  for (const e of g.edges) {
+    const l = m.get(e.tail);
+    if (l !== undefined) l.push(e);
+    else m.set(e.tail, [e]);
+  }
+  for (const l of m.values()) {
+    l.sort((a, b) => (a.head.id - b.head.id) || (a.seq - b.seq));
+  }
+  return m;
+}

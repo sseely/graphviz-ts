@@ -389,12 +389,31 @@ export function installCluster(g: Graph, n: Node, pass: number, q: Node[]): numb
 // mark_lowclusters — @see lib/dotgen/cluster.c:mark_lowclusters
 // ---------------------------------------------------------------------------
 
+/**
+ * Group a graph's edges by tail node, preserving edge order within each tail
+ * (so the virtual-chain assignment order matches C's agfstout/agnxtout walk).
+ * Built once per pass so the node×edge scans below are O(E), not O(N·E) — C
+ * iterates each node's out-edges via the adjacency list, never the whole edge
+ * set per node. @see lib/cgraph/edge.c:agfstout
+ */
+function outEdgesByTail(edges: Edge[]): Map<Node, Edge[]> {
+  const m = new Map<Node, Edge[]>();
+  for (const e of edges) {
+    const l = m.get(e.tail);
+    if (l !== undefined) l.push(e);
+    else m.set(e.tail, [e]);
+  }
+  return m;
+}
+
 /** @see lib/dotgen/cluster.c:mark_lowclusters (clear pass) */
 export function markLowclustersZap(root: Graph): void {
+  const outByTail = outEdgesByTail(root.edges);
   for (const n of root.nodes.values()) {
     n.info.clust = undefined;
-    for (const orig of root.edges) {
-      if (orig.tail !== n) continue;
+    const oes = outByTail.get(n);
+    if (oes === undefined) continue;
+    for (const orig of oes) {
       let e: Edge | undefined = orig.info.to_virt;
       while (e !== undefined && e.head.info.node_type === VIRTUAL) {
         e.head.info.clust = undefined;
@@ -417,12 +436,12 @@ export function markLowclusterChain(orig: Edge, g: Graph): void {
 export function markLowclusterBasic(g: Graph): void {
   const nClust = g.info.n_cluster ?? 0;
   for (let c = 1; c <= nClust; c++) markLowclusterBasic(g.info.clust![c - 1]);
+  const outByTail = outEdgesByTail(g.edges);
   for (const n of g.nodes.values()) {
     if (n.info.clust === undefined) n.info.clust = g;
-    for (const orig of g.edges) {
-      if (orig.tail !== n) continue;
-      markLowclusterChain(orig, g);
-    }
+    const oes = outByTail.get(n);
+    if (oes === undefined) continue;
+    for (const orig of oes) markLowclusterChain(orig, g);
   }
 }
 
