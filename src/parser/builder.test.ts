@@ -47,6 +47,25 @@ describe('edge port/compass → tailport/headport attrs', () => {
   });
 });
 
+// cgraph names anonymous subgraphs `%N` so siblings stay distinct. An empty
+// name collides in graph.subgraphs (a Map), dropping all but the last — losing
+// a cluster nested in an earlier anonymous block (nestedclust: cluster_ss81).
+describe('anonymous subgraphs get distinct names', () => {
+  it('keeps two sibling anonymous subgraphs (and their nested clusters)', () => {
+    const g = parse('digraph{subgraph{e->f subgraph cluster_a{a}} subgraph{subgraph cluster_b{b}}}');
+    expect(g.subgraphs.size).toBe(2);
+    const sgs = [...g.subgraphs.values()];
+    const nested = sgs.flatMap((s) => [...s.subgraphs.keys()]).sort();
+    expect(nested).toEqual(['cluster_a', 'cluster_b']);
+  });
+
+  it('does not collide an anonymous subgraph with a named one', () => {
+    const g = parse('digraph{subgraph{x} subgraph cluster_n{n}}');
+    expect(g.subgraphs.size).toBe(2);
+    expect(g.subgraphs.has('cluster_n')).toBe(true);
+  });
+});
+
 // A `node [...]` default is snapshot onto each node at creation, in statement
 // order — from the declaring subgraph up to root. @see effectiveNodeDefaults
 describe('subgraph-scoped node-attribute defaults', () => {

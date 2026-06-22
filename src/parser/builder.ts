@@ -126,6 +126,9 @@ export class NameCollector {
 
 /** Processes individual parsed statements into graph model objects. */
 export class StmtProcessor {
+  /** Sequence for naming anonymous subgraphs uniquely (cgraph's `%N`). */
+  private anonSeq = 0;
+
   constructor(private readonly registry: NodeRegistry) {}
 
   processAssign(stmt: AssignStmt, graph: Graph): void {
@@ -170,7 +173,13 @@ export class StmtProcessor {
     root: Graph,
     directed: boolean,
   ): void {
-    const sgName = stmt.id ?? '';
+    // cgraph names anonymous subgraphs `%N` so siblings stay distinct; an empty
+    // name would collide in graph.subgraphs (a Map), silently dropping all but
+    // the last — e.g. `subgraph {…} subgraph {…}` losing the first and any
+    // cluster nested in it (nestedclust: cluster_ss81). The `%` prefix is not a
+    // valid DOT identifier start, so it cannot clash with a user name.
+    // @see lib/cgraph/graph.c:agsubg (anonymous name generation)
+    const sgName = stmt.id ?? `%${this.anonSeq++}`;
     const sg = new Graph(sgName, graph.kind);
     sg.parent = graph;
     sg.root = root;
