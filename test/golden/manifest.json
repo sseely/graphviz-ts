@@ -1178,5 +1178,69 @@
     "input": "test/golden/inputs/dot-unicode-name.dot",
     "reference": "test/golden/refs/dot-unicode-name.svg",
     "description": "non-Latin (Cyrillic) node names parse via the widened NAME char class (\\x80–\\uFFFF, matching scan.l's byte>=0x80); fixedsize pins geometry; byte-matches the oracle (parity parser-gap graphs-russian)"
+  },
+  {
+    "id": "dot-arrow-dot",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-dot.dot",
+    "reference": "test/golden/refs/dot-arrow-dot.svg",
+    "description": "dir=both odot head + dot tail → two <ellipse> arrows (filled tail, open head); byte-matches the oracle (arrowhead-geometry G1)"
+  },
+  {
+    "id": "dot-arrow-crow",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-crow.dot",
+    "reference": "test/golden/refs/dot-arrow-crow.svg",
+    "description": "dir=both crow head + vee tail → 9-point arrow polygons; byte-matches the oracle (arrowhead-geometry G2)"
+  },
+  {
+    "id": "dot-arrow-box",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-box.dot",
+    "reference": "test/golden/refs/dot-arrow-box.svg",
+    "description": "dir=both box head + obox tail → polygon(4)+polyline, filled vs open; byte-matches the oracle"
+  },
+  {
+    "id": "dot-arrow-diamond",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-diamond.dot",
+    "reference": "test/golden/refs/dot-arrow-diamond.svg",
+    "description": "dir=both diamond head + ediamond (open) tail → 4-point polygons; byte-matches the oracle"
+  },
+  {
+    "id": "dot-arrow-tee",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-tee.dot",
+    "reference": "test/golden/refs/dot-arrow-tee.svg",
+    "description": "dir=both tee arrows → polygon(4)+polyline bar; byte-matches the oracle"
+  },
+  {
+    "id": "dot-arrow-curve",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-curve.dot",
+    "reference": "test/golden/refs/dot-arrow-curve.svg",
+    "description": "dir=both curve head + icurve tail → polyline shaft + concave Bézier <path>; byte-matches the oracle"
+  },
+  {
+    "id": "dot-arrow-compound",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-compound.dot",
+    "reference": "test/golden/refs/dot-arrow-compound.svg",
+    "description": "dir=both crowdot head + odotnormal tail → stacked compound arrows (polygon+ellipse) offset along the shaft; byte-matches the oracle"
+  },
+  {
+    "id": "dot-arrow-side",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-arrow-side.dot",
+    "reference": "test/golden/refs/dot-arrow-side.svg",
+    "description": "dir=both lnormal head + rdiamond tail → side-modifier half arrows; byte-matches the oracle"
   }
 ]
