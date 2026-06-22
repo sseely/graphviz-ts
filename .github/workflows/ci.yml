@@ -17,3 +17,18 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+
+  # Non-blocking early-warning: type-checks with the TS7 native preview (tsgo).
+  # Allowed to fail so it surfaces TS7 incompatibilities on every PR without
+  # gating merges. When it goes red, address before TS7 GA. See package.json
+  # typecheck:ts7.
+  ts7-readiness:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26'
+      - run: npm ci
+      - run: npm run typecheck:ts7
