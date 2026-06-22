@@ -228,6 +228,32 @@ export function markClustersVnodes(clust: Graph, n: Node): void {
   }
 }
 
+/**
+ * mark_clusters per-node: claim `n` for `clust`, or drop it if already claimed.
+ *
+ * C's ND_ranktype is a calloc-zeroed char defaulting to NORMAL(==0) (const.h:24,
+ * types.h:448); the guard is `!= NORMAL` (cluster.c:317). TS NodeInfo.ranktype is
+ * optional (undefined by default), so coerce undefined→0 — else every untouched
+ * NORMAL node is wrongly skipped and never receives ND_clust, breaking
+ * cross-cluster rank=same under newrank.
+ *
+ * A node already claimed by an earlier cluster (or in a rankset) is REMOVED from
+ * this cluster's node set — C does agdelete(clust, n) (first-cluster-wins).
+ * agdelete removes from the subgraph only, not from root/ancestors, so this is a
+ * direct clust.nodes.delete (NOT agdelnode, which walks up to root). Without it,
+ * foreign nodes leak into the cluster and surface as out-of-[minrank,maxrank]
+ * crashes in build_skeleton / contain_nodes.
+ *
+ * @see lib/dotgen/cluster.c:mark_clusters
+ */
+export function markClusterNode(clust: Graph, n: Node): void {
+  if ((n.info.ranktype ?? 0) !== 0) { clust.nodes.delete(n.name); return; }
+  ufSetname(n, clust.info.leader!);
+  n.info.clust = clust;
+  n.info.ranktype = CLUSTER;
+  markClustersVnodes(clust, n);
+}
+
 /** @see lib/dotgen/cluster.c:mark_clusters */
 export function markClusters(g: Graph): void {
   for (const n of g.nodes.values()) {
@@ -237,18 +263,8 @@ export function markClusters(g: Graph): void {
   const nClust = g.info.n_cluster ?? 0;
   for (let c = 1; c <= nClust; c++) {
     const clust = g.info.clust![c - 1];
-    for (const n of clust.nodes.values()) {
-      // C's ND_ranktype is a calloc-zeroed char defaulting to NORMAL(==0)
-      // (const.h:24, types.h:448); the guard is `!= NORMAL` (cluster.c:317).
-      // TS NodeInfo.ranktype is optional (undefined by default), so coerce
-      // undefined→0 — else every untouched NORMAL node is wrongly skipped and
-      // never receives ND_clust, breaking cross-cluster rank=same under newrank.
-      if ((n.info.ranktype ?? 0) !== 0) continue;
-      ufSetname(n, clust.info.leader!);
-      n.info.clust = clust;
-      n.info.ranktype = CLUSTER;
-      markClustersVnodes(clust, n);
-    }
+    // Snapshot: markClusterNode deletes from clust.nodes mid-loop.
+    for (const n of [...clust.nodes.values()]) markClusterNode(clust, n);
   }
 }
 
@@ -258,13 +274,18 @@ export function markClusters(g: Graph): void {
 
 /** @see lib/dotgen/cluster.c:build_skeleton (edge span accumulation) */
 export function buildSkeletonEdgeCounts(subg: Graph, v: Node): void {
+  // C fixes rl = GD_rankleader(subg)[ND_rank(v)] ONCE (the leader of v's own
+  // rank) and bumps ND_out(rl).list[0] count (hi-lo) times. The port indexed
+  // rankleader[r] per r, so an edge whose head rank exceeds subg.maxrank reached
+  // rankleader[mx] — the last skeleton leader, which has no outgoing edge (empty
+  // out.list) — and crashed. @see cluster.c:build_skeleton count loop.
   const lo = v.info.rank ?? 0;
+  const rl = subg.info.rankleader![lo];
   for (const e of subg.edges) {
     if (e.tail !== v) continue;
     const hi = e.head.info.rank ?? 0;
     for (let r = lo; r < hi; r++) {
-      const rlr = subg.info.rankleader![r];
-      rlr.info.out!.list[0].info.count = (rlr.info.out!.list[0].info.count ?? 1) + 1;
+      rl.info.out!.list[0].info.count = (rl.info.out!.list[0].info.count ?? 1) + 1;
     }
   }
 }
