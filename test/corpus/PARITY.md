@@ -35,13 +35,12 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `1879` | 20897.66 | `svg/g[1]/g[99]/g[1]/a[1][childCount]` |
 | `2095` | 19852.55 | `svg/g[1]/g[550]/path[1]/@d` |
 | `2620` | 10834.50 | `svg/g[1]/g[25]/path[1]/@d` |
-| `graphs-badvoro` | 8811.09 | `svg/g[1]/g[16]/path[1]/@d` |
-| `linux.x86-root_circo` | 8156.80 | `svg/g[1]/g[5]/path[1]/@d` |
-| `linux.x86-root_twopi` | 8156.80 | `svg/g[1]/g[5]/path[1]/@d` |
+| `linux.x86-root_circo` | 8110.40 | `svg/g[1]/g[5]/path[1]/@d` |
+| `linux.x86-root_twopi` | 8110.40 | `svg/g[1]/g[5]/path[1]/@d` |
 | `2239` | 7556.15 | `svg/g[1]/g[2][childCount]` |
 | `graphs-b103` | 6118.17 | `svg/g[1]/g[3]/path[1]/@d` |
-| `nshare-root_circo` | 5445.40 | `svg/g[1]/g[5]/path[1]/@d` |
-| `nshare-root_twopi` | 5445.40 | `svg/g[1]/g[5]/path[1]/@d` |
+| `nshare-root_circo` | 5403.90 | `svg/g[1]/g[5]/path[1]/@d` |
+| `nshare-root_twopi` | 5403.90 | `svg/g[1]/g[5]/path[1]/@d` |
 | `graphs-xx` | 5030.30 | `svg/g[1]/g[17]/path[1]/@d` |
 | `1447_1` | 3612.38 | `svg/g[1]/g[27]/path[1]/@d` |
 | `linux.i386-b106` | 3407.07 | `svg/g[1]/g[10]/path[1]/@d` |
@@ -58,6 +57,7 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-proc3d` | 2620.40 | `svg/g[1]/g[15]/path[1]/@d` |
 | `share-proc3d` | 2620.40 | `svg/g[1]/g[15]/path[1]/@d` |
 | `windows-proc3d` | 2620.40 | `svg/g[1]/g[15]/path[1]/@d` |
+| `graphs-badvoro` | 2215.95 | `svg/g[1]/g[33]/path[1]/@d` |
 | `graphs-NaN` | 2202.00 | `svg/g[1]/g[3]/path[1]/@d` |
 | `share-NaN` | 2202.00 | `svg/g[1]/g[3]/path[1]/@d` |
 | `windows-NaN` | 2202.00 | `svg/g[1]/g[3]/path[1]/@d` |

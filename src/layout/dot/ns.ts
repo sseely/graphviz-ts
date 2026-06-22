@@ -66,8 +66,13 @@ export function initRank(ctx: NsCtx): void {
 
 /** @see lib/common/ns.c:leave_edge (wrap-around scan helper) */
 export function leaveEdgeScan(
-  ctx: NsCtx, from: number, to: number, cnt: number, rv: Edge | undefined
+  ctx: NsCtx, to: number, cnt: number, rv: Edge | undefined
 ): [Edge | undefined, number] {
+  // C's leave_edge wrap loop runs `while (S_i < j)` and exits with S_i == j,
+  // preserving the rotating search cursor for the next pivot. The previous port
+  // reset S_i back to 0 here, which degenerated the round-robin into a repeated
+  // full rescan from the front — inflating the pivot count on graphs where the
+  // search wraps (e.g. 2475_2: 8748 native pivots vs ~18000+ before this fix).
   while (ctx.sI < to) {
     const f = ctx.treeEdges[ctx.sI];
     if (edgeCv(f) < 0) {
@@ -75,7 +80,6 @@ export function leaveEdgeScan(
       if (++cnt >= ctx.searchSize) return [rv, cnt];
     }
     ctx.sI++;
-    if (ctx.sI === to) { ctx.sI = from; break; }
   }
   return [rv, cnt];
 }
@@ -93,7 +97,7 @@ export function leaveEdge(ctx: NsCtx): Edge | undefined {
     }
     ctx.sI++;
   }
-  if (j > 0) { ctx.sI = 0; [rv, cnt] = leaveEdgeScan(ctx, 0, j, cnt, rv); }
+  if (j > 0) { ctx.sI = 0; [rv, cnt] = leaveEdgeScan(ctx, j, cnt, rv); }
   return rv;
 }
 
@@ -103,20 +107,19 @@ export function leaveEdge(ctx: NsCtx): Edge | undefined {
 
 /** @see lib/common/ns.c:dfs_enter_outedge (out-edge scan) */
 export function dfsEnterOutScan(
-  n: Node, low: number, lim: number, todo: Node[], best: Edge | undefined
-): Edge | undefined {
+  n: Node, low: number, lim: number, todo: Node[], best: EnterBest
+): void {
   const out = n.info.out;
-  if (!out) return best;
+  if (!out) return;
   for (let i = 0; i < out.size; i++) {
     const e = out.list[i];
     if (isTreeEdge(e)) {
       if (nodeLim(e.head) < nodeLim(n)) todo.push(e.head);
     } else if (!seq(low, nodeLim(e.head), lim)) {
       const s = nsSlack(e);
-      if (best === undefined || s < nsSlack(best)) best = e;
+      if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
     }
   }
-  return best;
 }
 
 export function dfsEnterOutTreeIn(n: Node, todo: Node[], bestSlack: number): void {
@@ -131,32 +134,37 @@ export function dfsEnterOutTreeIn(n: Node, todo: Node[], bestSlack: number): voi
 /** @see lib/common/ns.c:dfs_enter_outedge */
 export function dfsEnterOutedge(v: Node, low: number, lim: number): Edge | undefined {
   const todo: Node[] = [v];
-  let best: Edge | undefined;
+  const best: EnterBest = { e: undefined, slack: Number.MAX_SAFE_INTEGER };
   while (todo.length > 0) {
     const cur = todo.pop()!;
-    best = dfsEnterOutScan(cur, low, lim, todo, best);
-    const bs = best === undefined ? Number.MAX_SAFE_INTEGER : nsSlack(best);
-    dfsEnterOutTreeIn(cur, todo, bs);
+    dfsEnterOutScan(cur, low, lim, todo, best);
+    dfsEnterOutTreeIn(cur, todo, best.slack);
   }
-  return best;
+  return best.e;
 }
+
+/**
+ * Running best (entering edge + its slack), threaded through the search so
+ * slack is computed once per candidate edge (C maintains `Slack` as a local
+ * int rather than recomputing SLACK(Enter) on every comparison).
+ */
+interface EnterBest { e: Edge | undefined; slack: number; }
 
 /** @see lib/common/ns.c:dfs_enter_inedge (in-edge scan) */
 export function dfsEnterInScan(
-  n: Node, low: number, lim: number, todo: Node[], best: Edge | undefined
-): Edge | undefined {
+  n: Node, low: number, lim: number, todo: Node[], best: EnterBest
+): void {
   const inp = n.info.in;
-  if (!inp) return best;
+  if (!inp) return;
   for (let i = 0; i < inp.size; i++) {
     const e = inp.list[i];
     if (isTreeEdge(e)) {
       if (nodeLim(e.tail) < nodeLim(n)) todo.push(e.tail);
     } else if (!seq(low, nodeLim(e.tail), lim)) {
       const s = nsSlack(e);
-      if (best === undefined || s < nsSlack(best)) best = e;
+      if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
     }
   }
-  return best;
 }
 
 export function dfsEnterInTreeOut(n: Node, todo: Node[], bestSlack: number): void {
@@ -171,14 +179,13 @@ export function dfsEnterInTreeOut(n: Node, todo: Node[], bestSlack: number): voi
 /** @see lib/common/ns.c:dfs_enter_inedge */
 export function dfsEnterInedge(v: Node, low: number, lim: number): Edge | undefined {
   const todo: Node[] = [v];
-  let best: Edge | undefined;
+  const best: EnterBest = { e: undefined, slack: Number.MAX_SAFE_INTEGER };
   while (todo.length > 0) {
     const cur = todo.pop()!;
-    best = dfsEnterInScan(cur, low, lim, todo, best);
-    const bs = best === undefined ? Number.MAX_SAFE_INTEGER : nsSlack(best);
-    dfsEnterInTreeOut(cur, todo, bs);
+    dfsEnterInScan(cur, low, lim, todo, best);
+    dfsEnterInTreeOut(cur, todo, best.slack);
   }
-  return best;
+  return best.e;
 }
 
 /** @see lib/common/ns.c:enter_edge */
