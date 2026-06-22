@@ -15,6 +15,23 @@
 import { readFileSync } from 'node:fs';
 import { renderSvg } from '../../src/index.js';
 
+/**
+ * Decode a corpus input file the way native dot reads it. dot scans raw bytes
+ * with a default UTF-8 charset and, on invalid UTF-8, falls back to Latin-1 per
+ * label (lib/common/utils.c:1218/1249 latin1ToUTF8). renderSvg takes an
+ * already-decoded string, so the byte->string decode is the caller's job;
+ * reading every file as UTF-8 mangled the Latin-1 corpus inputs (b56, b60,
+ * Latin1) into U+FFFD before the parser saw them. Decode strict UTF-8, else
+ * Latin-1.
+ */
+function decodeDotInput(buf: Buffer): string {
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(buf);
+  } catch {
+    return buf.toString('latin1');
+  }
+}
+
 const inputPath = process.argv[2];
 const engine = process.argv[3];
 
@@ -24,7 +41,7 @@ if (!inputPath || !engine) {
 }
 
 try {
-  const svg = renderSvg(readFileSync(inputPath, 'utf8'), engine);
+  const svg = renderSvg(decodeDotInput(readFileSync(inputPath)), engine);
   process.stdout.write(svg);
 } catch (err) {
   // Emit the thrown error on a sentinel line so the survey can distinguish it

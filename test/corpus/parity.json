@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-22T17:35:19.687Z",
+  "generatedAt": "2026-06-22T17:59:58.012Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
     "byte-match": 251,
-    "structural-match": 222,
-    "diverged": 296,
+    "structural-match": 227,
+    "diverged": 291,
     "errored": 5,
     "timeout": 6,
     "oracle-error": 16
@@ -186,7 +186,7 @@
       "id": "1489",
       "path": "1489.dot",
       "verdict": "errored",
-      "errMsg": "Expected \"#\", \"/*\", \"//\", [ \\t\\r\\n], or end of input but \"�\" found."
+      "errMsg": "Expected \"#\", \"/*\", \"//\", [ \\t\\r\\n], or end of input but \"õ\" found."
     },
     {
       "id": "1494",
@@ -1077,9 +1077,8 @@
     {
       "id": "graphs-Latin1",
       "path": "graphs/Latin1.gv",
-      "verdict": "diverged",
-      "maxDelta": 78.10000000000001,
-      "firstDiffPath": "svg/g[1]/g[1]/text[1]/text()[1]"
+      "verdict": "structural-match",
+      "maxDelta": 78.10000000000001
     },
     {
       "id": "graphs-NaN",
@@ -1290,9 +1289,8 @@
     {
       "id": "graphs-b34",
       "path": "graphs/b34.gv",
-      "verdict": "diverged",
-      "maxDelta": 4,
-      "firstDiffPath": "svg/g[1]/g[14]/text[1]/text()[1]"
+      "verdict": "structural-match",
+      "maxDelta": 4
     },
     {
       "id": "graphs-b36",
@@ -1330,7 +1328,7 @@
       "path": "graphs/b56.gv",
       "verdict": "diverged",
       "maxDelta": 105,
-      "firstDiffPath": "svg/g[1]/g[1]/text[1]/text()[1]"
+      "firstDiffPath": "svg/g[1]/g[12]/path[1]/@d"
     },
     {
       "id": "graphs-b57",
@@ -1349,9 +1347,8 @@
     {
       "id": "graphs-b60",
       "path": "graphs/b60.gv",
-      "verdict": "diverged",
-      "maxDelta": 58,
-      "firstDiffPath": "svg/g[1]/g[1]/text[1]/text()[1]"
+      "verdict": "structural-match",
+      "maxDelta": 58
     },
     {
       "id": "graphs-b62",
@@ -3483,9 +3480,8 @@
     {
       "id": "share-Latin1",
       "path": "share/Latin1.gv",
-      "verdict": "diverged",
-      "maxDelta": 21,
-      "firstDiffPath": "svg/g[1]/g[1]/text[1]/text()[1]"
+      "verdict": "structural-match",
+      "maxDelta": 21
     },
     {
       "id": "share-NaN",
@@ -4179,9 +4175,8 @@
     {
       "id": "windows-Latin1",
       "path": "windows/Latin1.gv",
-      "verdict": "diverged",
-      "maxDelta": 23,
-      "firstDiffPath": "svg/g[1]/g[1]/text[1]/text()[1]"
+      "verdict": "structural-match",
+      "maxDelta": 23
     },
     {
       "id": "windows-NaN",
