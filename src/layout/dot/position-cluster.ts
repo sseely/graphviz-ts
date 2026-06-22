@@ -146,7 +146,12 @@ export function vnodeNotRelatedTo(g: Graph, v: Node): boolean {
 
 /** @see lib/dotgen/position.c:keepout_othernodes (left-side scan for one rank) */
 export function keepoutLeft(root: Graph, g: Graph, r: number, margin: number): void {
-  const v0 = g.info.rank![r].v[0];
+  // v = GD_rank(g)[r].v[0] is the cluster's leftmost node. g.info.rank[r].v is
+  // the shared root array offset by vStart, so read v0 via rankGet — a raw .v[0]
+  // returns the root's leftmost node (order≈0), collapsing the order-1..0 scan to
+  // nothing and dropping every left-keepout edge (same vStart-window class as
+  // containNodesRank). @see lib/dotgen/position.c:keepout_othernodes
+  const v0 = rankGet(g.info.rank![r], 0);
   if (!v0) return;
   for (let i = nodeOrder(v0) - 1; i >= 0; i--) {
     const u = root.info.rank![r].v[i];
@@ -161,7 +166,9 @@ export function keepoutLeft(root: Graph, g: Graph, r: number, margin: number): v
 export function keepoutRight(root: Graph, g: Graph, r: number, margin: number): void {
   const rk = g.info.rank![r];
   if (rk.n === 0) return;
-  const v0 = rk.v[0];
+  // Cluster-local leftmost via rankGet, not raw rk.v[0] (the root's leftmost) —
+  // see keepoutLeft. @see lib/dotgen/position.c:keepout_othernodes
+  const v0 = rankGet(rk, 0);
   if (!v0) return;
   const rootRk = root.info.rank![r];
   for (let i = nodeOrder(v0) + rk.n; i < rootRk.n; i++) {
