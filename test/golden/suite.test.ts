@@ -83,8 +83,10 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //  + 1 parity parser-gap (non-Latin/Cyrillic NAME char class))
 // ---------------------------------------------------------------------------
 
-test('manifest has 146 entries', () => {
-  expect(manifest).toHaveLength(146);
+// + 8 arrowhead-geometry goldens (one per arrow-type group: dot/crow/box/
+//   diamond/tee/curve/compound/side — dir=both head+tail, byte-matched)
+test('manifest has 154 entries', () => {
+  expect(manifest).toHaveLength(154);
 });
 
 // ---------------------------------------------------------------------------

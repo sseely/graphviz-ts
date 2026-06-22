@@ -32,6 +32,7 @@ import { colorPaint, colorOpacity, textFillAttrs } from './color-resolve.js';
 import { PenType, FillType } from '../gvc/context.js';
 import { emitLinearGradient, emitRadialGradient, gradientId } from './svg-gradient.js';
 import { transformPoint } from '../gvc/device.js';
+import { emitArrowOps } from './svg-arrow-ops.js';
 
 // ---------------------------------------------------------------------------
 // Module-level constants
@@ -474,15 +475,13 @@ export function emitArrowPolygon(rawPts: Point[], penColor: string, job: RenderJ
  * @see lib/common/arrows.c:arrow_type_normal
  */
 export function svgArrowPolygons(e: Edge, job: RenderJob): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const einfo = e.info as any;
   const obj = job.obj;
   const penColor = obj !== null ? paintStr(obj, false) : 'black';
   const pw = obj !== null ? obj.penWidth : 1.0;
-  const tailPts = einfo._tailArrowPts as Point[] | undefined;
-  if (tailPts?.length) emitArrowPolygon(tailPts, penColor, job, pw);
-  const headPts = einfo._arrowPts as Point[] | undefined;
-  if (headPts?.length) emitArrowPolygon(headPts, penColor, job, pw);
+  const tailOps = e.info.tailArrowOps;
+  if (tailOps?.length) emitArrowOps(tailOps, penColor, job, pw);
+  const headOps = e.info.headArrowOps;
+  if (headOps?.length) emitArrowOps(headOps, penColor, job, pw);
 }
 
 // ---------------------------------------------------------------------------

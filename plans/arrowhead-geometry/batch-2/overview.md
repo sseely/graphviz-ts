@@ -6,9 +6,13 @@ T6 emits them. Oracle-check the 16 target cases after T6.
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|------------|------|
-| T4 | Type-aware clip length + arrowsize in the clip | `src/layout/dot/edge-route-clip.ts` (+ test) | T2 | [ ] |
-| T5 | Typed draw-op storage; layout sites dispatch by arrow type | `src/model/edgeInfo.ts`, `src/layout/dot/edge-route-arrow.ts`, `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route.ts`, `src/layout/dot/compound.ts`, `src/layout/dot/splines-flat.ts` | T3, T4 | [ ] |
-| T6 | SVG emit per draw-op (polygon/ellipse/polyline) | `src/render/svg-helpers.ts` (+ test) | T5 | [ ] |
+| T4 | Type-aware clip length + arrowsize in the clip | `src/layout/dot/edge-route-clip.ts` (+ test) | T2 | [x] |
+| T5 | Typed draw-op storage; layout sites dispatch by arrow type | `edgeInfo.ts`, `edge-route-arrow.ts`, `edge-route-chain.ts`, `edge-route.ts`, `compound.ts`, `splines-flat.ts` (+ `splines-clip.ts`, `postproc.ts`) | T3, T4 | [x] |
+| T6 | SVG emit per draw-op (polygon/ellipse/polyline/bezier) | `src/render/svg-arrow-ops.ts` (new), `svg-helpers.ts`, `svg.ts` | T5 | [x] |
+
+**Note:** T5+T6 were committed together (merge rationale in decision-journal) —
+AC4 (no `_arrowPts` refs) requires the readers + per-kind emitter to land as one
+green state. Byte-match vs native oracle confirmed for dot/odot/crow/vee/diamond/box.
 
 ## Methodology
 - After T6, oracle-pin each of the 16 target cases (verify recipe in README).

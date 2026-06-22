@@ -16,8 +16,10 @@ import type { Edge } from '../model/edge.js';
 import type { Node } from '../model/node.js';
 import { approxEqPt, bezierClip, updateBbBz, InsideContext } from './splines-geom.js';
 import { MILLIPOINT, ARR_NONE } from './splines-constants.js';
-import { normalArrowLen } from '../layout/dot/edge-route-routing.js';
-import { arrowheadPolygon } from '../layout/dot/edge-route-arrow.js';
+import { arrowClipLength } from '../layout/dot/edge-route-clip.js';
+import {
+  arrowDrawOpsForEnd, edgeArrowName, edgeArrowsize,
+} from '../layout/dot/edge-route-arrow.js';
 
 /** Normal (filled triangle) arrowhead. @see lib/common/const.h:ARR_TYPE_NORM */
 export const ARR_NORM = 1;
@@ -115,7 +117,7 @@ class SplineClipHelper {
     e: Edge, ps: Point[], startp: number, endpIn: number, spl: Bezier, eflag: number,
   ): number {
     let endp = endpIn;
-    const elen = normalArrowLen(SplineClipHelper.edgePenwidth(e));
+    const elen = arrowClipLength(edgeArrowName(e, 'head'), edgeArrowsize(e), SplineClipHelper.edgePenwidth(e));
     spl.eflag = eflag;
     spl.ep = ps[endp + 3]!;
     if (endp > startp && SplineClipHelper.dist(ps[endp]!, ps[endp + 3]!) < elen) {
@@ -141,7 +143,7 @@ class SplineClipHelper {
     e: Edge, ps: Point[], startpIn: number, endp: number, spl: Bezier, sflag: number,
   ): number {
     let startp = startpIn;
-    const slen = normalArrowLen(SplineClipHelper.edgePenwidth(e));
+    const slen = arrowClipLength(edgeArrowName(e, 'tail'), edgeArrowsize(e), SplineClipHelper.edgePenwidth(e));
     spl.sflag = sflag;
     spl.sp = ps[startp]!;
     if (endp > startp && SplineClipHelper.dist(ps[startp]!, ps[startp + 3]!) < slen) {
@@ -226,12 +228,15 @@ class SplineClipHelper {
     e: Edge, ps: Point[], startp: number, endp: number, spl: Bezier,
     sflag: number, eflag: number,
   ): void {
-    const alen = normalArrowLen(SplineClipHelper.edgePenwidth(e));
+    const pwAttr = SplineClipHelper.edgePenwidth(e);
+    const size = edgeArrowsize(e);
+    const hlen0 = arrowClipLength(edgeArrowName(e, 'head'), size, pwAttr);
+    const tlen0 = arrowClipLength(edgeArrowName(e, 'tail'), size, pwAttr);
     if (sflag && eflag && endp === startp) {
       // two arrows on one segment
       const p = ps[endp]!; const q = ps[endp + 3]!;
       const d = SplineClipHelper.dist(p, q);
-      let hlen = alen; let tlen = alen;
+      let hlen = hlen0; let tlen = tlen0;
       if (hlen + tlen >= d) { hlen = tlen = d / 3.0; }
       const s = { x: p.x, y: p.y }; const t = { x: q.x, y: q.y };
       if (p.y === q.y) {
@@ -250,7 +255,7 @@ class SplineClipHelper {
       return;
     }
     if (eflag) {
-      let hlen = alen;
+      let hlen = hlen0;
       const p = ps[endp]!; const q = ps[endp + 3]!;
       const maxd = 0.9 * SplineClipHelper.dist(p, q);
       if (hlen >= maxd) hlen = maxd;
@@ -261,7 +266,7 @@ class SplineClipHelper {
       spl.eflag = eflag; spl.ep = q;
     }
     if (sflag) {
-      let tlen = alen;
+      let tlen = tlen0;
       const p = ps[startp]!; const q = ps[startp + 3]!;
       const maxd = 0.9 * SplineClipHelper.dist(p, q);
       if (tlen >= maxd) tlen = maxd;
@@ -276,9 +281,9 @@ class SplineClipHelper {
   /** Record an arrow polygon on the edge for svgArrowPolygons. */
   static stashArrow(e: Edge, tip: Point, base: Point, isTail: boolean): void {
     const dir = { x: base.x - tip.x, y: base.y - tip.y };
-    const pts = arrowheadPolygon(tip, dir, SplineClipHelper.renderPenwidth(e));
-    const key = isTail ? '_tailArrowPts' : '_arrowPts';
-    (e.info as unknown as Record<string, unknown>)[key] = pts;
+    const ops = arrowDrawOpsForEnd(e, isTail ? 'tail' : 'head', tip, dir, SplineClipHelper.renderPenwidth(e));
+    if (isTail) e.info.tailArrowOps = ops;
+    else e.info.headArrowOps = ops;
   }
 
   static clipSide(n: Node, box: Box | null, ps: Point[], pn: number, tail: boolean): number {

@@ -5,9 +5,9 @@ Pure, unit-testable port of `arrows.c` geometry. No layout/render wiring yet
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|------------|------|
-| T1 | Arrow types + name→ARR_TYPE resolution + length factors + draw-op union | `src/common/arrows-types.ts` (new), `src/common/arrows.ts`, `src/common/arrows-constants.ts` (+ tests) | — | [ ] |
-| T2 | Length functions + dispatch skeleton + closed shapes (normal, dot, box, diamond) | `src/common/arrows-shapes.ts` (new) (+ test) | T1 | [ ] |
-| T3 | Remaining shapes (crow/vee, tee, curve, gap) + open/side modifiers + compound stacking + arrowsize | `src/common/arrows-shapes.ts` (+ test) | T2 | [ ] |
+| T1 | Arrow types + name→ARR_TYPE resolution + length factors + draw-op union | `src/common/arrows-types.ts` (new), `src/common/arrows.ts`, `src/common/arrows-constants.ts` (+ tests) | — | [x] |
+| T2 | Length functions + dispatch skeleton + closed shapes (normal, dot, box, diamond) | `src/common/arrows-shapes.ts` (new) (+ test) | T1 | [x] |
+| T3 | Remaining shapes (crow/vee, tee, curve, gap) + open/side modifiers + compound stacking + arrowsize | `src/common/arrows-shapes.ts` (+ test; split into `-util`/`-poly`) | T2 | [x] |
 
 ## Shared methodology
 

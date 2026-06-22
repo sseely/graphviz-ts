@@ -18,9 +18,11 @@ import type { Node } from '../../model/node.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
 import { normalizeVec, negateVec } from './edge-route-geom.js';
 import type { NodeBox } from './edge-route-geom.js';
-import { arrowheadPolygon } from './edge-route-arrow.js';
-import { bezierClipNode, arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
-import { nodeInsideFn, normalArrowLen } from './edge-route-routing.js';
+import { arrowDrawOpsForEnd, edgeArrowName, edgeArrowsize } from './edge-route-arrow.js';
+import {
+  bezierClipNode, arrowEndClip, tailArrowEndClip, arrowClipLength,
+} from './edge-route-clip.js';
+import { nodeInsideFn } from './edge-route-routing.js';
 import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
 import {
   edgeRenderPenwidth, edgePenwidthAttr,
@@ -306,20 +308,23 @@ function applyBackEdgeArrows(
   e: GraphEdge, rev: Point[], arrowTip: Point, arrowDir: Point, dirAttr: string,
 ): void {
   const pw = edgeRenderPenwidth(e);
-  const elen = normalArrowLen(edgePenwidthAttr(e));
+  const pwAttr = edgePenwidthAttr(e);
+  const size = edgeArrowsize(e);
   const wantHead = dirAttr === 'forward' || dirAttr === 'both';
   const wantTail = dirAttr === 'back' || dirAttr === 'both';
   let pts = rev;
   if (wantTail) {
     const tailTip = pts[0] as Point;
-    (e.info as unknown as Record<string, unknown>)._tailArrowPts = arrowheadPolygon(tailTip, negateVec(arrowDir), pw);
-    pts = tailArrowEndClipMulti(pts, tailTip, elen);
+    e.info.tailArrowOps = arrowDrawOpsForEnd(e, 'tail', tailTip, negateVec(arrowDir), pw);
+    const tlen = arrowClipLength(edgeArrowName(e, 'tail'), size, pwAttr);
+    pts = tailArrowEndClipMulti(pts, tailTip, tlen);
   }
   if (wantHead) {
-    pts = arrowEndClipMulti(pts, arrowTip, elen);
+    const hlen = arrowClipLength(edgeArrowName(e, 'head'), size, pwAttr);
+    pts = arrowEndClipMulti(pts, arrowTip, hlen);
     const arrowbase = pts[pts.length - 1] as Point;
     const headDir = normalizeVec({ x: arrowbase.x - arrowTip.x, y: arrowbase.y - arrowTip.y });
-    (e.info as unknown as Record<string, unknown>)._arrowPts = arrowheadPolygon(arrowTip, headDir, pw);
+    e.info.headArrowOps = arrowDrawOpsForEnd(e, 'head', arrowTip, headDir, pw);
   }
   installEdgeSpline(e, pts, arrowTip);
 }

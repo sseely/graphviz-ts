@@ -22,7 +22,7 @@ import { resolvePort } from '../../common/splines-path-shared.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 
 import { normalizeVec } from './edge-route-geom.js';
-import { arrowheadPolygon } from './edge-route-arrow.js';
+import { arrowDrawOpsForEnd } from './edge-route-arrow.js';
 import { linearBezier } from './edge-route-poly.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
@@ -366,8 +366,7 @@ function routeForwardEdge(
     tailBox, headBox, rankInfo, edgePenwidthAttr(e), portRouteOf(e),
   );
   installEdgeSpline(e, result.bezierPts, result.arrowTip);
-  (e.info as unknown as Record<string, unknown>)._arrowPts =
-    arrowheadPolygon(result.arrowTip, result.arrowDir, pw);
+  e.info.headArrowOps = arrowDrawOpsForEnd(e, 'head', result.arrowTip, result.arrowDir, pw);
 }
 
 /**
