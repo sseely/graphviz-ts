@@ -10,7 +10,11 @@
     "declarationMap": true,
     "sourceMap": true,
     "esModuleInterop": false,
-    "skipLibCheck": false
+    // TS7 removes esModuleInterop:false. Decide then: flip to true (safe for this
+    // pure-ESM codebase) or bump ignoreDeprecations to "7.0". @see upgrade 2026-06.
+    "ignoreDeprecations": "6.0",
+    "skipLibCheck": false,
+    "types": ["node"]
   },
   "include": ["src/**/*", "test/**/*"]
 }
