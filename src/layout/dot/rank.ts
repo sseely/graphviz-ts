@@ -12,6 +12,7 @@ import { reverseEdge, virtualEdge, zapinlist } from './fastgr.js';
 import { rank } from './ns.js';
 import { dot2Rank } from './rank-dot2.js';
 import { class1 } from './classify.js';
+import { pruneForeignClusterNodes } from './cluster.js';
 
 // ---------------------------------------------------------------------------
 // Constants  @see lib/common/const.h
@@ -235,6 +236,7 @@ function induceClusterEdges(clust: Graph): void {
 
 /** @see lib/dotgen/rank.c:node_induce */
 export function nodeInduce(par: Graph, clust: Graph): void {
+  pruneForeignClusterNodes(par, clust);
   for (const n of clust.nodes.values()) {
     if (n.info.clust) continue;
     n.info.clust = clust;

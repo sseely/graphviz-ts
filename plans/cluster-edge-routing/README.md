@@ -56,9 +56,32 @@ instrumentation + rebuild before finishing. ADR-1 faithful (no guards), ADR-4
 ("stops crashing + faithful" = success even if `diverged`), ADR-5 (parity regen +
 0 regression gate). See `plans/cluster-membership-derisk/{findings,fix-plan}.md`.
 
+## Resolution (2026-06-22)
+
+**The brief mis-scoped this as an edge-routing defect.** The corrupt vnode rank
+(-468.875, a leftover x-position scratch from `make_LR_constraints`) was a
+*symptom*: the real cause is in the **rank phase**. The port's `nodeInduce`
+(rank.c:node_induce) was missing C's **first loop**, which agdeletes from a
+cluster any node already claimed by an earlier sibling cluster (`ND_ranktype !=
+0`, or contained in another of `par`'s clusters). The port only `continue`d,
+keeping the foreign node, so the cluster's internal `dot1Rank` re-ranked it.
+
+b53: `node_49` is owned by `cluster_node_43` (ranked there, rank 2) but is also
+listed in `cluster_node_52` via `node_49 -> node_53`. The port let cluster_52
+re-rank node_49 to 0 → cluster ranks collapsed (7 ranks vs C's 13, clusters not
+stacked) → a cross-cluster chain vnode landed at `rank[1]` index 8 with `n=8`
+(beyond the live count), so `set_xcoords` never restored its rank → routing
+crash.
+
+**Fix:** `pruneForeignClusterNodes` (ported C node_induce first loop, reusing
+`agDeleteFromCluster` from defect C) — drops foreign nodes + their incident edges
+before `dot1Rank(cluster)`. After the fix b53's rank structure is **byte-identical
+to C** (all 13 ranks, exact per-rank `n` and membership). No `cl_bound` port was
+needed — the corrupt rank was upstream, not in `maximal_bbox`.
+
 ## Status
 | Phase | Status |
 |-------|--------|
-| Investigate corrupt chain-vnode rank | [ ] |
-| Fix + cl_bound port | [ ] |
-| Verify (b53 renders) + parity regen | [ ] |
+| Investigate corrupt chain-vnode rank | [x] traced to rank phase (node_induce missing foreign-node prune), not routing |
+| Fix + cl_bound port | [x] `pruneForeignClusterNodes` in rank.ts/cluster.ts; cl_bound NOT needed |
+| Verify (b53 renders) + parity regen | [x] b53 ranks match C exactly; parity errored 8→5, timeout 8→6, 0 per-id regressions; suite 2260 |

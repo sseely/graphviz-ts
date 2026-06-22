@@ -229,27 +229,12 @@ export function markClustersVnodes(clust: Graph, n: Node): void {
 }
 
 /**
- * mark_clusters per-node: claim `n` for `clust`, or drop it if already claimed.
- *
- * C's ND_ranktype is a calloc-zeroed char defaulting to NORMAL(==0) (const.h:24,
- * types.h:448); the guard is `!= NORMAL` (cluster.c:317). TS NodeInfo.ranktype is
- * optional (undefined by default), so coerce undefined→0 — else every untouched
- * NORMAL node is wrongly skipped and never receives ND_clust, breaking
- * cross-cluster rank=same under newrank.
- *
- * A node already claimed by an earlier cluster (or in a rankset) is REMOVED from
- * this cluster's node set — C does agdelete(clust, n) (first-cluster-wins).
- * cgraph agdelete on a subgraph removes the node from that subgraph only (not
- * root/ancestors) AND deletes its incident edges from the subgraph (agdelnode).
- * node_induce induces root edges whose endpoints are (transiently) cluster
- * members into clust.edges, so deleting only the node leaves the edge behind:
- * agContainsEdge() then still reports the edge internal and interclexp skips it,
- * breaking the intercluster virtual chain (1332: c0->c5359 routed through
- * cluster_6754's rankleader is never restored, so removeRankleaders orphans it).
- * Without the node removal, foreign nodes also surface as out-of-[minrank,maxrank]
- * crashes in build_skeleton / contain_nodes.
- *
- * @see lib/dotgen/cluster.c:mark_clusters
+ * Mirror cgraph agdelnode(clust, n): remove the node from the cluster subgraph
+ * AND delete its incident edges from the subgraph (node_induce/mark_clusters
+ * induce root edges whose endpoints are transient cluster members; deleting only
+ * the node leaves the edge behind, so agContainsEdge wrongly reports it internal
+ * — 1332 chain orphaned, b53 foreign node re-ranked). agdelete affects the
+ * subgraph only, not root/ancestors. @see lib/dotgen/cluster.c:mark_clusters
  */
 export function agDeleteFromCluster(clust: Graph, n: Node): void {
   clust.nodes.delete(n.name);
@@ -259,6 +244,34 @@ export function agDeleteFromCluster(clust: Graph, n: Node): void {
   }
 }
 
+/**
+ * C node_induce first loop: a node is in at most one cluster at this level. A
+ * node already claimed by an earlier sibling cluster (ranktype set, or contained
+ * in another of par's clusters) is agdeleted from clust — node AND incident
+ * edges — so this cluster's internal dot1Rank does not re-rank the foreign node
+ * (b53: node_49 owned by cluster_node_43 was also ranked by cluster_node_52,
+ * clobbering its rank). makeNewCluster has not yet added clust to par.clust, so
+ * par.clust holds only earlier siblings. @see lib/dotgen/rank.c:node_induce
+ */
+export function pruneForeignClusterNodes(par: Graph, clust: Graph): void {
+  const sibs = par.info.clust;
+  const nc = par.info.n_cluster ?? 0;
+  for (const n of [...clust.nodes.values()]) {
+    let foreign = (n.info.ranktype ?? 0) !== 0;
+    for (let i = 0; !foreign && sibs && i < nc - 1; i++) {
+      if (sibs[i].nodes.get(n.name) === n) foreign = true;
+    }
+    if (foreign) agDeleteFromCluster(clust, n);
+    n.info.clust = undefined;
+  }
+}
+
+/**
+ * mark_clusters per-node: claim `n` for `clust`, or agdelete it if already
+ * claimed (first-cluster-wins). ranktype defaults to NORMAL(==0) in C (calloc);
+ * TS leaves it undefined, so coerce undefined→0 — else untouched NORMAL nodes
+ * are wrongly skipped and never receive ND_clust. @see lib/dotgen/cluster.c:mark_clusters
+ */
 export function markClusterNode(clust: Graph, n: Node): void {
   if ((n.info.ranktype ?? 0) !== 0) { agDeleteFromCluster(clust, n); return; }
   ufSetname(n, clust.info.leader!);

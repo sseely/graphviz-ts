@@ -32,7 +32,7 @@ are also fixed. This mission lands all of them as one coherent change.
 | **A** membership | `markClusters` must `agdelete` already-claimed (foreign) nodes from a cluster's node set | all cluster graphs | **implemented** (branch, commit c923f1a) |
 | **B** skeleton count | `buildSkeletonEdgeCounts` fixed `rl=rankleader[ND_rank(v)]` not `rankleader[r]` | 1767 | **implemented** (c923f1a) |
 | **C** expansion | `markClusterNode` agdeleted a foreign node from `clust.nodes` but left its incident edge in `clust.edges`; `agContainsEdge` then made `interclexp` skip a crossing edge, orphaning its chain (NOT "leaf clusters never expanded" — that was a symptom) | 1332 | **implemented** — `agDeleteFromCluster` mirrors C `agdelnode`; `plans/cluster-expansion-recursion/` |
-| **D** edge routing | faithful edge router has no cluster support; intra-cluster chain vnode gets corrupt rank (-183) | b53, 2825 | not started — `plans/cluster-edge-routing/` |
+| **D** edge routing | mis-scoped: NOT the router. `nodeInduce` missing C node_induce first loop → a sibling-owned node re-ranked by another cluster → ranks collapse → orphan chain vnode → corrupt rank (routing symptom) | b53, 2825 | **implemented** — `pruneForeignClusterNodes`; b53 ranks match C exactly |
 | **D2** position | empty-cluster (post-agdelete) clobbers shared root rank via vStart aliasing → null `rank.v[0]` | 1221, 2721 | **implemented** (commit 99e17d3) — `removeEmptyClusters` in dotMincross |
 
 ## Branch
@@ -72,12 +72,16 @@ native dot, revert C instrumentation + rebuild before finishing.
 |-------|--------|--------|
 | — | A + B (membership + skeleton) | [x] implemented (c923f1a, unmerged) |
 | 1 | D2 (position null v[0]) | [x] implemented (99e17d3) — 1221, 2721 render |
-| 2 | C (cluster expansion recursion) | [x] implemented — `markClusterNode` agdelete edge cleanup; 1332 renders |
-| 3 | D (cluster-aware edge routing) | [ ] |
-| 4 | merge gate (parity 0-regression) + merge | [ ] |
+| 2 | C (cluster expansion recursion) | [x] implemented (58eed09) — `markClusterNode` agdelete edge cleanup; 1332 renders |
+| 3 | D (cluster-aware edge routing) | [x] implemented — `pruneForeignClusterNodes` (node_induce first loop); b53 ranks match C exactly |
+| 4 | merge gate (parity 0-regression) + merge | [x] gate GREEN — ready to merge |
 
-### Progress (2026-06-22)
-A+B + D2 implemented on `feature/cluster-membership-fix`. Renders now: 1767
-(A+B), 1221 + 2721 (D2). Remaining for merge: C (1332), D (b53, 2825). Full
-vitest suite 2258 pass. Parity gate deferred to the end (after C + D) — do not
-run/merge until all six target graphs render.
+### Progress (2026-06-22) — MERGE GATE GREEN
+All defects implemented on `feature/cluster-membership-fix`. Parity regenerated:
+**errored 8→5, timeout 8→6, byte-match 249→251, 0 per-id regressions.** All six
+targets render: 1221 + 2721 byte-match; 1332, 1767, b53 diverged (ADR-4); 2825
+diverged (unchanged). Full vitest suite **2260 pass**, typecheck 0, build 0.
+Defect D was mis-scoped as routing — the real cause was a rank-phase membership
+gap (`nodeInduce` missing C's foreign-node prune), the same agdelete pattern as
+defect C. **Ready to merge to main** (use a merge commit, not squash, per
+pr-workflow.md — preserves per-task commit IDs). Awaiting user go-ahead.

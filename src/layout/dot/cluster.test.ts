@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest';
 import { Graph } from '../../model/graph.js';
 import { Node } from '../../model/node.js';
 import { Edge } from '../../model/edge.js';
-import { markClusters, markClusterNode } from './cluster.js';
+import { markClusters, markClusterNode, pruneForeignClusterNodes } from './cluster.js';
 import { CLUSTER } from './rank.js';
 import { parse } from '../../parser/index.js';
 import { renderSvg } from '../../index.js';
@@ -117,6 +117,34 @@ describe('markClusterNode — agdelete also drops incident edges (1332 defect C)
     expect(clust.nodes.has('a')).toBe(false);
     expect(clust.edges.includes(crossing)).toBe(false); // edge dropped with node
     expect(clust.nodes.has('b')).toBe(true);            // owned node untouched
+  });
+});
+
+describe('pruneForeignClusterNodes — node_induce first loop (b53 defect D)', () => {
+  it('drops a sibling-owned node + its edge before the cluster ranks it', () => {
+    // b53: node_49 is owned by cluster_node_43 (ranked there), but cluster_node_52
+    // also lists it via node_49->node_53. C node_induce agdeletes the foreign node
+    // from cluster_52 so its internal dot1Rank cannot re-rank (clobber) it; the
+    // port skipped it, so cluster_52 overwrote node_49's rank → corrupt vnode.
+    const g = new Graph('root', 'directed');
+    const c52 = new Graph('cluster_52', 'directed');
+    c52.parent = g;
+    c52.root = g;
+    const foreign = new Node(0, 'node_49', g); // owned by an earlier sibling
+    const owned = new Node(1, 'node_53', g);
+    foreign.info.ranktype = CLUSTER;           // claimed by cluster_43 already
+    foreign.info.clust = new Graph('cluster_43', 'directed');
+    const crossing = new Edge(foreign, owned, ''); // node_49 -> node_53
+    c52.nodes.set('node_49', foreign);
+    c52.nodes.set('node_53', owned);
+    c52.edges.push(crossing);
+
+    pruneForeignClusterNodes(g, c52);
+
+    expect(c52.nodes.has('node_49')).toBe(false);     // foreign node pruned
+    expect(c52.edges.includes(crossing)).toBe(false); // its edge pruned with it
+    expect(c52.nodes.has('node_53')).toBe(true);      // owned node kept
+    expect(owned.info.clust).toBeUndefined();         // kept node's clust reset (C: NULL)
   });
 });
 
