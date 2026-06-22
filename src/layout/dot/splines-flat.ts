@@ -38,6 +38,7 @@ import { cloneNode, cloneEdge, cleanupCloneGraph, transformf } from './splines-c
 import { dotInitNodeEdge } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import { newSpline } from '../../common/splines-clip.js';
+import { mapArrowOpPoints } from '../../common/arrows-shapes-util.js';
 import { updateBbBz } from '../../common/splines-geom.js';
 import { placeRegularEdgeLabels, updateBB } from './splines-label.js';
 import { NORMAL, VIRTUAL } from './fastgr.js';
@@ -200,23 +201,19 @@ function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
   }
 }
 
-/** Transform the aux edge's head-arrow polygon onto the original edge.
+/** Transform the aux edge's head-arrow draw-ops onto the original edge.
  * C regenerates the arrowhead at emit time from the spline's eflag/ep; the port
- * pre-stashes the polygon during routing. A reversed back-edge clone
- * (routeFaithfulAdjacentBack) stashes its arrow as `_tailArrowPts` (sflag side)
- * BEFORE swapSpline flips the spline to a head arrow (eflag), so its head polygon
- * lives under the tail key — recover it when the swapped spline carries eflag but
- * `_arrowPts` is absent (e.g. #241_0 `3:sw->2:se`).
+ * pre-stashes the ops during routing. A reversed back-edge clone
+ * (routeFaithfulAdjacentBack) stashes its arrow as `tailArrowOps` (sflag side)
+ * BEFORE swapSpline flips the spline to a head arrow (eflag), so its head ops
+ * live under the tail field — recover it when the swapped spline carries eflag
+ * but `headArrowOps` is absent (e.g. #241_0 `3:sw->2:se`).
  * @see lib/dotgen/dotsplines.c:make_flat_adj_edges */
 function copyFlatArrow(orig: Edge, auxe: Edge, del: Point, flip: boolean): void {
-  const einfo = auxe.info as unknown as Record<string, unknown>;
-  const head = (einfo._arrowPts as Point[] | undefined)
-    ?? (auxe.info.spl?.list[0]?.eflag
-      ? einfo._tailArrowPts as Point[] | undefined
-      : undefined);
+  const head = auxe.info.headArrowOps
+    ?? (auxe.info.spl?.list[0]?.eflag ? auxe.info.tailArrowOps : undefined);
   if (head !== undefined) {
-    (orig.info as unknown as Record<string, unknown>)._arrowPts =
-      head.map(p => transformf(p, del, flip));
+    orig.info.headArrowOps = head.map(op => mapArrowOpPoints(op, p => transformf(p, del, flip)));
   }
 }
 

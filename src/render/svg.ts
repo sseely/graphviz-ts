@@ -45,10 +45,10 @@ import {
   svgComment,
   svgEdgePath,
   svgArrowPolygons,
-  emitArrowPolygon,
   emitParallelEdgePaths,
   escapeXml,
 } from './svg-helpers.js';
+import { emitArrowOps } from './svg-arrow-ops.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 import { emitSplitEdgePaths } from './svg-edge-split.js';
 
@@ -59,17 +59,15 @@ import { emitSplitEdgePaths } from './svg-edge-split.js';
 
 /** Emit tail arrow with tailColor and head arrow with headColor (multicolor). */
 function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailColor: string): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const einfo = e.info as any;
   const obj = job.obj;
   const pw = obj !== null ? obj.penWidth : 1.0;
-  const tailPts = einfo._tailArrowPts as Point[] | undefined;
-  if (tailPts?.length) {
-    emitArrowPolygon(tailPts, tailColor, job, pw);
+  const tailOps = e.info.tailArrowOps;
+  if (tailOps?.length) {
+    emitArrowOps(tailOps, tailColor, job, pw);
   }
-  const headPts = einfo._arrowPts as Point[] | undefined;
-  if (headPts?.length) {
-    emitArrowPolygon(headPts, headColor, job, pw);
+  const headOps = e.info.headArrowOps;
+  if (headOps?.length) {
+    emitArrowOps(headOps, headColor, job, pw);
   }
 }
 

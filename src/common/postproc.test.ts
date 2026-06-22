@@ -198,13 +198,14 @@ function makeStubBezier() {
 function makeArrowEdge(
   g: Graph,
   pts: Array<{ x: number; y: number }>,
-  key: '_arrowPts' | '_tailArrowPts',
+  key: 'headArrowOps' | 'tailArrowOps',
 ) {
   const n = addNode(g);
+  const ops = [{ kind: 'polygon', points: pts, filled: true }];
   const e = {
     tail: n,
     head: n,
-    info: { spl: { list: [makeStubBezier()] }, [key]: pts },
+    info: { spl: { list: [makeStubBezier()] }, [key]: ops },
   };
   g.edges = [e as unknown as import('../model/edge.js').Edge];
   return e;
@@ -219,15 +220,16 @@ function cloneArrowPts(): Array<{ x: number; y: number }> {
 }
 
 function getArrowPts(e: ReturnType<typeof makeArrowEdge>, key: string) {
-  return (e.info as Record<string, unknown>)[key] as Array<{ x: number; y: number }>;
+  const ops = (e.info as Record<string, unknown>)[key] as Array<{ points: Array<{ x: number; y: number }> }>;
+  return ops[0]!.points;
 }
 
 // TB: identity transform, no winding change.
 function assertArrowTbUnchanged(): void {
   const g = makeTestGraph(RANKDIR_TB);
-  const e = makeArrowEdge(g, cloneArrowPts(), '_arrowPts');
+  const e = makeArrowEdge(g, cloneArrowPts(), 'headArrowOps');
   gvPostprocess(g);
-  const pts = getArrowPts(e, '_arrowPts');
+  const pts = getArrowPts(e, 'headArrowOps');
   expect(pts[0]!.x).toBeCloseTo(1, 5);
   expect(pts[2]!.x).toBeCloseTo(-1, 5);
 }
@@ -236,9 +238,9 @@ function assertArrowTbUnchanged(): void {
 // ccw90({1,0})={0,1}; Offset={-50,0}; mapped=(50,1). First y=1 > last y=-1.
 function assertArrowLrUnchanged(): void {
   const g = makeTestGraph(RANKDIR_LR);
-  const e = makeArrowEdge(g, cloneArrowPts(), '_arrowPts');
+  const e = makeArrowEdge(g, cloneArrowPts(), 'headArrowOps');
   gvPostprocess(g);
-  const pts = getArrowPts(e, '_arrowPts');
+  const pts = getArrowPts(e, 'headArrowOps');
   expect(pts[0]!.y).toBeCloseTo(1, 5);
   expect(pts[2]!.y).toBeCloseTo(-1, 5);
 }
@@ -247,9 +249,9 @@ function assertArrowLrUnchanged(): void {
 // ccw180({1,0})={1,0}; Offset={0,-50}; mapped=(1,50). After swap: first x=-1.
 function assertArrowBtSwapped(): void {
   const g = makeTestGraph(RANKDIR_BT);
-  const e = makeArrowEdge(g, cloneArrowPts(), '_arrowPts');
+  const e = makeArrowEdge(g, cloneArrowPts(), 'headArrowOps');
   gvPostprocess(g);
-  const pts = getArrowPts(e, '_arrowPts');
+  const pts = getArrowPts(e, 'headArrowOps');
   expect(pts[0]!.x).toBeCloseTo(-1, 5);
   expect(pts[2]!.x).toBeCloseTo(1, 5);
 }
@@ -258,19 +260,19 @@ function assertArrowBtSwapped(): void {
 // ccw270({1,0})={0,1}; Offset={0,0}; mapped=(0,1). After swap: first y=-1.
 function assertArrowRlSwapped(): void {
   const g = makeTestGraph(RANKDIR_RL);
-  const e = makeArrowEdge(g, cloneArrowPts(), '_arrowPts');
+  const e = makeArrowEdge(g, cloneArrowPts(), 'headArrowOps');
   gvPostprocess(g);
-  const pts = getArrowPts(e, '_arrowPts');
+  const pts = getArrowPts(e, 'headArrowOps');
   expect(pts[0]!.y).toBeCloseTo(-1, 5);
   expect(pts[2]!.y).toBeCloseTo(1, 5);
 }
 
-// BT: _tailArrowPts receives the same swap as _arrowPts.
+// BT: tailArrowOps receives the same swap as headArrowOps.
 function assertTailArrowBtSwapped(): void {
   const g = makeTestGraph(RANKDIR_BT);
-  const e = makeArrowEdge(g, cloneArrowPts(), '_tailArrowPts');
+  const e = makeArrowEdge(g, cloneArrowPts(), 'tailArrowOps');
   gvPostprocess(g);
-  const pts = getArrowPts(e, '_tailArrowPts');
+  const pts = getArrowPts(e, 'tailArrowOps');
   expect(pts[0]!.x).toBeCloseTo(-1, 5);
   expect(pts[2]!.x).toBeCloseTo(1, 5);
 }
@@ -280,7 +282,7 @@ describe('gvPostprocess: arrowhead winding order correction', () => {
   it('LR: winding order unchanged (proper rotation, det=+1)', assertArrowLrUnchanged);
   it('BT: base points swapped (reflection, det=-1)', assertArrowBtSwapped);
   it('RL: base points swapped (reflection, det=-1)', assertArrowRlSwapped);
-  it('_tailArrowPts also corrected for BT', assertTailArrowBtSwapped);
+  it('tailArrowOps also corrected for BT', assertTailArrowBtSwapped);
 });
 
 // ---------------------------------------------------------------------------

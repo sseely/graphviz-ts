@@ -265,9 +265,9 @@ function splineSvgPts(e: GraphEdge): Pt[] {
 
 /** The single arrowhead polygon stashed on e (head or tail slot), SVG frame. */
 function arrowPts(e: GraphEdge): Pt[] | undefined {
-  const info = e.info as unknown as Record<string, Pt[] | undefined>;
-  const raw = info._arrowPts ?? info._tailArrowPts;
-  return raw?.map(p => ({ x: p.x, y: -p.y }));
+  const ops = e.info.headArrowOps ?? e.info.tailArrowOps;
+  const poly = ops?.find(o => o.kind === 'polygon');
+  return poly?.kind === 'polygon' ? poly.points.map(p => ({ x: p.x, y: -p.y })) : undefined;
 }
 
 describe('T1 (DOT-1b): faithful adjacent back edge via makefwdedge (dot oracle)', () => {

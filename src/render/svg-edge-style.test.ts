@@ -61,12 +61,10 @@ function makeStyledEdge(headPts?: Point[], tailPts?: Point[]): Edge {
     }],
   };
   if (headPts !== undefined) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- C-interop: _arrowPts runtime-dynamic
-    (e.info as any)._arrowPts = headPts;
+    e.info.headArrowOps = [{ kind: 'polygon', points: headPts, filled: true }];
   }
   if (tailPts !== undefined) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- C-interop: _tailArrowPts runtime-dynamic
-    (e.info as any)._tailArrowPts = tailPts;
+    e.info.tailArrowOps = [{ kind: 'polygon', points: tailPts, filled: true }];
   }
   return e;
 }

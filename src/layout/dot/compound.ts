@@ -12,9 +12,8 @@ import type { Edge } from '../../model/edge.js';
 import {
   inBoxf, midPointf, splineIntersectf, boxIntersectf,
 } from './compound-clip.js';
-import { arrowEndClip, tailArrowEndClip } from './edge-route-clip.js';
-import { arrowheadPolygon } from './edge-route-arrow.js';
-import { normalArrowLen } from './edge-route-routing.js';
+import { arrowEndClip, tailArrowEndClip, arrowClipLength } from './edge-route-clip.js';
+import { arrowDrawOpsForEnd, edgeArrowName, edgeArrowsize } from './edge-route-arrow.js';
 import { edgePenwidthAttr, edgeRenderPenwidth } from './edge-route-helpers.js';
 import { dist } from '../../common/arrows-geometry.js';
 
@@ -65,7 +64,7 @@ interface ClipState { e: Edge; bez: Bezier; size: number; endi: number; starti: 
  */
 function arrowEndClipIdx(state: ClipState, endp: number): number {
   const { e, bez } = state;
-  const elen = normalArrowLen(edgePenwidthAttr(e));
+  const elen = arrowClipLength(edgeArrowName(e, 'head'), edgeArrowsize(e), edgePenwidthAttr(e));
   bez.eflag = bez.eflag || 1;
   bez.ep = { ...bez.list[endp + 3] };
   if (endp > state.starti && dist(bez.list[endp], bez.list[endp + 3]) < elen) endp -= 3;
@@ -81,7 +80,7 @@ function arrowEndClipIdx(state: ClipState, endp: number): number {
  */
 function arrowStartClipIdx(state: ClipState, startp: number, endp: number): number {
   const { e, bez } = state;
-  const slen = normalArrowLen(edgePenwidthAttr(e));
+  const slen = arrowClipLength(edgeArrowName(e, 'tail'), edgeArrowsize(e), edgePenwidthAttr(e));
   bez.sflag = bez.sflag || 1;
   bez.sp = { ...bez.list[startp] };
   if (endp > startp && dist(bez.list[startp], bez.list[startp + 3]) < slen) startp += 3;
@@ -238,11 +237,12 @@ export function applyBezierSlice(state: ClipState): void {
   bez.size = newList.length;
 }
 
-/** Re-stash the cached arrow polygon for the renderer from a clipped tip/base. */
+/** Re-stash the cached arrow draw-ops for the renderer from a clipped tip/base. */
 function restashArrow(e: Edge, tip: Point, base: Point, isTail: boolean): void {
   const dir: Point = { x: base.x - tip.x, y: base.y - tip.y };
-  const pts = arrowheadPolygon(tip, dir, edgeRenderPenwidth(e));
-  (e.info as unknown as Record<string, unknown>)[isTail ? '_tailArrowPts' : '_arrowPts'] = pts;
+  const ops = arrowDrawOpsForEnd(e, isTail ? 'tail' : 'head', tip, dir, edgeRenderPenwidth(e));
+  if (isTail) e.info.tailArrowOps = ops;
+  else e.info.headArrowOps = ops;
 }
 
 /**

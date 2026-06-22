@@ -14,6 +14,7 @@
 import type { Port, Spline } from './geom.js';
 import type { Edge } from './edge.js';
 import type { TextlabelT } from '../common/types.js';
+import type { ArrowDrawOp } from '../common/arrows-types.js';
 
 /**
  * Edge layout and rendering info record; replaces the ED_* macro family.
@@ -82,6 +83,19 @@ export interface EdgeInfo {
    * @see lib/common/types.h:ED_xlabel
    */
   xlabel?: TextlabelT;
+
+  // -------------------------------------------------------------------------
+  // Arrowhead draw-ops (ADR-1). The C port regenerates arrowheads at render
+  // time from the rotated spline endpoint; this TS port precomputes the typed
+  // primitive list during routing (per arrowhead/arrowtail type) and rotates
+  // it in postproc. Replaces the loose `_arrowPts`/`_tailArrowPts` Point[].
+  // -------------------------------------------------------------------------
+
+  /** Head-end arrow primitives (arrowhead). @see lib/common/arrows.c:arrow_gen */
+  headArrowOps?: ArrowDrawOp[];
+
+  /** Tail-end arrow primitives (arrowtail). @see lib/common/arrows.c:arrow_gen */
+  tailArrowOps?: ArrowDrawOp[];
 
   // -------------------------------------------------------------------------
   // Edge metadata

@@ -91,6 +91,21 @@ export interface GenResult {
   readonly q: Point;
 }
 
+/**
+ * Map every point of an arrow draw-op through `fn` (and the ellipse center).
+ * Used to translate/rotate stored ops in postproc and flat-edge copy. rx/ry are
+ * left unchanged — arrow ellipses are circles (dot/odot), so a 90° rankdir
+ * rotation that would swap them is a no-op.
+ */
+export function mapArrowOpPoints(op: ArrowDrawOp, fn: (p: Point) => Point): ArrowDrawOp {
+  switch (op.kind) {
+    case 'ellipse': return { ...op, center: fn(op.center) };
+    case 'polygon': return { ...op, points: op.points.map(fn) };
+    case 'polyline': return { kind: 'polyline', points: op.points.map(fn) };
+    case 'bezier': return { kind: 'bezier', points: op.points.map(fn) };
+  }
+}
+
 /** Signature shared by every per-type shape generator. */
 export type ArrowGen = (
   p: Point, u: Point, arrowsize: number, penwidth: number, flag: number,
