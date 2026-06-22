@@ -110,7 +110,15 @@ Oracle: native dot 15.1.0 at `~/git/graphviz/build/cmd/dot/dot`,
 - ADR-5 parity regen + 0 per-id regression is the gate.
 
 ## Confidence
-- **Batch 1 (A+B): high** — validated experimentally, 0 regressions, both in one
-  file with clear C references.
-- **Batch 2 (C): medium** — symptom precisely characterized; root cause needs
-  one C-instrumentation step before the fix is certain.
+- **Batch 1 (A+B): high** — validated, 0 regressions; **DONE** (commit c923f1a,
+  1767 renders).
+- **Batch 2 (C+D): deeper than estimated** — both root-found and confirmed to be
+  cluster-infrastructure sub-missions, not localized batches.
+
+## Final status (2026-06-22)
+- **Batch 1 (A+B) shipped** → 1767.dot fixed. Merged to main.
+- **Batch 2 paused + split into two follow-on missions** (user decision):
+  - `plans/cluster-edge-routing/` — defect D (b53, cluster-aware edge routing).
+  - `plans/cluster-expansion-recursion/` — defect C (1332, expand single-node
+    leaf clusters).
+  Both seeded with the exact findings here so they don't start cold.
