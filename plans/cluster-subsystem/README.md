@@ -33,7 +33,7 @@ are also fixed. This mission lands all of them as one coherent change.
 | **B** skeleton count | `buildSkeletonEdgeCounts` fixed `rl=rankleader[ND_rank(v)]` not `rankleader[r]` | 1767 | **implemented** (c923f1a) |
 | **C** expansion | single-node leaf clusters never expanded → no `info.rank` → broken intercluster chain | 1332 | not started — `plans/cluster-expansion-recursion/` |
 | **D** edge routing | faithful edge router has no cluster support; intra-cluster chain vnode gets corrupt rank (-183) | b53, 2825 | not started — `plans/cluster-edge-routing/` |
-| **D2** position | `setYcoordsInitial` (position-ycoords.ts:166) null `rank.v[0]` after membership removal | 1221, 2721 | not started — investigate |
+| **D2** position | empty-cluster (post-agdelete) clobbers shared root rank via vStart aliasing → null `rank.v[0]` | 1221, 2721 | **implemented** (commit 99e17d3) — `removeEmptyClusters` in dotMincross |
 
 ## Branch
 `feature/cluster-membership-fix` (already holds A+B). Continue here; **do not
@@ -70,8 +70,14 @@ native dot, revert C instrumentation + rebuild before finishing.
 ## Status
 | Batch | Defect | Status |
 |-------|--------|--------|
-| — | A + B (membership + skeleton) | [x] implemented (unmerged) |
-| 1 | D2 (position null v[0]) | [ ] |
+| — | A + B (membership + skeleton) | [x] implemented (c923f1a, unmerged) |
+| 1 | D2 (position null v[0]) | [x] implemented (99e17d3) — 1221, 2721 render |
 | 2 | C (cluster expansion recursion) | [ ] |
 | 3 | D (cluster-aware edge routing) | [ ] |
 | 4 | merge gate (parity 0-regression) + merge | [ ] |
+
+### Progress (2026-06-22)
+A+B + D2 implemented on `feature/cluster-membership-fix`. Renders now: 1767
+(A+B), 1221 + 2721 (D2). Remaining for merge: C (1332), D (b53, 2825). Full
+vitest suite 2258 pass. Parity gate deferred to the end (after C + D) — do not
+run/merge until all six target graphs render.
