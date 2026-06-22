@@ -28,7 +28,10 @@ export type ArrowDrawOp =
       readonly ry: number;
       readonly filled: boolean;
     }
-  | { readonly kind: 'polyline'; readonly points: Point[] };
+  | { readonly kind: 'polyline'; readonly points: Point[] }
+  // Cubic Bézier path (control points: 1 + 3n). Emitted by the `curve`/`icurve`
+  // arrow types via gvrender_beziercurve. @see lib/common/arrows.c:arrow_type_curve
+  | { readonly kind: 'bezier'; readonly points: Point[] };
 
 /**
  * A single parsed arrow component resolved to its dispatch info: the
