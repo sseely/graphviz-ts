@@ -32,7 +32,32 @@ investigation budget, spin C into its own mission.
 > T1+T2 both touch `cluster.ts`; do them as one logical unit (or sequential
 > with the suite between). Experimentally validated together: 2250 pass.
 
-## Batch 2 — C (single-node leaf-cluster rank install) → 1332  [GATED]
+## Batch 1 outcome (executed 2026-06-22)
+
+A+B implemented in `cluster.ts` (markClusters agdelete + buildSkeletonEdgeCounts
+fixed-rl) with tests in `cluster.test.ts`. **1767.dot renders** (cluster sets
+owned-only, matching native C); full suite **2253 pass, 0 regressions**. Commit
+`c923f1a`.
+
+**Correction:** the derisk validated b53 via *layout only* (`dotLayoutEntry`).
+With A+B, b53 now passes layout but crashes in the **edge-routing** phase —
+`maximalBbox` (edge-route-faithful.ts:133) reads `ranks[r].ht1` where `ranks[r]`
+is undefined (a vnode whose rank is outside the root rank array). This is a
+**separate pre-existing defect D**, exposed because A+B advance b53 past
+position. So Batch 1 (A+B) fully fixes **1767 only**; b53 needs +D, 1332 needs +C.
+
+## Batch 2 — C (leaf-cluster rank, 1332) + D (edge-route ht1, b53)  [GATED]
+
+### T4 — defect D: edge-route `ranks[r]` out-of-bounds (b53)
+- **Symptom:** `maximalBbox`/`routeChainSegmented` deref `ctx.g.info.rank[vn.info.rank]`
+  for a vnode whose rank is outside `[minrank,maxrank]`.
+- **First (investigation):** instrument which vnode/edge has the out-of-range
+  rank in b53; determine if it is a cluster skeleton vnode left at a bad rank or
+  an edge-chain vnode. Compare to native C edge routing for that edge.
+- **Write-set (provisional):** `src/layout/dot/edge-route-faithful.ts` /
+  `edge-route-chain.ts` — or upstream where the vnode rank is set.
+- **AC:** `graphs/b53.gv` renders to SVG (not just layout); full suite 0 regr.
+
 
 ### T3 — investigate + fix leaf-cluster rank-table install
 - **First (investigation):** instrument C `build_ranks`/`install_cluster` on

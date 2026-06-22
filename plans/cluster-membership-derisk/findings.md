@@ -88,8 +88,15 @@ three clusters and diff the install order/recursion against the port.
 
 ## Per-case outcome with candidate fixes
 
-| Case | HEAD (current) | with A | with A+B | with A+B+C |
-|------|----------------|--------|----------|------------|
-| graphs/b53.gv | crash `containNodesRank` | **renders** | renders | renders |
-| 1767.dot | crash `buildSkeletonCountsNode` | crash (defect B) | **renders** | renders |
-| 1332.dot | crash `containNodesRank` | crash `mapPath` | crash `mapPath` (defect C) | (needs C) |
+| Case | HEAD (current) | with A | with A+B | needs |
+|------|----------------|--------|----------|-------|
+| graphs/b53.gv | crash `containNodesRank` | layout OK¹ | layout OK¹, **crash `maximalBbox` (ht1)** | A+B + **D** |
+| 1767.dot | crash `buildSkeletonCountsNode` | crash (defect B) | **renders** ✅ | A+B |
+| 1332.dot | crash `containNodesRank` | crash `mapPath` | crash `mapPath` (defect C) | A+B + **C** |
+
+¹ **Correction (Batch 1):** the A/A+B columns here were measured with
+`dotLayoutEntry` (*layout only*). On full `renderSvg`, b53 passes layout but
+crashes in **edge routing** — defect **D** (`maximalBbox` reads `ranks[r].ht1`
+with `ranks[r]` undefined; a vnode rank outside the root rank array). D is a
+separate pre-existing defect exposed by A+B advancing b53 past position. Only
+**1767 renders end-to-end with A+B**; b53 needs +D, 1332 needs +C (both Batch 2).
