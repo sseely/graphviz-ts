@@ -12,3 +12,10 @@
 
 Deferred per ADR-3 (exceeds the localized ≤~30-line / single-module cutoff;
 needs arrowhead-type dispatch + crow/vee geometry port). Not fixed in this mission.
+
+
+---
+
+## Arrowhead-geometry mission outcome (2026-06-21)
+
+**IMPROVED — `diverged` → `structural-match`.** The arrow geometry now emits the correct per-type primitives (verified vs the oracle); the residual is sub-tolerance spline/coord drift, not arrow shape. Arrowhead geometry: done.

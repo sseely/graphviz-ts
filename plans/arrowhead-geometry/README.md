@@ -71,9 +71,9 @@ parity regeneration is the success metric (ADR-6).
 
 | Batch | Theme | Tasks | Status |
 |-------|-------|-------|--------|
-| [1](batch-1/overview.md) | Geometry core (pure, unit-tested) | T1 types+resolution, T2 length+simple shapes, T3 complex shapes+modifiers+compound | [ ] |
-| [2](batch-2/overview.md) | Wire-in (clip → store → emit) | T4 clip length, T5 layout storage, T6 SVG emit | [ ] |
-| [3](batch-3/overview.md) | Verify + finalize | T7 goldens, T8 survey regen + 0-regression + memory | [ ] |
+| [1](batch-1/overview.md) | Geometry core (pure, unit-tested) | T1 types+resolution, T2 length+simple shapes, T3 complex shapes+modifiers+compound | [x] |
+| [2](batch-2/overview.md) | Wire-in (clip → store → emit) | T4 clip length, T5 layout storage, T6 SVG emit | [x] |
+| [3](batch-3/overview.md) | Verify + finalize | T7 goldens, T8 survey regen + 0-regression + memory | [x] |
 
 ## Diagrams
 
