@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-22T13:29:13.650Z",
+  "generatedAt": "2026-06-22T17:35:19.687Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 249,
+    "byte-match": 251,
     "structural-match": 222,
-    "diverged": 293,
-    "errored": 8,
-    "timeout": 8,
+    "diverged": 296,
+    "errored": 5,
+    "timeout": 6,
     "oracle-error": 16
   },
   "results": [
@@ -37,13 +37,13 @@
     {
       "id": "1221",
       "path": "1221.dot",
-      "verdict": "timeout"
+      "verdict": "byte-match"
     },
     {
       "id": "1308",
       "path": "1308.dot",
       "verdict": "structural-match",
-      "maxDelta": 88
+      "maxDelta": 72
     },
     {
       "id": "1308_1",
@@ -80,8 +80,9 @@
     {
       "id": "1332",
       "path": "1332.dot",
-      "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading '5')"
+      "verdict": "diverged",
+      "maxDelta": 1743,
+      "firstDiffPath": "svg/g[1]/g[22]/@id"
     },
     {
       "id": "1367",
@@ -191,7 +192,7 @@
       "id": "1494",
       "path": "1494.dot",
       "verdict": "errored",
-      "errMsg": "Expected \"#\", \"-\", \".\", \"/*\", \"//\", \":\", \";\", \"<\", \"[\", \"\\\"\", \"{\", \"}\", [ \\t\\r\\n], [0-9], [A-Za-z_0-9\\x80-￿], [A-Za-z_\\x80-￿], [Ee], [Gg], [Nn], [Ss], or edge operator but \",\" found."
+      "errMsg": "Expected \"#\", \"-\", \".\", \"/*\", \"//\", \":\", \";\", \"<\", \"[\", \"\\\"\", \"{\", \"}\", [ \\t\\r\\n], [0-9], [A-Za-z_0-9\\x80-\\u{FFFF}], [A-Za-z_\\x80-\\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but \",\" found."
     },
     {
       "id": "1514",
@@ -303,7 +304,7 @@
       "id": "1676",
       "path": "1676.dot",
       "verdict": "errored",
-      "errMsg": "Expected \"#\", \"-\", \".\", \"/*\", \"//\", \":\", \";\", \"<\", \"[\", \"\\\"\", \"{\", \"}\", [ \\t\\r\\n], [0-9], [A-Za-z_\\x80-￿], [Ee], [Gg], [Nn], [Ss], or edge operator but \",\" found."
+      "errMsg": "Expected \"#\", \"-\", \".\", \"/*\", \"//\", \":\", \";\", \"<\", \"[\", \"\\\"\", \"{\", \"}\", [ \\t\\r\\n], [0-9], [A-Za-z_\\x80-\\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but \",\" found."
     },
     {
       "id": "1702",
@@ -324,8 +325,9 @@
     {
       "id": "1767",
       "path": "1767.dot",
-      "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading 'info')"
+      "verdict": "diverged",
+      "maxDelta": 113,
+      "firstDiffPath": "svg/g[1]/g[20]/path[1]/@d"
     },
     {
       "id": "1783",
@@ -762,7 +764,7 @@
       "id": "2521",
       "path": "2521.dot",
       "verdict": "diverged",
-      "maxDelta": 311,
+      "maxDelta": 383,
       "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
@@ -941,7 +943,7 @@
     {
       "id": "2721",
       "path": "2721.dot",
-      "verdict": "timeout"
+      "verdict": "byte-match"
     },
     {
       "id": "2723",
@@ -1020,7 +1022,7 @@
       "id": "705",
       "path": "705.dot",
       "verdict": "diverged",
-      "maxDelta": 140.19,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/g[1]/@id"
     },
     {
@@ -1313,8 +1315,9 @@
     {
       "id": "graphs-b53",
       "path": "graphs/b53.gv",
-      "verdict": "errored",
-      "errMsg": "Cannot read properties of undefined (reading 'head')"
+      "verdict": "diverged",
+      "maxDelta": 323,
+      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
     },
     {
       "id": "graphs-b545",

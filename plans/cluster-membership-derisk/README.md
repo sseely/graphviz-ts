@@ -102,10 +102,27 @@ All three are small enough to instrument C directly and diff intermediate state.
 - Do NOT write production fixes in this mission — investigation only. If a
   one-line faithful fix is irresistible, log it in `fix-plan.md` instead.
 
-## Status
+## Status — COMPLETE (2026-06-22)
 
 | Phase | Deliverable | Status |
 |-------|-------------|--------|
-| P1 | findings.md (per-case first divergence) | [ ] |
-| P2 | root-cause.md (upstream defect + blast radius) | [ ] |
-| P3 | fix-plan.md (scoped fix mission outline) | [ ] |
+| P1 | [findings.md](findings.md) (per-case first divergence) | [x] |
+| P2 | [root-cause.md](root-cause.md) (upstream defect + blast radius) | [x] |
+| P3 | [fix-plan.md](fix-plan.md) (scoped fix mission outline) | [x] |
+
+### Outcome
+
+Three defects identified (C ground truth + experiments; port reverted to HEAD,
+investigation only):
+- **A** membership — `markClusters` omits C's `agdelete(clust,n)` for
+  already-claimed nodes → foreign nodes in cluster node sets. **Shared root
+  cause** across all 3 cases.
+- **B** skeleton count — `buildSkeletonEdgeCounts` `rankleader[r]` vs fixed `rl`.
+- **C** single-node leaf clusters never get `info.rank` (1332 only) — narrower
+  follow-on, needs one C-instrumentation step.
+
+**A+B validated regression-clean (full suite 2250 pass); together they render
+b53 + 1767.** Recommendation: one fix mission `cluster-membership-fix`, Batch 1
+= A+B (high confidence, ship first), Batch 2 = C (gated on its own
+investigation). Converts 3 deferred errored cases into 2 ready-to-fix + 1 scoped
+follow-on.

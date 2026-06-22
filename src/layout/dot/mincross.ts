@@ -294,9 +294,35 @@ export function mincrossClust(ctx: MincrossContext, g: Graph): number {
 // ---------------------------------------------------------------------------
 
 /** @see lib/dotgen/mincross.c:dot_mincross */
+/**
+ * Drop clusters with no member nodes before crossing/expansion.
+ *
+ * C `dot_mincross` removes empty clusters up front (only parse-time-empty
+ * "malformed input" clusters reach that point). The port must run it *after*
+ * `initMincross` because a node referenced in several clusters is pruned to its
+ * first cluster by `mark_clusters` agdelete (defect A) during init — emptying
+ * the later clusters. The port then *must* drop them: `merge_ranks` aliases each
+ * cluster's `rank[r].v` into the shared root rank array (vStart), so expanding an
+ * empty cluster clobbers the slot a sibling cluster just filled (e.g. 1221/2721:
+ * one node in two clusters → node lost, `rank.v[0]` null → position crash). C is
+ * immune because it installs from the root node list, not cluster membership.
+ * An empty cluster has no bbox and is not drawn, so dropping it matches C output.
+ *
+ * @see lib/dotgen/mincross.c:dot_mincross (empty-cluster removal loop)
+ */
+export function removeEmptyClusters(g: Graph): void {
+  const clust = g.info.clust;
+  if (!clust) return;
+  const kept = clust.filter((c) => c.nodes.size > 0);
+  if (kept.length === clust.length) return;
+  g.info.clust = kept;
+  g.info.n_cluster = kept.length;
+}
+
 export function dotMincross(g: Graph): number {
   const ctx = makeMincrossCtx(g);
   initMincross(ctx, g);
+  removeEmptyClusters(g);
   const comp = g.info.comp;
   if (!comp) return 0;
   let nc = runComponents(ctx, g, comp);
