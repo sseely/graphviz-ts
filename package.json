@@ -31,7 +31,8 @@
     "build:types": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit --stableTypeOrdering",
+    "typecheck:ts7": "tsgo --noEmit",
     "parser:regen": "peggy --format es --dts src/parser/dot.pegjs -o src/parser/dot.js",
     "docs:dev": "vitepress dev docs-site",
     "docs:build": "vitepress build docs-site",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
+    "@typescript/native-preview": "^7.0.0-dev.20260622.1",
     "@vitest/coverage-v8": "^4.1.9",
     "@xmldom/xmldom": "^0.9.10",
     "canvas": "^3.2.3",
