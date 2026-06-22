@@ -19,6 +19,7 @@ import {
 import {
   MincrossContext, matrixSet, newMatrix,
   dotRoot, agContainsNode, insideCluster,
+  rankGet, rankSet,
 } from './mincross-utils.js';
 
 // flat_rev — @see lib/dotgen/mincross.c:flat_rev
@@ -88,9 +89,11 @@ export function flatSearch(g: Graph, v: Node, M: RankEntry['flat'], hascl: boole
 
 // flat_breakcycles — @see lib/dotgen/mincross.c:flat_breakcycles
 export function flatBreakcyclesRank(g: Graph, rk: RankEntry, hascl: boolean): void {
+  // Windowed access (rankGet) — for a cluster rank, C's GD_rank(g)[r].v is the
+  // parent array offset by the cluster's vStart. ND_low(v)=i is the window index.
   let hasFlat = false;
   for (let i = 0; i < rk.n; i++) {
-    const v = rk.v[i];
+    const v = rankGet(rk, i);
     v.info.mark = 0;
     v.info.onstack = 0;
     v.info.low = i;
@@ -101,7 +104,8 @@ export function flatBreakcyclesRank(g: Graph, rk: RankEntry, hascl: boolean): vo
   }
   if (hasFlat && rk.flat) {
     for (let i = 0; i < rk.n; i++) {
-      if (!rk.v[i].info.mark) flatSearch(g, rk.v[i], rk.flat, hascl);
+      const v = rankGet(rk, i);
+      if (!v.info.mark) flatSearch(g, v, rk.flat, hascl);
     }
   }
 }
@@ -149,17 +153,17 @@ export function postorder(g: Graph, v: Node, list: Node[], r: number): void {
 // flat_reorder — @see lib/dotgen/mincross.c:flat_reorder
 export function flatReorderBuildTemprank(g: Graph, rk: RankEntry, temprank: Node[], flip: boolean): void {
   for (let i = 0; i < rk.n; i++) {
-    const v = flip ? rk.v[i] : rk.v[rk.n - i - 1];
+    const v = flip ? rankGet(rk, i) : rankGet(rk, rk.n - i - 1);
     const inCnt = v.info.flat_in !== undefined ? countConstraining(g, v.info.flat_in) : 0;
     const outCnt = v.info.flat_out !== undefined ? countConstraining(g, v.info.flat_out) : 0;
     if (inCnt === 0 && outCnt === 0) { temprank.push(v); continue; }
-    if (!v.info.mark && inCnt === 0) postorder(g, v, temprank, rk.v[i].info.rank !== undefined ? rk.v[i].info.rank! : 0);
+    if (!v.info.mark && inCnt === 0) postorder(g, v, temprank, v.info.rank !== undefined ? v.info.rank! : 0);
   }
 }
 
 export function flatReorderFixEdges(g: Graph, rk: RankEntry, flip: boolean): void {
   for (let i = 0; i < rk.n; i++) {
-    const v = rk.v[i];
+    const v = rankGet(rk, i);
     const fo = v.info.flat_out;
     if (!fo) continue;
     let j = 0;
@@ -178,15 +182,18 @@ export function flatReorderFixEdges(g: Graph, rk: RankEntry, flip: boolean): voi
 
 export function flatReorderRank(g: Graph, rk: RankEntry, rootRank: RankEntry[], r: number, flip: boolean): void {
   if (rk.n === 0) return;
-  const baseOrder = rk.v[0].info.order !== undefined ? rk.v[0].info.order : 0;
-  for (let i = 0; i < rk.n; i++) rk.v[i].info.mark = 0;
+  // Windowed access (rankGet/rankSet): for a cluster rank, C's GD_rank(g)[r].v
+  // is the parent array offset by vStart. Raw rk.v[i] read the wrong nodes and
+  // left B/A out of temprank, undercounting it and crashing on undefined.
+  const baseOrder = rankGet(rk, 0).info.order !== undefined ? rankGet(rk, 0).info.order! : 0;
+  for (let i = 0; i < rk.n; i++) rankGet(rk, i).info.mark = 0;
   const temprank: Node[] = [];
   flatReorderBuildTemprank(g, rk, temprank, flip);
   if (temprank.length > 0) {
     if (!flip) temprank.reverse();
     for (let i = 0; i < rk.n; i++) {
-      rk.v[i] = temprank[i];
-      rk.v[i].info.order = i + baseOrder;
+      rankSet(rk, i, temprank[i]!);
+      temprank[i]!.info.order = i + baseOrder;
     }
     flatReorderFixEdges(g, rk, flip);
   }
