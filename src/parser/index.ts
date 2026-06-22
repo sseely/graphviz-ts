@@ -68,7 +68,11 @@ export class Stripper {
   static strip(src: string): string {
     const rBlock = new RegExp('[/][*][\\s\\S]*?[*][/]', 'g');
     const rLine  = new RegExp('[/][/][^\\n]*', 'g');
-    const rQ     = new RegExp('"(?:[^"\\\\]|\\\\.)*"', 'g');
+    // `\\[\\s\\S]` (not `\\.`) so a backslash-escaped char — incl. a
+    // `\\<newline>` continuation — never terminates the string and its
+    // interior `--`/`->` cannot leak to validateEdgeOperators.
+    // @see lib/cgraph/scan.l qstring rules (\" , \\ , \<newline> continuation)
+    const rQ     = new RegExp('"(?:[^"\\\\]|\\\\[\\s\\S])*"', 'g');
     const rH     = new RegExp('<(?:[^<>]|<[^<>]*>)*>', 'g');
     let s = src.replace(rBlock, Stripper.blankFull);
     s = s.replace(rLine, Stripper.blankFull);
