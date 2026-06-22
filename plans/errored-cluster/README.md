@@ -77,8 +77,20 @@ RC4 first then RC1–3 (ADR-2); RC1–3 sequential despite disjoint files (ADR-3
 | Batch | Theme | Tasks | Status |
 |-------|-------|-------|--------|
 | [1](batch-1/overview.md) | Parser fix (isolated quick win) | T1 Stripper string-strip (RC4) | [x] |
-| [2](batch-2/overview.md) | Cluster/mincross crashes (sequential) | T2 flatReorderRank (RC1), T3 mapPath (RC2), T4 skeleton (RC3) | [ ] |
+| [2](batch-2/overview.md) | Cluster/mincross crashes (sequential) | T2 flatReorderRank (RC1) done; T3 mapPath (RC2) + T4 skeleton (RC3) deferred to derisk | [~] |
 | [3](batch-3/overview.md) | Verify + finalize | T5 survey regen + 0-regression + memory | [ ] |
+
+## Outcome (paused 2026-06-22)
+
+**Fixed (committed):** RC4 (big, biglabel) via T1; RC1 (121, 2239, 258) via T2 —
+which also resolved RC2's `mapPath` crash. 5/8 original crashes gone, 0 vitest
+regressions (2250 pass).
+
+**Re-classified + deferred:** RC2 (1332, b53) and RC3 (1767) both bottom out in
+**cluster node/edge membership + cluster ranking** infrastructure — deeper and
+cross-module, outside this mission's per-file write-sets. The brief's RC2/RC3
+crash-site hypotheses were symptoms, not root causes (confirmed against native C).
+See the new derisk mission: [`plans/cluster-membership-derisk/`](../cluster-membership-derisk/README.md).
 
 ## Diagrams
 

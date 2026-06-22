@@ -9,9 +9,9 @@ do not guess.
 
 | ID | Description | Writes | Depends On | Done |
 |----|-------------|--------|------------|------|
-| T2 | RC1: `flatReorderRank` temprank undercount (`temprank[i]` undefined when `temprank.length < rk.n`) | `src/layout/dot/mincross-flat.ts`, `…mincross-flat.test.ts` (new) | — | [ ] |
-| T3 | RC2: `mapPathLongSingle` null-head walk (`e.head.info.out!.list[0]` undefined) | `src/layout/dot/cluster-path.ts`, `…cluster-path.test.ts` (new) | T2 (sequence only) | [ ] |
-| T4 | RC3: `buildSkeletonEdgeCounts` null `rankleader[r]`/`.out` | `src/layout/dot/cluster.ts`, `…cluster.test.ts` (existing) | T3 (sequence only) | [ ] |
+| T2 | RC1: `flatReorderRank` temprank undercount (`temprank[i]` undefined when `temprank.length < rk.n`) | `src/layout/dot/mincross-flat.ts`, `…mincross-flat.test.ts` (new) | — | [x] |
+| T3 | RC2: `mapPathLongSingle` null-head walk — **resolved by T2** (shared windowing root cause); 1332/b53 now crash deeper in a cluster-rank-install gap (out of write-set) → **deferred** ([deferred-1332-b53.md](deferred-1332-b53.md)) | (no cluster-path.ts edit) | T2 (sequence only) | [~] |
+| T4 | RC3: `buildSkeletonEdgeCounts` null `rankleader[r]`/`.out` — **real cause is upstream cluster node/edge membership + ranking** (C: clusters hold only owned nodes; port leaks foreign nodes). Out of write-set → **deferred** to derisk mission ([deferred-1767.md](deferred-1767.md)) | (no cluster.ts edit) | T3 (sequence only) | [~] |
 
 `Depends On` here encodes execution order (ADR-3), not a data dependency — the
 write-sets do not overlap.
