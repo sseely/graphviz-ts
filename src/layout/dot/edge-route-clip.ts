@@ -9,6 +9,8 @@
  */
 
 import type { Point } from '../../model/geom.js';
+import { parseArrow, resolveArrowType } from '../../common/arrows.js';
+import { arrowLength } from '../../common/arrows-shapes.js';
 
 // ---------------------------------------------------------------------------
 // De Casteljau subdivision
@@ -168,6 +170,18 @@ export function arrowEndClip(
   // The path endpoint becomes arrowBase = clipped[0]
   // Un-reverse the full clipped result; all 4 points update via de Casteljau
   return [clipped[3]!, clipped[2]!, clipped[1]!, clipped[0]!];
+}
+
+/**
+ * Per-type spline clip length for an arrow string: the sum of the parsed
+ * compound arrow's component lengths (`arrow_length`). Replaces the normal-only
+ * `normalArrowLen` so non-normal arrows clip by their true length (ADR-4); the
+ * caller still gates on the edge flag (no clip when the end has no arrow).
+ * @see lib/common/arrows.c:arrow_length (:253)
+ */
+export function arrowClipLength(arrowName: string, arrowsize: number, penwidth: number): number {
+  const comps = parseArrow(arrowName).map(resolveArrowType);
+  return arrowLength(comps, arrowsize, penwidth);
 }
 
 /**
