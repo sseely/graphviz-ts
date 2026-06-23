@@ -1266,5 +1266,13 @@
     "input": "test/golden/inputs/dot-htmltable-rounded-grad.dot",
     "reference": "test/golden/refs/dot-htmltable-rounded-grad.svg",
     "description": "style=rounded HTML table with a linear gradient bgcolor (gradientangle=315) and border=3 cells: table fill + border emit rounded Bezier <path>s, the bgcolor fills carry the leaked border pen width as stroke-width; byte-matches the oracle"
+  },
+  {
+    "id": "dot-label-blank-lines",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-label-blank-lines.dot",
+    "reference": "test/golden/refs/dot-label-blank-lines.svg",
+    "description": "Graph label with leading blank lines: blank spans emit no <text> element (gvrender_textspan skips empty strings) while still reserving vertical space"
   }
 ]
