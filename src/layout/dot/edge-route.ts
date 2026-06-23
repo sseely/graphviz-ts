@@ -27,6 +27,7 @@ import { arrowDrawOpsForEnd } from './edge-route-arrow.js';
 import { linearBezier } from './edge-route-poly.js';
 import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
+import { edgeRouteCmp } from './edge-order.js';
 import { isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
 import {
   collectNonAdjacentFlatGroup, routeFlatEdgeGroupFaithful,
@@ -371,20 +372,32 @@ function routeForwardEdge(
 }
 
 /**
+ * Collect every real out-edge (same set as `g.nodes.values()` × out-edges) in
+ * C `dot_splines_` routing order: rank-major collection + `edgecmp` sort. Order
+ * matters because `recover_slack` mutates shared virtual nodes that other edges
+ * read as `maximal_bbox` neighbours (S1). When the graph is unranked, preserve
+ * the legacy insertion order (the sort keys are rank-derived).
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (edges list build + edgecmp sort)
+ */
+function orderedDotEdges(g: Graph): GraphEdge[] {
+  const outIdx = buildOutEdgeIndex(g);
+  const edges: GraphEdge[] = [];
+  for (const n of g.nodes.values()) {
+    for (const e of outIdx.get(n) ?? []) edges.push(e);
+  }
+  if (g.info.rank !== undefined) edges.sort(edgeRouteCmp);
+  return edges;
+}
+
+/**
  * Compute and install edge splines for all unrouted edges in g.
  * @see lib/dotgen/dotsplines.c:dot_splines_
  */
 export function routeDotEdges(g: Graph): void {
-  // One out-edge index instead of n.outEdges(g) per node (O(N·E) → O(E log E));
-  // routing only writes per-edge splines, never g.edges, and the index keeps
-  // outEdges' sorted order so spline output is unchanged.
-  const outIdx = buildOutEdgeIndex(g);
-  for (const n of g.nodes.values()) {
-    for (const e of outIdx.get(n) ?? []) {
-      if (e.info.spl !== undefined) continue;
-      if (e.tail === e.head) continue;
-      if (!hasValidCoords(e)) continue;
-      routeOneEdge(e, g);
-    }
+  for (const e of orderedDotEdges(g)) {
+    if (e.info.spl !== undefined) continue;
+    if (e.tail === e.head) continue;
+    if (!hasValidCoords(e)) continue;
+    routeOneEdge(e, g);
   }
 }
