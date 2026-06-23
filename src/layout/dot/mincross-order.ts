@@ -178,20 +178,40 @@ export function restoreBest(ctx: MincrossContext, g: Graph): void {
 // ---------------------------------------------------------------------------
 
 export function reorderFindLp(vlist: Node[], lp: number, ep: number): number {
-  while (lp < ep && (vlist[lp]!.info.mval !== undefined ? vlist[lp]!.info.mval! : -1) < 0) lp++;
+  // Advance past nodes that cannot be compared, i.e. while (mval ?? -1) < 0.
+  // Perf: read node.info.mval once per step (the original ternary read the
+  // property chain twice). Behaviour-identical — this is the hottest loop in
+  // the port (~1.6e9 iters on 2108); the read count, not the logic, changed.
+  while (lp < ep) {
+    const mv = vlist[lp]!.info.mval;
+    if (mv !== undefined && mv >= 0) break;
+    lp++;
+  }
   return lp;
 }
 
+/**
+ * Reused output for reorderFindRp. The result is consumed synchronously by the
+ * single caller (and by tests) before the next call, so a shared scratch object
+ * is safe and removes ~1.6e9 short-lived allocations on large ranks (2108).
+ * @see lib/dotgen/mincross.c:reorder (C returns `rp`/`muststay` via locals)
+ */
+const REORDER_RP: ReorderResult = { rp: 0, muststay: false };
+
 export function reorderFindRp(g: Graph, vlist: Node[], lp: number, ep: number): ReorderResult {
+  const lpNode = vlist[lp]!; // loop-invariant across the rp scan — hoisted
   let sawclust = false;
   for (let rp = lp + 1; rp < ep; rp++) {
     const w = vlist[rp]!;
-    if (sawclust && w.info.clust) continue;
-    if (left2right(g, vlist[lp]!, w) !== 0) return { rp, muststay: true };
-    if ((w.info.mval !== undefined ? w.info.mval : -1) >= 0) return { rp, muststay: false };
-    if (w.info.clust) sawclust = true;
+    const wInfo = w.info;
+    if (sawclust && wInfo.clust) continue;
+    if (left2right(g, lpNode, w) !== 0) { REORDER_RP.rp = rp; REORDER_RP.muststay = true; return REORDER_RP; }
+    const wm = wInfo.mval;
+    if (wm !== undefined && wm >= 0) { REORDER_RP.rp = rp; REORDER_RP.muststay = false; return REORDER_RP; }
+    if (wInfo.clust) sawclust = true;
   }
-  return { rp: ep, muststay: false };
+  REORDER_RP.rp = ep; REORDER_RP.muststay = false;
+  return REORDER_RP;
 }
 
 export function reorderInner(
@@ -208,13 +228,19 @@ export function reorderInner(
     lp = reorderFindLp(vlist, lp, ep);
     if (lp >= ep) break;
     const res = reorderFindRp(g, vlist, lp, ep);
-    if (res.rp >= ep) break;
+    const rp = res.rp; // capture before any later call mutates the shared scratch
+    if (rp >= ep) break;
     if (!res.muststay) {
-      const p1 = vlist[lp]!.info.mval !== undefined ? vlist[lp]!.info.mval! : -1;
-      const p2 = vlist[res.rp]!.info.mval !== undefined ? vlist[res.rp]!.info.mval! : -1;
-      if (p1 > p2 || (p1 >= p2 && reverse)) { exchange(ctx, vlist[lp]!, vlist[res.rp]!); changed = true; }
+      // Perf: read each node and its mval once (was four property-chain reads).
+      const lpNode = vlist[lp]!;
+      const rpNode = vlist[rp]!;
+      const m1 = lpNode.info.mval;
+      const m2 = rpNode.info.mval;
+      const p1 = m1 !== undefined ? m1 : -1;
+      const p2 = m2 !== undefined ? m2 : -1;
+      if (p1 > p2 || (p1 >= p2 && reverse)) { exchange(ctx, lpNode, rpNode); changed = true; }
     }
-    lp = res.rp;
+    lp = rp;
   }
   return changed;
 }
