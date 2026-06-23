@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T22:08:36.914Z",
+  "generatedAt": "2026-06-23T00:23:15.149Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -1653,22 +1653,22 @@
       "id": "graphs-grdfillcolor",
       "path": "graphs/grdfillcolor.gv",
       "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "maxDelta": 3.5399999999999636,
+      "firstDiffPath": "svg/g[1]/g[2]/polygon[1]"
     },
     {
       "id": "graphs-grdlinear",
       "path": "graphs/grdlinear.gv",
       "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "maxDelta": 3.5399999999999636,
+      "firstDiffPath": "svg/g[1]/g[2]/polygon[1]"
     },
     {
       "id": "graphs-grdlinear_angle",
       "path": "graphs/grdlinear_angle.gv",
       "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "maxDelta": 3.5399999999999636,
+      "firstDiffPath": "svg/g[1]/g[2]/polygon[1]"
     },
     {
       "id": "graphs-grdlinear_node",
@@ -1679,15 +1679,15 @@
       "id": "graphs-grdradial",
       "path": "graphs/grdradial.gv",
       "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "maxDelta": 3.5399999999999636,
+      "firstDiffPath": "svg/g[1]/g[2]/polygon[1]"
     },
     {
       "id": "graphs-grdradial_angle",
       "path": "graphs/grdradial_angle.gv",
       "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2][childCount]"
+      "maxDelta": 3.5399999999999636,
+      "firstDiffPath": "svg/g[1]/g[2]/polygon[1]"
     },
     {
       "id": "graphs-grdradial_node",

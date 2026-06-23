@@ -1242,5 +1242,21 @@
     "input": "test/golden/inputs/dot-arrow-side.dot",
     "reference": "test/golden/refs/dot-arrow-side.svg",
     "description": "dir=both lnormal head + rdiamond tail → side-modifier half arrows; byte-matches the oracle"
+  },
+  {
+    "id": "dot-htmltable-grad-linear",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-htmltable-grad-linear.dot",
+    "reference": "test/golden/refs/dot-htmltable-grad-linear.svg",
+    "description": "HTML table with a table-level linear gradient bgcolor (gradientangle=315) plus per-cell linear gradients (setFill GRADIENT path); byte-matches the oracle"
+  },
+  {
+    "id": "dot-htmltable-grad-radial",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-htmltable-grad-radial.dot",
+    "reference": "test/golden/refs/dot-htmltable-grad-radial.svg",
+    "description": "HTML table cell with a radial gradient bgcolor (STYLE=radial → setFill RGRADIENT path); byte-matches the oracle"
   }
 ]
