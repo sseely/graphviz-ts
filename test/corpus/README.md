@@ -40,6 +40,31 @@ npx tsx test/corpus/survey.ts
 npx tsx test/corpus/dashboard.ts
 ```
 
+## Performance dashboard (speed, peer to parity)
+
+PARITY tracks *correctness*; **PERF** tracks *speed* — warm in-process
+`renderSvg()` time vs native `dot`, against the **≤3× native** fidelity target.
+Unlike the survey (one cold `tsx` subprocess per render), the bench loads the
+shipped **bundle** once in a pool of resident, JIT-primed worker threads and
+times the pure render, so the numbers reflect the warm steady state a long-lived
+consumer (e.g. plantuml-js) actually sees.
+
+| Stage | Script | Output |
+|-------|--------|--------|
+| P1 bench (warm port vs native) | `bench.mjs` (+ `bench-worker.mjs`) | `perf.json` |
+| P2 perf dashboard | `perf-dashboard.mjs` | `PERF.md` |
+
+```sh
+npm run build:js                       # bench times the dist bundle
+node test/corpus/bench.mjs             # warm pool of floor(cpus/2) workers
+node test/corpus/perf-dashboard.mjs    # render perf.json -> PERF.md
+```
+
+Heavy graphs (native > 2s) are timed solo for clean numbers; light graphs run at
+full pool. A per-render cap (`BENCH_CAP_MS`, default 180s) SIGKILLs a true hang.
+Env: `BENCH_POOL`, `BENCH_CAP_MS`, `BENCH_IDS`, `BENCH_LIMIT`, `BENCH_HEAVY_MS`,
+`BENCH_HEAVY_POOL`, `BENCH_BUDGET_MULT`.
+
 ### Configuration (env / argv)
 
 | Variable | Default | Meaning |
