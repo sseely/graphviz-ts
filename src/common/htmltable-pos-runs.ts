@@ -226,7 +226,7 @@ function placeSimpleRuns(
   let baseline = box.ur.y;
   for (let i = 0; i < runs.length; i++) {
     const run = runs[i];
-    baseline -= i === 0 ? freetypeAscent(run.fontSize) : run.height;
+    baseline -= i === 0 ? freetypeAscent(run.fontSize, finfo.fontname) : run.height;
     lines.push(...placeRunItems(run, centerX - run.width / 2, baseline, finfo, measurer));
   }
   return lines;

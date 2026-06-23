@@ -5,6 +5,8 @@ import {
   LUT_FAMILY_COUNT,
   LutTextMeasurer,
   estimate_text_width_1pt,
+  freetypeLineHeight,
+  freetypeAscent,
 } from "./textmeasure.js";
 import { ALL_FONT_METRICS } from "./textmeasure-lut-data.js";
 import { normalizeFontName } from "./textmeasure-lookup.js";
@@ -181,5 +183,72 @@ describe("LutTextMeasurer.measure variant regression", () => {
     const wBold = m.measure("A", "Times", 14, { bold: true }).w;
     const wBI = m.measure("A", "Times", 14, { bold: true, italic: true }).w;
     expect(wBI).not.toBe(wBold);
+  });
+});
+
+// ── Font-aware vertical metrics (freetypeLineHeight / freetypeAscent) ─────────
+//
+// Helvetica/Nimbus Sans has a shorter line box than Times. The hinted line
+// height (ceil(asc·px)+ceil(desc·px)) is pinned to the native-dot oracle's
+// baseline-to-baseline delta across fontsizes 6-48. PX_PER_PT = 96/72; the
+// oracle line height in px below converts to pt via ×0.75.
+
+/** Oracle Helvetica line height in 96-dpi px, fontsizes 6..48. */
+const HELVETICA_LINE_PX: Record<number, number> = {
+  6: 9, 7: 11, 8: 12, 9: 13, 10: 15, 11: 16, 12: 17, 13: 18, 14: 20, 15: 21,
+  16: 22, 17: 24, 18: 25, 19: 26, 20: 28, 21: 29, 22: 30, 23: 32, 24: 33,
+  25: 34, 26: 35, 27: 37, 28: 38, 29: 39, 30: 41, 31: 42, 32: 43, 33: 45,
+  34: 46, 35: 47, 36: 49, 37: 50, 38: 52, 39: 53, 40: 55, 41: 56, 42: 57,
+  43: 59, 44: 60, 45: 61, 46: 63, 47: 64, 48: 65,
+};
+
+describe("freetypeLineHeight is font-aware", () => {
+  it("matches the oracle Helvetica line height at every fontsize 6-48", () => {
+    for (const [fsStr, px] of Object.entries(HELVETICA_LINE_PX)) {
+      const fs = Number(fsStr);
+      expect(freetypeLineHeight(fs, "Helvetica")).toBeCloseTo(px * 0.75, 9);
+    }
+  });
+
+  it("applies the Helvetica metric to sans aliases (arialmt, nimbussans, etc.)", () => {
+    const helv = freetypeLineHeight(36, "Helvetica");
+    expect(helv).toBeCloseTo(36.75, 9);
+    for (const alias of ["ArialMT", "Nimbus Sans", "Liberation Sans", "FreeSans"]) {
+      expect(freetypeLineHeight(36, alias)).toBe(helv);
+    }
+  });
+
+  it("keeps literal 'Arial' on the Times default (real Arial face differs; not Helvetica)", () => {
+    // On the reference system fontconfig resolves "Arial" to a real Arial face,
+    // distinct from both Helvetica and Times; pinning it is a separate follow-up.
+    expect(freetypeLineHeight(36, "Arial")).toBe(freetypeLineHeight(36, "Times"));
+    expect(freetypeLineHeight(36, "Arial")).not.toBeCloseTo(36.75, 9);
+  });
+
+  it("leaves Times unchanged (Times 36 → 40.5pt, 14 → 16.5pt)", () => {
+    expect(freetypeLineHeight(36, "Times")).toBeCloseTo(40.5, 9);
+    expect(freetypeLineHeight(14, "Times")).toBeCloseTo(16.5, 9);
+  });
+
+  it("defaults to Times when fontname is omitted (backward compatible)", () => {
+    expect(freetypeLineHeight(36)).toBe(freetypeLineHeight(36, "Times"));
+    expect(freetypeLineHeight(14)).toBe(freetypeLineHeight(14, "Times"));
+  });
+
+  it("unknown families fall back to Times metrics", () => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    expect(freetypeLineHeight(36, "NoSuchFont")).toBe(freetypeLineHeight(36, "Times"));
+  });
+});
+
+describe("freetypeAscent is font-aware", () => {
+  it("uses the Helvetica ascender (1577/2048): fs36 → 37px → 27.75pt", () => {
+    expect(freetypeAscent(36, "Helvetica")).toBeCloseTo(27.75, 9);
+  });
+
+  it("leaves Times ascent unchanged and defaults to it without a fontname", () => {
+    // Times 1825/2048: fs36 → ceil(42.77)=43px → 32.25pt
+    expect(freetypeAscent(36, "Times")).toBeCloseTo(32.25, 9);
+    expect(freetypeAscent(36)).toBe(freetypeAscent(36, "Times"));
   });
 });
