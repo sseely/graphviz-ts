@@ -1274,5 +1274,13 @@
     "input": "test/golden/inputs/dot-label-blank-lines.dot",
     "reference": "test/golden/refs/dot-label-blank-lines.svg",
     "description": "Graph label with leading blank lines: blank spans emit no <text> element (gvrender_textspan skips empty strings) while still reserving vertical space"
+  },
+  {
+    "id": "dot-size-scaling",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-size-scaling.dot",
+    "reference": "test/golden/refs/dot-size-scaling.svg",
+    "description": "size=1,1 on a wider drawing: init_job_viewport zoom Z<1 fits it; the SVG group carries scale(Z) and the width/height/viewBox are size-fitted while node/edge coordinates stay full-size (D4)"
   }
 ]

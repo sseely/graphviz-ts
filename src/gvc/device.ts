@@ -12,6 +12,7 @@
  */
 
 import type { Point } from '../model/geom.js';
+import { parseDrawingSize, initJobViewportZoom } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import { buildOutEdgeIndex } from '../model/node.js';
@@ -459,6 +460,27 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   const gbb = g.info.bb;
   const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
   job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
+  // init_job_viewport: fit the drawing into size= via a zoom Z carried by the
+  // SVG group transform (D1: parse here, not graph_init).
+  //
+  // Correction to D3: only the trailing `!` on size= sets the *filled* flag
+  // that init_job_viewport reads (input.c:694 GD_drawing->filled =
+  // getdoubles2ptf). `ratio=fill` instead sets ratio_kind=R_FILL (setRatio),
+  // which reshapes the *layout* (out of scope, D3) and does NOT feed
+  // init_job_viewport — so it is not OR-ed into filled here (doing so upscales
+  // ~31x where the oracle reshapes to ~1x). ratio=fill graphs therefore diverge
+  // on node positions, the deferred ratio-aspect-layout mission.
+  //
+  // Deviation from D4's stated mechanism: the brief assumed transformPoint
+  // short-circuits on GVRENDER_DOES_TRANSFORM for SVG, leaving job.zoom free to
+  // scale coordinates. In this port that flag is never set, so transformPoint
+  // (the shared raster ptf path — do not touch) applies job.zoom*devscale to
+  // every coordinate. To keep SVG coords full-size (D4's intent) WITHOUT
+  // altering the ptf path, carry Z in job.scale instead — which is exactly what
+  // C's SVG group emits (svg_begin_page prints job->scale.x/y = zoom*dpi/72 = Z
+  // for dpi=72), not job->zoom. job.scale is read only by the SVG group/dims.
+  const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')));
+  job.scale = { x: z, y: z };
   job.renderer = renderer;
   resetHtmlAnchorIds(); // C: fresh anchorId per dot invocation
   for (const n of g.nodes.values()) polyInit(n, g, job.measurer);

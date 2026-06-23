@@ -1,0 +1,11 @@
+// graphviz-ts reference input: size= drawing scaling (init_job_viewport zoom)
+// engine: dot
+// tolerance: deterministic
+// A drawing wider than size=1,1 (72pt): zoom Z < 1 shrinks it to fit. The SVG
+// group carries scale(Z); node/edge coordinates stay full-size.
+digraph G {
+    size="1,1";
+    rankdir=LR;
+    a -> b -> c -> d;
+    a -> d;
+}
