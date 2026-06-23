@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-23T02:47:31.921Z",
+  "generatedAt": "2026-06-23T12:05:54.397Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
     "byte-match": 280,
-    "structural-match": 237,
-    "diverged": 251,
+    "structural-match": 236,
+    "diverged": 252,
     "errored": 5,
     "timeout": 7,
     "oracle-error": 16
@@ -370,7 +370,7 @@
       "id": "1880",
       "path": "1880.dot",
       "verdict": "diverged",
-      "maxDelta": 3,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/polygon[1]"
     },
     {
@@ -514,8 +514,9 @@
     {
       "id": "2193",
       "path": "2193.dot",
-      "verdict": "structural-match",
-      "maxDelta": 129.08999999999992
+      "verdict": "diverged",
+      "maxDelta": 81.47000000000003,
+      "firstDiffPath": "svg/g[1]/g[91]/path[1]/@d"
     },
     {
       "id": "2222",
@@ -1051,7 +1052,7 @@
       "id": "graphs-Helvetica",
       "path": "graphs/Helvetica.gv",
       "verdict": "structural-match",
-      "maxDelta": 48
+      "maxDelta": 42
     },
     {
       "id": "graphs-KW91",
@@ -1291,7 +1292,7 @@
       "id": "graphs-b51",
       "path": "graphs/b51.gv",
       "verdict": "diverged",
-      "maxDelta": 1065.5,
+      "maxDelta": 1077.5,
       "firstDiffPath": "svg/g[1]/g[40]/path[1]/@d"
     },
     {
@@ -1311,8 +1312,8 @@
       "id": "graphs-b56",
       "path": "graphs/b56.gv",
       "verdict": "diverged",
-      "maxDelta": 105,
-      "firstDiffPath": "svg/g[1]/g[12]/path[1]/@d"
+      "maxDelta": 122,
+      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
     },
     {
       "id": "graphs-b57",
@@ -1543,7 +1544,7 @@
       "id": "graphs-crazy",
       "path": "graphs/crazy.gv",
       "verdict": "diverged",
-      "maxDelta": 53.430000000000064,
+      "maxDelta": 15.720000000000027,
       "firstDiffPath": "svg/g[1]/g[23]/path[1]/@d"
     },
     {
@@ -2569,7 +2570,7 @@
       "id": "graphs-xx",
       "path": "graphs/xx.gv",
       "verdict": "diverged",
-      "maxDelta": 5030.299999999999,
+      "maxDelta": 1558.3899999999994,
       "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
     },
     {
@@ -2773,14 +2774,14 @@
       "id": "linux.x86-rankdir_dot",
       "path": "linux.x86/rankdir_dot.gv",
       "verdict": "diverged",
-      "maxDelta": 43.120000000000005,
+      "maxDelta": 40.58999999999992,
       "firstDiffPath": "svg/g[1]/g[23]/path[1]/@d"
     },
     {
       "id": "linux.x86-rankdir_dot1",
       "path": "linux.x86/rankdir_dot1.gv",
       "verdict": "diverged",
-      "maxDelta": 65.52999999999997,
+      "maxDelta": 65.55000000000007,
       "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
@@ -3041,7 +3042,7 @@
       "id": "nshare-rankdir_dot1",
       "path": "nshare/rankdir_dot1.gv",
       "verdict": "diverged",
-      "maxDelta": 68.12999999999988,
+      "maxDelta": 68.14999999999986,
       "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
