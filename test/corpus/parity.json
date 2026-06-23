@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-23T17:26:47.835Z",
+  "generatedAt": "2026-06-23T17:43:56.696Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 302,
-    "structural-match": 265,
-    "diverged": 201,
+    "byte-match": 312,
+    "structural-match": 256,
+    "diverged": 200,
     "errored": 5,
     "timeout": 7,
     "oracle-error": 16
@@ -1122,8 +1122,7 @@
     {
       "id": "graphs-abstract",
       "path": "graphs/abstract.gv",
-      "verdict": "structural-match",
-      "maxDelta": 5
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-alf",
@@ -1166,7 +1165,7 @@
       "path": "graphs/b102.gv",
       "verdict": "diverged",
       "maxDelta": 1850.6900000000005,
-      "firstDiffPath": "svg/g[1]/g[153]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[211]/path[1]/@d"
     },
     {
       "id": "graphs-b103",
@@ -1431,9 +1430,7 @@
     {
       "id": "graphs-badvoro",
       "path": "graphs/badvoro.gv",
-      "verdict": "diverged",
-      "maxDelta": 107.5,
-      "firstDiffPath": "svg/g[1]/g[849]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-big",
@@ -1535,7 +1532,7 @@
       "id": "graphs-crazy",
       "path": "graphs/crazy.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 1
     },
     {
       "id": "graphs-ctext",
@@ -1593,7 +1590,7 @@
       "id": "graphs-fig6",
       "path": "graphs/fig6.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 0.010000000000019327
     },
     {
       "id": "graphs-flatedge",
@@ -2037,19 +2034,19 @@
       "id": "graphs-lsunix1",
       "path": "graphs/lsunix1.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 2.039999999999999
     },
     {
       "id": "graphs-lsunix2",
       "path": "graphs/lsunix2.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 2.039999999999999
     },
     {
       "id": "graphs-lsunix3",
       "path": "graphs/lsunix3.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 2.039999999999999
     },
     {
       "id": "graphs-mike",
@@ -2456,7 +2453,7 @@
       "id": "graphs-unix",
       "path": "graphs/unix.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 2.039999999999999
     },
     {
       "id": "graphs-unix2",
@@ -2541,7 +2538,7 @@
       "path": "graphs/xx.gv",
       "verdict": "diverged",
       "maxDelta": 178.75,
-      "firstDiffPath": "svg/g[1]/g[153]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[216]/path[1]/@d"
     },
     {
       "id": "imagepath_test-base",
@@ -2585,7 +2582,7 @@
       "id": "linux.i386-crazy",
       "path": "linux.i386/crazy.gv",
       "verdict": "structural-match",
-      "maxDelta": 8.960000000000036
+      "maxDelta": 8.25
     },
     {
       "id": "linux.i386-dfa",
@@ -2740,20 +2737,17 @@
     {
       "id": "linux.x86-rankdir_dot",
       "path": "linux.x86/rankdir_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.309999999999945
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-rankdir_dot1",
       "path": "linux.x86/rankdir_dot1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 5
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-rankdir_dot2",
       "path": "linux.x86/rankdir_dot2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 8.300000000000182
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-record_dot",
@@ -2997,20 +2991,17 @@
     {
       "id": "nshare-rankdir_dot",
       "path": "nshare/rankdir_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.740000000000236
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-rankdir_dot1",
       "path": "nshare/rankdir_dot1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 5
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-rankdir_dot2",
       "path": "nshare/rankdir_dot2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 8.230000000000018
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-record_dot",
@@ -3420,8 +3411,7 @@
     {
       "id": "share-abstract",
       "path": "share/abstract.gv",
-      "verdict": "structural-match",
-      "maxDelta": 5
+      "verdict": "byte-match"
     },
     {
       "id": "share-alf",
@@ -3530,7 +3520,7 @@
       "id": "share-crazy",
       "path": "share/crazy.gv",
       "verdict": "structural-match",
-      "maxDelta": 9.049999999999955
+      "maxDelta": 8.25
     },
     {
       "id": "share-ctext",
@@ -3549,7 +3539,7 @@
       "id": "share-fig6",
       "path": "share/fig6.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 0.010000000000019327
     },
     {
       "id": "share-flatedge",
@@ -4006,7 +3996,7 @@
       "id": "share-unix",
       "path": "share/unix.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 2.039999999999999
     },
     {
       "id": "share-unix2",
@@ -4076,8 +4066,7 @@
     {
       "id": "windows-abstract",
       "path": "windows/abstract.gv",
-      "verdict": "structural-match",
-      "maxDelta": 5
+      "verdict": "byte-match"
     },
     {
       "id": "windows-alf",
@@ -4091,7 +4080,7 @@
       "path": "windows/b102.gv",
       "verdict": "diverged",
       "maxDelta": 485,
-      "firstDiffPath": "svg/g[1]/g[153]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[181]/path[1]/@d"
     },
     {
       "id": "windows-b106",
@@ -4175,7 +4164,7 @@
       "id": "windows-crazy",
       "path": "windows/crazy.gv",
       "verdict": "structural-match",
-      "maxDelta": 8.960000000000036
+      "maxDelta": 8.25
     },
     {
       "id": "windows-ctext",
@@ -4194,7 +4183,7 @@
       "id": "windows-fig6",
       "path": "windows/fig6.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 0.010000000000019327
     },
     {
       "id": "windows-fsm",
@@ -4657,7 +4646,7 @@
       "id": "windows-unix",
       "path": "windows/unix.gv",
       "verdict": "structural-match",
-      "maxDelta": 5
+      "maxDelta": 2.039999999999999
     },
     {
       "id": "windows-unix2",

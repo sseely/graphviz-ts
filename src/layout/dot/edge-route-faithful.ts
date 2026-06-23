@@ -313,7 +313,7 @@ export function routeRegularEdgeFaithful(g: Graph, e: Edge): Point[] | null {
     sp: {
       leftBound: computeLeftBound(g),
       rightBound: computeRightBound(g),
-      splinesep: (g.info.nodesep ?? 18) / 2,
+      splinesep: Math.trunc((g.info.nodesep ?? 18) / 4),
     },
   };
   const ranksep = graphRanksep(g);
