@@ -52,14 +52,18 @@ import {
 
 /** Per-call spline bounds. Splinesep = nodesep/4 (C's sd.Splinesep,
  *  dotsplines.c:267) sets the gap to VIRTUAL neighbors in maximal_bbox, which
- *  the chain's virtual nodes exercise. */
+ *  the chain's virtual nodes exercise. C's GD_nodesep is an `int` (types.h:334)
+ *  and the divide is INTEGER (18/4=4); a float divide here (4.5) makes
+ *  maximal_bbox's round() straddle the boundary, shifting a virtual-node box
+ *  wall 1px and forcing an extra bezier piece on near-straight long edges
+ *  (rankdir_dot Unix/TS 3.0->TS 4.0). Truncate to mirror C. */
 function chainBboxCtx(g: Graph): BboxCtx {
   return {
     g,
     sp: {
       leftBound: computeLeftBound(g),
       rightBound: computeRightBound(g),
-      splinesep: (g.info.nodesep ?? 18) / 4,
+      splinesep: Math.trunc((g.info.nodesep ?? 18) / 4),
     },
   };
 }
