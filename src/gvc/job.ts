@@ -296,7 +296,6 @@ export class RenderJob {
   layerIDs: (string | null)[] = [];
   nodeId: number = 0;
   edgeId: number = 0;
-  clusterId: number = 0;
   /** Monotonic counter for linear gradient ids per render.
    * @see AD1; plugin/core/gvrender_core_svg.c:572 (static gradId) */
   linearGradId: number = 0;

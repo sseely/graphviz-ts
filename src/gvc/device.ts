@@ -340,8 +340,9 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     // Resolve and wire cluster fill/pen into job.obj before the polygon.
     // emit_clusters:3805-3874 — must happen before gvrender_box.
     const filled = applyClusterObjState(sg, job);
-    // beginCluster increments job.clusterId (svgBeginCluster); set obj.id
-    // after so emitGradientDefs prefixes gradient id as "clustN_l_0".
+    // Cluster id is clust<AGSEQ seq> (getObjId); obj.id feeds emitGradientDefs
+    // the "clustN_l_0" gradient prefix. seq is stable on the subgraph, so the
+    // begin/assign order below is no longer load-bearing.
     // @see lib/common/emit.c:209 getObjId (AGRAPH/cluster: pfx="clust")
     renderer.beginCluster?.(sg, job);
     if (job.obj !== null) job.obj.id = svgClusterId(sg, job);
