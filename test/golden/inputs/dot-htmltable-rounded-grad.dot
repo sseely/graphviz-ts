@@ -1,0 +1,6 @@
+digraph G {
+  a [shape=plaintext label=<
+    <TABLE style="rounded" BGCOLOR="yellow:violet" gradientangle="315" border="6">
+      <TR><TD border="3" BGCOLOR="green:blue">00</TD><TD border="3" BGCOLOR="orange">01</TD></TR>
+    </TABLE>>];
+}

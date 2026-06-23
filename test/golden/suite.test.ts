@@ -86,8 +86,10 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 // + 8 arrowhead-geometry goldens (one per arrow-type group: dot/crow/box/
 //   diamond/tee/curve/compound/side — dir=both head+tail, byte-matched)
 // + 2 HTML-table gradient bgcolor goldens (linear table+cell; radial cell)
-test('manifest has 156 entries', () => {
-  expect(manifest).toHaveLength(156);
+// + 1 rounded HTML-table gradient golden (rounded fill+border <path>,
+//   leaked stroke-width on bordered-cell fills)
+test('manifest has 157 entries', () => {
+  expect(manifest).toHaveLength(157);
 });
 
 // ---------------------------------------------------------------------------
