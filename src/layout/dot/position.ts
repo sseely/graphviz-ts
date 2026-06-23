@@ -75,13 +75,23 @@ export function shiftAllXcoords(g: Graph, delta: number): void {
 }
 
 /**
- * Shift all node x-coords so the leftmost NORMAL node's left edge is at x=0.
- * Matches C: left boundary virtual node (GD_ln) ends at rank=0 after NS,
- * so the leftmost real node sits at x=lw (left edge=0).
+ * Shift all node x-coords so the leftmost NORMAL node sits near x=0. C does not
+ * normalize here (network simplex leaves GD_ln at rank=0 naturally with integer
+ * x-coords); the port's NS leaves a non-zero leftmost, so we compensate.
+ *
+ * The shift delta is ROUNDED to an integer: minNormalLeftX = coord.x - lw, and
+ * lw (half node-width) is non-integer, so subtracting it raw would inject a
+ * fractional offset into every node and route splines in a frame shifted off
+ * C's integer frame by a non-integer amount. maximal_bbox's round() then
+ * straddles rounding boundaries differently than C, perturbing the
+ * Pshortestpath corridor and flipping the fitter's bezier piece count on
+ * knife-edge long edges. Rounding keeps the routing frame integer (matching C);
+ * the fraction washes out in the postprocess translate, so final node positions
+ * are unchanged. @see lib/dotgen/position.c:set_xcoords (no normalize step)
  */
 export function normalizeXcoords(g: Graph): void {
   const minX = minNormalLeftX(g);
-  if (minX !== Number.MAX_SAFE_INTEGER && minX !== 0) shiftAllXcoords(g, minX);
+  if (minX !== Number.MAX_SAFE_INTEGER && minX !== 0) shiftAllXcoords(g, Math.round(minX));
 }
 
 /** @see lib/dotgen/position.c:set_xcoords */
