@@ -86,7 +86,7 @@ const paintObj: ObjState = {
 
 /** Paint requested for a scoped drawing call. */
 export interface HtmlPaint {
-  /** Solid fill color; absent → no fill ("none"). */
+  /** Solid fill color, or the first stop of a gradient when `stop` is set. */
   fill?: string;
   /** Pen (stroke) color; absent → "none" (transparent). */
   pen?: string;
@@ -94,6 +94,16 @@ export interface HtmlPaint {
   penWidth?: number;
   /** Style string; "dashed"/"dotted" map to the pen type. */
   penStyle?: string;
+  /**
+   * Second/stop color of a gradient fill. Presence switches the fill from
+   * solid to a gradient (linear, or radial when `radial` is true), mirroring
+   * C setFill's findStopColor hit. @see lib/common/htmltable.c:setFill
+   */
+  stop?: string;
+  /** Gradient angle in degrees; defaults to 0. Ignored without `stop`. */
+  gradientAngle?: number;
+  /** True → radial gradient (RGRADIENT); else linear. Ignored without `stop`. */
+  radial?: boolean;
 }
 
 /** Map a style string to the C pen type. @see lib/common/htmltable.c:doBorder */
@@ -114,11 +124,32 @@ export function withHtmlPaint(paint: HtmlPaint, job: RenderJob, drawFn: () => vo
     ? resolveRenderColor(paint.fill) : { type: 'none' };
   paintObj.penColor = paint.pen !== undefined
     ? resolveRenderColor(paint.pen) : { type: 'string', s: 'transparent' };
-  paintObj.fill = paint.fill !== undefined ? FillType.Solid : FillType.None;
+  applyHtmlFill(paint);
   paintObj.pen = penTypeOf(paint.penStyle);
   paintObj.penWidth = paint.penWidth !== undefined ? paint.penWidth : 1.0;
   job.pushObj(paintObj);
   try { drawFn(); } finally { job.popObj(); }
+}
+
+/**
+ * Set the fill type + gradient fields on paintObj from a paint request.
+ * A `stop` color switches solid → gradient, mirroring C setFill's
+ * findStopColor hit (clrs[0] is the fill, clrs[1] the gradient stop).
+ * For the "c0:c1" form with no explicit fraction the frac is 0
+ * (findStopColor's else branch). @see lib/common/htmltable.c:setFill
+ */
+function applyHtmlFill(paint: HtmlPaint): void {
+  if (paint.stop !== undefined) {
+    paintObj.fill = paint.radial === true ? FillType.Radial : FillType.Linear;
+    paintObj.stopColor = resolveRenderColor(paint.stop);
+    paintObj.gradientAngle = paint.gradientAngle ?? 0;
+    paintObj.gradientFrac = 0;
+    return;
+  }
+  paintObj.fill = paint.fill !== undefined ? FillType.Solid : FillType.None;
+  paintObj.stopColor = { type: 'none' };
+  paintObj.gradientAngle = 0;
+  paintObj.gradientFrac = 0;
 }
 
 // ---------------------------------------------------------------------------

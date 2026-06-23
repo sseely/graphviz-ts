@@ -123,10 +123,21 @@ describe('T6 — BGCOLOR fill (htmltable.c:setFill)', () => {
     expect(svg.indexOf(fill)).toBeLessThan(svg.indexOf(border));
   });
 
-  it('two-color gradient spec falls back to solid first color (AD4)', () => {
+  it('two-color gradient spec emits a linear gradient fill', () => {
     const svg = renderSvg(tbl('<TR><TD BGCOLOR="red:blue">a</TD></TR>'), 'dot');
-    expect(svg).toContain('fill="red" stroke="none"');
-    expect(svg).not.toContain('linearGradient');
+    expect(svg).toContain('<linearGradient id="l_0"');
+    expect(svg).toContain('stop-color:red;');
+    expect(svg).toContain('stop-color:blue;');
+    expect(svg).toContain('fill="url(#l_0)" stroke="none"');
+    // No longer collapsed to a solid first-stop fill.
+    expect(svg).not.toContain('fill="red" stroke="none"');
+  });
+
+  it('radial style gradient spec emits a radial gradient fill', () => {
+    const svg = renderSvg(
+      tbl('<TR><TD BGCOLOR="red:blue" STYLE="radial">a</TD></TR>'), 'dot');
+    expect(svg).toContain('<radialGradient id="r_0"');
+    expect(svg).toContain('fill="url(#r_0)" stroke="none"');
   });
 });
 
@@ -230,11 +241,7 @@ describe('T7 — html IMG emission', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// T9 — gaps found by C-oracle verification.
-// Expected strings verified against C graphviz 15.0.0 on 2026-06-12.
-// ---------------------------------------------------------------------------
-
+// T9 — gaps found by C-oracle verification (C graphviz 15.0.0, 2026-06-12).
 describe('T9 — CELLBORDER > 1 (htmltable.c:doBorder via emit_html_cell)', () => {
   it('emits stroke-width and insets the box by border/2', () => {
     const svg = renderSvg(
