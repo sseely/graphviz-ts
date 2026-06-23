@@ -316,3 +316,71 @@ describe('IMG SCALE fallback to node imagescale attr (emit_html_img:615-618)', (
     expect(svg).toContain('width="24px" height="12px"');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Rounded bgcolor fill + border (htmltable.c emit_html_tbl/emit_html_cell
+// rounded arm; doBorder rounded arm). A style="rounded" table/cell fills and
+// borders a rounded Bézier <path> instead of a square <polygon>; the bgcolor
+// fill also carries the leaked pen width as stroke-width (gap B). Every
+// expected string below was verified byte-for-byte against the installed C
+// graphviz 15.0.0 (`dot -Tsvg`) on 2026-06-22.
+// @see lib/common/htmltable.c:emit_html_tbl (:543), emit_html_cell (:644), doBorder (:271)
+// ---------------------------------------------------------------------------
+
+const roundFill = 'M24,-4C24,-4 30,-4 30,-4 33,-4 36,-7 36,-10 36,-10 36,-26.5 36,-26.5 36,-29.5 33,-32.5 30,-32.5 30,-32.5 24,-32.5 24,-32.5 21,-32.5 18,-29.5 18,-26.5 18,-26.5 18,-10 18,-10 18,-7 21,-4 24,-4';
+
+describe('Rounded table bgcolor fill (gap A)', () => {
+  it('rounded solid table fills a Bézier <path>, not a <polygon>', () => {
+    const svg = renderSvg(
+      'digraph { A [shape=plaintext label=<<TABLE style="rounded" bgcolor="lightblue"><TR><TD>a</TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toContain('<path fill="lightblue" stroke="none" d="' + roundFill + '"/>');
+    // table fill must NOT be a square polygon
+    expect(svg).not.toContain('<polygon fill="lightblue"');
+  });
+
+  it('rounded table border is also a Bézier <path>', () => {
+    const svg = renderSvg(
+      'digraph { A [shape=plaintext label=<<TABLE style="rounded" bgcolor="lightblue"><TR><TD>a</TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toContain('<path fill="none" stroke="black" d="' + roundFill + '"/>');
+  });
+
+  it('non-rounded table still fills a square <polygon> (regression)', () => {
+    const svg = renderSvg(tbl('<TR><TD>a</TD></TR>').replace('<TABLE>', '<TABLE bgcolor="lightblue">'), 'dot');
+    expect(svg).toContain('<polygon fill="lightblue" stroke="none"');
+    expect(svg).not.toContain('<path fill="lightblue"');
+  });
+
+  it('rounded gradient table emits a <path> filled with the gradient url', () => {
+    const svg = renderSvg(
+      'digraph { A [shape=plaintext label=<<TABLE style="rounded" bgcolor="red:blue" gradientangle="90"><TR><TD>a</TD></TR></TABLE>>]; }', 'dot');
+    expect(svg).toContain('<linearGradient id="l_0"');
+    expect(svg).toContain('<path fill="url(#l_0)" stroke="none" d="' + roundFill + '"/>');
+  });
+});
+
+describe('Rounded cell bgcolor fill (gap A — D2 cell arm)', () => {
+  it('rounded cell fills and borders a Bézier <path>', () => {
+    const svg = renderSvg(
+      'digraph { A [shape=plaintext label=<<TABLE><TR><TD style="rounded" bgcolor="lightblue">a</TD></TR></TABLE>>]; }', 'dot');
+    const cellFill = 'M25,-7C25,-7 29,-7 29,-7 31,-7 33,-9 33,-11 33,-11 33,-25.5 33,-25.5 33,-27.5 31,-29.5 29,-29.5 29,-29.5 25,-29.5 25,-29.5 23,-29.5 21,-27.5 21,-25.5 21,-25.5 21,-11 21,-11 21,-9 23,-7 25,-7';
+    expect(svg).toContain('<path fill="lightblue" stroke="none" d="' + cellFill + '"/>');
+    expect(svg).toContain('<path fill="none" stroke="black" d="' + cellFill + '"/>');
+  });
+});
+
+describe('Pen width on bgcolor fill (gap B — htmltable.c penwidth leak)', () => {
+  it('cell fill carries the prior cell border as stroke-width; first cell none', () => {
+    const svg = renderSvg(
+      'digraph { A [shape=plaintext label=<<TABLE><TR><TD border="3" bgcolor="yellow">a</TD><TD border="3" bgcolor="green">b</TD></TR></TABLE>>]; }', 'dot');
+    // first cell fill inherits pen width 1 → no stroke-width
+    expect(svg).toContain('<polygon fill="yellow" stroke="none" points="11,-7 11,-33.5 27,-33.5 27,-7 11,-7"/>');
+    // second cell fill leaks the prior cell's border=3 → stroke-width="3", stroke still none
+    expect(svg).toContain('<polygon fill="green" stroke="none" stroke-width="3" points="29,-7 29,-33.5 45.75,-33.5 45.75,-7 29,-7"/>');
+  });
+
+  it('default-border cell fill carries no stroke-width', () => {
+    const svg = renderSvg(tbl('<TR><TD BGCOLOR="lightblue">a</TD></TR>'), 'dot');
+    expect(svg).toContain('<polygon fill="lightblue" stroke="none" points=');
+    expect(svg).not.toMatch(/<polygon fill="lightblue" stroke="none" stroke-width=/);
+  });
+});

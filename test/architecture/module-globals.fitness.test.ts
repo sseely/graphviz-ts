@@ -59,6 +59,8 @@ const ALLOWLIST: Readonly<Record<string, string>> = {
     'reset to 0 within fillRanks before reuse',
   'src/common/htmltable-emit-rules.ts::anchorSeq':
     'reset to 0 per anchor environment before reuse',
+  'src/common/htmltable-emit-fill.ts::htmlFillPen':
+    'gvrender penwidth leak for bgcolor fills; reset to 1.0 via resetHtmlFillPenWidth() at each top-level table (emitHtmlLabel entry)',
 
   // --- Currently never mutated (latent: must reset if ever wired) ---
   'src/layout/dot/rank.ts::clType':
