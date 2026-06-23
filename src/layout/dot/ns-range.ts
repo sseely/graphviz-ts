@@ -2,15 +2,53 @@
 /** @see lib/common/ns.c — cut values, DFS range initialization */
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
+import type { EdgeList } from '../../model/nodeInfo.js';
 import { seq, isTreeEdge } from './ns-core.js';
 import type { NsCtx } from './ns-core.js';
 
 // ---------------------------------------------------------------------------
-// Internal state types
+// Shared flat DFS frame stack (structure-of-arrays).  @see AD-1
+//
+// C's dfs_range / dfs_range_init / dfs_cutval each use `LIST(dfs_state_t)` — a
+// flat array of value structs with zero per-frame heap allocation
+// (lib/common/ns.c:1161 `dfs_state_t`). The object-stack port allocated one
+// `{v,par,lim,toI,tiI}` object per node visit (~384M on tests/2471), the 40%
+// hotspot. These module-private parallel arrays mirror C's value-struct list:
+// indexed by a stack pointer `sp`, reused across calls, grown in place.
+//
+// Multi-diagram safety (see memory multi-diagram-global-state-safety): these are
+// `const`-bound buffers, never reassigned, so they cannot be confused with the
+// reset-per-render `let` globals the fitness check guards. Every public entry
+// starts at sp=0 and writes each slot before reading it, and every pushed frame
+// is popped before the call returns, with `popFrame` nulling the `Node`/`Edge`
+// reference slots — so no graph reference survives one render into the next.
+// The three functions never run re-entrantly (single-threaded, synchronous, and
+// none calls another), so one shared buffer set is safe.
 // ---------------------------------------------------------------------------
 
-interface DfsCvState { v: Node; par?: Edge; toI: number; tiI: number; }
-interface DfsState { v: Node; par?: Edge; lim: number; toI: number; tiI: number; }
+const frameV: (Node | undefined)[] = [];
+const framePar: (Edge | undefined)[] = [];
+const frameLim: number[] = [];
+const frameToI: number[] = [];
+const frameTiI: number[] = [];
+
+/** Push a frame at `sp`; returns the new stack pointer. */
+function pushFrame(n: Node | undefined, par: Edge | undefined, lim: number, sp: number): number {
+  frameV[sp] = n;
+  framePar[sp] = par;
+  frameLim[sp] = lim;
+  frameToI[sp] = 0;
+  frameTiI[sp] = 0;
+  return sp + 1;
+}
+
+/** Pop the top frame; nulls reference slots so no graph leaks across renders. */
+function popFrame(sp: number): number {
+  const t = sp - 1;
+  frameV[t] = undefined;
+  framePar[t] = undefined;
+  return t;
+}
 
 // ---------------------------------------------------------------------------
 // xVal / xCutval
@@ -55,33 +93,31 @@ export function xCutval(f: Edge): void {
 // dfsCutval
 // ---------------------------------------------------------------------------
 
-export function dfsCvStep(todo: DfsCvState[]): boolean {
-  const top = todo[todo.length - 1];
-  const to = top.v.info.tree_out;
-  while (to && top.toI < to.size) {
-    const e = to.list[top.toI++];
-    if (e !== top.par) {
-      todo.push({ v: e.head, par: e, toI: 0, tiI: 0 });
-      return true;
-    }
+/** Scan one tree-edge list for an unvisited child; push it. @see dfs_cutval */
+function cutvalDescend(list: EdgeList | undefined, iArr: number[], top: number, sp: number, head: boolean): number {
+  if (!list) return sp;
+  const par = framePar[top];
+  while (iArr[top] < list.size) {
+    const e = list.list[iArr[top]++];
+    if (e !== par) return pushFrame(head ? e.head : e.tail, e, 0, sp);
   }
-  const ti = top.v.info.tree_in;
-  while (ti && top.tiI < ti.size) {
-    const e = ti.list[top.tiI++];
-    if (e !== top.par) {
-      todo.push({ v: e.tail, par: e, toI: 0, tiI: 0 });
-      return true;
-    }
-  }
-  if (top.par) xCutval(top.par);
-  todo.pop();
-  return false;
+  return sp;
 }
 
 /** @see lib/common/ns.c:dfs_cutval */
 export function dfsCutval(v: Node, par?: Edge): void {
-  const todo: DfsCvState[] = [{ v, par, toI: 0, tiI: 0 }];
-  while (todo.length > 0) dfsCvStep(todo);
+  let sp = pushFrame(v, par, 0, 0);
+  while (sp > 0) {
+    const top = sp - 1;
+    const sv = frameV[top]!;
+    let nsp = cutvalDescend(sv.info.tree_out, frameToI, top, sp, true);
+    if (nsp !== sp) { sp = nsp; continue; }
+    nsp = cutvalDescend(sv.info.tree_in, frameTiI, top, sp, false);
+    if (nsp !== sp) { sp = nsp; continue; }
+    const fpar = framePar[top];
+    if (fpar) xCutval(fpar);
+    sp = popFrame(sp);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -98,73 +134,94 @@ export function initCutvalues(ctx: NsCtx): void {
 // dfsRangeInit
 // ---------------------------------------------------------------------------
 
-function dfsRangeInitStep(todo: DfsState[], s: DfsState, n: Node, e: Edge): void {
-  n.info.par = e; n.info.low = s.lim;
-  todo.push({ v: n, par: e, lim: s.lim, toI: 0, tiI: 0 });
-}
-
-export function dfsRangeInitFrame(todo: DfsState[]): boolean {
-  const s = todo[todo.length - 1];
-  const to = s.v.info.tree_out;
-  while (to && s.toI < to.size) {
-    const e = to.list[s.toI++];
-    if (e !== s.par) { dfsRangeInitStep(todo, s, e.head, e); return true; }
+/** Scan one tree-edge list; set par/low and push the first unvisited child. */
+function rangeInitDescend(list: EdgeList | undefined, iArr: number[], top: number, sp: number, head: boolean): number {
+  if (!list) return sp;
+  const par = framePar[top];
+  const lim = frameLim[top];
+  while (iArr[top] < list.size) {
+    const e = list.list[iArr[top]++];
+    if (e !== par) {
+      const n = head ? e.head : e.tail;
+      n.info.par = e;
+      n.info.low = lim;
+      return pushFrame(n, e, lim, sp);
+    }
   }
-  const ti = s.v.info.tree_in;
-  while (ti && s.tiI < ti.size) {
-    const e = ti.list[s.tiI++];
-    if (e !== s.par) { dfsRangeInitStep(todo, s, e.tail, e); return true; }
-  }
-  s.v.info.lim = s.lim;
-  const lim = s.lim; todo.pop();
-  if (todo.length > 0) todo[todo.length - 1].lim = lim + 1;
-  return false;
+  return sp;
 }
 
 /** @see lib/common/ns.c:dfs_range_init */
 export function dfsRangeInit(v: Node): number {
-  v.info.par = undefined; v.info.low = 1;
-  const todo: DfsState[] = [{ v, par: undefined, lim: 1, toI: 0, tiI: 0 }];
-  while (todo.length > 0) dfsRangeInitFrame(todo);
-  return (v.info.lim ?? 0) + 1;
+  v.info.par = undefined;
+  v.info.low = 1;
+  let sp = pushFrame(v, undefined, 1, 0);
+  let lim = 0;
+  while (sp > 0) {
+    const top = sp - 1;
+    const sv = frameV[top]!;
+    let nsp = rangeInitDescend(sv.info.tree_out, frameToI, top, sp, true);
+    if (nsp !== sp) { sp = nsp; continue; }
+    nsp = rangeInitDescend(sv.info.tree_in, frameTiI, top, sp, false);
+    if (nsp !== sp) { sp = nsp; continue; }
+    sv.info.lim = frameLim[top];
+    lim = frameLim[top];
+    sp = popFrame(sp);
+    if (sp > 0) frameLim[sp - 1] = lim + 1;
+  }
+  return lim + 1;
 }
 
 // ---------------------------------------------------------------------------
 // dfsRange
 // ---------------------------------------------------------------------------
 
-function dfsRangeStep(todo: DfsState[], s: DfsState, n: Node, e: Edge): boolean {
-  if (n.info.par === e && (n.info.low ?? 0) === s.lim) {
-    s.lim = (n.info.lim ?? 0) + 1; return false;
+/**
+ * Scan one tree-edge list. On an already-ranged child (`par===e && low===lim`)
+ * absorb its range into `lim` and keep scanning (== C's break+continue, which
+ * re-runs the same list from the advanced index). Otherwise set par/low and
+ * push it. Returns the new sp (> sp only when a frame was pushed).
+ */
+function rangeDescend(list: EdgeList | undefined, iArr: number[], top: number, sp: number, head: boolean): number {
+  if (!list) return sp;
+  const par = framePar[top];
+  while (iArr[top] < list.size) {
+    const e = list.list[iArr[top]++];
+    if (e === par) continue;
+    const n = head ? e.head : e.tail;
+    const lim = frameLim[top];
+    if (n.info.par === e && n.info.low === lim) {
+      frameLim[top] = n.info.lim! + 1;
+      continue;
+    }
+    n.info.par = e;
+    n.info.low = lim;
+    return pushFrame(n, e, lim, sp);
   }
-  n.info.par = e; n.info.low = s.lim;
-  todo.push({ v: n, par: e, lim: s.lim, toI: 0, tiI: 0 });
-  return true;
+  return sp;
 }
 
-export function dfsRangeFrame(todo: DfsState[]): boolean {
-  const s = todo[todo.length - 1];
-  const to = s.v.info.tree_out;
-  while (to && s.toI < to.size) {
-    const e = to.list[s.toI++];
-    if (e !== s.par && dfsRangeStep(todo, s, e.head, e)) return true;
-  }
-  const ti = s.v.info.tree_in;
-  while (ti && s.tiI < ti.size) {
-    const e = ti.list[s.tiI++];
-    if (e !== s.par && dfsRangeStep(todo, s, e.tail, e)) return true;
-  }
-  s.v.info.lim = s.lim;
-  const lim = s.lim; todo.pop();
-  if (todo.length > 0) todo[todo.length - 1].lim = lim + 1;
-  return false;
+/** One settle step of the dfsRange stack: descend, or finalize+pop the top. */
+function rangeFrameStep(sp: number): number {
+  const top = sp - 1;
+  const sv = frameV[top]!;
+  let nsp = rangeDescend(sv.info.tree_out, frameToI, top, sp, true);
+  if (nsp !== sp) return nsp;
+  nsp = rangeDescend(sv.info.tree_in, frameTiI, top, sp, false);
+  if (nsp !== sp) return nsp;
+  sv.info.lim = frameLim[top];
+  const lim = frameLim[top];
+  sp = popFrame(sp);
+  if (sp > 0) frameLim[sp - 1] = lim + 1;
+  return sp;
 }
 
 /** @see lib/common/ns.c:dfs_range */
 export function dfsRange(v: Node, par: Edge | undefined, low: number): number {
   if (v.info.par === par && (v.info.low ?? 0) === low) return (v.info.lim ?? 0) + 1;
-  v.info.par = par; v.info.low = low;
-  const todo: DfsState[] = [{ v, par, lim: low, toI: 0, tiI: 0 }];
-  while (todo.length > 0) dfsRangeFrame(todo);
+  v.info.par = par;
+  v.info.low = low;
+  let sp = pushFrame(v, par, low, 0);
+  while (sp > 0) sp = rangeFrameStep(sp);
   return (v.info.lim ?? 0) + 1;
 }

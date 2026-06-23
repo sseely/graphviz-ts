@@ -111,11 +111,13 @@ export function dfsEnterOutScan(
 ): void {
   const out = n.info.out;
   if (!out) return;
+  // AD-2: lim is set by dfsRangeInit before enterEdge runs — read it directly.
+  const nLim = n.info.lim!;
   for (let i = 0; i < out.size; i++) {
     const e = out.list[i];
     if (isTreeEdge(e)) {
-      if (nodeLim(e.head) < nodeLim(n)) todo.push(e.head);
-    } else if (!seq(low, nodeLim(e.head), lim)) {
+      if (e.head.info.lim! < nLim) todo.push(e.head);
+    } else if (!seq(low, e.head.info.lim!, lim)) {
       const s = nsSlack(e);
       if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
     }
@@ -125,9 +127,10 @@ export function dfsEnterOutScan(
 export function dfsEnterOutTreeIn(n: Node, todo: Node[], bestSlack: number): void {
   const ti = n.info.tree_in;
   if (!ti || bestSlack <= 0) return;
+  const nLim = n.info.lim!;
   for (let i = 0; i < ti.size; i++) {
     const e = ti.list[i];
-    if (nodeLim(e.tail) < nodeLim(n)) todo.push(e.tail);
+    if (e.tail.info.lim! < nLim) todo.push(e.tail);
   }
 }
 
@@ -156,11 +159,13 @@ export function dfsEnterInScan(
 ): void {
   const inp = n.info.in;
   if (!inp) return;
+  // AD-2: lim is set by dfsRangeInit before enterEdge runs — read it directly.
+  const nLim = n.info.lim!;
   for (let i = 0; i < inp.size; i++) {
     const e = inp.list[i];
     if (isTreeEdge(e)) {
-      if (nodeLim(e.tail) < nodeLim(n)) todo.push(e.tail);
-    } else if (!seq(low, nodeLim(e.tail), lim)) {
+      if (e.tail.info.lim! < nLim) todo.push(e.tail);
+    } else if (!seq(low, e.tail.info.lim!, lim)) {
       const s = nsSlack(e);
       if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
     }
@@ -170,9 +175,10 @@ export function dfsEnterInScan(
 export function dfsEnterInTreeOut(n: Node, todo: Node[], bestSlack: number): void {
   const to = n.info.tree_out;
   if (!to || bestSlack <= 0) return;
+  const nLim = n.info.lim!;
   for (let i = 0; i < to.size; i++) {
     const e = to.list[i];
-    if (nodeLim(e.head) < nodeLim(n)) todo.push(e.head);
+    if (e.head.info.lim! < nLim) todo.push(e.head);
   }
 }
 
@@ -213,18 +219,30 @@ export function treeupdate(v: Node, w: Node, cutvalue: number, dir: boolean): No
   return n;
 }
 
-/** @see lib/common/ns.c:rerank */
+/**
+ * Iterative rerank (AD-3). C's `rerank` recurses to depth O(V) and overflows
+ * V8's ~1MB stack on deep tight trees (tests/2108); a browser stack is small
+ * and fixed, so it must be an explicit todo-stack. Each node's rank is
+ * decremented exactly once by `delta` and the writes are independent, so the
+ * LIFO visit order yields a bit-identical result to the recursive pre-order.
+ * @see lib/common/ns.c:rerank
+ */
 export function rerank(v: Node, delta: number): void {
-  v.info.rank = nodeRank(v) - delta;
-  const to = v.info.tree_out;
-  if (to) for (let i = 0; i < to.size; i++) {
-    const e = to.list[i];
-    if (e !== v.info.par) rerank(e.head, delta);
-  }
-  const ti = v.info.tree_in;
-  if (ti) for (let i = 0; i < ti.size; i++) {
-    const e = ti.list[i];
-    if (e !== v.info.par) rerank(e.tail, delta);
+  const todo: Node[] = [v];
+  while (todo.length > 0) {
+    const n = todo.pop()!;
+    n.info.rank = nodeRank(n) - delta;
+    const par = n.info.par;
+    const to = n.info.tree_out;
+    if (to) for (let i = 0; i < to.size; i++) {
+      const e = to.list[i];
+      if (e !== par) todo.push(e.head);
+    }
+    const ti = n.info.tree_in;
+    if (ti) for (let i = 0; i < ti.size; i++) {
+      const e = ti.list[i];
+      if (e !== par) todo.push(e.tail);
+    }
   }
 }
 
