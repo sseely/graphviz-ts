@@ -28,7 +28,7 @@ import type { RendererPlugin } from '../gvc/context.js';
 import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage } from './htmltable-pos.js';
 import { transformPoint } from '../gvc/device.js';
-import { withHtmlPaint, parseGradientSpec, doBorder } from './htmltable-emit-fill.js';
+import { withHtmlPaint, parseGradientSpec, doBorder, type HtmlPaint } from './htmltable-emit-fill.js';
 import { emitHtmlRules, initHtmlAnchor, endHtmlAnchor, htmlObjImgscale } from './htmltable-emit-rules.js';
 
 export type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage };
@@ -82,22 +82,37 @@ export function emitHtmlLine(
 // ---------------------------------------------------------------------------
 
 /** Context for bgcolor fill emission. */
-interface BgFillCtx { bgcolor: string; box: Box; pos: Point; renderer: RendererPlugin; job: RenderJob; }
+interface BgFillCtx {
+  bgcolor: string;
+  box: Box;
+  pos: Point;
+  renderer: RendererPlugin;
+  job: RenderJob;
+  /** Gradient angle (degrees) from the table/cell; 0 when absent. */
+  gradientangle?: number;
+  /** Style string; a "radial" substring selects a radial gradient. */
+  style?: string;
+}
 
 /**
- * Emit a filled bgcolor polygon.
- *
- * Two-color gradient specs ("c1:c2"): C setFill passes clrs[0] as the
- * solid fill component alongside the gradient stops; the gradient
- * subsystem is deferred (AD4), so only the solid first color is drawn.
- *
+ * Build the paint for a bgcolor: a gradient for "c1:c2" specs (linear, or
+ * radial when style includes "radial"), else a solid fill. Mirrors C setFill:
+ * clrs[0] = fill, clrs[1] = gradient stop, angle from gradientangle.
  * @see lib/common/htmltable.c:setFill
  */
+function bgFillPaint(ctx: BgFillCtx): HtmlPaint {
+  const spec = parseGradientSpec(ctx.bgcolor);
+  if (spec === null) return { fill: ctx.bgcolor };
+  return {
+    fill: spec[0], stop: spec[1], gradientAngle: ctx.gradientangle ?? 0,
+    radial: ctx.style !== undefined && ctx.style.includes('radial'),
+  };
+}
+
+/** Emit a filled bgcolor polygon (solid or gradient). */
 function emitBgFill(ctx: BgFillCtx): void {
-  const { bgcolor, box, pos, renderer, job } = ctx;
-  const spec = parseGradientSpec(bgcolor);
-  const solid = spec !== null ? spec[0] : bgcolor;
-  withHtmlPaint({ fill: solid }, job, () => {
+  const { box, pos, renderer, job } = ctx;
+  withHtmlPaint(bgFillPaint(ctx), job, () => {
     const pts = [
       { x: box.ll.x + pos.x, y: box.ll.y + pos.y },
       { x: box.ll.x + pos.x, y: box.ur.y + pos.y },
@@ -119,11 +134,9 @@ interface BorderDecor {
 }
 
 /**
- * Emit a border. C emit_html_cell/emit_html_tbl always route through
- * doBorder (penwidth = border, box inset by border/2 when border > 1);
- * for the default border=1/no-decoration case doBorder's output is
- * byte-identical to a plain box outline.
- * @see lib/common/htmltable.c:emit_html_cell
+ * Emit a border via doBorder (penwidth = border, box inset by border/2 when
+ * border > 1); the default border=1/no-decoration case is byte-identical to a
+ * plain box outline. @see lib/common/htmltable.c:emit_html_cell
  */
 function emitBorder(
   d: BorderDecor,
@@ -145,7 +158,8 @@ function emitCellDecoration(
   job: RenderJob,
 ): void {
   if (cell.bgcolor !== undefined) {
-    emitBgFill({ bgcolor: cell.bgcolor, box: cell.box, pos, renderer, job });
+    emitBgFill({ bgcolor: cell.bgcolor, box: cell.box, pos, renderer, job,
+      gradientangle: cell.gradientangle, style: cell.style });
   }
   if (cell.border > 0) {
     emitBorder({ box: cell.box, pos, border: cell.border, color: cell.color, sides: cell.sides, style: cell.style }, renderer, job);
@@ -277,7 +291,8 @@ export function emitHtmlLabel(
     renderer, job,
   );
   if (placed.bgcolor !== undefined) {
-    emitBgFill({ bgcolor: placed.bgcolor, box: placed.box, pos, renderer, job });
+    emitBgFill({ bgcolor: placed.bgcolor, box: placed.box, pos, renderer, job,
+      gradientangle: placed.gradientangle, style: placed.style });
   }
   for (const cell of placed.cells) emitHtmlCell(cell, pos, renderer, job);
   emitTableRules(placed, pos, renderer, job);
