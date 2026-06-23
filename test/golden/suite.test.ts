@@ -90,8 +90,10 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //   leaked stroke-width on bordered-cell fills)
 // + 1 blank-line label golden (empty spans emit no <text>)
 // + 1 size= scaling golden (init_job_viewport zoom, group scale(Z))
-test('manifest has 159 entries', () => {
-  expect(manifest).toHaveLength(159);
+// + 1 long-edge routing-order golden (dot_splines_ rank-major + edgecmp; a
+//   shared-neighbour corridor depends on edge routing order — T2)
+test('manifest has 160 entries', () => {
+  expect(manifest).toHaveLength(160);
 });
 
 // ---------------------------------------------------------------------------
