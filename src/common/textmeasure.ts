@@ -8,7 +8,7 @@
  */
 
 import { type FontFamilyData } from "./textmeasure-lut-data.js";
-import { getFamilyMetrics } from "./textmeasure-lookup.js";
+import { getFamilyMetrics, normalizeFontName } from "./textmeasure-lookup.js";
 
 /** Number of hard-coded font families in the LUT. */
 export const LUT_FAMILY_COUNT = 11;
@@ -139,12 +139,60 @@ export const FREETYPE_ASCENT_RATIO = 1825 / 2048;
 export const FREETYPE_DESCENT_RATIO = 443 / 2048;
 
 /**
+ * FreeType-hinted ascender/descender ratios (in em) for a font, used for the
+ * hinted line height. Vertical metrics are keyed by the *resolved font*, NOT
+ * the width family: the width LUT lumps Helvetica and Arial together (their
+ * advances match), but on the reference system their line boxes differ
+ * (Helvetica/Nimbus ≈ 1.0 em, real Arial ≈ taller, Times ≈ 1.107 em).
+ */
+interface VMetric {
+  readonly ascent: number;
+  readonly descent: number;
+}
+
+/** Times-Roman default (the historical hardcoded model). */
+const TIMES_VMETRIC: VMetric = {
+  ascent: FREETYPE_ASCENT_RATIO,
+  descent: FREETYPE_DESCENT_RATIO,
+};
+
+/**
+ * Helvetica / Nimbus Sans: ascender 1577/2048, descender 471/2048. Empirically
+ * pinned to the native-dot oracle's hinted line height across fontsizes 6-48
+ * (ceil(asc·px)+ceil(desc·px) reproduces every size exactly).
+ */
+const HELVETICA_VMETRIC: VMetric = { ascent: 1577 / 2048, descent: 471 / 2048 };
+
+/**
+ * Normalized font names whose line box matches Helvetica/Nimbus Sans on the
+ * reference system. This is every sans alias the width LUT groups as Arial
+ * EXCEPT the literal "arial": fontconfig resolves "Arial" to a real Arial face
+ * with a taller line box (55px vs 49px at 36pt) — distinct from both Helvetica
+ * and Times — so it keeps the Times default until pinned separately.
+ * @see src/common/textmeasure-lut-data-a.ts ARIAL_FAMILY
+ */
+const HELVETICA_VMETRIC_NAMES: ReadonlySet<string> = new Set([
+  "helvetica", "arialmt", "arimo", "albany",
+  "nimbussans", "nimbussansa", "texgyreheros", "freesans", "liberationsans",
+]);
+
+/** Resolve the vertical metric for a font name (defaults to Times). */
+function vMetricFor(fontname: string | undefined): VMetric {
+  if (fontname === undefined) return TIMES_VMETRIC;
+  return HELVETICA_VMETRIC_NAMES.has(normalizeFontName(fontname))
+    ? HELVETICA_VMETRIC
+    : TIMES_VMETRIC;
+}
+
+/**
  * FreeType-hinted font ascent in points (baseline distance from line
  * top). FreeType rounds the ascender UP to the pixel grid
  * (FT_PIX_CEIL); at 14pt ceil and round coincide (16.63 → 17px).
+ * Font-aware: Helvetica's ascender differs from Times' (default when
+ * `fontname` is omitted or is not a known Helvetica-metric face).
  */
-export function freetypeAscent(fontsize: number): number {
-  const px = Math.ceil(FREETYPE_ASCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
+export function freetypeAscent(fontsize: number, fontname?: string): number {
+  const px = Math.ceil(vMetricFor(fontname).ascent * fontsize * FREETYPE_PX_PER_PT);
   return px * PT_PER_FREETYPE_PX;
 }
 
@@ -152,12 +200,14 @@ export function freetypeAscent(fontsize: number): number {
  * FreeType-hinted line height in points: ceil-hinted ascender plus
  * ceil-hinted descender magnitude (FT_PIX_CEIL / FT_PIX_FLOOR on the
  * negative descender). Verified against graphviz 15.0.0 two-line
- * baseline deltas for fontsizes 6-48 (e.g. 14pt → 17+5 px = 16.5pt,
- * 20pt → 24+6 px = 22.5pt).
+ * baseline deltas for fontsizes 6-48 (e.g. Times 14pt → 17+5 px = 16.5pt;
+ * Helvetica 36pt → 33+16 px = 36.75pt). Font-aware: defaults to Times when
+ * `fontname` is omitted or is not a known Helvetica-metric face.
  */
-export function freetypeLineHeight(fontsize: number): number {
-  const asc = Math.ceil(FREETYPE_ASCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
-  const desc = Math.ceil(FREETYPE_DESCENT_RATIO * fontsize * FREETYPE_PX_PER_PT);
+export function freetypeLineHeight(fontsize: number, fontname?: string): number {
+  const m = vMetricFor(fontname);
+  const asc = Math.ceil(m.ascent * fontsize * FREETYPE_PX_PER_PT);
+  const desc = Math.ceil(m.descent * fontsize * FREETYPE_PX_PER_PT);
   return (asc + desc) * PT_PER_FREETYPE_PX;
 }
 
@@ -176,7 +226,7 @@ export class LutTextMeasurer implements TextMeasurer {
     const bold = flags?.bold === true;
     const italic = flags?.italic === true;
     const w = freetypeHintedWidth(fontname, text, fontsize, bold, italic);
-    return { w, h: freetypeLineHeight(fontsize) };
+    return { w, h: freetypeLineHeight(fontsize, fontname) };
   }
 }
 
