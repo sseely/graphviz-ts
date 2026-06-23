@@ -28,7 +28,12 @@ import type { RendererPlugin } from '../gvc/context.js';
 import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage } from './htmltable-pos.js';
 import { transformPoint } from '../gvc/device.js';
-import { withHtmlPaint, parseGradientSpec, doBorder, type HtmlPaint } from './htmltable-emit-fill.js';
+import {
+  withHtmlPaint, parseGradientSpec, doBorder, mkPts,
+  htmlFillPenWidth, resetHtmlFillPenWidth, type HtmlPaint,
+} from './htmltable-emit-fill.js';
+import { emitRoundedBezier } from './poly-shapes.js';
+import { parseStyleFlags } from './style-resolve.js';
 import { emitHtmlRules, initHtmlAnchor, endHtmlAnchor, htmlObjImgscale } from './htmltable-emit-rules.js';
 
 export type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage };
@@ -81,16 +86,16 @@ export function emitHtmlLine(
 // Shared decoration helpers
 // ---------------------------------------------------------------------------
 
-/** Context for bgcolor fill emission. */
+/** bgcolor fill context: border insets the rounded ring (mkPts); style
+ * "rounded"→Bézier path, "radial"→radial gradient; gradientangle in deg. */
 interface BgFillCtx {
   bgcolor: string;
   box: Box;
   pos: Point;
+  border: number;
   renderer: RendererPlugin;
   job: RenderJob;
-  /** Gradient angle (degrees) from the table/cell; 0 when absent. */
   gradientangle?: number;
-  /** Style string; a "radial" substring selects a radial gradient. */
   style?: string;
 }
 
@@ -101,18 +106,31 @@ interface BgFillCtx {
  * @see lib/common/htmltable.c:setFill
  */
 function bgFillPaint(ctx: BgFillCtx): HtmlPaint {
+  // penWidth = the leaked gvrender pen width (prior doBorder); a bordered cell's
+  // fill carries it as stroke-width even with stroke="none". @see htmltable.c:setFill
+  const penWidth = htmlFillPenWidth();
   const spec = parseGradientSpec(ctx.bgcolor);
-  if (spec === null) return { fill: ctx.bgcolor };
+  if (spec === null) return { fill: ctx.bgcolor, penWidth };
   return {
     fill: spec[0], stop: spec[1], gradientAngle: ctx.gradientangle ?? 0,
-    radial: ctx.style !== undefined && ctx.style.includes('radial'),
+    radial: ctx.style !== undefined && ctx.style.includes('radial'), penWidth,
   };
 }
 
-/** Emit a filled bgcolor polygon (solid or gradient). */
+/**
+ * Emit a filled bgcolor shape. A `style.rounded` table/cell fills a rounded
+ * Bézier path over the border/2-inset mkPts ring (emitRoundedBezier transforms
+ * internally, so pass the untransformed SW,SE,NE,NW ring with coord {0,0}, as
+ * record.ts/device.ts do); otherwise a raw box.
+ * @see lib/common/htmltable.c:emit_html_tbl (:543), emit_html_cell (:644)
+ */
 function emitBgFill(ctx: BgFillCtx): void {
-  const { box, pos, renderer, job } = ctx;
+  const { box, pos, border, renderer, job } = ctx;
   withHtmlPaint(bgFillPaint(ctx), job, () => {
+    if (parseStyleFlags(ctx.style).rounded) {
+      emitRoundedBezier(mkPts(box, border, pos), { x: 0, y: 0 }, true, { renderer, job });
+      return;
+    }
     const pts = [
       { x: box.ll.x + pos.x, y: box.ll.y + pos.y },
       { x: box.ll.x + pos.x, y: box.ur.y + pos.y },
@@ -133,11 +151,8 @@ interface BorderDecor {
   style?: string;
 }
 
-/**
- * Emit a border via doBorder (penwidth = border, box inset by border/2 when
- * border > 1); the default border=1/no-decoration case is byte-identical to a
- * plain box outline. @see lib/common/htmltable.c:emit_html_cell
- */
+/** Emit a border via doBorder (penwidth=border, box inset by border/2 when
+ * border>1); default border=1 matches a plain box outline. @see htmltable.c:emit_html_cell */
 function emitBorder(
   d: BorderDecor,
   renderer: RendererPlugin,
@@ -158,8 +173,8 @@ function emitCellDecoration(
   job: RenderJob,
 ): void {
   if (cell.bgcolor !== undefined) {
-    emitBgFill({ bgcolor: cell.bgcolor, box: cell.box, pos, renderer, job,
-      gradientangle: cell.gradientangle, style: cell.style });
+    emitBgFill({ bgcolor: cell.bgcolor, box: cell.box, pos, border: cell.border,
+      renderer, job, gradientangle: cell.gradientangle, style: cell.style });
   }
   if (cell.border > 0) {
     emitBorder({ box: cell.box, pos, border: cell.border, color: cell.color, sides: cell.sides, style: cell.style }, renderer, job);
@@ -286,13 +301,17 @@ export function emitHtmlLabel(
   renderer: RendererPlugin,
   job: RenderJob,
 ): void {
+  // C never resets the gvrender penwidth before a table fill; the prior node/
+  // cluster shape drew at pen width 1, so the first table/cell fill carries no
+  // stroke-width. Reset here so the leak starts clean per top-level table.
+  resetHtmlFillPenWidth();
   const inAnchor = initHtmlAnchor(
     { href: placed.href, title: placed.title, target: placed.target, id: placed.id },
     renderer, job,
   );
   if (placed.bgcolor !== undefined) {
-    emitBgFill({ bgcolor: placed.bgcolor, box: placed.box, pos, renderer, job,
-      gradientangle: placed.gradientangle, style: placed.style });
+    emitBgFill({ bgcolor: placed.bgcolor, box: placed.box, pos, border: placed.border,
+      renderer, job, gradientangle: placed.gradientangle, style: placed.style });
   }
   for (const cell of placed.cells) emitHtmlCell(cell, pos, renderer, job);
   emitTableRules(placed, pos, renderer, job);

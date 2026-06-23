@@ -8,8 +8,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { RenderJob } from '../gvc/job.js';
 import type { ObjState } from '../gvc/job.js';
+import type { Box } from '../model/geom.js';
 import { FillType } from '../gvc/context.js';
-import { withHtmlPaint, type HtmlPaint } from './htmltable-emit-fill.js';
+import {
+  withHtmlPaint, doBorder, htmlFillPenWidth, resetHtmlFillPenWidth,
+  type HtmlPaint,
+} from './htmltable-emit-fill.js';
 
 function makeStubJob(): { job: RenderJob; captured: ObjState[] } {
   const captured: ObjState[] = [];
@@ -79,5 +83,32 @@ describe('withHtmlPaint — radial gradient', () => {
   it('radial:false keeps Linear', () => {
     const obj = capturedObj({ fill: 'yellow', stop: 'violet', gradientAngle: 0, radial: false });
     expect(obj.fill).toBe(FillType.Linear);
+  });
+});
+
+describe('withHtmlPaint — pen width', () => {
+  it('threads penWidth onto the pushed obj', () => {
+    expect(capturedObj({ fill: 'yellow', penWidth: 3 }).penWidth).toBe(3);
+  });
+  it('defaults penWidth to 1 when omitted', () => {
+    expect(capturedObj({ fill: 'yellow' }).penWidth).toBe(1.0);
+  });
+});
+
+// The gvrender penwidth leak: a cell/table fill draws at the pen width left by
+// the *prior* doBorder, reset to 1.0 per top-level table. @see htmltable.c:doBorder
+describe('html fill pen-width leak state', () => {
+  const box: Box = { ll: { x: 0, y: 0 }, ur: { x: 20, y: 20 } };
+  it('reset returns the leaked pen width to 1.0', () => {
+    resetHtmlFillPenWidth();
+    expect(htmlFillPenWidth()).toBe(1.0);
+  });
+  it('doBorder leaks its border width into the next fill', () => {
+    const { job } = makeStubJob();
+    resetHtmlFillPenWidth();
+    doBorder({ box, pos: { x: 0, y: 0 }, border: 3, color: 'black' }, job.renderer!, job);
+    expect(htmlFillPenWidth()).toBe(3);
+    resetHtmlFillPenWidth();
+    expect(htmlFillPenWidth()).toBe(1.0);
   });
 });

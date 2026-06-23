@@ -17,6 +17,8 @@ import type { RendererPlugin } from '../gvc/context.js';
 import { FillType, PenType } from '../gvc/context.js';
 import { transformPoint } from '../gvc/device.js';
 import { resolveRenderColor } from '../render/color-resolve.js';
+import { emitRoundedBezier } from './poly-shapes.js';
+import { parseStyleFlags } from './style-resolve.js';
 import {
   BORDER_LEFT,
   BORDER_TOP,
@@ -104,6 +106,35 @@ export interface HtmlPaint {
   gradientAngle?: number;
   /** True → radial gradient (RGRADIENT); else linear. Ignored without `stop`. */
   radial?: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// HTML fill pen-width state — the port of gvrender's persistent penwidth
+// ---------------------------------------------------------------------------
+
+/**
+ * The live gvrender pen width during HTML emission. C never resets it before a
+ * bgcolor fill: `setFill` sets only the fill color, so a cell/table fill draws
+ * at whatever pen width the *previous* `doBorder` left (the oracle emits
+ * `stroke-width="N"` on a bordered cell's fill, leaked from the prior cell's
+ * border, even though `stroke="none"`). `doBorder` writes it; the bgcolor fill
+ * reads it. Reset to 1.0 at each top-level table — the node/cluster shape drew
+ * at pen width 1 immediately before, so the first table/cell fill carries no
+ * stroke-width. Module-level to mirror gvrender job state and to stay reset per
+ * render (multi-diagram safety).
+ * @see lib/common/htmltable.c:doBorder (gvrender_set_penwidth(job, dp->border))
+ * @see lib/common/htmltable.c:setFill (sets fill color only, not penwidth)
+ */
+let htmlFillPen = 1.0;
+
+/** Current leaked fill pen width, read by the bgcolor fill for its stroke-width. */
+export function htmlFillPenWidth(): number {
+  return htmlFillPen;
+}
+
+/** Reset the leaked fill pen width to 1.0 — call at each top-level table entry. */
+export function resetHtmlFillPenWidth(): void {
+  htmlFillPen = 1.0;
 }
 
 /** Map a style string to the C pen type. @see lib/common/htmltable.c:doBorder */
@@ -234,7 +265,16 @@ export function doBorder(
   job: RenderJob,
 ): void {
   const { box, pos, border, color, sides, style } = spec;
+  // C: gvrender_set_penwidth(job, dp->border) before drawing the border; the
+  // value persists and leaks into the next bgcolor fill's stroke-width.
+  htmlFillPen = border;
   withHtmlPaint({ pen: color, penWidth: border, penStyle: style }, job, () => {
+    if (parseStyleFlags(style).rounded) {
+      // C: round_corners(job, mkPts(AF,b,border), 4, {rounded}, 0) — unfilled
+      // rounded border path; emitRoundedBezier transforms the AF ring itself.
+      emitRoundedBezier(mkPts(box, border, pos), { x: 0, y: 0 }, false, { renderer, job });
+      return;
+    }
     const effSides = (sides !== undefined) ? (sides & BORDER_MASK) : 0;
     if (effSides !== 0) {
       const corners = mkPts(box, border, pos).map((p) => transformPoint(p, job));
