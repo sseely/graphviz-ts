@@ -102,6 +102,24 @@ export class Graph {
    */
   root: Graph;
 
+  /**
+   * Subgraph sequence number (AGSEQ). A global counter on the root, assigned
+   * at creation in source order, counting anonymous subgraphs. The root keeps
+   * the default 0 (par == NULL never calls agnextseq). Consumed by getObjId to
+   * emit cluster ids `clust<seq>`.
+   * @see lib/cgraph/cgraph.h:AGSEQ
+   * @see lib/cgraph/graph.c:agopen (AGSEQ(g) = agnextseq(par, AGRAPH))
+   */
+  seq = 0;
+
+  /**
+   * Root-only counter mirroring `clos->seq[AGRAPH]`: the running maximum AGSEQ
+   * handed out to subgraphs. Meaningful only on the root graph; `assignSubgSeq`
+   * pre-increments it. Other graphs leave it at 0.
+   * @see lib/cgraph/graph.c:agnextseq (++clos->seq[AGRAPH])
+   */
+  subgSeqCounter = 0;
+
   /** @see lib/cgraph/graph.c:agopen */
   constructor(name: string, kind: GraphKind) {
     this.name = name;

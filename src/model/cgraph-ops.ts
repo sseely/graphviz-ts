@@ -73,9 +73,23 @@ export function agnode(
 }
 
 /**
+ * Assign a subgraph its AGSEQ from the root-level counter, mirroring
+ * `agnextseq(par, AGRAPH)` in agopen: pre-increment `clos->seq[AGRAPH]` (stored
+ * on the root as `subgSeqCounter`) and record it on the subgraph. Call once,
+ * only when the subgraph is first created.
+ *
+ * @see lib/cgraph/graph.c:agopen (AGSEQ(g) = agnextseq(par, AGRAPH))
+ * @see lib/cgraph/graph.c:agnextseq
+ */
+export function assignSubgSeq(parent: Graph, sg: Graph): void {
+  sg.seq = ++parent.root.subgSeqCounter;
+}
+
+/**
  * Create-or-get a named subgraph under `parent`. On create, sets the new
- * graph's `parent`/`root` and registers it in `parent.subgraphs`. Returns
- * null when `create` is false and the subgraph is absent.
+ * graph's `parent`/`root`, assigns its AGSEQ, and registers it in
+ * `parent.subgraphs`. Returns null when `create` is false and the subgraph is
+ * absent.
  *
  * @see lib/cgraph/subg.c:agsubg
  */
@@ -90,6 +104,7 @@ export function agsubg(
   const subg = new GraphClass(name, parent.kind);
   subg.parent = parent;
   subg.root = parent.root;
+  assignSubgSeq(parent, subg);
   parent.subgraphs.set(name, subg);
   return subg;
 }
