@@ -50,13 +50,27 @@ interface BgGradientSpec {
   radial: boolean;
 }
 
+/**
+ * Reproduce C's `%g` (6 significant digits, trailing zeros trimmed) used for
+ * the group scale. `1` → "1", `0.12319530…` → "0.123195".
+ * @see plugin/core/gvrender_core_svg.c:314 gvprintf("%g %g", …)
+ */
+function formatG(n: number): string {
+  return String(parseFloat(n.toPrecision(6)));
+}
+
 /** Emit SVG tag. ViewBox starts at (0,0); group translate absorbs bb.ll offset. */
 export function emitSvgTag(job: RenderJob): void {
   const bb = job.bb;
-  const contentW = Math.round(bb.ur.x - bb.ll.x);
-  const contentH = Math.round(bb.ur.y - bb.ll.y);
-  const w = contentW + 2 * SVG_PAD;
-  const h = contentH + 2 * SVG_PAD;
+  // Size-fitted device dims = ROUND(Z * sz), sz = bb extent plus pad in points
+  // (emit.c:1249 job->width/height, dpi=72), Z carried in job.scale (see
+  // device.ts render()). For Z=1 this equals round(content)+2*PAD exactly
+  // (adding an integer commutes with round), so non-size graphs are
+  // byte-unchanged (D5). @see gvrender_core_svg.c:258
+  const szx = bb.ur.x - bb.ll.x + 2 * SVG_PAD;
+  const szy = bb.ur.y - bb.ll.y + 2 * SVG_PAD;
+  const w = Math.round(szx * job.scale.x);
+  const h = Math.round(szy * job.scale.y);
   job.write('<svg width="' + String(w) + 'pt" height="' + String(h) + 'pt"\n');
   // viewBox always starts at (0,0); gvPostprocess normalises bb.ll to (0,0) before render
   job.write('     viewBox="0.00 0.00 ' + String(w) + '.00 ' + String(h) + '.00"\n');
@@ -80,8 +94,13 @@ export function emitGraphGroupOpen(
   ty: number,
   job: RenderJob,
 ): void {
+  // Group carries the size= zoom (D4): C's svg_begin_page prints job->scale.x/y
+  // (= zoom for dpi=72). %g, not gvprintdouble (its comment: 2 digits
+  // insufficient); parseFloat(toPrecision(6)) reproduces %g. Z=1 → "1".
+  const sx = formatG(job.scale.x);
+  const sy = formatG(job.scale.y);
   job.write('<g id="' + graphId + '" ' + classStr +
-    ' transform="scale(1 1) rotate(0) translate(');
+    ' transform="scale(' + sx + ' ' + sy + ') rotate(0) translate(');
   job.printDouble(tx);
   job.write(' ');
   job.printDouble(ty);

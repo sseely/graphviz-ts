@@ -88,8 +88,10 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 // + 2 HTML-table gradient bgcolor goldens (linear table+cell; radial cell)
 // + 1 rounded HTML-table gradient golden (rounded fill+border <path>,
 //   leaked stroke-width on bordered-cell fills)
-test('manifest has 157 entries', () => {
-  expect(manifest).toHaveLength(157);
+// + 1 blank-line label golden (empty spans emit no <text>)
+// + 1 size= scaling golden (init_job_viewport zoom, group scale(Z))
+test('manifest has 159 entries', () => {
+  expect(manifest).toHaveLength(159);
 });
 
 // ---------------------------------------------------------------------------

@@ -12,11 +12,13 @@
  */
 
 import type { Point } from '../model/geom.js';
+import { parseDrawingSize, initJobViewportZoom } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import { buildOutEdgeIndex } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
+import { PenType } from './context.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import {
@@ -205,6 +207,17 @@ function labelSpanX(lp: TextlabelT, just: 'l' | 'n' | 'r'): number {
 }
 
 /**
+ * Whether a label span should be emitted: non-empty string, and (unless no obj)
+ * a visible pen. Blank lines and PEN_NONE objects are skipped by C.
+ * @see lib/gvc/gvrender.c:419 gvrender_textspan
+ *   if (span->str && span->str[0] && (!job->obj || job->obj->pen != PEN_NONE))
+ */
+function spanIsVisible(span: TextSpan, job: RenderJob): boolean {
+  if (span.str.length === 0) return false;
+  return job.obj === null || job.obj.pen !== PenType.None;
+}
+
+/**
  * Emit one label's text spans if present and placed.
  * Shared by edge-label, node-xlabel, and graph-label slots.
  * URL/anchor/map machinery and E_decorate attachment (emit.c:emit_attachment)
@@ -231,8 +244,12 @@ export function renderOneLabel(
   for (let i = 0; i < lp.u.nspans; i++) {
     const span = lp.u.span[i] as TextSpan | undefined;
     if (!span) break;
-    renderer.textspan({ x: labelSpanX(lp, span.just), y }, span, job);
-    y -= span.size.y; // UL position for next span
+    // Emit only visible spans; the baseline still advances below so blank
+    // lines reserve vertical space. @see gvrender_textspan (gvrender.c:419).
+    if (spanIsVisible(span, job)) {
+      renderer.textspan({ x: labelSpanX(lp, span.just), y }, span, job);
+    }
+    y -= span.size.y; // UL position for next span (unconditional)
   }
 }
 
@@ -443,6 +460,27 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   const gbb = g.info.bb;
   const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
   job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
+  // init_job_viewport: fit the drawing into size= via a zoom Z carried by the
+  // SVG group transform (D1: parse here, not graph_init).
+  //
+  // Correction to D3: only the trailing `!` on size= sets the *filled* flag
+  // that init_job_viewport reads (input.c:694 GD_drawing->filled =
+  // getdoubles2ptf). `ratio=fill` instead sets ratio_kind=R_FILL (setRatio),
+  // which reshapes the *layout* (out of scope, D3) and does NOT feed
+  // init_job_viewport — so it is not OR-ed into filled here (doing so upscales
+  // ~31x where the oracle reshapes to ~1x). ratio=fill graphs therefore diverge
+  // on node positions, the deferred ratio-aspect-layout mission.
+  //
+  // Deviation from D4's stated mechanism: the brief assumed transformPoint
+  // short-circuits on GVRENDER_DOES_TRANSFORM for SVG, leaving job.zoom free to
+  // scale coordinates. In this port that flag is never set, so transformPoint
+  // (the shared raster ptf path — do not touch) applies job.zoom*devscale to
+  // every coordinate. To keep SVG coords full-size (D4's intent) WITHOUT
+  // altering the ptf path, carry Z in job.scale instead — which is exactly what
+  // C's SVG group emits (svg_begin_page prints job->scale.x/y = zoom*dpi/72 = Z
+  // for dpi=72), not job->zoom. job.scale is read only by the SVG group/dims.
+  const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')));
+  job.scale = { x: z, y: z };
   job.renderer = renderer;
   resetHtmlAnchorIds(); // C: fresh anchorId per dot invocation
   for (const n of g.nodes.values()) polyInit(n, g, job.measurer);

@@ -42,7 +42,14 @@
       "Bash(perl *:*)",
       "Bash(sed *:*)",
       "Bash(timeout *:*)",
-      "Bash(pkill -f *probe*:*)"
+      "Bash(pkill -f *probe*:*)",
+      "Bash(dot *:*)",
+      "Bash(jq *:*)",
+      "Bash(sg *:*)",
+      "mcp__serena__find_referencing_symbols",
+      "Bash(bash test/golden/gates.sh:*)",
+      "Bash(make *:*)",
+      "Bash(cmake *:*)"
     ]
   },
   "hooks": {
