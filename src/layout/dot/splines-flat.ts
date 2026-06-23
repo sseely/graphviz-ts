@@ -432,14 +432,18 @@ export function freshFlatPath(): Path {
   return { start: makePort(), end: makePort(), nbox: 0, boxes: [], data: null };
 }
 
-/** Per-caller spline_info bounds (C builds its own `sd` per orchestrator). */
+/** Per-caller spline_info bounds (C builds its own `sd` per orchestrator).
+ *  Splinesep = GD_nodesep(g) / 4 with INTEGER division (C's GD_nodesep is an
+ *  `int`, types.h:334; dotsplines.c:267 builds one sd shared by regular + flat
+ *  routing). A float divide here (nodesep/2 = 9) over-widens the VIRTUAL-
+ *  neighbor gap in maximal_bbox; truncate to nodesep/4 to mirror C. */
 export function flatBboxCtx(g: Graph): BboxCtx {
   return {
     g,
     sp: {
       leftBound: computeLeftBound(g),
       rightBound: computeRightBound(g),
-      splinesep: (g.info.nodesep ?? 18) / 2,
+      splinesep: Math.trunc((g.info.nodesep ?? 18) / 4),
     },
   };
 }
