@@ -12,6 +12,7 @@
 import { describe, it, expect } from 'vitest';
 import { parse } from './index.js';
 import { nodeAttr } from '../common/poly-init.js';
+import type { Graph } from '../model/graph.js';
 
 function firstEdge(src: string) {
   return parse(src).edges[0]!;
@@ -63,6 +64,60 @@ describe('anonymous subgraphs get distinct names', () => {
     const g = parse('digraph{subgraph{x} subgraph cluster_n{n}}');
     expect(g.subgraphs.size).toBe(2);
     expect(g.subgraphs.has('cluster_n')).toBe(true);
+  });
+});
+
+// AGSEQ: cgraph assigns each subgraph a global sequence number from a root-level
+// counter (clos->seq[AGRAPH], graph.c:152) at creation in source order, counting
+// anonymous subgraphs. getObjId (emit.c:230) emits `clust<AGSEQ>`. The port must
+// reproduce the counter so cluster ids match native dot.
+// @see lib/cgraph/graph.c:agopen (AGSEQ assignment), :152 (agnextseq)
+function findSubg(g: Graph, name: string): Graph | undefined {
+  const direct = g.subgraphs.get(name);
+  if (direct !== undefined) return direct;
+  for (const sg of g.subgraphs.values()) {
+    const found = findSubg(sg, name);
+    if (found !== undefined) return found;
+  }
+  return undefined;
+}
+
+describe('subgraph AGSEQ numbering matches cgraph', () => {
+  // nestedclust.gv: anon subgraphs interleave between clusters, so a dense
+  // counter (clust1,2,3) diverges from native (clust2,6,7).
+  const nestedclust =
+    'digraph G {' +
+    ' subgraph {e->f subgraph cluster_ss81 {a->b->c}};' +
+    ' subgraph { subgraph { subgraph { subgraph cluster_x {' +
+    '   x; subgraph cluster_y {y }}}}}' +
+    '}';
+
+  it('nestedclust clusters get seq 2, 6, 7', () => {
+    const g = parse(nestedclust);
+    expect(findSubg(g, 'cluster_ss81')!.seq).toBe(2);
+    expect(findSubg(g, 'cluster_x')!.seq).toBe(6);
+    expect(findSubg(g, 'cluster_y')!.seq).toBe(7);
+  });
+
+  it('two named clusters with no anon interleave get seq 1, 2', () => {
+    const g = parse('digraph G { subgraph cluster_0 {a} subgraph cluster_1 {b} }');
+    expect(findSubg(g, 'cluster_0')!.seq).toBe(1);
+    expect(findSubg(g, 'cluster_1')!.seq).toBe(2);
+  });
+
+  it('root graph keeps seq 0', () => {
+    expect(parse('digraph G { subgraph cluster_0 {a} }').seq).toBe(0);
+    expect(parse('digraph { a->b }').seq).toBe(0);
+  });
+
+  it('a repeated named subgraph keeps its first seq (no double-increment)', () => {
+    // `subgraph cluster_0` reopened mid-graph must not re-advance the counter;
+    // a later cluster_1 stays at seq 2.
+    const g = parse(
+      'digraph G { subgraph cluster_0 {a} subgraph cluster_0 {b} subgraph cluster_1 {c} }',
+    );
+    expect(findSubg(g, 'cluster_0')!.seq).toBe(1);
+    expect(findSubg(g, 'cluster_1')!.seq).toBe(2);
   });
 });
 

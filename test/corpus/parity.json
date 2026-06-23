@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-23T01:02:15.486Z",
+  "generatedAt": "2026-06-23T01:37:37.688Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 272,
-    "structural-match": 232,
-    "diverged": 264,
+    "byte-match": 278,
+    "structural-match": 236,
+    "diverged": 254,
     "errored": 5,
     "timeout": 7,
     "oracle-error": 16
@@ -16,9 +16,8 @@
     {
       "id": "121",
       "path": "121.dot",
-      "verdict": "diverged",
-      "maxDelta": 222,
-      "firstDiffPath": "svg/g[1]/g[2]/@id"
+      "verdict": "structural-match",
+      "maxDelta": 222
     },
     {
       "id": "1213-1",
@@ -82,7 +81,7 @@
       "path": "1332.dot",
       "verdict": "diverged",
       "maxDelta": 1988.85,
-      "firstDiffPath": "svg/g[1]/g[22]/@id"
+      "firstDiffPath": "svg/g[1]/g[72]/path[1]/@d"
     },
     {
       "id": "1367",
@@ -124,7 +123,7 @@
       "path": "1436.dot",
       "verdict": "diverged",
       "maxDelta": 541.0200000000001,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "firstDiffPath": "svg/g[1]/g[22]/path[1]/@d"
     },
     {
       "id": "1444-2",
@@ -197,9 +196,8 @@
     {
       "id": "1514",
       "path": "1514.dot",
-      "verdict": "diverged",
-      "maxDelta": 1,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "verdict": "structural-match",
+      "maxDelta": 1
     },
     {
       "id": "1581",
@@ -539,9 +537,8 @@
     {
       "id": "2242",
       "path": "2242.dot",
-      "verdict": "diverged",
-      "maxDelta": 104,
-      "firstDiffPath": "svg/g[1]/g[2]/@id"
+      "verdict": "structural-match",
+      "maxDelta": 104
     },
     {
       "id": "2257",
@@ -800,16 +797,15 @@
     {
       "id": "258",
       "path": "258.dot",
-      "verdict": "diverged",
-      "maxDelta": 222,
-      "firstDiffPath": "svg/g[1]/g[2]/@id"
+      "verdict": "structural-match",
+      "maxDelta": 222
     },
     {
       "id": "2592",
       "path": "2592.dot",
       "verdict": "diverged",
       "maxDelta": 749,
-      "firstDiffPath": "svg/g[1]/g[2]/@id"
+      "firstDiffPath": "svg/g[1]/g[4]/@id"
     },
     {
       "id": "2593",
@@ -1013,9 +1009,7 @@
     {
       "id": "705",
       "path": "705.dot",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "813",
@@ -1363,9 +1357,7 @@
     {
       "id": "graphs-b7",
       "path": "graphs/b7.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[2]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b71",
@@ -2090,9 +2082,7 @@
     {
       "id": "graphs-nestedclust",
       "path": "graphs/nestedclust.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-newarrows",
@@ -2722,9 +2712,7 @@
     {
       "id": "linux.x86-nestedclust_dot",
       "path": "linux.x86/nestedclust_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-ordering_dot",
@@ -2875,9 +2863,7 @@
     {
       "id": "macosx-nestedclust_dot",
       "path": "macosx/nestedclust_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "macosx-ordering_dot",
@@ -2987,9 +2973,7 @@
     {
       "id": "nshare-nestedclust_dot",
       "path": "nshare/nestedclust_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-ordering_dot",

@@ -9,6 +9,7 @@
 import { Graph, type GraphKind } from '../model/graph.js';
 import { Node } from '../model/node.js';
 import { Edge } from '../model/edge.js';
+import { assignSubgSeq } from '../model/cgraph-ops.js';
 import type {
   AttrPair,
   NodeId,
@@ -210,9 +211,17 @@ export class StmtProcessor {
     // enclosing scope have already advanced it — matching native's %N exactly.
     // @see lib/cgraph/graph.c:agsubg, lib/cgraph/id.c:idmap
     const sgName = stmt.id ?? `%${this.nextAnonId()}`;
+    // AGSEQ is assigned when the subgraph opens, before its body — matching C's
+    // agopen, which calls agnextseq before processing the subgraph contents.
+    // A reopened named subgraph (`subgraph X {…} … subgraph X {…}`) consumes no
+    // new AGSEQ in cgraph, so reuse the prior seq rather than re-incrementing.
+    // (Content still overwrites; merge semantics are unchanged and out of scope.)
+    const prior = graph.subgraphs.get(sgName);
     const sg = new Graph(sgName, graph.kind);
     sg.parent = graph;
     sg.root = root;
+    if (prior !== undefined) sg.seq = prior.seq;
+    else assignSubgSeq(graph, sg);
     buildGraph(stmt.stmts, sg, root, directed, this);
     graph.subgraphs.set(sgName, sg);
   }

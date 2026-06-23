@@ -44,9 +44,10 @@ export function svgEdgeId(e: Edge, job: RenderJob): string {
   return job.objId(e.attrs.get('id'), 'edge' + e.graphSeq);
 }
 
-/** SVG id for a cluster: own DOT `id` attr, else `clust<clusterId>` (gid prefix). */
+/** SVG id for a cluster: own DOT `id` attr, else `clust<AGSEQ seq>` (gid prefix).
+ * @see lib/common/emit.c:getObjId */
 export function svgClusterId(sg: Graph, job: RenderJob): string {
-  return job.objId(sg.attrs.get('id'), 'clust' + job.clusterId);
+  return job.objId(sg.attrs.get('id'), 'clust' + sg.seq);
 }
 
 /** SVG id for the root graph group: DOT `id` attr, else `graph0` (no prefix). */
