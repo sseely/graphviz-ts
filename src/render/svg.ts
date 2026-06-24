@@ -78,10 +78,24 @@ function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailCo
 // @see plugin/core/gvrender_core_svg.c:svg_engine
 // ---------------------------------------------------------------------------
 
+/**
+ * True when an edge has something to draw: a spline (path + arrows) or any
+ * label. C's gvrender defers the `<g>` until a draw op, so an edge with neither
+ * (e.g. a concentrate-merged IGNORED duplicate) emits no group. begin/end edge
+ * callbacks still fire, matching emit_edge. @see lib/common/emit.c:emit_edge
+ */
+function edgeHasDrawableContent(e: Edge): boolean {
+  const i = e.info;
+  return i.spl !== undefined || i.label !== undefined || i.xlabel !== undefined
+    || i.head_label !== undefined || i.tail_label !== undefined;
+}
+
 export class SvgRenderer implements RendererPlugin {
   readonly type = 'svg';
   /** @see plugin/core/gvplugin_core.c registration table */
   readonly quality = 0;
+  /** Whether the current edge's <g> group was opened (deferred-emit state). */
+  private edgeGroupOpen = false;
 
   beginGraph(g: Graph, job: RenderJob): void { svgBeginGraph(g, job); }
   endGraph(_g: Graph, job: RenderJob): void { svgEndGraph(job); }
@@ -93,7 +107,10 @@ export class SvgRenderer implements RendererPlugin {
   endLayer(job: RenderJob): void { svgEndLayer(job); }
   beginNode(n: Node, job: RenderJob): void { svgBeginNode(n, job); }
   endNode(_n: Node, job: RenderJob): void { svgEndNode(job); }
-  beginEdge(e: Edge, job: RenderJob): void { svgBeginEdge(e, job); }
+  beginEdge(e: Edge, job: RenderJob): void {
+    this.edgeGroupOpen = edgeHasDrawableContent(e);
+    if (this.edgeGroupOpen) svgBeginEdge(e, job);
+  }
 
   /**
    * Close the edge group.  Edge graphics (path + arrowhead) are emitted here
@@ -108,6 +125,10 @@ export class SvgRenderer implements RendererPlugin {
    * @see lib/common/emit.c:2442-2528 (else if numc parallel-bezier branch)
    */
   endEdge(e: Edge, job: RenderJob): void {
+    // No <g> opened (no spline/label) → nothing to draw or close, matching C's
+    // deferred group emission for content-less edges.
+    if (!this.edgeGroupOpen) return;
+    this.edgeGroupOpen = false;
     // Whole-edge anchor wraps the spline + arrows only; it closes before the
     // labels, which carry their own sub-anchors (siblings, not nested).
     // @see lib/common/emit.c:2877 (begin) / emit_end_edge:2970 (end)

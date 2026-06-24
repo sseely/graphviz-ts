@@ -129,6 +129,10 @@ export function testBeginEdge(): void {
   const job = makeJob();
   const g = makeGraph();
   const e = new Edge(new Node(0, 'A', g), new Node(1, 'B', g), '');
+  // A drawable edge has a spline; the renderer defers the <g> for content-less
+  // edges (e.g. concentrate-merged IGNORED duplicates), matching C.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- spl is runtime-dynamic
+  (e.info as any).spl = { size: 0, list: [] };
   r.beginEdge(e, job);
   expect(job.output.join('')).toContain('class="edge"');
 }

@@ -209,7 +209,7 @@ export function dotPosition(g: Graph): number {
   if (g.info.nlist === undefined) return 0;
   markLowclusters(g);
   setYcoords(g);
-  if (g.info.drawing?.concentrate) {
+  if (g.info.concentrate) {
     const rc = dotConcentrate(g);
     if (rc !== 0) return rc;
   }

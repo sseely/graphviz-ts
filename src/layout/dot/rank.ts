@@ -259,14 +259,21 @@ export function nodeInduce(par: Graph, clust: Graph): void {
 
 /** @see lib/dotgen/rank.c:dot_scan_ranks */
 export function dotScanRanks(g: Graph): void {
+  // C computes the ACTUAL min/max node rank (and the min-rank node as leader);
+  // a prior port hardcoded minrank=0, which made concentrate's rebuild_vlists
+  // walk ranks the cluster doesn't span → a null rank leader → crash on cluster
+  // graphs. @see lib/dotgen/rank.c:dot_scan_ranks
   let leader: Node | undefined;
-  let maxrank = 0;
+  let leaderRank = 0;
+  let minrank = Number.MAX_SAFE_INTEGER;
+  let maxrank = -1;
   for (const n of g.nodes.values()) {
     const r = n.info.rank ?? 0;
-    if (r === 0 && (n.info.node_type ?? 0) === 0) leader = n;
-    if (maxrank < r) maxrank = r;
+    if (r > maxrank) maxrank = r;
+    if (r < minrank) minrank = r;
+    if (leader === undefined || r < leaderRank) { leader = n; leaderRank = r; }
   }
-  g.info.minrank = 0;
+  g.info.minrank = minrank;
   g.info.maxrank = maxrank;
   g.info.leader = leader;
 }

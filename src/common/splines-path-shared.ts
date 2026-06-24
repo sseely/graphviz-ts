@@ -37,20 +37,24 @@ export function addBox(P: Path, b: Box): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Computes the concentrated slope at node n (mean of in/out angles).
- * @see lib/common/splines.c:conc_slope
+ * Computes the concentrated slope at node n (mean of in/out angles). Reads the
+ * node's own in/out fast-edge lists directly, as C conc_slope reads
+ * ND_in(n)/ND_out(n) — only called for spline-merge (concentrator) nodes, which
+ * always carry both lists. @see lib/common/splines.c:conc_slope
  */
-export function concSlope(n: Node, inEdges: Edge[], outEdges: Edge[]): number {
+export function concSlope(n: Node): number {
+  const inE = n.info.in;
+  const outE = n.info.out;
+  const cntIn = inE?.size ?? 0;
+  const cntOut = outE?.size ?? 0;
   let sIn = 0;
   let sOut = 0;
-  for (const e of inEdges) sIn += e.tail.info.coord.x;
-  for (const e of outEdges) sOut += e.head.info.coord.x;
-  const cntIn = inEdges.length;
-  const cntOut = outEdges.length;
+  for (let i = 0; i < cntIn; i++) sIn += inE!.list[i].tail.info.coord.x;
+  for (let i = 0; i < cntOut; i++) sOut += outE!.list[i].head.info.coord.x;
   const x1 = n.info.coord.x - sIn / cntIn;
-  const y1 = n.info.coord.y - inEdges[0].tail.info.coord.y;
+  const y1 = n.info.coord.y - inE!.list[0].tail.info.coord.y;
   const x2 = sOut / cntOut - n.info.coord.x;
-  const y2 = outEdges[0].head.info.coord.y - n.info.coord.y;
+  const y2 = outE!.list[0].head.info.coord.y - n.info.coord.y;
   return (Math.atan2(y1, x1) + Math.atan2(y2, x2)) / 2.0;
 }
 
@@ -218,11 +222,9 @@ export function invokePboxfn(
 // ---------------------------------------------------------------------------
 
 /** Configure P.start constrained/theta for the tail endpoint. */
-export function setStartTheta(
-  P: Path, e: Edge, merge: boolean, inEdges: Edge[], outEdges: Edge[],
-): void {
+export function setStartTheta(P: Path, e: Edge, merge: boolean): void {
   if (merge) {
-    P.start.theta = concSlope(e.tail, inEdges, outEdges);
+    P.start.theta = concSlope(e.tail);
     P.start.constrained = true;
   } else if (e.info.tail_port.constrained) {
     P.start.theta = e.info.tail_port.theta;
@@ -233,11 +235,9 @@ export function setStartTheta(
 }
 
 /** Configure P.end constrained/theta for the head endpoint. */
-export function setEndTheta(
-  P: Path, e: Edge, merge: boolean, inEdges: Edge[], outEdges: Edge[],
-): void {
+export function setEndTheta(P: Path, e: Edge, merge: boolean): void {
   if (merge) {
-    P.end.theta = concSlope(e.head, inEdges, outEdges) + Math.PI;
+    P.end.theta = concSlope(e.head) + Math.PI;
     P.end.constrained = true;
   } else if (e.info.head_port.constrained) {
     P.end.theta = e.info.head_port.theta;

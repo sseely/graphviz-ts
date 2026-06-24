@@ -24,8 +24,6 @@ export interface EndPathArgs {
   et: number;
   endp: PathendT;
   merge: boolean;
-  inEdges: Edge[];
-  outEdges: Edge[];
   ranksep: number;
   pboxfn: ShapeDesc['fns'];
 }
@@ -211,7 +209,7 @@ function endDefaultPath(
  * @see lib/common/splines.c:endpath
  */
 export function endPath(args: EndPathArgs): void {
-  const { P, e, et, endp, merge, inEdges, outEdges, ranksep, pboxfn } = args;
+  const { P, e, et, endp, merge, ranksep, pboxfn } = args;
   const n = e.head;
   if (e.info.head_port.dyna) {
     e.info.head_port = resolvePort(n, e.tail, e.info.head_port);
@@ -220,7 +218,7 @@ export function endPath(args: EndPathArgs): void {
     x: n.info.coord.x + e.info.head_port.p.x,
     y: n.info.coord.y + e.info.head_port.p.y,
   };
-  setEndTheta(P, e, merge, inEdges, outEdges);
+  setEndTheta(P, e, merge);
   endp.np = { x: P.end.p.x, y: P.end.p.y };
   const ctx: EndCtx = { P, e, n, endp, ranksep };
   const side = e.info.head_port.side;

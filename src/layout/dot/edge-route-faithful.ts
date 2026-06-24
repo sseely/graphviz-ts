@@ -342,7 +342,7 @@ export function freshEndp(nb: Box): PathendT {
 
 /** beginPath/endPath args for a single non-merged regular edge. */
 function pathArgs(P: Path, e: Edge, endp: PathendT, merge: boolean, ranksep: number) {
-  return { P, e, et: REGULAREDGE, endp, merge, inEdges: [], outEdges: [], ranksep, pboxfn: null };
+  return { P, e, et: REGULAREDGE, endp, merge, ranksep, pboxfn: null };
 }
 
 /**

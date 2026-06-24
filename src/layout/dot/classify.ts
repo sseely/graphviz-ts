@@ -312,10 +312,15 @@ function handleClusterEdge(g: Graph, e: Edge, prev: Edge | undefined): Edge | un
 // ---------------------------------------------------------------------------
 
 function concentrateOrMerge(g: Graph, e: Edge, prev: Edge): void {
+  // C: if (Concentrate) ED_edge_type(e) = IGNORED — unconditionally, with NO
+  // ED_to_virt check. Only the non-concentrate merge_chain branch needs to_virt
+  // (set by prev's make_chain). The port previously gated the whole call on
+  // prev.to_virt, so adjacent parallel edges (no virtual chain) never got
+  // IGNORED under concentrate. @see lib/dotgen/class2.c (merge multi-edges)
   if (dotRoot(g).info.concentrate ?? false) {
     e.info.edge_type = IGNORED;
-  } else {
-    mergeChain(g, e, prev.info.to_virt!, true);
+  } else if (prev.info.to_virt !== undefined) {
+    mergeChain(g, e, prev.info.to_virt, true);
     otherEdge(e);
   }
 }
@@ -330,7 +335,7 @@ function handleMultiSameRank(e: Edge, prev: Edge): boolean {
 function handleMultiParallel(g: Graph, e: Edge, prev: Edge): boolean {
   if (e.info.label !== undefined || prev.info.label !== undefined) return false;
   if (!portsEq(e, prev)) return false;
-  if (prev.info.to_virt !== undefined) concentrateOrMerge(g, e, prev);
+  concentrateOrMerge(g, e, prev);
   return true;
 }
 

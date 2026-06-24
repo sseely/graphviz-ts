@@ -17,6 +17,7 @@ import {
   virtualEdge, mergeOneway, deleteFastEdge, deleteFastNode,
 } from './fastgr.js';
 import { dotScanRanks } from './rank.js';
+import { dotRoot } from './mincross-utils.js';
 import { graphMinrank, graphMaxrank } from './position-aux.js';
 
 const UP = 0;
@@ -254,10 +255,15 @@ export function computeMaxi(g: Graph, r: number): number {
 export function fillRankVlist(g: Graph, r: number, root: Graph): number {
   const rankArr = g.info.rank!;
   const lead = g.info.rankleader![r];
-  if (lead === undefined) return -1;
+  if (lead === undefined || lead === null) return -1;
   const rootRank = root.info.rank![r];
   if (rootRank.v[lead.info.order ?? 0] !== lead) return -2;
+  // C sets GD_rank(g)[r].v = GD_rank(root)[r].v + ND_order(lead) (pointer
+  // offset). The port bakes that offset into a fresh slice, so the window now
+  // starts at index 0 — reset the stale vStart (left over from mincross) or
+  // downstream rankGet double-offsets past the slice end. @see rebuild_vlists
   rankArr[r].v = rootRank.v.slice(lead.info.order ?? 0);
+  rankArr[r].vStart = 0;
   rankArr[r].n = computeMaxi(g, r) + 1;
   return 0;
 }
@@ -272,11 +278,14 @@ export function infuseAllNodes(g: Graph): void {
 
 /** Fill all per-rank vlists for g using root as the master rank table. */
 export function fillAllRankVlists(g: Graph): number {
-  const root = g.info.dotroot ?? g;
+  // C uses GD_rank(dot_root(g)) as the master rank table. dotRoot falls back to
+  // g.root (the true root), NOT g — `g.info.dotroot ?? g` wrongly used the
+  // cluster itself when dotroot was unset. @see lib/dotgen/conc.c:rebuild_vlists
+  const root = dotRoot(g);
   const minR = graphMinrank(g);
   const maxR = graphMaxrank(g);
   for (let r = minR; r <= maxR; r++) {
-    if (g.info.rankleader![r] === undefined) return -1;
+    if (g.info.rankleader![r] == null) return -1;
     const rc = fillRankVlist(g, r, root);
     if (rc !== 0) return rc;
   }

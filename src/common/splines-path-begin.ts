@@ -210,8 +210,6 @@ export interface BeginPathArgs {
   et: number;
   endp: PathendT;
   merge: boolean;
-  inEdges: Edge[];
-  outEdges: Edge[];
   ranksep: number;
   pboxfn: ShapeDesc['fns'];
 }
@@ -221,7 +219,7 @@ export interface BeginPathArgs {
  * @see lib/common/splines.c:beginpath
  */
 export function beginPath(args: BeginPathArgs): void {
-  const { P, e, et, endp, merge, inEdges, outEdges, ranksep, pboxfn } = args;
+  const { P, e, et, endp, merge, ranksep, pboxfn } = args;
   const n = e.tail;
   if (e.info.tail_port.dyna) {
     e.info.tail_port = resolvePort(n, e.head, e.info.tail_port);
@@ -230,7 +228,7 @@ export function beginPath(args: BeginPathArgs): void {
     x: n.info.coord.x + e.info.tail_port.p.x,
     y: n.info.coord.y + e.info.tail_port.p.y,
   };
-  setStartTheta(P, e, merge, inEdges, outEdges);
+  setStartTheta(P, e, merge);
   P.nbox = 0;
   P.data = e;
   endp.np = { x: P.start.p.x, y: P.start.p.y };

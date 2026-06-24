@@ -73,6 +73,12 @@ function chainSegments(e: GraphEdge): GraphEdge[] {
   const segs: GraphEdge[] = [];
   let cur = e.info.to_virt;
   while (cur !== undefined) {
+    // Resolve the merge redirect: concentrate (dot_concentrate) sets to_virt on
+    // merged virtual edges so siblings share the representative chain. Following
+    // the raw edge lands on a drained dead-end node; follow to_virt to the
+    // representative, as C does (for rep=e; ED_to_virt(rep); rep=ED_to_virt(rep)).
+    // @see lib/dotgen/conc.c:rebuild_vlists
+    while (cur.info.to_virt !== undefined) cur = cur.info.to_virt;
     segs.push(cur);
     if (cur.head === e.head) break;
     const out = cur.head.info.out;
@@ -83,7 +89,7 @@ function chainSegments(e: GraphEdge): GraphEdge[] {
 
 /** beginPath/endPath args for a single non-merged REGULAREDGE chain segment. */
 function chainPathArgs(P: Path, e: GraphEdge, endp: PathendT, merge: boolean, ranksep: number) {
-  return { P, e, et: REGULAREDGE, endp, merge, inEdges: [], outEdges: [], ranksep, pboxfn: null };
+  return { P, e, et: REGULAREDGE, endp, merge, ranksep, pboxfn: null };
 }
 
 /** True when n is a non-merged virtual chain node (the C while-loop guard). */
@@ -134,7 +140,11 @@ function beginSeg(
 ): void {
   const tn = chainEdge.tail;
   w.tend = freshEndp(maximalBbox(w.ctx, tn, ie, chainEdge));
-  beginPath(chainPathArgs(w.P, portEdge, w.tend, splineMerge(tn), w.ranksep));
+  // merge tested on the node beginPath/concSlope uses (portEdge.tail), not the
+  // chain segment's tail — they differ when a concentrate-merged chain starts at
+  // a merge node while portEdge carries the real (normal) tail. Symmetric to
+  // endSeg. @see lib/dotgen/dotsplines.c:make_regular_edge (spline_merge(agtail(e)))
+  beginPath(chainPathArgs(w.P, portEdge, w.tend, splineMerge(portEdge.tail), w.ranksep));
   appendRegularEnd(w.tend.nb, w.tend, BOTTOM, tn.info.coord.y - rankHt(w.ranks[tn.info.rank!].ht1, tn.info.ht));
   if (constrain) { w.P.start.theta = -Math.PI / 2; w.P.start.constrained = true; }
 }
@@ -152,7 +162,13 @@ function endSeg(
 ): boolean {
   const hn = chainEdge.head;
   const hend = freshEndp(maximalBbox(w.ctx, hn, chainEdge, oe));
-  endPath(chainPathArgs(w.P, portEdge, hend, splineMerge(hn), w.ranksep));
+  // merge must be tested on the node endPath/concSlope actually uses (the path
+  // edge's head = portEdge.head), as C does (spline_merge(aghead(e))) — NOT the
+  // chain segment's head. They differ in the final segment when the chain ends
+  // at a concentrator merge node while portEdge carries the real (normal) head;
+  // testing the merge node there would call concSlope on the normal sink (0
+  // in/out edges) and crash. @see lib/dotgen/dotsplines.c:make_regular_edge
+  endPath(chainPathArgs(w.P, portEdge, hend, splineMerge(portEdge.head), w.ranksep));
   appendRegularEnd(hend.nb, hend, TOP, hn.info.coord.y + rankHt(w.ranks[hn.info.rank!].ht2, hn.info.ht));
   if (constrain) { w.P.end.theta = Math.PI / 2; w.P.end.constrained = true; }
   if (!completeRegularPath({ P: w.P, first: w.segfirst, last: chainEdge, tend: w.tend, hend, boxes: w.boxes })) {
@@ -244,7 +260,14 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
     if (line !== null) return line;
   }
   const segs = chainSegments(e);
-  if (segs.length < 2) return null;
+  // Route only a COMPLETE chain (the last segment reaches e.head). C builds a
+  // synthetic edge tail -> aghead(le) (le = the fully to_virt-resolved
+  // representative): when concentrate merges an edge's entire chain, that head IS
+  // e.head, giving a single direct tail->head segment that must still route (so
+  // segs.length === 1 is valid, not a bail). But a chain that ends at a virtual
+  // node is broken (a to_virt resolution that could not be reconstructed) — bail
+  // rather than crash the segment loop. @see dotsplines.c:make_regular_edge
+  if (segs.length === 0 || segs[segs.length - 1].head !== e.head) return null;
   return routeChainSegmented(g, e, segs);
 }
 

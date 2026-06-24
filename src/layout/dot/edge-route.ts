@@ -34,6 +34,8 @@ import {
 } from './splines-flat-multi.js';
 import { makeFlatLabeledEdge, makeAdjFlatNoPortEdge } from './splines-flat-labeled.js';
 import { EDGETYPE_SPLINE, swapEndsP, swapSpline } from './splines.js';
+import { FLATORDER } from './fastgr.js';
+import { IGNORED } from './rank.js';
 import { buildDotSinfo } from './self-loop.js';
 
 import {
@@ -396,6 +398,11 @@ function orderedDotEdges(g: Graph): GraphEdge[] {
 export function routeDotEdges(g: Graph): void {
   for (const e of orderedDotEdges(g)) {
     if (e.info.spl !== undefined) continue;
+    // C dot_splines_ skips FLATORDER/IGNORED edges when building the route list;
+    // an IGNORED edge (e.g. a concentrate-merged parallel duplicate) must get no
+    // spline so emit draws only the representative. @see dotsplines.c:295
+    const et = e.info.edge_type ?? 0;
+    if (et === FLATORDER || et === IGNORED) continue;
     if (e.tail === e.head) continue;
     if (!hasValidCoords(e)) continue;
     routeOneEdge(e, g);

@@ -168,6 +168,10 @@ export function dotGraphInit(g: Graph): void {
   // ratio + size → g.info.drawing (input.c:693-694: setRatio then size). Scoped
   // to ratio=compress (ADR-1); activates compressGraph. @see input.c:576,694
   parseRatioCompress(g);
+  // concentrate (input.c:708-709): Concentrate = mapbool(agget(g,"concentrate")).
+  // Gates both the class2 merge path (classify.ts) and dot_concentrate
+  // (position.ts). @see lib/common/input.c:708, lib/common/globals.h:Concentrate
+  g.info.concentrate = mapbool(g.attrs.get('concentrate'));
   // Root graph label: dimensions measured here so bb expansion in gvPostprocess
   // has the dimen available. Cluster labels are handled by buildSkeleton/rank.ts.
   // HTML labels not yet supported — plain-text only.
