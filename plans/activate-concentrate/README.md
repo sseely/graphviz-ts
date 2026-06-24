@@ -1,7 +1,7 @@
 # Mission: activate `concentrate=true` (dead feature) + fix its latent bugs
 
-Status: **WIP on `feature/activate-concentrate` (87b4e97) — 2 of 4 bugs fixed; NOT
-merged (b15 regresses).**
+Status: **WIP on `feature/activate-concentrate` (87b4e97, 55cfed4) — 5 bugs
+fixed; NOT merged (b15 still errors deeper, in spline routing).**
 
 ## How we got here
 
@@ -25,12 +25,25 @@ concentrate feature is dead code. b69 (concentrate=true) renders un-concentrated
    now reads the node's own `in`/`out` fast-edge lists directly, exactly as C
    `conc_slope` reads `ND_in(n)`/`ND_out(n)`; removed the dead inEdges/outEdges
    plumbing.
-3. **Cluster + concentrate crash (b15)** — **OPEN.** `b15.gv` (concentrate +
-   subgraph clusters + record nodes) throws `Cannot read properties of null`
-   at `conc.ts:259 fillRankVlist` (the cluster `rebuild_vlists` path:
-   `rootRank.v[lead.info.order]`). The cluster vlist-rebuild has never run.
-   **This is the merge blocker** — b15 was `diverged` (maxDelta 25) on main and
-   now errors (a regression), so the branch cannot merge until this is fixed.
+3. **Cluster + concentrate crashes (b15)** — **3 fixed, 1 open** (commit
+   `55cfed4`). `b15.gv` (concentrate + nested clusters + records) exercised the
+   never-run cluster `rebuild_vlists`. Fixed in order:
+   - **3a** `dotScanRanks` hardcoded `minrank=0` (C computes the real min node
+     rank) → `rebuild_vlists` walked ranks the cluster doesn't span → null rank
+     leader → crash. **FIXED** (real min/max + min-rank leader).
+   - **3b** `fillAllRankVlists` used `g.info.dotroot ?? g` (the cluster itself)
+     as master rank table; C uses `dot_root(g)`. **FIXED** (`dotRoot(g)`).
+   - **3c** `fillRankVlist` slices `rootRank.v` at the leader's order (baking the
+     offset) but left a stale `vStart` → downstream `rankGet` double-offset →
+     crash in `containNodesRank`. **FIXED** (`vStart = 0` after slice).
+   - **3d OPEN** — b15 now clears concentrate + the whole position phase, then
+     errors in **spline routing**: `concSlope` hits a `splineMerge` virtual node
+     with **0 in-edges** (`inE.list[0]` undefined). C never produces such a node,
+     so the port's cluster mergevirtual/rebuild leaves a merge node without an
+     in-edge. This is the remaining b15 blocker. Lead: instrument which node
+     (rank/cluster) and trace its in/out through `mergeVirtual`/`rebuildVlists`.
+   b15 was `diverged` (maxDelta 25) on main; still errors, so the branch cannot
+   merge until 3d is fixed.
 4. **Merge under-count** — **OPEN.** Even after (1)+(2), the merge *decision*
    under-merges vs C: b69 140 vs 137 edges (the original 3 edges:
    `MRS380-LOAD-WRCLS1_TEMP->WRCLS1`, `WS-BATCH-DATE->MRS145-UPD-DATEFILE`,
