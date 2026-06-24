@@ -98,3 +98,30 @@ export interface LayoutParams {
    */
   id: string | null;
 }
+
+/**
+ * Construct a `LayoutParams` mirroring C's calloc-zeroed `layout_t` (GD_drawing),
+ * with the given fields overridden. C zero-inits every field, then `graph_init`
+ * sets only the ones it parses (ratio_kind, size, filled, …); this factory keeps
+ * the unset fields at their C-zero defaults so callers populate just what they
+ * need. @see lib/common/types.h:layout_t (allocated via agbindrec/calloc)
+ */
+export function makeDrawing(overrides: Partial<LayoutParams>): LayoutParams {
+  const zero: Point = { x: 0, y: 0 };
+  return {
+    quantum: 0,
+    scale: 0,
+    ratio: 0,
+    dpi: 0,
+    margin: { ...zero },
+    page: { ...zero },
+    size: { ...zero },
+    filled: false,
+    landscape: false,
+    centered: false,
+    ratioKind: 'none',
+    xdots: null,
+    id: null,
+    ...overrides,
+  };
+}

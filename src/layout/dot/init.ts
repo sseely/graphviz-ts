@@ -13,6 +13,8 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import { commonInitNode, lateInt, lateDouble, layoutMeasurer } from '../../common/nodeinit.js';
 import { POINTS_PER_INCH } from '../../model/geom.js';
+import { makeDrawing } from '../../model/layoutParams.js';
+import type { RatioKind } from '../../model/layoutParams.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL, deleteFastNode, removeFromRank } from './fastgr.js';
 import { mapbool } from './rank.js';
@@ -70,6 +72,66 @@ function parseSepAttrs(g: Graph): void {
   g.info.ranksep = points(xf);
 }
 
+/** sscanf("%lf")-style float token. @see lib/common/input.c:476 getdoubles2ptf */
+const SIZE_FLOAT = '[-+]?[0-9.]+(?:[eE][-+]?[0-9]+)?';
+const SIZE_XY_RE = new RegExp(`^\\s*(${SIZE_FLOAT})\\s*,\\s*(${SIZE_FLOAT})(.?)`);
+const SIZE_X_RE = new RegExp(`^\\s*(${SIZE_FLOAT})(.?)`);
+
+/**
+ * Local port of `getdoubles2ptf(g,"size",…)`: parse `"x,y"` (or a lone `"x"`
+ * meaning square) → points, with a trailing `!` as the *filled* flag. Returns
+ * null when absent or non-positive. Re-derived here rather than imported from
+ * `gvc/viewport` to avoid a layout→render dependency edge (ADR-2 deviation, same
+ * result). @see lib/common/input.c:476 getdoubles2ptf
+ */
+function parseSizePoints(raw: string | undefined): { x: number; y: number; filled: boolean } | null {
+  if (raw === undefined) return null;
+  const xy = SIZE_XY_RE.exec(raw);
+  if (xy) {
+    const xf = Number(xy[1]);
+    const yf = Number(xy[2]);
+    if (xf > 0 && yf > 0) return { x: points(xf), y: points(yf), filled: xy[3] === '!' };
+  }
+  const x = SIZE_X_RE.exec(raw);
+  if (x) {
+    const xf = Number(x[1]);
+    if (xf > 0) return { x: points(xf), y: points(xf), filled: x[2] === '!' };
+  }
+  return null;
+}
+
+/**
+ * Port of `setRatio` (input.c:576): map the `ratio` attr to a RatioKind. A
+ * positive numeric value is R_VALUE; anything else absent/unrecognized → none.
+ * @see lib/common/input.c:576 setRatio
+ */
+function parseRatioKind(g: Graph): RatioKind | undefined {
+  const p = g.attrs.get('ratio');
+  if (p === undefined) return undefined;
+  if (p === 'auto') return 'auto';
+  if (p === 'compress') return 'compress';
+  if (p === 'expand') return 'expand';
+  if (p === 'fill') return 'fill';
+  return Number.parseFloat(p) > 0 ? 'value' : undefined;
+}
+
+/**
+ * Populate `g.info.drawing` for `ratio=compress` only (ADR-1). Other ratio kinds
+ * (fill/expand/value/auto) intentionally leave `drawing` unset so `setAspect`
+ * stays dead for them — the deferred ratio-aspect mission. compressGraph reads
+ * `drawing.ratioKind`/`drawing.size` and runs the x-NS compression.
+ * @see lib/dotgen/position.c:501 compress_graph
+ */
+function parseRatioCompress(g: Graph): void {
+  if (parseRatioKind(g) !== 'compress') return;
+  const sz = parseSizePoints(g.attrs.get('size'));
+  g.info.drawing = makeDrawing({
+    ratioKind: 'compress',
+    size: sz ? { x: sz.x, y: sz.y } : { x: 0, y: 0 },
+    filled: sz?.filled ?? false,
+  });
+}
+
 // ---------------------------------------------------------------------------
 // dotGraphInit — parse rankdir and propagate to subgraphs (graph_init semantics)
 // @see lib/common/input.c:600-663 graph_init
@@ -103,6 +165,9 @@ export function dotGraphInit(g: Graph): void {
   // nodesep / ranksep (input.c:665-681) — parsed here so the values are set
   // before dotInitSubg's defaults and before ranking uses GD_ranksep.
   parseSepAttrs(g);
+  // ratio + size → g.info.drawing (input.c:693-694: setRatio then size). Scoped
+  // to ratio=compress (ADR-1); activates compressGraph. @see input.c:576,694
+  parseRatioCompress(g);
   // Root graph label: dimensions measured here so bb expansion in gvPostprocess
   // has the dimen available. Cluster labels are handled by buildSkeleton/rank.ts.
   // HTML labels not yet supported — plain-text only.

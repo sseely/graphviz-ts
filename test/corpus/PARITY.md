@@ -38,8 +38,8 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-b104` | 10252.30 | `svg/g[1]/g[21]/path[1]/@d` |
 | `2620` | 8005.85 | `svg/g[1]/g[25]/path[1]/@d` |
 | `2239` | 7620.15 | `svg/g[1]/g[2][childCount]` |
-| `1447_1` | 3896.00 | `svg/g[1]/g[27]/path[1]/@d` |
 | `1718` | 3725.90 | `svg/g[1]/g[47]/path[1]/@d` |
+| `1447_1` | 3624.38 | `svg/g[1]/g[23]/path[1]/@d` |
 | `graphs-b103` | 3570.20 | `svg/g[1]/g[70]/path[1]/@d` |
 | `linux.i386-b106` | 3407.27 | `svg/g[1]/g[10]/path[1]/@d` |
 | `share-b106` | 3407.27 | `svg/g[1]/g[10]/path[1]/@d` |
@@ -54,6 +54,9 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `share-b29` | 1785.96 | `svg/g[1]/g[8]/path[1]/@d` |
 | `graphs-b29` | 1781.49 | `svg/g[1]/g[14]/path[1]/@d` |
 | `windows-b29` | 1781.49 | `svg/g[1]/g[14]/path[1]/@d` |
+| `graphs-NaN` | 1601.51 | `svg/g[1]/g[7]/path[1]/@d` |
+| `share-NaN` | 1601.51 | `svg/g[1]/g[7]/path[1]/@d` |
+| `windows-NaN` | 1601.51 | `svg/g[1]/g[7]/path[1]/@d` |
 | `windows-b106` | 1271.25 | `svg/g[1]/g[10]/path[1]/@d` |
 | `1855` | 1240.58 | `svg/g[1]/g[3]/path[1]/@d` |
 | `windows-pgram` | 1115.98 | `svg/g[1]/g[29]/path[1]/@d` |
