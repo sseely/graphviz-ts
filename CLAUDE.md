@@ -1,5 +1,8 @@
 # graphviz-ts — Claude Code Instructions
 
+## Overrides
+We want to keep the plans/ contents. This is for archaeology on this particular effort.
+
 ## Mission
 
 This project is a faithful TypeScript port of [Graphviz](https://graphviz.org/),
@@ -38,20 +41,20 @@ the question.
 
 ### Type Mappings
 
-| C concept | TypeScript equivalent |
-|-----------|----------------------|
-| `int`, `long` | `number` (note precision limits for values > 2^53) |
-| `double`, `float` | `number` |
-| `char *` (string) | `string` |
-| `char *` (byte buffer) | `Uint8Array` |
-| `struct Foo` | `interface Foo` or `class Foo` (prefer `interface` for plain data) |
-| `enum` | `const enum` or `enum` |
-| `void *` (generic pointer) | `unknown` or a typed union |
-| `FILE *` | Abstract `Writer` interface; concrete implementations per environment |
-| Pointer arithmetic | Array + index, or `DataView` for packed binary data |
-| `NULL` | `null` or `undefined` (prefer `null` for nullable pointers) |
-| `#define` constant | `const` or `const enum` |
-| Function pointer | Typed function type or interface with a single call signature |
+| C concept                  | TypeScript equivalent                                                 |
+| -------------------------- | --------------------------------------------------------------------- |
+| `int`, `long`              | `number` (note precision limits for values > 2^53)                    |
+| `double`, `float`          | `number`                                                              |
+| `char *` (string)          | `string`                                                              |
+| `char *` (byte buffer)     | `Uint8Array`                                                          |
+| `struct Foo`               | `interface Foo` or `class Foo` (prefer `interface` for plain data)    |
+| `enum`                     | `const enum` or `enum`                                                |
+| `void *` (generic pointer) | `unknown` or a typed union                                            |
+| `FILE *`                   | Abstract `Writer` interface; concrete implementations per environment |
+| Pointer arithmetic         | Array + index, or `DataView` for packed binary data                   |
+| `NULL`                     | `null` or `undefined` (prefer `null` for nullable pointers)           |
+| `#define` constant         | `const` or `const enum`                                               |
+| Function pointer           | Typed function type or interface with a single call signature         |
 
 ### No Browser-Hostile APIs
 
@@ -97,20 +100,20 @@ Apply YAGNI strictly here. This is a translation, not a redesign:
 
 The C source is organized under `~/git/graphviz/lib/`. Key modules:
 
-| Directory | Purpose |
-|-----------|---------|
-| `cgraph/` | Core graph data structure (nodes, edges, subgraphs, attributes) |
-| `dotgen/` | `dot` layout engine — hierarchical, layered digraph layout |
-| `neatogen/` | `neato` / `fdp` — spring-model layout |
-| `circogen/` | `circo` — circular layout |
-| `osage/` | `osage` — clustered layout |
-| `sfdpgen/` | `sfdp` — force-directed for large graphs |
-| `pathplan/` | Path planning (edge routing) |
-| `common/` | Shared rendering utilities, label handling, color |
-| `label/` | Label layout and text measurement |
-| `gvc/` | Graphviz context — plugin registration, rendering pipeline |
-| `cdt/` | Container data types (dictionary, tree, list) |
-| `ast/` | String utilities |
+| Directory   | Purpose                                                         |
+| ----------- | --------------------------------------------------------------- |
+| `cgraph/`   | Core graph data structure (nodes, edges, subgraphs, attributes) |
+| `dotgen/`   | `dot` layout engine — hierarchical, layered digraph layout      |
+| `neatogen/` | `neato` / `fdp` — spring-model layout                           |
+| `circogen/` | `circo` — circular layout                                       |
+| `osage/`    | `osage` — clustered layout                                      |
+| `sfdpgen/`  | `sfdp` — force-directed for large graphs                        |
+| `pathplan/` | Path planning (edge routing)                                    |
+| `common/`   | Shared rendering utilities, label handling, color               |
+| `label/`    | Label layout and text measurement                               |
+| `gvc/`      | Graphviz context — plugin registration, rendering pipeline      |
+| `cdt/`      | Container data types (dictionary, tree, list)                   |
+| `ast/`      | String utilities                                                |
 
 Start porting from the bottom up: `cdt` → `ast` → `cgraph` → `common` →
 layout engines → `gvc`.
