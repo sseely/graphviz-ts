@@ -41,6 +41,14 @@ const BUNDLE = join(REPO, 'dist/index.js');
 const WORKER = join(REPO, 'test/corpus/bench-worker.mjs');
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
 const PERF = new URL('./perf.json', import.meta.url);
+const NATIVE_TIMINGS = new URL('./native-timings.json', import.meta.url);
+
+/** Canonical native dot times (id → ms). Native C is frozen; we don't re-time
+ *  it — see test/corpus/capture-native.mjs. {} if not yet captured. */
+function loadNativeTimings() {
+  try { return JSON.parse(readFileSync(NATIVE_TIMINGS, 'utf8')).timings ?? {}; }
+  catch { return {}; }
+}
 
 const POOL = Number(process.env.BENCH_POOL ?? Math.max(1, Math.floor(availableParallelism() / 2)));
 const CAP_MS = Number(process.env.BENCH_CAP_MS ?? 180_000);
@@ -188,16 +196,30 @@ function tally(rows) {
 // Orchestration
 // ---------------------------------------------------------------------------
 
-/** Native phase: measure every input with POOL-way concurrency. */
+/** Native phase: reuse the canonical (frozen) native times; only measure inputs
+ *  not yet captured. Native C isn't under development, so once captured its time
+ *  is a fact — capture-native.mjs owns the canonical file. */
 async function nativePhase(entries) {
+  const canon = loadNativeTimings();
   const out = new Array(entries.length);
+  const misses = [];
+  for (let i = 0; i < entries.length; i++) {
+    const ms = canon[entries[i].id];
+    if (typeof ms === 'number') out[i] = { ms };
+    else misses.push(i);
+  }
+  if (misses.length === 0) {
+    process.stderr.write(`  all ${entries.length} native times canonical (no dot runs)\n`);
+    return out;
+  }
+  process.stderr.write(`  ${entries.length - misses.length} canonical, measuring ${misses.length} uncaptured\n`);
   let next = 0;
   const worker = async () => {
-    for (let i = next++; i < entries.length; i = next++) {
-      out[i] = await nativeMs(join(ROOT, entries[i].path));
+    for (let j = next++; j < misses.length; j = next++) {
+      out[misses[j]] = await nativeMs(join(ROOT, entries[misses[j]].path));
     }
   };
-  await Promise.all(Array.from({ length: POOL }, worker));
+  await Promise.all(Array.from({ length: Math.min(POOL, misses.length) }, worker));
   return out;
 }
 
