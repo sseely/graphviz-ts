@@ -64,8 +64,8 @@ target runtimes, so a byte bar would be untestable rather than merely expensive.
 
 **Affected:** Graphs with **wide text labels** whose measured width happens to
 tip an integer-rounding boundary inside layout. Most labels are unaffected;
-short labels and many long ones still match exactly. Observed examples:
-`proc3d`, `b69` (label-heavy graphs that stay at *structural-match*); `NaN`
+short labels and many long ones still match exactly. Observed example:
+`proc3d` (a label-heavy graph that stays at *structural-match*); `NaN`
 (`graphs-NaN` / `share-NaN` / `windows-NaN`, see below — the one case where the
 shift tips a verdict to *diverged*).
 
@@ -119,7 +119,10 @@ feeds node size, which feeds the layout. The chain is deterministic:
 
 The **rank assignment, node ordering, edge topology, and y-coordinates are
 identical** to C; only fine x-positions move. For `proc3d` the entire effect is a
-**≤ 3.55 pt** difference in x-extent over a ~2620 pt drawing (**0.13%**).
+**≤ 3.55 pt** difference in x-extent over a ~2620 pt drawing (**0.13%**). A visual
+golden-vs-ours overlay (the green/red fringe lands almost entirely on the long
+file-path oval labels) is at
+`comparisons/a2-font-metrics/proc3d-a2.html`.
 
 **Why accepted.** Byte-matching FreeType's per-glyph advances across every font
 and string would require replicating its metric tables, hinting, and rounding —

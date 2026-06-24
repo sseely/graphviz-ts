@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>proc3d — accepted A2 font-metric divergence</title>
+<link rel="stylesheet" href="a2.css"></head><body>
+
+<h1>proc3d — accepted A2 font-metric divergence</h1>
+<p class="status ok"><strong>Accepted delta — structural-match.</strong>
+<code>proc3d</code> (<code>graphs-proc3d</code> / <code>share-proc3d</code> /
+<code>windows-proc3d</code>) is the canonical
+<a href="../../docs/known-divergences.md">A2 font-metric</a> case: a sub-pixel
+text-measurement difference shifts node x-positions by a few points, and the
+graph stays <strong>structural-match</strong>.</p>
+
+<h2>Input</h2>
+<div class="meta">
+  <span><b>Engine:</b> <code>dot</code></span>
+  <span><b>Source:</b> <code>tests/graphs/proc3d.gv</code></span>
+  <span><b>Key attrs:</b> <code>fontname=Courier</code>, <code>orientation=land</code>, <code>size="10,7.5"</code>, <code>ranksep=1.0</code></span>
+</div>
+<details><summary>DOT source — 443 lines (click to expand)</summary>
+<pre class="src">digraph g {
+graph [
+fontname=Courier,
+fontsize=24,
+ranksep = 1.0,
+size=&quot;10,7.5&quot;,
+orientation=land,
+style=&quot;setlinewidth(8)&quot;
+page = &quot;8.5,11&quot;,
+center=true
+];
+node [
+shape = &quot;box&quot;
+width = &quot;0.5&quot;
+];
+edge [
+];
+subgraph cluster_0 {
+label=&quot;gryphon&quot;
+&quot;22342&quot;
+&quot;22343&quot;
+&quot;22346&quot;
+&quot;22347&quot;
+&quot;22351&quot;
+&quot;22344&quot;
+&quot;22345&quot;
+&quot;22348&quot;
+&quot;22350&quot;
+&quot;22357&quot;
+}
+subgraph cluster_1 {
+label=toucan
+&quot;22349&quot;
+&quot;22352&quot;
+&quot;22356&quot;
+&quot;22361&quot;
+&quot;22369&quot;
+&quot;22353&quot;
+&quot;22355&quot;
+&quot;22360&quot;
+&quot;22365&quot;
+&quot;22374&quot;
+}
+subgraph cluster_2 {
+label=parker
+&quot;22354&quot;
+&quot;22359&quot;
+&quot;22375&quot;
+}
+subgraph cluster_3 {
+label=condor
+&quot;22358&quot;
+&quot;22362&quot;
+&quot;22367&quot;
+&quot;22373&quot;
+&quot;22378&quot;
+}
+subgraph cluster_4 {
+label=kite
+&quot;22363&quot;
+&quot;22366&quot;
+&quot;22371&quot;
+&quot;22376&quot;
+&quot;22380&quot;
+}
+subgraph cluster_5 {
+label=coot
+&quot;22368&quot;
+&quot;22372&quot;
+&quot;22377&quot;
+&quot;22379&quot;
+&quot;22381&quot;
+}
+&quot;22316&quot; [
+label = &quot;22316\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22324&quot; [
+label = &quot;22324\nnmake&quot;
+pname = &quot;nmake&quot;
+kind = &quot;proc&quot;
+];
+&quot;22337&quot; [
+label = &quot;22337\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22342&quot; [
+label = &quot;22342\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22343&quot; [
+label = &quot;22343\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22344&quot; [
+label = &quot;22344\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22345&quot; [
+label = &quot;22345\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22346&quot; [
+label = &quot;22346\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;22347&quot; [
+label = &quot;22347\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;22348&quot; [
+label = &quot;22348\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;93736-32246&quot; [
+label = &quot;93736-32246\n/home/ek/work/src/lefty/lefty.c&quot;
+fname = &quot;/home/ek/work/src/lefty/lefty.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22349&quot; [
+label = &quot;22349\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22350&quot; [
+label = &quot;22350\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;93627-32246&quot; [
+label = &quot;93627-32246\n/home/ek/work/src/lefty/gfxview.c&quot;
+fname = &quot;/home/ek/work/src/lefty/gfxview.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22351&quot; [
+label = &quot;22351\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;22352&quot; [
+label = &quot;22352\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22353&quot; [
+label = &quot;22353\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22354&quot; [
+label = &quot;22354\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22355&quot; [
+label = &quot;22355\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22356&quot; [
+label = &quot;22356\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;22357&quot; [
+label = &quot;22357\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;22358&quot; [
+label = &quot;22358\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22359&quot; [
+label = &quot;22359\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22360&quot; [
+label = &quot;22360\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;22361&quot; [
+label = &quot;22361\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;93645-32246&quot; [
+label = &quot;93645-32246\n/home/ek/work/src/lefty/txtview.c&quot;
+fname = &quot;/home/ek/work/src/lefty/txtview.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22362&quot; [
+label = &quot;22362\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22363&quot; [
+label = &quot;22363\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22365&quot; [
+label = &quot;22365\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;22366&quot; [
+label = &quot;22366\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;93638-32246&quot; [
+label = &quot;93638-32246\n/home/ek/work/src/lefty/internal.c&quot;
+fname = &quot;/home/ek/work/src/lefty/internal.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22367&quot; [
+label = &quot;22367\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;22368&quot; [
+label = &quot;22368\nksh&quot;
+pname = &quot;ksh&quot;
+kind = &quot;proc&quot;
+];
+&quot;22369&quot; [
+label = &quot;22369\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;93642-32246&quot; [
+label = &quot;93642-32246\n/home/ek/work/src/lefty/lex.c&quot;
+fname = &quot;/home/ek/work/src/lefty/lex.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22371&quot; [
+label = &quot;22371\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;22372&quot; [
+label = &quot;22372\ngcc&quot;
+pname = &quot;gcc&quot;
+kind = &quot;proc&quot;
+];
+&quot;22373&quot; [
+label = &quot;22373\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;88860-32246&quot; [
+label = &quot;88860-32246\n/home/ek/dev/src/lefty/stringify.c&quot;
+fname = &quot;/home/ek/dev/src/lefty/stringify.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22374&quot; [
+label = &quot;22374\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;22375&quot; [
+label = &quot;22375\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;22376&quot; [
+label = &quot;22376\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;93626-32246&quot; [
+label = &quot;93626-32246\n/home/ek/work/src/lefty/exec.c&quot;
+fname = &quot;/home/ek/work/src/lefty/exec.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22377&quot; [
+label = &quot;22377\ncpp&quot;
+pname = &quot;cpp&quot;
+kind = &quot;proc&quot;
+];
+&quot;22378&quot; [
+label = &quot;22378\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;22379&quot; [
+label = &quot;22379\ncc1&quot;
+pname = &quot;cc1&quot;
+kind = &quot;proc&quot;
+];
+&quot;93643-32246&quot; [
+label = &quot;93643-32246\n/home/ek/work/src/lefty/parse.c&quot;
+fname = &quot;/home/ek/work/src/lefty/parse.c&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22380&quot; [
+label = &quot;22380\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;22381&quot; [
+label = &quot;22381\nas&quot;
+pname = &quot;as&quot;
+kind = &quot;proc&quot;
+];
+&quot;37592-32246&quot; [
+label = &quot;37592-32246\n/home/ek/dev/src/lefty/exec.h&quot;
+fname = &quot;/home/ek/dev/src/lefty/exec.h&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;135504-32246&quot; [
+label = &quot;135504-32246\n/home/ek/work/sun4/lefty/display.o&quot;
+fname = &quot;/home/ek/work/sun4/lefty/display.o&quot;
+shape = &quot;ellipse&quot;
+kind = &quot;file&quot;
+];
+&quot;22316&quot; -&gt; &quot;22324&quot; [
+];
+&quot;22324&quot; -&gt; &quot;22337&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22342&quot; [
+];
+&quot;22342&quot; -&gt; &quot;22343&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22344&quot; [
+];
+&quot;22344&quot; -&gt; &quot;22345&quot; [
+];
+&quot;22343&quot; -&gt; &quot;22346&quot; [
+];
+&quot;22343&quot; -&gt; &quot;22347&quot; [
+];
+&quot;22345&quot; -&gt; &quot;22348&quot; [
+];
+&quot;22346&quot; -&gt; &quot;93736-32246&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22349&quot; [
+];
+&quot;22345&quot; -&gt; &quot;22350&quot; [
+];
+&quot;22348&quot; -&gt; &quot;93627-32246&quot; [
+];
+&quot;22343&quot; -&gt; &quot;22351&quot; [
+];
+&quot;22349&quot; -&gt; &quot;22352&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22353&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22354&quot; [
+];
+&quot;22353&quot; -&gt; &quot;22355&quot; [
+];
+&quot;22352&quot; -&gt; &quot;22356&quot; [
+];
+&quot;22345&quot; -&gt; &quot;22357&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22358&quot; [
+];
+&quot;22354&quot; -&gt; &quot;22359&quot; [
+];
+&quot;22355&quot; -&gt; &quot;22360&quot; [
+];
+&quot;22352&quot; -&gt; &quot;22361&quot; [
+];
+&quot;22356&quot; -&gt; &quot;93645-32246&quot; [
+];
+&quot;22358&quot; -&gt; &quot;22362&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22363&quot; [
+];
+&quot;22355&quot; -&gt; &quot;22365&quot; [
+];
+&quot;22363&quot; -&gt; &quot;22366&quot; [
+];
+&quot;22360&quot; -&gt; &quot;93638-32246&quot; [
+];
+&quot;22362&quot; -&gt; &quot;22367&quot; [
+];
+&quot;22337&quot; -&gt; &quot;22368&quot; [
+];
+&quot;22352&quot; -&gt; &quot;22369&quot; [
+];
+&quot;22324&quot; -&gt; &quot;93642-32246&quot; [
+];
+&quot;22366&quot; -&gt; &quot;22371&quot; [
+];
+&quot;22368&quot; -&gt; &quot;22372&quot; [
+];
+&quot;22362&quot; -&gt; &quot;22373&quot; [
+];
+&quot;22367&quot; -&gt; &quot;88860-32246&quot; [
+];
+&quot;22355&quot; -&gt; &quot;22374&quot; [
+];
+&quot;22359&quot; -&gt; &quot;22375&quot; [
+];
+&quot;22366&quot; -&gt; &quot;22376&quot; [
+];
+&quot;22371&quot; -&gt; &quot;93626-32246&quot; [
+];
+&quot;22372&quot; -&gt; &quot;22377&quot; [
+];
+&quot;22362&quot; -&gt; &quot;22378&quot; [
+];
+&quot;22372&quot; -&gt; &quot;22379&quot; [
+];
+&quot;22377&quot; -&gt; &quot;93643-32246&quot; [
+];
+&quot;22366&quot; -&gt; &quot;22380&quot; [
+];
+&quot;22372&quot; -&gt; &quot;22381&quot; [
+];
+&quot;22371&quot; -&gt; &quot;37592-32246&quot; [
+];
+&quot;22375&quot; -&gt; &quot;135504-32246&quot; [
+];
+
+/* hack to increase node separation */
+{	rank = same; &quot;22337&quot; -&gt; &quot;93642-32246&quot; [style=invis,minlen=10]; }
+
+}
+</pre></details>
+
+<h2>Why it diverges (root cause)</h2>
+<p>The x-network-simplex layout is faithful; the only difference is that the
+port's font measurer reports some <strong>wide labels</strong> a fraction of a
+point wider than FreeType. proc3d's widest labels are the file-path ovals — e.g.
+<code>/home/ek/work/src/lefty/lefty.c</code>, the exact string
+<code>known-divergences.md</code> §A2 measures at <strong>+0.75&nbsp;pt
+(+0.43%)</strong>. A wider label makes a slightly wider node, whose half-width
+feeds the <code>ROUND()</code>-ed left-to-right separation constraints; the
+network simplex then picks a marginally different (equally optimal) integer
+x-assignment. The result is a near-uniform <strong>≤3.55&nbsp;pt</strong> x-shift
+over a ~2620&nbsp;pt drawing — rank, order, topology and y-coordinates identical.</p>
+
+<h2>The delta — golden vs ours, overlaid</h2>
+<p class="caption">Golden (<span class="g">green</span>) and ours
+(<span class="r">red</span>) superimposed in the same frame. At full scale they
+blend to brown — the shift is sub-perceptual (hence <em>structural-match</em>).</p>
+<div class="delta"><div class="cols">
+  <div class="col"><div class="lbl">overlay — full drawing</div>
+    <img src="proc3d-overlay.svg" style="height:520px" alt="proc3d golden vs ours overlay"></div>
+  <div class="col"><div class="lbl">overlay — zoomed (the wide path-label ovals)</div>
+    <img src="proc3d-overlay-zoom.png" style="height:300px" alt="zoom: green/red separation on long labels"></div>
+</div>
+<p class="legend">Zoomed, the <span class="g">green</span>/<span class="r">red</span>
+fringe appears almost entirely on the long file-path oval labels — exactly the
+wide strings the measurer over-measures. The code/box nodes stay coincident.</p>
+</div>
+
+<h2>Full drawings — Golden first, Ours second</h2>
+<div class="cols">
+  <div class="col"><div class="lbl">Golden — native dot</div><img src="proc3d-golden.svg" style="height:480px" alt="native dot proc3d"></div>
+  <div class="col"><div class="lbl">Ours — graphviz-ts</div><img src="proc3d-ours.svg" style="height:480px" alt="graphviz-ts proc3d"></div>
+</div>
+
+<h2>Numbers</h2>
+<table>
+  <tr><th>metric</th><th>value</th></tr>
+  <tr><td>verdict</td><td>structural-match</td></tr>
+  <tr><td>maxDelta (port vs native)</td><td>3.55 pt</td></tr>
+  <tr><td>labels shifted in x</td><td>73 / 73 (near-uniform)</td></tr>
+  <tr><td>drawing x-extent</td><td>~2620 pt → shift is 0.13%</td></tr>
+  <tr><td>rank / order / topology / y</td><td>identical to C</td></tr>
+</table>
+<p class="caption">Reproduce: <code>GVBINDIR=/tmp/gvplugins npx tsx test/corpus/render-one.ts ~/git/graphviz/tests/graphs/proc3d.gv dot</code>
+vs <code>… build/cmd/dot/dot -Tsvg …/proc3d.gv</code>.</p>
+</body></html>
