@@ -13,6 +13,7 @@ import type { TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { PlacedHtml } from '../common/htmltable-pos.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
+import { gvrenderTextspan } from './textspan-emit.js';
 import type { ResolvedFill, ClusterAttrs } from '../common/style-resolve.js';
 import {
   parseStyleFlags, resolvePenColor, resolvePenType, resolvePenWidth,
@@ -38,7 +39,7 @@ export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: Ren
   for (let i = 0; i < lab.u.nspans; i++) {
     const span = lab.u.span[i] as TextSpan | undefined;
     if (!span) break;
-    renderer.textspan({ x: lab.pos.x, y: py }, span, job);
+    gvrenderTextspan(renderer, { x: lab.pos.x, y: py }, span, job);
   }
 }
 

@@ -18,7 +18,7 @@ import type { Node } from '../model/node.js';
 import { buildOutEdgeIndex } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
-import { PenType } from './context.js';
+import { gvrenderTextspan } from './textspan-emit.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import {
@@ -207,17 +207,6 @@ function labelSpanX(lp: TextlabelT, just: 'l' | 'n' | 'r'): number {
 }
 
 /**
- * Whether a label span should be emitted: non-empty string, and (unless no obj)
- * a visible pen. Blank lines and PEN_NONE objects are skipped by C.
- * @see lib/gvc/gvrender.c:419 gvrender_textspan
- *   if (span->str && span->str[0] && (!job->obj || job->obj->pen != PEN_NONE))
- */
-function spanIsVisible(span: TextSpan, job: RenderJob): boolean {
-  if (span.str.length === 0) return false;
-  return job.obj === null || job.obj.pen !== PenType.None;
-}
-
-/**
  * Emit one label's text spans if present and placed.
  * Shared by edge-label, node-xlabel, and graph-label slots.
  * URL/anchor/map machinery and E_decorate attachment (emit.c:emit_attachment)
@@ -246,9 +235,7 @@ export function renderOneLabel(
     if (!span) break;
     // Emit only visible spans; the baseline still advances below so blank
     // lines reserve vertical space. @see gvrender_textspan (gvrender.c:419).
-    if (spanIsVisible(span, job)) {
-      renderer.textspan({ x: labelSpanX(lp, span.just), y }, span, job);
-    }
+    gvrenderTextspan(renderer, { x: labelSpanX(lp, span.just), y }, span, job);
     y -= span.size.y; // UL position for next span (unconditional)
   }
 }

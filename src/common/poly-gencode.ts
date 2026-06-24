@@ -10,6 +10,7 @@ import type { Node } from '../model/node.js';
 import type { Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
+import { gvrenderTextspan } from '../gvc/textspan-emit.js';
 import type { PolygonT, TextlabelT, GraphvizPolygonStyle, ShapeDesc } from './types.js';
 import { ShapeKind } from './types.js';
 import type { TextSpan } from './emit-types.js';
@@ -179,7 +180,7 @@ export function renderLabel(
     const px = span.just === 'l' ? coord.x - label.space.x / 2.0
       : span.just === 'r' ? coord.x + label.space.x / 2.0
       : coord.x;
-    renderer.textspan({ x: px, y: py }, span, job);
+    gvrenderTextspan(renderer, { x: px, y: py }, span, job);
     py -= span.size.y;
   }
 }

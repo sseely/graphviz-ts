@@ -28,6 +28,7 @@ import type { RendererPlugin } from '../gvc/context.js';
 import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage } from './htmltable-pos.js';
 import { transformPoint } from '../gvc/device.js';
+import { gvrenderTextspan } from '../gvc/textspan-emit.js';
 import {
   withHtmlPaint, parseGradientSpec, doBorder, mkPts,
   htmlFillPenWidth, resetHtmlFillPenWidth, type HtmlPaint,
@@ -79,7 +80,7 @@ function lineToSpan(line: PlacedLine): TextSpan {
 export function emitHtmlLine(
   line: PlacedLine, pos: Point, renderer: RendererPlugin, job: RenderJob,
 ): void {
-  renderer.textspan({ x: line.x + pos.x, y: line.baseline + pos.y }, lineToSpan(line), job);
+  gvrenderTextspan(renderer, { x: line.x + pos.x, y: line.baseline + pos.y }, lineToSpan(line), job);
 }
 
 // ---------------------------------------------------------------------------

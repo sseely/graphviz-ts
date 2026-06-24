@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-24T01:34:22.878Z",
+  "generatedAt": "2026-06-24T11:59:14.568Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
-  "total": 796,
+  "total": 795,
   "counts": {
-    "byte-match": 313,
-    "structural-match": 257,
-    "diverged": 206,
+    "byte-match": 315,
+    "structural-match": 261,
+    "diverged": 198,
     "errored": 5,
-    "timeout": 4,
+    "timeout": 5,
     "oracle-error": 11
   },
   "results": [
@@ -959,13 +959,6 @@
       "verdict": "byte-match"
     },
     {
-      "id": "2782",
-      "path": "2782.dot",
-      "verdict": "diverged",
-      "maxDelta": 5572860,
-      "firstDiffPath": "svg/g[1]/g[6][childCount]"
-    },
-    {
       "id": "2796",
       "path": "2796.dot",
       "verdict": "diverged",
@@ -987,9 +980,7 @@
     {
       "id": "2854",
       "path": "2854.dot",
-      "verdict": "diverged",
-      "maxDelta": 2067.4100000000003,
-      "firstDiffPath": "svg/g[1]/g[20]/path[1]/@d"
+      "verdict": "timeout"
     },
     {
       "id": "358",
@@ -1131,9 +1122,7 @@
     {
       "id": "graphs-alf",
       "path": "graphs/alf.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-arrows",
@@ -1445,14 +1434,14 @@
       "path": "graphs/big.gv",
       "verdict": "diverged",
       "maxDelta": 650.9200000000001,
-      "firstDiffPath": "svg/g[1]/g[4][childCount]"
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "graphs-biglabel",
       "path": "graphs/biglabel.gv",
       "verdict": "diverged",
       "maxDelta": 131.4000000000001,
-      "firstDiffPath": "svg/g[1]/g[4][childCount]"
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "graphs-cairo",
@@ -2233,9 +2222,7 @@
     {
       "id": "graphs-record",
       "path": "graphs/record.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-record2",
@@ -2760,9 +2747,8 @@
     {
       "id": "linux.x86-record_dot",
       "path": "linux.x86/record_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0.010000000000005116,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 0.010000000000005116
     },
     {
       "id": "linux.x86-root_circo",
@@ -3014,9 +3000,8 @@
     {
       "id": "nshare-record_dot",
       "path": "nshare/record_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0.010000000000005116,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 0.010000000000005116
     },
     {
       "id": "nshare-root_circo",
@@ -3424,9 +3409,8 @@
     {
       "id": "share-alf",
       "path": "share/alf.gv",
-      "verdict": "diverged",
-      "maxDelta": 0.010000000000005116,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 0.010000000000005116
     },
     {
       "id": "share-b102",
@@ -4079,9 +4063,8 @@
     {
       "id": "windows-alf",
       "path": "windows/alf.gv",
-      "verdict": "diverged",
-      "maxDelta": 0.010000000000005116,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 0.010000000000005116
     },
     {
       "id": "windows-b102",
