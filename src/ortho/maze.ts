@@ -17,6 +17,7 @@ import {
   M_RIGHT, M_TOP, M_LEFT, M_BOTTOM,
 } from "./types.js";
 import { partition } from "./partition.js";
+import { dfpCmp } from "./trap-types.js";
 import {
   createSGraph, createSNode, createSEdge,
   initSEdges, gsave,
@@ -119,96 +120,114 @@ function createSEdges(cp: Cell, g: SGraph): void {
   if (isSmall(bb.UR.x - bb.LL.x) && !(cp.flags & MZ_SMALLH)) { vwt = BIG; wt = BIG; }
   const L = cp.sides[M_LEFT]; const T = cp.sides[M_TOP];
   const R = cp.sides[M_RIGHT]; const B = cp.sides[M_BOTTOM];
-  if (L && T) cp.edges[cp.nedges++] = createSEdge(g, L, T, wt);
-  if (T && R) cp.edges[cp.nedges++] = createSEdge(g, T, R, wt);
-  if (L && B) cp.edges[cp.nedges++] = createSEdge(g, L, B, wt);
-  if (B && R) cp.edges[cp.nedges++] = createSEdge(g, B, R, wt);
-  if (T && B) cp.edges[cp.nedges++] = createSEdge(g, T, B, vwt);
-  if (L && R) cp.edges[cp.nedges++] = createSEdge(g, L, R, hwt);
+  // Same six conditional edges, same order/weights as the C unrolled form.
+  // @see lib/ortho/maze.c:createSEdges
+  const pairs: [SNode | null, SNode | null, number][] = [
+    [L, T, wt], [T, R, wt], [L, B, wt], [B, R, wt], [T, B, vwt], [L, R, hwt],
+  ];
+  for (const [a, b, w] of pairs) {
+    if (a && b) cp.edges[cp.nedges++] = createSEdge(g, a, b, w);
+  }
 }
 
-// ─── findSVert ───────────────────────────────────────────────────────────────
+// ─── search-node dict ─────────────────────────────────────────────────────────
+//
+// Mirrors C's CDT ordered set (Dtoset) keyed by the numeric point `snode.p`
+// with the C_EPS-tolerant `dfp_cmp` comparator — NOT a stringified key. `byX`
+// selects the C disc: vdict (vcmpid) orders by x-then-y, hdict (hcmpid) by
+// y-then-x. Kept sorted so findSVert = dtmatch+dtinsert and the gcell walk =
+// dtmatch+dtnext. @see lib/ortho/maze.c:vcmpid/hcmpid/findSVert
 
-function ptKey(p: { x: number; y: number }): string { return `${p.x},${p.y}`; }
+interface PointDict { nodes: SNode[]; byX: boolean }
 
-function findSVert(
-  g: SGraph,
-  dict: Map<string, SNode>,
-  p: { x: number; y: number },
-  isVert: boolean,
-): SNode {
-  const k = ptKey(p);
-  let np = dict.get(k);
-  if (!np) { np = createSNode(g); np.isVert = isVert; dict.set(k, np); }
+/** Ordered compare of points (ax,ay) vs (bx,by) per the dict's disc. */
+function pdCmp(byX: boolean, ax: number, ay: number, bx: number, by: number): number {
+  if (byX) { const c = dfpCmp(ax, bx); return c !== 0 ? c : dfpCmp(ay, by); }
+  const c = dfpCmp(ay, by); return c !== 0 ? c : dfpCmp(ax, bx);
+}
+
+/** Binary search for (x,y): { found, idx } — idx is the match or insert point. */
+function pdSearch(pd: PointDict, x: number, y: number): { found: boolean; idx: number } {
+  let lo = 0, hi = pd.nodes.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    const n = pd.nodes[mid]!;
+    const c = pdCmp(pd.byX, n.x, n.y, x, y);
+    if (c === 0) return { found: true, idx: mid };
+    if (c < 0) lo = mid + 1; else hi = mid;
+  }
+  return { found: false, idx: lo };
+}
+
+/** @see lib/ortho/maze.c:findSVert (dtmatch; createSNode + dtinsert on miss) */
+function findSVert(g: SGraph, pd: PointDict, x: number, y: number, isVert: boolean): SNode {
+  const r = pdSearch(pd, x, y);
+  if (r.found) return pd.nodes[r.idx]!;
+  const np = createSNode(g);
+  np.isVert = isVert; np.x = x; np.y = y;
+  pd.nodes.splice(r.idx, 0, np);
   return np;
 }
 
 // ─── mkMazeGraph helpers ──────────────────────────────────────────────────────
 
 function attachCellSides(
-  mp: Maze, g: SGraph, bb: OrthoBox,
-  vdict: Map<string, SNode>, hdict: Map<string, SNode>,
+  mp: Maze, g: SGraph, bb: OrthoBox, vdict: PointDict, hdict: PointDict,
 ): void {
   for (let i = 0; i < mp.ncells; i++) {
     const cp = mp.cells[i];
     cp.nsides = 4;
     cp.sides = [null, null, null, null];
     if (cp.bb.UR.x < bb.UR.x) {
-      const np = findSVert(g, vdict, { x: cp.bb.UR.x, y: cp.bb.LL.y }, true);
+      const np = findSVert(g, vdict, cp.bb.UR.x, cp.bb.LL.y, true);
       np.cells[0] = cp; cp.sides[M_RIGHT] = np;
     }
     if (cp.bb.UR.y < bb.UR.y) {
-      const np = findSVert(g, hdict, { x: cp.bb.LL.x, y: cp.bb.UR.y }, false);
+      const np = findSVert(g, hdict, cp.bb.LL.x, cp.bb.UR.y, false);
       np.cells[0] = cp; cp.sides[M_TOP] = np;
     }
     if (cp.bb.LL.x > bb.LL.x) {
-      const np = findSVert(g, vdict, cp.bb.LL, true);
+      const np = findSVert(g, vdict, cp.bb.LL.x, cp.bb.LL.y, true);
       np.cells[1] = cp; cp.sides[M_LEFT] = np;
     }
     if (cp.bb.LL.y > bb.LL.y) {
-      const np = findSVert(g, hdict, cp.bb.LL, false);
+      const np = findSVert(g, hdict, cp.bb.LL.x, cp.bb.LL.y, false);
       np.cells[1] = cp; cp.sides[M_BOTTOM] = np;
     }
   }
 }
 
-function collectEdgeNodes(
-  dict: Map<string, SNode>,
-  startPt: { x: number; y: number },
-  isHoriz: boolean,
-  limit: number,
-  out: SNode[],
-  cp: Cell,
-  cellIdx: 0 | 1,
-): void {
-  for (const [key, np] of dict) {
-    const [kx, ky] = key.split(",").map(Number);
-    const coord = isHoriz ? ky : kx;
-    const scan = isHoriz ? kx : ky;
-    const startCoord = isHoriz ? startPt.y : startPt.x;
-    const startScan = isHoriz ? startPt.x : startPt.y;
-    if (Math.abs(coord - startCoord) < 1e-9 && scan >= startScan && scan < limit) {
-      out.push(np);
-      np.cells[cellIdx] = cp;
-    }
+/**
+ * dtmatch + dtnext walk of one cell edge: start at the node equal to (sx,sy),
+ * then take in-order successors while the scan coord stays below `bound`
+ * (raw `<`, exactly as C). Returns the side nodes in sorted order.
+ * @see lib/ortho/maze.c:mkMazeGraph (the four dtmatch/dtnext loops)
+ */
+function gcellWalk(pd: PointDict, sx: number, sy: number, boundIsX: boolean, bound: number): SNode[] {
+  const out: SNode[] = [];
+  const r = pdSearch(pd, sx, sy);
+  if (!r.found) return out; // dtmatch returned NULL → empty edge
+  for (let i = r.idx; i < pd.nodes.length; i++) {
+    const np = pd.nodes[i]!;
+    if (boundIsX ? !(np.x < bound) : !(np.y < bound)) break;
+    out.push(np);
   }
+  return out;
 }
 
-function attachGcellSides(
-  mp: Maze, g: SGraph,
-  hdict: Map<string, SNode>, vdict: Map<string, SNode>,
-): number {
+/** Append walked side nodes to `sides`, tagging each with the owning gcell. */
+function appendSide(sides: SNode[], found: SNode[], cp: Cell, cellIdx: 0 | 1): void {
+  for (const np of found) { sides.push(np); np.cells[cellIdx] = cp; }
+}
+
+function attachGcellSides(mp: Maze, hdict: PointDict, vdict: PointDict): number {
   let maxdeg = 0;
   for (const cp of mp.gcells) {
     const sides: SNode[] = [];
-    // bottom edge (horiz, y=LL.y)
-    collectEdgeNodes(hdict, cp.bb.LL, true, cp.bb.UR.x, sides, cp, 1);
-    // left edge (vert, x=LL.x)
-    collectEdgeNodes(vdict, cp.bb.LL, false, cp.bb.UR.y, sides, cp, 1);
-    // top edge (horiz, y=UR.y)
-    collectEdgeNodes(hdict, { x: cp.bb.LL.x, y: cp.bb.UR.y }, true, cp.bb.UR.x, sides, cp, 0);
-    // right edge (vert, x=UR.x)
-    collectEdgeNodes(vdict, { x: cp.bb.UR.x, y: cp.bb.LL.y }, false, cp.bb.UR.y, sides, cp, 0);
+    appendSide(sides, gcellWalk(hdict, cp.bb.LL.x, cp.bb.LL.y, true, cp.bb.UR.x), cp, 1); // bottom
+    appendSide(sides, gcellWalk(vdict, cp.bb.LL.x, cp.bb.LL.y, false, cp.bb.UR.y), cp, 1); // left
+    appendSide(sides, gcellWalk(hdict, cp.bb.LL.x, cp.bb.UR.y, true, cp.bb.UR.x), cp, 0); // top
+    appendSide(sides, gcellWalk(vdict, cp.bb.UR.x, cp.bb.LL.y, false, cp.bb.UR.y), cp, 0); // right
     cp.sides = sides;
     cp.nsides = sides.length;
     if (cp.nsides > maxdeg) maxdeg = cp.nsides;
@@ -219,10 +238,10 @@ function attachGcellSides(
 function mkMazeGraph(mp: Maze, bb: OrthoBox): SGraph {
   const bound = 4 * mp.ncells;
   const g = createSGraph(bound + 2);
-  const vdict = new Map<string, SNode>();
-  const hdict = new Map<string, SNode>();
+  const vdict: PointDict = { nodes: [], byX: true };  // vcmpid: x then y
+  const hdict: PointDict = { nodes: [], byX: false }; // hcmpid: y then x
   attachCellSides(mp, g, bb, vdict, hdict);
-  const maxdeg = attachGcellSides(mp, g, hdict, vdict);
+  const maxdeg = attachGcellSides(mp, hdict, vdict);
   for (const gc of mp.gcells) markSmall(gc);
   g.nodes[g.nnodes].index = g.nnodes;
   g.nodes[g.nnodes + 1].index = g.nnodes + 1;

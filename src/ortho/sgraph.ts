@@ -52,6 +52,8 @@ function makeSNode(index: number): SNode {
     adjEdgeList: [],
     index,
     isVert: false,
+    x: 0,
+    y: 0,
   };
 }
 

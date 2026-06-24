@@ -134,7 +134,7 @@ export function orthoEdges(
     sg.nodes.push({
       nVal: 0, nIdx: 0, nDad: null, nEdge: null,
       nAdj: 0, saveNAdj: 0, cells: [null, null],
-      adjEdgeList: [], index: sg.nodes.length, isVert: false,
+      adjEdgeList: [], index: sg.nodes.length, isVert: false, x: 0, y: 0,
     });
   }
 

@@ -39,6 +39,8 @@ export function pqGen(sz: number): Pq {
     adjEdgeList: [],
     index: -1,
     isVert: false,
+    x: 0,
+    y: 0,
   };
   const pq: (SNode | null)[] = new Array<SNode | null>(sz + 1).fill(null);
   pq[0] = guard;

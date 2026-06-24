@@ -107,6 +107,8 @@ export interface SNode {
   adjEdgeList: number[]; // indices into edges array
   index: number; // index in graph nodes array
   isVert: boolean; // true = vertical boundary segment
+  x: number; // segment point x — mirrors C snode.p.x (maze dict key, numeric)
+  y: number; // segment point y — mirrors C snode.p.y
 }
 
 export interface SEdge {

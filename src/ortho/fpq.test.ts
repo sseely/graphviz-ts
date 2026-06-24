@@ -32,6 +32,8 @@ function snode(nVal: number, index: number): SNode {
     adjEdgeList: [],
     index,
     isVert: false,
+    x: 0,
+    y: 0,
   };
 }
 
