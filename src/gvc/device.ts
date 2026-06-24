@@ -12,7 +12,7 @@
  */
 
 import type { Point } from '../model/geom.js';
-import { parseDrawingSize, initJobViewportZoom } from './viewport.js';
+import { parseDrawingSize, initJobViewportZoom, parseLandscape } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import { buildOutEdgeIndex } from '../model/node.js';
@@ -66,9 +66,12 @@ export function transformPoint(p: Point, job: RenderJob): Point {
   const sy = job.zoom * job.devscale.y;
   const tx = job.translation.x;
   const ty = job.translation.y;
-  if (job.rotation !== 0) {
-    return applyRotation(p, tx, ty, sx, sy);
-  }
+  // ADR-2: SVG landscape rotation lives entirely in the graph `<g>` group
+  // transform (svg_begin_page emits rotate(-job->rotation)); inner coords stay
+  // in the unrotated frame. The ptf rotation branch (applyRotation) is the
+  // raster/imagemap path and must NOT fire here, else job.rotation=90 would
+  // double-rotate every SVG coordinate. applyRotation stays exported as the
+  // faithful gvrender_ptf port (currently dead). @see ADR-2; gvrender.c:gvrender_ptf
   return applyScale(p, tx, ty, sx, sy);
 }
 
@@ -476,6 +479,12 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   // for dpi=72), not job->zoom. job.scale is read only by the SVG group/dims.
   const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')));
   job.scale = { x: z, y: z };
+  // init_job_viewport: job->rotation = gvc->rotation (= 90 for landscape, set in
+  // emit_graph from GD_drawing->landscape). Emit-only — drives the SVG group
+  // transform + dim swap (T2), never layout/routing (ADR-1). transformPoint is
+  // guarded against the ptf rotation branch (ADR-2).
+  // @see lib/common/emit.c:3260 (gvc->rotation=90); :3390 (job->rotation)
+  job.rotation = parseLandscape(g) ? 90 : 0;
   job.renderer = renderer;
   resetHtmlAnchorIds(); // C: fresh anchorId per dot invocation
   for (const n of g.nodes.values()) polyInit(n, g, job.measurer);

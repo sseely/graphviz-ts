@@ -467,3 +467,17 @@ describe('AC12: renderClusterLabel — html cluster label renders cells', () => 
     expect(renderer.spans).toHaveLength(0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// AC16: transformPoint stays unrotated when job.rotation === 90 (ADR-2)
+// SVG landscape rotation is the group transform, not the ptf path.
+// ---------------------------------------------------------------------------
+
+describe('AC16: transformPoint — job.rotation=90 does not rotate coords', () => {
+  it('applies scale+translate only (no applyRotation) at rotation 90', () => {
+    const job = makeJob();
+    job.rotation = 90;
+    // Same result as rotation 0: devscale.y=-1 flips Y, no axis swap.
+    expect(transformPoint({ x: 3, y: 5 }, job)).toEqual({ x: 3, y: -5 });
+  });
+});
