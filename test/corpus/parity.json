@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-24T17:30:54.388Z",
+  "generatedAt": "2026-06-24T18:42:47.416Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 334,
-    "structural-match": 268,
+    "byte-match": 337,
+    "structural-match": 265,
     "diverged": 172,
     "errored": 5,
     "timeout": 5,
@@ -1033,7 +1033,7 @@
       "id": "graphs-Heawood",
       "path": "graphs/Heawood.gv",
       "verdict": "structural-match",
-      "maxDelta": 94
+      "maxDelta": 23
     },
     {
       "id": "graphs-Helvetica",
@@ -1224,7 +1224,7 @@
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
       "verdict": "diverged",
-      "maxDelta": 60,
+      "maxDelta": 25,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -2242,7 +2242,7 @@
       "id": "graphs-rowe",
       "path": "graphs/rowe.gv",
       "verdict": "diverged",
-      "maxDelta": 182,
+      "maxDelta": 93,
       "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
@@ -2426,8 +2426,7 @@
     {
       "id": "graphs-try",
       "path": "graphs/try.gv",
-      "verdict": "structural-match",
-      "maxDelta": 12
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-unix",
@@ -3320,7 +3319,7 @@
       "id": "share-Heawood",
       "path": "share/Heawood.gv",
       "verdict": "structural-match",
-      "maxDelta": 94
+      "maxDelta": 0.3800000000000523
     },
     {
       "id": "share-KW91",
@@ -3416,7 +3415,7 @@
       "id": "share-b51",
       "path": "share/b51.gv",
       "verdict": "diverged",
-      "maxDelta": 159.96000000000004,
+      "maxDelta": 156.00000000000006,
       "firstDiffPath": "svg/g[1]/g[44]/path[1]/@d"
     },
     {
@@ -3887,7 +3886,7 @@
       "id": "share-rowe",
       "path": "share/rowe.gv",
       "verdict": "diverged",
-      "maxDelta": 182,
+      "maxDelta": 93,
       "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
@@ -3939,8 +3938,7 @@
     {
       "id": "share-try",
       "path": "share/try.gv",
-      "verdict": "structural-match",
-      "maxDelta": 12
+      "verdict": "byte-match"
     },
     {
       "id": "share-unix",
@@ -3985,7 +3983,7 @@
       "id": "windows-Heawood",
       "path": "windows/Heawood.gv",
       "verdict": "structural-match",
-      "maxDelta": 94
+      "maxDelta": 0.379999999999999
     },
     {
       "id": "windows-KW91",
@@ -4066,7 +4064,7 @@
       "id": "windows-b51",
       "path": "windows/b51.gv",
       "verdict": "diverged",
-      "maxDelta": 158.94,
+      "maxDelta": 155.02,
       "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
     },
     {
@@ -4528,7 +4526,7 @@
       "id": "windows-rowe",
       "path": "windows/rowe.gv",
       "verdict": "diverged",
-      "maxDelta": 182,
+      "maxDelta": 93,
       "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
@@ -4585,8 +4583,7 @@
     {
       "id": "windows-try",
       "path": "windows/try.gv",
-      "verdict": "structural-match",
-      "maxDelta": 12
+      "verdict": "byte-match"
     },
     {
       "id": "windows-unix",

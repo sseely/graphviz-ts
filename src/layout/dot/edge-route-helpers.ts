@@ -19,6 +19,7 @@ import type { Point, Bezier, Spline } from '../../model/geom.js';
 import { routeSpline } from '../../pathplan/route.js';
 import type { Edge as BarrierEdge } from '../../pathplan/types.js';
 import { linearBezier } from './edge-route-poly.js';
+import { updateBbBz } from '../../common/splines-geom.js';
 import { DEFAULT_NODEPENWIDTH } from './edge-route-clip.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { routeWithRank, routeSimple } from './edge-route-routing.js';
@@ -117,6 +118,16 @@ export function makeSplineRecord(bz: Bezier): Spline {
 /** Create and install a Spline on the edge. @see lib/common/splines.c:clip_and_install */
 export function installEdgeSpline(e: GraphEdge, bezierPts: Point[], arrowTip: Point): void {
   e.info.spl = makeSplineRecord(makeBezierRecord(bezierPts, arrowTip));
+  // C clip_and_install expands GD_bb by every installed bezier segment via
+  // update_bb_bz (splines.c:312). This direct-install path (chain/long-edge
+  // router) must do the same, else a spline that bows outside the node hull —
+  // e.g. a long back edge routed around the side — is clipped by the viewport.
+  const bb = e.tail.root.info.bb;
+  if (bb != null) {
+    for (let i = 0; i + 3 < bezierPts.length; i += 3) {
+      updateBbBz(bb, [bezierPts[i], bezierPts[i + 1], bezierPts[i + 2], bezierPts[i + 3]]);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
