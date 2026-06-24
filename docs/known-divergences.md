@@ -83,8 +83,10 @@ compress — surfaces as a −3..−5 pt interior x-shift. That shift tips the
 bends it into an extra bezier piece (7 pts vs C's 4) — a *structural* delta,
 hence *diverged*. Forcing the 9 widths to C's values reproduces C exactly
 (node-x 53/76→0/76 off; spline 7→4 pts), confirming the residual is 100%
-upstream font metrics, not the compress or spline code. Full evidence:
-`plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.md`.
+upstream font metrics, not the compress or spline code. Full evidence (with a
+visual golden-vs-ours side-by-side + the 4-vs-7-point spline delta overlay):
+`plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.html` (prose writeup:
+`…/nan-compress-xcoord.md`).
 
 **Characterization.** Native Graphviz measures text with FreeType/libgd glyph
 advances. The port uses its own font-metric model (it cannot bundle a font

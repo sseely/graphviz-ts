@@ -5,6 +5,11 @@
 `tests/graphs/NaN.gv` (`orientation=landscape; ratio=compress; size="16,10"`).
 Corpus ids: `graphs-NaN`, `share-NaN`, `windows-NaN` — all `diverged`.
 
+> **Visual side-by-side (engine, DOT source, golden-vs-ours, delta overlay):**
+> [`nan-compress-xcoord.html`](nan-compress-xcoord.html) — open in a browser.
+> Rendered SVGs: [`nan-golden.svg`](nan-golden.svg) (native dot),
+> [`nan-ours.svg`](nan-ours.svg) (graphviz-ts).
+
 ## Before (symptom)
 
 - 53 of 76 nodes mispositioned in **X only** (`dy=0` for all), by −5..+1 pt.

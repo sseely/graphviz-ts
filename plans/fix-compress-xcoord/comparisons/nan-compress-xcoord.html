@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>NaN ratio=compress x-coordinate residual — accepted A2 divergence</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.55}
+body{margin:2rem auto;max-width:60rem;padding:0 1rem;color:#1a1a1a}
+h1{font-size:1.5rem} h2{font-size:1.15rem;margin-top:2.2rem;border-bottom:1px solid #eee;padding-bottom:.3rem}
+.status{background:#fdf6e3;border:1px solid #e8d9a0;padding:.6rem 1rem;border-radius:6px}
+.cols{display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;margin:1rem 0}
+.col{text-align:center}
+.col .lbl{font-size:.85rem;color:#555;margin-bottom:.4rem;font-weight:600}
+.col img{height:420px;width:auto;border:1px dashed #ccc;background:
+  repeating-conic-gradient(#f4f4f4 0% 25%,#fff 0% 50%) 0/16px 16px;padding:4px}
+.delta{border:1px solid #ddd;border-radius:8px;padding:1rem;background:#fafafa;margin:1rem 0}
+table{border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{border:1px solid #ddd;padding:.25rem .6rem;text-align:right;font-variant-numeric:tabular-nums}
+th{background:#f7f7f7} td:first-child,th:first-child{text-align:left}
+tr.bad td{background:#fde8e8;font-weight:600}
+.caption{font-size:.85rem;color:#555;margin:.3rem 0}
+p{margin:.7rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px}
+.legend{font-size:.82rem;color:#777}
+.key span{display:inline-block;margin-right:1.2rem;font-size:.82rem}
+.swatch{display:inline-block;width:1.1rem;height:.35rem;vertical-align:middle;margin-right:.3rem}
+.meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.85rem;margin:.6rem 0}
+.meta b{color:#444}
+pre.src{background:#1e1e1e;color:#d4d4d4;padding:.8rem 1rem;border-radius:6px;
+  font-size:.78rem;line-height:1.4;max-height:18rem;overflow:auto;white-space:pre}
+</style></head><body>
+
+<h1>NaN <code>ratio=compress</code> x-coordinate residual — accepted A2 divergence</h1>
+<p class="status"><strong>Characterized, not fixed.</strong> The
+<code>NaN.gv</code> family (<code>graphs-NaN</code> / <code>share-NaN</code> /
+<code>windows-NaN</code>) stays <code>diverged</code> because of the accepted
+<a href="../../../docs/known-divergences.md">A2 font-metric</a> divergence —
+<em>not</em> a bug in the compress or spline code.</p>
+
+<!-- ============ INPUT ============ -->
+<h2>Input</h2>
+<div class="meta">
+  <span><b>Engine:</b> <code>dot</code> (default for <code>digraph</code>)</span>
+  <span><b>Source:</b> <code>~/git/graphviz/tests/graphs/NaN.gv</code></span>
+  <span><b>Corpus ids:</b> <code>graphs-NaN</code>, <code>share-NaN</code>, <code>windows-NaN</code></span>
+  <span><b>Key attrs:</b> <code>orientation=landscape</code>, <code>ratio=compress</code>, <code>size="16,10"</code></span>
+</div>
+<details><summary style="cursor:pointer;font-size:.85rem;color:#555;font-weight:600">DOT source — 126 lines (click to expand)</summary>
+<pre class="src">digraph xyz {
+orientation=landscape;
+ratio=compress;
+size="16,10";
+AbstractMemory -&gt; Memory;
+AliasedMemory -&gt; AliasedMemory;
+AliasedMemory -&gt; Memory;
+Architecture -&gt; ROOT;
+Assembly -&gt; ROOT;
+AtomProperties -&gt; NRAtom;
+AtomWr -&gt; Wr;
+Break -&gt; Break;
+Break -&gt; Target;
+Breakpoint -&gt; Breakpoint;
+Breakpoint -&gt; Event;
+Breakpoint -&gt; ROOT;
+CDB -&gt; Target;
+CDB -&gt; Thread;
+CommonFrame -&gt; Target;
+ControlOps -&gt; InterpF;
+Displayed -&gt; Displayed;
+Displayed -&gt; InterpTypes;
+ETimer -&gt; RTHeapRep;
+Event -&gt; Event;
+Event -&gt; ROOT;
+Event -&gt; Target;
+EventHandler -&gt; ROOT;
+EventHandler -&gt; StandardEvents;
+Expression -&gt; ROOT;
+ExpressionServer -&gt; Expression;
+FollowBreakpoint -&gt; Breakpoint;
+Formatter -&gt; ROOT;
+Formatter -&gt; Thread;
+Frame -&gt; Frame;
+Frame -&gt; Memory;
+Frame -&gt; Target;
+FrameClass -&gt; Frame;
+IntIntTbl -&gt; IntIntTbl;
+IntIntTbl -&gt; ROOT;
+Interp -&gt; InterpF;
+Interp -&gt; ROOT;
+InterpF -&gt; Interp;
+InterpF -&gt; InterpF;
+InterpF -&gt; ROOT;
+InterpScan -&gt; TokenStream;
+InterpTypes -&gt; InterpTypes;
+InterpTypes -&gt; ROOT;
+List -&gt; Thread;
+LoadState -&gt; LoadState;
+LoadState -&gt; LoadStateRep;
+LoadState -&gt; ROOT;
+LoadStateRep -&gt; LoadState;
+LocationRep -&gt; Memory;
+MC68Frame -&gt; CommonFrame;
+MC68GCommonFrame -&gt; EventHandler;
+MUTEX  -&gt; ROOT;
+Memory -&gt; Displayed;
+Memory -&gt; InterpTypes;
+MipsFrame -&gt; CommonFrame;
+MipsFrame -&gt; InterpTypes;
+MipsGCommonFrame -&gt; EventHandler;
+NRAtom -&gt; AtomProperties;
+NRAtom -&gt; ROOT;
+NopBreakpoint -&gt; Breakpoint;
+PSFormatter -&gt; InterpTypes;
+PSInterp -&gt; InterpTypes;
+PSLoadState -&gt; InterpTypes;
+PSMemory -&gt; InterpTypes;
+ProtectedWire -&gt; ProtectedWire;
+ProtectedWire -&gt; Wire;
+RTHeap -&gt; RTHeapRep;
+RTHeapRep -&gt; ROOT;
+Rd -&gt; RdClass;
+RdClass -&gt; MUTEX;
+RegisterMemory -&gt; Memory;
+Scope -&gt; ROOT;
+Scope -&gt; Scope;
+Scope -&gt; Target;
+SourceLoc -&gt; Target;
+SourceMap -&gt; ROOT;
+SparcFrame -&gt; CommonFrame;
+SparcGCommonFrame -&gt; EventHandler;
+StandardEvents -&gt; StandardEvents;
+StandardEvents -&gt; Target;
+StreamWire -&gt; Wire;
+Symbol -&gt; Displayed;
+Symbol -&gt; Symbol;
+TThread -&gt; ROOT;
+TThread -&gt; Target;
+Target -&gt; Displayed;
+Target -&gt; Event;
+Target -&gt; FrameClass;
+Target -&gt; ROOT;
+Target -&gt; TThread;
+Target -&gt; Target;
+Target -&gt; TargetF;
+Target -&gt; Thread;
+TargetF -&gt; Target;
+TargetState -&gt; Assembly;
+TextRd -&gt; Rd;
+TextWr -&gt; Wr;
+Thread -&gt; ROOT;
+Thread -&gt; Thread;
+TokenStream -&gt; ROOT;
+TokenStream -&gt; TokenStream;
+Trap -&gt; ROOT;
+TrapMemory -&gt; Memory;
+UFileRd -&gt; Rd;
+UFileRd -&gt; UFileRd;
+UFileWr -&gt; UFileWr;
+UFileWr -&gt; Wr;
+UnixHandler -&gt; Event;
+UnixHandler -&gt; UnixHandler;
+UserBreak -&gt; Break;
+UserBreak -&gt; Breakpoint;
+UserBreak -&gt; Event;
+UserBreak -&gt; Trap;
+UserBreak -&gt; UserBreak;
+VaxFrame -&gt; CommonFrame;
+VaxGCommonFrame -&gt; EventHandler;
+Wire -&gt; ROOT;
+Wire -&gt; TrapMemory;
+Wire -&gt; Wire;
+Wr -&gt; WrClass;
+WrClass -&gt; MUTEX;
+}</pre>
+</details>
+
+<!-- ============ PROSE ============ -->
+<h2>Why it diverges (root cause)</h2>
+<p>The compress x-network-simplex path is <strong>faithful</strong> to C: every
+constraint input matches the oracle — the width-constraint value
+(<code>flip=0 x=1152</code>), the <code>containNodes</code> minlens, the aux-edge
+counts (LR 132 / pairs 318 / total 471 / weight-sum 1612), the
+<code>lrBalance</code> step, and the per-rank node <strong>orders</strong> are
+all identical. The drawings below confirm it: at full scale they are visually
+indistinguishable.</p>
+
+<p>The <strong>only</strong> diverging input is the half-width of 9 nodes, which
+the port's font measurer reports <strong>0.5–1.03&nbsp;pt wider</strong> than C
+(<code>VaxFrame</code>, <code>VaxGCommonFrame</code>, <code>Wire</code>,
+<code>UFileWr</code>, <code>AtomWr</code>, <code>WrClass</code>,
+<code>ProtectedWire</code>, <code>StreamWire</code>, <code>TextWr</code>). Those
+widths feed the left-to-right separation constraints
+(<code>width = ND_rw(u) + ND_lw(v) + nodesep</code>), pushing their
+<code>ROUND()</code>-ed minlen sum from C's 11368 to 11380 (<strong>+12</strong>).
+Without compress that error hides in network-simplex slack; under
+<code>ratio=compress</code> the weight-1000 width edge makes every separation
+<strong>binding</strong>, so the sub-pixel error surfaces as a
+<strong>−3..−5&nbsp;pt interior x-shift</strong>.</p>
+
+<p>That shift is what flips the verdict to <code>diverged</code>: it nudges the
+<code>Target→TThread</code> straight line 0.55&nbsp;pt past the tail node's box
+wall, so <code>shortestPath</code> must bend the polyline around the corner and
+the router emits an <strong>extra bezier piece (7 pts vs C's 4)</strong> — a
+<em>structural</em> difference. Forcing those 9 widths to C's values reproduces C
+exactly: node-x off <strong>53/76 → 0/76</strong>, spline <strong>7 → 4 pts</strong>.
+The residual is therefore 100% upstream font metrics — out of scope (a shared
+text-measurement primitive every label flows through; the spline router is
+faithful and forbidden by scope).</p>
+
+<!-- ============ VISUAL ============ -->
+<h2>The visible delta: <code>Target→TThread</code> spline</h2>
+<p class="caption">Zoomed to the two nodes and their edge (layout frame, before
+the landscape rotation). Golden = native <code>dot</code>; Ours = graphviz-ts.</p>
+<div class="delta">
+  <div class="key">
+    <span><span class="swatch" style="background:#1a8a3a"></span>Golden — straight, 4 pts (1 bezier)</span>
+    <span><span class="swatch" style="background:#cc2222"></span>Ours — bent, 7 pts (2 beziers)</span>
+    <span><span class="swatch" style="background:#888;height:.7rem;width:.7rem;border-radius:50%"></span>bend vertex (tail-box corner)</span>
+  </div>
+  <svg viewBox="415 -472 300 118" width="760" xmlns="http://www.w3.org/2000/svg">
+    <!-- Target node (shared position) -->
+    <ellipse cx="667.32" cy="-450" rx="34.97" ry="18" fill="#f0f0f0" stroke="#999"/>
+    <text x="667.32" y="-446" text-anchor="middle" font-size="9" font-family="sans-serif">Target</text>
+    <!-- Golden TThread (dashed green) at cx=466.32 -->
+    <ellipse cx="466.32" cy="-378" rx="42.65" ry="18" fill="none" stroke="#1a8a3a" stroke-dasharray="3 2"/>
+    <!-- Ours TThread (solid red) at cx=463.32 — shifted -3pt left -->
+    <ellipse cx="463.32" cy="-378" rx="42.65" ry="18" fill="none" stroke="#cc2222"/>
+    <text x="464" y="-374" text-anchor="middle" font-size="9" font-family="sans-serif">TThread</text>
+    <!-- Golden edge: straight 4-pt bezier -->
+    <path d="M637.63,-440.28C602.85,-428.99 545.37,-409.1 506.63,-395.05" fill="none" stroke="#1a8a3a" stroke-width="1.4"/>
+    <!-- Ours edge: bent 7-pt (2 beziers) -->
+    <path d="M641.96,-437.09C637.11,-435.38 632.09,-433.64 627.32,-432 587.58,-418.31 542.06,-402.76 508.96,-392.07" fill="none" stroke="#cc2222" stroke-width="1.4"/>
+    <!-- Golden control points (4) -->
+    <g fill="#1a8a3a"><circle cx="637.63" cy="-440.28" r="2"/><circle cx="602.85" cy="-428.99" r="2"/><circle cx="545.37" cy="-409.1" r="2"/><circle cx="506.63" cy="-395.05" r="2"/></g>
+    <!-- Ours control points (7) -->
+    <g fill="#cc2222"><circle cx="641.96" cy="-437.09" r="2"/><circle cx="637.11" cy="-435.38" r="2"/><circle cx="632.09" cy="-433.64" r="2"/><circle cx="627.32" cy="-432" r="2"/><circle cx="587.58" cy="-418.31" r="2"/><circle cx="542.06" cy="-402.76" r="2"/><circle cx="508.96" cy="-392.07" r="2"/></g>
+    <!-- bend vertex marker (the segment join at the tail-box corner) -->
+    <circle cx="627.32" cy="-432" r="3.4" fill="none" stroke="#555" stroke-width="1"/>
+  </svg>
+  <p class="legend"><b>4 green dots</b> (golden: 1 bezier) vs <b>7 red dots</b>
+  (ours: 2 beziers). The three extra red dots cluster near Target where the route
+  kinks at the tail-box corner (circled) — the sub-pixel bend that splits one
+  bezier into two and flips the verdict to <code>diverged</code>.</p>
+  <p class="legend">The −3&nbsp;pt leftward shift of TThread (red vs green
+  ellipse) drags the red line just outside Target's box wall; the router bends it
+  at the grey corner vertex, splitting one bezier into two. Golden clears the
+  wall and stays a single straight bezier.</p>
+</div>
+
+<h2>Full drawings — Golden first, Ours second</h2>
+<p class="caption">The complete renders (landscape). At this scale the −3..−5&nbsp;pt
+x-shift is sub-perceptual — that is exactly why it is an <em>accepted</em> delta.</p>
+<div class="cols">
+  <div class="col"><div class="lbl">Golden — native dot 15.x</div>
+    <img src="nan-golden.svg" alt="native dot — NaN.gv"></div>
+  <div class="col"><div class="lbl">Ours — graphviz-ts (ratio=compress)</div>
+    <img src="nan-ours.svg" alt="graphviz-ts — NaN.gv"></div>
+</div>
+
+<h2>Numbers</h2>
+<p class="caption">Largest node-x deltas (port − native), all <code>dy=0</code>.
+Every node whose width is correct is still dragged by its wider neighbours.</p>
+<table>
+  <tr><th>node</th><th>native cx</th><th>ours cx</th><th>Δx</th></tr>
+  <tr class="bad"><td>MC68Frame</td><td>—</td><td>—</td><td>−5</td></tr>
+  <tr class="bad"><td>SparcFrame</td><td>—</td><td>—</td><td>−5</td></tr>
+  <tr class="bad"><td>VaxFrame</td><td>—</td><td>—</td><td>−4</td></tr>
+  <tr><td>TThread</td><td>466.32</td><td>463.32</td><td>−3</td></tr>
+  <tr><td>(≈25 more)</td><td>—</td><td>—</td><td>−3</td></tr>
+</table>
+<table>
+  <tr><th>metric</th><th>port (as-is)</th><th>port (forced C widths)</th><th>native</th></tr>
+  <tr><td>nodes off in X (|Δx|&gt;0.5)</td><td>53 / 76</td><td>0 / 76</td><td>—</td></tr>
+  <tr><td>Target→TThread spline pts</td><td>7</td><td>4</td><td>4</td></tr>
+  <tr><td>family maxDelta</td><td>21</td><td>0</td><td>—</td></tr>
+</table>
+
+<p class="caption">Reproduce: <code>GVBINDIR=/tmp/gvplugins npx tsx
+test/corpus/render-one.ts ~/git/graphviz/tests/graphs/NaN.gv dot</code> vs
+<code>GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot -Tsvg …/NaN.gv</code>.
+Full root-cause log: <code>../decision-journal.md</code>.</p>
+
+</body></html>
