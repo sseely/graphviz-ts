@@ -1,5 +1,13 @@
 # b69 is a REAL divergence (concentrate under-merge) — NOT accepted A2
 
+> **UPDATE (2026-06-24, troubleshooting pass):** the under-merge is the *tip* of a
+> bigger issue — the `concentrate` attribute was **never plumbed**, so the whole
+> feature was dead. Activation + the first two fixes (flag wiring + a concSlope
+> crash) live on branch `feature/activate-concentrate` (87b4e97). b71 now
+> byte-matches; b15 crashes on the cluster path; b69/b135/b62 still under-merge.
+> Full plan + remaining bugs: `plans/activate-concentrate/README.md`. The
+> original under-merge analysis below remains the lead for Bug 4.
+
 ## Observation: b69 diverged 116.69 — port's concentrate merges 3 fewer edges than C
 - **Context**: Building "accepted A2" visuals for the divergences doc. The doc
   listed `b69` alongside `proc3d` as a label-heavy graph that "stays at
