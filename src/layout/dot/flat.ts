@@ -177,9 +177,9 @@ export function abomination(g: Graph): void {
   const rank = g.info.rank!;
   for (let r = mx; r >= 0; r--) rank[r + 1] = rank[r];
   rank[0] = {
-    n: 0, an: 0, v: [], av: [],
+    n: 0, v: [], an: 0, av: [],
     ht1: 1, ht2: 1, pht1: 1, pht2: 1,
-    candidate: false, valid: false, cache_nc: 0,
+    candidate: false, valid: false, cache_nc: 0, flat: undefined, vStart: 0,
   };
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
     n.info.rank = (n.info.rank ?? 0) + 1;

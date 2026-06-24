@@ -42,7 +42,8 @@ export {
 
 // allocate_ranks — @see lib/dotgen/mincross.c:allocate_ranks
 export function makeEmptyRank(): RankEntry {
-  return { n: 0, v: [], an: 0, av: [], ht1: 0, ht2: 0, pht1: 0, pht2: 0, candidate: false, valid: false, cache_nc: 0 };
+  const rt: RankEntry = { n: 0, v: [], an: 0, av: [], ht1: 0, ht2: 0, pht1: 0, pht2: 0, candidate: false, valid: false, cache_nc: 0, flat: undefined, vStart: 0 };
+  return rt;
 }
 
 export function allocateRanksCount(g: Graph, cn: number[]): void {
