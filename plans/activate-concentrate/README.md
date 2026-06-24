@@ -1,7 +1,45 @@
 # Mission: activate `concentrate=true` (dead feature) + fix its latent bugs
 
-Status: **WIP on `feature/activate-concentrate` (87b4e97, 55cfed4) — 5 bugs
-fixed; NOT merged (b15 still errors deeper, in spline routing).**
+Status: **MERGED to main (`274964e`, 2026-06-24).** Feature activated; ~10 latent
+bugs fixed (activation, 5 crashes, parallel-edge merge, merged-chain routing).
+Full survey: **0 verdict regressions, +1 byte-match (b62)**. 2384 tests pass.
+
+## Result per concentrate corpus graph (vs native dot)
+- **b62**: diverged → **byte-match**.
+- **b71**: byte-match (unchanged — its concentrate is a no-op).
+- **b135**: node positions + edge count match C; stays diverged on other deltas.
+- **b69**: all 47 nodes byte-match C, edge count 137 = 137; stays diverged.
+- **b15**: renders (was un-rendered / crash); 150 of 153 edges.
+
+## FOLLOW-UP (return here) — the 2 still-diverged items: b69, b15
+
+Both diverge **only** on merged-collinear edge *spline geometry*, not structure.
+When `dot_concentrate` merges an edge's **entire** virtual chain (cascaded
+`to_virt` redirects that shift rank), the port routes it as a **direct
+tail→head segment**, while C routes the synthetic edge through the
+representative chain's **box corridor** (`make_regular_edge` hackflag → boxes
+from the merged nodes), producing a curved spline. So these few edges are drawn
+but rougher than C → inflated maxDelta within `diverged` (b69 116→375, b15
+25→195; nodes/counts match, so it is purely these splines).
+
+- b69: 0 edges missing (137=137); the WAR-* collinear edges route direct.
+- b15: 3 edges still unrouted — their chain resolution ends at a virtual node
+  (the `chainSegments` to_virt walk cannot reconstruct the cascaded merge), so
+  `routeMultiRankEdgeFaithful` bails (no crash, no spline).
+
+**The fix** is the rank-walk: reconstruct the per-rank box chain through the
+representative virtual nodes (as C's `make_regular_edge` does) instead of
+following `to_virt` edges, so the merged-chain splines match C's corridor and
+the 3 b15 edges route. Touches `chainSegments` / `routeChainSegmented`; regression
+risk to the working non-concentrate path → full survey required. Repro:
+`GVBINDIR=/tmp/gvplugins npx tsx test/corpus/render-one.ts
+~/git/graphviz/tests/graphs/b69.gv dot` vs the C oracle; the affected edges are
+WAR-WR1CD1/WR1VI1→MRS305-LOAD-WR1RP1, WAR-WRCALV1→MRS430-LOAD-WR1PP1,
+WAR-WRSRV1→MRS405-LOAD-WR1PT1.
+
+---
+
+(original WIP plan retained below)
 
 ## How we got here
 
