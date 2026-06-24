@@ -26,11 +26,27 @@ const ROOT = process.env.CORPUS_ROOT ?? join(homedir(), 'git/graphviz/tests');
 const DOT_BIN = process.env.DOT_BIN ?? join(homedir(), 'git/graphviz/build/cmd/dot/dot');
 const GVBINDIR = process.env.GVBINDIR ?? '/tmp/gvplugins';
 const CACHE = process.env.ORACLE_CACHE ?? join(tmpdir(), 'dot-corpus-oracle');
-const TIMEOUT_MS = Number(process.env.RENDER_TIMEOUT_MS ?? 20000);
+// A render is a `timeout` only if it does not error and runs past its budget:
+// max(MULT × native, FLOOR). The flat-20s budget mis-flagged graphs that are
+// merely slow-but-valid (e.g. 2108 ~70s, native ~12s); only a true runaway past
+// 3× native or 3 minutes — whichever is greater — counts.
+const TIMEOUT_MULT = Number(process.env.RENDER_TIMEOUT_MULT ?? 3);
+const TIMEOUT_FLOOR_MS = Number(process.env.RENDER_TIMEOUT_FLOOR_MS ?? 180_000);
+// The oracle gets a generous fixed cap so slow-but-valid native renders finish
+// (they yield the reference SVG *and* the native time the budget is based on).
+const ORACLE_TIMEOUT_MS = Number(process.env.ORACLE_TIMEOUT_MS ?? 300_000);
 const CONCURRENCY = Number(process.env.SURVEY_CONCURRENCY ?? 8);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
 const PARITY = new URL('./parity.json', import.meta.url);
+const NATIVE_TIMINGS = new URL('./native-timings.json', import.meta.url);
 const RENDER_ONE = join(REPO, 'test/corpus/render-one.ts');
+/** Canonical (frozen) native dot times (id → ms), shared with the perf bench.
+ *  The budget prefers these so it is stable run-to-run; the just-measured oracle
+ *  time is the fallback for not-yet-captured inputs. @see capture-native.mjs */
+const CANON_NATIVE: Record<string, number> = (() => {
+  try { return JSON.parse(readFileSync(NATIVE_TIMINGS, 'utf8')).timings ?? {}; }
+  catch { return {}; }
+})();
 /** Extracts a semantic version from `dot -V` output. */
 const VERSION_RE = /version (\d+\.\d+\.\d+)/;
 
@@ -125,15 +141,23 @@ function findCachedTsx(): string | null {
   return null;
 }
 
-/** Render an input with the native oracle, caching the SVG under CACHE (AD-3). */
-async function oracleSvg(absInput: string, id: string): Promise<{ svg?: string; err?: string }> {
+/**
+ * Render an input with the native oracle, caching the SVG and the native render
+ * time (a `.ms` sidecar) under CACHE. The time seeds the port's per-input budget
+ * (max(MULT×native, FLOOR)), so it must be cached alongside the SVG (AD-3).
+ */
+async function oracleSvg(absInput: string, id: string): Promise<{ svg?: string; ms?: number; err?: string }> {
   const cacheFile = join(CACHE, `${id}.svg`);
-  if (existsSync(cacheFile)) {
+  const msFile = join(CACHE, `${id}.ms`);
+  if (existsSync(cacheFile) && existsSync(msFile)) {
     const cached = readFileSync(cacheFile, 'utf8');
-    if (cached.length > 0) return { svg: cached };
+    const ms = Number(readFileSync(msFile, 'utf8'));
+    if (cached.length > 0 && Number.isFinite(ms)) return { svg: cached, ms };
   }
   const env = { ...process.env, GVBINDIR };
-  const r = await spawnCapture(DOT_BIN, ['-Tsvg', absInput], env, TIMEOUT_MS);
+  const t = Date.now();
+  const r = await spawnCapture(DOT_BIN, ['-Tsvg', absInput], env, ORACLE_TIMEOUT_MS);
+  const ms = Date.now() - t;
   // The native `dot` exits nonzero on warnings AND on recoverable errors (e.g.
   // "trouble in init_rank") while still emitting a COMPLETE SVG. Exit code is
   // therefore not a validity signal — completeness (a closing </svg>) is. Only
@@ -142,16 +166,18 @@ async function oracleSvg(absInput: string, id: string): Promise<{ svg?: string; 
     return { err: firstLine(r.stderr) || `oracle exit ${r.code}` };
   }
   writeFileSync(cacheFile, r.stdout);
-  return { svg: r.stdout };
+  writeFileSync(msFile, String(ms));
+  return { svg: r.stdout, ms };
 }
 
-/** Render an input with the port in an isolated, timeout-killed subprocess. */
+/** Render an input with the port in an isolated, budget-killed subprocess. */
 async function portSvg(
   absInput: string,
   tsx: { cmd: string; pre: string[] },
+  budgetMs: number,
 ): Promise<{ svg?: string; verdict?: Verdict; errMsg?: string }> {
   const args = [...tsx.pre, RENDER_ONE, absInput, 'dot'];
-  const r = await spawnCapture(tsx.cmd, args, process.env, TIMEOUT_MS);
+  const r = await spawnCapture(tsx.cmd, args, process.env, budgetMs);
   if (r.timedOut) return { verdict: 'timeout' };
   if (r.code !== 0 || r.stdout.length === 0) {
     return { verdict: 'errored', errMsg: portErrMsg(r.stderr) || `port exit ${r.code}` };
@@ -209,7 +235,12 @@ async function surveyOne(
   const meta = { id: entry.id, path: entry.path };
   const oracle = await oracleSvg(absInput, entry.id);
   if (oracle.svg === undefined) return { ...meta, verdict: 'oracle-error', errMsg: oracle.err };
-  const port = await portSvg(absInput, tsx);
+  // Budget = max(MULT × native, FLOOR): only a non-erroring run past this is a
+  // timeout. Native time is the canonical (frozen) value when captured, else the
+  // time the oracle run just measured.
+  const nativeMs = CANON_NATIVE[entry.id] ?? oracle.ms ?? 0;
+  const budgetMs = Math.max(TIMEOUT_FLOOR_MS, Math.ceil(TIMEOUT_MULT * nativeMs));
+  const port = await portSvg(absInput, tsx, budgetMs);
   if (port.svg === undefined) return { ...meta, verdict: port.verdict!, errMsg: port.errMsg };
   return { ...meta, ...diffVerdict(port.svg, oracle.svg) };
 }
@@ -268,8 +299,8 @@ async function main(): Promise<void> {
   const tsx = resolveTsx();
   process.stderr.write(
     `surveying ${applicable.length} applicable inputs ` +
-      `(concurrency ${CONCURRENCY}, timeout ${TIMEOUT_MS}ms)\n` +
-      `oracle ${DOT_BIN}\ncache ${CACHE}\nport via ${tsx.cmd}\n`,
+      `(concurrency ${CONCURRENCY}, budget max(${TIMEOUT_MULT}x native, ${TIMEOUT_FLOOR_MS}ms))\n` +
+      `oracle ${DOT_BIN} (cap ${ORACLE_TIMEOUT_MS}ms)\ncache ${CACHE}\nport via ${tsx.cmd}\n`,
   );
   const results = await runPool(applicable, tsx, CONCURRENCY);
   const counts = tally(results);

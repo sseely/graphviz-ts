@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-06-23T17:43:56.696Z",
+  "generatedAt": "2026-06-24T01:34:22.878Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 796,
   "counts": {
-    "byte-match": 312,
-    "structural-match": 256,
-    "diverged": 200,
+    "byte-match": 313,
+    "structural-match": 257,
+    "diverged": 206,
     "errored": 5,
-    "timeout": 7,
-    "oracle-error": 16
+    "timeout": 4,
+    "oracle-error": 11
   },
   "results": [
     {
@@ -311,7 +311,9 @@
     {
       "id": "1718",
       "path": "1718.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 3725.899999999998,
+      "firstDiffPath": "svg/g[1]/g[47]/path[1]/@d"
     },
     {
       "id": "1724",
@@ -452,13 +454,13 @@
     {
       "id": "2095_1",
       "path": "2095_1.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "timeout"
     },
     {
       "id": "2108",
       "path": "2108.dot",
-      "verdict": "timeout"
+      "verdict": "structural-match",
+      "maxDelta": 72.89000000000004
     },
     {
       "id": "2159",
@@ -521,7 +523,7 @@
     {
       "id": "2222",
       "path": "2222.dot",
-      "verdict": "timeout"
+      "verdict": "byte-match"
     },
     {
       "id": "2225",
@@ -576,8 +578,7 @@
     {
       "id": "2343",
       "path": "2343.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "timeout"
     },
     {
       "id": "2352",
@@ -618,8 +619,7 @@
     {
       "id": "2371",
       "path": "2371.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "timeout"
     },
     {
       "id": "2391",
@@ -705,7 +705,9 @@
     {
       "id": "2471",
       "path": "2471.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 23020,
+      "firstDiffPath": "svg/g[1][childCount]"
     },
     {
       "id": "2475_1",
@@ -716,7 +718,9 @@
     {
       "id": "2475_2",
       "path": "2475_2.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 520.9000000000001,
+      "firstDiffPath": "svg/g[1]/g[5242]/path[1]/@d"
     },
     {
       "id": "2476",
@@ -895,8 +899,7 @@
     {
       "id": "2646",
       "path": "2646.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "timeout"
     },
     {
       "id": "2669",
@@ -984,8 +987,9 @@
     {
       "id": "2854",
       "path": "2854.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "diverged",
+      "maxDelta": 2067.4100000000003,
+      "firstDiffPath": "svg/g[1]/g[20]/path[1]/@d"
     },
     {
       "id": "358",
@@ -1158,7 +1162,9 @@
     {
       "id": "graphs-b100",
       "path": "graphs/b100.gv",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 10252.300000000003,
+      "firstDiffPath": "svg/g[1]/g[21]/path[1]/@d"
     },
     {
       "id": "graphs-b102",
@@ -1177,7 +1183,9 @@
     {
       "id": "graphs-b104",
       "path": "graphs/b104.gv",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 10252.300000000003,
+      "firstDiffPath": "svg/g[1]/g[21]/path[1]/@d"
     },
     {
       "id": "graphs-b106",

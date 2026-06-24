@@ -75,7 +75,14 @@ Env: `BENCH_POOL`, `BENCH_CAP_MS`, `BENCH_IDS`, `BENCH_LIMIT`, `BENCH_HEAVY_MS`,
 | `DOT_BIN` | `~/git/graphviz/build/cmd/dot/dot` | Native oracle binary (15.0.0). |
 | `GVBINDIR` | `/tmp/gvplugins` | Oracle plugin dir. |
 | `ORACLE_CACHE` | a `/tmp` dir | Gitignored cache of oracle SVGs (AD-3). |
-| `RENDER_TIMEOUT_MS` | 20000 | Per-render wall-clock timeout (port + oracle). |
+| `RENDER_TIMEOUT_MULT` | 3 | Port budget = `max(MULT × native, FLOOR)`. |
+| `RENDER_TIMEOUT_FLOOR_MS` | 180000 | Lower bound on the port budget (3 min). |
+| `ORACLE_TIMEOUT_MS` | 300000 | Oracle cap — generous so slow-but-valid natives finish. |
+
+The port's budget is **`max(3× native, 3 min)`**, not a flat wall clock: a graph
+that is merely slow-but-valid (e.g. 2108 renders in ~70s, native ~12s) is *not* a
+timeout. Native time is read from the canonical `native-timings.json` when present
+(see the perf section) so the budget is stable run-to-run.
 
 Oracle reference SVGs are generated on demand by the local native binary into a
 **gitignored** cache and reused across runs. They are **never committed** — only
@@ -117,7 +124,7 @@ Each applicable input gets one verdict in `parity.json`:
 | `structural-match` | same element tree; only numeric coordinate diffs above tolerance. |
 | `diverged` | a structural difference (missing/extra node, wrong tag, text mismatch). |
 | `errored` | the port threw (e.g. unported attribute, parser gap) — message captured. |
-| `timeout` | the port hung and was killed after the wall-clock timeout. |
+| `timeout` | non-erroring, but ran past `max(3× native, 3 min)` — a true runaway, not merely slow. |
 | `oracle-error` | the native oracle failed to render — excluded from port scoring. |
 
 The survey isolates every port render in a **spawned subprocess with a timeout**
