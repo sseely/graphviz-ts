@@ -11,7 +11,8 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { commonInitNode, lateInt, layoutMeasurer } from '../../common/nodeinit.js';
+import { commonInitNode, lateInt, lateDouble, layoutMeasurer } from '../../common/nodeinit.js';
+import { POINTS_PER_INCH } from '../../model/geom.js';
 import { nonconstraintEdge } from './classify.js';
 import { NORMAL, deleteFastNode, removeFromRank } from './fastgr.js';
 import { mapbool } from './rank.js';
@@ -33,6 +34,41 @@ export const RANKDIR_LR = 1;
 export const RANKDIR_BT = 2;
 /** @see lib/common/const.h:RANKDIR_RL */
 export const RANKDIR_RL = 3;
+
+// ---------------------------------------------------------------------------
+// nodesep / ranksep separation defaults — @see lib/common/const.h:85-88
+// ---------------------------------------------------------------------------
+
+const DEFAULT_NODESEP = 0.25;
+const MIN_NODESEP = 0.02;
+const DEFAULT_RANKSEP = 0.5;
+const MIN_RANKSEP = 0.02;
+
+/** Inches→points exactly as C's POINTS macro: ROUND(in * 72). @see geom.h:62 */
+function points(inches: number): number {
+  return Math.round(inches * POINTS_PER_INCH);
+}
+
+/**
+ * Parse the `nodesep` and `ranksep` graph attributes into g.info, mirroring
+ * graph_init. nodesep is a plain late_double; ranksep additionally honours the
+ * `equally` keyword (sets exact_ranksep) and a bare number that may be followed
+ * by text. Absent attrs yield POINTS(DEFAULT_*) = 18 / 36, matching the prior
+ * dotInitSubg defaults (so non-setting graphs stay byte-identical).
+ * @see lib/common/input.c:665-681
+ */
+function parseSepAttrs(g: Graph): void {
+  g.info.nodesep = points(lateDouble(g.attrs.get('nodesep'), DEFAULT_NODESEP, MIN_NODESEP));
+  const p = g.attrs.get('ranksep');
+  let xf = DEFAULT_RANKSEP;
+  if (p !== undefined && p !== '') {
+    // C: sscanf(p, "%lf", &xf) == 0 → no leading number → DEFAULT_RANKSEP.
+    const parsed = Number.parseFloat(p);
+    xf = Number.isNaN(parsed) ? DEFAULT_RANKSEP : Math.max(parsed, MIN_RANKSEP);
+    if (p.includes('equally')) g.info.exact_ranksep = true;
+  }
+  g.info.ranksep = points(xf);
+}
 
 // ---------------------------------------------------------------------------
 // dotGraphInit — parse rankdir and propagate to subgraphs (graph_init semantics)
@@ -64,6 +100,9 @@ export function dotGraphInit(g: Graph): void {
   g.info.flip = (rankdir & 1) === 1;
   // Propagate to subgraphs (dotinit.c:352: GD_rankdir2(sg) = GD_rankdir2(g))
   initSubgraphRankdir(g);
+  // nodesep / ranksep (input.c:665-681) — parsed here so the values are set
+  // before dotInitSubg's defaults and before ranking uses GD_ranksep.
+  parseSepAttrs(g);
   // Root graph label: dimensions measured here so bb expansion in gvPostprocess
   // has the dimen available. Cluster labels are handled by buildSkeleton/rank.ts.
   // HTML labels not yet supported — plain-text only.

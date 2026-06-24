@@ -25,6 +25,7 @@ import {
   dotInitNode,
   dotInitEdge,
   dotInitSubg,
+  dotGraphInit,
 } from './index.js';
 import { parse } from '../../parser/index.js';
 
@@ -97,6 +98,58 @@ describe('dotInitSubg: graph attribute defaults', () => {
     dotInitSubg(g);
     expect(g.info.nodesep).toBe(36);
     expect(g.info.ranksep).toBe(72);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC2b: dotGraphInit parses nodesep/ranksep attrs (input.c:665-681)
+// ---------------------------------------------------------------------------
+
+describe('dotGraphInit: nodesep/ranksep attribute parsing', () => {
+  it('absent attrs → POINTS(defaults) = nodesep 18, ranksep 36', () => {
+    const g = makeGraph('sep-default');
+    dotGraphInit(g);
+    expect(g.info.nodesep).toBe(18);
+    expect(g.info.ranksep).toBe(36);
+    expect(g.info.exact_ranksep).toBeFalsy();
+  });
+
+  it('ranksep=1.0 → POINTS(1.0) = 72', () => {
+    const g = makeGraph('rs1');
+    g.attrs.set('ranksep', '1.0');
+    dotGraphInit(g);
+    expect(g.info.ranksep).toBe(72);
+    expect(g.info.exact_ranksep).toBeFalsy();
+  });
+
+  it('nodesep=0.5 → POINTS(0.5) = 36', () => {
+    const g = makeGraph('ns');
+    g.attrs.set('nodesep', '0.5');
+    dotGraphInit(g);
+    expect(g.info.nodesep).toBe(36);
+  });
+
+  it('ranksep="0.75 equally" → 54 pts and exact_ranksep flag', () => {
+    const g = makeGraph('rs-eq');
+    g.attrs.set('ranksep', '0.75 equally');
+    dotGraphInit(g);
+    expect(g.info.ranksep).toBe(54);
+    expect(g.info.exact_ranksep).toBe(true);
+  });
+
+  it('ranksep="equally" (no number) → DEFAULT 36 + exact_ranksep', () => {
+    const g = makeGraph('rs-eq-only');
+    g.attrs.set('ranksep', 'equally');
+    dotGraphInit(g);
+    expect(g.info.ranksep).toBe(36);
+    expect(g.info.exact_ranksep).toBe(true);
+  });
+
+  it('ranksep below MIN_RANKSEP (0.02) is clamped: 0.001 → POINTS(0.02) = 1', () => {
+    const g = makeGraph('rs-min');
+    g.attrs.set('ranksep', '0.001');
+    dotGraphInit(g);
+    expect(g.info.ranksep).toBe(1);
   });
 });
 
