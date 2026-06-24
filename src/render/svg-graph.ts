@@ -69,8 +69,13 @@ export function emitSvgTag(job: RenderJob): void {
   // byte-unchanged (D5). @see gvrender_core_svg.c:258
   const szx = bb.ur.x - bb.ll.x + 2 * SVG_PAD;
   const szy = bb.ur.y - bb.ll.y + 2 * SVG_PAD;
-  const w = Math.round(szx * job.scale.x);
-  const h = Math.round(szy * job.scale.y);
+  const dw = Math.round(szx * job.scale.x);
+  const dh = Math.round(szy * job.scale.y);
+  // Landscape rotation swaps the canvas dims to page orientation (C swaps via
+  // init_job_pagination exch_xyf, emit.c:1201); round() commutes with the swap
+  // and Z is uniform, so swapping the final device dims matches native.
+  const w = job.rotation !== 0 ? dh : dw;
+  const h = job.rotation !== 0 ? dw : dh;
   job.write('<svg width="' + String(w) + 'pt" height="' + String(h) + 'pt"\n');
   // viewBox always starts at (0,0); gvPostprocess normalises bb.ll to (0,0) before render
   job.write('     viewBox="0.00 0.00 ' + String(w) + '.00 ' + String(h) + '.00"\n');
@@ -99,8 +104,11 @@ export function emitGraphGroupOpen(
   // insufficient); parseFloat(toPrecision(6)) reproduces %g. Z=1 → "1".
   const sx = formatG(job.scale.x);
   const sy = formatG(job.scale.y);
+  // rotate(-job->rotation): 0 for portrait (byte-unchanged), -90 for landscape
+  // (orientation=land). @see gvrender_core_svg.c:svg_begin_page
+  const rot = String(-job.rotation);
   job.write('<g id="' + graphId + '" ' + classStr +
-    ' transform="scale(' + sx + ' ' + sy + ') rotate(0) translate(');
+    ' transform="scale(' + sx + ' ' + sy + ') rotate(' + rot + ') translate(');
   job.printDouble(tx);
   job.write(' ');
   job.printDouble(ty);
@@ -314,7 +322,13 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
 export function svgBeginPage(g: Graph, job: RenderJob): void {
   const bb = job.bb;
   // gvPostprocess zeroes bb.ll before render; tx is simply the padding.
-  const tx = SVG_PAD;
+  // Landscape (ADR-3): setup_page's rotation branch (SVG = GVRENDER_Y_GOES_DOWN)
+  // gives translation.x = -(focus.x + pageSize.x/2) = -(bb.ur.x + PAD) in the
+  // zeroed-bb frame; translation.y is unchanged (focus.y + pageSize.y/2 =
+  // bb.ur.y + PAD). pageSize = imageSize/zoom is Z-independent (outer scale
+  // carries Z), so the formula holds for any size= fit. Pinned to b68 native
+  // translate(-634 208.5). @see emit.c:setup_page; gvrender_core_svg.c:svg_begin_page
+  const tx = job.rotation !== 0 ? -(bb.ur.x + SVG_PAD) : SVG_PAD;
   const ty = bb.ur.y + SVG_PAD;
   emitGraphGroupOpen(
     job.idLayerPrefix() + svgGraphId(g, job),

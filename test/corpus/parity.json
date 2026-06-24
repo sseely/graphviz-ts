@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-24T13:15:17.787Z",
+  "generatedAt": "2026-06-24T14:29:19.815Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 324,
-    "structural-match": 254,
+    "byte-match": 325,
+    "structural-match": 253,
     "diverged": 196,
     "errored": 5,
     "timeout": 5,
@@ -1060,7 +1060,7 @@
       "id": "graphs-NaN",
       "path": "graphs/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 2007.6,
+      "maxDelta": 1906.9900000000002,
       "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
     },
     {
@@ -1331,14 +1331,13 @@
     {
       "id": "graphs-b68",
       "path": "graphs/b68.gv",
-      "verdict": "structural-match",
-      "maxDelta": 638
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b69",
       "path": "graphs/b69.gv",
       "verdict": "diverged",
-      "maxDelta": 2728.35,
+      "maxDelta": 116.69000000000005,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -2177,7 +2176,7 @@
       "id": "graphs-proc3d",
       "path": "graphs/proc3d.gv",
       "verdict": "diverged",
-      "maxDelta": 2620.4,
+      "maxDelta": 217.1400000000001,
       "firstDiffPath": "svg/g[1]/g[28]/path[1]/@d"
     },
     {
@@ -3366,7 +3365,7 @@
       "id": "share-NaN",
       "path": "share/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 2007.6,
+      "maxDelta": 1906.9900000000002,
       "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
     },
     {
@@ -3895,7 +3894,7 @@
       "id": "share-proc3d",
       "path": "share/proc3d.gv",
       "verdict": "diverged",
-      "maxDelta": 2620.4,
+      "maxDelta": 217.1400000000001,
       "firstDiffPath": "svg/g[1]/g[28]/path[1]/@d"
     },
     {
@@ -4034,7 +4033,7 @@
       "id": "windows-NaN",
       "path": "windows/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 2007.6,
+      "maxDelta": 1906.9900000000002,
       "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
     },
     {
@@ -4532,7 +4531,7 @@
       "id": "windows-proc3d",
       "path": "windows/proc3d.gv",
       "verdict": "diverged",
-      "maxDelta": 2620.4,
+      "maxDelta": 217.42000000000007,
       "firstDiffPath": "svg/g[1]/g[99]/path[1]/@d"
     },
     {

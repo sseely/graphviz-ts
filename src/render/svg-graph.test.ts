@@ -13,8 +13,13 @@ import { describe, it, expect } from 'vitest';
 import { RenderJob } from '../gvc/job.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { Box } from '../model/geom.js';
-import { resolveGraphBgcolor, emitGraphBackground } from './svg-graph.js';
+import {
+  resolveGraphBgcolor, emitGraphBackground, emitSvgTag, svgBeginPage,
+} from './svg-graph.js';
 import { renderSvg } from '../index.js';
+import { createSvgRenderer } from './svg.js';
+import { Graph as GraphClass } from '../model/graph.js';
+import type { Graph } from '../model/graph.js';
 
 const measurer: TextMeasurer = { measure: () => ({ w: 0, h: 0 }) };
 
@@ -155,5 +160,87 @@ describe('graph bgcolor gradient — end to end', () => {
     const svg = renderSvg('digraph G { bgcolor=lightyellow; a }', 'dot');
     expect(svg).not.toContain('<linearGradient');
     expect(svg).toContain('<polygon fill="lightyellow" stroke="none"');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Landscape rotation (orientation=land mission T2). Numbers pinned to b68.gv
+// native: padded bb 638 x 213 (bb.ur = 630 x 204.5, pad 4) renders rotated as
+// width="213pt" height="638pt", scale(1 1) rotate(-90) translate(-634 208.5).
+// @see lib/common/emit.c:setup_page; gvrender_core_svg.c:svg_begin_page
+// ---------------------------------------------------------------------------
+
+/** Job with b68's padded-bb geometry (bb.ur = 630 x 204.5; pad 4 → 638 x 213). */
+function b68Job(rotation: number): RenderJob {
+  const job = new RenderJob('svg', measurer);
+  job.zoom = 1;
+  job.scale = { x: 1, y: 1 };
+  job.devscale = { x: 1, y: -1 };
+  job.translation = { x: 0, y: 0 };
+  job.rotation = rotation;
+  job.bb = { ll: { x: 0, y: 0 }, ur: { x: 630, y: 204.5 } };
+  job.renderer = createSvgRenderer();
+  return job;
+}
+
+describe('emitSvgTag — landscape dim swap', () => {
+  it('portrait (rotation 0): width=638 height=213, unswapped', () => {
+    const job = b68Job(0);
+    emitSvgTag(job);
+    const o = job.output.join('');
+    expect(o).toContain('<svg width="638pt" height="213pt"');
+    expect(o).toContain('viewBox="0.00 0.00 638.00 213.00"');
+  });
+
+  it('landscape (rotation 90): width=213 height=638, swapped', () => {
+    const job = b68Job(90);
+    emitSvgTag(job);
+    const o = job.output.join('');
+    expect(o).toContain('<svg width="213pt" height="638pt"');
+    expect(o).toContain('viewBox="0.00 0.00 213.00 638.00"');
+  });
+});
+
+describe('svgBeginPage — landscape group transform (b68 canary)', () => {
+  it('portrait (rotation 0): rotate(0) translate(4 208.5), unchanged', () => {
+    const g = new GraphClass('simple', 'directed') as unknown as Graph;
+    const job = b68Job(0);
+    svgBeginPage(g, job);
+    expect(job.output.join('')).toContain(
+      'transform="scale(1 1) rotate(0) translate(4 208.5)"',
+    );
+  });
+
+  it('landscape (rotation 90): rotate(-90) translate(-634 208.5) — b68 native', () => {
+    const g = new GraphClass('simple', 'directed') as unknown as Graph;
+    const job = b68Job(90);
+    svgBeginPage(g, job);
+    expect(job.output.join('')).toContain(
+      'transform="scale(1 1) rotate(-90) translate(-634 208.5)"',
+    );
+  });
+});
+
+describe('renderSvg — landscape wiring (parseLandscape -> job.rotation -> emit)', () => {
+  it('rotate=90 emits rotate(-90); portrait emits rotate(0)', () => {
+    const land = renderSvg('digraph { rotate=90; a -> b }', 'dot');
+    expect(land).toContain('rotate(-90)');
+    const portrait = renderSvg('digraph { a -> b }', 'dot');
+    expect(portrait).toContain('rotate(0)');
+    expect(portrait).not.toContain('rotate(-90)');
+  });
+
+  it('landscape swaps <svg> width/height vs the same portrait graph', () => {
+    const portrait = renderSvg('digraph { a -> b }', 'dot');
+    const land = renderSvg('digraph { orientation=land; a -> b }', 'dot');
+    const dims = (svg: string): [string, string] => {
+      const m = /<svg width="(\d+)pt" height="(\d+)pt"/.exec(svg);
+      if (m === null) throw new Error('no <svg> dims');
+      return [m[1], m[2]];
+    };
+    const [pw, ph] = dims(portrait);
+    const [lw, lh] = dims(land);
+    expect(lw).toBe(ph);
+    expect(lh).toBe(pw);
   });
 });
