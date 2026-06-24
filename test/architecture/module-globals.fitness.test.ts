@@ -30,6 +30,8 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import { renderSvg } from '../../src/index.js';
+import type { EngineName } from '../../src/gvc/context.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..');
@@ -128,5 +130,63 @@ describe('fitness: module-level globals (multi-diagram safety)', () => {
       stale,
       `ALLOWLIST entries no longer present in src — delete them:\n${stale.join(', ')}`,
     ).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Dynamic counterpart: prove the invariant HOLDS behaviorally, not just that
+// every global is allowlisted. The static check above trusts each "safe"
+// justification; this one exercises the render path and fails if a global is
+// read-before-set in a way that changes OUTPUT. Render a probe, render a
+// pollution battery touching the known globals, render the probe again, require
+// byte-identical output.
+//
+// Coverage model: this catches GEOMETRY-AFFECTING leaks — proven against a
+// broken Rankdir reset (which would rotate every subsequent graph). It does NOT
+// claim to behaviorally trip every global: some are inherently low-risk and
+// won't change output even with their reset removed (reMincross only flips on
+// the rare re-mincross path; fillSeq is an order tiebreak; the PRNGs are
+// re-seeded by every consumer; colorScheme is try/finally-scoped). Those are
+// guarded by the static allowlist above (any new global declaration must be
+// reviewed and justified). The two tests together: static = the declaration
+// gate; dynamic = a behavioral backstop for position-affecting leaks.
+// ---------------------------------------------------------------------------
+
+/** Probes whose render must be invariant to preceding renders. */
+const PROBES: ReadonlyArray<readonly [string, EngineName]> = [
+  // dot: 2-cycle + multi-node ranks (exercises back-edge/mincross/x-NS order)
+  ['digraph{a->b;b->a;c->a;c->b;a->d;b->e;d->f;e->f}', 'dot'],
+  ['digraph{rankdir=LR; x->y; y->x; x->z; z->w}', 'dot'],          // flip/Rankdir
+  // cross-cluster cycle: exercises reMincross/fillSeq + cluster left2right ordering
+  ['digraph{subgraph cluster0{a;b} subgraph cluster1{c;d} subgraph cluster2{e;f} a->c;c->e;b->d;d->f;e->a;f->b}', 'dot'],
+  ['digraph{subgraph cluster0{a->b->c} subgraph cluster1{d->e->f} a->d;b->e;c->f;f->a}', 'dot'],
+  ['graph{n1--n2; n2--n3; n3--n1}', 'neato'],                      // PRNG (srand48)
+];
+
+/** Pollution battery — renders that mutate the known module globals. */
+const POLLUTERS: ReadonlyArray<readonly [string, EngineName]> = [
+  ['digraph{rankdir=BT; a->b->c; c->a}', 'dot'],                   // Rankdir/Offset, back edge
+  ['digraph{rankdir=RL; subgraph cluster0{m->n} n->o; o->m}', 'dot'], // reMincross + flip
+  ['digraph{a->b;b->a;a->b}', 'dot'],                              // 2-cycle + parallel
+  ['digraph{a[label=<<table bgcolor="red:blue"><tr><td>x</td></tr></table>>]}', 'dot'], // htmlFillPen/anchorSeq
+  ['digraph{node[colorscheme=accent3]; a[color=1]; b[color=2]; a->b}', 'dot'], // colorScheme
+  ['graph{a--b--c--a; c--d}', 'sfdp'],                             // crand PRNG (csrand)
+  ['graph{r--a; r--b; r--c; a--b}', 'fdp'],                        // srand48 PRNG
+  ['digraph{a->a; b->b; a->b}', 'dot'],                            // self-loops
+];
+
+describe('fitness: render determinism (no global leaks in practice)', () => {
+  it('every probe renders identically after a full pollution battery', () => {
+    for (const [src, engine] of PROBES) {
+      const before = renderSvg(src, engine);
+      for (const [psrc, pengine] of POLLUTERS) renderSvg(psrc, pengine);
+      const after = renderSvg(src, engine);
+      expect(
+        after === before,
+        `Render of (${engine}) "${src}" changed after rendering other diagrams — ` +
+          'a module global leaked across renders (read-before-set). Find the ' +
+          'global whose ALLOWLIST "safe" justification is wrong and fix its reset.',
+      ).toBe(true);
+    }
   });
 });
