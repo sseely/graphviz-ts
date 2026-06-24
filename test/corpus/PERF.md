@@ -21,55 +21,48 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
 - **Native:** `dot -Tsvg` best-of-3 (min).
 - **Budget:** target ≤3× native. Per-render cap **180000ms**
   (SIGKILL → `over-cap`, i.e. a true synchronous hang).
-- **Caveat:** light graphs are timed under up-to-6-way load; for a
+- **Caveat:** light graphs are timed under up-to-1-way load; for a
   precise single number re-run `BENCH_POOL=1 BENCH_IDS=<id> node test/corpus/bench.mjs`.
 
 ## Summary
 
-- **Rated inputs:** 778 · **within ≤3× native:** 761 (97.8%)
-- **ok (≤3×):** 761 · **slow (>3×):** 17 · **over-cap (hang):** 1 · **errored:** 5 · **oracle-error:** 12
-- **ratio (port/native):** p50 0.01× · p90 0.15× · max 11.71×
+- **Rated inputs:** 776 · **within ≤3× native:** 768 (99.0%)
+- **ok (≤3×):** 768 · **slow (>3×):** 8 · **over-cap (hang):** 3 · **errored:** 5 · **oracle-error:** 11
+- **ratio (port/native):** p50 0.01× · p90 0.12× · max 6.69×
 
 ## Ratio distribution
 
 | band | count |
 |---|---:|
-| ≤1× (port ≥ native, warm) | 737 |
-| 1–2× | 10 |
-| 2–3× | 14 |
-| 3–4× | 8 |
-| 4–6× | 7 |
+| ≤1× (port ≥ native, warm) | 739 |
+| 1–2× | 11 |
+| 2–3× | 18 |
+| 3–4× | 5 |
+| 4–6× | 2 |
 | 6–10× | 1 |
-| >10× | 1 |
-| over-cap (≥180000ms, possible hang) | 1 |
+| >10× | 0 |
+| over-cap (≥180000ms, possible hang) | 3 |
 
 ## Over budget — slower than 3× native (worst first)
 
 | id | native ms | port ms (warm) | ratio |
 |---|---:|---:|---:|
-| `1447_1` | 90 | 1053 | 11.71× |
-| `2782` | 934 | 8885 | 9.52× |
-| `2620` | 374 | 1969 | 5.26× |
-| `2108` | 14546 | 74166 | 5.1× |
-| `2471` | 3210 | 15439 | 4.81× |
-| `graphs-b103` | 1237 | 5764 | 4.66× |
-| `linux.x86-root_circo` | 250 | 1121 | 4.49× |
-| `nshare-root_circo` | 253 | 1071 | 4.24× |
-| `linux.x86-root_twopi` | 254 | 1019 | 4.01× |
-| `graphs-root` | 222 | 857 | 3.86× |
-| `nshare-root_twopi` | 253 | 944 | 3.72× |
-| `2371` | 58735 | 205101 | 3.49× |
-| `graphs-badvoro` | 335 | 1117 | 3.34× |
-| `graphs-b104` | 10298 | 32851 | 3.19× |
-| `graphs-b100` | 10569 | 32947 | 3.12× |
-| `linux.i386-b29` | 587 | 1825 | 3.11× |
-| `2743` | 255 | 787 | 3.09× |
+| `2108` | 12849 | 86010 | 6.69× |
+| `2620` | 371 | 2113 | 5.69× |
+| `2471` | 3269 | 16361 | 5× |
+| `graphs-b104` | 8635 | 33872 | 3.92× |
+| `graphs-b100` | 8646 | 33167 | 3.84× |
+| `2743` | 201 | 690 | 3.43× |
+| `graphs-b103` | 1210 | 4064 | 3.36× |
+| `2095_1` | 22309 | 68493 | 3.07× |
 
 ## Over-cap / possible hang
 
 | id | native ms | cap ms | native×budget | status |
 |---|---:|---:|---:|---|
-| `2646` | 109331 | 180000 | 327993 | re-run at 400000ms cap: still over-cap (native 109331ms terminates) — port runaway, >3.7x, not a proven infinite loop |
+| `2371` | 73639 | 180000 | 220917 | inconclusive (3×native=220917ms > cap — huge graph, may be within budget) |
+| `2646` | 97463 | 180000 | 292389 | inconclusive (3×native=292389ms > cap — huge graph, may be within budget) |
+| `2854` | 163559 | 180000 | 490677 | inconclusive (3×native=490677ms > cap — huge graph, may be within budget) |
 
 Raise `BENCH_CAP_MS` and re-run these ids to resolve an inconclusive status.
 
