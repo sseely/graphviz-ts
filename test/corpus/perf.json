@@ -1242,9 +1242,10 @@
       "path": "2620.dot",
       "verdict": "slow",
       "nativeMs": 374,
-      "portMs": 9290,
-      "ratio": 24.82,
-      "runs": 5
+      "portMs": 1969,
+      "ratio": 5.26,
+      "runs": 5,
+      "note": "ortho maze dict fix (eaf3283): 9290ms/24.82x -> 1969ms/5.26x, byte-identical"
     },
     {
       "id": "2621",

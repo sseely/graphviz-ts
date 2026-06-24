@@ -60,8 +60,10 @@ node test/corpus/bench.mjs             # warm pool of floor(cpus/2) workers
 node test/corpus/perf-dashboard.mjs    # render perf.json -> PERF.md
 ```
 
-Heavy graphs (native > 2s) are timed solo for clean numbers; light graphs run at
-full pool. A per-render cap (`BENCH_CAP_MS`, default 180s) SIGKILLs a true hang.
+Light graphs run at the full pool; heavy graphs (native > 2s) are timed serially
+by default for contention-free numbers (concurrent big renders inflate the single
+sample materially). Set `BENCH_HEAVY_POOL>1` for a faster, noisier scan. A
+per-render cap (`BENCH_CAP_MS`, default 180s) SIGKILLs a true hang.
 Env: `BENCH_POOL`, `BENCH_CAP_MS`, `BENCH_IDS`, `BENCH_LIMIT`, `BENCH_HEAVY_MS`,
 `BENCH_HEAVY_POOL`, `BENCH_BUDGET_MULT`.
 

@@ -14,8 +14,10 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
 - **Port:** the shipped bundle (`dist/index.js`) loaded once in a pool of
   resident, JIT-primed worker threads; pure `renderSvg()` is timed (best-of-N),
   so the measured region excludes all process/transpile/module-load startup —
-  the warm steady state a long-lived consumer sees. Heavy graphs (native > 2s)
-  are timed **solo** for clean numbers; light graphs run at full pool.
+  the warm steady state a long-lived consumer sees. Light graphs run at full pool;
+  heavy graphs (native > 2s) are timed serially by default — measured cross-talk
+  inflates a concurrent big render's single sample materially (≈66% on 2620). Set
+  `BENCH_HEAVY_POOL>1` for a faster, noisier scan.
 - **Native:** `dot -Tsvg` best-of-3 (min).
 - **Budget:** target ≤3× native. Per-render cap **180000ms**
   (SIGKILL → `over-cap`, i.e. a true synchronous hang).
@@ -26,7 +28,7 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
 
 - **Rated inputs:** 778 · **within ≤3× native:** 761 (97.8%)
 - **ok (≤3×):** 761 · **slow (>3×):** 17 · **over-cap (hang):** 1 · **errored:** 5 · **oracle-error:** 12
-- **ratio (port/native):** p50 0.01× · p90 0.15× · max 24.82×
+- **ratio (port/native):** p50 0.01× · p90 0.15× · max 11.71×
 
 ## Ratio distribution
 
@@ -36,18 +38,18 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
 | 1–2× | 10 |
 | 2–3× | 14 |
 | 3–4× | 8 |
-| 4–6× | 6 |
+| 4–6× | 7 |
 | 6–10× | 1 |
-| >10× | 2 |
+| >10× | 1 |
 | over-cap (≥180000ms, possible hang) | 1 |
 
 ## Over budget — slower than 3× native (worst first)
 
 | id | native ms | port ms (warm) | ratio |
 |---|---:|---:|---:|
-| `2620` | 374 | 9290 | 24.82× |
 | `1447_1` | 90 | 1053 | 11.71× |
 | `2782` | 934 | 8885 | 9.52× |
+| `2620` | 374 | 1969 | 5.26× |
 | `2108` | 14546 | 74166 | 5.1× |
 | `2471` | 3210 | 15439 | 4.81× |
 | `graphs-b103` | 1237 | 5764 | 4.66× |

@@ -101,8 +101,10 @@ Regenerate: \`npm run build:js && node test/corpus/bench.mjs && node test/corpus
 - **Port:** the shipped bundle (\`dist/index.js\`) loaded once in a pool of
   resident, JIT-primed worker threads; pure \`renderSvg()\` is timed (best-of-N),
   so the measured region excludes all process/transpile/module-load startup —
-  the warm steady state a long-lived consumer sees. Heavy graphs (native > 2s)
-  are timed **solo** for clean numbers; light graphs run at full pool.
+  the warm steady state a long-lived consumer sees. Light graphs run at full pool;
+  heavy graphs (native > 2s) are timed serially by default — measured cross-talk
+  inflates a concurrent big render's single sample materially (≈66% on 2620). Set
+  \`BENCH_HEAVY_POOL>1\` for a faster, noisier scan.
 - **Native:** \`dot -Tsvg\` best-of-3 (min).
 - **Budget:** target ≤${report.budgetMult}× native. Per-render cap **${report.capMs}ms**
   (SIGKILL → \`over-cap\`, i.e. a true synchronous hang).

@@ -47,8 +47,14 @@ const CAP_MS = Number(process.env.BENCH_CAP_MS ?? 180_000);
 const BUDGET_MULT = Number(process.env.BENCH_BUDGET_MULT ?? 3);
 const SLOW_MS = 30_000; // a render slower than this self-warms; time it once
 const REPEAT_BUDGET_MS = 60_000; // stop repeat timed runs once this is spent
-const HEAVY_MS = Number(process.env.BENCH_HEAVY_MS ?? 2_000); // native>this => measured solo
-const HEAVY_POOL = Number(process.env.BENCH_HEAVY_POOL ?? 1); // concurrency for heavy inputs
+const HEAVY_MS = Number(process.env.BENCH_HEAVY_MS ?? 2_000); // native>this => "heavy"
+// Heavy inputs are timed SERIALLY by default (HEAVY_POOL=1). Measured, not
+// assumed: running them concurrently inflated 2620's single sample ~66%
+// (1969ms→3268ms) via memory-bandwidth + scheduler cross-talk — enough to swing
+// the cited ratio (5.3x→9.1x). Light graphs (the bulk) still run at full pool, so
+// the wall-clock cost is only the few big graphs. Set BENCH_HEAVY_POOL>1 for a
+// fast rough scan, accepting noisier big-graph numbers.
+const HEAVY_POOL = Number(process.env.BENCH_HEAVY_POOL ?? 1);
 
 /** Decode a corpus input the way native dot does: strict UTF-8 else Latin-1. */
 function decode(buf) {
