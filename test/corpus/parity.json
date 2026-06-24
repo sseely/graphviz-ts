@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-24T15:11:02.840Z",
+  "generatedAt": "2026-06-24T17:30:54.388Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
     "byte-match": 334,
-    "structural-match": 252,
-    "diverged": 188,
+    "structural-match": 268,
+    "diverged": 172,
     "errored": 5,
     "timeout": 5,
     "oracle-error": 11
@@ -293,7 +293,7 @@
       "id": "167",
       "path": "167.dot",
       "verdict": "diverged",
-      "maxDelta": 37,
+      "maxDelta": 46,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -439,7 +439,7 @@
       "id": "2087",
       "path": "2087.dot",
       "verdict": "diverged",
-      "maxDelta": 51,
+      "maxDelta": 60,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -595,7 +595,7 @@
       "id": "2361",
       "path": "2361.dot",
       "verdict": "diverged",
-      "maxDelta": 115,
+      "maxDelta": 54,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -642,8 +642,8 @@
       "id": "2413_2",
       "path": "2413_2.dot",
       "verdict": "diverged",
-      "maxDelta": 2128.75,
-      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
+      "maxDelta": 243.15999999999985,
+      "firstDiffPath": "svg/g[1]/g[51]/path[1]/@d"
     },
     {
       "id": "241_0",
@@ -1057,8 +1057,8 @@
       "id": "graphs-NaN",
       "path": "graphs/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 1906.9900000000002,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "maxDelta": 679.3599999999997,
+      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
     },
     {
       "id": "graphs-NewCenturySchlbk",
@@ -1192,8 +1192,8 @@
       "id": "graphs-b124",
       "path": "graphs/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2813,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 2536.85,
+      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
     },
     {
       "id": "graphs-b135",
@@ -1224,7 +1224,7 @@
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
       "verdict": "diverged",
-      "maxDelta": 147,
+      "maxDelta": 60,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1559,9 +1559,8 @@
     {
       "id": "graphs-dpd",
       "path": "graphs/dpd.gv",
-      "verdict": "diverged",
-      "maxDelta": 1000.5799999999999,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.5699999999999363
     },
     {
       "id": "graphs-edgeclip",
@@ -2063,9 +2062,8 @@
     {
       "id": "graphs-ngk10_4",
       "path": "graphs/ngk10_4.gv",
-      "verdict": "diverged",
-      "maxDelta": 72,
-      "firstDiffPath": "svg/g[1]/g[16]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 14.099999999999909
     },
     {
       "id": "graphs-nhg",
@@ -2108,9 +2106,8 @@
     {
       "id": "graphs-overlap",
       "path": "graphs/overlap.gv",
-      "verdict": "diverged",
-      "maxDelta": 1000.5799999999999,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.5699999999999363
     },
     {
       "id": "graphs-p",
@@ -2245,8 +2242,8 @@
       "id": "graphs-rowe",
       "path": "graphs/rowe.gv",
       "verdict": "diverged",
-      "maxDelta": 672.07,
-      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
+      "maxDelta": 182,
+      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
       "id": "graphs-russian",
@@ -2569,9 +2566,8 @@
     {
       "id": "linux.i386-dfa",
       "path": "linux.i386/dfa.gv",
-      "verdict": "diverged",
-      "maxDelta": 35.25,
-      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 19.819999999999993
     },
     {
       "id": "linux.i386-hashtable",
@@ -2642,16 +2638,14 @@
     {
       "id": "linux.x86-neatosplines_neato",
       "path": "linux.x86/neatosplines_neato.gv",
-      "verdict": "diverged",
-      "maxDelta": 852.8,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.509999999999998
     },
     {
       "id": "linux.x86-neatosplines_neato1",
       "path": "linux.x86/neatosplines_neato1.gv",
-      "verdict": "diverged",
-      "maxDelta": 856.56,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.509999999999998
     },
     {
       "id": "linux.x86-nestedclust_dot",
@@ -2673,16 +2667,14 @@
     {
       "id": "linux.x86-overlap_neato",
       "path": "linux.x86/overlap_neato.gv",
-      "verdict": "diverged",
-      "maxDelta": 852.8,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.509999999999998
     },
     {
       "id": "linux.x86-overlap_neato1",
       "path": "linux.x86/overlap_neato1.gv",
-      "verdict": "diverged",
-      "maxDelta": 852.8,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.509999999999998
     },
     {
       "id": "linux.x86-pack_neato",
@@ -2887,16 +2879,14 @@
     {
       "id": "nshare-neatosplines_neato",
       "path": "nshare/neatosplines_neato.gv",
-      "verdict": "diverged",
-      "maxDelta": 1000.5799999999999,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.5699999999999363
     },
     {
       "id": "nshare-neatosplines_neato1",
       "path": "nshare/neatosplines_neato1.gv",
-      "verdict": "diverged",
-      "maxDelta": 1000.5799999999999,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.5699999999999363
     },
     {
       "id": "nshare-nestedclust_dot",
@@ -2918,16 +2908,14 @@
     {
       "id": "nshare-overlap_neato",
       "path": "nshare/overlap_neato.gv",
-      "verdict": "diverged",
-      "maxDelta": 1000.5799999999999,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.5699999999999363
     },
     {
       "id": "nshare-overlap_neato1",
       "path": "nshare/overlap_neato1.gv",
-      "verdict": "diverged",
-      "maxDelta": 852.8,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.509999999999998
     },
     {
       "id": "nshare-pack_neato",
@@ -3350,8 +3338,8 @@
       "id": "share-NaN",
       "path": "share/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 1906.9900000000002,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "maxDelta": 679.3599999999997,
+      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
     },
     {
       "id": "share-Petersen",
@@ -3404,8 +3392,8 @@
       "id": "share-b124",
       "path": "share/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2820,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 2545.87,
+      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
     },
     {
       "id": "share-b29",
@@ -3496,9 +3484,8 @@
     {
       "id": "share-dfa",
       "path": "share/dfa.gv",
-      "verdict": "diverged",
-      "maxDelta": 35.25,
-      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 19.819999999999993
     },
     {
       "id": "share-fig6",
@@ -3840,9 +3827,8 @@
     {
       "id": "share-ngk10_4",
       "path": "share/ngk10_4.gv",
-      "verdict": "diverged",
-      "maxDelta": 72,
-      "firstDiffPath": "svg/g[1]/g[16]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 14.099999999999909
     },
     {
       "id": "share-nhg",
@@ -3901,8 +3887,8 @@
       "id": "share-rowe",
       "path": "share/rowe.gv",
       "verdict": "diverged",
-      "maxDelta": 672.07,
-      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
+      "maxDelta": 182,
+      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
       "id": "share-shells",
@@ -4017,8 +4003,8 @@
       "id": "windows-NaN",
       "path": "windows/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 1906.9900000000002,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "maxDelta": 679.3599999999997,
+      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
     },
     {
       "id": "windows-Petersen",
@@ -4056,8 +4042,8 @@
       "id": "windows-b124",
       "path": "windows/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 3216,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "maxDelta": 2541.85,
+      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
     },
     {
       "id": "windows-b29",
@@ -4137,9 +4123,8 @@
     {
       "id": "windows-dfa",
       "path": "windows/dfa.gv",
-      "verdict": "diverged",
-      "maxDelta": 35.25,
-      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 19.819999999999993
     },
     {
       "id": "windows-fig6",
@@ -4476,9 +4461,8 @@
     {
       "id": "windows-ngk10_4",
       "path": "windows/ngk10_4.gv",
-      "verdict": "diverged",
-      "maxDelta": 72,
-      "firstDiffPath": "svg/g[1]/g[16]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 14.099999999999909
     },
     {
       "id": "windows-nhg",
@@ -4544,8 +4528,8 @@
       "id": "windows-rowe",
       "path": "windows/rowe.gv",
       "verdict": "diverged",
-      "maxDelta": 672.07,
-      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
+      "maxDelta": 182,
+      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
     },
     {
       "id": "windows-shells",

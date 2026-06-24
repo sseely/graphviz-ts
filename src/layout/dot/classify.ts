@@ -344,12 +344,6 @@ function handleMultiEdge(g: Graph, e: Edge, prev: Edge | undefined): boolean {
 // class2 back-edge handler
 // ---------------------------------------------------------------------------
 
-function outEdges(n: Node): Edge[] {
-  const out = n.info.out;
-  if (!out) return [];
-  return out.list.slice(0, out.size);
-}
-
 function oppEdgeConcOrMerge(g: Graph, e: Edge, opp: Edge): boolean {
   if (e.info.label !== undefined || opp.info.label !== undefined) return false;
   if (!portsEq(e, opp)) return false;
@@ -370,8 +364,15 @@ function tryOppEdge(g: Graph, e: Edge, opp: Edge): boolean {
   return oppEdgeConcOrMerge(g, e, opp);
 }
 
+/**
+ * Back edge: find the opposite forward edge and merge into it, else make a new
+ * chain. The opposite is sought among the head's **original** out-edges
+ * (`agfstout`), NOT the fast graph — a fast edge has no `to_virt`, so iterating
+ * `ND_out` would re-trip `tryOppEdge`'s `makeChain` guard and duplicate the edge
+ * for a 2-cycle. @see lib/dotgen/class2.c:259 (backward-edge block)
+ */
 function handleBackEdge(g: Graph, e: Edge): Edge | undefined {
-  for (const opp of outEdges(e.head)) {
+  for (const opp of e.head.outEdges(g)) {
     if (tryOppEdge(g, e, opp)) return undefined;
   }
   makeChain(g, e.head, e.tail, e);
