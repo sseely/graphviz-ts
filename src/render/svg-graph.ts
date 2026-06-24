@@ -322,7 +322,17 @@ export function svgBeginPage(g: Graph, job: RenderJob): void {
     tx, ty, job,
   );
   emitGraphTitle(g, job);
-  emitBgcolorBackground(g, bb, g.attrs.get('bgcolor'), job);
+}
+
+/**
+ * Emit the page background polygon. Split out of svg_begin_page so the
+ * device-layer page loop can wrap the background (and the graph label) in the
+ * graph's `<a>` anchor, matching C where emit_background is separate from
+ * gvrender_begin_page.
+ * @see lib/common/emit.c:emit_page (emit_background after begin_page)
+ */
+export function svgPageBackground(g: Graph, job: RenderJob): void {
+  emitBgcolorBackground(g, job.bb, g.attrs.get('bgcolor'), job);
 }
 
 /** Close the graph `<g>` group. @see svg_end_page */

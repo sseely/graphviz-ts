@@ -23,11 +23,13 @@ import type { Point, Box } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { RendererPlugin, LabelType } from '../gvc/context.js';
 import type { RenderJob } from '../gvc/job.js';
-import { renderEdgeLabels } from '../gvc/device.js';
+import { renderEdgeLabels } from '../gvc/edge-labels.js';
+import { beginAnchorIf } from '../gvc/anchor.js';
 import {
   svgBeginGraph,
   svgEndGraph,
   svgBeginPage,
+  svgPageBackground,
   svgEndPage,
   svgBeginLayer,
   svgEndLayer,
@@ -84,6 +86,8 @@ export class SvgRenderer implements RendererPlugin {
   beginGraph(g: Graph, job: RenderJob): void { svgBeginGraph(g, job); }
   endGraph(_g: Graph, job: RenderJob): void { svgEndGraph(job); }
   beginPage(g: Graph, job: RenderJob): void { svgBeginPage(g, job); }
+
+  pageBackground(g: Graph, job: RenderJob): void { svgPageBackground(g, job); }
   endPage(_g: Graph, job: RenderJob): void { svgEndPage(job); }
   beginLayer(name: string, job: RenderJob): void { svgBeginLayer(name, job); }
   endLayer(job: RenderJob): void { svgEndLayer(job); }
@@ -104,6 +108,10 @@ export class SvgRenderer implements RendererPlugin {
    * @see lib/common/emit.c:2442-2528 (else if numc parallel-bezier branch)
    */
   endEdge(e: Edge, job: RenderJob): void {
+    // Whole-edge anchor wraps the spline + arrows only; it closes before the
+    // labels, which carry their own sub-anchors (siblings, not nested).
+    // @see lib/common/emit.c:2877 (begin) / emit_end_edge:2970 (end)
+    const anchored = beginAnchorIf(this, job);
     const colorAttr = e.attrs.get('color') ?? '';
     const numc = (colorAttr.match(/:/g) ?? []).length;
     const numsemi = (colorAttr.match(/;/g) ?? []).length;
@@ -123,6 +131,7 @@ export class SvgRenderer implements RendererPlugin {
       svgEdgePath(e, job);
       svgArrowPolygons(e, job);
     }
+    if (anchored) this.endAnchor(job);
     // Edge labels go inside the group, after path + arrows.
     // @see lib/common/emit.c:emit_end_edge (3010-3025)
     renderEdgeLabels(e, this, job);

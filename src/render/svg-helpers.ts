@@ -159,7 +159,7 @@ export function textAnchor(just: 'l' | 'n' | 'r'): string {
 export {
   emitSvgTag, emitGraphGroupOpen, emitGraphTitle,
   emitGraphBackground, svgBeginGraph, svgEndGraph,
-  svgBeginPage, svgEndPage, svgBeginLayer, svgEndLayer,
+  svgBeginPage, svgPageBackground, svgEndPage, svgBeginLayer, svgEndLayer,
 } from './svg-graph.js';
 
 // ---------------------------------------------------------------------------

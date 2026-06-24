@@ -19,6 +19,7 @@ import { buildOutEdgeIndex } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import { gvrenderTextspan } from './textspan-emit.js';
+import { resolveEdgeAnchor, resolveObjAnchor, beginAnchorIf } from './anchor.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import {
@@ -172,6 +173,9 @@ export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): v
   try {
     // @see lib/common/emit.c:emit_begin_edge / getObjId
     setHtmlAnchorObj(svgEdgeId(e, job), labelTextOf(e.info.label));
+    // Resolve edge url/tooltip/target/id into obj for the whole-edge anchor
+    // (svg endEdge) and the per-label sub-anchors (renderEdgeLabels).
+    resolveEdgeAnchor(e, svgEdgeId(e, job), obj);
     // Activate the edge's colorscheme around the whole emission so label
     // textspans resolve numeric color indices (e.g. fontcolor=2) against it,
     // mirroring C's setColorScheme window in emit_edge.
@@ -238,18 +242,6 @@ export function renderOneLabel(
     gvrenderTextspan(renderer, { x: labelSpanX(lp, span.just), y }, span, job);
     y -= span.size.y; // UL position for next span (unconditional)
   }
-}
-
-/**
- * Emit all four edge label slots in C order: label, xlabel, head, tail.
- * Must run inside the edge group, after the path and arrow polygons.
- * @see lib/common/emit.c:emit_end_edge (3010-3025)
- */
-export function renderEdgeLabels(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
-  renderOneLabel(e.info.label as TextlabelT | undefined, renderer, job);
-  renderOneLabel(e.info.xlabel as TextlabelT | undefined, renderer, job);
-  renderOneLabel(e.info.head_label, renderer, job);
-  renderOneLabel(e.info.tail_label, renderer, job);
 }
 
 /**
@@ -350,15 +342,22 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     // @see lib/common/emit.c:209 getObjId (AGRAPH/cluster: pfx="clust")
     renderer.beginCluster?.(sg, job);
     if (job.obj !== null) job.obj.id = svgClusterId(sg, job);
+    // @see lib/common/emit.c:emit_begin_cluster / getObjId
+    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label));
+    // Resolve and open the cluster anchor around the box + label (closed before
+    // the cluster's child nodes — sibling of them). @see emit.c:3803.
+    if (job.obj !== null) {
+      resolveObjAnchor(sg, labelTextOf(sg.info.label), svgClusterId(sg, job), job.obj);
+    }
+    const anchored = beginAnchorIf(renderer, job);
     // C draws the boundary box only when peripheries != 0, or (peripheries == 0
     // and the cluster is filled). peripheries=0 + unfilled emits nothing.
     // @see lib/common/emit.c:3907-3917
     if (clusterPeripheries(sg) !== 0 || filled) {
       renderClusterBox(sg, filled, renderer, job);
     }
-    // @see lib/common/emit.c:emit_begin_cluster / getObjId
-    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label));
     renderClusterLabel(sg, renderer, job);
+    if (anchored) renderer.endAnchor?.(job);
     renderer.endCluster?.(sg, job);
   } finally {
     // pop_obj_state in emit_end_cluster (line 3774), before sub-cluster recursion
@@ -421,11 +420,20 @@ export function renderGraph(g: Graph, job: RenderJob, renderer: RendererPlugin):
   return job.output.join('');
 }
 
-/** One page (per layer): graph group, label, clusters, nodes/edges. */
+/** One page (per layer): graph group, background+label (in the graph anchor),
+ * clusters, nodes/edges. The graph anchor wraps emit_background + the graph
+ * label, closing before emit_view (clusters/nodes) — siblings.
+ * @see lib/common/emit.c:emit_page (3651-3660) */
 function renderPage(g: Graph, renderer: RendererPlugin, job: RenderJob, info: LayerInfo): void {
   renderer.beginPage?.(g, job);
+  if (job.obj !== null) {
+    resolveObjAnchor(g, labelTextOf(g.info.label), svgGraphId(g, job), job.obj);
+  }
+  const anchored = beginAnchorIf(renderer, job);
+  renderer.pageBackground?.(g, job);
   // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page
   renderGraphLabel(g, renderer, job);
+  if (anchored) renderer.endAnchor?.(job);
   renderClusters(g, renderer, job);
   walkNodesAndEdges(g, renderer, job, info);
   renderer.endPage?.(g, job);

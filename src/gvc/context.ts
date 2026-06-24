@@ -66,6 +66,9 @@ export interface RendererPlugin {
   /** Per-page content (graph group + background); split from beginGraph so it
    * can be re-emitted per layer. @see svg_begin_page */
   beginPage?(g: Graph, job: RenderJob): void;
+  /** Page background polygon; split from beginPage so the page loop can wrap
+   * it (and the graph label) in the graph anchor. @see emit_page */
+  pageBackground?(g: Graph, job: RenderJob): void;
   endPage?(g: Graph, job: RenderJob): void;
   beginNode(n: Node, job: RenderJob): void;
   endNode(n: Node, job: RenderJob): void;
