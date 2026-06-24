@@ -1006,7 +1006,8 @@
     "id": "2782",
     "path": "2782.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "malformed"
   },
   {
     "id": "2796",

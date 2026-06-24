@@ -68,6 +68,12 @@ Allowed quarantine reasons:
 - `parse-unsupported` — input the peggy parser legitimately cannot accept
   (record the message; candidate for a parser-gap backlog entry, not a silent
   drop).
+- `malformed` — input that parses AND renders, but whose reference geometry is
+  degenerate, so parity comparison carries no spec signal (e.g. fuzzer input
+  where native dot itself emits HTML parse errors and a multi-million-pt canvas
+  from a nonsense attribute). Force-quarantined per-file via `MANUAL_QUARANTINE`
+  in `enumerate.ts` after a recorded human triage decision — never an automated
+  structural heuristic, since the input is structurally a valid DOT graph.
 
 ## Rollback classification
 

@@ -33,7 +33,8 @@ export type QuarantineReason =
   | 'include'
   | 'non-graph'
   | 'raster-only-ref'
-  | 'parse-unsupported';
+  | 'parse-unsupported'
+  | 'malformed';
 
 /** Non-dot engines: an explicit `layout=` to one of these defers the input. */
 const FORCE_ENGINES = ['neato', 'fdp', 'sfdp', 'circo', 'twopi', 'osage', 'patchwork'];
@@ -142,6 +143,23 @@ function slug(relPath: string): string {
   return relPath.replace(/\.(gv|dot)$/i, '').replace(/[/\\]/g, '-');
 }
 
+/**
+ * Manually-triaged quarantines, keyed by corpus-relative path. These inputs
+ * pass structural classification AND parse + render, so `classify()` (cheap
+ * structural scan only) cannot catch them — they are force-quarantined here
+ * after a human triage decision recorded in
+ * plans/mission-dot-corpus-harness/decision-journal.md.
+ *
+ * - `2782.dot` — `malformed`: fuzzer input. Native dot itself emits HTML parse
+ *   errors on its broken labels and produces a degenerate ~106302 × 10495018 pt
+ *   canvas from a nonsense `minlen=283647`; the survey reports maxDelta 5572860,
+ *   a single offset element at that astronomical scale. Sub-pixel parity is
+ *   meaningless, so it is left as poorly-formed rather than chased.
+ */
+const MANUAL_QUARANTINE: Record<string, QuarantineReason> = {
+  '2782.dot': 'malformed',
+};
+
 /** Build the manifest from the corpus root, ensuring unique ids. */
 export function buildManifest(root: string): CorpusEntry[] {
   const files = walk(root).sort();
@@ -153,7 +171,10 @@ export function buildManifest(root: string): CorpusEntry[] {
     const n = seen.get(id) ?? 0;
     seen.set(id, n + 1);
     if (n > 0) id = `${id}-${n}`;
-    const { status, reason } = classify(readFileSync(full, 'utf8'));
+    const manual = MANUAL_QUARANTINE[relPath];
+    const { status, reason } = manual
+      ? { status: 'quarantined' as const, reason: manual }
+      : classify(readFileSync(full, 'utf8'));
     entries.push({ id, path: relPath, engine: 'dot', status, ...(reason ? { reason } : {}) });
   }
   return entries;
