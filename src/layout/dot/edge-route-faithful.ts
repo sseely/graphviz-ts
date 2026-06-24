@@ -87,33 +87,84 @@ function isLabeledVirtual(n: Node): boolean {
   return nodeType(n) === VIRTUAL && n.info.label != null;
 }
 
+/** Tail/head clusters behind node n: its own cluster when NORMAL, else the
+ *  original edge's endpoint clusters. @see cl_bound (dotsplines.c:2135-2140) */
+function endpointClusters(n: Node): [Graph | undefined, Graph | undefined] {
+  if (nodeType(n) === NORMAL) return [n.info.clust, n.info.clust];
+  const orig = n.info.out?.list[0]?.info.to_orig;
+  return [orig?.tail.info.clust, orig?.head.info.clust];
+}
+
+/** A real (non-root) cluster that is neither endpoint's cluster. C's
+ *  `cl && cl != tcl && cl != hcl`. */
+function interferes(cl: Graph | undefined, tcl: Graph | undefined, hcl: Graph | undefined): cl is Graph {
+  return cl !== undefined && cl !== tcl && cl !== hcl;
+}
+
+/** True if virtual node n's coord lies inside cluster cl's bbox.
+ *  @see lib/dotgen/dotsplines.c:cl_vninside */
+function clVninside(cl: Graph, n: Node): boolean {
+  const bb = cl.info.bb;
+  if (bb === undefined) return false;
+  const c = n.info.coord;
+  return bb.ll.x <= c.x && c.x <= bb.ur.x && bb.ll.y <= c.y && c.y <= bb.ur.y;
+}
+
+/** The cluster of a virtual adj node that interferes with n, if its coord lies
+ *  inside it. @see cl_bound (dotsplines.c:2141-2153) */
+function virtualAdjCluster(adj: Node, tcl: Graph | undefined, hcl: Graph | undefined): Graph | undefined {
+  const orig = adj.info.out?.list[0]?.info.to_orig;
+  if (orig === undefined) return undefined;
+  const tc = orig.tail.info.clust;
+  if (interferes(tc, tcl, hcl) && clVninside(tc, adj)) return tc;
+  const hc = orig.head.info.clust;
+  if (interferes(hc, tcl, hcl) && clVninside(hc, adj)) return hc;
+  return undefined;
+}
+
+/**
+ * Return the cluster of `adj` that interferes with the routing of `n`, or
+ * undefined. A box adjacent to a node in a different cluster is clamped to that
+ * cluster's boundary so the spline routes around it.
+ * @see lib/dotgen/dotsplines.c:cl_bound (2129)
+ */
+function clBound(n: Node, adj: Node): Graph | undefined {
+  const [tcl, hcl] = endpointClusters(n);
+  if (nodeType(adj) === NORMAL) {
+    const cl = adj.info.clust;
+    return interferes(cl, tcl, hcl) ? cl : undefined;
+  }
+  return virtualAdjCluster(adj, tcl, hcl);
+}
+
 /** Left x-extent of the maximal bbox. @see lib/dotgen/dotsplines.c:maximal_bbox */
 function bboxLeftX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | undefined): number {
-  let b = vn.info.coord.x - vn.info.lw - MBB_FUDGE;
+  const b = vn.info.coord.x - vn.info.lw - MBB_FUDGE;
   const left = neighbor(ctx.g, vn, ie, oe, -1);
   if (!left) return Math.min(Math.round(b), ctx.sp.leftBound);
-  let nb = left.info.coord.x + (left.info.mval ?? 0);
-  nb += nodeType(left) === NORMAL ? (ctx.g.info.nodesep ?? 18) / 2 : ctx.sp.splinesep;
-  if (nb < b) b = nb;
-  return Math.round(b);
+  // A left neighbor in another cluster clamps us to that cluster's right edge.
+  const clBb = clBound(vn, left)?.info.bb;
+  const nb = clBb !== undefined
+    ? clBb.ur.x + ctx.sp.splinesep
+    : left.info.coord.x + (left.info.mval ?? 0)
+      + (nodeType(left) === NORMAL ? (ctx.g.info.nodesep ?? 18) / 2 : ctx.sp.splinesep);
+  return Math.round(Math.min(nb, b));
 }
 
 /** Right x-extent of the maximal bbox. @see lib/dotgen/dotsplines.c:maximal_bbox */
 function bboxRightX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | undefined): number {
-  let b = isLabeledVirtual(vn)
+  const b = isLabeledVirtual(vn)
     ? vn.info.coord.x + 10
     : vn.info.coord.x + vn.info.rw + MBB_FUDGE;
   const right = neighbor(ctx.g, vn, ie, oe, 1);
-  let urx: number;
-  if (right) {
-    let nb = right.info.coord.x - right.info.lw;
-    nb -= nodeType(right) === NORMAL ? (ctx.g.info.nodesep ?? 18) / 2 : ctx.sp.splinesep;
-    if (nb > b) b = nb;
-    urx = Math.round(b);
-  } else {
-    urx = Math.max(Math.round(b), ctx.sp.rightBound);
-  }
-  return urx;
+  if (!right) return Math.max(Math.round(b), ctx.sp.rightBound);
+  // A right neighbor in another cluster clamps us to that cluster's left edge.
+  const clBb = clBound(vn, right)?.info.bb;
+  const nb = clBb !== undefined
+    ? clBb.ll.x - ctx.sp.splinesep
+    : right.info.coord.x - right.info.lw
+      - (nodeType(right) === NORMAL ? (ctx.g.info.nodesep ?? 18) / 2 : ctx.sp.splinesep);
+  return Math.round(Math.max(nb, b));
 }
 
 /**
