@@ -54,3 +54,30 @@ with options (see README "Outcome").
 
 All C and TS instrumentation reverted; C rebuilt clean; working tree pristine
 (HEAD `232e252`).
+
+## 2026-06-24 — Session end: characterized + merged (per human decision)
+
+Human chose "characterize + merge compress." Tasks completed vs planned:
+- **T1** done — compress cherry-picked, gates green.
+- **T2** done — root cause pinned (out of scope: accepted A2 font metrics).
+- **T3** N/A — no in-scope fix exists (premise disproven by T2).
+- **T4** — stated goal (NaN -> structural-match) not reached, and proven
+  unreachable in scope; instead NaN characterized as an A2 instance.
+
+Outcome:
+- NaN family characterized in `docs/known-divergences.md` A2 + comparison page
+  `plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.md`.
+- `ratio=compress` activation merged to `main` on its own merits — faithful,
+  **0 verdict regressions** (fresh main-vs-branch full-corpus survey: per-id
+  diff = 0 changes; counts identical 337/265/172/5/5/11). Compress corrects
+  geometry: NaN-family maxDelta **679 -> 21**, 1447_1 **3896 -> 3624**.
+- Quality gates on merged main: typecheck exit 0; `npm test` 2384/2384 pass.
+- Merge commit `de72ce1` (compress `232e252` + characterization `2a34a37`).
+- Per-user additions (outside original write-set, explicitly requested mid-
+  mission): removed `plans/` from `.gitignore` and committed the 146 previously-
+  untracked mission files (`0521ae4`) plus a CLAUDE.md "Overrides" note, to keep
+  plans/ as the archaeological record.
+
+Known issue / follow-up: NaN remains `diverged` (the A2 font-metric x-shift tips
+a spline segment count). The only path to structural-match is the separately-
+scoped font-metric fidelity effort noted in `known-divergences.md` A2.
