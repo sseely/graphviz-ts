@@ -153,6 +153,58 @@ describe('dotGraphInit: nodesep/ranksep attribute parsing', () => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// AC2c: dotGraphInit populates drawing for ratio=compress only (input.c:576,694)
+// ---------------------------------------------------------------------------
+
+describe('dotGraphInit: ratio=compress → g.info.drawing', () => {
+  it('ratio=compress + size="16,10" → drawing with size in points', () => {
+    const g = makeGraph('rc');
+    g.attrs.set('ratio', 'compress');
+    g.attrs.set('size', '16,10');
+    dotGraphInit(g);
+    expect(g.info.drawing?.ratioKind).toBe('compress');
+    expect(g.info.drawing?.size).toEqual({ x: 1152, y: 720 }); // POINTS(16),POINTS(10)
+  });
+
+  it('ratio=compress, square size="5" → square points', () => {
+    const g = makeGraph('rcsq');
+    g.attrs.set('ratio', 'compress');
+    g.attrs.set('size', '5');
+    dotGraphInit(g);
+    expect(g.info.drawing?.size).toEqual({ x: 360, y: 360 });
+  });
+
+  it('ratio=fill → drawing stays undefined (deferred, ADR-1)', () => {
+    const g = makeGraph('rf');
+    g.attrs.set('ratio', 'fill');
+    g.attrs.set('size', '16,10');
+    dotGraphInit(g);
+    expect(g.info.drawing).toBeUndefined();
+  });
+
+  it('ratio=auto → drawing stays undefined (no-op by omission)', () => {
+    const g = makeGraph('ra');
+    g.attrs.set('ratio', 'auto');
+    dotGraphInit(g);
+    expect(g.info.drawing).toBeUndefined();
+  });
+
+  it('no ratio attr → drawing stays undefined', () => {
+    const g = makeGraph('nr');
+    dotGraphInit(g);
+    expect(g.info.drawing).toBeUndefined();
+  });
+
+  it('ratio=compress with no size → drawing.size is {0,0} (compress no-ops)', () => {
+    const g = makeGraph('rcns');
+    g.attrs.set('ratio', 'compress');
+    dotGraphInit(g);
+    expect(g.info.drawing?.ratioKind).toBe('compress');
+    expect(g.info.drawing?.size).toEqual({ x: 0, y: 0 });
+  });
+});
+
 describe('dotInitNode: node geometry and edge list defaults', () => {
   it('initialises UF_size, edge lists, geometry, and node_type', () => {
     const g = makeGraph('ninfo');

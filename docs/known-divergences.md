@@ -65,7 +65,26 @@ target runtimes, so a byte bar would be untestable rather than merely expensive.
 **Affected:** Graphs with **wide text labels** whose measured width happens to
 tip an integer-rounding boundary inside layout. Most labels are unaffected;
 short labels and many long ones still match exactly. Observed examples:
-`proc3d`, `b69` (label-heavy graphs that stay at *structural-match*).
+`proc3d`, `b69` (label-heavy graphs that stay at *structural-match*); `NaN`
+(`graphs-NaN` / `share-NaN` / `windows-NaN`, see below — the one case where the
+shift tips a verdict to *diverged*).
+
+**`NaN` under `ratio=compress` — same cause, amplified to `diverged`.** The
+`NaN.gv` family (`orientation=landscape; ratio=compress; size="16,10"`) is an A2
+case whose verdict lands at *diverged* rather than *structural-match*. The
+compress x-network-simplex path is faithful — every constraint input matches C
+(width-constraint value, `containNodes` minlens, aux-edge counts 471/wt 1612,
+`lrBalance`, and rank orders all identical) *except* the half-widths of 9 nodes,
+which the measurer reports 0.5–1.03 pt wider than C. `ratio=compress`'s
+weight-1000 packing makes the normally-slack left-to-right separation
+constraints **binding**, so that sub-pixel width error — invisible without
+compress — surfaces as a −3..−5 pt interior x-shift. That shift tips the
+`Target<->TThread` straight spline 0.55 pt past a node-box wall, so the router
+bends it into an extra bezier piece (7 pts vs C's 4) — a *structural* delta,
+hence *diverged*. Forcing the 9 widths to C's values reproduces C exactly
+(node-x 53/76→0/76 off; spline 7→4 pts), confirming the residual is 100%
+upstream font metrics, not the compress or spline code. Full evidence:
+`plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.md`.
 
 **Characterization.** Native Graphviz measures text with FreeType/libgd glyph
 advances. The port uses its own font-metric model (it cannot bundle a font

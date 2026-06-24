@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T18:42:47.416Z",
+  "generatedAt": "2026-06-24T20:10:24.642Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -146,8 +146,8 @@
       "id": "1447_1",
       "path": "1447_1.dot",
       "verdict": "diverged",
-      "maxDelta": 3896.0000000000005,
-      "firstDiffPath": "svg/g[1]/g[27]/path[1]/@d"
+      "maxDelta": 3624.38,
+      "firstDiffPath": "svg/g[1]/g[23]/path[1]/@d"
     },
     {
       "id": "144_no_ortho",
@@ -1057,8 +1057,8 @@
       "id": "graphs-NaN",
       "path": "graphs/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 679.3599999999997,
-      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
+      "maxDelta": 21,
+      "firstDiffPath": "svg/g[1]/g[40]/path[1]/@d"
     },
     {
       "id": "graphs-NewCenturySchlbk",
@@ -3337,8 +3337,8 @@
       "id": "share-NaN",
       "path": "share/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 679.3599999999997,
-      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
+      "maxDelta": 21,
+      "firstDiffPath": "svg/g[1]/g[40]/path[1]/@d"
     },
     {
       "id": "share-Petersen",
@@ -4001,8 +4001,8 @@
       "id": "windows-NaN",
       "path": "windows/NaN.gv",
       "verdict": "diverged",
-      "maxDelta": 679.3599999999997,
-      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
+      "maxDelta": 21,
+      "firstDiffPath": "svg/g[1]/g[40]/path[1]/@d"
     },
     {
       "id": "windows-Petersen",

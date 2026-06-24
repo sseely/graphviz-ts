@@ -38,8 +38,8 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-b104` | 10252.30 | `svg/g[1]/g[21]/path[1]/@d` |
 | `2620` | 8005.85 | `svg/g[1]/g[25]/path[1]/@d` |
 | `2239` | 7620.15 | `svg/g[1]/g[2][childCount]` |
-| `1447_1` | 3896.00 | `svg/g[1]/g[27]/path[1]/@d` |
 | `1718` | 3725.90 | `svg/g[1]/g[47]/path[1]/@d` |
+| `1447_1` | 3624.38 | `svg/g[1]/g[23]/path[1]/@d` |
 | `graphs-b103` | 3570.20 | `svg/g[1]/g[70]/path[1]/@d` |
 | `linux.i386-b106` | 3407.27 | `svg/g[1]/g[10]/path[1]/@d` |
 | `share-b106` | 3407.27 | `svg/g[1]/g[10]/path[1]/@d` |
@@ -70,9 +70,6 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `share-jsort` | 737.20 | `svg/g[1]/g[13]/path[1]/@d` |
 | `windows-jsort` | 737.20 | `svg/g[1]/g[13]/path[1]/@d` |
 | `graphs-trapeziumlr` | 694.03 | `svg/g[1]/g[33]/path[1]/@d` |
-| `graphs-NaN` | 679.36 | `svg/g[1]/g[30]/path[1]/@d` |
-| `share-NaN` | 679.36 | `svg/g[1]/g[30]/path[1]/@d` |
-| `windows-NaN` | 679.36 | `svg/g[1]/g[30]/path[1]/@d` |
 | `graphs-big` | 650.92 | `svg/g[1]/g[5]/path[1]/@d` |
 | `graphs-b57` | 605.78 | `svg/g[1]/g[39]/path[1]/@d` |
 | `2592` | 585.00 | `svg/g[1]/g[4]/@id` |
@@ -90,6 +87,9 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `share-shells` | 392.08 | `svg/g[1]/g[23]/path[1]/@d` |
 | `windows-shells` | 390.04 | `svg/g[1]/g[23]/path[1]/@d` |
 | `2669` | 378.00 | `svg/g[1]/g[74]/path[1]/@d` |
+| `graphs-shells` | 374.88 | `svg/g[1]/g[36]/path[1]/@d` |
+| `1939` | 348.00 | `svg/g[1]/g[8]/path[1]/@d` |
+| `2183` | 324.00 | `svg/g[1]/g[10]/path[1]/@d` |
 
 _… and 112 more diverged inputs (see parity.json + the buckets below)._
 
