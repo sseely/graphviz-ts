@@ -44,7 +44,8 @@ const CACHE = process.env.ORACLE_CACHE ?? join(tmpdir(), 'dot-corpus-oracle', OR
 // merely slow-but-valid (e.g. 2108 ~70s, native ~12s); only a true runaway past
 // 3× native or 3 minutes — whichever is greater — counts.
 const TIMEOUT_MULT = Number(process.env.RENDER_TIMEOUT_MULT ?? 3);
-const TIMEOUT_FLOOR_MS = Number(process.env.RENDER_TIMEOUT_FLOOR_MS ?? 180_000);
+// TIMEOUT_FLOOR_MS is derived from the canonical native times below (5x the
+// slowest native render) so it scales with the host instead of a fixed 180s.
 // The oracle gets a generous fixed cap so slow-but-valid native renders finish
 // (they yield the reference SVG *and* the native time the budget is based on).
 const ORACLE_TIMEOUT_MS = Number(process.env.ORACLE_TIMEOUT_MS ?? 300_000);
@@ -63,6 +64,33 @@ const CANON_NATIVE: Record<string, number> = (() => {
   try { return JSON.parse(readFileSync(NATIVE_TIMINGS, 'utf8')).timings ?? {}; }
   catch { return {}; }
 })();
+/**
+ * A render is a `timeout` only if it does not error and runs past its budget:
+ * `max(MULT x native, FLOOR)`. The FLOOR is derived as 5x the slowest canonical
+ * native render so it scales with the host (native-timings.json is frozen
+ * per-hardware). This keeps a slow-but-valid port render from falsely timing out
+ * under concurrency — e.g. the mincross-heavy 2108 is ~7x its native time and,
+ * with 8-way CPU contention, can run several hundred seconds though native is
+ * only ~13s — while a true runaway is still bounded. Env override wins; falls
+ * back to 180s only when no native timings are available.
+ */
+const MAX_NATIVE_MS = Math.max(0, ...Object.values(CANON_NATIVE));
+const TIMEOUT_FLOOR_MS = Number(
+  process.env.RENDER_TIMEOUT_FLOOR_MS ?? (Math.ceil(5 * MAX_NATIVE_MS) || 180_000),
+);
+/** Recorded warm port render times (id -> ms) from the perf bench, used only to
+ *  pre-filter slow graphs out of a fast validation run (SURVEY_MAX_PORT_MS). */
+const PORT_TIMES: Record<string, number> = (() => {
+  try {
+    const rows = JSON.parse(readFileSync(new URL('./perf.json', import.meta.url), 'utf8')).results ?? [];
+    return Object.fromEntries(rows.map((r: { id: string; portMs?: number }) => [r.id, r.portMs ?? 0]));
+  } catch { return {}; }
+})();
+/** Fast "did we break anything?" mode: when set, exclude graphs whose recorded
+ *  warm port render exceeds this many ms (e.g. 60000), so a routine run skips the
+ *  slow/timeout tail and focuses on divergences that complete in reasonable time.
+ *  Graphs with no recorded port time are kept (assumed fast). 0 = no filter. */
+const MAX_PORT_MS = Number(process.env.SURVEY_MAX_PORT_MS ?? 0);
 /** Extracts a semantic version from `dot -V` output. */
 const VERSION_RE = /version (\d+\.\d+\.\d+)/;
 
@@ -311,11 +339,18 @@ async function main(): Promise<void> {
   let applicable = manifest.filter((e) => e.status === 'applicable');
   const limit = Number(process.env.SURVEY_LIMIT ?? 0);
   if (limit > 0) applicable = applicable.slice(0, limit);
+  let skippedSlow = 0;
+  if (MAX_PORT_MS > 0) {
+    const before = applicable.length;
+    applicable = applicable.filter((e) => !(PORT_TIMES[e.id] > MAX_PORT_MS));
+    skippedSlow = before - applicable.length;
+  }
   mkdirSync(CACHE, { recursive: true });
   const tsx = resolveTsx();
   process.stderr.write(
     `surveying ${applicable.length} applicable inputs ` +
       `(concurrency ${CONCURRENCY}, budget max(${TIMEOUT_MULT}x native, ${TIMEOUT_FLOOR_MS}ms))\n` +
+      (MAX_PORT_MS > 0 ? `fast mode: excluded ${skippedSlow} graphs with port time > ${MAX_PORT_MS}ms\n` : '') +
       `oracle ${DOT_BIN} (cap ${ORACLE_TIMEOUT_MS}ms)\ncache ${CACHE}\nport via ${tsx.cmd}\n`,
   );
   const results = await runPool(applicable, tsx, CONCURRENCY);

@@ -1308,5 +1308,21 @@
     "input": "test/golden/inputs/concentrate-167.dot",
     "reference": "test/golden/refs/concentrate-167.svg",
     "description": "concentrate=true with a multi-edge fan and a back edge b->a; the surviving concentrated edge carries conc_opp_flag and draws both arrowheads (second confirming case for the conc_opp_flag branch)"
+  },
+  {
+    "id": "parallel-multirank-min",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/parallel-multirank-min.gv",
+    "reference": "test/golden/refs/parallel-multirank-min.svg",
+    "description": "minimal repro for the T1.2 representative-resolution fix: 3 parallel edges a->b spanning 2 ranks (a->m->b forces b to rank 2). Pre-fix the group's shared base routed the first virtual segment (a->vnode) and each copy ended at the rank-1 virtual node; post-fix each routes through the corridor to b. Cluster-free to isolate the parallel-routing fix from the separate adjacent cluster-exit over-segmentation; the cluster case is covered by parallel-cluster-ldbxtried"
+  },
+  {
+    "id": "parallel-cluster-ldbxtried",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/parallel-cluster-ldbxtried.gv",
+    "reference": "test/golden/refs/parallel-cluster-ldbxtried.svg",
+    "knownResidual": "T1.2 fixes the motivating parallel n0->n2 (x3) edges: post-fix they route the up-right-down corridor around cluster0 (3-bezier/10-pt) and reach n2 (structural match; ~1px Proutespline residual on the descent control points). The whole-SVG golden stays diverged on TWO separate, out-of-scope issues: (1) the ~1px descent residual, and (2) the lone edge n0->n1 under-segments because routing the n0->n2 group now calls recover_slack, repositioning shared chain virtual nodes that the lone-edge router (edge-route.ts, outside this mission's write-set) does not re-route faithfully. The survey verdict (graphs-ldbxtried: pre-existing diverged, 0 regression) is the active gate; follow-up tracked in .agent-notes."
   }
 ]

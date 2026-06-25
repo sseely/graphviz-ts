@@ -36,6 +36,7 @@
     "parser:regen": "peggy --format es --dts src/parser/dot.pegjs -o src/parser/dot.js",
     "survey:setup": "sh test/corpus/gen-headless-gvbindir.sh",
     "survey": "npm run survey:setup && GVBINDIR=${GVBINDIR:-/tmp/ghl} PARITY_OUT=parity-rules.json tsx test/corpus/survey.ts",
+    "survey:fast": "SURVEY_MAX_PORT_MS=${SURVEY_MAX_PORT_MS:-60000} npm run survey",
     "survey:gate": "tsx test/corpus/rules-gate.ts",
     "survey:dashboard": "tsx test/corpus/dashboard.ts",
     "survey:baseline": "GV_TEXT_MEASURER=lut tsx test/corpus/survey.ts",
