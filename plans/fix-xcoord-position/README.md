@@ -1,6 +1,8 @@
 # Mission: text-measurement architecture (decouple layout rules from font metrics)
 
-**Status:** NOT STARTED. Branch: `feature/text-measure-arch` (create from main).
+**Status:** Batch 0 DONE (rules gate PASS: 599 stable, 10 font-fix improvements,
+171 pre-existing, 4 allowlisted, 0 regressions). Branch: `feature/text-measure-arch`.
+Now: Batch 1.
 
 ## Objective
 Implement the design in [DESIGN.md](DESIGN.md): split text measurement into three
@@ -67,8 +69,8 @@ conversation decision log; the minimal repro is `repro/b69-min-noconc.gv`.
 ## Batches (sequential; each gated)
 | Batch | Task | Writes | Gate |
 |-------|------|--------|------|
-| 0 | [T0.1 EstimateTextMeasurer](batch-0/T0.1-estimate-measurer.md) | textmeasure.ts (+factory) | reference measurer exists, unit-tested |
-| 0 | [T0.2 headless rules corpus (side-by-side)](batch-0/T0.2-headless-corpus.md) | test/corpus/* (new) | reference vs headless byte-exact (modulo pre-existing) |
+| 0 | [x] [T0.1 EstimateTextMeasurer](batch-0/T0.1-estimate-measurer.md) | textmeasure.ts (+factory) | reference measurer exists, unit-tested |
+| 0 | [x] [T0.2 headless rules corpus (side-by-side)](batch-0/T0.2-headless-corpus.md) | test/corpus/* (new) | reference vs headless byte-exact (modulo pre-existing) |
 | 1 | [T1.1 public setTextMeasurer + resolution chain](batch-1/T1.1-measurer-api.md) | textmeasure-factory.ts, context.ts, index.ts | API public; browser excludes node-canvas; LUT demoted |
 | 2 | [T2.1 bundled-font measurement tests](batch-2/T2.1-bundled-tests.md) | test/fonts/*, test helpers | kern/ligature/charset unit tests pass |
 | 3 | [T3.1 production wiring + docs](batch-3/T3.1-production.md) | factory, docs | Node→node-canvas, browser→canvas, warning advises install |

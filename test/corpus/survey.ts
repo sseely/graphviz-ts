@@ -37,7 +37,10 @@ const TIMEOUT_FLOOR_MS = Number(process.env.RENDER_TIMEOUT_FLOOR_MS ?? 180_000);
 const ORACLE_TIMEOUT_MS = Number(process.env.ORACLE_TIMEOUT_MS ?? 300_000);
 const CONCURRENCY = Number(process.env.SURVEY_CONCURRENCY ?? 8);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
-const PARITY = new URL('./parity.json', import.meta.url);
+// Output is parameterizable so a side-by-side survey (e.g. the headless rules
+// survey: GVBINDIR=ghl GV_TEXT_MEASURER=estimate) can write a separate report
+// without clobbering the default pango baseline. @see plans/fix-xcoord-position
+const PARITY = new URL(process.env.PARITY_OUT ?? './parity.json', import.meta.url);
 const NATIVE_TIMINGS = new URL('./native-timings.json', import.meta.url);
 const RENDER_ONE = join(REPO, 'test/corpus/render-one.ts');
 /** Canonical (frozen) native dot times (id → ms), shared with the perf bench.

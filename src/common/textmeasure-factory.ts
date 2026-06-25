@@ -6,13 +6,20 @@
  * @see lib/common/textspan.c:estimate_textspan_size
  */
 
-import { LutTextMeasurer, CanvasTextMeasurer, type TextMeasurer } from './textmeasure.js';
+import {
+  LutTextMeasurer, CanvasTextMeasurer, EstimateTextMeasurer, type TextMeasurer,
+} from './textmeasure.js';
 
 /**
  * Returns a CanvasTextMeasurer when a browser canvas is available,
  * otherwise falls back to LutTextMeasurer.
  */
 export function createMeasurer(): TextMeasurer {
+  // Test/CI hook: force a measurer for deterministic rules validation. `estimate`
+  // = the raw headless-matching reference (ADR-1). T1.1 folds this into the public
+  // setTextMeasurer + resolution chain.
+  const forced = process.env.GV_TEXT_MEASURER;
+  if (forced === 'estimate') return new EstimateTextMeasurer();
   if (typeof document === 'undefined') return new LutTextMeasurer();
   try {
     const ctx2d = document.createElement('canvas').getContext('2d');
