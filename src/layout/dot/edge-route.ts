@@ -395,16 +395,26 @@ function orderedDotEdges(g: Graph): GraphEdge[] {
  * Compute and install edge splines for all unrouted edges in g.
  * @see lib/dotgen/dotsplines.c:dot_splines_
  */
+/**
+ * Route one not-yet-routed edge, applying the `dot_splines_` skip guards. No-op
+ * if the edge is already routed or ineligible (FLATORDER/IGNORED, self-loop, or
+ * lacking valid coords). Used both by the unified `dotSplines_` loop — which
+ * routes lone edges at their `edgecmp` position, interleaved with groups, as C
+ * does — and by the `routeDotEdges` backstop sweep below.
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (per-edge dispatch + 295 skip)
+ */
+export function routeLoneEdge(e: GraphEdge, g: Graph): void {
+  if (e.info.spl !== undefined) return;
+  // C dot_splines_ skips FLATORDER/IGNORED edges when building the route list;
+  // an IGNORED edge (e.g. a concentrate-merged parallel duplicate) must get no
+  // spline so emit draws only the representative. @see dotsplines.c:295
+  const et = e.info.edge_type ?? 0;
+  if (et === FLATORDER || et === IGNORED) return;
+  if (e.tail === e.head) return;
+  if (!hasValidCoords(e)) return;
+  routeOneEdge(e, g);
+}
+
 export function routeDotEdges(g: Graph): void {
-  for (const e of orderedDotEdges(g)) {
-    if (e.info.spl !== undefined) continue;
-    // C dot_splines_ skips FLATORDER/IGNORED edges when building the route list;
-    // an IGNORED edge (e.g. a concentrate-merged parallel duplicate) must get no
-    // spline so emit draws only the representative. @see dotsplines.c:295
-    const et = e.info.edge_type ?? 0;
-    if (et === FLATORDER || et === IGNORED) continue;
-    if (e.tail === e.head) continue;
-    if (!hasValidCoords(e)) continue;
-    routeOneEdge(e, g);
-  }
+  for (const e of orderedDotEdges(g)) routeLoneEdge(e, g);
 }

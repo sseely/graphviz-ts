@@ -18,7 +18,7 @@ import type { Bezier, Spline } from '../../model/geom.js';
 import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
 import { IGNORED, EDGE_LABEL } from './rank.js';
 import { markLowclusters } from './cluster.js';
-import { routeDotEdges } from './edge-route.js';
+import { routeDotEdges, routeLoneEdge } from './edge-route.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
 import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
@@ -321,19 +321,14 @@ function groupSize(edges: Edge[], ind: number): number {
   return cnt;
 }
 
-/**
- * Original-edge creation seq for parallel-edge ordering. Resolving virtuals back
- * to the original seq restores C's edgecmp order (seq is globally allocated).
- * @see lib/dotgen/dotsplines.c:edgecmp
- */
+/** Original-edge creation seq (resolve virtuals) — restores C's edgecmp order. */
 function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
 
 /**
  * Collapse a main-edge group to one representative per distinct original edge.
- * The opposing `a->b`/`b->a` case collects three entries (two out-edges resolving
- * to main `a->b`, plus `b->a` in ND_other) but two distinct originals; dedup by
- * `resolveOrigEdge` yields one per original (cnt=2 here, parallels untouched).
- * @see lib/dotgen/dotsplines.c:make_regular_edge (one clip_and_install per orig)
+ * The opposing `a->b`/`b->a` case collects three entries but two distinct
+ * originals; dedup by `resolveOrigEdge` yields one per original (parallels
+ * untouched). @see dotsplines.c:make_regular_edge (one clip_and_install per orig)
  */
 function dedupByOrig(group: Edge[]): Edge[] {
   const seen = new Set<Edge>();
@@ -348,10 +343,9 @@ function dedupByOrig(group: Edge[]): Edge[] {
 }
 
 /**
- * Dispatch one parallel-edge group to the appropriate router.
- * - self-loops  → routeSelfEdgeGroup
- * - cross-rank, distinct-orig cnt > 1 → routeParallelEdgeGroup (Multisep offsets)
- * - other (cnt=1, same-rank) → left for routeDotEdges
+ * Dispatch one edgecmp group: self-loop → routeSelfEdgeGroup; cross-rank cnt>1 →
+ * routeParallelEdgeGroup (Multisep offsets); cross-rank cnt==1 → routeLoneEdge
+ * in-place (C order); same-rank flat → left for the routeDotEdges sweep.
  * @see lib/dotgen/dotsplines.c:367-419
  */
 function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
@@ -362,30 +356,29 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
   }
   if (nodeRankOf(e0.tail) === nodeRankOf(e0.head)) return;
   const uniq = dedupByOrig(group);
-  if (uniq.length <= 1) return;
-  // Sort by original seq so the first original edge gets the leftmost offset,
-  // matching C's allocation order (e1 < e2 < e3).
-  // @see lib/dotgen/dotsplines.c:make_regular_edge (lines 1885-1907)
+  // Lone edge: route HERE at its edgecmp position (interleaved with groups), as C
+  // does, so it reads recover_slack-moved vnodes correctly. @see root-cause.md
+  if (uniq.length <= 1) return routeLoneEdge(resolveOrigEdge(uniq[0]), g);
+  // Sort by original seq so the first original gets the leftmost offset, matching
+  // C's allocation order (e1<e2<e3). @see dotsplines.c:make_regular_edge:1885-1907
   uniq.sort((a, b) => origSeq(a) - origSeq(b));
   routeParallelEdgeGroup(g, uniq, multisep);
 }
 
 /**
  * Route one curved group via makeStraightEdges. C routes the whole same-endpoint
- * group at once — parallels AND opposing edges (`a->b`/`b->a`) together (verified
- * by C instrumentation: a 2-cycle is one cnt=2 group, ports (0,0); the visible
- * separation is the perp-spread clipped to the node). The TS collection adds
- * virtual duplicates, so dedup to distinct originals; sort by creation seq so the
- * index→perp-offset order matches C (first → +perp). makeStraightEdges reverses
- * the control points for the opposing edge via its head==group-head check.
+ * group at once — parallels AND opposing edges (`a->b`/`b->a`) together (a 2-cycle
+ * is one cnt=2 group, ports (0,0); the visible separation is perp-spread clipped
+ * to the node). Dedup the TS virtual duplicates to distinct originals; sort by
+ * creation seq so index→perp-offset matches C (first → +perp); makeStraightEdges
+ * reverses the opposing edge's control points via its head==group-head check.
  * @see lib/dotgen/dotsplines.c:381-387, lib/common/routespl.c:1000-1041
  */
 function routeCurvedGroup(g: Graph, group: Edge[]): void {
   const uniq = dedupByOrig(group);
   uniq.sort((a, b) => origSeq(a) - origSeq(b));
   makeStraightEdges(g, uniq, uniq.length, EDGETYPE_CURVED, buildDotSinfo());
-  // Reversed back edges live in ND_other, which edgeNormalize() skips; swap them
-  // here (no double-swap), mirroring the non-curved back-edge router (edge-route.ts).
+  // Reversed back edges live in ND_other (edgeNormalize skips them); swap here.
   for (const e of uniq) {
     if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
   }
@@ -467,6 +460,18 @@ function curvedTop(g: Graph): void {
   }
 }
 
+/**
+ * Post-loop: vnode labels, normalize, routeDotEdges backstop (curved already
+ * routed its groups; C skips routesplinesterm), port labels. @see c:422-471
+ */
+function finalizeSplines(g: Graph, et: number, normalize: boolean): void {
+  placeRegularEdgeLabels(g);
+  if (normalize) edgeNormalize(g);
+  if (et !== EDGETYPE_CURVED) routeDotEdges(g);
+  placePortLabels(g);
+  g.info.edgeLabelsDone = true; // @see dotsplines.c:471 (EdgeLabelsDone = 1)
+}
+
 export function dotSplines_(g: Graph, normalize: boolean): number {
   const et = edgeType(g);
   if (et === EDGETYPE_NONE) return 0;
@@ -476,18 +481,12 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   const edges: Edge[] = [];
   for (const n of g.nodes.values()) collectNodeEdges(n, edges);
   edges.sort(edgecmp);
+  // C places line-edge labels BEFORE the routing loop (dotsplines.c:334-340) so
+  // the line router reads final label positions; lone edges now route in-loop.
+  if (et === EDGETYPE_LINE) placeRegularEdgeLabels(g);
   const multisep = g.info.nodesep ?? 18;
-  for (let l = 0; l < edges.length;) {
-    l += routeEdgeGroup(g, edges, l, multisep, et);
-  }
-  // Place regular edge labels from virtual nodes. @see dotsplines.c:422-430
-  placeRegularEdgeLabels(g);
-  if (normalize) edgeNormalize(g);
-  // Curved routes every group via makeStraightEdges above; skip the regular
-  // spline router (C skips routesplinesterm). @see dotsplines.c:461-465
-  if (et !== EDGETYPE_CURVED) routeDotEdges(g);
-  placePortLabels(g);
-  g.info.edgeLabelsDone = true; // @see dotsplines.c:471 (EdgeLabelsDone = 1)
+  for (let l = 0; l < edges.length;) l += routeEdgeGroup(g, edges, l, multisep, et);
+  finalizeSplines(g, et, normalize);
   return 0;
 }
 
