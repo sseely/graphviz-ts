@@ -164,6 +164,31 @@ not an unknown.
 > text-measurement delta (A2) — their layout logic is correct and they sit at
 > structural-match. Those are accepted deltas, not long-tail bugs.
 
+### `concentrate=true` opposing-edge arrowheads
+
+When `concentrate=true` merges an anti-parallel pair (`A->B; B->A`) into one
+surviving edge, that edge must draw an arrowhead at **both** ends. This is now
+ported (the `conc_opp_flag` branch of `arrow_flags`; see
+`src/common/splines-clip.ts:arrowFlags`), so `graphs-b135`, `167`, and `2087`
+match (the missing-arrowhead `element-count` divergence and its unclipped-spline
+`@d` side effect are both gone).
+
+Some concentrate graphs **retain a separate, pre-existing residual** that the
+arrowhead fix does **not** address — it is a node **x-coordinate** position
+delta (x-network-simplex / compass-port), not an arrowhead defect:
+
+- **`graphs-b15`, `graphs-b69`** — the large record/cluster "elevator" graphs.
+  Concentrate activates and merges correctly; the residual is a ~1pt node-x delta
+  that amplifies into an `element-count`/spline `@d` difference. The arrowhead
+  emission itself is now correct (b69 gains its missing arrowhead polygons). See
+  the `b69-concentrate-undermerge` agent note for the x-coord root cause.
+- **`1453`, `2825`** — still diverge on a top-level `element-count` cause
+  unrelated to the conc_opp_flag arrowhead (for `2825` the port output is
+  byte-identical with and without the arrowhead fix — no opposing-pair merge is
+  triggered there).
+
+These are tracked x-coordinate / structural items, **not** arrowhead bugs.
+
 ---
 
 ## Intentionally not ported (non-goals)

@@ -1292,5 +1292,21 @@
     "input": "test/golden/inputs/dot-long-edge-order.dot",
     "reference": "test/golden/refs/dot-long-edge-order.svg",
     "description": "rankdir=LR chain with overlapping long spans; n12->n14 corridor depends on routing order (dot_splines_ rank-major + edgecmp). Routing edges in C order gives its bent 2-cubic spline; nodes.values() order collapsed it to 1 cubic (T2)."
+  },
+  {
+    "id": "concentrate-b135",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/concentrate-b135.gv",
+    "reference": "test/golden/refs/concentrate-b135.svg",
+    "description": "concentrate=true merges anti-parallel A->B / B->A into one edge that must draw an arrowhead at BOTH ends (conc_opp_flag OR's the opposing edge's arrowhead in arrow_flags); the second arrowhead also clips the spline at the tail end (@see lib/common/arrows.c:arrow_flags)"
+  },
+  {
+    "id": "concentrate-167",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/concentrate-167.dot",
+    "reference": "test/golden/refs/concentrate-167.svg",
+    "description": "concentrate=true with a multi-edge fan and a back edge b->a; the surviving concentrated edge carries conc_opp_flag and draws both arrowheads (second confirming case for the conc_opp_flag branch)"
   }
 ]
