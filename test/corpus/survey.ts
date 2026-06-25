@@ -44,7 +44,8 @@ const CACHE = process.env.ORACLE_CACHE ?? join(tmpdir(), 'dot-corpus-oracle', OR
 // merely slow-but-valid (e.g. 2108 ~70s, native ~12s); only a true runaway past
 // 3× native or 3 minutes — whichever is greater — counts.
 const TIMEOUT_MULT = Number(process.env.RENDER_TIMEOUT_MULT ?? 3);
-const TIMEOUT_FLOOR_MS = Number(process.env.RENDER_TIMEOUT_FLOOR_MS ?? 180_000);
+// TIMEOUT_FLOOR_MS is derived from the canonical native times below (5x the
+// slowest native render) so it scales with the host instead of a fixed 180s.
 // The oracle gets a generous fixed cap so slow-but-valid native renders finish
 // (they yield the reference SVG *and* the native time the budget is based on).
 const ORACLE_TIMEOUT_MS = Number(process.env.ORACLE_TIMEOUT_MS ?? 300_000);
@@ -63,6 +64,20 @@ const CANON_NATIVE: Record<string, number> = (() => {
   try { return JSON.parse(readFileSync(NATIVE_TIMINGS, 'utf8')).timings ?? {}; }
   catch { return {}; }
 })();
+/**
+ * A render is a `timeout` only if it does not error and runs past its budget:
+ * `max(MULT x native, FLOOR)`. The FLOOR is derived as 5x the slowest canonical
+ * native render so it scales with the host (native-timings.json is frozen
+ * per-hardware). This keeps a slow-but-valid port render from falsely timing out
+ * under concurrency — e.g. the mincross-heavy 2108 is ~7x its native time and,
+ * with 8-way CPU contention, can run several hundred seconds though native is
+ * only ~13s — while a true runaway is still bounded. Env override wins; falls
+ * back to 180s only when no native timings are available.
+ */
+const MAX_NATIVE_MS = Math.max(0, ...Object.values(CANON_NATIVE));
+const TIMEOUT_FLOOR_MS = Number(
+  process.env.RENDER_TIMEOUT_FLOOR_MS ?? (Math.ceil(5 * MAX_NATIVE_MS) || 180_000),
+);
 /** Extracts a semantic version from `dot -V` output. */
 const VERSION_RE = /version (\d+\.\d+\.\d+)/;
 
