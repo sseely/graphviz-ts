@@ -60,11 +60,21 @@ export function setClType(t: number): void { clType = t; }
 // Utility helpers
 // ---------------------------------------------------------------------------
 
-/** @see lib/common/utils.c:mapbool */
+/**
+ * @see lib/common/utils.c:mapBool — mapbool(p) === mapBool(p, false).
+ * Only a leading-digit value is parsed numerically (`gv_isdigit(*p)` →
+ * `atoi(p) != 0`); any other unrecognized string (e.g. "none") returns the
+ * default `false`. The previous `parseInt(s) !== 0` returned `true` for such
+ * strings because `NaN !== 0` is true — so `constraint=none` was treated as a
+ * rank constraint, mis-ranking clusters joined only by constraint=none edges.
+ */
 export function mapbool(s: string | undefined): boolean {
-  if (!s || s === '' || s.toLowerCase() === 'false' || s.toLowerCase() === 'no') return false;
-  if (s.toLowerCase() === 'true' || s.toLowerCase() === 'yes') return true;
-  return parseInt(s, 10) !== 0;
+  if (!s || s === '') return false;
+  const l = s.toLowerCase();
+  if (l === 'false' || l === 'no') return false;
+  if (l === 'true' || l === 'yes') return true;
+  if (s[0] >= '0' && s[0] <= '9') return parseInt(s, 10) !== 0;
+  return false;
 }
 
 /** @see lib/util/gv_math.h:scale_clamp */

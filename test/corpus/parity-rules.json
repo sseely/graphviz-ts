@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-25T18:16:41.061Z",
+  "generatedAt": "2026-06-25T19:07:21.241Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 393,
+    "byte-match": 395,
     "structural-match": 220,
-    "diverged": 161,
+    "diverged": 159,
     "errored": 6,
     "timeout": 4,
     "oracle-error": 11
@@ -17,21 +17,21 @@
       "id": "121",
       "path": "121.dot",
       "verdict": "structural-match",
-      "maxDelta": 222
+      "maxDelta": 13.990000000000002
     },
     {
       "id": "1213-1",
       "path": "1213-1.dot",
       "verdict": "diverged",
-      "maxDelta": 226.3,
+      "maxDelta": 84.02999999999997,
       "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
     },
     {
       "id": "1213-2",
       "path": "1213-2.dot",
       "verdict": "diverged",
-      "maxDelta": 147,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "maxDelta": 83.40000000000003,
+      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
     },
     {
       "id": "1221",
@@ -115,15 +115,15 @@
       "id": "1435",
       "path": "1435.dot",
       "verdict": "diverged",
-      "maxDelta": 429,
+      "maxDelta": 503,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
       "id": "1436",
       "path": "1436.dot",
       "verdict": "diverged",
-      "maxDelta": 1643.3000000000002,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "maxDelta": 564.9000000000001,
+      "firstDiffPath": "svg/g[1]/g[25][childCount]"
     },
     {
       "id": "1444-2",
@@ -361,7 +361,7 @@
       "id": "1879",
       "path": "1879.dot",
       "verdict": "diverged",
-      "maxDelta": 22872.129999999997,
+      "maxDelta": 1149,
       "firstDiffPath": "svg/g[1]/g[99]/g[1]/a[1][childCount]"
     },
     {
@@ -687,14 +687,14 @@
       "id": "2470",
       "path": "2470.dot",
       "verdict": "diverged",
-      "maxDelta": 38910.39,
-      "firstDiffPath": "svg/g[1]/g[231]/path[1]/@d"
+      "maxDelta": 17106.3,
+      "firstDiffPath": "svg/g[1]/g[232]/path[1]/@d"
     },
     {
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 16160,
+      "maxDelta": 3097,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -754,7 +754,7 @@
       "id": "2521_1",
       "path": "2521_1.dot",
       "verdict": "diverged",
-      "maxDelta": 112.00000000000003,
+      "maxDelta": 25.269999999999996,
       "firstDiffPath": "svg/g[1]/g[22]/path[1]/@d"
     },
     {
@@ -788,7 +788,7 @@
       "id": "258",
       "path": "258.dot",
       "verdict": "structural-match",
-      "maxDelta": 222
+      "maxDelta": 0.29999999999999716
     },
     {
       "id": "2592",
@@ -847,8 +847,8 @@
       "id": "2620",
       "path": "2620.dot",
       "verdict": "diverged",
-      "maxDelta": 8073.58,
-      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
+      "maxDelta": 3207,
+      "firstDiffPath": "svg/g[1]/g[63]/path[1]/@d"
     },
     {
       "id": "2621",
@@ -948,7 +948,7 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "diverged",
-      "maxDelta": 257,
+      "maxDelta": 213,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1202,7 +1202,7 @@
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
       "verdict": "diverged",
-      "maxDelta": 1567,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1259,8 +1259,8 @@
       "id": "graphs-b53",
       "path": "graphs/b53.gv",
       "verdict": "diverged",
-      "maxDelta": 385.81,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "maxDelta": 138.54999999999995,
+      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
     },
     {
       "id": "graphs-b545",
@@ -3412,9 +3412,7 @@
     {
       "id": "share-clust5",
       "path": "share/clust5.gv",
-      "verdict": "diverged",
-      "maxDelta": 298,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "share-crazy",
@@ -4041,9 +4039,7 @@
     {
       "id": "windows-clust5",
       "path": "windows/clust5.gv",
-      "verdict": "diverged",
-      "maxDelta": 298,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "windows-crazy",

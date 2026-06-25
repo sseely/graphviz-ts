@@ -219,11 +219,25 @@ export function containSubclust(g: Graph): void {
 export function separateClustPair(low: Graph, high: Graph, margin: number): void {
   if (graphMaxrank(low) < graphMinrank(high)) return;
   const pivotRank = graphMinrank(high);
-  const lowV0 = low.info.rank![pivotRank].v[0];
-  const highV0 = high.info.rank![pivotRank].v[0];
+  // C reads GD_rank(low/high)[minrank(high)].v[0] — each cluster's OWN rank
+  // array, i.e. its leftmost node. The port shares the root rank array with a
+  // vStart window, so a raw .v[0] returns the root's leftmost node (order 0) for
+  // BOTH clusters → orders compare equal → left/right is assigned arbitrarily.
+  // That happens to match the layout for rankdir=TB but contradicts it under
+  // flip (LR/RL), so the separation edge points the wrong way and the clusters
+  // collapse together. Read the cluster-local leftmost via rankGet (same
+  // vStart-window class as containNodesRank/keepoutLeft).
+  const lowV0 = rankGet(low.info.rank![pivotRank], 0);
+  const highV0 = rankGet(high.info.rank![pivotRank], 0);
+  if (!lowV0 || !highV0) return;
   const left = nodeOrder(lowV0) < nodeOrder(highV0) ? low : high;
   const right = left === low ? high : low;
-  makeAuxEdge(right.info.rn!, left.info.ln!, margin, 0);
+  // C: make_aux_edge(GD_rn(left), GD_ln(right), margin, 0) — left's RIGHT border
+  // sits `margin` to the left of right's LEFT border. The port had these args
+  // swapped (right.rn, left.ln); with the old raw-.v[0] bug left/right were
+  // arbitrary, so the two errors cancelled for rankdir=TB but compounded under
+  // flip. @see lib/dotgen/position.c:480
+  makeAuxEdge(left.info.rn!, right.info.ln!, margin, 0);
 }
 
 /** @see lib/dotgen/position.c:separate_subclust */
