@@ -66,3 +66,27 @@ tests: 2394 pass; side-by-side default survey unchanged (0 verdict changes)
 fontkit + fonts are dev/test-only: 0 fontkit refs in dist/*.js (runtime bundle clean)
 full suite 2401 pass; typecheck + lizard clean
 ```
+
+## Batch 3 — execution log
+| When | Task | Decision | Rationale |
+|------|------|----------|-----------|
+| 2026-06-25 | T3.1 | node-canvas is opt-in via setTextMeasurer; canvas = OPTIONAL PEER dep | Zero-runtime-dep + single bundle: library never imports canvas. peerDependenciesMeta.optional makes it discoverable without force-install. |
+| 2026-06-25 | T3.1 | Install-advice note: one-time, TTY-only, GV_FONT_QUIET-suppressible | Honors ADR-5 ("advise install") without spamming CI/tests/piped output. Verified: 1 line on TTY, 0 when quiet/piped. |
+| 2026-06-25 | T3.1 | Docs: README section + docs-site/guide/text-measurement.md + sidebar | States the deterministic-default / host-faithful-opt-in contract. |
+
+### B3/T3.1 gate
+```
+2401 tests pass; typecheck + lizard clean; bundle builds canvas-free (0 refs)
+advice note: TTY→1 (once), GV_FONT_QUIET→0, piped→0
+adviceShown one-time latch allowlisted in module-globals.fitness
+```
+
+### T3.2 — STOP before cutover (blast-radius escalation)
+Forcing the default measurer to Estimate (the cutover's implied default change)
+**fails 167 unit tests** across 8 files — they assert LUT-hinted golden output.
+So "cut over to the rules survey + change the default" is a far larger
+re-baseline than ADR-3 anticipated. Escalated to the user for a decision among:
+(a) full cutover + regenerate 167 goldens + corpus; (b) keep LUT default, adopt
+the rules survey as a PARALLEL clean rules-gate, keep the pango survey as the
+shipped-fidelity tracker (no re-baseline); (c) other. Pausing per autonomous
+STOP condition "task is mis-scoped / much bigger than estimated".

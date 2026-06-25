@@ -73,6 +73,8 @@ const ALLOWLIST: Readonly<Record<string, string>> = {
     'process-wide image-sizer DI hook set via setImageSizer; not mutated by rendering (shared config, last-write-wins by design)',
   'src/common/textmeasure-factory.ts::override':
     'process-wide text-measurer DI hook set via setTextMeasurer; not mutated by rendering (shared config, last-write-wins by design), analogous to activeSizer',
+  'src/common/textmeasure-factory.ts::adviceShown':
+    'one-time process latch for the interactive host-faithful advice note; emitted at most once per process, never per-render output state',
   'src/label/node.ts::_splitNodeImpl':
     'DI wiring for the record split-node impl; set once at import, not per render',
   'src/layout/dot/mincross-order.ts::mincrossTrace':

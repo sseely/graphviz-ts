@@ -28,6 +28,7 @@ export default defineConfig({
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'Build a graph in code', link: '/guide/build-a-graph' },
           { text: 'Read computed geometry', link: '/guide/geometry' },
+          { text: 'Text measurement', link: '/guide/text-measurement' },
           { text: 'Render to other formats', link: '/guide/render-formats' },
           { text: 'Custom rendering with xdot', link: '/guide/xdot-drawops' },
           { text: 'API reference', link: '/guide/api' },

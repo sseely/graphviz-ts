@@ -38,6 +38,14 @@
     "docs:build": "vitepress build docs-site",
     "docs:preview": "vitepress preview docs-site"
   },
+  "peerDependencies": {
+    "canvas": ">=2"
+  },
+  "peerDependenciesMeta": {
+    "canvas": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/fontkit": "^2.0.9",
     "@types/node": "^26.0.0",
