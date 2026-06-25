@@ -13,8 +13,8 @@ import { agContainsNode } from './mincross-utils.js';
 import { dotRoot, rankGet } from './mincross-utils.js';
 import { SLACKNODE } from './rank.js';
 import {
-  CL_OFFSET, BOTTOM_IX, RIGHT_IX, TOP_IX, LEFT_IX,
-  makeAuxEdge,
+  BOTTOM_IX, RIGHT_IX, TOP_IX, LEFT_IX,
+  makeAuxEdge, clusterMarginOf,
   nodeRw, nodeLw, nodeOrder,
 } from './position-aux.js';
 
@@ -24,7 +24,7 @@ import {
 
 /** @internal */
 export function graphMargin(g: Graph): number {
-  return g.info.clusterMargin ?? CL_OFFSET;
+  return g.info.clusterMargin ?? clusterMarginOf(g);
 }
 
 /** @internal */

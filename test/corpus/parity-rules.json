@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-25T17:15:22.191Z",
+  "generatedAt": "2026-06-25T18:16:41.061Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 392,
-    "structural-match": 221,
+    "byte-match": 393,
+    "structural-match": 220,
     "diverged": 161,
     "errored": 6,
     "timeout": 4,
@@ -80,7 +80,7 @@
       "id": "1332",
       "path": "1332.dot",
       "verdict": "diverged",
-      "maxDelta": 555,
+      "maxDelta": 563,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -361,7 +361,7 @@
       "id": "1879",
       "path": "1879.dot",
       "verdict": "diverged",
-      "maxDelta": 23893,
+      "maxDelta": 22872.129999999997,
       "firstDiffPath": "svg/g[1]/g[99]/g[1]/a[1][childCount]"
     },
     {
@@ -531,8 +531,7 @@
     {
       "id": "2242",
       "path": "2242.dot",
-      "verdict": "structural-match",
-      "maxDelta": 40
+      "verdict": "byte-match"
     },
     {
       "id": "2257",
@@ -688,14 +687,14 @@
       "id": "2470",
       "path": "2470.dot",
       "verdict": "diverged",
-      "maxDelta": 38615.44,
+      "maxDelta": 38910.39,
       "firstDiffPath": "svg/g[1]/g[231]/path[1]/@d"
     },
     {
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 17618.399999999998,
+      "maxDelta": 16160,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -795,7 +794,7 @@
       "id": "2592",
       "path": "2592.dot",
       "verdict": "diverged",
-      "maxDelta": 588.0000000000001,
+      "maxDelta": 564,
       "firstDiffPath": "svg/g[1]/g[4]/@id"
     },
     {

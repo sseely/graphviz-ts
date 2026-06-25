@@ -11,6 +11,7 @@ import type { Node } from '../../model/node.js';
 import { dotRoot } from './mincross-utils.js';
 import {
   CL_OFFSET, BOTTOM_IX, RIGHT_IX, TOP_IX, LEFT_IX,
+  clusterMarginOf,
   graphMinrank, graphMaxrank, graphNclust,
   graphHt1, graphHt2, graphRanksep, nodeRank,
 } from './position-aux.js';
@@ -21,7 +22,7 @@ import {
 
 /** @internal */
 export function graphMarginY(g: Graph): number {
-  return g.info.clusterMargin ?? CL_OFFSET;
+  return g.info.clusterMargin ?? clusterMarginOf(g);
 }
 
 // ---------------------------------------------------------------------------

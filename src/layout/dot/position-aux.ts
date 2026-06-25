@@ -13,9 +13,28 @@ import { Edge as EdgeClass } from '../../model/edge.js';
 import { fastEdge, findFastEdge } from './fastgr.js';
 import { SLACKNODE, EDGE_LABEL } from './rank.js';
 import { selfRightSpace } from '../../common/splines-selfedge.js';
+import { lateInt } from '../../common/nodeinit.js';
 
 /** @see lib/common/const.h:CL_OFFSET */
 export const CL_OFFSET = 8;
+
+/**
+ * Cluster margin = `late_int(g, G_margin, CL_OFFSET, 0)`. The `margin` attribute
+ * is resolved up the subgraph chain (matching `agxget` inheritance), so a
+ * cluster with no own `margin` inherits an ancestor's; absent everywhere it
+ * falls back to `CL_OFFSET`, and negatives clamp to 0. Used for both the
+ * x-coordinate (`make_lrvn`/`make_lrconstraints`/separate clusters) and the
+ * rank/y-coordinate (`set_ycoords`) cluster spacing.
+ * @see lib/dotgen/position.c:397,436,460,642
+ */
+export function clusterMarginOf(g: Graph): number {
+  let raw: string | undefined;
+  for (let s: Graph | null = g; s !== null; s = s.parent) {
+    const v = s.attrs.get('margin');
+    if (v !== undefined) { raw = v; break; }
+  }
+  return lateInt(raw, CL_OFFSET, 0);
+}
 
 /** @see lib/common/const.h:BOTTOM_IX */
 export const BOTTOM_IX = 0;
