@@ -163,10 +163,11 @@
     "id": "fdp-large",
     "engine": "fdp",
     "toleranceClass": "iterative",
+    "tolerance": 1,
     "input": "test/golden/inputs/fdp-large.dot",
     "reference": "test/golden/refs/fdp-large.svg",
-    "description": "20-node undirected graph",
-    "knownResidual": "cutover residual: native fdp in HEADLESS mode produces an unstable layout (~45pt swing vs pango/port); fdp ref kept as pango. Polish: fdp solver fidelity (tangential to text measurement)."
+    "portReference": "test/golden/refs-port/fdp-large.svg",
+    "description": "20-node undirected graph; ref: graphviz 15.0.0 dot -Kfdp -Tsvg. Node centers are BYTE-IDENTICAL to the ref; the only delta is text baseline @y 0.85pt — the intended Estimate vertical metric (yoffset_centerline 0.1*fs), which the ref predates. C-ref tolerance 1pt (iterative) absorbs it; portReference pins the exact port output at 0.01pt."
   },
   {
     "id": "fdp-nested-cluster",
@@ -470,8 +471,7 @@
     "input": "test/golden/inputs/fdp-tiny-self-loop.dot",
     "reference": "test/golden/refs/fdp-tiny-self-loop.svg",
     "portReference": "test/golden/refs-port/fdp-tiny-self-loop.svg",
-    "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg",
-    "knownResidual": "cutover residual: fdp solver divergence under Estimate (~10pt); pinned by portReference. Polish: fdp solver fidelity."
+    "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg"
   },
   {
     "id": "dot-constraint-false",
@@ -971,8 +971,7 @@
     "input": "test/golden/inputs/dot-port-record-aligned.dot",
     "reference": "test/golden/refs/dot-port-record-aligned.svg",
     "portReference": "test/golden/refs-port/dot-port-record-aligned.svg",
-    "description": "record-field port A:f0->B via faithful routesplines (SR8); title carries the field name A:f0->B; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt",
-    "knownResidual": "cutover residual: record node total width differs 1pt from native under the Estimate model (field-sizing rounding); text positions match. Polish: record field/margin rounding."
+    "description": "record-field port A:f0->B via faithful routesplines (SR8); title carries the field name A:f0->B; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
   },
   {
     "id": "dot-ortho-chain",

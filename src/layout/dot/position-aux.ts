@@ -239,8 +239,14 @@ export function addEdgePair(g: Graph, e: Edge): void {
   const sn = makeSlackNode(g);
   const hp = e.info.head_port.p;
   const tp = e.info.tail_port.p;
-  const m0 = Math.max(0, hp.x - tp.x);
-  const m1 = Math.max(0, tp.x - hp.x);
+  // C: `int m0 = (ED_head_port(e).p.x - ED_tail_port(e).p.x)` truncates the
+  // fractional port offset toward zero BEFORE the +1 and the aux-edge minlen
+  // round (position.c:338). Keeping it as a float and letting makeAuxEdge round
+  // m0+1 inflates the tail/head separation by 1pt for any fractional port
+  // offset (e.g. a record field center), shifting the ported node's x by 1.
+  const d = Math.trunc(hp.x - tp.x);
+  const m0 = Math.max(0, d);
+  const m1 = Math.max(0, -d);
   makeAuxEdge(sn, e.tail, m0 + 1, edgeWeight(e));
   makeAuxEdge(sn, e.head, m1 + 1, edgeWeight(e));
   sn.info.rank = Math.min(nodeRank(e.tail) - m0 - 1, nodeRank(e.head) - m1 - 1);
