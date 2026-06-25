@@ -62,7 +62,7 @@ Run between/after tasks. Definitions in `batch-1/overview.md`.
 
 | Batch | Tasks | Status |
 |---|---|---|
-| [batch-1](batch-1/overview.md) | T1 fix+golden, T2 survey-verify | [ ] |
+| [batch-1](batch-1/overview.md) | T1 fix+golden, T2 survey-verify | [x] |
 
 ## Index
 

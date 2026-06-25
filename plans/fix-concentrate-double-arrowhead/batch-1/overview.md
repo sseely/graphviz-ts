@@ -7,8 +7,8 @@ work; one writer per file.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T1 | Port `conc_opp_flag` branch into `arrowFlags` + opposing-edge helper; add `b135`/`167` goldens (TDD: golden red → fix green) | sonnet | `src/common/splines-clip.ts`, `src/common/splines-clip.test.ts` (create), `test/golden/manifest.json`, `test/golden/inputs/*`, `test/golden/refs/*` | — | [ ] |
-| T2 | Regenerate survey + dashboard; confirm predicted flips and **0 regressions**; document any residual b15/b69 x-coord note | sonnet | `test/corpus/parity.json`, `test/corpus/PARITY.md`, `docs/known-divergences.md` (only if needed) | T1 | [ ] |
+| T1 | Port `conc_opp_flag` branch into `arrowFlags` + opposing-edge helper; add `b135`/`167` goldens (TDD: golden red → fix green) | sonnet | `src/common/splines-clip.ts`, `src/common/splines-clip.test.ts` (create), `test/golden/manifest.json`, `test/golden/inputs/*`, `test/golden/refs/*` | — | [x] |
+| T2 | Regenerate survey + dashboard; confirm predicted flips and **0 regressions**; document any residual b15/b69 x-coord note | sonnet | `docs/known-divergences.md`, `comparisons/T2-survey-verification.md` (tracked parity artifacts left stale-by-design; see journal) | T1 | [x] |
 
 ## Quality gates (run after each task)
 
