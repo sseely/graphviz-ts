@@ -59,7 +59,7 @@ Run between/after tasks (definitions in each batch overview):
 | Batch | Tasks | Status |
 |---|---|---|
 | [batch-0](batch-0/overview.md) — investigation (GATE) | T0.1 C oracle, T0.2 port instrument, T0.3 root-cause+GO/STOP | [x] GO |
-| [batch-1](batch-1/overview.md) — faithful per-edge routing | T1.1 golden red, T1.2 offset-port route, T1.3 straight-edges, T1.4 boxes | [ ] |
+| [batch-1](batch-1/overview.md) — faithful per-edge routing | T1.1 golden red, T1.2 representative-resolution fix (0 regr, +13), T1.3/T1.4 N/A | [x] |
 | [batch-2](batch-2/overview.md) — verify + baselines | T2.1 survey+perf, T2.2 baseline refresh + close | [ ] |
 
 ## Index
