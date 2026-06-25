@@ -51,3 +51,18 @@ setTextMeasurer/getTextMeasurer public; resolution = override → env(estimate) 
 build: esbuild bundle OK, 0 `canvas` refs in dist/index.js (browser-safe)
 tests: 2394 pass; side-by-side default survey unchanged (0 verdict changes)
 ```
+
+## Batch 2 — execution log
+| When | Task | Decision | Rationale |
+|------|------|----------|-----------|
+| 2026-06-25 | T2.1 | Shaper = fontkit (devDep); no harfbuzzjs | fontkit applies GPOS kerning + GSUB substitution + charset in pure JS, deterministically; one dep covers all three. harfbuzzjs unnecessary. |
+| 2026-06-25 | T2.1 | Bundle DejaVu Sans + Fira Code (test/fonts/) | DejaVu: real kerning (VA −131), GSUB (fi→1 glyph), Latin-1/Greek charset. Fira Code: monospace (`<=` = 2 cells) shows width is font-specific. Open licenses (DejaVu / SIL OFL). |
+| 2026-06-25 | T2.1 | Test METRIC = advance width + glyph substitution, not glyph count | FiraCode `<=` is width-neutral (monospace) and fontkit didn't collapse its calt glyph ids; the layout-relevant signals are advance width (kerning) and GSUB substitution (fi). |
+| 2026-06-25 | T2.1 | Tests contrast fontkit (real) vs EstimateTextMeasurer (deterministic) | Makes the decoupling concrete: estimate does NOT kern (VA==V+A) and has no non-ASCII metrics (é falls back) — exactly why production needs the host/real-font measurer. |
+
+### B2 gate
+```
+7 measurement tests pass (kerning, GSUB, charset, monospace, estimate-contrast, determinism)
+fontkit + fonts are dev/test-only: 0 fontkit refs in dist/*.js (runtime bundle clean)
+full suite 2401 pass; typecheck + lizard clean
+```
