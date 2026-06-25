@@ -73,7 +73,7 @@ from the investigation (clean, no commits) — reuse or rebrand.
 
 | Batch | Tasks | Status |
 |---|---|---|
-| [batch-0](batch-0/overview.md) — investigation (GATE) | T0.1 C order oracle, T0.2 port order divergence, T0.3 root-cause+GO/STOP | [ ] |
+| [batch-0](batch-0/overview.md) — investigation (GATE) | T0.1 C order oracle, T0.2 port order divergence, T0.3 root-cause+GO/STOP | [x] **GO** |
 | [batch-1](batch-1/overview.md) — unify the pass | T1.1 golden red, T1.2 single edgecmp pass, T1.3 comparator align (conditional) | [ ] |
 | [batch-2](batch-2/overview.md) — verify + baselines | T2.1 survey+perf, T2.2 baseline refresh + close | [ ] |
 
