@@ -283,10 +283,22 @@ function isInterior(i: number, len: number): boolean {
  * control points and clip_and_installs (make_regular_edge cnt>1). When e0 is a
  * back edge, route its forward view (makefwdedge) so the geometry runs low→high
  * rank like the adjacent/multi-rank faithful routers expect.
- * @see lib/dotgen/dotsplines.c:make_regular_edge (shared base for cnt>1)
+ *
+ * The group representative `e0` collected from `ND_out` is the FIRST virtual
+ * segment of a multi-rank edge (head = a virtual chain node at rank `r+1`), not
+ * the original `tail → realHead` edge. Routing that segment directly makes
+ * `routeRegularEdgeFaithful` treat it as an adjacent-rank edge and emit a
+ * straight base ending at the virtual node, short-circuiting the chain router.
+ * Resolve to the original first (C `getmainedge`/`ED_to_orig`), so a multi-rank
+ * representative declines the adjacent router and routes the full corridor via
+ * `routeMultiRankEdgeFaithful`. `resolveOrigEdge` is identity for an already-
+ * original (adjacent, real-head) representative, so adjacent groups are
+ * unchanged.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (realedge resolve + VIRTUAL chain walk)
  */
 function baseSplineForGroup(g: Graph, e0: Edge): Point[] | null {
-  const fe = isBackEdgeMember(e0) ? makeFwdEdge(e0) : e0;
+  const orig = resolveOrigEdge(e0);
+  const fe = isBackEdgeMember(orig) ? makeFwdEdge(orig) : orig;
   return routeRegularEdgeFaithful(g, fe) ?? routeMultiRankEdgeFaithful(g, fe);
 }
 
@@ -305,6 +317,19 @@ function isBackEdgeMember(e: Edge): boolean {
 }
 
 /**
+ * The real (forward) head node of a group member: the higher-rank endpoint of
+ * its resolved original edge. The member `e` collected from `ND_out` is the
+ * first virtual chain segment, so `e.head` is a VIRTUAL node — clipping the
+ * installed copy to it (instead of the real head) mis-trims the head approach of
+ * the most-shifted copy. C installs each copy with `aghead(edges[j])` = the real
+ * head. @see lib/dotgen/dotsplines.c:make_regular_edge (clip_and_install hn)
+ */
+function groupRealHead(e: Edge): Node {
+  const o = resolveOrigEdge(e);
+  return nodeRankOf(o.head) >= nodeRankOf(o.tail) ? o.head : o.tail;
+}
+
+/**
  * Install a shifted base spline on one group member via the faithful
  * clip_and_install. Back members install through their forward view
  * (makefwdedge), which sets to_orig/edge_type so the spline lands on the
@@ -316,7 +341,9 @@ function installShiftedEdge(e: Edge, shifted: Point[]): void {
   const copy = shifted.map(p => ({ x: p.x, y: p.y }));
   const back = isBackEdgeMember(e);
   const fe = back ? makeFwdEdge(e) : e;
-  clipAndInstall(fe, fe.head, copy, copy.length, buildDotSinfo());
+  // Clip the head to the REAL head node, not fe.head (a virtual chain segment
+  // node for multi-rank edges). @see dotsplines.c:make_regular_edge clip_and_install
+  clipAndInstall(fe, groupRealHead(e), copy, copy.length, buildDotSinfo());
   // C edge_normalize reverses back edges via agfstout; the TS port iterates
   // ND_out, but a reversed back edge lives in ND_other and is never reached by
   // that pass — reverse its installed spline here (once) so it runs tail→head.

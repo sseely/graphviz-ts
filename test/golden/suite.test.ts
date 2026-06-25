@@ -101,9 +101,13 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //   shared-neighbour corridor depends on edge routing order — T2)
 // + 2 concentrate conc_opp_flag goldens (b135 + 167: anti-parallel pair merged
 //   under concentrate=true draws an arrowhead at both ends — arrow_flags branch)
-// + 2 parallel cluster-crossing corridor goldens (min repro + ldbxtried: parallel
-//   cross-rank edges from inside a cluster route the rank-box corridor to the real
-//   head, not a straight under-segmented line to the first virtual node — T1.2)
+// + 2 parallel multi-rank corridor goldens (T1.2 representative-resolution fix):
+//   parallel-multirank-min (cluster-free, active byte golden — parallel cross-rank
+//   edges route the corridor to the real head, not a straight line to the first
+//   virtual node) and parallel-cluster-ldbxtried (motivating cluster case, marked
+//   knownResidual: n0->n2 now routes the corridor (structural) but the whole-SVG
+//   stays diverged on a ~1px Proutespline residual + a separate lone-edge issue;
+//   the survey verdict is its active gate)
 test('manifest has 164 entries', () => {
   expect(manifest).toHaveLength(164);
 });
