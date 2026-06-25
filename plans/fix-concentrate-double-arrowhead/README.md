@@ -72,3 +72,37 @@ Run between/after tasks. Definitions in `batch-1/overview.md`.
 - [batch-1/T2-survey-verify.md](batch-1/T2-survey-verify.md)
 - [diagrams/data-flow.md](diagrams/data-flow.md)
 - [decision-journal.md](decision-journal.md)
+- [comparisons/T2-survey-verification.md](comparisons/T2-survey-verification.md)
+
+## Mission summary (complete — 2026-06-25)
+
+**Tasks completed:** 2 / 2 planned (T1 fix + goldens `a085474`; T2 verify `638b8e2`).
+
+**Outcome:** Ported the `conc_opp_flag` branch of C `arrow_flags`. The merged
+concentrate edge now draws an arrowhead at both ends and the spline clips at the
+new tail end (one fix, both symptoms).
+
+- `graphs-b135`, `167`, `2087` → diverged → **structural-match** (goldens
+  `concentrate-b135`/`concentrate-167` byte-match the headless oracle).
+- `graphs-b69`, `1453` → arrowheads now correct, retain a separate
+  childCount/x-coord residual.
+- `graphs-b15`, `2825` → byte-identical with/without the fix (no opposing-pair
+  merge triggers there); divergence is unrelated to arrowheads.
+
+**Quality gates:** `npm run typecheck` exit 0; `npm test` 2403 passed (183 files,
++2 new goldens). **0 regressions attributable to the fix** — proven via
+concentrate-only mechanism + concentrate=false classification of every flagged
+input + HEAD~1 byte-identity on 8 samples.
+
+**Decisions flagged for review (1):** the tracked parity baselines
+(`parity.json`/`parity-rules.json`/`PARITY.md`) are stale — they predate the
+`text-measure-arch` merge — so they were **not** regenerated under this fix
+(would conflate a feature-merge's drift with this commit). **Follow-up:** a
+dedicated post-cutover `chore(corpus): refresh parity baselines` run on current
+`main`; it will show the gate green with these 3 flips included.
+
+**Known issues:** none introduced. b15/b69 x-coord residual documented in
+`docs/known-divergences.md`. `2361` over-draw was out of scope (untouched).
+
+**Branch:** `fix/concentrate-double-arrowhead` (off `main`) — ready to merge
+(merge commit, per mission-brief branch policy).
