@@ -67,7 +67,9 @@ class SplineClipHelper {
    * arrowhead/arrowtail attributes. Only "normal" and "none" arrow
    * type names are ported (other types — diamond, tee, crow, ... —
    * are unused by the supported inputs and fall back to normal).
-   * conc_opp_flag merging is not ported (no concentrators).
+   * When `conc_opp_flag` is set (a concentrate=true merge of an
+   * anti-parallel pair), the opposing edge's arrowhead is OR'd in so the
+   * surviving edge draws an arrowhead at both ends.
    * @see lib/common/arrows.c:arrow_flags
    */
   static arrowFlags(e: Edge): [number, number] {
@@ -80,6 +82,17 @@ class SplineClipHelper {
     else if (dir === 'none') { sflag = ARR_NONE; eflag = ARR_NONE; }
     if (eflag === ARR_NORM && e.attrs.get('arrowhead') === 'none') eflag = ARR_NONE;
     if (sflag === ARR_NORM && e.attrs.get('arrowtail') === 'none') sflag = ARR_NONE;
+    // conc_opp_flag: pick up the opposing (original B->A) edge's arrowhead.
+    // agfindedge(agraphof(aghead(e)), aghead(e), agtail(e)) → first out-edge
+    // of e.head back to e.tail. @see lib/common/arrows.c:arrow_flags
+    if (e.info.conc_opp_flag) {
+      const f = e.head.outEdges(e.head.root).find(x => x.head === e.tail);
+      if (f) {
+        const [s0, e0] = SplineClipHelper.arrowFlags(f);
+        eflag |= s0;
+        sflag |= e0;
+      }
+    }
     return [sflag, eflag];
   }
 

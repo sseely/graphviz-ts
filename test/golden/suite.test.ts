@@ -99,8 +99,10 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 // + 1 size= scaling golden (init_job_viewport zoom, group scale(Z))
 // + 1 long-edge routing-order golden (dot_splines_ rank-major + edgecmp; a
 //   shared-neighbour corridor depends on edge routing order — T2)
-test('manifest has 160 entries', () => {
-  expect(manifest).toHaveLength(160);
+// + 2 concentrate conc_opp_flag goldens (b135 + 167: anti-parallel pair merged
+//   under concentrate=true draws an arrowhead at both ends — arrow_flags branch)
+test('manifest has 162 entries', () => {
+  expect(manifest).toHaveLength(162);
 });
 
 // ---------------------------------------------------------------------------
