@@ -210,6 +210,9 @@ describe('T6 — undecorated tables unchanged', () => {
 
 import { setImageSizer } from '../gvc/usershape.js';
 import { afterEach } from 'vitest';
+import { pinLutMeasurer } from "../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 const imgTbl = (attrs: string): string =>
   `digraph { A [shape=plaintext label=<<TABLE><TR><TD${attrs.startsWith(' W') ? attrs.slice(0, attrs.indexOf('>')) : ''}><IMG${attrs.startsWith(' W') ? attrs.slice(attrs.indexOf('>') + 1) : attrs}/></TD></TR></TABLE>>]; }`;

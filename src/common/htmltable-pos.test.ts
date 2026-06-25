@@ -107,43 +107,43 @@ export function testBuildRunsAccumulatesWidth(): void {
 // ---------------------------------------------------------------------------
 
 export function testPlaceRunPlainFlagsZero(): void {
-  const run = { items: [{ text: 'hi' }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi' }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontFlags).toBe(0);
 }
 
 export function testPlaceRunBoldFlag(): void {
-  const run = { items: [{ text: 'hi', bold: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi', bold: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontFlags).toBe(HTML_BF);
 }
 
 export function testPlaceRunItalicFlag(): void {
-  const run = { items: [{ text: 'hi', italic: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi', italic: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontFlags).toBe(HTML_IF);
 }
 
 export function testPlaceRunUnderlineFlag(): void {
-  const run = { items: [{ text: 'hi', underline: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi', underline: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontFlags).toBe(HTML_UL);
 }
 
 export function testPlaceRunCombinedFlags(): void {
-  const run = { items: [{ text: 'hi', bold: true, italic: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi', bold: true, italic: true }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontFlags).toBe(HTML_BF | HTML_IF);
 }
 
 export function testPlaceRunFontColorFromFinfo(): void {
-  const run = { items: [{ text: 'hi' }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi' }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontColor).toBe('black');
 }
 
 export function testPlaceRunFontColorFromItem(): void {
-  const run = { items: [{ text: 'hi', fontColor: 'red' }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6 };
+  const run = { items: [{ text: 'hi', fontColor: 'red' }] as HtmlTextItem[], width: 10, fontSize: 12, height: 12, maxOffset: 0.6, maxLayout: 0 };
   const lines = placeRunItems(run, 0, 0, defaultFinfo, stubMeasurer);
   expect(lines[0]!.fontColor).toBe('red');
 }

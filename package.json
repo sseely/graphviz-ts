@@ -34,17 +34,32 @@
     "typecheck": "tsc --noEmit --stableTypeOrdering",
     "typecheck:ts7": "tsgo --noEmit",
     "parser:regen": "peggy --format es --dts src/parser/dot.pegjs -o src/parser/dot.js",
+    "survey:setup": "sh test/corpus/gen-headless-gvbindir.sh",
+    "survey": "npm run survey:setup && GVBINDIR=${GVBINDIR:-/tmp/ghl} PARITY_OUT=parity-rules.json tsx test/corpus/survey.ts",
+    "survey:gate": "tsx test/corpus/rules-gate.ts",
+    "survey:dashboard": "tsx test/corpus/dashboard.ts",
+    "survey:baseline": "GV_TEXT_MEASURER=lut tsx test/corpus/survey.ts",
     "docs:dev": "vitepress dev docs-site",
     "docs:build": "vitepress build docs-site",
     "docs:preview": "vitepress preview docs-site"
   },
+  "peerDependencies": {
+    "canvas": ">=2"
+  },
+  "peerDependenciesMeta": {
+    "canvas": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@types/fontkit": "^2.0.9",
     "@types/node": "^26.0.0",
     "@typescript/native-preview": "^7.0.0-dev.20260622.1",
     "@vitest/coverage-v8": "^4.1.9",
     "@xmldom/xmldom": "^0.9.10",
     "canvas": "^3.2.3",
     "esbuild": "^0.28.1",
+    "fontkit": "^2.0.4",
     "peggy": "^5.0.0",
     "typescript": "^6.0.0",
     "vitepress": "^1.6.0",

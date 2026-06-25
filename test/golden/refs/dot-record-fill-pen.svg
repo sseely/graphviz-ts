@@ -12,17 +12,17 @@
 <g id="node1" class="node">
 <title>a</title>
 <polygon fill="lightyellow" stroke="black" points="0,-146.5 0,-182.5 54,-182.5 54,-146.5 0,-146.5"/>
-<text xml:space="preserve" text-anchor="middle" x="13.38" y="-159.45" font-family="Times,serif" font-size="14.00">x</text>
-<polyline fill="none" stroke="black" points="26.75,-146.5 26.75,-182.5"/>
-<text xml:space="preserve" text-anchor="middle" x="40.12" y="-159.45" font-family="Times,serif" font-size="14.00">y</text>
+<text xml:space="preserve" text-anchor="middle" x="13.5" y="-160.3" font-family="Times,serif" font-size="14.00">x</text>
+<polyline fill="none" stroke="black" points="27,-146.5 27,-182.5"/>
+<text xml:space="preserve" text-anchor="middle" x="40.5" y="-160.3" font-family="Times,serif" font-size="14.00">y</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
 <path fill="lightblue" stroke="black" d="M12,-73.5C12,-73.5 42,-73.5 42,-73.5 48,-73.5 54,-79.5 54,-85.5 54,-85.5 54,-97.5 54,-97.5 54,-103.5 48,-109.5 42,-109.5 42,-109.5 12,-109.5 12,-109.5 6,-109.5 0,-103.5 0,-97.5 0,-97.5 0,-85.5 0,-85.5 0,-79.5 6,-73.5 12,-73.5"/>
-<text xml:space="preserve" text-anchor="middle" x="13.38" y="-86.45" font-family="Times,serif" font-size="14.00">p</text>
-<polyline fill="none" stroke="black" points="26.75,-73.5 26.75,-109.5"/>
-<text xml:space="preserve" text-anchor="middle" x="40.12" y="-86.45" font-family="Times,serif" font-size="14.00">q</text>
+<text xml:space="preserve" text-anchor="middle" x="13.5" y="-87.3" font-family="Times,serif" font-size="14.00">p</text>
+<polyline fill="none" stroke="black" points="27,-73.5 27,-109.5"/>
+<text xml:space="preserve" text-anchor="middle" x="40.5" y="-87.3" font-family="Times,serif" font-size="14.00">q</text>
 </g>
 <!-- a&#45;&gt;b -->
 <g id="edge1" class="edge">
@@ -34,9 +34,9 @@
 <g id="node3" class="node">
 <title>c</title>
 <polygon fill="none" stroke="red" points="0,-0.5 0,-36.5 54,-36.5 54,-0.5 0,-0.5"/>
-<text xml:space="preserve" text-anchor="middle" x="14.62" y="-13.45" font-family="Times,serif" font-size="14.00">m</text>
-<polyline fill="none" stroke="red" points="29.25,-0.5 29.25,-36.5"/>
-<text xml:space="preserve" text-anchor="middle" x="41.62" y="-13.45" font-family="Times,serif" font-size="14.00">n</text>
+<text xml:space="preserve" text-anchor="middle" x="14.44" y="-14.3" font-family="Times,serif" font-size="14.00">m</text>
+<polyline fill="none" stroke="red" points="28.89,-0.5 28.89,-36.5"/>
+<text xml:space="preserve" text-anchor="middle" x="41.39" y="-14.3" font-family="Times,serif" font-size="14.00">n</text>
 </g>
 <!-- b&#45;&gt;c -->
 <g id="edge2" class="edge">

@@ -13,13 +13,13 @@
 <g id="node1" class="node">
 <title>a</title>
 <ellipse fill="none" stroke="black" cx="27" cy="-18" rx="27" ry="18"/>
-<text xml:space="preserve" text-anchor="middle" x="27" y="-12.95" font-family="Times,serif" font-size="14.00">a</text>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-13.8" font-family="Times,serif" font-size="14.00">a</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
 <ellipse fill="none" stroke="black" cx="117" cy="-41" rx="27" ry="18"/>
-<text xml:space="preserve" text-anchor="middle" x="117" y="-35.95" font-family="Times,serif" font-size="14.00">b</text>
+<text xml:space="preserve" text-anchor="middle" x="117" y="-36.8" font-family="Times,serif" font-size="14.00">b</text>
 </g>
 <!-- a&#45;&gt;b -->
 <g id="edge1" class="edge">
@@ -31,7 +31,7 @@
 <g id="node4" class="node">
 <title>d</title>
 <ellipse fill="none" stroke="black" cx="297" cy="-18" rx="27" ry="18"/>
-<text xml:space="preserve" text-anchor="middle" x="297" y="-12.95" font-family="Times,serif" font-size="14.00">d</text>
+<text xml:space="preserve" text-anchor="middle" x="297" y="-13.8" font-family="Times,serif" font-size="14.00">d</text>
 </g>
 <!-- a&#45;&gt;d -->
 <g id="edge4" class="edge">
@@ -43,7 +43,7 @@
 <g id="node3" class="node">
 <title>c</title>
 <ellipse fill="none" stroke="black" cx="207" cy="-41" rx="27" ry="18"/>
-<text xml:space="preserve" text-anchor="middle" x="207" y="-35.95" font-family="Times,serif" font-size="14.00">c</text>
+<text xml:space="preserve" text-anchor="middle" x="207" y="-36.8" font-family="Times,serif" font-size="14.00">c</text>
 </g>
 <!-- b&#45;&gt;c -->
 <g id="edge2" class="edge">

@@ -57,6 +57,8 @@ interface LineRun {
   height: number;
   /** Max yoffset_centerline over items (C maxoffset = 0.05 × fs). */
   maxOffset: number;
+  /** Max yoffset_layout (ascent) over items; 0 → fall back to freetype ascent. */
+  maxLayout: number;
 }
 
 /**
@@ -85,7 +87,7 @@ function itemFace(item: HtmlTextItem, finfo: HtmlFontInfo): { fs: number; face: 
 }
 
 /** Per-item measurement used while accumulating a run. */
-interface ItemMetric { w: number; h: number; fs: number; }
+interface ItemMetric { w: number; h: number; fs: number; yoffsetCenterline?: number; yoffsetLayout?: number; }
 
 /** Measure one text item; null when the item carries no text. */
 function measureItem(item: HtmlTextItem, finfo: HtmlFontInfo, measurer: TextMeasurer): ItemMetric | null {
@@ -94,12 +96,12 @@ function measureItem(item: HtmlTextItem, finfo: HtmlFontInfo, measurer: TextMeas
   const flags = itemFontFlags(item);
   const sz = measurer.measure(item.text, face, fs,
     { bold: !!(flags & HTML_BF), italic: !!(flags & HTML_IF) });
-  return { w: sz.w, h: sz.h, fs };
+  return { w: sz.w, h: sz.h, fs, yoffsetCenterline: sz.yoffsetCenterline, yoffsetLayout: sz.yoffsetLayout };
 }
 
 /** A fresh, empty run accumulator. */
 function newRun(): LineRun {
-  return { items: [], width: 0, fontSize: 0, height: 0, maxOffset: 0 };
+  return { items: [], width: 0, fontSize: 0, height: 0, maxOffset: 0, maxLayout: 0 };
 }
 
 /**
@@ -111,7 +113,8 @@ function accumulateItem(cur: LineRun, item: HtmlTextItem, m: ItemMetric): void {
   cur.width += m.w;
   cur.fontSize = Math.max(cur.fontSize, m.fs);
   cur.height = Math.max(cur.height, m.h);
-  cur.maxOffset = Math.max(cur.maxOffset, 0.05 * m.fs);
+  cur.maxOffset = Math.max(cur.maxOffset, m.yoffsetCenterline ?? 0.05 * m.fs);
+  cur.maxLayout = Math.max(cur.maxLayout, m.yoffsetLayout ?? 0);
 }
 
 /** Split text content into lines at <BR/> items. @see size_html_txt */
@@ -226,7 +229,11 @@ function placeSimpleRuns(
   let baseline = box.ur.y;
   for (let i = 0; i < runs.length; i++) {
     const run = runs[i];
-    baseline -= i === 0 ? freetypeAscent(run.fontSize, finfo.fontname) : run.height;
+    // first baseline = one ascent below the block top. The ascent is the
+    // measurement model's yoffset_layout (estimate = fontsize) when provided,
+    // else the freetype ascent (pango/canvas path).
+    const ascent = run.maxLayout > 0 ? run.maxLayout : freetypeAscent(run.fontSize, finfo.fontname);
+    baseline -= i === 0 ? ascent : run.height;
     lines.push(...placeRunItems(run, centerX - run.width / 2, baseline, finfo, measurer));
   }
   return lines;

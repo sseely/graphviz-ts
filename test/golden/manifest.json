@@ -165,7 +165,8 @@
     "toleranceClass": "iterative",
     "input": "test/golden/inputs/fdp-large.dot",
     "reference": "test/golden/refs/fdp-large.svg",
-    "description": "20-node undirected graph"
+    "description": "20-node undirected graph",
+    "knownResidual": "cutover residual: native fdp in HEADLESS mode produces an unstable layout (~45pt swing vs pango/port); fdp ref kept as pango. Polish: fdp solver fidelity (tangential to text measurement)."
   },
   {
     "id": "fdp-nested-cluster",
@@ -469,7 +470,8 @@
     "input": "test/golden/inputs/fdp-tiny-self-loop.dot",
     "reference": "test/golden/refs/fdp-tiny-self-loop.svg",
     "portReference": "test/golden/refs-port/fdp-tiny-self-loop.svg",
-    "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg"
+    "description": "3-node undirected graph with self-loop; libm-chaotic: ARM libm vs Apple libm, maxDelta=2.0pt; drift pinned by portReference; ref: graphviz 15.0.0 dot -Kfdp -Tsvg",
+    "knownResidual": "cutover residual: fdp solver divergence under Estimate (~10pt); pinned by portReference. Polish: fdp solver fidelity."
   },
   {
     "id": "dot-constraint-false",
@@ -969,7 +971,8 @@
     "input": "test/golden/inputs/dot-port-record-aligned.dot",
     "reference": "test/golden/refs/dot-port-record-aligned.svg",
     "portReference": "test/golden/refs-port/dot-port-record-aligned.svg",
-    "description": "record-field port A:f0->B via faithful routesplines (SR8); title carries the field name A:f0->B; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt"
+    "description": "record-field port A:f0->B via faithful routesplines (SR8); title carries the field name A:f0->B; ref: graphviz 15.0.0 dot -Tsvg; drift pinned by portReference at 0.01pt",
+    "knownResidual": "cutover residual: record node total width differs 1pt from native under the Estimate model (field-sizing rounding); text positions match. Polish: record field/margin rounding."
   },
   {
     "id": "dot-ortho-chain",
@@ -1009,7 +1012,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-curved-single.dot",
     "reference": "test/golden/refs/dot-curved-single.svg",
-    "description": "splines=curved single edge a->b; bent toward cycle centroid (here on-axis \u2192 straight); ref: native C dot -Tsvg via gvmine"
+    "description": "splines=curved single edge a->b; bent toward cycle centroid (here on-axis → straight); ref: native C dot -Tsvg via gvmine"
   },
   {
     "id": "dot-curved-parallel",
@@ -1113,7 +1116,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-style-funlimit.dot",
     "reference": "test/golden/refs/dot-style-funlimit.svg",
-    "description": "node style with 65 tokens hits parse_style FUNLIMIT (64) truncation \u2192 empty style list \u2192 unfilled (fill=none); byte-matches the oracle (parity color-stroke group B2)"
+    "description": "node style with 65 tokens hits parse_style FUNLIMIT (64) truncation → empty style list → unfilled (fill=none); byte-matches the oracle (parity color-stroke group B2)"
   },
   {
     "id": "dot-edge-fontcolor-scheme",
@@ -1129,7 +1132,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-cluster-peripheries0.dot",
     "reference": "test/golden/refs/dot-cluster-peripheries0.svg",
-    "description": "cluster peripheries=0 suppresses the boundary stroke (pencolor transparent \u2192 stroke none) per emit_clusters; byte-matches the oracle (parity color-stroke group D)"
+    "description": "cluster peripheries=0 suppresses the boundary stroke (pencolor transparent → stroke none) per emit_clusters; byte-matches the oracle (parity color-stroke group D)"
   },
   {
     "id": "dot-label-xml-entity",
@@ -1137,7 +1140,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-label-xml-entity.dot",
     "reference": "test/golden/refs/dot-label-xml-entity.svg",
-    "description": "label XML-entity decode (htmlEntityUTF8: &lt;/&gt;/&amp;/&#65;) + textspan escaping flags {raw,dash,nbsp} (apostrophe\u2192&#39;, dash\u2192&#45;); fixedsize pins geometry; byte-matches the oracle (parity text-content group b81/1990)"
+    "description": "label XML-entity decode (htmlEntityUTF8: &lt;/&gt;/&amp;/&#65;) + textspan escaping flags {raw,dash,nbsp} (apostrophe→&#39;, dash→&#45;); fixedsize pins geometry; byte-matches the oracle (parity text-content group b81/1990)"
   },
   {
     "id": "dot-string-no-concat",
@@ -1145,7 +1148,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-string-no-concat.dot",
     "reference": "test/golden/refs/dot-string-no-concat.svg",
-    "description": "adjacent quoted strings are NOT implicitly concatenated (QAtom: only '+' concatenates) \u2014 \"a\" \"b\" yields two nodes; byte-matches the oracle (parity parser-gap 2682/1990)"
+    "description": "adjacent quoted strings are NOT implicitly concatenated (QAtom: only '+' concatenates) — \"a\" \"b\" yields two nodes; byte-matches the oracle (parity parser-gap 2682/1990)"
   },
   {
     "id": "dot-cluster-id-attr",
@@ -1161,7 +1164,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-node-class-attr.dot",
     "reference": "test/golden/refs/dot-node-class-attr.svg",
-    "description": "DOT `class` attr (node default) appended to the SVG class string (svg_print_id_class \u2192 class=\"node node\"); byte-matches the oracle (parity attr-or-tag 2563)"
+    "description": "DOT `class` attr (node default) appended to the SVG class string (svg_print_id_class → class=\"node node\"); byte-matches the oracle (parity attr-or-tag 2563)"
   },
   {
     "id": "dot-id-stylesheet",
@@ -1177,7 +1180,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-unicode-name.dot",
     "reference": "test/golden/refs/dot-unicode-name.svg",
-    "description": "non-Latin (Cyrillic) node names parse via the widened NAME char class (\\x80\u2013\\uFFFF, matching scan.l's byte>=0x80); fixedsize pins geometry; byte-matches the oracle (parity parser-gap graphs-russian)"
+    "description": "non-Latin (Cyrillic) node names parse via the widened NAME char class (\\x80–\\uFFFF, matching scan.l's byte>=0x80); fixedsize pins geometry; byte-matches the oracle (parity parser-gap graphs-russian)"
   },
   {
     "id": "dot-arrow-dot",
@@ -1185,7 +1188,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-dot.dot",
     "reference": "test/golden/refs/dot-arrow-dot.svg",
-    "description": "dir=both odot head + dot tail \u2192 two <ellipse> arrows (filled tail, open head); byte-matches the oracle (arrowhead-geometry G1)"
+    "description": "dir=both odot head + dot tail → two <ellipse> arrows (filled tail, open head); byte-matches the oracle (arrowhead-geometry G1)"
   },
   {
     "id": "dot-arrow-crow",
@@ -1193,7 +1196,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-crow.dot",
     "reference": "test/golden/refs/dot-arrow-crow.svg",
-    "description": "dir=both crow head + vee tail \u2192 9-point arrow polygons; byte-matches the oracle (arrowhead-geometry G2)"
+    "description": "dir=both crow head + vee tail → 9-point arrow polygons; byte-matches the oracle (arrowhead-geometry G2)"
   },
   {
     "id": "dot-arrow-box",
@@ -1201,7 +1204,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-box.dot",
     "reference": "test/golden/refs/dot-arrow-box.svg",
-    "description": "dir=both box head + obox tail \u2192 polygon(4)+polyline, filled vs open; byte-matches the oracle"
+    "description": "dir=both box head + obox tail → polygon(4)+polyline, filled vs open; byte-matches the oracle"
   },
   {
     "id": "dot-arrow-diamond",
@@ -1209,7 +1212,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-diamond.dot",
     "reference": "test/golden/refs/dot-arrow-diamond.svg",
-    "description": "dir=both diamond head + ediamond (open) tail \u2192 4-point polygons; byte-matches the oracle"
+    "description": "dir=both diamond head + ediamond (open) tail → 4-point polygons; byte-matches the oracle"
   },
   {
     "id": "dot-arrow-tee",
@@ -1217,7 +1220,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-tee.dot",
     "reference": "test/golden/refs/dot-arrow-tee.svg",
-    "description": "dir=both tee arrows \u2192 polygon(4)+polyline bar; byte-matches the oracle"
+    "description": "dir=both tee arrows → polygon(4)+polyline bar; byte-matches the oracle"
   },
   {
     "id": "dot-arrow-curve",
@@ -1225,7 +1228,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-curve.dot",
     "reference": "test/golden/refs/dot-arrow-curve.svg",
-    "description": "dir=both curve head + icurve tail \u2192 polyline shaft + concave B\u00e9zier <path>; byte-matches the oracle"
+    "description": "dir=both curve head + icurve tail → polyline shaft + concave Bézier <path>; byte-matches the oracle"
   },
   {
     "id": "dot-arrow-compound",
@@ -1233,7 +1236,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-compound.dot",
     "reference": "test/golden/refs/dot-arrow-compound.svg",
-    "description": "dir=both crowdot head + odotnormal tail \u2192 stacked compound arrows (polygon+ellipse) offset along the shaft; byte-matches the oracle"
+    "description": "dir=both crowdot head + odotnormal tail → stacked compound arrows (polygon+ellipse) offset along the shaft; byte-matches the oracle"
   },
   {
     "id": "dot-arrow-side",
@@ -1241,7 +1244,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-side.dot",
     "reference": "test/golden/refs/dot-arrow-side.svg",
-    "description": "dir=both lnormal head + rdiamond tail \u2192 side-modifier half arrows; byte-matches the oracle"
+    "description": "dir=both lnormal head + rdiamond tail → side-modifier half arrows; byte-matches the oracle"
   },
   {
     "id": "dot-htmltable-grad-linear",
@@ -1257,7 +1260,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-htmltable-grad-radial.dot",
     "reference": "test/golden/refs/dot-htmltable-grad-radial.svg",
-    "description": "HTML table cell with a radial gradient bgcolor (STYLE=radial \u2192 setFill RGRADIENT path); byte-matches the oracle"
+    "description": "HTML table cell with a radial gradient bgcolor (STYLE=radial → setFill RGRADIENT path); byte-matches the oracle"
   },
   {
     "id": "dot-htmltable-rounded-grad",

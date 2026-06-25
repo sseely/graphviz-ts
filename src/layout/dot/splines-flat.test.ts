@@ -14,6 +14,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderSvg } from '../../index.js';
+import { pinLutMeasurer } from "../../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 const Q = String.fromCharCode(34);
 const RE_PATH = new RegExp('<path[^>]*\\sd=' + Q + '(M[^' + Q + ']+)' + Q, 'g');

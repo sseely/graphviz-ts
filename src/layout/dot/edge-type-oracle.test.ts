@@ -18,6 +18,9 @@
 
 import { it, expect } from 'vitest';
 import { renderSvg } from '../../index.js';
+import { pinLutMeasurer } from "../../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 const Q = String.fromCharCode(34);
 const RE_NUM = new RegExp('-?[0-9.]+', 'g');

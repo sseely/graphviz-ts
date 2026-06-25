@@ -9,6 +9,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderSvg } from '../index.js';
+import { pinLutMeasurer } from "../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 const polygons = (svg: string): string[] =>
   (svg.match(/<polygon[^>]*stroke="black"[^>]*/g) ?? []);

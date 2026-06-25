@@ -37,6 +37,9 @@
 import { describe, it, expect } from 'vitest';
 import { freetypeHintedWidth } from './textmeasure.js';
 import { renderSvg } from '../index.js';
+import { pinLutMeasurer } from "../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 // The canonical divergent string (recorded in the M12 follow-up notes).
 const DIVERGENT = 'A to B';

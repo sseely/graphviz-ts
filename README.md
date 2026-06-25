@@ -135,8 +135,27 @@ caller-supplied hook may be required:
   setImageSizer((src) => ({ w: 64, h: 64 })); // return null if unknown
   ```
 
-Text measurement is handled internally with a built-in metric model, so no font
-files are required for layout.
+### Text measurement
+
+Layout needs to know how wide each label is. By default this uses a **built-in,
+deterministic metric model** — no font files, identical output on every platform.
+In the **browser** the library automatically measures with the page's own canvas
+(the same font the browser renders the SVG with).
+
+For **host-faithful** Node measurement (real kerning/shaping, matching the local
+fonts the SVG will be rendered with), install the optional `canvas` peer and wire
+it once via `setTextMeasurer`:
+
+```ts
+import { setTextMeasurer, CanvasTextMeasurer } from 'graphviz-ts';
+import { createCanvas } from 'canvas'; // optional peer: `npm i canvas`
+
+setTextMeasurer(new CanvasTextMeasurer(createCanvas(0, 0).getContext('2d')));
+```
+
+Trade-off: the built-in model is reproducible across machines; the host-faithful
+path matches the rendering font but is platform-dependent (as native graphviz is).
+See the Text measurement guide for the full contract.
 
 ## Public API
 
