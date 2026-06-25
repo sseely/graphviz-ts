@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-25T19:07:21.241Z",
+  "generatedAt": "2026-06-25T21:49:15.284Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
     "byte-match": 395,
-    "structural-match": 220,
+    "structural-match": 223,
     "diverged": 159,
     "errored": 6,
-    "timeout": 4,
+    "timeout": 1,
     "oracle-error": 11
   },
   "results": [
@@ -447,7 +447,9 @@
     {
       "id": "2095_1",
       "path": "2095_1.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 5797.799999999996,
+      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
     },
     {
       "id": "2108",
@@ -566,7 +568,9 @@
     {
       "id": "2343",
       "path": "2343.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 11146.45,
+      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
     },
     {
       "id": "2352",
@@ -607,7 +611,9 @@
     {
       "id": "2371",
       "path": "2371.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 12524.489999999998,
+      "firstDiffPath": "svg/g[1]/g[71]/path[1]/@d"
     },
     {
       "id": "2391",
@@ -1173,8 +1179,8 @@
       "id": "graphs-b124",
       "path": "graphs/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2547.85,
-      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
+      "maxDelta": 2538.63,
+      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
     },
     {
       "id": "graphs-b135",
@@ -1979,7 +1985,7 @@
       "path": "graphs/ldbxtried.gv",
       "verdict": "diverged",
       "maxDelta": 323,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[4]/path[1]/@d"
     },
     {
       "id": "graphs-longflat",
@@ -2118,9 +2124,8 @@
     {
       "id": "graphs-pmpipe",
       "path": "graphs/pmpipe.gv",
-      "verdict": "diverged",
-      "maxDelta": 68.10000000000001,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 10.699999999999989
     },
     {
       "id": "graphs-polypoly",
@@ -3339,8 +3344,8 @@
       "id": "share-b124",
       "path": "share/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2547.85,
-      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
+      "maxDelta": 2538.63,
+      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
     },
     {
       "id": "share-b29",
@@ -3745,7 +3750,7 @@
       "path": "share/ldbxtried.gv",
       "verdict": "diverged",
       "maxDelta": 323,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "share-longflat",
@@ -3794,9 +3799,8 @@
     {
       "id": "share-pmpipe",
       "path": "share/pmpipe.gv",
-      "verdict": "diverged",
-      "maxDelta": 72.6,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 12.739999999999995
     },
     {
       "id": "share-polypoly",
@@ -3977,8 +3981,8 @@
       "id": "windows-b124",
       "path": "windows/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2547.85,
-      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
+      "maxDelta": 2538.63,
+      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
     },
     {
       "id": "windows-b29",
@@ -4367,7 +4371,7 @@
       "path": "windows/ldbxtried.gv",
       "verdict": "diverged",
       "maxDelta": 322,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "windows-longflat",
@@ -4416,9 +4420,8 @@
     {
       "id": "windows-pmpipe",
       "path": "windows/pmpipe.gv",
-      "verdict": "diverged",
-      "maxDelta": 71.22999999999999,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 11.789999999999992
     },
     {
       "id": "windows-polypoly",

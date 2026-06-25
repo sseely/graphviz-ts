@@ -60,7 +60,50 @@ Run between/after tasks (definitions in each batch overview):
 |---|---|---|
 | [batch-0](batch-0/overview.md) — investigation (GATE) | T0.1 C oracle, T0.2 port instrument, T0.3 root-cause+GO/STOP | [x] GO |
 | [batch-1](batch-1/overview.md) — faithful per-edge routing | T1.1 golden red, T1.2 representative-resolution fix (0 regr, +13), T1.3/T1.4 N/A | [x] |
-| [batch-2](batch-2/overview.md) — verify + baselines | T2.1 survey+perf, T2.2 baseline refresh + close | [ ] |
+| [batch-2](batch-2/overview.md) — verify + baselines | T2.1 survey+perf (gate PASS, 0 regr), T2.2 baseline refresh + close | [x] |
+
+## Mission summary (2026-06-25)
+
+**Status: COMPLETE.** Objective met — parallel/opposing cross-rank edges now route
+the pathplan corridor to their real head instead of a straight line to the first
+virtual node.
+
+**Root cause (Batch 0, GO):** the parallel/opposing group routed its shared base
+from the unresolved first virtual chain segment (`edges[0]`, head = a virtual
+node), so `routeRegularEdgeFaithful` treated it as adjacent-rank and emitted a
+straight base ending at that vnode, short-circuiting the multi-rank chain router.
+Pinned against an instrumented C `make_regular_edge`/`routesplines_` oracle +
+a port dispatch probe; **refined ADR-3** (C routes ONE base from un-offset ports,
+not per-edge offset ports).
+
+**Fix (Batch 1, T1.2 — `splines-route.ts` only, ~30 LOC):**
+- `baseSplineForGroup` resolves the representative to its original edge before
+  routing (`resolveOrigEdge`), so the multi-rank chain router walks the corridor.
+- `groupRealHead` clips each shifted copy to the real head, not the virtual
+  segment head. Mirrors C `make_regular_edge` (realedge resolve + VIRTUAL chain
+  walk + `clip_and_install(e, aghead(e))`). `edge-route-faithful.ts` needed no
+  change; T1.3/T1.4 were N/A.
+
+**Verification (Batch 2):**
+- **Survey gate: PASS, 0 regressions.** Fix's isolated headless effect: `pmpipe`
+  ×3 `diverged → structural-match` (maxΔ 68→11) + broad edge-level corridor
+  fidelity on parallel/opposing multi-rank edges.
+- **Perf clean:** routing-changed graphs render 0.04–0.36× native; the heaviest
+  input `2108` is identical 95s pre/post (mincross-bound, unaffected by the fix).
+- **Goldens:** `parallel-multirank-min` (cluster-free, byte-exact) pins the fix;
+  `parallel-cluster-ldbxtried` is `knownResidual`. Full suite 2404 passed.
+
+**Known residual / follow-up (out of scope — `edge-route.ts`):** `ldbxtried` stays
+diverged (maxΔ 323 unchanged): the fix corrects the parallel `n0->n2` edges, but
+the worst delta MOVED to the lone `n0->n1` edge — routing the n0->n2 group now
+calls `recover_slack`, repositioning shared chain vnodes that the LONE multi-rank
+router does not re-route faithfully. Tracked in
+`.agent-notes/parallel-corridor-fix-and-lone-recoverslack-followup.md`.
+
+**Harness improvements (user-directed):** survey timeout floor derived as
+`5× slowest native` (`survey.ts`, was a fixed 180s — fixed concurrency
+false-timeouts on 2108/1718); `npm run survey:fast` (`SURVEY_MAX_PORT_MS`) skips
+the >60s tail for routine "did we break anything?" runs.
 
 ## Index
 

@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-06-25T19:26:24.561Z",
+  "generatedAt": "2026-06-25T22:04:38.181Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
     "byte-match": 346,
-    "structural-match": 262,
+    "structural-match": 265,
     "diverged": 166,
     "errored": 6,
-    "timeout": 4,
-    "oracle-error": 11
+    "timeout": 0,
+    "oracle-error": 12
   },
   "results": [
     {
@@ -448,7 +448,9 @@
     {
       "id": "2095_1",
       "path": "2095_1.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 6793.5999999999985,
+      "firstDiffPath": "svg/g[1]/g[130]/path[1]/@d"
     },
     {
       "id": "2108",
@@ -569,7 +571,9 @@
     {
       "id": "2343",
       "path": "2343.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 8869.419999999998,
+      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
     },
     {
       "id": "2352",
@@ -610,7 +614,9 @@
     {
       "id": "2371",
       "path": "2371.dot",
-      "verdict": "timeout"
+      "verdict": "diverged",
+      "maxDelta": 12524.689999999999,
+      "firstDiffPath": "svg/g[1]/g[71]/path[1]/@d"
     },
     {
       "id": "2391",
@@ -970,7 +976,8 @@
     {
       "id": "2854",
       "path": "2854.dot",
-      "verdict": "timeout"
+      "verdict": "oracle-error",
+      "errMsg": "oracle exit null"
     },
     {
       "id": "358",
@@ -1188,8 +1195,8 @@
       "id": "graphs-b124",
       "path": "graphs/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2536.85,
-      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
+      "maxDelta": 2527.63,
+      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
     },
     {
       "id": "graphs-b135",
@@ -1999,7 +2006,7 @@
       "path": "graphs/ldbxtried.gv",
       "verdict": "diverged",
       "maxDelta": 320,
-      "firstDiffPath": "svg/g[1]/g[6]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[4]/path[1]/@d"
     },
     {
       "id": "graphs-longflat",
@@ -2140,9 +2147,8 @@
     {
       "id": "graphs-pmpipe",
       "path": "graphs/pmpipe.gv",
-      "verdict": "diverged",
-      "maxDelta": 69.27000000000001,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 11.25
     },
     {
       "id": "graphs-polypoly",
@@ -3381,8 +3387,8 @@
       "id": "share-b124",
       "path": "share/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2545.87,
-      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
+      "maxDelta": 2536.65,
+      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
     },
     {
       "id": "share-b29",
@@ -3789,7 +3795,7 @@
       "path": "share/ldbxtried.gv",
       "verdict": "diverged",
       "maxDelta": 320,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "share-longflat",
@@ -3838,9 +3844,8 @@
     {
       "id": "share-pmpipe",
       "path": "share/pmpipe.gv",
-      "verdict": "diverged",
-      "maxDelta": 72.65,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 12.89
     },
     {
       "id": "share-polypoly",
@@ -4028,8 +4033,8 @@
       "id": "windows-b124",
       "path": "windows/b124.gv",
       "verdict": "diverged",
-      "maxDelta": 2541.85,
-      "firstDiffPath": "svg/g[1]/g[26]/path[1]/@d"
+      "maxDelta": 2532.63,
+      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
     },
     {
       "id": "windows-b29",
@@ -4420,7 +4425,7 @@
       "path": "windows/ldbxtried.gv",
       "verdict": "diverged",
       "maxDelta": 320,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
     },
     {
       "id": "windows-longflat",
@@ -4469,9 +4474,8 @@
     {
       "id": "windows-pmpipe",
       "path": "windows/pmpipe.gv",
-      "verdict": "diverged",
-      "maxDelta": 71.23,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 11.14
     },
     {
       "id": "windows-polypoly",
