@@ -14,7 +14,8 @@
 // oracle binary, unreadable manifest) exits nonzero. Node-only dev/test infra.
 
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,7 +26,19 @@ const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const ROOT = process.env.CORPUS_ROOT ?? join(homedir(), 'git/graphviz/tests');
 const DOT_BIN = process.env.DOT_BIN ?? join(homedir(), 'git/graphviz/build/cmd/dot/dot');
 const GVBINDIR = process.env.GVBINDIR ?? '/tmp/gvplugins';
-const CACHE = process.env.ORACLE_CACHE ?? join(tmpdir(), 'dot-corpus-oracle');
+// Oracle-cache identity. The cache stores native `dot` SVGs keyed by input id;
+// a bare shared dir silently cross-contaminated different oracles (the headless
+// /tmp/ghl rules survey vs the pango /tmp/gvplugins baseline read each other's
+// cached SVGs — same id, same dir) and went stale when `dot` was rebuilt (only
+// missing entries are (re)written). Namespace the default cache by a signature
+// of (binary, GVBINDIR, binary mtime) so oracles never collide and a rebuild
+// auto-invalidates. An explicit ORACLE_CACHE override still wins verbatim.
+const ORACLE_SIG = (() => {
+  let mt = '';
+  try { mt = String(statSync(DOT_BIN).mtimeMs); } catch { /* binary checked later */ }
+  return createHash('sha1').update(`${DOT_BIN}\0${GVBINDIR}\0${mt}`).digest('hex').slice(0, 12);
+})();
+const CACHE = process.env.ORACLE_CACHE ?? join(tmpdir(), 'dot-corpus-oracle', ORACLE_SIG);
 // A render is a `timeout` only if it does not error and runs past its budget:
 // max(MULT × native, FLOOR). The flat-20s budget mis-flagged graphs that are
 // merely slow-but-valid (e.g. 2108 ~70s, native ~12s); only a true runaway past

@@ -21,11 +21,18 @@ against the pango baseline (`parity.json`) **per graph**:
 The gate passes iff **regressions == 0**. Pre-existing divergences are documented
 here, not chased.
 
-## Full-corpus gate result (2026-06-24)
+## Full-corpus gate result (2026-06-25)
 ```
-rules-gate: stable=599 improvements=10 pre-existing=171 allowlisted=4 regressions=0
+rules-gate: stable=603 improvements=10 pre-existing=168 allowlisted=3 regressions=0
 GATE PASS
 ```
+> The prior (2026-06-24) `599/171/4` figures were computed from a `parity-rules.json`
+> generated against a **stale/cross-contaminated oracle cache** (the cache key was
+> not namespaced by GVBINDIR, so the headless rules survey read the pango baseline's
+> cached SVGs). Fixed in `survey.ts` (cache namespaced by binary+GVBINDIR+mtime); the
+> regenerated rules survey is byte-match 392 (was a spurious 65). `pre-existing` drops
+> to 168 because the concentrate fix flipped `graphs-b135/167/2087` in the pango
+> baseline too.
 - **improvements (10)** — diverged in pango, MATCH in rules = the font-measurement
   cases the decoupling fixes: `2193, graphs-NaN, graphs-b102, graphs-b143,
   graphs-xx, linux.i386-b102, share-NaN, share-b102, windows-NaN, windows-b102`.
