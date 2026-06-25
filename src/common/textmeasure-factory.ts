@@ -4,10 +4,11 @@
  *
  * Resolution order (when no explicit override is set):
  *   1. explicit override via setTextMeasurer (tests, host-faithful Node opt-in)
- *   2. GV_TEXT_MEASURER=estimate  — test/CI hook for deterministic rules validation
+ *   2. GV_TEXT_MEASURER=estimate|lut — test/CI hook to force a specific measurer
  *   3. browser (document present) — CanvasTextMeasurer over the page canvas
  *      (host-faithful: the same font the browser renders the SVG with)
- *   4. Node default               — LutTextMeasurer
+ *   4. Node default               — EstimateTextMeasurer (deterministic; matches
+ *      graphviz's own headless estimate_textspan_size)
  *
  * Host-faithful Node measurement (node-canvas) is intentionally NOT auto-loaded:
  * the library has ZERO runtime deps and ships a single browser+Node bundle, so
@@ -68,13 +69,18 @@ function adviseHostFaithful(): void {
 /** Resolve the text measurer for this render (see resolution order above). */
 export function createMeasurer(): TextMeasurer {
   if (override) return override;
-  if (envMeasurer() === 'estimate') return new EstimateTextMeasurer();
+  const forced = envMeasurer(); // test/CI hook: force a specific measurer
+  if (forced === 'estimate') return new EstimateTextMeasurer();
+  if (forced === 'lut') return new LutTextMeasurer();
   if (typeof document !== 'undefined') {
     try {
       const ctx2d = document.createElement('canvas').getContext('2d');
       if (ctx2d) return new CanvasTextMeasurer(ctx2d);
     } catch { /* canvas unavailable */ }
   }
-  adviseHostFaithful(); // Node, no host canvas → built-in metrics
-  return new LutTextMeasurer();
+  adviseHostFaithful(); // Node, no host canvas → built-in deterministic metrics
+  // Node default = EstimateTextMeasurer: the deterministic reference that matches
+  // graphviz's own headless (estimate_textspan_size) output. The hinted
+  // LutTextMeasurer is retained as an opt-in (ADR-4). @see DESIGN.md
+  return new EstimateTextMeasurer();
 }

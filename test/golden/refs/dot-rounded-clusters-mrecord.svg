@@ -20,15 +20,15 @@
 <g id="node1" class="node">
 <title>a</title>
 <path fill="none" stroke="black" d="M28,-88.5C28,-88.5 58,-88.5 58,-88.5 64,-88.5 70,-94.5 70,-100.5 70,-100.5 70,-112.5 70,-112.5 70,-118.5 64,-124.5 58,-124.5 58,-124.5 28,-124.5 28,-124.5 22,-124.5 16,-118.5 16,-112.5 16,-112.5 16,-100.5 16,-100.5 16,-94.5 22,-88.5 28,-88.5"/>
-<text xml:space="preserve" text-anchor="middle" x="29.38" y="-101.45" font-family="Times,serif" font-size="14.00">x</text>
-<polyline fill="none" stroke="black" points="42.75,-88.5 42.75,-124.5"/>
-<text xml:space="preserve" text-anchor="middle" x="56.12" y="-101.45" font-family="Times,serif" font-size="14.00">y</text>
+<text xml:space="preserve" text-anchor="middle" x="29.5" y="-102.3" font-family="Times,serif" font-size="14.00">x</text>
+<polyline fill="none" stroke="black" points="43,-88.5 43,-124.5"/>
+<text xml:space="preserve" text-anchor="middle" x="56.5" y="-102.3" font-family="Times,serif" font-size="14.00">y</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
 <ellipse fill="none" stroke="black" cx="43" cy="-34" rx="27" ry="18"/>
-<text xml:space="preserve" text-anchor="middle" x="43" y="-28.95" font-family="Times,serif" font-size="14.00">b</text>
+<text xml:space="preserve" text-anchor="middle" x="43" y="-29.8" font-family="Times,serif" font-size="14.00">b</text>
 </g>
 <!-- a&#45;&gt;b -->
 <g id="edge1" class="edge">

@@ -30,7 +30,7 @@ describe('setTextMeasurer override', () => {
     setTextMeasurer({ measure: (): TextSize => ({ w: 0, h: 0 }) });
     setTextMeasurer(undefined);
     expect(getTextMeasurer()).toBeUndefined();
-    expect(createMeasurer()).toBeInstanceOf(LutTextMeasurer); // node default
+    expect(createMeasurer()).toBeInstanceOf(EstimateTextMeasurer); // node default
   });
 
   it('override wins over the GV_TEXT_MEASURER env hook', () => {
@@ -44,13 +44,13 @@ describe('setTextMeasurer override', () => {
 // ── auto-resolution (Node) ───────────────────────────────────────────────────
 
 describe('createMeasurer auto-resolution (Node, no document)', () => {
-  it('defaults to LutTextMeasurer', () => {
-    expect(createMeasurer()).toBeInstanceOf(LutTextMeasurer);
+  it('defaults to EstimateTextMeasurer (deterministic, headless-matching)', () => {
+    expect(createMeasurer()).toBeInstanceOf(EstimateTextMeasurer);
   });
 
-  it('GV_TEXT_MEASURER=estimate selects the deterministic reference', () => {
-    process.env.GV_TEXT_MEASURER = 'estimate';
-    expect(createMeasurer()).toBeInstanceOf(EstimateTextMeasurer);
+  it('GV_TEXT_MEASURER=lut forces the hinted built-in measurer', () => {
+    process.env.GV_TEXT_MEASURER = 'lut';
+    expect(createMeasurer()).toBeInstanceOf(LutTextMeasurer);
   });
 });
 

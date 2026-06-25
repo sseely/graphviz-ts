@@ -25,6 +25,9 @@ import { renderSvg } from '../../index.js';
 import { flatLabeledLinePoints } from './splines-flat-labeled.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
+import { pinLutMeasurer } from "../../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 const Q = String.fromCharCode(34);
 const RE_PATH = new RegExp('<path[^>]*\\sd=' + Q + '(M[^' + Q + ']+)' + Q, 'g');

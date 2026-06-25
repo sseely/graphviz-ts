@@ -12,13 +12,13 @@
 <g id="node1" class="node">
 <title>Контрагенты</title>
 <polygon fill="none" stroke="black" points="144,-151.2 0,-151.2 0,-93.6 144,-93.6 144,-151.2"/>
-<text xml:space="preserve" text-anchor="middle" x="72" y="-117.35" font-family="Times,serif" font-size="14.00">Контрагенты</text>
+<text xml:space="preserve" text-anchor="middle" x="72" y="-118.2" font-family="Times,serif" font-size="14.00">Контрагенты</text>
 </g>
 <!-- Банк -->
 <g id="node2" class="node">
 <title>Банк</title>
 <polygon fill="none" stroke="black" points="144,-57.6 0,-57.6 0,0 144,0 144,-57.6"/>
-<text xml:space="preserve" text-anchor="middle" x="72" y="-23.75" font-family="Times,serif" font-size="14.00">Банк</text>
+<text xml:space="preserve" text-anchor="middle" x="72" y="-24.6" font-family="Times,serif" font-size="14.00">Банк</text>
 </g>
 <!-- Контрагенты&#45;&gt;Банк -->
 <g id="edge1" class="edge">

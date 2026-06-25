@@ -59,6 +59,9 @@ describe('multiline labels end-to-end (C-verified)', () => {
 // ---------------------------------------------------------------------------
 
 import { parse } from '../parser/index.js';
+import { pinLutMeasurer } from "../../test/helpers/measurer.js";
+
+pinLutMeasurer();
 
 describe('quoted-string lexing (scan.l: only \\" and \\<newline> transform)', () => {
   const attr = (dot: string): string => {

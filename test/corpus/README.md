@@ -20,12 +20,22 @@ red, that suite (mission decision AD-1). All survey code is Node-only under
 | Stage | Script | Output |
 |-------|--------|--------|
 | T1 enumerate + classify | `enumerate.ts` | `corpus-manifest.json` |
-| T2 survey (oracle vs port) | `survey.ts` (+ `render-one.ts`) | `parity.json` |
+| T2 **rules survey** (headless oracle vs port `EstimateTextMeasurer`) | `survey.ts` (+ `render-one.ts`) | `parity-rules.json` |
+| T2-gate no-regression check | `rules-gate.ts` | exit 0/1 |
 | T3 dashboard + triage | `dashboard.ts` | `PARITY.md` |
 
 ```
-enumerate.ts ──▶ corpus-manifest.json ──▶ survey.ts ──▶ parity.json ──▶ dashboard.ts ──▶ PARITY.md
+enumerate.ts ──▶ corpus-manifest.json ──▶ survey.ts ──▶ parity-rules.json ──▶ dashboard.ts ──▶ PARITY.md
 ```
+
+The **rules survey** is the canonical layout survey (mission `fix-xcoord-position`,
+ADR-3). It diffs the port (default `EstimateTextMeasurer`) against native `dot`
+run **headless** (core + dot_layout plugins only → `estimate_textspan_size`), so
+it is deterministic and font-stack-independent on every platform. The older pango
+baseline (port `LutTextMeasurer` vs native dot + pango) is **retired**: its
+incidental kerning/charset coverage now lives in the Batch-2 measurement tests
+(`src/common/textmeasure.bundled-font.test.ts`). It stays runnable as
+`survey:baseline` for diagnosis only — see `rules-known-divergences.md`.
 
 ## Running it
 
@@ -33,11 +43,18 @@ enumerate.ts ──▶ corpus-manifest.json ──▶ survey.ts ──▶ parity
 # T1 — classify every .gv/.dot under the corpus root, write corpus-manifest.json
 npx tsx test/corpus/enumerate.ts [corpusRoot]
 
-# T2 — render + diff every applicable input, write parity.json
-npx tsx test/corpus/survey.ts
+# T2 — build the headless oracle GVBINDIR, then render + diff every applicable
+#      input against it, writing parity-rules.json (the primary survey)
+npm run survey
 
-# T3 — render parity.json into the PARITY.md dashboard
-npx tsx test/corpus/dashboard.ts
+# T2-gate — fail if any graph REGRESSES vs the retired pango baseline
+npm run survey:gate
+
+# T3 — render the parity report into the PARITY.md dashboard
+npm run survey:dashboard
+
+# Legacy pango baseline (port LutTextMeasurer vs native dot + pango); diagnosis only
+npm run survey:baseline
 ```
 
 ## Performance dashboard (speed, peer to parity)

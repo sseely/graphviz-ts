@@ -17,6 +17,21 @@ export const LUT_FAMILY_COUNT = 11;
 export interface TextSize {
   w: number;
   h: number;
+  /**
+   * Baseline→centerline offset in points (C textspan_t.yoffset_centerline). The
+   * vertical metric is part of the measurement model: native graphviz's estimate
+   * uses 0.1·fontsize, while the font-plugin (pango) path is ≈0.05·fontsize. When
+   * omitted, callers default to the 0.05·fontsize (pango-calibrated) value.
+   * @see lib/common/textspan.c:estimate_textspan_size
+   */
+  yoffsetCenterline?: number;
+  /**
+   * Baseline→top (ascent) in points (C textspan_t.yoffset_layout). Native
+   * estimate uses `fontsize`; the freetype/pango path uses the font ascent
+   * (~0.89·fontsize). When omitted, callers fall back to the freetype ascent.
+   * @see lib/common/textspan.c:estimate_textspan_size
+   */
+  yoffsetLayout?: number;
 }
 
 /**
@@ -277,6 +292,11 @@ export class EstimateTextMeasurer implements TextMeasurer {
     const w = fontsize * estimate_text_width_1pt(
       fontname, text, flags?.bold === true, flags?.italic === true,
     );
-    return { w, h: fontsize * LINESPACING };
+    // native estimate_textspan_size: size.y = fontsize*LINESPACING,
+    // yoffset_layout = fontsize, yoffset_centerline = 0.1*fontsize.
+    return {
+      w, h: fontsize * LINESPACING,
+      yoffsetCenterline: 0.1 * fontsize, yoffsetLayout: fontsize,
+    };
   }
 }

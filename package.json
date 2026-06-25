@@ -34,6 +34,11 @@
     "typecheck": "tsc --noEmit --stableTypeOrdering",
     "typecheck:ts7": "tsgo --noEmit",
     "parser:regen": "peggy --format es --dts src/parser/dot.pegjs -o src/parser/dot.js",
+    "survey:setup": "sh test/corpus/gen-headless-gvbindir.sh",
+    "survey": "npm run survey:setup && GVBINDIR=${GVBINDIR:-/tmp/ghl} PARITY_OUT=parity-rules.json tsx test/corpus/survey.ts",
+    "survey:gate": "tsx test/corpus/rules-gate.ts",
+    "survey:dashboard": "tsx test/corpus/dashboard.ts",
+    "survey:baseline": "GV_TEXT_MEASURER=lut tsx test/corpus/survey.ts",
     "docs:dev": "vitepress dev docs-site",
     "docs:build": "vitepress build docs-site",
     "docs:preview": "vitepress preview docs-site"

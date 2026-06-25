@@ -77,7 +77,7 @@ function buildSpan(
     fontColor: font.fontcolor,
     fontFlags: 0,
     yoffset_layout: 0,
-    yoffset_centerline: 0.05 * font.fontsize,
+    yoffset_centerline: measured.yoffsetCenterline ?? 0.05 * font.fontsize,
     size: { x: measured.w, y: measured.h },
     just: 'n',
   };
