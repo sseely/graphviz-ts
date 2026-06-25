@@ -36,3 +36,18 @@ pre-existing=171 == pango baseline diverged (171), all font-independent
 side-by-side invariant: default survey == committed baseline (0 changes)
 ```
 Layout RULES proven faithful; b69/b135/b15 stay pre-existing on NON-font (concentrate/x-NS) issues.
+
+## Batch 1 — execution log
+| When | Task | Decision | Rationale |
+|------|------|----------|-----------|
+| 2026-06-25 | T1.1 | node-canvas is OPT-IN (not auto-loaded); refines ADR-6 | Library is ZERO-runtime-dep + single esbuild browser+Node bundle; a static/dynamic `canvas` import would break the browser bundle. Consumers wire node-canvas via setTextMeasurer(new CanvasTextMeasurer(...)). |
+| 2026-06-25 | T1.1 | LUT-demotion + Node default change DEFERRED to cutover (T3.2) | Side-by-side (ADR-3): the old pango survey uses the default measurer (LUT) via render-one; changing the default now would break it. Default stays LUT until cutover; rules survey forces estimate via GV_TEXT_MEASURER. |
+| 2026-06-25 | T1.1 | Browser-safe process.env read (`typeof process`) + fitness guard "no canvas import in src" | CLAUDE.md forbids unguarded process.env in browser lib code; the guard test prevents future node-canvas wiring from leaking into the browser bundle. |
+| 2026-06-25 | T1.1 | `override` module global allowlisted in module-globals.fitness | Process-wide DI hook (set via setTextMeasurer), not per-render state — analogous to activeSizer/setImageSizer. |
+
+### B1 gate
+```
+setTextMeasurer/getTextMeasurer public; resolution = override → env(estimate) → browser-canvas → LUT
+build: esbuild bundle OK, 0 `canvas` refs in dist/index.js (browser-safe)
+tests: 2394 pass; side-by-side default survey unchanged (0 verdict changes)
+```

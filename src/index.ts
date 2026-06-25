@@ -116,6 +116,16 @@ export type {
 } from './errors.js';
 export { setImageSizer } from './gvc/usershape.js';
 export type { ImageSizer } from './common/htmltable-types.js';
+
+// Text measurement: install a custom measurer (deterministic tests, or a
+// host-faithful Node measurer wired from node-canvas). The library auto-resolves
+// browser canvas → Node LUT by default and never imports `canvas` itself (zero
+// runtime deps). @see plans/fix-xcoord-position/DESIGN.md
+export { setTextMeasurer, getTextMeasurer } from './common/textmeasure-factory.js';
+export {
+  CanvasTextMeasurer, EstimateTextMeasurer, LutTextMeasurer,
+} from './common/textmeasure.js';
+export type { TextMeasurer, TextSize, TextVariantFlags } from './common/textmeasure.js';
 export { GvcContext } from './gvc/context.js';
 export type { BuiltinEngine, EngineName } from './gvc/context.js';
 
