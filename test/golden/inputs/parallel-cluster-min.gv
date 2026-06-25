@@ -1,0 +1,11 @@
+digraph {
+  node [shape=box width=0.5];
+  subgraph cluster0 {
+    label="c0";
+    a -> c -> d;
+  }
+  a -> b;
+  a -> b;
+  a -> b;
+  d -> b;
+}

@@ -1308,5 +1308,21 @@
     "input": "test/golden/inputs/concentrate-167.dot",
     "reference": "test/golden/refs/concentrate-167.svg",
     "description": "concentrate=true with a multi-edge fan and a back edge b->a; the surviving concentrated edge carries conc_opp_flag and draws both arrowheads (second confirming case for the conc_opp_flag branch)"
+  },
+  {
+    "id": "parallel-cluster-min",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/parallel-cluster-min.gv",
+    "reference": "test/golden/refs/parallel-cluster-min.svg",
+    "description": "minimal repro: 3 parallel edges a->b from inside cluster0 to an outside node spanning 3 ranks; each must route through the rank-box corridor (make_regular_edge, 2-bezier/7-pt) reaching b, not a straight 1-bezier ending at the first virtual node (T1.2 representative-resolution fix)"
+  },
+  {
+    "id": "parallel-cluster-ldbxtried",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/parallel-cluster-ldbxtried.gv",
+    "reference": "test/golden/refs/parallel-cluster-ldbxtried.svg",
+    "description": "motivating case: parallel n0->n2 edges (x3) from inside cluster0 to outside node n2 must route the up-right-down corridor around the cluster (3-bezier/10-pt) instead of under-segmenting to a straight line ending at a virtual node"
   }
 ]

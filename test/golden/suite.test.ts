@@ -101,8 +101,11 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //   shared-neighbour corridor depends on edge routing order — T2)
 // + 2 concentrate conc_opp_flag goldens (b135 + 167: anti-parallel pair merged
 //   under concentrate=true draws an arrowhead at both ends — arrow_flags branch)
-test('manifest has 162 entries', () => {
-  expect(manifest).toHaveLength(162);
+// + 2 parallel cluster-crossing corridor goldens (min repro + ldbxtried: parallel
+//   cross-rank edges from inside a cluster route the rank-box corridor to the real
+//   head, not a straight under-segmented line to the first virtual node — T1.2)
+test('manifest has 164 entries', () => {
+  expect(manifest).toHaveLength(164);
 });
 
 // ---------------------------------------------------------------------------
