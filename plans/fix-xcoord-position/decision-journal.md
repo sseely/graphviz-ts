@@ -90,3 +90,26 @@ re-baseline than ADR-3 anticipated. Escalated to the user for a decision among:
 the rules survey as a PARALLEL clean rules-gate, keep the pango survey as the
 shipped-fidelity tracker (no re-baseline); (c) other. Pausing per autonomous
 STOP condition "task is mis-scoped / much bigger than estimated".
+
+### T3.2 — RESOLVED: full cutover (user chose option A)
+User: *"A. What this buys us is faithful usage of what the change does … if this
+methodology is the right path, the goldens should cut over and continue to work.
+Failure here shows that the idea needs some polish."* — full cutover, residuals
+exposed honestly (not papered over).
+
+| When | Decision | Rationale |
+|------|----------|-----------|
+| 2026-06-25 | Node default → EstimateTextMeasurer (textmeasure-factory) | Ships the validated headless/rules path as the default; LUT demoted to GV_TEXT_MEASURER=lut opt-in. |
+| 2026-06-25 | Vertical metrics measurer-driven, not pango constants | yoffset_centerline 0.05→0.1·fs and HTML simple-run ascent (=fontsize) now come from TextSize.yoffsetCenterline/yoffsetLayout; pango values are the fallback. Closed the 0.7pt text-@y and 1.25pt HTML-ascent regressions the regen exposed. |
+| 2026-06-25 | Regenerate ALL 160 golden refs against the headless oracle | Per user: the goldens must cut over and still pass. They do, at deterministic (0.01pt) tolerance. |
+| 2026-06-25 | 3 residuals SKIPPED via manifest knownResidual, not hidden | dot-port-record-aligned (record-field 1pt rounding); fdp-large + fdp-tiny-self-loop (fdp solver / native-headless-fdp instability). Honest exposure = "needs polish", per the user's framing. |
+| 2026-06-25 | 27 inline coord tests pinned to LUT via test/helpers/measurer.ts | They characterize a specific vertical/shaping model (incl. the accepted LUT whole-string shaping divergence); estimate-default geometry is covered by the golden suite. pinLutMeasurer sets immediately + per-test so module-load renders are covered. |
+| 2026-06-25 | Rules survey = canonical (npm run survey + gen-headless-gvbindir.sh + survey:gate); pango retired to survey:baseline | ADR-3 cutover. Kerning/charset coverage moved to Batch-2 measurement tests. |
+
+### T3.2 gate
+```
+golden suite: 160 pass / 3 skipped (documented cutover residuals)
+full suite: 2398 pass / 3 skipped; typecheck PASS; lizard clean
+rules-gate: stable=599 improvements=10 pre-existing=171 allowlisted=4 regressions=0 → PASS
+commit 239c51b (feature/text-measure-arch)
+```

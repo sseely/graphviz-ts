@@ -1,11 +1,15 @@
 # Mission: text-measurement architecture (decouple layout rules from font metrics)
 
-**Status:** Batches 0-2 + T3.1 DONE. B0 rules gate PASS (599 stable, 10 font-fix
+**Status:** ALL batches DONE (0-3). B0 rules gate PASS (599 stable, 10 font-fix
 improvements, 0 regressions); B1 public `setTextMeasurer` (bundle canvas-free);
 B2 bundled-font measurement tests; T3.1 production wiring + docs (canvas optional
 peer, TTY install-advice note). Branch: `feature/text-measure-arch`.
-**T3.2 (cutover) PAUSED for decision** — changing the default measurer fails 167
-golden tests; the cutover scope is a user decision (see decision-journal T3.2).
+**T3.2 (cutover) DONE** — user chose full cutover (option A): Node default →
+`EstimateTextMeasurer`, all 160 goldens regenerated against the headless oracle
+(160 pass / 3 documented residuals skipped), vertical metrics made
+measurer-driven, rules survey is now canonical (`npm run survey`). Full suite
+2398 pass / 3 skipped; typecheck + lizard clean. Commit `239c51b`. See
+decision-journal T3.2.
 
 ## Objective
 Implement the design in [DESIGN.md](DESIGN.md): split text measurement into three
@@ -77,7 +81,7 @@ conversation decision log; the minimal repro is `repro/b69-min-noconc.gv`.
 | 1 | [x] [T1.1 public setTextMeasurer + resolution chain](batch-1/T1.1-measurer-api.md) | textmeasure-factory.ts, context.ts, index.ts | API public; browser excludes node-canvas; LUT demoted |
 | 2 | [x] [T2.1 bundled-font measurement tests](batch-2/T2.1-bundled-tests.md) | test/fonts/*, test helpers | kern/ligature/charset unit tests pass |
 | 3 | [x] [T3.1 production wiring + docs](batch-3/T3.1-production.md) | factory, docs | Node→node-canvas, browser→canvas, warning advises install |
-| 3 | [T3.2 cut over rules corpus](batch-3/T3.2-cutover.md) | test/corpus/* | old corpus retired; rules corpus is the survey |
+| 3 | [x] [T3.2 cut over rules corpus](batch-3/T3.2-cutover.md) | test/corpus/*, factory, goldens | default→Estimate; 160 goldens regen; rules survey canonical; pango retired |
 
 ## Index
 - [DESIGN.md](DESIGN.md) — the architecture + spike evidence
