@@ -255,3 +255,28 @@ export class CanvasTextMeasurer implements TextMeasurer {
     return { w: m.width, h: fontsize };
   }
 }
+
+/** graphviz estimate_textspan_size line spacing. @see lib/common/const.h:70 */
+export const LINESPACING = 1.20;
+
+/**
+ * Raw textspan_lut.c estimate: un-hinted per-char widths summed once, no kerning,
+ * height = fontsize * LINESPACING. Reproduces graphviz's HEADLESS measurement
+ * (no textlayout plugin → estimate_textspan_size) exactly, making it the
+ * deterministic, font-stack-independent reference for layout-rules validation.
+ * Unlike LutTextMeasurer this does NOT apply per-char FreeType px hinting.
+ * @see lib/common/textspan.c:estimate_textspan_size
+ */
+export class EstimateTextMeasurer implements TextMeasurer {
+  measure(
+    text: string,
+    fontname: string,
+    fontsize: number,
+    flags?: TextVariantFlags,
+  ): TextSize {
+    const w = fontsize * estimate_text_width_1pt(
+      fontname, text, flags?.bold === true, flags?.italic === true,
+    );
+    return { w, h: fontsize * LINESPACING };
+  }
+}

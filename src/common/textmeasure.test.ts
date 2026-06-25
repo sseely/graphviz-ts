@@ -4,7 +4,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   LUT_FAMILY_COUNT,
   LutTextMeasurer,
+  EstimateTextMeasurer,
+  LINESPACING,
   estimate_text_width_1pt,
+  freetypeHintedWidth,
   freetypeLineHeight,
   freetypeAscent,
 } from "./textmeasure.js";
@@ -250,5 +253,41 @@ describe("freetypeAscent is font-aware", () => {
     // Times 1825/2048: fs36 → ceil(42.77)=43px → 32.25pt
     expect(freetypeAscent(36, "Times")).toBeCloseTo(32.25, 9);
     expect(freetypeAscent(36)).toBe(freetypeAscent(36, "Times"));
+  });
+});
+
+// ── EstimateTextMeasurer: raw headless-matching (no hinting, no kerning) ──────
+
+describe("EstimateTextMeasurer", () => {
+  const m = new EstimateTextMeasurer();
+
+  it("w == fontsize * estimate_text_width_1pt (raw, NOT hinted)", () => {
+    // a hint-sensitive string whose hinted width differs from the raw width
+    const text = "WAR-WR1VI1";
+    const raw = 14 * estimate_text_width_1pt("Times", text, false, false);
+    const hinted = freetypeHintedWidth("Times", text, 14);
+    expect(hinted).not.toBeCloseTo(raw, 2); // guard: this string is hint-sensitive
+    expect(m.measure(text, "Times", 14).w).toBeCloseTo(raw, 9);
+    expect(m.measure(text, "Times", 14).w).not.toBeCloseTo(hinted, 2);
+  });
+
+  it("matches the raw estimate across families", () => {
+    for (const font of ["Times", "Helvetica", "Courier"]) {
+      const w = m.measure("Quartz glyph", font, 12).w;
+      expect(w).toBeCloseTo(12 * estimate_text_width_1pt(font, "Quartz glyph", false, false), 9);
+    }
+  });
+
+  it("height == fontsize * LINESPACING (1.20)", () => {
+    expect(LINESPACING).toBe(1.20);
+    expect(m.measure("x", "Times", 14).h).toBeCloseTo(14 * 1.20, 9);
+    expect(m.measure("x", "Helvetica", 36).h).toBeCloseTo(36 * 1.20, 9);
+  });
+
+  it("honors bold/italic variant selection", () => {
+    const plain = m.measure("Ag", "Times", 14, { bold: false, italic: false }).w;
+    const bold = m.measure("Ag", "Times", 14, { bold: true, italic: false }).w;
+    expect(plain).toBeCloseTo(14 * estimate_text_width_1pt("Times", "Ag", false, false), 9);
+    expect(bold).toBeCloseTo(14 * estimate_text_width_1pt("Times", "Ag", true, false), 9);
   });
 });
