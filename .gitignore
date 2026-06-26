@@ -5,6 +5,9 @@
 # Dependencies
 node_modules/
 
+# npm pack output (local consumable package tarball)
+*.tgz
+
 # Build output
 dist/
 build/

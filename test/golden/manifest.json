@@ -1318,11 +1318,19 @@
     "description": "minimal repro for the T1.2 representative-resolution fix: 3 parallel edges a->b spanning 2 ranks (a->m->b forces b to rank 2). Pre-fix the group's shared base routed the first virtual segment (a->vnode) and each copy ended at the rank-1 virtual node; post-fix each routes through the corridor to b. Cluster-free to isolate the parallel-routing fix from the separate adjacent cluster-exit over-segmentation; the cluster case is covered by parallel-cluster-ldbxtried"
   },
   {
+    "id": "edge-order-min",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/edge-order-min.gv",
+    "reference": "test/golden/refs/edge-order-min.svg",
+    "description": "edgecmp-order fixture (fix-edge-route-order): lone a->b (|rank diff|=1) dispatches BEFORE the parallel multi-rank a->c group (cnt=2) that recover_slack-moves their shared rank-1 vnode. Byte-matches the headless oracle both pre- and post-T1.2 (the move here is sub-pixel and a->b is straight in C either way), so it guards the unified single-pass router against breaking simple lone-before-group cases. The motivating geometric divergence (n0->n1 under-segmentation) only manifests at ldbxtried scale; that is pinned by the focused 'ldbxtried n0->n1 corridor' test."
+  },
+  {
     "id": "parallel-cluster-ldbxtried",
     "engine": "dot",
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/parallel-cluster-ldbxtried.gv",
     "reference": "test/golden/refs/parallel-cluster-ldbxtried.svg",
-    "knownResidual": "T1.2 fixes the motivating parallel n0->n2 (x3) edges: post-fix they route the up-right-down corridor around cluster0 (3-bezier/10-pt) and reach n2 (structural match; ~1px Proutespline residual on the descent control points). The whole-SVG golden stays diverged on TWO separate, out-of-scope issues: (1) the ~1px descent residual, and (2) the lone edge n0->n1 under-segments because routing the n0->n2 group now calls recover_slack, repositioning shared chain virtual nodes that the lone-edge router (edge-route.ts, outside this mission's write-set) does not re-route faithfully. The survey verdict (graphs-ldbxtried: pre-existing diverged, 0 regression) is the active gate; follow-up tracked in .agent-notes."
+    "knownResidual": "ldbxtried is a deeply-diverged graph (port vs C: 23 structural + 500+ numeric diffs across nodes/arrowheads/edges), so the whole-SVG golden cannot byte/structural-match and remains skipped; the corpus survey verdict (graphs-ldbxtried) is its active corpus-level gate. The fix-edge-route-order mission targets ONE element of it: the lone n0->n1 edge, which the two-pass router under-segmented (4-pt straight) because lone edges routed AFTER the n0->n2 group's recover_slack moved their shared rank-1 vnode. That specific fix is pinned by the focused 'ldbxtried n0->n1 corridor' test (port n0->n1 == C 7-pt corridor), not by this whole-SVG entry. The n0->n2 parallel group (~1px Proutespline descent residual) and the broader node/arrow divergence are separate and out of scope. Ref regenerated from the headless oracle (/tmp/ghl)."
   }
 ]

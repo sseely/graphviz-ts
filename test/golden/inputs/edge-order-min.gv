@@ -1,0 +1,6 @@
+// Minimal edgecmp-order fixture: lone a->b (|rank diff|=1) dispatches BEFORE the
+// parallel multi-rank a->c group (cnt=2) that recover_slack-moves their shared
+// rank-1 vnode. Pins that the unified single-pass router routes the lone edge in
+// its edgecmp position and does not break simple lone-before-group cases.
+// @see plans/fix-edge-route-order/comparisons/c-order-oracle.md
+digraph { a -> b; a -> c; a -> c; m1 -> m2; m2 -> c; b -> c; }

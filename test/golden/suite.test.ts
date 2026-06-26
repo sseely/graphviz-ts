@@ -13,7 +13,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import { renderSvg } from '../../src/index.js';
-import { compareSvg } from './compare.js';
+import { compareSvg, TOLERANCES } from './compare.js';
 import type { Diff } from './compare.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -108,8 +108,11 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //   knownResidual: n0->n2 now routes the corridor (structural) but the whole-SVG
 //   stays diverged on a ~1px Proutespline residual + a separate lone-edge issue;
 //   the survey verdict is its active gate)
-test('manifest has 164 entries', () => {
-  expect(manifest).toHaveLength(164);
+// + 1 edgecmp-order fixture (fix-edge-route-order: edge-order-min — lone edge
+//   dispatched before a vnode-moving parallel group; byte-matches the oracle and
+//   guards the unified single-pass router against breaking simple cases)
+test('manifest has 165 entries', () => {
+  expect(manifest).toHaveLength(165);
 });
 
 // ---------------------------------------------------------------------------
@@ -144,6 +147,54 @@ test('error message omits delta line for structural diff', () => {
   expect(msg).toContain('[struct-test]');
   expect(msg).toContain('svg/g[2]');
   expect(msg).not.toContain('delta:');
+});
+
+// ---------------------------------------------------------------------------
+// Focused pin (fix-edge-route-order): the lone ldbxtried edge n0->n1 must route
+// C's 7-pt corridor. The two-pass router routed lone edges AFTER all groups, so
+// n0->n1 read the n0->n2 group's recover_slack-moved shared rank-1 vnode and
+// under-segmented to a 4-pt straight. C routes both in one edgecmp pass (n0->n1
+// @seq30, before the n0->n2 group @seq52). The whole-SVG ldbxtried golden is a
+// skipped knownResidual (the graph is broadly diverged), so this scoped pin is
+// the active red->green test for the unify. Ref is the headless oracle.
+// @see plans/fix-edge-route-order/comparisons/{c-order-oracle,root-cause}.md
+// ---------------------------------------------------------------------------
+
+/** Extract a named edge's path `d` from rendered SVG (title is XML-encoded). */
+function edgePathD(svg: string, title: string): string | null {
+  const enc = title.replace(/-/g, '&#45;').replace(/>/g, '&gt;');
+  const m = new RegExp(`<title>${enc}</title>[\\s\\S]*?<path[^>]*\\sd="([^"]+)"`).exec(svg);
+  return m ? m[1] : null;
+}
+
+function pathNumbers(d: string): number[] {
+  return (d.match(/[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?/g) ?? []).map(Number);
+}
+
+test('dot / ldbxtried n0->n1 corridor (lone-before-group edgecmp order)', () => {
+  const dotSource = readFileSync(
+    join(process.cwd(), 'test/golden/inputs/parallel-cluster-ldbxtried.gv'),
+    'utf8',
+  );
+  const refSvg = readFileSync(
+    join(process.cwd(), 'test/golden/refs/parallel-cluster-ldbxtried.svg'),
+    'utf8',
+  );
+  const actualSvg = renderSvg(dotSource, 'dot');
+
+  const portD = edgePathD(actualSvg, 'n0->n1');
+  const refD = edgePathD(refSvg, 'n0->n1');
+  expect(portD).not.toBeNull();
+  expect(refD).not.toBeNull();
+
+  const portNums = pathNumbers(portD as string);
+  const refNums = pathNumbers(refD as string);
+  // 7-pt corridor = 14 numbers; the pre-fix two-pass produced a 4-pt straight (8).
+  expect(portNums.length).toBe(refNums.length);
+  const tol = TOLERANCES['deterministic'];
+  for (let i = 0; i < refNums.length; i++) {
+    expect(Math.abs(portNums[i] - refNums[i])).toBeLessThanOrEqual(tol);
+  }
 });
 
 // ---------------------------------------------------------------------------
