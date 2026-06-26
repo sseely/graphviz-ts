@@ -196,3 +196,34 @@ describe('dotInitEdge: default path regression', () => {
     expect(e.info.minlen).toBe(1);
   });
 });
+
+// ---------------------------------------------------------------------------
+// samehead / sametail — group ids read for shared-port merging (dot_sameports)
+// @see lib/dotgen/sameport.c:dot_sameports (agxget E_samehead / E_sametail)
+// ---------------------------------------------------------------------------
+
+describe('dotInitEdge: samehead / sametail group ids', () => {
+  it('leaves samehead/sametail undefined when attrs absent', () => {
+    const e = initEdge();
+    expect(e.info.samehead).toBeUndefined();
+    expect(e.info.sametail).toBeUndefined();
+  });
+
+  it('parses samehead="m000" into e.info.samehead', () => {
+    const e = initEdge({ samehead: 'm000' });
+    expect(e.info.samehead).toBe('m000');
+    expect(e.info.sametail).toBeUndefined();
+  });
+
+  it('parses sametail="grp" into e.info.sametail', () => {
+    const e = initEdge({ sametail: 'grp' });
+    expect(e.info.sametail).toBe('grp');
+    expect(e.info.samehead).toBeUndefined();
+  });
+
+  it('treats an empty samehead/sametail string as "no group" (undefined)', () => {
+    const e = initEdge({ samehead: '', sametail: '' });
+    expect(e.info.samehead).toBeUndefined();
+    expect(e.info.sametail).toBeUndefined();
+  });
+});

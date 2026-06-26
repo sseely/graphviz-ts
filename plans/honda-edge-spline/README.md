@@ -71,7 +71,7 @@ Per-edge piece-count diff recipe: see [batch-1/overview.md](batch-1/overview.md)
 |---|------|--------|-----|
 | 1 | Capture C spline oracle for honda's 2 divergent edges | [x] | [batch-1/overview.md](batch-1/overview.md) |
 | 2 | Instrument port, diff, localize first divergence | [x] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 | Apply faithful fix + unit test | [ ] | [batch-3/overview.md](batch-3/overview.md) |
+| 3 | Apply faithful fix + unit test | [x] | [batch-3/overview.md](batch-3/overview.md) |
 | 4 | Revert instrument, validate, commit | [ ] | [batch-4/overview.md](batch-4/overview.md) |
 
 ## Index

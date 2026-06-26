@@ -11,8 +11,11 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import type { Port } from '../../model/geom.js';
+import type { Point, Port } from '../../model/geom.js';
 import { VIRTUAL, MC_SCALE } from './fastgr.js';
+import { nodeBoxOf } from './edge-route-helpers.js';
+import { bezierClipNode } from './edge-route-clip.js';
+import { nodeInsideFn } from './edge-route-routing.js';
 
 // ---------------------------------------------------------------------------
 // ARR_LEN — distance from node boundary for arr_port
@@ -51,42 +54,21 @@ export function sameedge(same: SameGroup[], e: Edge, id: string): void {
 // @see lib/dotgen/sameport.c — calls shape_clip(u, curve)
 // ---------------------------------------------------------------------------
 
-/** Clamp t on the x-axis: tighten t so the ray stays within [lo, hi]. */
-export function clampAxisX(t: number, d: number, n: number, lo: number, hi: number): number {
-  if (d > 0) return Math.min(t, (hi - n) / d);
-  if (d < 0) return Math.min(t, (lo - n) / d);
-  return t;
-}
-
-/** Clamp t on the y-axis: tighten t so the ray stays within [lo, hi]. */
-export function clampAxisY(t: number, d: number, n: number, lo: number, hi: number): number {
-  if (d > 0) return Math.min(t, (hi - n) / d);
-  if (d < 0) return Math.min(t, (lo - n) / d);
-  return t;
-}
-
 /**
- * Approximate rectangular clip: move curve[0] toward curve[3] until it
- * reaches the node boundary rectangle.
+ * Move curve[0] to node u's shape boundary along the Bézier, exactly as C's
+ * shape_clip: build the node's shape inside-function (ellipse vs polygon, pen-
+ * width aware) and bezier-clip with left_inside = insidefn(curve[0]). curve[0]
+ * is the node center, which is always inside, so left_inside is true.
  *
- * The C implementation calls shape_clip() which uses exact shape geometry.
- * This stub approximates with the node's bounding rectangle.
+ * Replaces an earlier rectangle approximation, which was wrong for ellipse
+ * nodes (every honda head is an ellipse) and shifted the shared port ~17px.
  *
- * @see lib/common/shapes.c:shape_clip
+ * @see lib/common/splines.c:shape_clip / shape_clip0
  */
-export function shapeClip(u: Node, curve: { x: number; y: number }[]): void {
-  const lx = u.info.coord.x - (u.info.lw ?? 1);
-  const rx = u.info.coord.x + (u.info.rw ?? 1);
-  const ty = u.info.coord.y + (u.info.ht ?? 1) / 2;
-  const by = u.info.coord.y - (u.info.ht ?? 1) / 2;
-  const dx = curve[3].x - curve[0].x;
-  const dy = curve[3].y - curve[0].y;
-  if (Math.hypot(dx, dy) === 0) return;
-  const nx = curve[0].x;
-  const ny = curve[0].y;
-  const tx = clampAxisX(1, dx, nx, lx, rx);
-  const t  = clampAxisY(tx, dy, ny, by, ty);
-  curve[0] = { x: nx + dx * t, y: ny + dy * t };
+export function shapeClip(u: Node, curve: Point[]): void {
+  const box = nodeBoxOf(u, u.root);
+  const clipped = bezierClipNode(curve, box.center.x, box.center.y, nodeInsideFn(box), true);
+  for (let i = 0; i < curve.length && i < clipped.length; i++) curve[i] = clipped[i];
 }
 
 // ---------------------------------------------------------------------------
