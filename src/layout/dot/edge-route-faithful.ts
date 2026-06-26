@@ -110,14 +110,25 @@ function clVninside(cl: Graph, n: Node): boolean {
   return bb.ll.x <= c.x && c.x <= bb.ur.x && bb.ll.y <= c.y && c.y <= bb.ur.y;
 }
 
+/** C's `REAL_CLUSTER(n)`: a node's cluster, but NULL when that cluster is the
+ *  routing graph `g` itself (top-level nodes are assigned ND_clust == g by
+ *  mark_lowclusters, yet must not count as a real, interfering cluster).
+ *  @see lib/dotgen/dotsplines.c:2137 #define REAL_CLUSTER */
+function realCluster(n: Node, g: Graph): Graph | undefined {
+  const cl = n.info.clust;
+  return cl === g ? undefined : cl;
+}
+
 /** The cluster of a virtual adj node that interferes with n, if its coord lies
  *  inside it. @see cl_bound (dotsplines.c:2141-2153) */
-function virtualAdjCluster(adj: Node, tcl: Graph | undefined, hcl: Graph | undefined): Graph | undefined {
+function virtualAdjCluster(
+  adj: Node, tcl: Graph | undefined, hcl: Graph | undefined, g: Graph,
+): Graph | undefined {
   const orig = adj.info.out?.list[0]?.info.to_orig;
   if (orig === undefined) return undefined;
-  const tc = orig.tail.info.clust;
+  const tc = realCluster(orig.tail, g);
   if (interferes(tc, tcl, hcl) && clVninside(tc, adj)) return tc;
-  const hc = orig.head.info.clust;
+  const hc = realCluster(orig.head, g);
   if (interferes(hc, tcl, hcl) && clVninside(hc, adj)) return hc;
   return undefined;
 }
@@ -128,13 +139,13 @@ function virtualAdjCluster(adj: Node, tcl: Graph | undefined, hcl: Graph | undef
  * cluster's boundary so the spline routes around it.
  * @see lib/dotgen/dotsplines.c:cl_bound (2129)
  */
-function clBound(n: Node, adj: Node): Graph | undefined {
+function clBound(n: Node, adj: Node, g: Graph): Graph | undefined {
   const [tcl, hcl] = endpointClusters(n);
   if (nodeType(adj) === NORMAL) {
-    const cl = adj.info.clust;
+    const cl = realCluster(adj, g);
     return interferes(cl, tcl, hcl) ? cl : undefined;
   }
-  return virtualAdjCluster(adj, tcl, hcl);
+  return virtualAdjCluster(adj, tcl, hcl, g);
 }
 
 /** Left x-extent of the maximal bbox. @see lib/dotgen/dotsplines.c:maximal_bbox */
@@ -143,7 +154,7 @@ function bboxLeftX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | unde
   const left = neighbor(ctx.g, vn, ie, oe, -1);
   if (!left) return Math.min(Math.round(b), ctx.sp.leftBound);
   // A left neighbor in another cluster clamps us to that cluster's right edge.
-  const clBb = clBound(vn, left)?.info.bb;
+  const clBb = clBound(vn, left, ctx.g)?.info.bb;
   const nb = clBb !== undefined
     ? clBb.ur.x + ctx.sp.splinesep
     : left.info.coord.x + (left.info.mval ?? 0)
@@ -159,7 +170,7 @@ function bboxRightX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | und
   const right = neighbor(ctx.g, vn, ie, oe, 1);
   if (!right) return Math.max(Math.round(b), ctx.sp.rightBound);
   // A right neighbor in another cluster clamps us to that cluster's left edge.
-  const clBb = clBound(vn, right)?.info.bb;
+  const clBb = clBound(vn, right, ctx.g)?.info.bb;
   const nb = clBb !== undefined
     ? clBb.ll.x - ctx.sp.splinesep
     : right.info.coord.x - right.info.lw

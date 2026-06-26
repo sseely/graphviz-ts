@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-26T16:31:49.151Z",
+  "generatedAt": "2026-06-26T17:32:25.563Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 419,
+    "byte-match": 420,
     "structural-match": 231,
-    "diverged": 128,
+    "diverged": 126,
     "errored": 6,
-    "timeout": 0,
+    "timeout": 1,
     "oracle-error": 11
   },
   "results": [
@@ -358,7 +358,7 @@
       "id": "1879",
       "path": "1879.dot",
       "verdict": "diverged",
-      "maxDelta": 1149,
+      "maxDelta": 1049.8199999999997,
       "firstDiffPath": "svg/g[1]/g[99]/g[1]/a[1][childCount]"
     },
     {
@@ -965,9 +965,7 @@
     {
       "id": "2854",
       "path": "2854.dot",
-      "verdict": "diverged",
-      "maxDelta": 8362.89,
-      "firstDiffPath": "svg/g[1]/g[20]/path[1]/@d"
+      "verdict": "timeout"
     },
     {
       "id": "358",
@@ -1451,9 +1449,7 @@
     {
       "id": "graphs-clust5",
       "path": "graphs/clust5.gv",
-      "verdict": "diverged",
-      "maxDelta": 9.98999999999998,
-      "firstDiffPath": "svg/g[1]/g[8]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-clusters",
