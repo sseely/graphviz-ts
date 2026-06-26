@@ -258,7 +258,11 @@ export function emitHtmlCell(
     renderer, job,
   );
   emitCellDecoration(cell, pos, renderer, job);
-  if (cell.image !== undefined) {
+  if (cell.nested !== undefined) {
+    // C: emit_html_cell recurses emit_html_tbl for an HTML_TBL child.
+    // @see lib/common/htmltable.c:emit_html_cell
+    emitHtmlLabel(cell.nested, pos, renderer, job);
+  } else if (cell.image !== undefined) {
     emitHtmlImg(cell.image, pos, renderer, job);
   } else {
     for (const line of cell.lines) emitHtmlLine(line, pos, renderer, job);

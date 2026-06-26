@@ -14,7 +14,10 @@ import {
   itemFontFlags,
   buildLineRuns,
   placeRunItems,
+  posHtmlLabel,
 } from './htmltable-pos.js';
+import { parseHtmlLabel, sizeHtmlLabel } from './htmltable.js';
+import { portToTbl } from './htmltable-port.js';
 import {
   HTML_BF, HTML_IF, HTML_UL, HTML_S, HTML_OL, HTML_SUP, HTML_SUB,
 } from './emit-types.js';
@@ -178,4 +181,63 @@ describe('placeRunItems fontFlags', () => {
   it('fontFlags=HTML_BF|HTML_IF for bold+italic', testPlaceRunCombinedFlags);
   it('fontColor from finfo when item has none', testPlaceRunFontColorFromFinfo);
   it('fontColor from item overrides finfo', testPlaceRunFontColorFromItem);
+});
+
+// Nested HTML table: a cell whose child is a <TABLE> must be POSITIONED
+// (placeCell recurses posHtmlTable into the cell's inset box) and carry its
+// port, so emit and html_port can reach it.
+// @see lib/common/htmltable.c:pos_html_cell (HTML_TBL branch)
+describe('nested table is placed inside its parent cell', () => {
+  it('placed outer cell carries a nested PlacedHtml with the inner cell + port', () => {
+    const lbl = parseHtmlLabel(
+      '<TABLE><TR><TD>L</TD><TD>' +
+      '<TABLE PORT="inner"><TR><TD>RT</TD></TR><TR><TD>RB</TD></TR></TABLE>' +
+      '</TD></TR></TABLE>',
+    );
+    sizeHtmlLabel(lbl, stubMeasurer);
+    const finfo = { fontname: 'Times', fontsize: 14, fontcolor: 'black' };
+    const placed = posHtmlLabel(lbl, finfo, stubMeasurer);
+    const outerCells = placed.cells;
+    const nestedHost = outerCells.find((c) => c.nested !== undefined);
+    expect(nestedHost).toBeDefined();
+    expect(nestedHost!.lines.length).toBe(0); // text path not taken
+    expect(nestedHost!.nested!.port).toBe('inner');
+    expect(nestedHost!.nested!.cells.length).toBe(2); // RT + RB
+  });
+});
+
+// html_port resolution: portToTbl walks the placed tree (incl. nested tables)
+// to find a named port, returning its node-relative box + boundary sides.
+// @see lib/common/htmltable.c:portToTbl / portToCell
+describe('portToTbl resolves named ports in the placed tree', () => {
+  const finfo = { fontname: 'Times', fontsize: 14, fontcolor: 'black' };
+  function place(src: string) {
+    const lbl = parseHtmlLabel(src);
+    sizeHtmlLabel(lbl, stubMeasurer);
+    return posHtmlLabel(lbl, finfo, stubMeasurer);
+  }
+
+  it('finds a top-level cell port', () => {
+    const placed = place('<TABLE><TR><TD PORT="L">L</TD><TD>R</TD></TR></TABLE>');
+    const hit = portToTbl(placed, 'L');
+    expect(hit).not.toBeNull();
+    // left cell: its box LL.x is the table-left side
+    expect(hit!.box.ll.x).toBeLessThan(placed.box.ur.x);
+  });
+
+  it('finds a port on a nested table (recursive)', () => {
+    const placed = place(
+      '<TABLE><TR><TD>L</TD><TD>' +
+      '<TABLE PORT="inner"><TR><TD>RT</TD></TR></TABLE></TD></TR></TABLE>',
+    );
+    const hit = portToTbl(placed, 'inner');
+    expect(hit).not.toBeNull();
+    expect(hit!.sides).toBeGreaterThan(0);
+  });
+
+  it('is case-insensitive and returns null for an unknown port', () => {
+    const placed = place('<TABLE><TR><TD PORT="MyPort">x</TD></TR></TABLE>');
+    expect(portToTbl(placed, 'myport')).not.toBeNull();
+    expect(portToTbl(placed, 'nope')).toBeNull();
+  });
 });

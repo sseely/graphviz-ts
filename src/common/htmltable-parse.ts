@@ -254,6 +254,11 @@ const parseCellContent = (
   }
   const nxt = peek(s);
   if (nxt?.type === 'close' && nxt.tag === 'TD') consume(s);
+  // C models a cell child as a single object; the `TD table TD` rule discards
+  // whitespace around a nested table, so a table IS the cell's sole content.
+  // @see lib/common/htmltable.h:htmlcell_t.child
+  const tbl = content.find((c) => c.kind === 'table');
+  if (tbl !== undefined) return [tbl];
   return content;
 };
 

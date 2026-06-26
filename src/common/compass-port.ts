@@ -23,6 +23,8 @@ import { MC_SCALE } from '../layout/dot/fastgr.js';
 import { RANKDIR_LR, RANKDIR_BT, RANKDIR_RL } from '../layout/dot/init.js';
 import { bezierClip } from './splines-geom.js';
 import type { InsideContext } from './splines-geom.js';
+import { portToTbl } from './htmltable-port.js';
+import type { PlacedHtml } from './htmltable-pos.js';
 
 /** Node shape inside-function (poly_inside / record_inside). @see inside_t */
 type ShapeHost = {
@@ -314,9 +316,20 @@ export function compassPort(n: Node, args: CompassArgs, pp: Port): number {
 // @see lib/common/htmltable.c:html_port (line 916)
 // ---------------------------------------------------------------------------
 
-/** Stub for html_port (T7). portToTbl absent; always returns null. @see lib/common/htmltable.c:html_port (line 916) */
-function htmlPortStub(_n: Node, _portname: string, _sides: { value: number }): Box | null {
-  return null;
+/**
+ * Resolve an HTML node port name to its node-relative box, walking the placed
+ * table tree (portToTbl/portToCell). Sets `sides.value` to the matched
+ * element's boundary mask. Returns null when the label is plain text or no port
+ * matches. @see lib/common/htmltable.c:html_port
+ */
+function htmlPort(n: Node, portname: string, sides: { value: number }): Box | null {
+  const label = n.info.label as { u?: { kind?: string; html?: PlacedHtml } } | undefined;
+  const placed = label?.u?.kind === 'html' ? label.u.html : undefined;
+  if (placed === undefined) return null;
+  const hit = portToTbl(placed, portname);
+  if (hit === null) return null;
+  sides.value = hit.sides;
+  return hit.box;
 }
 
 // ---------------------------------------------------------------------------
@@ -339,7 +352,7 @@ export function polyPort(n: Node, portname: string, compass: string): Port {
   const label = n.info.label as { html?: boolean } | undefined;
   if (label?.html === true) {
     const sidesRef = { value: sides };
-    const bp = htmlPortStub(n, portname, sidesRef);
+    const bp = htmlPort(n, portname, sidesRef);
     if (bp !== null) {
       compassPort(n, { bp, compass: compassStr, sides: sidesRef.value }, rv);
       rv.name = null; return rv;

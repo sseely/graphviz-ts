@@ -199,3 +199,26 @@ describe('ROWS/COLUMNS="*" propagation (htmlparse.y addRow/setCell)', () => {
     expect(lbl.table.rows[0]?.cells.every((c) => c.vruled === true)).toBe(true);
   });
 });
+
+// A cell whose child is a nested <TABLE> stores ONLY that table (C models a
+// cell child as a single object; the `TD table TD` grammar discards the
+// whitespace around a nested table). @see lib/common/htmltable.h:htmlcell_t.child
+describe('nested table cell child is a single table (whitespace stripped)', () => {
+  it('cell with a nested table drops surrounding whitespace text', () => {
+    const cell = firstCell(
+      '<TABLE><TR><TD>\n  <TABLE PORT="inner"><TR><TD>x</TD></TR></TABLE>\n  </TD></TR></TABLE>',
+    );
+    expect(cell.content.length).toBe(1);
+    expect(cell.content[0]?.kind).toBe('table');
+    const inner = cell.content[0];
+    if (inner?.kind !== 'table') throw new Error('expected nested table');
+    expect(inner.port).toBe('inner');
+    expect(inner.rows[0]?.cells.length).toBe(1);
+  });
+
+  it('a plain-text cell is unaffected (still a single text item)', () => {
+    const cell = firstCell('<TABLE><TR><TD>hello</TD></TR></TABLE>');
+    expect(cell.content.length).toBe(1);
+    expect(cell.content[0]?.kind).toBe('text');
+  });
+});

@@ -21,6 +21,7 @@ import type { TextMeasurer } from './textmeasure.js';
 import type { HtmlCell, HtmlImage, HtmlLabel, HtmlTable, HtmlText, ImageSizer } from './htmltable-types.js';
 import { layoutHtmlTable, cellPad, cellBorder, sizeHtmlLabel, parseHtmlLabel } from './htmltable.js';
 import { makeLabel } from './make-label.js';
+import { TOP, BOTTOM, LEFT, RIGHT } from './splines-constants.js';
 import type { PlacedLine, HtmlFontInfo } from './htmltable-pos-runs.js';
 import {
   itemFontFlags, buildLineRuns, runsAreSimple, placeRunItems, placeTextRuns,
@@ -64,6 +65,15 @@ export interface PlacedCell {
   lines: PlacedLine[];
   /** Placed image, present when the cell contains an <IMG> element. */
   image?: PlacedImage;
+  /**
+   * Placed nested table, present when the cell's child is a <TABLE>.
+   * @see lib/common/htmltable.h:htmlcell_t.child (HTML_TBL)
+   */
+  nested?: PlacedHtml;
+  /** PORT name on this cell, for html_port edge resolution. */
+  port?: string;
+  /** Boundary mask (C `sides & mask`): which node sides this cell touches. */
+  sidesMask?: number;
   /** BGCOLOR attribute (solid color or "color1:color2" gradient spec). */
   bgcolor?: string;
   /** Pen (border) color override. */
@@ -114,6 +124,10 @@ export interface PlacedHtml {
   box: Box;
   border: number;
   cells: PlacedCell[];
+  /** PORT name on this table, for html_port edge resolution. */
+  port?: string;
+  /** Boundary mask placed with (ALL top-level; parent cell mask if nested). */
+  boundarySides?: number;
   /** BGCOLOR attribute for the table background. */
   bgcolor?: string;
   /** Pen color for the table border. */
@@ -159,6 +173,9 @@ export function centerContentBox(box: Box, w: number, h: number): Box {
   };
 }
 
+/** All four boundary sides — the top-level table's placement mask. */
+export const HTML_ALL_SIDES = TOP | BOTTOM | LEFT | RIGHT;
+
 /** Cell placement context: geometry + grid position, used by placeCell. */
 export interface CellPlaceCtx {
   cell: HtmlCell;
@@ -170,6 +187,8 @@ export interface CellPlaceCtx {
   row: number;
   colspan: number;
   rowspan: number;
+  /** Boundary mask for this cell (C `sides & mask`). */
+  sidesMask: number;
 }
 
 /** Place text runs for a cell, returning the inset content box. */
@@ -233,6 +252,20 @@ function alignImageBox(cbox: Box, cell: HtmlCell, iw: number, ih: number): void 
   }
 }
 
+/** Position a nested <TABLE> child inside the cell's inset content box.
+ * @see lib/common/htmltable.c:pos_html_cell (HTML_TBL branch) */
+function placeCellNested(ctx: CellPlaceCtx): PlacedHtml | undefined {
+  const { cell, tbl, box, finfo, measurer, sidesMask } = ctx;
+  const nested = cell.content.find((c): c is HtmlTable => c.kind === 'table');
+  if (nested === undefined) return undefined;
+  const inset = cellBorder(cell, tbl) + cellPad(cell, tbl);
+  const cbox: Box = {
+    ll: { x: box.ll.x + inset, y: box.ll.y + inset },
+    ur: { x: box.ur.x - inset, y: box.ur.y - inset },
+  };
+  return posHtmlTable(nested, finfo, measurer, cbox, sidesMask);
+}
+
 /** Position one cell's text inside its box, copying decoration metadata. @see pos_html_cell */
 export function placeCell(ctx: CellPlaceCtx): PlacedCell {
   const { cell, tbl, box, col, row, colspan, rowspan } = ctx;
@@ -241,11 +274,15 @@ export function placeCell(ctx: CellPlaceCtx): PlacedCell {
   // "cells VR cell" for explicit <VR>); copy it through.
   // @see lib/common/htmlparse.y:329,434-435
   const vruled = cell.vruled;
-  const image = placeCellImage(cell, tbl, box);
+  const nested = placeCellNested(ctx);
+  const image = nested === undefined ? placeCellImage(cell, tbl, box) : undefined;
   return {
     box, border,
-    lines: placeCellRuns(ctx),
+    lines: nested === undefined ? placeCellRuns(ctx) : [],
     image,
+    nested,
+    port: cell.port,
+    sidesMask: ctx.sidesMask,
     bgcolor: cell.bgcolor,
     color: cell.color,
     sides: cell.sides,
@@ -299,9 +336,25 @@ interface PlaceCellsCtx {
   colX: number[];
   rowY: number[];
   spacing: number;
+  ncols: number;
   nrows: number;
+  sides: number;
   finfo: HtmlFontInfo;
   measurer: TextMeasurer;
+}
+
+/** Cell boundary mask: outer sides it touches AND inherited `sides`. */
+function cellSidesMask(
+  e: { col: number; row: number; colspan: number; rowspan: number },
+  ncols: number, nrows: number, sides: number,
+): number {
+  if (sides === 0) return 0;
+  let mask = 0;
+  if (e.col === 0) mask |= LEFT;
+  if (e.row === 0) mask |= TOP;
+  if (e.col + e.colspan === ncols) mask |= RIGHT;
+  if (e.row + e.rowspan === nrows) mask |= BOTTOM;
+  return sides & mask;
 }
 
 /**
@@ -319,7 +372,7 @@ function ruledBoundaries(tbl: HtmlTable): Set<number> {
 
 /** Place all cells for a table, marking ruled cells per C processTbl. */
 function placeCells(ctx: PlaceCellsCtx): PlacedCell[] {
-  const { tbl, entries, colX, rowY, spacing, finfo, measurer } = ctx;
+  const { tbl, entries, colX, rowY, spacing, ncols, nrows, sides, finfo, measurer } = ctx;
   const boundaries = ruledBoundaries(tbl);
   return entries.map((e) => {
     const box: Box = {
@@ -329,20 +382,27 @@ function placeCells(ctx: PlaceCellsCtx): PlacedCell[] {
     const placed = placeCell({
       cell: e.cell, tbl, box, finfo, measurer,
       col: e.col, row: e.row, colspan: e.colspan, rowspan: e.rowspan,
+      sidesMask: cellSidesMask(e, ncols, nrows, sides),
     });
     if (boundaries.has(e.row + e.rowspan)) placed.hruled = true;
     return placed;
   });
 }
 
-/** Position the table and all cells. @see pos_html_tbl */
+/**
+ * Position the table and all cells within `pos`. The top-level caller omits
+ * `pos` (the table is centered on its own dimen); a nested table is positioned
+ * into its parent cell's inset content box. @see pos_html_tbl
+ */
 export function posHtmlTable(
   tbl: HtmlTable,
   finfo: HtmlFontInfo,
   measurer: TextMeasurer,
+  pos?: Box,
+  sides: number = HTML_ALL_SIDES,
 ): PlacedHtml {
   const dim = tbl.dimen ?? { w: 0, h: 0 };
-  const pos: Box = {
+  const box: Box = pos ?? {
     ll: { x: -dim.w / 2, y: -dim.h / 2 },
     ur: { x: dim.w / 2, y: dim.h / 2 },
   };
@@ -351,10 +411,10 @@ export function posHtmlTable(
   });
   const ncols = widths.length > 0 ? Math.max(...entries.map(e => e.col + e.colspan)) : 0;
   const nrows = heights.length > 0 ? Math.max(...entries.map(e => e.row + e.rowspan)) : 0;
-  const colX = buildColX(pos, border, spacing, widths);
-  const rowY = buildRowY(pos, border, spacing, heights);
-  const cells = placeCells({ tbl, entries, colX, rowY, spacing, nrows, finfo, measurer });
-  return { box: pos, border, cells, spacing, columnCount: ncols, rowCount: nrows, ...tblDecoration(tbl) };
+  const colX = buildColX(box, border, spacing, widths);
+  const rowY = buildRowY(box, border, spacing, heights);
+  const cells = placeCells({ tbl, entries, colX, rowY, spacing, ncols, nrows, sides, finfo, measurer });
+  return { box, border, cells, spacing, columnCount: ncols, rowCount: nrows, port: tbl.port, boundarySides: sides, ...tblDecoration(tbl) };
 }
 
 /** Build a single-cell PlacedHtml for a plain text label. */
