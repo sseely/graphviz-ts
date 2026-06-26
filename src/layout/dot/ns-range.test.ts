@@ -16,6 +16,7 @@ import type { NsCtx } from './ns-core.js';
 import { addTreeEdge } from './ns-core.js';
 import { dfsRangeInit, dfsRange } from './ns-range.js';
 import { rerank } from './ns.js';
+import { treeAdjust } from './ns-subtree.js';
 
 // ---------------------------------------------------------------------------
 // Minimal fixture builders
@@ -147,4 +148,50 @@ describe('rerank — iterative equals recursive reference', () => {
       expect(snapshot(got, ['rank'])).toEqual(refSnap);
     });
   }
+});
+
+/** @see lib/common/ns.c:tree_adjust (recursive). */
+function refTreeAdjust(v: Node, from: Node | undefined, delta: number): void {
+  v.info.rank = (v.info.rank ?? 0) + delta;
+  const ti = v.info.tree_in;
+  if (ti) for (let i = 0; i < ti.size; i++) {
+    const w = ti.list[i].tail;
+    if (w !== from) refTreeAdjust(w, v, delta);
+  }
+  const to = v.info.tree_out;
+  if (to) for (let i = 0; i < to.size; i++) {
+    const w = to.list[i].head;
+    if (w !== from) refTreeAdjust(w, v, delta);
+  }
+}
+
+describe('treeAdjust — iterative equals recursive reference', () => {
+  for (const [name, spec] of Object.entries(TREES)) {
+    it(`adds delta to every tight-tree node identically on ${name}`, () => {
+      const ref = buildTree(spec.n, spec.edges);
+      ref.forEach((nd, i) => { nd.info.rank = i * 2 + 1; });
+      refTreeAdjust(ref[0], undefined, 5);
+      const refSnap = snapshot(ref, ['rank']);
+
+      const got = buildTree(spec.n, spec.edges);
+      got.forEach((nd, i) => { nd.info.rank = i * 2 + 1; });
+      treeAdjust(got[0], undefined, 5);
+      expect(snapshot(got, ['rank'])).toEqual(refSnap);
+    });
+  }
+});
+
+describe('treeAdjust — deep tight tree does not overflow the stack', () => {
+  it('walks a 50k-deep chain iteratively (regression: corpus 2646)', () => {
+    // A recursive tree_adjust overflows the JS call stack here; the iterative
+    // port must add delta to all 50000 nodes. @see ns.c:tree_adjust
+    const n = 50000;
+    const edges: [number, number][] = [];
+    for (let i = 0; i + 1 < n; i++) edges.push([i, i + 1]);
+    const nodes = buildTree(n, edges);
+    nodes.forEach((nd) => { nd.info.rank = 0; });
+    expect(() => treeAdjust(nodes[0], undefined, 3)).not.toThrow();
+    expect(nodes[0].info.rank).toBe(3);
+    expect(nodes[n - 1].info.rank).toBe(3);
+  });
 });
