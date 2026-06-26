@@ -12,7 +12,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 795
 - **byte-match:** 365 · **structural-match:** 277 → 642/795 structurally equal (80.8%)
-- **diverged:** 136 · **errored:** 6 · **timeout:** 0 · **oracle-error:** 11
+- **diverged:** 135 · **errored:** 6 · **timeout:** 0 · **oracle-error:** 12
 - **Quarantined (not surveyed, from corpus-manifest.json):** engine-deferred 6, multi-graph 3, malformed 1
 
 ## byte-match (365)
@@ -26,18 +26,17 @@ Port SVG matches the oracle within the `deterministic` tolerance (0.01).
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). These are near-misses — sub-pixel-to-modest position drift.
 
-## diverged (136) — worst-first
+## diverged (135) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
 | `graphs-b100` | 10252.30 | `svg/g[1]/g[21]/path[1]/@d` |
 | `graphs-b104` | 10252.30 | `svg/g[1]/g[21]/path[1]/@d` |
-| `2471` | 9123.00 | `svg/g[1][childCount]` |
+| `2471` | 8898.00 | `svg/g[1][childCount]` |
 | `2343` | 8869.42 | `svg/g[1]/g[3]/path[1]/@d` |
 | `2239` | 7620.15 | `svg/g[1]/g[2][childCount]` |
 | `2470` | 6754.50 | `svg/g[1]/g[232]/path[1]/@d` |
 | `1718` | 3725.90 | `svg/g[1]/g[47]/path[1]/@d` |
-| `2854` | 3669.80 | `svg/g[1]/g[20]/path[1]/@d` |
 | `1447_1` | 3624.38 | `svg/g[1]/g[23]/path[1]/@d` |
 | `graphs-b103` | 3570.20 | `svg/g[1]/g[70]/path[1]/@d` |
 | `linux.i386-b106` | 3407.27 | `svg/g[1]/g[10]/path[1]/@d` |
@@ -90,8 +89,9 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-b69` | 375.25 | `svg/g[1]/g[37][childCount]` |
 | `graphs-shells` | 374.88 | `svg/g[1]/g[36]/path[1]/@d` |
 | `1939` | 348.00 | `svg/g[1]/g[8]/path[1]/@d` |
+| `graphs-ldbxtried` | 320.00 | `svg/g[1]/g[17]/path[1]/@d` |
 
-_… and 76 more diverged inputs (see parity.json + the buckets below)._
+_… and 75 more diverged inputs (see parity.json + the buckets below)._
 
 ## errored (6)
 
@@ -109,7 +109,7 @@ _… and 76 more diverged inputs (see parity.json + the buckets below)._
 | id | path | message |
 |---|---|---|
 
-## oracle-error (11) — excluded from port scoring
+## oracle-error (12) — excluded from port scoring
 
 The native oracle did not emit a complete SVG (usually a hard syntax error
 it rejects entirely); there is no reference to compare against.
@@ -125,6 +125,7 @@ it rejects entirely); there is no reference to compare against.
 | `2593` | `2593.dot` | oracle exit null |
 | `2621` | `2621.dot` | oracle exit null |
 | `2723` | `2723.dot` | oracle exit null |
+| `2854` | `2854.dot` | oracle exit null |
 | `imagepath_test-base` | `imagepath_test/base.gv` | Error: /Users/scottseely/git/graphviz/tests/imagepath_test/base.gv: syntax error in line 8 near ']' |
 | `share-b545` | `share/b545.gv` | Error: /Users/scottseely/git/graphviz/tests/share/b545.gv: syntax error in line 1 near '3.583' |
 
@@ -136,7 +137,7 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 92 | `1213-1`, `1213-2`, `1332` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 91 | `1213-1`, `1213-2`, `1332` | edge path has a different command sequence or point count — spline routing structure |
 | `element-count` | 37 | `1323`, `1323_1`, `1367` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `attr-or-tag` | 5 | `1453`, `2592`, `42` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |

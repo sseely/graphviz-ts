@@ -1,0 +1,349 @@
+== STAGE1 aux-graph ==
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r65 rank=65 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r71 rank=71 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r35 rank=35 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r-1 rank=-1 type=2
+NODE S@r65 rank=65 type=2
+NODE S@r65 rank=65 type=2
+NODE S@r65 rank=65 type=2
+NODE S@r95 rank=95 type=2
+NODE S@r95 rank=95 type=2
+NODE S@r95 rank=95 type=2
+NODE S@r41 rank=41 type=2
+NODE S@r101 rank=101 type=2
+NODE S@r77 rank=77 type=2
+NODE S@r77 rank=77 type=2
+NODE S@r71 rank=71 type=2
+NODE S@r71 rank=71 type=2
+NODE S@r95 rank=95 type=2
+NODE S@r101 rank=101 type=2
+NODE S@r131 rank=131 type=2
+NODE S@r131 rank=131 type=2
+NODE S@r38 rank=38 type=2
+NODE S@r38 rank=38 type=2
+NODE S@r38 rank=38 type=2
+NODE S@r38 rank=38 type=2
+NODE S@r167 rank=167 type=2
+NODE S@r167 rank=167 type=2
+NODE S@r137 rank=137 type=2
+NODE S@r125 rank=125 type=2
+NODE S@r107 rank=107 type=2
+NODE S@r107 rank=107 type=2
+NODE S@r119 rank=119 type=2
+NODE S@r131 rank=131 type=2
+NODE S@r41 rank=41 type=2
+NODE S@r-1 rank=-1 type=2
+NODE n000 rank=0 type=0
+NODE n001 rank=42 type=0
+NODE V@r132 rank=132 type=1
+NODE n002 rank=138 type=0
+NODE n003 rank=120 type=0
+NODE n004 rank=108 type=0
+NODE V@r126 rank=126 type=1
+NODE V@r138 rank=138 type=1
+NODE V@r168 rank=168 type=1
+NODE V@r168 rank=168 type=1
+NODE V@r252 rank=252 type=1
+NODE n022 rank=39 type=0
+NODE V@r222 rank=222 type=1
+NODE n008 rank=132 type=0
+NODE n007 rank=132 type=0
+NODE n006 rank=102 type=0
+NODE V@r96 rank=96 type=1
+NODE V@r72 rank=72 type=1
+NODE n005 rank=78 type=0
+NODE V@r102 rank=102 type=1
+NODE V@r102 rank=102 type=1
+NODE V@r96 rank=96 type=1
+NODE V@r96 rank=96 type=1
+NODE n009 rank=186 type=0
+NODE V@r66 rank=66 type=1
+NODE V@r66 rank=66 type=1
+NODE n010 rank=144 type=0
+NODE n011 rank=0 type=0
+NODE n012 rank=36 type=0
+NODE n013 rank=36 type=0
+NODE n014 rank=36 type=0
+NODE V@r72 rank=72 type=1
+NODE V@r72 rank=72 type=1
+NODE n015 rank=36 type=0
+NODE V@r66 rank=66 type=1
+NODE V@r66 rank=66 type=1
+NODE V@r36 rank=36 type=1
+NODE V@r36 rank=36 type=1
+NODE V@r108 rank=108 type=1
+NODE n023 rank=0 type=0
+NODE V@r78 rank=78 type=1
+NODE n019 rank=0 type=0
+NODE n018 rank=0 type=0
+NODE V@r36 rank=36 type=1
+NODE V@r36 rank=36 type=1
+NODE n017 rank=0 type=0
+NODE n016 rank=0 type=0
+NODE V@r0 rank=0 type=1
+NODE V@r0 rank=0 type=1
+NODE V@r0 rank=0 type=1
+NODE V@r0 rank=0 type=1
+NODE n020 rank=42 type=0
+NODE n021 rank=0 type=0
+AUXEDGE S@r-1 -> n021 minlen=1 weight=1
+AUXEDGE S@r-1 -> n019 minlen=1 weight=1
+AUXEDGE S@r-1 -> n020 minlen=1 weight=1
+AUXEDGE S@r-1 -> n019 minlen=1 weight=1
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=1
+AUXEDGE S@r-1 -> n011 minlen=1 weight=1
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=4
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=4
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=4
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=4
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=4
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=4
+AUXEDGE S@r-1 -> n016 minlen=1 weight=1
+AUXEDGE S@r-1 -> n015 minlen=1 weight=1
+AUXEDGE S@r-1 -> n016 minlen=1 weight=1
+AUXEDGE S@r-1 -> V@r0 minlen=1 weight=1
+AUXEDGE S@r-1 -> n017 minlen=1 weight=1
+AUXEDGE S@r-1 -> n016 minlen=1 weight=1
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=1
+AUXEDGE S@r35 -> n015 minlen=1 weight=1
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=4
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=4
+AUXEDGE S@r-1 -> n018 minlen=1 weight=1
+AUXEDGE S@r-1 -> n017 minlen=1 weight=1
+AUXEDGE S@r-1 -> n018 minlen=1 weight=1
+AUXEDGE S@r-1 -> V@r36 minlen=1 weight=1
+AUXEDGE S@r-1 -> n019 minlen=1 weight=1
+AUXEDGE S@r-1 -> n018 minlen=1 weight=1
+AUXEDGE S@r-1 -> V@r78 minlen=1 weight=0
+AUXEDGE S@r-1 -> n019 minlen=1 weight=0
+AUXEDGE S@r-1 -> n023 minlen=1 weight=2
+AUXEDGE S@r-1 -> n021 minlen=1 weight=2
+AUXEDGE S@r-1 -> n023 minlen=1 weight=2
+AUXEDGE S@r-1 -> n020 minlen=1 weight=2
+AUXEDGE S@r-1 -> n023 minlen=1 weight=0
+AUXEDGE S@r-1 -> V@r78 minlen=1 weight=0
+AUXEDGE S@r-1 -> n023 minlen=1 weight=0
+AUXEDGE S@r-1 -> V@r108 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r108 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r36 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r66 minlen=1 weight=0
+AUXEDGE S@r65 -> V@r66 minlen=1 weight=0
+AUXEDGE S@r65 -> V@r66 minlen=1 weight=0
+AUXEDGE S@r35 -> V@r66 minlen=1 weight=0
+AUXEDGE S@r35 -> n015 minlen=1 weight=0
+AUXEDGE S@r35 -> n015 minlen=1 weight=1
+AUXEDGE S@r35 -> n014 minlen=1 weight=1
+AUXEDGE S@r-1 -> V@r72 minlen=1 weight=1
+AUXEDGE S@r-1 -> n011 minlen=1 weight=1
+AUXEDGE S@r71 -> V@r72 minlen=1 weight=4
+AUXEDGE S@r71 -> V@r72 minlen=1 weight=4
+AUXEDGE S@r35 -> n014 minlen=1 weight=1
+AUXEDGE S@r35 -> n013 minlen=1 weight=1
+AUXEDGE S@r35 -> n014 minlen=1 weight=1
+AUXEDGE S@r35 -> V@r72 minlen=1 weight=1
+AUXEDGE S@r35 -> n013 minlen=1 weight=1
+AUXEDGE S@r35 -> n012 minlen=1 weight=1
+AUXEDGE S@r-1 -> n012 minlen=1 weight=2
+AUXEDGE S@r-1 -> n011 minlen=1 weight=2
+AUXEDGE S@r-1 -> n011 minlen=1 weight=1
+AUXEDGE S@r-1 -> n000 minlen=1 weight=1
+AUXEDGE S@r65 -> n010 minlen=1 weight=1
+AUXEDGE S@r65 -> V@r66 minlen=1 weight=1
+AUXEDGE S@r65 -> V@r66 minlen=1 weight=4
+AUXEDGE S@r65 -> V@r66 minlen=1 weight=4
+AUXEDGE S@r65 -> V@r66 minlen=1 weight=1
+AUXEDGE S@r65 -> n006 minlen=1 weight=1
+AUXEDGE S@r95 -> n009 minlen=1 weight=1
+AUXEDGE S@r95 -> V@r96 minlen=1 weight=1
+AUXEDGE S@r95 -> V@r96 minlen=1 weight=4
+AUXEDGE S@r95 -> V@r96 minlen=1 weight=4
+AUXEDGE S@r95 -> V@r96 minlen=1 weight=1
+AUXEDGE S@r95 -> n006 minlen=1 weight=1
+AUXEDGE S@r41 -> V@r102 minlen=1 weight=1
+AUXEDGE S@r41 -> n001 minlen=1 weight=1
+AUXEDGE S@r101 -> V@r102 minlen=1 weight=4
+AUXEDGE S@r101 -> V@r102 minlen=1 weight=4
+AUXEDGE S@r77 -> n005 minlen=1 weight=1
+AUXEDGE S@r77 -> n002 minlen=1 weight=1
+AUXEDGE S@r77 -> n005 minlen=1 weight=1
+AUXEDGE S@r77 -> V@r102 minlen=1 weight=1
+AUXEDGE S@r71 -> V@r72 minlen=1 weight=1
+AUXEDGE S@r71 -> n005 minlen=1 weight=1
+AUXEDGE S@r71 -> V@r96 minlen=1 weight=4
+AUXEDGE S@r71 -> V@r72 minlen=1 weight=4
+AUXEDGE S@r95 -> n006 minlen=1 weight=1
+AUXEDGE S@r95 -> V@r96 minlen=1 weight=1
+AUXEDGE S@r101 -> n007 minlen=1 weight=2
+AUXEDGE S@r101 -> n006 minlen=1 weight=2
+AUXEDGE S@r131 -> n008 minlen=1 weight=1
+AUXEDGE S@r131 -> n007 minlen=1 weight=1
+AUXEDGE S@r131 -> V@r222 minlen=1 weight=0
+AUXEDGE S@r131 -> n008 minlen=1 weight=0
+AUXEDGE S@r38 -> n022 minlen=1 weight=2
+AUXEDGE S@r38 -> n010 minlen=1 weight=2
+AUXEDGE S@r38 -> n022 minlen=1 weight=2
+AUXEDGE S@r38 -> n009 minlen=1 weight=2
+AUXEDGE S@r38 -> n022 minlen=1 weight=0
+AUXEDGE S@r38 -> V@r222 minlen=1 weight=0
+AUXEDGE S@r38 -> n022 minlen=1 weight=0
+AUXEDGE S@r38 -> V@r252 minlen=1 weight=0
+AUXEDGE S@r167 -> V@r252 minlen=1 weight=0
+AUXEDGE S@r167 -> V@r168 minlen=1 weight=0
+AUXEDGE S@r167 -> V@r168 minlen=1 weight=0
+AUXEDGE S@r167 -> V@r168 minlen=1 weight=0
+AUXEDGE S@r137 -> V@r168 minlen=1 weight=0
+AUXEDGE S@r137 -> V@r138 minlen=1 weight=0
+AUXEDGE S@r125 -> V@r138 minlen=1 weight=0
+AUXEDGE S@r125 -> V@r126 minlen=1 weight=0
+AUXEDGE S@r107 -> V@r126 minlen=1 weight=0
+AUXEDGE S@r107 -> n004 minlen=1 weight=0
+AUXEDGE S@r107 -> n004 minlen=1 weight=1
+AUXEDGE S@r107 -> n003 minlen=1 weight=1
+AUXEDGE S@r119 -> n003 minlen=1 weight=2
+AUXEDGE S@r119 -> n002 minlen=1 weight=2
+AUXEDGE S@r131 -> n002 minlen=1 weight=1
+AUXEDGE S@r131 -> V@r132 minlen=1 weight=1
+AUXEDGE S@r41 -> V@r132 minlen=1 weight=1
+AUXEDGE S@r41 -> n001 minlen=1 weight=1
+AUXEDGE S@r-1 -> n001 minlen=1 weight=1
+AUXEDGE S@r-1 -> n000 minlen=1 weight=1
+AUXEDGE V@r222 -> V@r252 minlen=30 weight=0
+AUXEDGE n008 -> V@r168 minlen=36 weight=0
+AUXEDGE n007 -> V@r168 minlen=36 weight=0
+AUXEDGE n006 -> V@r138 minlen=36 weight=0
+AUXEDGE V@r96 -> V@r126 minlen=30 weight=0
+AUXEDGE V@r72 -> n004 minlen=36 weight=0
+AUXEDGE n005 -> n003 minlen=42 weight=0
+AUXEDGE V@r102 -> n002 minlen=36 weight=0
+AUXEDGE V@r102 -> V@r132 minlen=30 weight=0
+AUXEDGE V@r96 -> n007 minlen=36 weight=0
+AUXEDGE V@r96 -> n008 minlen=36 weight=0
+AUXEDGE n009 -> V@r222 minlen=36 weight=0
+AUXEDGE V@r66 -> V@r96 minlen=30 weight=0
+AUXEDGE V@r66 -> V@r96 minlen=30 weight=0
+AUXEDGE n010 -> n009 minlen=42 weight=0
+AUXEDGE n011 -> n001 minlen=42 weight=0
+AUXEDGE n012 -> V@r72 minlen=36 weight=0
+AUXEDGE n013 -> V@r72 minlen=36 weight=0
+AUXEDGE n014 -> n005 minlen=42 weight=0
+AUXEDGE V@r72 -> V@r102 minlen=30 weight=0
+AUXEDGE V@r72 -> V@r102 minlen=30 weight=0
+AUXEDGE n015 -> V@r72 minlen=36 weight=0
+AUXEDGE V@r66 -> V@r96 minlen=30 weight=0
+AUXEDGE V@r66 -> n006 minlen=36 weight=0
+AUXEDGE V@r36 -> V@r66 minlen=30 weight=0
+AUXEDGE V@r36 -> V@r66 minlen=30 weight=0
+AUXEDGE V@r108 -> n010 minlen=36 weight=0
+AUXEDGE n023 -> n022 minlen=39 weight=0
+AUXEDGE V@r78 -> V@r108 minlen=30 weight=0
+AUXEDGE n019 -> V@r36 minlen=36 weight=0
+AUXEDGE n018 -> V@r36 minlen=36 weight=0
+AUXEDGE V@r36 -> V@r66 minlen=30 weight=0
+AUXEDGE V@r36 -> V@r66 minlen=30 weight=0
+AUXEDGE n017 -> V@r36 minlen=36 weight=0
+AUXEDGE n016 -> V@r36 minlen=36 weight=0
+AUXEDGE V@r0 -> n015 minlen=36 weight=0
+AUXEDGE V@r0 -> n014 minlen=36 weight=0
+AUXEDGE V@r0 -> n013 minlen=36 weight=0
+AUXEDGE V@r0 -> n012 minlen=36 weight=0
+AUXEDGE n020 -> V@r78 minlen=36 weight=0
+AUXEDGE n021 -> n020 minlen=42 weight=0
+PIVOT iter=0 leave n015->V@r72 enter S@r71->n005 slack=6
+PIVOT iter=1 leave n014->n005 enter S@r113->V@r126 slack=12
+PIVOT iter=2 leave V@r96->V@r126 enter S@r89->V@r96 slack=6
+PIVOT iter=3 leave S@r65->V@r66 enter S@r137->n002 slack=0
+PIVOT iter=4 leave S@r-1->n023 enter S@r-1->n020 slack=42
+PIVOT iter=5 leave n023->n022 enter S@r80->n010 slack=63
+PIVOT iter=6 leave S@r-1->n011 enter S@r-1->n012 slack=36
+PIVOT iter=7 leave S@r35->n012 enter V@r0->n013 slack=0
+PIVOT iter=8 leave S@r-1->n019 enter S@r-1->n020 slack=42
+PIVOT iter=9 leave S@r77->n014 enter V@r42->n015 slack=0
+PIVOT iter=10 leave n018->V@r78 enter S@r137->n006 slack=6
+PIVOT iter=11 leave S@r41->n018 enter S@r83->V@r108 slack=24
+PIVOT iter=12 leave n011->n001 enter S@r143->V@r168 slack=24
+PIVOT iter=13 leave S@r161->V@r162 enter S@r161->n006 slack=6
+PIVOT iter=14 leave V@r102->V@r132 enter S@r203->n003 slack=0
+PIVOT iter=15 leave S@r203->n003 enter S@r161->V@r168 slack=6
+PIVOT iter=16 leave S@r107->V@r108 enter S@r137->n010 slack=6
+PIVOT iter=17 leave S@r209->n008 enter V@r174->n007 slack=0
+== STAGE3 pre-balance ==
+X n000 = 102
+X n001 = 168
+X n002 = 204
+X n003 = 210
+X n004 = 210
+X n022 = 144
+X n008 = 210
+X n007 = 210
+X n006 = 174
+X n005 = 168
+X n009 = 186
+X n010 = 144
+X n011 = 102
+X n012 = 102
+X n013 = 102
+X n014 = 102
+X n015 = 102
+X n023 = 42
+X n019 = 42
+X n018 = 66
+X n017 = 66
+X n016 = 66
+X n020 = 42
+X n021 = 0
+== STAGE4 post-balance ==
+X n000 = 123
+X n001 = 168
+X n002 = 207
+X n003 = 210
+X n004 = 210
+X n022 = 165
+X n008 = 210
+X n007 = 210
+X n006 = 174
+X n005 = 168
+X n009 = 186
+X n010 = 144
+X n011 = 90
+X n012 = 90
+X n013 = 90
+X n014 = 90
+X n015 = 90
+X n023 = 21
+X n019 = 42
+X n018 = 54
+X n017 = 54
+X n016 = 54
+X n020 = 42
+X n021 = 0
