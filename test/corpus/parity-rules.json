@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-26T05:04:15.525Z",
+  "generatedAt": "2026-06-26T15:05:38.234Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
     "byte-match": 419,
-    "structural-match": 224,
-    "diverged": 134,
+    "structural-match": 225,
+    "diverged": 133,
     "errored": 6,
     "timeout": 1,
     "oracle-error": 11
@@ -60,15 +60,15 @@
       "id": "1323",
       "path": "1323.dot",
       "verdict": "diverged",
-      "maxDelta": 284,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "maxDelta": 28,
+      "firstDiffPath": "svg/g[1]/g[3][childCount]"
     },
     {
       "id": "1323_1",
       "path": "1323_1.dot",
       "verdict": "diverged",
       "maxDelta": 28,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "firstDiffPath": "svg/g[1]/g[3][childCount]"
     },
     {
       "id": "1328",
@@ -443,8 +443,8 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "verdict": "diverged",
-      "maxDelta": 6531.9000000000015,
-      "firstDiffPath": "svg/g[1]/g[121]/path[1]/@d"
+      "maxDelta": 9048.98,
+      "firstDiffPath": "svg/g[1]/g[295]/path[1]/@d"
     },
     {
       "id": "2108",
@@ -606,8 +606,8 @@
       "id": "2371",
       "path": "2371.dot",
       "verdict": "diverged",
-      "maxDelta": 12524.489999999998,
-      "firstDiffPath": "svg/g[1]/g[71]/path[1]/@d"
+      "maxDelta": 575.5300000000002,
+      "firstDiffPath": "svg/g[1]/g[261]/path[1]/@d"
     },
     {
       "id": "2391",
@@ -694,7 +694,7 @@
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 3097,
+      "maxDelta": 6511,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -890,9 +890,8 @@
     {
       "id": "2669",
       "path": "2669.dot",
-      "verdict": "diverged",
-      "maxDelta": 378,
-      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.010000000000005116
     },
     {
       "id": "2682",

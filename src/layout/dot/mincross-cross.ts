@@ -290,22 +290,28 @@ export function localCrossEdges(edges: EdgeList, dir: number): number {
 // rcross helpers
 // ---------------------------------------------------------------------------
 
-/** Count crossings for one node's out-edges vs Count array. @see lib/dotgen/mincross.c:rcross */
-export function rcrossCount(out: EdgeList, Count: number[], max: number): number {
+/** Count crossings for one node's out-edges vs Count array. `vs` is the head
+ *  rank's window offset. ND_order is stored ABSOLUTE (vStart + index) in this
+ *  port, but C indexes Count by the window-RELATIVE order, and Count is sized to
+ *  the component's rank count. Subtract vs so a component c>0 indexes within the
+ *  Count array; without it, Count[inv] is undefined → NaN → ncross breaks.
+ *  @see lib/dotgen/mincross.c:rcross */
+export function rcrossCount(out: EdgeList, Count: number[], max: number, vs: number): number {
   let cross = 0;
   for (let i = 0; i < out.size; i++) {
     const e: Edge = out.list[i];
-    const headOrd = e.head.info.order !== undefined ? e.head.info.order : 0;
+    const headOrd = (e.head.info.order !== undefined ? e.head.info.order : 0) - vs;
     for (let k = headOrd + 1; k <= max; k++) cross += Count[k] * xpen(e);
   }
   return cross;
 }
 
-/** Register one node's out-edges in Count; return updated max. @see lib/dotgen/mincross.c:rcross */
-export function rcrossRegister(out: EdgeList, Count: number[], max: number): number {
+/** Register one node's out-edges in Count; return updated max. `vs`: head rank
+ *  window offset (see rcrossCount). @see lib/dotgen/mincross.c:rcross */
+export function rcrossRegister(out: EdgeList, Count: number[], max: number, vs: number): number {
   for (let i = 0; i < out.size; i++) {
     const e: Edge = out.list[i];
-    const inv = e.head.info.order !== undefined ? e.head.info.order : 0;
+    const inv = (e.head.info.order !== undefined ? e.head.info.order : 0) - vs;
     if (inv > max) max = inv;
     Count[inv] += xpen(e);
   }
@@ -338,13 +344,16 @@ export function rcross(ctx: MincrossContext, g: Graph, r: number): number {
   const nextN = nextRk !== undefined ? nextRk.n : 0;
   const Count = new Array<number>(nextN + 1).fill(0);
   const rk = gRank[r];
+  // Head nodes live in rank r+1's window; ND_order is absolute, so map to the
+  // window-relative Count index by subtracting that window's vStart.
+  const headVs = gRank[r + 1] !== undefined ? (gRank[r + 1].vStart ?? 0) : 0;
   let cross = 0;
   let max = 0;
   for (let top = 0; top < rk.n; top++) {
     const v = rankGet(rk, top);
     if (!v || !v.info.out) continue;
-    if (max > 0) cross += rcrossCount(v.info.out, Count, max);
-    max = rcrossRegister(v.info.out, Count, max);
+    if (max > 0) cross += rcrossCount(v.info.out, Count, max, headVs);
+    max = rcrossRegister(v.info.out, Count, max, headVs);
   }
   cross += rcrossLocal(rk, 1);
   const nextRkG = gRank[r + 1];
