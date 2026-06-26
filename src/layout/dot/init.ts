@@ -285,7 +285,15 @@ function applyNonconstraintZero(e: Edge): void {
  */
 export function dotInitEdge(e: Edge): void {
   initEdgeConstraint(e);
-  e.info.weight = e.info.weight ?? 1;
+  // C: ED_weight(e) = late_int(e, E_weight, 1, 0) — honor an explicit weight
+  // attr (default 1, min 0). dotInitEdge is re-run on edges the flat-label
+  // machinery has stamped with a synthetic weight (e.g. 10000); preserve that
+  // when there is no attr, rather than resetting to the default. The group/
+  // nonconstraint adjustments below then apply on top, matching C's order.
+  // @see lib/dotgen/dotinit.c:65
+  e.info.weight = e.attrs.has('weight')
+    ? lateInt(e.attrs.get('weight'), 1, 0)
+    : (e.info.weight ?? 1);
   e.info.count = 1;
   e.info.xpenalty = 1;
   applyGroupPenalty(e);
