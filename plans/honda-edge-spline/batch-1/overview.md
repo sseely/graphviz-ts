@@ -4,7 +4,7 @@ Single sequential task. No port changes. Output feeds Batch 2.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Map SVG edge index→tail/head/label; instrument C spline router; dump 4 stages for the 2 divergent edges (+1 control) | orchestrator (debugger) | C source (temp), `oracle/c-dump.txt` | — | [ ] |
+| T1 | Map SVG edge index→tail/head/label; instrument C spline router; dump 4 stages for the 2 divergent edges (+1 control) | orchestrator (debugger) | C source (temp), `oracle/c-dump.txt` | — | [x] |
 
 Dependency summary: none (mission entry point).
 
