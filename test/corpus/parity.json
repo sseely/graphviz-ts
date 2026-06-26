@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-26T05:02:18.802Z",
+  "generatedAt": "2026-06-26T15:00:16.469Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 363,
+    "byte-match": 364,
     "structural-match": 271,
-    "diverged": 143,
+    "diverged": 142,
     "errored": 6,
     "timeout": 0,
     "oracle-error": 12
@@ -60,15 +60,15 @@
       "id": "1323",
       "path": "1323.dot",
       "verdict": "diverged",
-      "maxDelta": 275,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "maxDelta": 26.5,
+      "firstDiffPath": "svg/g[1]/g[3][childCount]"
     },
     {
       "id": "1323_1",
       "path": "1323_1.dot",
       "verdict": "diverged",
       "maxDelta": 26.5,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "firstDiffPath": "svg/g[1]/g[3][childCount]"
     },
     {
       "id": "1328",
@@ -444,8 +444,8 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "verdict": "diverged",
-      "maxDelta": 1315.9099999999994,
-      "firstDiffPath": "svg/g[1]/g[130]/path[1]/@d"
+      "maxDelta": 304.5,
+      "firstDiffPath": "svg/g[1]/g[228]/path[1]/@d"
     },
     {
       "id": "2108",
@@ -610,8 +610,8 @@
       "id": "2371",
       "path": "2371.dot",
       "verdict": "diverged",
-      "maxDelta": 12524.689999999999,
-      "firstDiffPath": "svg/g[1]/g[71]/path[1]/@d"
+      "maxDelta": 713.2999999999993,
+      "firstDiffPath": "svg/g[1]/g[128]/path[1]/@d"
     },
     {
       "id": "2391",
@@ -698,7 +698,7 @@
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 5503,
+      "maxDelta": 12463,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -895,9 +895,7 @@
     {
       "id": "2669",
       "path": "2669.dot",
-      "verdict": "diverged",
-      "maxDelta": 378,
-      "firstDiffPath": "svg/g[1]/g[74]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "2682",
