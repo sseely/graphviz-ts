@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-24T03:52:06.897Z",
-  "pool": 1,
+  "generatedAt": "2026-06-26T11:28:14.529Z",
+  "pool": 6,
   "capMs": 180000,
   "budgetMult": 3,
   "counts": {
-    "ok": 768,
-    "slow": 8,
-    "over-cap": 3,
-    "errored": 5,
+    "ok": 758,
+    "slow": 18,
+    "over-cap": 2,
+    "errored": 6,
     "oracle-error": 11
   },
   "results": [
@@ -16,8 +16,8 @@
       "path": "121.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -26,7 +26,7 @@
       "verdict": "ok",
       "nativeMs": 58,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -34,8 +34,8 @@
       "path": "1213-2.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -44,7 +44,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -52,7 +52,7 @@
       "path": "1308.dot",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -68,7 +68,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -76,8 +76,8 @@
       "path": "1323.dot",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -85,8 +85,8 @@
       "path": "1323_1.dot",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -94,7 +94,7 @@
       "path": "1328.dot",
       "verdict": "ok",
       "nativeMs": 55,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -103,8 +103,8 @@
       "path": "1332.dot",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 17,
-      "ratio": 0.28,
+      "portMs": 33,
+      "ratio": 0.56,
       "runs": 5
     },
     {
@@ -112,8 +112,8 @@
       "path": "1367.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 7,
+      "ratio": 0.12,
       "runs": 5
     },
     {
@@ -121,8 +121,8 @@
       "path": "1408.dot",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -135,8 +135,8 @@
       "path": "1425.dot",
       "verdict": "ok",
       "nativeMs": 55,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -144,8 +144,8 @@
       "path": "1425_1.dot",
       "verdict": "ok",
       "nativeMs": 54,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -153,8 +153,8 @@
       "path": "1435.dot",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -162,8 +162,8 @@
       "path": "1436.dot",
       "verdict": "ok",
       "nativeMs": 55,
-      "portMs": 3,
-      "ratio": 0.06,
+      "portMs": 9,
+      "ratio": 0.16,
       "runs": 5
     },
     {
@@ -171,8 +171,8 @@
       "path": "1444-2.dot",
       "verdict": "ok",
       "nativeMs": 53,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -180,8 +180,8 @@
       "path": "1444.dot",
       "verdict": "ok",
       "nativeMs": 55,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -189,8 +189,8 @@
       "path": "1447.dot",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 8,
-      "ratio": 0.15,
+      "portMs": 10,
+      "ratio": 0.19,
       "runs": 5
     },
     {
@@ -198,8 +198,8 @@
       "path": "1447_1.dot",
       "verdict": "ok",
       "nativeMs": 81,
-      "portMs": 71,
-      "ratio": 0.87,
+      "portMs": 116,
+      "ratio": 1.43,
       "runs": 5
     },
     {
@@ -207,8 +207,8 @@
       "path": "144_no_ortho.dot",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -217,7 +217,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -225,8 +225,8 @@
       "path": "1453.dot",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 13,
-      "ratio": 0.21,
+      "portMs": 34,
+      "ratio": 0.57,
       "runs": 5
     },
     {
@@ -234,8 +234,8 @@
       "path": "1472.dot",
       "verdict": "ok",
       "nativeMs": 70,
-      "portMs": 16,
-      "ratio": 0.22,
+      "portMs": 21,
+      "ratio": 0.29,
       "runs": 5
     },
     {
@@ -261,8 +261,8 @@
       "path": "1514.dot",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -270,8 +270,8 @@
       "path": "1581.dot",
       "verdict": "ok",
       "nativeMs": 54,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -279,8 +279,8 @@
       "path": "1585_0.dot",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -288,8 +288,8 @@
       "path": "1585_1.dot",
       "verdict": "ok",
       "nativeMs": 54,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -297,8 +297,8 @@
       "path": "162.dot",
       "verdict": "ok",
       "nativeMs": 53,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -307,7 +307,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -315,8 +315,8 @@
       "path": "1622_1.dot",
       "verdict": "ok",
       "nativeMs": 52,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -325,7 +325,7 @@
       "verdict": "ok",
       "nativeMs": 53,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -333,8 +333,8 @@
       "path": "1622_3.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -342,7 +342,7 @@
       "path": "1624.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -361,7 +361,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -374,8 +374,8 @@
       "path": "1658.dot",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -393,7 +393,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -402,7 +402,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -417,25 +417,25 @@
       "verdict": "ok",
       "nativeMs": 63,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
       "id": "1718",
       "path": "1718.dot",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 11492,
-      "portMs": 25280,
-      "ratio": 2.2,
-      "runs": 3
+      "portMs": 40673,
+      "ratio": 3.54,
+      "runs": 1
     },
     {
       "id": "1724",
       "path": "1724.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -457,8 +457,8 @@
       "path": "1855.dot",
       "verdict": "ok",
       "nativeMs": 18,
-      "portMs": 2,
-      "ratio": 0.09,
+      "portMs": 3,
+      "ratio": 0.18,
       "runs": 5
     },
     {
@@ -466,8 +466,8 @@
       "path": "1856.dot",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -490,7 +490,7 @@
       "verdict": "ok",
       "nativeMs": 64,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -498,8 +498,8 @@
       "path": "1879.dot",
       "verdict": "ok",
       "nativeMs": 153,
-      "portMs": 119,
-      "ratio": 0.78,
+      "portMs": 166,
+      "ratio": 1.08,
       "runs": 5
     },
     {
@@ -507,8 +507,8 @@
       "path": "1880.dot",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 3,
-      "ratio": 0.04,
+      "portMs": 5,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -516,7 +516,7 @@
       "path": "1896.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -525,8 +525,8 @@
       "path": "1898.dot",
       "verdict": "ok",
       "nativeMs": 66,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 6,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -534,8 +534,8 @@
       "path": "1902.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -543,8 +543,8 @@
       "path": "1909.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -552,8 +552,8 @@
       "path": "1925.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -561,8 +561,8 @@
       "path": "1939.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -570,8 +570,8 @@
       "path": "1949.dot",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -579,8 +579,8 @@
       "path": "1990.dot",
       "verdict": "ok",
       "nativeMs": 74,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -593,8 +593,8 @@
       "path": "2082.dot",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -602,17 +602,17 @@
       "path": "2087.dot",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
     {
       "id": "2095",
       "path": "2095.dot",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 261,
-      "portMs": 20,
-      "ratio": 0.08,
+      "portMs": 942,
+      "ratio": 3.61,
       "runs": 5
     },
     {
@@ -620,8 +620,8 @@
       "path": "2095_1.dot",
       "verdict": "slow",
       "nativeMs": 22309,
-      "portMs": 68493,
-      "ratio": 3.07,
+      "portMs": 99384,
+      "ratio": 4.45,
       "runs": 1
     },
     {
@@ -629,8 +629,8 @@
       "path": "2108.dot",
       "verdict": "slow",
       "nativeMs": 12849,
-      "portMs": 86010,
-      "ratio": 6.69,
+      "portMs": 90591,
+      "ratio": 7.05,
       "runs": 1
     },
     {
@@ -639,7 +639,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -647,8 +647,8 @@
       "path": "2168.dot",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -657,7 +657,7 @@
       "verdict": "ok",
       "nativeMs": 54,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -674,8 +674,8 @@
       "path": "2168_3.dot",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -683,8 +683,8 @@
       "path": "2168_4.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -692,8 +692,8 @@
       "path": "2168_5.dot",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -701,8 +701,8 @@
       "path": "2183.dot",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -710,8 +710,8 @@
       "path": "2184.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -719,8 +719,8 @@
       "path": "2193.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 6,
-      "ratio": 0.11,
+      "portMs": 18,
+      "ratio": 0.31,
       "runs": 5
     },
     {
@@ -728,9 +728,9 @@
       "path": "2222.dot",
       "verdict": "ok",
       "nativeMs": 6799,
-      "portMs": 18176,
-      "ratio": 2.67,
-      "runs": 4
+      "portMs": 18802,
+      "ratio": 2.77,
+      "runs": 3
     },
     {
       "id": "2225",
@@ -738,7 +738,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -746,8 +746,8 @@
       "path": "2239.dot",
       "verdict": "ok",
       "nativeMs": 73,
-      "portMs": 22,
-      "ratio": 0.3,
+      "portMs": 29,
+      "ratio": 0.4,
       "runs": 5
     },
     {
@@ -755,8 +755,8 @@
       "path": "2242.dot",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -764,8 +764,8 @@
       "path": "2257.dot",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -773,8 +773,8 @@
       "path": "2258.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -792,7 +792,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -801,7 +801,7 @@
       "verdict": "ok",
       "nativeMs": 64,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -809,17 +809,17 @@
       "path": "2342.dot",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
       "id": "2343",
       "path": "2343.dot",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 44304,
-      "portMs": 127418,
-      "ratio": 2.88,
+      "portMs": 138930,
+      "ratio": 3.14,
       "runs": 1
     },
     {
@@ -846,7 +846,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -855,7 +855,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -863,8 +863,8 @@
       "path": "2368.dot",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -872,8 +872,8 @@
       "path": "2368_1.dot",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -890,7 +890,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -898,8 +898,8 @@
       "path": "2391_1.dot",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -907,8 +907,8 @@
       "path": "2406.dot",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -925,8 +925,8 @@
       "path": "2413_2.dot",
       "verdict": "ok",
       "nativeMs": 72,
-      "portMs": 26,
-      "ratio": 0.37,
+      "portMs": 32,
+      "ratio": 0.44,
       "runs": 5
     },
     {
@@ -934,8 +934,8 @@
       "path": "241_0.dot",
       "verdict": "ok",
       "nativeMs": 67,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 7,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -943,8 +943,8 @@
       "path": "241_1.dot",
       "verdict": "ok",
       "nativeMs": 66,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 4,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -970,8 +970,8 @@
       "path": "2457_1.dot",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -980,7 +980,7 @@
       "verdict": "ok",
       "nativeMs": 65,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -988,8 +988,8 @@
       "path": "2458.dot",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1006,18 +1006,18 @@
       "path": "2470.dot",
       "verdict": "ok",
       "nativeMs": 189,
-      "portMs": 384,
-      "ratio": 2.03,
+      "portMs": 457,
+      "ratio": 2.42,
       "runs": 5
     },
     {
       "id": "2471",
       "path": "2471.dot",
-      "verdict": "slow",
+      "verdict": "ok",
       "nativeMs": 3269,
-      "portMs": 16361,
-      "ratio": 5,
-      "runs": 4
+      "portMs": 6850,
+      "ratio": 2.1,
+      "runs": 5
     },
     {
       "id": "2475_1",
@@ -1029,8 +1029,8 @@
       "path": "2475_2.dot",
       "verdict": "ok",
       "nativeMs": 4197,
-      "portMs": 10276,
-      "ratio": 2.45,
+      "portMs": 12099,
+      "ratio": 2.88,
       "runs": 5
     },
     {
@@ -1038,8 +1038,8 @@
       "path": "2476.dot",
       "verdict": "ok",
       "nativeMs": 70,
-      "portMs": 4,
-      "ratio": 0.05,
+      "portMs": 5,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -1047,8 +1047,8 @@
       "path": "2484.dot",
       "verdict": "ok",
       "nativeMs": 67,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1056,8 +1056,8 @@
       "path": "2490.dot",
       "verdict": "ok",
       "nativeMs": 66,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1065,8 +1065,8 @@
       "path": "2497.dot",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1075,7 +1075,7 @@
       "verdict": "ok",
       "nativeMs": 71,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1084,7 +1084,7 @@
       "verdict": "ok",
       "nativeMs": 21,
       "portMs": 0,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1092,8 +1092,8 @@
       "path": "2521.dot",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1102,7 +1102,7 @@
       "verdict": "ok",
       "nativeMs": 67,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1110,8 +1110,8 @@
       "path": "2556.dot",
       "verdict": "ok",
       "nativeMs": 67,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -1119,8 +1119,8 @@
       "path": "2559.dot",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1129,7 +1129,7 @@
       "verdict": "ok",
       "nativeMs": 67,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1138,7 +1138,7 @@
       "verdict": "ok",
       "nativeMs": 68,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1147,7 +1147,7 @@
       "verdict": "ok",
       "nativeMs": 66,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1155,8 +1155,8 @@
       "path": "258.dot",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1164,8 +1164,8 @@
       "path": "2592.dot",
       "verdict": "ok",
       "nativeMs": 81,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1178,8 +1178,8 @@
       "path": "2609.dot",
       "verdict": "ok",
       "nativeMs": 20,
-      "portMs": 0,
-      "ratio": 0.02,
+      "portMs": 1,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1187,8 +1187,8 @@
       "path": "2613.dot",
       "verdict": "ok",
       "nativeMs": 64,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1197,7 +1197,7 @@
       "verdict": "ok",
       "nativeMs": 64,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1205,8 +1205,8 @@
       "path": "2615.dot",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1215,7 +1215,7 @@
       "verdict": "ok",
       "nativeMs": 20,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1223,7 +1223,7 @@
       "path": "2619_1.dot",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 1,
+      "portMs": 2,
       "ratio": 0.02,
       "runs": 5
     },
@@ -1232,8 +1232,8 @@
       "path": "2619_2.dot",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1241,8 +1241,8 @@
       "path": "2620.dot",
       "verdict": "slow",
       "nativeMs": 371,
-      "portMs": 2113,
-      "ratio": 5.69,
+      "portMs": 1418,
+      "ratio": 3.82,
       "runs": 5
     },
     {
@@ -1256,7 +1256,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1265,7 +1265,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1274,7 +1274,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1282,8 +1282,8 @@
       "path": "2639.dot",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1292,24 +1292,22 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
       "id": "2646",
       "path": "2646.dot",
-      "verdict": "over-cap",
-      "nativeMs": 97463,
-      "portMs": 180000,
-      "ratio": null
+      "verdict": "errored",
+      "errMsg": "Maximum call stack size exceeded"
     },
     {
       "id": "2669",
       "path": "2669.dot",
       "verdict": "ok",
       "nativeMs": 66,
-      "portMs": 11,
-      "ratio": 0.17,
+      "portMs": 14,
+      "ratio": 0.22,
       "runs": 5
     },
     {
@@ -1326,8 +1324,8 @@
       "path": "2683.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1336,7 +1334,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1345,7 +1343,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1354,7 +1352,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1377,7 +1375,7 @@
       "verdict": "ok",
       "nativeMs": 20,
       "portMs": 2,
-      "ratio": 0.08,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -1385,8 +1383,8 @@
       "path": "2743.dot",
       "verdict": "slow",
       "nativeMs": 201,
-      "portMs": 690,
-      "ratio": 3.43,
+      "portMs": 888,
+      "ratio": 4.42,
       "runs": 5
     },
     {
@@ -1394,8 +1392,8 @@
       "path": "2796.dot",
       "verdict": "ok",
       "nativeMs": 95,
-      "portMs": 97,
-      "ratio": 1.02,
+      "portMs": 110,
+      "ratio": 1.15,
       "runs": 5
     },
     {
@@ -1403,7 +1401,7 @@
       "path": "2801.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -1412,8 +1410,8 @@
       "path": "2825.dot",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -1429,8 +1427,8 @@
       "path": "358.dot",
       "verdict": "ok",
       "nativeMs": 74,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1438,8 +1436,8 @@
       "path": "42.dot",
       "verdict": "ok",
       "nativeMs": 80,
-      "portMs": 54,
-      "ratio": 0.67,
+      "portMs": 75,
+      "ratio": 0.94,
       "runs": 5
     },
     {
@@ -1447,8 +1445,8 @@
       "path": "56.dot",
       "verdict": "ok",
       "nativeMs": 73,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -1456,7 +1454,7 @@
       "path": "705.dot",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -1502,7 +1500,7 @@
       "verdict": "ok",
       "nativeMs": 63,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1510,8 +1508,8 @@
       "path": "graphs/Heawood.gv",
       "verdict": "ok",
       "nativeMs": 64,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -1520,7 +1518,7 @@
       "verdict": "ok",
       "nativeMs": 75,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1546,8 +1544,8 @@
       "path": "graphs/NaN.gv",
       "verdict": "ok",
       "nativeMs": 64,
-      "portMs": 9,
-      "ratio": 0.15,
+      "portMs": 11,
+      "ratio": 0.18,
       "runs": 5
     },
     {
@@ -1555,7 +1553,7 @@
       "path": "graphs/NewCenturySchlbk.gv",
       "verdict": "ok",
       "nativeMs": 70,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -1564,7 +1562,7 @@
       "path": "graphs/Palatino.gv",
       "verdict": "ok",
       "nativeMs": 71,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -1573,8 +1571,8 @@
       "path": "graphs/Petersen.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1591,7 +1589,7 @@
       "path": "graphs/Times.gv",
       "verdict": "ok",
       "nativeMs": 71,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -1609,8 +1607,8 @@
       "path": "graphs/ZapfDingbats.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1618,8 +1616,8 @@
       "path": "graphs/a.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1627,8 +1625,8 @@
       "path": "graphs/abstract.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 6,
-      "ratio": 0.09,
+      "portMs": 8,
+      "ratio": 0.13,
       "runs": 5
     },
     {
@@ -1637,7 +1635,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1655,7 +1653,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 2,
-      "ratio": 0.02,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1663,8 +1661,8 @@
       "path": "graphs/awilliams.gv",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 5,
-      "ratio": 0.07,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -1672,8 +1670,8 @@
       "path": "graphs/b.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1681,8 +1679,8 @@
       "path": "graphs/b100.gv",
       "verdict": "slow",
       "nativeMs": 8646,
-      "portMs": 33167,
-      "ratio": 3.84,
+      "portMs": 47711,
+      "ratio": 5.52,
       "runs": 1
     },
     {
@@ -1690,8 +1688,8 @@
       "path": "graphs/b102.gv",
       "verdict": "ok",
       "nativeMs": 126,
-      "portMs": 214,
-      "ratio": 1.7,
+      "portMs": 252,
+      "ratio": 2,
       "runs": 5
     },
     {
@@ -1699,8 +1697,8 @@
       "path": "graphs/b103.gv",
       "verdict": "slow",
       "nativeMs": 1210,
-      "portMs": 4064,
-      "ratio": 3.36,
+      "portMs": 4749,
+      "ratio": 3.92,
       "runs": 5
     },
     {
@@ -1708,8 +1706,8 @@
       "path": "graphs/b104.gv",
       "verdict": "slow",
       "nativeMs": 8635,
-      "portMs": 33872,
-      "ratio": 3.92,
+      "portMs": 50659,
+      "ratio": 5.87,
       "runs": 1
     },
     {
@@ -1717,8 +1715,8 @@
       "path": "graphs/b106.gv",
       "verdict": "ok",
       "nativeMs": 141,
-      "portMs": 211,
-      "ratio": 1.5,
+      "portMs": 299,
+      "ratio": 2.12,
       "runs": 5
     },
     {
@@ -1726,8 +1724,8 @@
       "path": "graphs/b117.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1744,8 +1742,8 @@
       "path": "graphs/b124.gv",
       "verdict": "ok",
       "nativeMs": 92,
-      "portMs": 187,
-      "ratio": 2.03,
+      "portMs": 117,
+      "ratio": 1.27,
       "runs": 5
     },
     {
@@ -1762,8 +1760,8 @@
       "path": "graphs/b143.gv",
       "verdict": "ok",
       "nativeMs": 160,
-      "portMs": 275,
-      "ratio": 1.72,
+      "portMs": 386,
+      "ratio": 2.41,
       "runs": 5
     },
     {
@@ -1772,7 +1770,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1781,7 +1779,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1789,8 +1787,8 @@
       "path": "graphs/b15.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 25,
-      "ratio": 0.41,
+      "portMs": 24,
+      "ratio": 0.4,
       "runs": 5
     },
     {
@@ -1799,7 +1797,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1807,17 +1805,17 @@
       "path": "graphs/b22.gv",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
       "id": "graphs-b29",
       "path": "graphs/b29.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 585,
-      "portMs": 1345,
-      "ratio": 2.3,
+      "portMs": 1952,
+      "ratio": 3.34,
       "runs": 5
     },
     {
@@ -1825,8 +1823,8 @@
       "path": "graphs/b3.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1835,7 +1833,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1843,8 +1841,8 @@
       "path": "graphs/b34.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1852,8 +1850,8 @@
       "path": "graphs/b36.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -1861,8 +1859,8 @@
       "path": "graphs/b491.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1870,8 +1868,8 @@
       "path": "graphs/b51.gv",
       "verdict": "ok",
       "nativeMs": 72,
-      "portMs": 13,
-      "ratio": 0.18,
+      "portMs": 21,
+      "ratio": 0.29,
       "runs": 5
     },
     {
@@ -1879,8 +1877,8 @@
       "path": "graphs/b53.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 3,
-      "ratio": 0.04,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -1889,7 +1887,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1897,8 +1895,8 @@
       "path": "graphs/b56.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -1906,8 +1904,8 @@
       "path": "graphs/b57.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 5,
-      "ratio": 0.09,
+      "portMs": 7,
+      "ratio": 0.11,
       "runs": 5
     },
     {
@@ -1915,8 +1913,8 @@
       "path": "graphs/b58.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1934,7 +1932,7 @@
       "verdict": "ok",
       "nativeMs": 57,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1942,8 +1940,8 @@
       "path": "graphs/b68.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -1951,8 +1949,8 @@
       "path": "graphs/b69.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 16,
-      "ratio": 0.27,
+      "portMs": 21,
+      "ratio": 0.33,
       "runs": 5
     },
     {
@@ -1960,8 +1958,8 @@
       "path": "graphs/b7.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1969,8 +1967,8 @@
       "path": "graphs/b71.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -1978,8 +1976,8 @@
       "path": "graphs/b73.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -1987,8 +1985,8 @@
       "path": "graphs/b73a.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2006,7 +2004,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2015,7 +2013,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2050,8 +2048,8 @@
       "path": "graphs/b81.gv",
       "verdict": "ok",
       "nativeMs": 114,
-      "portMs": 38,
-      "ratio": 0.33,
+      "portMs": 45,
+      "ratio": 0.4,
       "runs": 5
     },
     {
@@ -2059,8 +2057,8 @@
       "path": "graphs/b85.gv",
       "verdict": "ok",
       "nativeMs": 54,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2068,8 +2066,8 @@
       "path": "graphs/b94.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 5,
-      "ratio": 0.09,
+      "portMs": 9,
+      "ratio": 0.15,
       "runs": 5
     },
     {
@@ -2077,8 +2075,8 @@
       "path": "graphs/b993.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2093,10 +2091,10 @@
     {
       "id": "graphs-badvoro",
       "path": "graphs/badvoro.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 320,
-      "portMs": 823,
-      "ratio": 2.57,
+      "portMs": 1183,
+      "ratio": 3.7,
       "runs": 5
     },
     {
@@ -2104,7 +2102,7 @@
       "path": "graphs/big.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 2,
+      "portMs": 3,
       "ratio": 0.04,
       "runs": 5
     },
@@ -2114,7 +2112,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2122,8 +2120,8 @@
       "path": "graphs/cairo.gv",
       "verdict": "ok",
       "nativeMs": 78,
-      "portMs": 55,
-      "ratio": 0.7,
+      "portMs": 58,
+      "ratio": 0.74,
       "runs": 5
     },
     {
@@ -2131,8 +2129,8 @@
       "path": "graphs/center.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2140,8 +2138,8 @@
       "path": "graphs/clover.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2149,8 +2147,8 @@
       "path": "graphs/clust.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2158,7 +2156,7 @@
       "path": "graphs/clust1.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -2167,7 +2165,7 @@
       "path": "graphs/clust2.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -2176,8 +2174,8 @@
       "path": "graphs/clust3.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -2186,7 +2184,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2194,8 +2192,8 @@
       "path": "graphs/clust5.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -2204,7 +2202,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2212,8 +2210,8 @@
       "path": "graphs/clustlabel.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2230,8 +2228,8 @@
       "path": "graphs/colors.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2240,7 +2238,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2248,7 +2246,7 @@
       "path": "graphs/compound.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -2257,8 +2255,8 @@
       "path": "graphs/crazy.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -2266,8 +2264,8 @@
       "path": "graphs/ctext.gv",
       "verdict": "ok",
       "nativeMs": 64,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2275,7 +2273,7 @@
       "path": "graphs/d.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -2284,8 +2282,8 @@
       "path": "graphs/dd.gv",
       "verdict": "ok",
       "nativeMs": 55,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2293,8 +2291,8 @@
       "path": "graphs/decorate.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 5,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -2311,8 +2309,8 @@
       "path": "graphs/dir.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2320,8 +2318,8 @@
       "path": "graphs/dpd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 13,
-      "ratio": 0.21,
+      "portMs": 18,
+      "ratio": 0.3,
       "runs": 5
     },
     {
@@ -2338,8 +2336,8 @@
       "path": "graphs/fdp.gv",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2347,8 +2345,8 @@
       "path": "graphs/fig6.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 6,
-      "ratio": 0.1,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -2366,7 +2364,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2375,7 +2373,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -2392,7 +2390,7 @@
       "path": "graphs/grdcluster.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -2401,8 +2399,8 @@
       "path": "graphs/grdcolors.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 3,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -2419,8 +2417,8 @@
       "path": "graphs/grdlinear.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -2428,8 +2426,8 @@
       "path": "graphs/grdlinear_angle.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -2437,8 +2435,8 @@
       "path": "graphs/grdlinear_node.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2446,8 +2444,8 @@
       "path": "graphs/grdradial.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -2455,8 +2453,8 @@
       "path": "graphs/grdradial_angle.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -2464,8 +2462,8 @@
       "path": "graphs/grdradial_node.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2473,8 +2471,8 @@
       "path": "graphs/grdshapes.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -2482,8 +2480,8 @@
       "path": "graphs/hashtable.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2491,8 +2489,8 @@
       "path": "graphs/honda-tokoro.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -2500,8 +2498,8 @@
       "path": "graphs/html.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2509,8 +2507,8 @@
       "path": "graphs/html2.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2519,7 +2517,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2554,8 +2552,8 @@
       "path": "graphs/japanese.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -2564,7 +2562,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2572,8 +2570,8 @@
       "path": "graphs/jsort.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 6,
-      "ratio": 0.11,
+      "portMs": 9,
+      "ratio": 0.16,
       "runs": 5
     },
     {
@@ -2581,8 +2579,8 @@
       "path": "graphs/labelclust-fbc.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2591,7 +2589,7 @@
       "verdict": "ok",
       "nativeMs": 55,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2600,7 +2598,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2636,7 +2634,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2645,7 +2643,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2654,7 +2652,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2671,8 +2669,8 @@
       "path": "graphs/labelclust-ftl.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2680,8 +2678,8 @@
       "path": "graphs/labelclust-ftr.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2689,8 +2687,8 @@
       "path": "graphs/labelclust-nbc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2708,7 +2706,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2716,8 +2714,8 @@
       "path": "graphs/labelclust-nbr.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -2726,7 +2724,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2735,7 +2733,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2744,7 +2742,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2771,7 +2769,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2789,7 +2787,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2797,8 +2795,8 @@
       "path": "graphs/labelroot-fbc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2825,7 +2823,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2834,7 +2832,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2842,8 +2840,8 @@
       "path": "graphs/labelroot-fdd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2869,8 +2867,8 @@
       "path": "graphs/labelroot-ftc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2878,8 +2876,8 @@
       "path": "graphs/labelroot-ftd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2897,7 +2895,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2933,7 +2931,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2942,7 +2940,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2960,7 +2958,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2968,8 +2966,8 @@
       "path": "graphs/labelroot-ndr.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -2996,7 +2994,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3005,7 +3003,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3014,7 +3012,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3023,7 +3021,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3032,7 +3030,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3040,8 +3038,8 @@
       "path": "graphs/ldbxtried.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 5,
-      "ratio": 0.09,
+      "portMs": 9,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -3059,7 +3057,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -3068,7 +3066,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3077,7 +3075,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -3085,8 +3083,8 @@
       "path": "graphs/mike.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3094,8 +3092,8 @@
       "path": "graphs/mode.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 24,
-      "ratio": 0.39,
+      "portMs": 29,
+      "ratio": 0.47,
       "runs": 5
     },
     {
@@ -3104,7 +3102,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3112,8 +3110,8 @@
       "path": "graphs/newarrows.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3121,8 +3119,8 @@
       "path": "graphs/ngk10_4.gv",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 37,
-      "ratio": 0.54,
+      "portMs": 41,
+      "ratio": 0.6,
       "runs": 5
     },
     {
@@ -3130,8 +3128,8 @@
       "path": "graphs/nhg.gv",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3139,8 +3137,8 @@
       "path": "graphs/nojustify.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3149,7 +3147,7 @@
       "verdict": "ok",
       "nativeMs": 69,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3158,7 +3156,7 @@
       "verdict": "ok",
       "nativeMs": 64,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3175,8 +3173,8 @@
       "path": "graphs/ordering.gv",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3184,8 +3182,8 @@
       "path": "graphs/overlap.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 13,
-      "ratio": 0.21,
+      "portMs": 16,
+      "ratio": 0.27,
       "runs": 5
     },
     {
@@ -3193,8 +3191,8 @@
       "path": "graphs/p.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3202,8 +3200,8 @@
       "path": "graphs/p2.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3212,7 +3210,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3221,7 +3219,7 @@
       "verdict": "ok",
       "nativeMs": 57,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3230,7 +3228,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3238,8 +3236,8 @@
       "path": "graphs/pgram.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 3,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -3248,7 +3246,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3256,8 +3254,8 @@
       "path": "graphs/pmpipe.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3265,8 +3263,8 @@
       "path": "graphs/polypoly.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 7,
+      "ratio": 0.11,
       "runs": 5
     },
     {
@@ -3274,8 +3272,8 @@
       "path": "graphs/ports.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3283,8 +3281,8 @@
       "path": "graphs/proc3d.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -3302,7 +3300,7 @@
       "verdict": "ok",
       "nativeMs": 57,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3319,8 +3317,8 @@
       "path": "graphs/pslib.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3328,8 +3326,8 @@
       "path": "graphs/radius.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3337,8 +3335,8 @@
       "path": "graphs/rd_rules.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3346,8 +3344,8 @@
       "path": "graphs/record.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3356,7 +3354,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3364,17 +3362,17 @@
       "path": "graphs/records.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
     {
       "id": "graphs-root",
       "path": "graphs/root.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 214,
-      "portMs": 601,
-      "ratio": 2.81,
+      "portMs": 883,
+      "ratio": 4.13,
       "runs": 5
     },
     {
@@ -3382,8 +3380,8 @@
       "path": "graphs/rootlabel.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3392,7 +3390,7 @@
       "verdict": "ok",
       "nativeMs": 57,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3400,8 +3398,8 @@
       "path": "graphs/rowe.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 7,
-      "ratio": 0.11,
+      "portMs": 10,
+      "ratio": 0.16,
       "runs": 5
     },
     {
@@ -3409,8 +3407,8 @@
       "path": "graphs/russian.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3418,8 +3416,8 @@
       "path": "graphs/sb_box.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3427,8 +3425,8 @@
       "path": "graphs/sb_box_dbl.gv",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3437,7 +3435,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3446,7 +3444,7 @@
       "verdict": "ok",
       "nativeMs": 55,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3454,8 +3452,8 @@
       "path": "graphs/shapes.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3463,8 +3461,8 @@
       "path": "graphs/shells.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3472,8 +3470,8 @@
       "path": "graphs/sides.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3481,8 +3479,8 @@
       "path": "graphs/size.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -3490,8 +3488,8 @@
       "path": "graphs/sl_box.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3499,8 +3497,8 @@
       "path": "graphs/sl_box_dbl.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3508,8 +3506,8 @@
       "path": "graphs/sl_circle.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3518,7 +3516,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3526,8 +3524,8 @@
       "path": "graphs/sq_rules.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3535,8 +3533,8 @@
       "path": "graphs/sr_box.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3545,7 +3543,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3553,8 +3551,8 @@
       "path": "graphs/sr_circle.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3562,8 +3560,8 @@
       "path": "graphs/sr_circle_dbl.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -3571,8 +3569,8 @@
       "path": "graphs/st_box.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3580,8 +3578,8 @@
       "path": "graphs/st_box_dbl.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3589,8 +3587,8 @@
       "path": "graphs/st_circle.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3598,8 +3596,8 @@
       "path": "graphs/st_circle_dbl.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3607,8 +3605,8 @@
       "path": "graphs/states.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3616,8 +3614,8 @@
       "path": "graphs/structs.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3625,8 +3623,8 @@
       "path": "graphs/style.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3634,8 +3632,8 @@
       "path": "graphs/train11.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -3643,8 +3641,8 @@
       "path": "graphs/trapeziumlr.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 6,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -3652,8 +3650,8 @@
       "path": "graphs/tree.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -3661,8 +3659,8 @@
       "path": "graphs/triedds.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -3679,7 +3677,7 @@
       "path": "graphs/try.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -3689,7 +3687,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3697,8 +3695,8 @@
       "path": "graphs/unix2.gv",
       "verdict": "ok",
       "nativeMs": 56,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -3706,8 +3704,8 @@
       "path": "graphs/unix2k.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -3715,8 +3713,8 @@
       "path": "graphs/url.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3725,7 +3723,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3733,8 +3731,8 @@
       "path": "graphs/val_inv.gv",
       "verdict": "ok",
       "nativeMs": 66,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3743,7 +3741,7 @@
       "verdict": "ok",
       "nativeMs": 68,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3751,8 +3749,8 @@
       "path": "graphs/val_val.gv",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -3760,8 +3758,8 @@
       "path": "graphs/viewfile.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -3769,8 +3767,8 @@
       "path": "graphs/viewport.gv",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 27,
-      "ratio": 0.41,
+      "portMs": 37,
+      "ratio": 0.57,
       "runs": 5
     },
     {
@@ -3778,8 +3776,8 @@
       "path": "graphs/weight.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -3787,8 +3785,8 @@
       "path": "graphs/world.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 5,
-      "ratio": 0.09,
+      "portMs": 7,
+      "ratio": 0.11,
       "runs": 5
     },
     {
@@ -3796,7 +3794,7 @@
       "path": "graphs/xlabels.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -3805,8 +3803,8 @@
       "path": "graphs/xx.gv",
       "verdict": "ok",
       "nativeMs": 122,
-      "portMs": 216,
-      "ratio": 1.77,
+      "portMs": 228,
+      "ratio": 1.87,
       "runs": 5
     },
     {
@@ -3828,8 +3826,8 @@
       "path": "linux.i386/b102.gv",
       "verdict": "ok",
       "nativeMs": 124,
-      "portMs": 217,
-      "ratio": 1.75,
+      "portMs": 273,
+      "ratio": 2.2,
       "runs": 5
     },
     {
@@ -3837,17 +3835,17 @@
       "path": "linux.i386/b106.gv",
       "verdict": "ok",
       "nativeMs": 139,
-      "portMs": 215,
-      "ratio": 1.55,
+      "portMs": 231,
+      "ratio": 1.66,
       "runs": 5
     },
     {
       "id": "linux.i386-b29",
       "path": "linux.i386/b29.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 582,
-      "portMs": 1277,
-      "ratio": 2.19,
+      "portMs": 2388,
+      "ratio": 4.1,
       "runs": 5
     },
     {
@@ -3855,8 +3853,8 @@
       "path": "linux.i386/b36.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -3864,8 +3862,8 @@
       "path": "linux.i386/crazy.gv",
       "verdict": "ok",
       "nativeMs": 73,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 6,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -3874,7 +3872,7 @@
       "verdict": "ok",
       "nativeMs": 58,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -3909,8 +3907,8 @@
       "path": "linux.x86/arrows_dot.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -3927,8 +3925,8 @@
       "path": "linux.x86/dotsplines_dot.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -3936,8 +3934,8 @@
       "path": "linux.x86/dotsplines_dot1.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -3954,7 +3952,7 @@
       "path": "linux.x86/flatedge_dot.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -3964,7 +3962,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -3981,8 +3979,8 @@
       "path": "linux.x86/neatosplines_neato.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 14,
-      "ratio": 0.24,
+      "portMs": 16,
+      "ratio": 0.26,
       "runs": 5
     },
     {
@@ -3990,8 +3988,8 @@
       "path": "linux.x86/neatosplines_neato1.gv",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 13,
-      "ratio": 0.2,
+      "portMs": 14,
+      "ratio": 0.22,
       "runs": 5
     },
     {
@@ -4009,7 +4007,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4018,7 +4016,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4026,8 +4024,8 @@
       "path": "linux.x86/overlap_neato.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 14,
-      "ratio": 0.23,
+      "portMs": 17,
+      "ratio": 0.28,
       "runs": 5
     },
     {
@@ -4035,8 +4033,8 @@
       "path": "linux.x86/overlap_neato1.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 14,
-      "ratio": 0.23,
+      "portMs": 15,
+      "ratio": 0.25,
       "runs": 5
     },
     {
@@ -4071,8 +4069,8 @@
       "path": "linux.x86/ports_dot.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -4081,7 +4079,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4089,8 +4087,8 @@
       "path": "linux.x86/rankdir_dot.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 5,
-      "ratio": 0.07,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -4098,8 +4096,8 @@
       "path": "linux.x86/rankdir_dot1.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 5,
-      "ratio": 0.08,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -4107,8 +4105,8 @@
       "path": "linux.x86/rankdir_dot2.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 5,
-      "ratio": 0.08,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -4116,26 +4114,26 @@
       "path": "linux.x86/record_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
       "id": "linux.x86-root_circo",
       "path": "linux.x86/root_circo.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 245,
-      "portMs": 732,
-      "ratio": 2.99,
+      "portMs": 891,
+      "ratio": 3.64,
       "runs": 5
     },
     {
       "id": "linux.x86-root_twopi",
       "path": "linux.x86/root_twopi.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 248,
-      "portMs": 727,
-      "ratio": 2.93,
+      "portMs": 1030,
+      "ratio": 4.15,
       "runs": 5
     },
     {
@@ -4162,7 +4160,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -4179,8 +4177,8 @@
       "path": "linux.x86/weight_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 5,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -4188,8 +4186,8 @@
       "path": "macosx/arrows_dot.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -4198,7 +4196,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4207,7 +4205,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4215,8 +4213,8 @@
       "path": "macosx/nestedclust_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4225,7 +4223,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4234,7 +4232,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4242,8 +4240,8 @@
       "path": "macosx/radius_dot.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4252,7 +4250,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4261,7 +4259,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4279,7 +4277,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4287,8 +4285,8 @@
       "path": "nshare/arrows_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -4297,7 +4295,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4305,8 +4303,8 @@
       "path": "nshare/dotsplines_dot.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -4314,8 +4312,8 @@
       "path": "nshare/dotsplines_dot1.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -4323,8 +4321,8 @@
       "path": "nshare/edgeclip_dot.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4332,8 +4330,8 @@
       "path": "nshare/flatedge_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4341,8 +4339,8 @@
       "path": "nshare/html2_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -4350,7 +4348,7 @@
       "path": "nshare/html_dot.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -4359,8 +4357,8 @@
       "path": "nshare/neatosplines_neato.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 14,
-      "ratio": 0.24,
+      "portMs": 23,
+      "ratio": 0.37,
       "runs": 5
     },
     {
@@ -4368,8 +4366,8 @@
       "path": "nshare/neatosplines_neato1.gv",
       "verdict": "ok",
       "nativeMs": 65,
-      "portMs": 14,
-      "ratio": 0.21,
+      "portMs": 18,
+      "ratio": 0.28,
       "runs": 5
     },
     {
@@ -4377,8 +4375,8 @@
       "path": "nshare/nestedclust_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4387,7 +4385,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4396,7 +4394,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4404,8 +4402,8 @@
       "path": "nshare/overlap_neato.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 14,
-      "ratio": 0.23,
+      "portMs": 18,
+      "ratio": 0.3,
       "runs": 5
     },
     {
@@ -4413,8 +4411,8 @@
       "path": "nshare/overlap_neato1.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 14,
-      "ratio": 0.22,
+      "portMs": 19,
+      "ratio": 0.3,
       "runs": 5
     },
     {
@@ -4431,8 +4429,8 @@
       "path": "nshare/pack_neato1.gv",
       "verdict": "ok",
       "nativeMs": 55,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -4449,8 +4447,8 @@
       "path": "nshare/ports_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -4459,7 +4457,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4467,8 +4465,8 @@
       "path": "nshare/rankdir_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 5,
-      "ratio": 0.08,
+      "portMs": 8,
+      "ratio": 0.13,
       "runs": 5
     },
     {
@@ -4476,8 +4474,8 @@
       "path": "nshare/rankdir_dot1.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 5,
-      "ratio": 0.07,
+      "portMs": 7,
+      "ratio": 0.11,
       "runs": 5
     },
     {
@@ -4485,8 +4483,8 @@
       "path": "nshare/rankdir_dot2.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 5,
-      "ratio": 0.08,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -4494,26 +4492,26 @@
       "path": "nshare/record_dot.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
       "id": "nshare-root_circo",
       "path": "nshare/root_circo.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 247,
-      "portMs": 736,
-      "ratio": 2.98,
+      "portMs": 1072,
+      "ratio": 4.34,
       "runs": 5
     },
     {
       "id": "nshare-root_twopi",
       "path": "nshare/root_twopi.gv",
-      "verdict": "ok",
+      "verdict": "slow",
       "nativeMs": 247,
-      "portMs": 728,
-      "ratio": 2.95,
+      "portMs": 847,
+      "ratio": 3.43,
       "runs": 5
     },
     {
@@ -4530,8 +4528,8 @@
       "path": "nshare/rowcolsep_dot1.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4539,8 +4537,8 @@
       "path": "nshare/shapes_dot.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -4557,8 +4555,8 @@
       "path": "nshare/weight_dot.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 6,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -4567,7 +4565,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4576,7 +4574,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4585,7 +4583,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4603,7 +4601,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4621,7 +4619,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4630,7 +4628,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4639,7 +4637,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4648,7 +4646,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4657,7 +4655,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4666,7 +4664,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4675,7 +4673,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4684,7 +4682,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4711,7 +4709,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4720,7 +4718,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4729,7 +4727,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4738,7 +4736,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4747,7 +4745,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4756,7 +4754,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4765,7 +4763,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4774,7 +4772,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4783,7 +4781,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4792,7 +4790,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4801,7 +4799,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4810,7 +4808,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4819,7 +4817,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4828,7 +4826,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4837,7 +4835,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4846,7 +4844,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4855,7 +4853,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4864,7 +4862,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4873,7 +4871,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4882,7 +4880,7 @@
       "verdict": "ok",
       "nativeMs": 15,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4909,7 +4907,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4918,7 +4916,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4927,7 +4925,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4936,7 +4934,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4945,7 +4943,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4954,7 +4952,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4963,7 +4961,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4972,7 +4970,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4981,7 +4979,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -4990,7 +4988,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -4999,7 +4997,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5008,7 +5006,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5026,7 +5024,7 @@
       "verdict": "ok",
       "nativeMs": 16,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5035,7 +5033,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5044,7 +5042,7 @@
       "verdict": "ok",
       "nativeMs": 19,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5053,7 +5051,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5062,7 +5060,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5071,7 +5069,7 @@
       "verdict": "ok",
       "nativeMs": 18,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5080,7 +5078,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5089,7 +5087,7 @@
       "verdict": "ok",
       "nativeMs": 17,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5107,7 +5105,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5116,7 +5114,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -5125,7 +5123,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5142,8 +5140,8 @@
       "path": "share/NaN.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 11,
-      "ratio": 0.18,
+      "portMs": 12,
+      "ratio": 0.19,
       "runs": 5
     },
     {
@@ -5151,8 +5149,8 @@
       "path": "share/Petersen.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -5161,7 +5159,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5179,7 +5177,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5187,8 +5185,8 @@
       "path": "share/abstract.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 7,
-      "ratio": 0.11,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -5196,8 +5194,8 @@
       "path": "share/alf.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -5205,8 +5203,8 @@
       "path": "share/b102.gv",
       "verdict": "ok",
       "nativeMs": 118,
-      "portMs": 216,
-      "ratio": 1.83,
+      "portMs": 296,
+      "ratio": 2.51,
       "runs": 5
     },
     {
@@ -5214,8 +5212,8 @@
       "path": "share/b106.gv",
       "verdict": "ok",
       "nativeMs": 140,
-      "portMs": 220,
-      "ratio": 1.57,
+      "portMs": 258,
+      "ratio": 1.84,
       "runs": 5
     },
     {
@@ -5223,8 +5221,8 @@
       "path": "share/b124.gv",
       "verdict": "ok",
       "nativeMs": 91,
-      "portMs": 191,
-      "ratio": 2.1,
+      "portMs": 124,
+      "ratio": 1.36,
       "runs": 5
     },
     {
@@ -5232,8 +5230,8 @@
       "path": "share/b29.gv",
       "verdict": "ok",
       "nativeMs": 578,
-      "portMs": 1337,
-      "ratio": 2.31,
+      "portMs": 1519,
+      "ratio": 2.63,
       "runs": 5
     },
     {
@@ -5242,7 +5240,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 4,
-      "ratio": 0.06,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -5251,7 +5249,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5259,8 +5257,8 @@
       "path": "share/b51.gv",
       "verdict": "ok",
       "nativeMs": 72,
-      "portMs": 14,
-      "ratio": 0.19,
+      "portMs": 16,
+      "ratio": 0.22,
       "runs": 5
     },
     {
@@ -5274,7 +5272,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5282,8 +5280,8 @@
       "path": "share/b94.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 5,
-      "ratio": 0.07,
+      "portMs": 6,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -5291,8 +5289,8 @@
       "path": "share/clust.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -5309,8 +5307,8 @@
       "path": "share/clust2.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -5319,7 +5317,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5328,7 +5326,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5346,7 +5344,7 @@
       "verdict": "ok",
       "nativeMs": 73,
       "portMs": 5,
-      "ratio": 0.06,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -5354,7 +5352,7 @@
       "path": "share/ctext.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -5363,8 +5361,8 @@
       "path": "share/dfa.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -5372,8 +5370,8 @@
       "path": "share/fig6.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 7,
-      "ratio": 0.12,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -5381,7 +5379,7 @@
       "path": "share/flatedge.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -5390,8 +5388,8 @@
       "path": "share/fsm.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -5399,8 +5397,8 @@
       "path": "share/grammar.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -5409,7 +5407,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5426,8 +5424,8 @@
       "path": "share/jsort.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 7,
-      "ratio": 0.12,
+      "portMs": 10,
+      "ratio": 0.16,
       "runs": 5
     },
     {
@@ -5435,8 +5433,8 @@
       "path": "share/labelclust-fbc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5444,8 +5442,8 @@
       "path": "share/labelclust-fbd.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5453,8 +5451,8 @@
       "path": "share/labelclust-fbl.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5463,7 +5461,7 @@
       "verdict": "ok",
       "nativeMs": 58,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5471,8 +5469,8 @@
       "path": "share/labelclust-fdc.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5481,7 +5479,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5489,8 +5487,8 @@
       "path": "share/labelclust-fdl.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5499,7 +5497,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5508,7 +5506,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5516,8 +5514,8 @@
       "path": "share/labelclust-ftd.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5525,8 +5523,8 @@
       "path": "share/labelclust-ftl.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5535,7 +5533,7 @@
       "verdict": "ok",
       "nativeMs": 58,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5543,8 +5541,8 @@
       "path": "share/labelclust-nbc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5553,7 +5551,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5561,8 +5559,8 @@
       "path": "share/labelclust-nbl.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5571,7 +5569,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5580,7 +5578,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5589,7 +5587,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5598,7 +5596,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5606,8 +5604,8 @@
       "path": "share/labelclust-ndr.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5624,8 +5622,8 @@
       "path": "share/labelclust-ntd.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5633,8 +5631,8 @@
       "path": "share/labelclust-ntl.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5643,7 +5641,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5652,7 +5650,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5660,8 +5658,8 @@
       "path": "share/labelroot-fbd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5670,7 +5668,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5678,8 +5676,8 @@
       "path": "share/labelroot-fbr.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5688,7 +5686,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5696,8 +5694,8 @@
       "path": "share/labelroot-fdd.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5706,7 +5704,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5715,7 +5713,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5724,7 +5722,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5732,8 +5730,8 @@
       "path": "share/labelroot-ftd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5742,7 +5740,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5751,7 +5749,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5759,8 +5757,8 @@
       "path": "share/labelroot-nbc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5787,7 +5785,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5796,7 +5794,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5823,7 +5821,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5832,7 +5830,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5840,8 +5838,8 @@
       "path": "share/labelroot-ntd.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5850,7 +5848,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5867,8 +5865,8 @@
       "path": "share/ldbxtried.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 6,
-      "ratio": 0.1,
+      "portMs": 7,
+      "ratio": 0.12,
       "runs": 5
     },
     {
@@ -5885,8 +5883,8 @@
       "path": "share/mike.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 5,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -5895,7 +5893,7 @@
       "verdict": "ok",
       "nativeMs": 57,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -5903,8 +5901,8 @@
       "path": "share/ngk10_4.gv",
       "verdict": "ok",
       "nativeMs": 68,
-      "portMs": 38,
-      "ratio": 0.56,
+      "portMs": 45,
+      "ratio": 0.66,
       "runs": 5
     },
     {
@@ -5912,7 +5910,7 @@
       "path": "share/nhg.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -5921,8 +5919,8 @@
       "path": "share/pgram.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 5,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -5931,7 +5929,7 @@
       "verdict": "ok",
       "nativeMs": 58,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5939,8 +5937,8 @@
       "path": "share/pmpipe.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 3,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -5948,8 +5946,8 @@
       "path": "share/polypoly.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -5957,8 +5955,8 @@
       "path": "share/proc3d.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -5967,7 +5965,7 @@
       "verdict": "ok",
       "nativeMs": 55,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -5976,7 +5974,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -5984,7 +5982,7 @@
       "path": "share/records.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -5993,8 +5991,8 @@
       "path": "share/rowe.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 8,
-      "ratio": 0.14,
+      "portMs": 16,
+      "ratio": 0.28,
       "runs": 5
     },
     {
@@ -6002,8 +6000,8 @@
       "path": "share/shells.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -6011,7 +6009,7 @@
       "path": "share/states.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -6020,8 +6018,8 @@
       "path": "share/structs.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6030,7 +6028,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -6038,8 +6036,8 @@
       "path": "share/trapeziumlr.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 3,
-      "ratio": 0.05,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -6074,8 +6072,8 @@
       "path": "share/unix.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 3,
-      "ratio": 0.06,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -6083,8 +6081,8 @@
       "path": "share/unix2.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -6092,8 +6090,8 @@
       "path": "share/unix2k.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.08,
       "runs": 5
     },
     {
@@ -6101,8 +6099,8 @@
       "path": "share/viewfile.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -6110,8 +6108,8 @@
       "path": "share/world.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 7,
-      "ratio": 0.11,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -6129,7 +6127,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6138,7 +6136,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -6146,8 +6144,8 @@
       "path": "windows/KW91.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.01,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -6164,8 +6162,8 @@
       "path": "windows/NaN.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 11,
-      "ratio": 0.19,
+      "portMs": 12,
+      "ratio": 0.2,
       "runs": 5
     },
     {
@@ -6173,8 +6171,8 @@
       "path": "windows/Petersen.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -6182,8 +6180,8 @@
       "path": "windows/abstract.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 6,
-      "ratio": 0.11,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -6191,8 +6189,8 @@
       "path": "windows/alf.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -6200,8 +6198,8 @@
       "path": "windows/b102.gv",
       "verdict": "ok",
       "nativeMs": 119,
-      "portMs": 219,
-      "ratio": 1.84,
+      "portMs": 279,
+      "ratio": 2.34,
       "runs": 5
     },
     {
@@ -6209,8 +6207,8 @@
       "path": "windows/b106.gv",
       "verdict": "ok",
       "nativeMs": 145,
-      "portMs": 217,
-      "ratio": 1.5,
+      "portMs": 286,
+      "ratio": 1.97,
       "runs": 5
     },
     {
@@ -6218,8 +6216,8 @@
       "path": "windows/b124.gv",
       "verdict": "ok",
       "nativeMs": 90,
-      "portMs": 196,
-      "ratio": 2.17,
+      "portMs": 101,
+      "ratio": 1.12,
       "runs": 5
     },
     {
@@ -6227,8 +6225,8 @@
       "path": "windows/b29.gv",
       "verdict": "ok",
       "nativeMs": 597,
-      "portMs": 1347,
-      "ratio": 2.26,
+      "portMs": 1611,
+      "ratio": 2.7,
       "runs": 5
     },
     {
@@ -6237,7 +6235,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 4,
-      "ratio": 0.06,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -6246,7 +6244,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6254,8 +6252,8 @@
       "path": "windows/b51.gv",
       "verdict": "ok",
       "nativeMs": 71,
-      "portMs": 13,
-      "ratio": 0.19,
+      "portMs": 18,
+      "ratio": 0.25,
       "runs": 5
     },
     {
@@ -6263,8 +6261,8 @@
       "path": "windows/b94.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 5,
-      "ratio": 0.09,
+      "portMs": 6,
+      "ratio": 0.1,
       "runs": 5
     },
     {
@@ -6273,7 +6271,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6290,8 +6288,8 @@
       "path": "windows/clust2.gv",
       "verdict": "ok",
       "nativeMs": 57,
-      "portMs": 0,
-      "ratio": 0.01,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6309,7 +6307,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6318,7 +6316,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6326,8 +6324,8 @@
       "path": "windows/crazy.gv",
       "verdict": "ok",
       "nativeMs": 71,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 5,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -6335,7 +6333,7 @@
       "path": "windows/ctext.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -6344,8 +6342,8 @@
       "path": "windows/dfa.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 2,
+      "ratio": 0.03,
       "runs": 5
     },
     {
@@ -6353,8 +6351,8 @@
       "path": "windows/fig6.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 7,
-      "ratio": 0.12,
+      "portMs": 11,
+      "ratio": 0.19,
       "runs": 5
     },
     {
@@ -6371,7 +6369,7 @@
       "path": "windows/grammar.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 2,
+      "portMs": 3,
       "ratio": 0.04,
       "runs": 5
     },
@@ -6398,8 +6396,8 @@
       "path": "windows/jsort.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 7,
-      "ratio": 0.12,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -6407,8 +6405,8 @@
       "path": "windows/labelclust-fbc.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6417,7 +6415,7 @@
       "verdict": "ok",
       "nativeMs": 57,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6426,7 +6424,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6435,7 +6433,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6443,8 +6441,8 @@
       "path": "windows/labelclust-fdc.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6471,7 +6469,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6480,7 +6478,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6488,8 +6486,8 @@
       "path": "windows/labelclust-ftd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6498,7 +6496,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6506,8 +6504,8 @@
       "path": "windows/labelclust-ftr.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6516,7 +6514,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6534,7 +6532,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6543,7 +6541,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6560,8 +6558,8 @@
       "path": "windows/labelclust-ndd.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6570,7 +6568,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6579,7 +6577,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6605,8 +6603,8 @@
       "path": "windows/labelclust-ntl.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6615,7 +6613,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6624,7 +6622,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6642,7 +6640,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6650,8 +6648,8 @@
       "path": "windows/labelroot-fbr.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6669,7 +6667,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6677,8 +6675,8 @@
       "path": "windows/labelroot-fdl.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6686,8 +6684,8 @@
       "path": "windows/labelroot-fdr.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6695,8 +6693,8 @@
       "path": "windows/labelroot-ftc.gv",
       "verdict": "ok",
       "nativeMs": 63,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6705,7 +6703,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6714,7 +6712,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6723,7 +6721,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6749,8 +6747,8 @@
       "path": "windows/labelroot-nbl.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6758,8 +6756,8 @@
       "path": "windows/labelroot-nbr.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6768,7 +6766,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6777,7 +6775,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6785,8 +6783,8 @@
       "path": "windows/labelroot-ndl.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6795,7 +6793,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6803,8 +6801,8 @@
       "path": "windows/labelroot-ntc.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6812,8 +6810,8 @@
       "path": "windows/labelroot-ntd.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
-      "ratio": 0,
+      "portMs": 1,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6822,7 +6820,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6839,8 +6837,8 @@
       "path": "windows/ldbxtried.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 6,
-      "ratio": 0.09,
+      "portMs": 8,
+      "ratio": 0.14,
       "runs": 5
     },
     {
@@ -6849,7 +6847,7 @@
       "verdict": "ok",
       "nativeMs": 60,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6857,8 +6855,8 @@
       "path": "windows/mike.gv",
       "verdict": "ok",
       "nativeMs": 59,
-      "portMs": 2,
-      "ratio": 0.04,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -6866,8 +6864,8 @@
       "path": "windows/newarrows.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 2,
-      "ratio": 0.03,
+      "portMs": 3,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -6875,8 +6873,8 @@
       "path": "windows/ngk10_4.gv",
       "verdict": "ok",
       "nativeMs": 70,
-      "portMs": 38,
-      "ratio": 0.54,
+      "portMs": 48,
+      "ratio": 0.68,
       "runs": 5
     },
     {
@@ -6884,7 +6882,7 @@
       "path": "windows/nhg.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -6893,8 +6891,8 @@
       "path": "windows/pgram.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 4,
-      "ratio": 0.07,
+      "portMs": 6,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -6911,8 +6909,8 @@
       "path": "windows/pmpipe.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 1,
-      "ratio": 0.02,
+      "portMs": 4,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -6921,7 +6919,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 3,
-      "ratio": 0.05,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -6929,8 +6927,8 @@
       "path": "windows/proc3d.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 3,
-      "ratio": 0.06,
+      "portMs": 6,
+      "ratio": 0.09,
       "runs": 5
     },
     {
@@ -6939,7 +6937,7 @@
       "verdict": "ok",
       "nativeMs": 56,
       "portMs": 1,
-      "ratio": 0.01,
+      "ratio": 0.02,
       "runs": 5
     },
     {
@@ -6948,7 +6946,7 @@
       "verdict": "ok",
       "nativeMs": 59,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6957,7 +6955,7 @@
       "verdict": "ok",
       "nativeMs": 55,
       "portMs": 0,
-      "ratio": 0,
+      "ratio": 0.01,
       "runs": 5
     },
     {
@@ -6965,7 +6963,7 @@
       "path": "windows/records.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 0,
+      "portMs": 1,
       "ratio": 0.01,
       "runs": 5
     },
@@ -6974,8 +6972,8 @@
       "path": "windows/rowe.gv",
       "verdict": "ok",
       "nativeMs": 58,
-      "portMs": 8,
-      "ratio": 0.14,
+      "portMs": 11,
+      "ratio": 0.18,
       "runs": 5
     },
     {
@@ -6984,7 +6982,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 3,
-      "ratio": 0.04,
+      "ratio": 0.05,
       "runs": 5
     },
     {
@@ -7020,7 +7018,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 3,
-      "ratio": 0.05,
+      "ratio": 0.06,
       "runs": 5
     },
     {
@@ -7064,8 +7062,8 @@
       "path": "windows/unix.gv",
       "verdict": "ok",
       "nativeMs": 60,
-      "portMs": 3,
-      "ratio": 0.06,
+      "portMs": 4,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -7074,7 +7072,7 @@
       "verdict": "ok",
       "nativeMs": 62,
       "portMs": 4,
-      "ratio": 0.06,
+      "ratio": 0.07,
       "runs": 5
     },
     {
@@ -7082,8 +7080,8 @@
       "path": "windows/unix2k.gv",
       "verdict": "ok",
       "nativeMs": 62,
-      "portMs": 4,
-      "ratio": 0.06,
+      "portMs": 7,
+      "ratio": 0.12,
       "runs": 5
     },
     {
@@ -7092,7 +7090,7 @@
       "verdict": "ok",
       "nativeMs": 61,
       "portMs": 2,
-      "ratio": 0.03,
+      "ratio": 0.04,
       "runs": 5
     },
     {
@@ -7100,8 +7098,8 @@
       "path": "windows/world.gv",
       "verdict": "ok",
       "nativeMs": 61,
-      "portMs": 7,
-      "ratio": 0.11,
+      "portMs": 8,
+      "ratio": 0.12,
       "runs": 5
     }
   ]

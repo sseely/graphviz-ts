@@ -21,52 +21,61 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
 - **Native:** `dot -Tsvg` best-of-3 (min).
 - **Budget:** target ≤3× native. Per-render cap **180000ms**
   (SIGKILL → `over-cap`, i.e. a true synchronous hang).
-- **Caveat:** light graphs are timed under up-to-1-way load; for a
+- **Caveat:** light graphs are timed under up-to-6-way load; for a
   precise single number re-run `BENCH_POOL=1 BENCH_IDS=<id> node test/corpus/bench.mjs`.
 
 ## Summary
 
-- **Rated inputs:** 776 · **within ≤3× native:** 768 (99.0%)
-- **ok (≤3×):** 768 · **slow (>3×):** 8 · **over-cap (hang):** 3 · **errored:** 5 · **oracle-error:** 11
-- **ratio (port/native):** p50 0.01× · p90 0.12× · max 6.69×
+- **Rated inputs:** 776 · **within ≤3× native:** 758 (97.7%)
+- **ok (≤3×):** 758 · **slow (>3×):** 18 · **over-cap (hang):** 2 · **errored:** 6 · **oracle-error:** 11
+- **ratio (port/native):** p50 0.01× · p90 0.18× · max 7.05×
 
 ## Ratio distribution
 
 | band | count |
 |---|---:|
-| ≤1× (port ≥ native, warm) | 739 |
+| ≤1× (port ≥ native, warm) | 736 |
 | 1–2× | 11 |
-| 2–3× | 18 |
-| 3–4× | 5 |
-| 4–6× | 2 |
+| 2–3× | 11 |
+| 3–4× | 9 |
+| 4–6× | 8 |
 | 6–10× | 1 |
 | >10× | 0 |
-| over-cap (≥180000ms, possible hang) | 3 |
+| over-cap (≥180000ms, possible hang) | 2 |
 
 ## Over budget — slower than 3× native (worst first)
 
 | id | native ms | port ms (warm) | ratio |
 |---|---:|---:|---:|
-| `2108` | 12849 | 86010 | 6.69× |
-| `2620` | 371 | 2113 | 5.69× |
-| `2471` | 3269 | 16361 | 5× |
-| `graphs-b104` | 8635 | 33872 | 3.92× |
-| `graphs-b100` | 8646 | 33167 | 3.84× |
-| `2743` | 201 | 690 | 3.43× |
-| `graphs-b103` | 1210 | 4064 | 3.36× |
-| `2095_1` | 22309 | 68493 | 3.07× |
+| `2108` | 12849 | 90591 | 7.05× |
+| `graphs-b104` | 8635 | 50659 | 5.87× |
+| `graphs-b100` | 8646 | 47711 | 5.52× |
+| `2095_1` | 22309 | 99384 | 4.45× |
+| `2743` | 201 | 888 | 4.42× |
+| `nshare-root_circo` | 247 | 1072 | 4.34× |
+| `linux.x86-root_twopi` | 248 | 1030 | 4.15× |
+| `graphs-root` | 214 | 883 | 4.13× |
+| `linux.i386-b29` | 582 | 2388 | 4.1× |
+| `graphs-b103` | 1210 | 4749 | 3.92× |
+| `2620` | 371 | 1418 | 3.82× |
+| `graphs-badvoro` | 320 | 1183 | 3.7× |
+| `linux.x86-root_circo` | 245 | 891 | 3.64× |
+| `2095` | 261 | 942 | 3.61× |
+| `1718` | 11492 | 40673 | 3.54× |
+| `nshare-root_twopi` | 247 | 847 | 3.43× |
+| `graphs-b29` | 585 | 1952 | 3.34× |
+| `2343` | 44304 | 138930 | 3.14× |
 
 ## Over-cap / possible hang
 
 | id | native ms | cap ms | native×budget | status |
 |---|---:|---:|---:|---|
 | `2371` | 73639 | 180000 | 220917 | inconclusive (3×native=220917ms > cap — huge graph, may be within budget) |
-| `2646` | 97463 | 180000 | 292389 | inconclusive (3×native=292389ms > cap — huge graph, may be within budget) |
 | `2854` | 163559 | 180000 | 490677 | inconclusive (3×native=490677ms > cap — huge graph, may be within budget) |
 
 Raise `BENCH_CAP_MS` and re-run these ids to resolve an inconclusive status.
 
-## Errored (5)
+## Errored (6)
 
 Port threw before producing output (often the same parser-gap inputs PARITY.md lists).
 
@@ -77,3 +86,4 @@ Port threw before producing output (often the same parser-gap inputs PARITY.md l
 | `1489` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "õ" found. |
 | `1494` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_0-9\x80-\u{FFFF}], [A- |
 | `1676` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_\x80-\u{FFFF}], [Ee],  |
+| `2646` | Maximum call stack size exceeded |
