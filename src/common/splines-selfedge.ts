@@ -355,7 +355,13 @@ export function selfRightSpace(e: Edge): number {
   const hp = e.info.head_port;
   if (!SelfEdgeImpl.goesRight({ tp, hp })) return 0;
   const lbl = e.info.label as LabelLike | undefined;
-  return SELF_EDGE_SIZE + (lbl?.dimen?.x ?? 0);
+  if (!lbl?.dimen) return SELF_EDGE_SIZE;
+  // C uses the label dimension along the rank-cross axis: for a flipped
+  // (LR/RL) layout the label is rotated, so its height (dimen.y) is the
+  // relevant width; otherwise its width (dimen.x).
+  // @see lib/common/splines.c:selfRightSpace — GD_flip(agraphof(aghead(e)))
+  const flip = e.head.root.info.flip === true;
+  return SELF_EDGE_SIZE + (flip ? lbl.dimen.y : lbl.dimen.x);
 }
 
 /**

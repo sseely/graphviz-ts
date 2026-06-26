@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-06-26T15:00:16.469Z",
+  "generatedAt": "2026-06-26T16:52:16.922Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
     "byte-match": 364,
-    "structural-match": 271,
-    "diverged": 142,
+    "structural-match": 277,
+    "diverged": 137,
     "errored": 6,
     "timeout": 0,
-    "oracle-error": 12
+    "oracle-error": 11
   },
   "results": [
     {
@@ -698,7 +698,7 @@
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 12463,
+      "maxDelta": 9123,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -951,7 +951,7 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "diverged",
-      "maxDelta": 195,
+      "maxDelta": 57.0600000000004,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -969,8 +969,9 @@
     {
       "id": "2854",
       "path": "2854.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "diverged",
+      "maxDelta": 3669.7999999999993,
+      "firstDiffPath": "svg/g[1]/g[20]/path[1]/@d"
     },
     {
       "id": "358",
@@ -1573,9 +1574,8 @@
     {
       "id": "graphs-fsm",
       "path": "graphs/fsm.gv",
-      "verdict": "diverged",
-      "maxDelta": 7.180000000000007,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 3.3700000000000045
     },
     {
       "id": "graphs-grammar",
@@ -2369,9 +2369,8 @@
     {
       "id": "graphs-train11",
       "path": "graphs/train11.gv",
-      "verdict": "diverged",
-      "maxDelta": 26.5,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 3.75
     },
     {
       "id": "graphs-trapeziumlr",
@@ -3459,9 +3458,8 @@
     {
       "id": "share-fsm",
       "path": "share/fsm.gv",
-      "verdict": "diverged",
-      "maxDelta": 7.009999999999991,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 3.3799999999999955
     },
     {
       "id": "share-grammar",
@@ -3866,9 +3864,8 @@
     {
       "id": "share-train11",
       "path": "share/train11.gv",
-      "verdict": "diverged",
-      "maxDelta": 27.5,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 3.75
     },
     {
       "id": "share-trapeziumlr",
@@ -4084,9 +4081,8 @@
     {
       "id": "windows-fsm",
       "path": "windows/fsm.gv",
-      "verdict": "diverged",
-      "maxDelta": 7.009999999999991,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 3.3799999999999955
     },
     {
       "id": "windows-grammar",
@@ -4499,9 +4495,8 @@
     {
       "id": "windows-train11",
       "path": "windows/train11.gv",
-      "verdict": "diverged",
-      "maxDelta": 27.5,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 3.75
     },
     {
       "id": "windows-trapeziumlr",
