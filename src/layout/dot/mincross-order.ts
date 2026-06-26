@@ -89,18 +89,26 @@ export function mediansCollectDir(v: Node, d: number, list: number[]): void {
   }
 }
 
-/** @see lib/dotgen/mincross.c:median */
+/**
+ * C operates on an int[] (VAL = MC_SCALE*ND_order + port.order), so the n==2
+ * average and the equal-span case use INTEGER division (truncation toward
+ * zero), not float. Using float here yields x.5 mvals that perturb the reorder
+ * sort and diverge from C on tie-heavy ranks (e.g. 2371's flat mid network).
+ * The unequal-span weighted median stays a true double, matching C.
+ * @see lib/dotgen/mincross.c:median
+ */
 export function computeMedian(list: number[]): number {
   const n = list.length;
   if (n === 0) return -1;
   list.sort((a, b) => a - b);
   if (n === 1) return list[0]!;
-  if (n === 2) return (list[0]! + list[1]!) / 2;
+  if (n === 2) return Math.trunc((list[0]! + list[1]!) / 2);
   const m = Math.floor(n / 2);
   if (n % 2 !== 0) return list[m]!;
-  const left = list[m - 1]! - list[0]!;
-  const right = list[n - 1]! - list[m]!;
-  return (list[m - 1]! * right + list[m]! * left) / (left + right);
+  const lspan = list[m - 1]! - list[0]!;
+  const rspan = list[n - 1]! - list[m]!;
+  if (lspan === rspan) return Math.trunc((list[m - 1]! + list[m]!) / 2);
+  return (list[m - 1]! * rspan + list[m]! * lspan) / (lspan + rspan);
 }
 
 export function mediansProcessNode(v: Node, d: number): boolean {
