@@ -220,8 +220,17 @@ export function lrRankPair(g: Graph, r: number, u: Node, v: Node, last: number):
   const nodesep = lrSep(g, r);
   const width = nodeRw(u) + nodeLw(v) + nodesep;
   makeAuxEdge(u, v, width, 0);
-  v.info.rank = last + width;
-  return last + width;
+  /* C: `last = (ND_rank(v) = last + width)`. ND_rank is an int, so the
+   * double `last + width` truncates toward zero on assignment, and the
+   * truncated *integer* flows back into `last` — positions accumulate as
+   * integers. The port's info.rank is a float, so without this truncation the
+   * fractional node widths accumulate, perturbing the initial feasible ranks
+   * (slack/tight-edge detection) and selecting a different vertex of the
+   * x-coord NS optimal face (honda-tokoro weight=0 degeneracy).
+   * @see lib/dotgen/position.c:make_LR_constraints */
+  const next = Math.trunc(last + width);
+  v.info.rank = next;
+  return next;
 }
 
 /** @see lib/dotgen/position.c:make_LR_constraints (per-rank inner loop) */
