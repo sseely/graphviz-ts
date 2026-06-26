@@ -1,5 +1,11 @@
 STAGE1 n002->n001 et=10 cnt=1 trank=8 hrank=10 tcoord=207.0000,152.6153 hcoord=168.0000,59.7182 rankdiff=2
   headlabel=':r:' pos=0.0000,0.0000 dimen=7.1094,9.6000
+  MBB[n002->n001] vn=n002 rank=8 ord=4 type=0 label=1 coord=207.0000,152.6153 lw=14.1421 rw=14.1421 mval=14.1421 -> LL.x=179.0000 UR.x=436.0000
+    left=%0 type=1 coord.x=168.0000 lw=8.0000 mval=8.0000
+  MBB[n002->n001] vn=%0 rank=9 ord=4 type=1 label=0 coord=202.0000,105.3812 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=179.0000 UR.x=436.0000
+    left=%0 type=1 coord.x=168.0000 lw=8.0000 mval=8.0000
+  MBB[n002->n001] vn=n001 rank=10 ord=1 type=0 label=1 coord=168.0000,59.7182 lw=14.1421 rw=14.1421 mval=14.1421 -> LL.x=111.0000 UR.x=436.0000
+    left=n011 type=0 coord.x=90.0000 lw=14.1421 mval=14.1421
 RSPL n002->n001 polyline=0
   STAGE2 boxes n=4 start=207.0000,151.6153 end=171.0000,77.7182
     box[0] LL=179.0000,134.2305 UR=436.0000,152.6153
@@ -19,6 +25,17 @@ RSPL n002->n001 polyline=0
     sp[5]=171.0000,77.7182
     sp[6]=171.0000,77.7182
 STAGE1 n018->n015 et=10 cnt=1 trank=3 hrank=6 tcoord=54.0000,388.7853 hcoord=90.0000,247.0833 rankdiff=3
+  MBB[n018->n015] vn=n018 rank=3 ord=0 type=0 label=1 coord=54.0000,388.7853 lw=14.1421 rw=14.1421 mval=14.1421 -> LL.x=-192.0000 UR.x=88.0000
+    right=%0 type=1 coord.x=99.0000 lw=8.0000 mval=8.0000
+  MBB[n018->n015] vn=%0 rank=4 ord=1 type=1 label=0 coord=90.0000,341.5513 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=75.0000 UR.x=124.0000
+    left=n017 type=0 coord.x=54.0000 lw=14.1421 mval=14.1421
+    right=%0 type=1 coord.x=135.0000 lw=8.0000 mval=8.0000
+  MBB[n018->n015] vn=%0 rank=5 ord=1 type=1 label=0 coord=90.0000,294.3173 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=75.0000 UR.x=127.0000
+    left=n016 type=0 coord.x=54.0000 lw=14.1421 mval=14.1421
+    right=%0 type=1 coord.x=138.0000 lw=8.0000 mval=8.0000
+  MBB[n018->n015] vn=n015 rank=6 ord=1 type=0 label=1 coord=90.0000,247.0833 lw=14.1421 rw=14.1421 mval=14.1421 -> LL.x=65.0000 UR.x=166.0000
+    left=%0 type=1 coord.x=54.0000 lw=8.0000 mval=8.0000
+    right=%0 type=1 coord.x=170.0196 lw=0.7236 mval=8.0000
 RSPL n018->n015 polyline=0
   STAGE2 boxes n=7 start=54.0000,387.7853 end=82.0000,264.0833
     box[0] LL=-192.0000,373.9361 UR=88.0000,388.7853
@@ -42,6 +59,26 @@ RSPL n018->n015 polyline=0
     sp[6]=82.0000,264.0833
 STAGE1 n023->n015 et=10 cnt=1 trank=0 hrank=6 tcoord=21.0000,537.1737 hcoord=90.0000,247.0833 rankdiff=6
   headlabel=':s/r:' pos=0.0000,0.0000 dimen=12.4453,9.6000
+  MBB[n023->n015] vn=n023 rank=0 ord=0 type=0 label=1 coord=21.0000,537.1737 lw=12.6000 rw=12.6000 mval=12.6000 -> LL.x=-192.0000 UR.x=145.0000
+    right=n022 type=0 coord.x=165.0000 lw=12.6000 mval=12.6000
+  MBB[n023->n015] vn=%0 rank=1 ord=3 type=1 label=0 coord=108.0000,486.7889 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=76.0000 UR.x=123.0000
+    left=%0 type=1 coord.x=65.2965 lw=2.2965 mval=8.0000
+    right=n010 type=0 coord.x=144.0000 lw=14.1421 mval=14.1421
+  MBB[n023->n015] vn=%0 rank=2 ord=1 type=1 label=0 coord=111.0000,436.0194 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=63.0000 UR.x=149.0000
+    left=n019 type=0 coord.x=42.0000 lw=14.1421 mval=14.1421
+    right=%0 type=1 coord.x=156.7769 lw=4.4301 mval=8.0000
+  MBB[n023->n015] vn=%0 rank=3 ord=1 type=1 label=0 coord=99.0000,388.7853 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=75.0000 UR.x=163.0000
+    left=n018 type=0 coord.x=54.0000 lw=14.1421 mval=14.1421
+    right=%0 type=1 coord.x=169.5811 lw=3.5224 mval=8.0000
+  MBB[n023->n015] vn=%0 rank=4 ord=2 type=1 label=0 coord=135.0000,341.5513 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=90.0000 UR.x=153.0000
+    left=%0 type=1 coord.x=78.9797 lw=3.9797 mval=8.0000
+    right=n006 type=0 coord.x=174.0000 lw=14.1421 mval=14.1421
+  MBB[n023->n015] vn=%0 rank=5 ord=2 type=1 label=0 coord=138.0000,294.3173 lw=8.0000 rw=8.0000 mval=8.0000 -> LL.x=95.0000 UR.x=168.0000
+    left=%0 type=1 coord.x=83.8194 lw=0.3221 mval=8.0000
+    right=%0 type=1 coord.x=171.9897 lw=0.6049 mval=8.0000
+  MBB[n023->n015] vn=n015 rank=6 ord=1 type=0 label=1 coord=90.0000,247.0833 lw=14.1421 rw=14.1421 mval=14.1421 -> LL.x=65.0000 UR.x=166.0000
+    left=%0 type=1 coord.x=54.0000 lw=0.0000 mval=8.0000
+    right=%0 type=1 coord.x=170.0196 lw=0.7236 mval=8.0000
 RSPL n023->n015 polyline=0
   STAGE2 boxes n=13 start=21.0000,536.1737 end=90.0000,248.0833
     box[0] LL=-192.0000,519.1737 UR=145.0000,537.1737
