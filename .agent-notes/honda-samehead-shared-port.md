@@ -37,13 +37,32 @@
   Survey **0 regressions on both baselines**; the same fix took the **arrows
   family to byte-match** (graphs-arrows/newarrows + linux/macosx/nshare/share/
   windows variants) and improved 2193/NaN/b102/b143/ports/xx. 2424 tests green.
-- **Residual (sub-pixel, accepted)**: n012→n011 (two parallels with DISTINCT
-  samehead ids m005/m006) ends 1px off in y — a `round(y1)` tie in the
-  ellipse-clip of the shared-port direction (`buildSharedPort`/`shapeClip`), not
-  a structural or grouping issue. Keeps honda at structural-match, not
-  byte-match.
+- **Residual (sub-pixel, accepted — keeps honda at structural-match, ~1px on 2
+  edges)**: n012→n011 (two parallels carrying DISTINCT samehead ids m005/m006).
+  Investigated to ground truth (GV_XDUMP in `sameport`/`clip_and_install`/
+  `make_regular_edge` vs `buildSharedPort`/`clipAndInstall`/`routeRegularEdge-
+  Faithful`):
+  - **NOT the shared port** — `buildSharedPort` is byte-identical to C
+    `sameport`: same average dir, same `y1` (14.977842 / 15.021354), same
+    `round` → `p=(-1,15)` / `(0,15)`. (Disproves the earlier "round(y1) tie in
+    the shared-port clip" guess.)
+  - **NOT the grouping** — disabling the `groupSize` portcmp split changes
+    nothing; both parallel instances still land 1px off.
+  - **Root = `maximal_bbox` head-corridor box wall.** C installs both n012→n011
+    at internal x=90; the port at x=89 (→ the 1px SVG-y shift). The head
+    endpoint is clamped −1 by the n011 corridor box wall, independent of `hp`.
+    This is the documented box-wall `round()` sub-pixel class
+    [[bbox-class-control-hull-vs-curve]] — the port already mirrors C's
+    `maximal_bbox` formula exactly; the delta is a floating-point rounding
+    boundary, not a logic gap.
+  - **Decision: leave as-is.** A fix would need to alter `round()` in
+    `maximal_bbox`, a primitive shared by every corpus edge — corpus-wide
+    regression risk for 1px on 2 edges. If ever pursued, it is its own gated
+    mission (instrument the n011 head box-wall inputs in both, find the exact
+    round-tie, validate any tweak against the FULL survey on both baselines).
 - **Confidence**: High (root cause proven by toggling the attr parse: piece-
-  count diffs 2→0, maxΔ 27.9→17.4 with parse alone; 0 corpus regressions).
+  count diffs 2→0, maxΔ 27.9→17.4 with parse alone; 0 corpus regressions; the
+  residual localization is oracle-confirmed, not hypothesized).
 
 ## Gotcha: shape_clip is shape-aware; the rect stub silently mis-clips ellipses
 
