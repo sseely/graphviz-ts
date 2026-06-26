@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-26T00:19:24.675Z",
+  "generatedAt": "2026-06-26T01:24:38.652Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -164,8 +164,8 @@
       "id": "1453",
       "path": "1453.dot",
       "verdict": "diverged",
-      "maxDelta": 273,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "maxDelta": 453.86,
+      "firstDiffPath": "svg/g[1]/g[38]/@id"
     },
     {
       "id": "1472",
@@ -388,7 +388,7 @@
       "id": "1902",
       "path": "1902.dot",
       "verdict": "diverged",
-      "maxDelta": 120,
+      "maxDelta": 64,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -2154,8 +2154,8 @@
       "id": "graphs-ports",
       "path": "graphs/ports.gv",
       "verdict": "diverged",
-      "maxDelta": 556,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "maxDelta": 121.89000000000001,
+      "firstDiffPath": "svg/g[1]/g[8][childCount]"
     },
     {
       "id": "graphs-proc3d",

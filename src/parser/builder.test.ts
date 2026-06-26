@@ -217,3 +217,35 @@ describe('edge-attribute defaults snapshot at creation', () => {
     expect(byTail('x').attrs.get('color')).toBe('blue');  // explicit wins
   });
 });
+
+// A subgraph used as an EDGE ENDPOINT (`A -> {rank=same b c} -> D`) must be
+// created as a first-class subgraph — registered in the parent's subgraph map
+// with its attrs (rank=same/min/max/…) and node membership, and consuming an
+// AGSEQ/%N like any subgraph — exactly as cgraph's grammar does (endpoint:
+// subgraph creates the Agraph_t, then the edge connects to its nodes). The pre-
+// fix builder only collected the endpoint's node NAMES, silently dropping the
+// subgraph object, its rank-set attr, and its anon-id/AGSEQ.
+// @see lib/cgraph/grammar.y (endpoint: subgraph), lib/dotgen/rank.c:collapse_sets
+describe('subgraph as edge endpoint is registered (rank-set + AGSEQ)', () => {
+  it('TOP -> {rank=same a b c} -> BOTTOM registers the rank=same subgraph', () => {
+    const g = parse('digraph G { TOP -> {rank=same a b c} -> BOTTOM; a->b }');
+    expect(g.subgraphs.size).toBe(1);
+    const sg = [...g.subgraphs.values()][0]!;
+    expect(sg.attrs.get('rank')).toBe('same');
+    expect([...sg.nodes.keys()].sort()).toEqual(['a', 'b', 'c']);
+  });
+
+  it('interior endpoint subgraph is created exactly once (one %N)', () => {
+    // `A -> {b c} -> D`: the `{b c}` is head of pair 1 and tail of pair 2 — it
+    // must not be created twice (which would double-advance the anon counter).
+    const g = parse('strict digraph G { A -> {b c} -> D }');
+    expect(anonKeys(g)).toEqual(['%1']);
+  });
+
+  it('endpoint subgraph consumes AGSEQ → following cluster shifts to clust2', () => {
+    // C: `a->{b c}; subgraph cluster1{x}` emits clust2 because the endpoint
+    // subgraph took AGSEQ 1. Pre-fix the port emitted clust1 (undercount).
+    const g = parse('digraph G { a -> {b c}; subgraph cluster1 { x } }');
+    expect(findSubg(g, 'cluster1')!.seq).toBe(2);
+  });
+});
