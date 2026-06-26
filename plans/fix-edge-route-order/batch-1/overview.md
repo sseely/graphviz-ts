@@ -7,8 +7,8 @@ each step re-runs the full survey to stay 0-regression. T1.3 is conditional.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T1.1 | TDD goldens (red): flip `ldbxtried` golden to active + add a minimal repro (lone edge sharing a vnode with a later-`edgecmp` group); manifest entries (+count). Watch fail. | sonnet | `test/golden/inputs/*`, `test/golden/refs/*`, `test/golden/manifest.json`, `test/golden/suite.test.ts` (count) | T0.3 | [ ] |
-| T1.2 | Unify the pass (Option A): route each `edgecmp` group in `dotSplines_` in order — `cnt>1` → `routeParallelEdgeGroup`, `cnt==1` → `routeOneEdge` — and remove the separate `routeDotEdges` pass. Make goldens green; cnt==1 byte-stable where no shared-state interaction. | sonnet | `src/layout/dot/splines.ts`, `src/layout/dot/edge-route.ts` | T1.1 | [ ] |
+| T1.1 | TDD goldens (red): flip `ldbxtried` golden to active + add a minimal repro (lone edge sharing a vnode with a later-`edgecmp` group); manifest entries (+count). Watch fail. | sonnet | `test/golden/inputs/*`, `test/golden/refs/*`, `test/golden/manifest.json`, `test/golden/suite.test.ts` (count) | T0.3 | [x] |
+| T1.2 | Unify the pass (Option A): route each `edgecmp` group in `dotSplines_` in order — `cnt>1` → `routeParallelEdgeGroup`, `cnt==1` → `routeOneEdge` — and remove the separate `routeDotEdges` pass. Make goldens green; cnt==1 byte-stable where no shared-state interaction. | sonnet | `src/layout/dot/splines.ts`, `src/layout/dot/edge-route.ts` | T1.1 | [x] |
 | T1.3 | Align `edge-order.ts:edgeRouteCmp` to C's order — ONLY if T0.3 implicates it | sonnet | `src/layout/dot/edge-order.ts` | T1.2 | [x] **N/A** (T0.3: port `edgecmp` is positional-exact to C; no comparator change) |
 
 T1.3 is **conditional** — include only if T0.3's root cause names a comparator

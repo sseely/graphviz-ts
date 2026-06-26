@@ -7,7 +7,7 @@ refreshes the committed survey artifacts + comparison pages.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T2.1 | Full survey + gate (0-regression); judge changed goldens per-id vs fresh oracle; perf check (no >2× native on previously-passing inputs); document flips (esp. ldbxtried `n0->n1`) | sonnet | `comparisons/T2-survey-verification.md` | T1.2 (+T1.3 if done) | [ ] |
+| T2.1 | Full survey + gate (0-regression); judge changed goldens per-id vs fresh oracle; perf check (no >2× native on previously-passing inputs); document flips (esp. ldbxtried `n0->n1`) | sonnet | `comparisons/T2-survey-verification.md` | T1.2 (+T1.3 if done) | [x] |
 | T2.2 | Refresh `parity.json` (pango/LUT baseline) + `parity-rules.json` + `PARITY.md`; write comparison page; close mission summary | sonnet | `test/corpus/parity.json`, `test/corpus/parity-rules.json`, `test/corpus/PARITY.md`, `README.md` (summary) | T2.1 | [ ] |
 
 ## Quality gates
