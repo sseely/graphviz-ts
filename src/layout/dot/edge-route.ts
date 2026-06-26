@@ -29,6 +29,7 @@ import { rankEdgeInfoOf } from './edge-route-rank.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
 import { edgeRouteCmp } from './edge-order.js';
 import { isFlatAdjacent, makeFlatAdjEdges } from './splines-flat.js';
+import { ShapeKind, type ShapeDesc } from '../../common/types.js';
 import {
   collectNonAdjacentFlatGroup, routeFlatEdgeGroupFaithful,
 } from './splines-flat-multi.js';
@@ -350,10 +351,24 @@ function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
   return true;
 }
 
+/** graphviz #1323: C make_flat_adj_edges bails on a flat edge between ADJACENT
+ *  nodes with a record-shape endpoint — no spline is built, map_edge "lost"s it,
+ *  and it is never drawn. Detect that case so the router leaves e.info.spl
+ *  undefined (edgeHasDrawableContent then skips it), matching the oracle.
+ *  @see lib/dotgen/dotsplines.c:make_flat_adj_edges */
+function isLostFlatAdjRecordEdge(g: Graph, e: GraphEdge): boolean {
+  const tr = e.tail.info.rank;
+  if (tr === undefined || tr !== e.head.info.rank) return false;
+  if (!isFlatAdjacent(g, e)) return false;
+  const rec = (s: unknown): boolean => (s as ShapeDesc | undefined)?.kind === ShapeKind.SH_RECORD;
+  return rec(e.tail.info.shape) || rec(e.head.info.shape);
+}
+
 /** Route + install a plain forward edge, attaching declared ports if any. */
 function routeForwardEdge(
   e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
 ): void {
+  if (isLostFlatAdjRecordEdge(g, e)) return; // #1323: lost edge, leave unrouted
   // Labeled same-rank edges: non-adjacent routes around the flat label vnode
   // (make_flat_labeled_edge); adjacent no-port routes straight with the label
   // above (make_flat_adj_edges → makeSimpleFlatLabels). Both decline for every
