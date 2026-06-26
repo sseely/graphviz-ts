@@ -20,18 +20,28 @@ class ShortestHelper {
   }
 
   static triInner(pnlps: PNL[], tris: Triangle[]): boolean {
-    const n = pnlps.length;
-    if (n > 3) {
+    // C triangulate() is tail-recursive: `return triangulate(points, n-1)` after
+    // storing one ear triangle (shortest.c). The recursion depth equals the
+    // polygon vertex count, so a large routing polygon (a long edge spanning many
+    // ranks) overflows V8's stack, which has no TCO. Faithful loop form per the
+    // AD-3 recursion->iteration pattern: same ear per pass, same store order,
+    // same return value.
+    let pts = pnlps;
+    while (pts.length > 3) {
+      const n = pts.length;
+      let cut = -1;
       for (let i = 0; i < n; i++) {
         const ip2 = (i + 2) % n;
-        if (isdiagonal(i, ip2, k => pnlps[k].pp, n)) {
-          tris.push(ShortestHelper.buildTri(pnlps[i], pnlps[(i+1)%n], pnlps[ip2]));
-          return ShortestHelper.triInner(pnlps.filter((_,j) => j !== (i+1)%n), tris);
+        if (isdiagonal(i, ip2, k => pts[k].pp, n)) {
+          tris.push(ShortestHelper.buildTri(pts[i], pts[(i+1)%n], pts[ip2]));
+          cut = (i + 1) % n;
+          break;
         }
       }
-      return false;
+      if (cut === -1) return false; // C: prerror("triangulation failed"); return 0
+      pts = pts.filter((_, j) => j !== cut);
     }
-    tris.push(ShortestHelper.buildTri(pnlps[0], pnlps[1], pnlps[2]));
+    tris.push(ShortestHelper.buildTri(pts[0], pts[1], pts[2]));
     return true;
   }
 

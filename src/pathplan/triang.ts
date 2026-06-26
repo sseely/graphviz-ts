@@ -72,18 +72,27 @@ class TriangHelper {
   }
 
   static triangulateInner(pts: Point[], fn: (t: [Point,Point,Point]) => void): boolean {
-    const n = pts.length;
-    if (n > 3) {
+    // C Ptriangulate's helper is tail-recursive (recurses on the polygon with the
+    // clipped ear removed). The recursion depth equals the vertex count, so a
+    // large polygon overflows V8's stack (no TCO). Faithful loop form per the
+    // AD-3 recursion->iteration pattern: same ear per pass, same emit order,
+    // same return value. Mirrors shortest.ts:triInner.
+    let cur = pts;
+    while (cur.length > 3) {
+      const n = cur.length;
+      let cut = -1;
       for (let i = 0; i < n; i++) {
         const ip2 = (i + 2) % n;
-        if (TriangHelper.isdiagonal(i, ip2, k => pts[k], n)) {
-          fn([pts[i], pts[(i+1)%n], pts[ip2]]);
-          return TriangHelper.triangulateInner(pts.filter((_,idx) => idx !== (i+1)%n), fn);
+        if (TriangHelper.isdiagonal(i, ip2, k => cur[k], n)) {
+          fn([cur[i], cur[(i+1)%n], cur[ip2]]);
+          cut = (i + 1) % n;
+          break;
         }
       }
-      return false;
+      if (cut === -1) return false;
+      cur = cur.filter((_, idx) => idx !== cut);
     }
-    fn([pts[0], pts[1], pts[2]]);
+    fn([cur[0], cur[1], cur[2]]);
     return true;
   }
 }

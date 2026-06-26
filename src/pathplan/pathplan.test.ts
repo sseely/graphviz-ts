@@ -106,6 +106,31 @@ describe("triangulate / callback receives all vertices", () => {
   it("contains (1,2)", () => expect(flat.some((p) => ptEq(p, pt(1, 2)))).toBe(true));
 });
 
+// triangulate (and shortestPath's triInner) port C's tail-recursive ear-clip.
+// The recursion depth equals the vertex count; V8 has no TCO, so a large routing
+// polygon — produced e.g. when a weight=0 node floats to the top rank and spawns
+// a graph-spanning edge (corpus 2095_1) — overflowed the stack. The iterative
+// form must clip an arbitrarily large polygon without recursing. N=8000 is above
+// the empirically-observed overflow point of the old recursive form (~6k-8k) and
+// must yield exactly N-2 triangles. @see src/pathplan/triang.ts:triangulateInner
+describe("triangulate / large polygon is stack-safe (regression: 2095_1)", () => {
+  const N = 8000;
+  // Regular convex N-gon: every vertex is an ear, so triangulation runs the full
+  // depth-N clip sequence and yields N-2 triangles.
+  const ps: Point[] = [];
+  for (let i = 0; i < N; i++) {
+    const a = (2 * Math.PI * i) / N;
+    ps.push(pt(Math.cos(a) * 1000, Math.sin(a) * 1000));
+  }
+  let count = 0;
+  let rc = -1;
+  it("does not overflow the stack and triangulates fully", () => {
+    expect(() => { rc = triangulate({ ps }, () => { count++; }); }).not.toThrow();
+    expect(rc).toBe(0);
+    expect(count).toBe(N - 2);
+  });
+});
+
 // ─── shortestPath (shortest.c:Pshortestpath) ─────────────────────────────────
 
 const SP_SQ: Poly = { ps: [pt(0,0), pt(10,0), pt(10,10), pt(0,10)] };
