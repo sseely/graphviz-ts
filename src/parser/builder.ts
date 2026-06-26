@@ -183,15 +183,18 @@ export class StmtProcessor {
     }
   }
 
-  processEdgeStmt(stmt: EdgeStmt, graph: Graph, root: Graph): void {
-    for (let i = 0; i < stmt.nodes.length - 1; i++) {
-      this.processEdgePair(
-        stmt.nodes[i],
-        stmt.nodes[i + 1],
-        stmt.attrs,
-        graph,
-        root,
-      );
+  processEdgeStmt(stmt: EdgeStmt, graph: Graph, root: Graph, directed: boolean): void {
+    // Resolve every endpoint ONCE before pairing. A subgraph endpoint is created
+    // as a real subgraph here (consuming its anon-id/AGSEQ); an interior one
+    // (A -> {S} -> B) appears in two adjacent pairs, so resolving once avoids
+    // double-creating it. Endpoints (incl. subgraphs) open before any edge of the
+    // statement is built — matching cgraph's grammar. @see lib/cgraph/grammar.y
+    const ends = stmt.nodes.map((item) => ({
+      nodes: this.resolveEndpoint(item, root, graph, directed),
+      port: portStringOf(item),
+    }));
+    for (let i = 0; i < ends.length - 1; i++) {
+      this.connectEndpoints(ends[i], ends[i + 1], stmt.attrs, graph, root);
     }
   }
 
@@ -200,7 +203,7 @@ export class StmtProcessor {
     graph: Graph,
     root: Graph,
     directed: boolean,
-  ): void {
+  ): Graph {
     // cgraph names anonymous subgraphs `%N` so siblings stay distinct; an empty
     // name would collide in graph.subgraphs (a Map), silently dropping all but
     // the last — e.g. `subgraph {…} subgraph {…}` losing the first and any
@@ -224,6 +227,7 @@ export class StmtProcessor {
     else assignSubgSeq(graph, sg);
     buildGraph(stmt.stmts, sg, root, directed, this);
     graph.subgraphs.set(sgName, sg);
+    return sg;
   }
 
   dispatch(
@@ -236,7 +240,7 @@ export class StmtProcessor {
       case 'assign':   this.processAssign(stmt, graph); break;
       case 'attr':     this.processAttr(stmt, graph); break;
       case 'node':     this.processNodeStmt(stmt, graph, root); break;
-      case 'edge':     this.processEdgeStmt(stmt, graph, root); break;
+      case 'edge':     this.processEdgeStmt(stmt, graph, root, directed); break;
       case 'subgraph': this.processSubgraph(stmt, graph, root, directed); break;
     }
   }
@@ -256,8 +260,17 @@ export class StmtProcessor {
     }
   }
 
-  private resolveEndpoint(item: NodeId | SubgraphStmt, root: Graph, scope: Graph): Node[] {
+  private resolveEndpoint(
+    item: NodeId | SubgraphStmt,
+    root: Graph,
+    scope: Graph,
+    directed: boolean,
+  ): Node[] {
     if ('type' in item && item.type === 'subgraph') {
+      // Create the subgraph as a first-class object so its rank-set attr
+      // (rank=same/min/max/source/sink), node membership, and anon-id/AGSEQ are
+      // registered for collapse_sets; then expand the edge over its node names.
+      this.processSubgraph(item, scope, root, directed);
       return NameCollector.fromStmts(item.stmts).map(
         (n) => this.registry.ensure(n, root, scope),
       );
@@ -265,18 +278,18 @@ export class StmtProcessor {
     return [this.registry.ensure((item as NodeId).id, root, scope)];
   }
 
-  private processEdgePair(
-    tailItem: NodeId | SubgraphStmt,
-    headItem: NodeId | SubgraphStmt,
+  private connectEndpoints(
+    tailEnd: { nodes: Node[]; port: string },
+    headEnd: { nodes: Node[]; port: string },
     attrs: AttrPair[],
     graph: Graph,
     root: Graph,
   ): void {
     // DOT-syntax ports land in tailport/headport attrs; explicit attrs win.
-    const tailPort = portStringOf(tailItem);
-    const headPort = portStringOf(headItem);
-    for (const tail of this.resolveEndpoint(tailItem, root, graph)) {
-      for (const head of this.resolveEndpoint(headItem, root, graph)) {
+    const tailPort = tailEnd.port;
+    const headPort = headEnd.port;
+    for (const tail of tailEnd.nodes) {
+      for (const head of headEnd.nodes) {
         const edge = new Edge(tail, head, '');
         this.advanceAnonId(); // keyless edge = anonymous cgraph id (see method)
         applyAttrs(attrs, edge.attrs);

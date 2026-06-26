@@ -73,7 +73,6 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `1332` | 642.47 | `svg/g[1]/g[78]/path[1]/@d` |
 | `graphs-b57` | 605.78 | `svg/g[1]/g[39]/path[1]/@d` |
 | `2592` | 561.00 | `svg/g[1]/g[4]/@id` |
-| `graphs-ports` | 556.00 | `svg/g[1]/g[3]/path[1]/@d` |
 | `graphs-b143` | 550.83 | `svg/g[1]/g[9]/path[1]/@d` |
 | `1436` | 548.90 | `svg/g[1]/g[25][childCount]` |
 | `2475_2` | 520.90 | `svg/g[1]/g[5242]/path[1]/@d` |
@@ -82,6 +81,7 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `windows-b102` | 485.00 | `svg/g[1]/g[181]/path[1]/@d` |
 | `1581` | 464.00 | `svg/g[1][childCount]` |
 | `2825` | 461.00 | `svg/g[1][childCount]` |
+| `1453` | 453.86 | `svg/g[1]/g[38]/@id` |
 | `1658` | 452.89 | `svg/g[1]/g[31]/path[1]/@d` |
 | `2619_2` | 412.00 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
 | `share-b29` | 396.81 | `svg/g[1]/g[8]/path[1]/@d` |
@@ -137,9 +137,9 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 105 | `1213-1`, `1213-2`, `1332` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 104 | `1213-1`, `1213-2`, `1332` | edge path has a different command sequence or point count — spline routing structure |
 | `element-count` | 54 | `1323`, `1323_1`, `1367` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
-| `attr-or-tag` | 5 | `1622_0`, `2592`, `42` | element tag or a non-coordinate attribute differs |
+| `attr-or-tag` | 6 | `1453`, `1622_0`, `2592` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
 | `color-stroke` | 1 | `2184` | fill/stroke value differs — color resolution or default styling |
 
