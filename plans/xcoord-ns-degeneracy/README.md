@@ -55,9 +55,9 @@ then `sh test/corpus/gen-headless-gvbindir.sh` (regens `/tmp/ghl`).
 | # | Goal | Status | Doc |
 |---|------|--------|-----|
 | 1 | Capture C 4-stage oracle dump | [x] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 | Instrument port, diff, localize divergence | [ ] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 | Apply faithful fix + unit test | [ ] | [batch-3/overview.md](batch-3/overview.md) |
-| 4 | Revert instrument, validate, commit | [ ] | [batch-4/overview.md](batch-4/overview.md) |
+| 2 | Instrument port, diff, localize divergence | [x] | [batch-2/overview.md](batch-2/overview.md) |
+| 3 | Apply faithful fix + unit test | [x] | [batch-3/overview.md](batch-3/overview.md) |
+| 4 | Revert instrument, validate, commit | [x] | [batch-4/overview.md](batch-4/overview.md) |
 
 ## Index
 - [decisions.md](decisions.md) — ADR-1..5 + stop conditions
@@ -65,3 +65,29 @@ then `sh test/corpus/gen-headless-gvbindir.sh` (regens `/tmp/ghl`).
 - [diagrams/component-map.md](diagrams/component-map.md) — affected components
 - [diagrams/data-flow.md](diagrams/data-flow.md) — x-coord NS pipeline
 - `oracle/` — c-dump.txt / port-dump.txt (created during T1/T2)
+
+## Outcome (2026-06-26)
+**x-coord NS bug found + fixed; honda's separate edge-spline divergence split out
+per user decision.**
+
+- **Root cause**: `make_LR_constraints` running position. C `ND_rank` is `int`
+  (`last = (ND_rank(v) = last + width)` truncates each step + feeds the int back
+  into `last`); port `lrRankPair` kept a float and accumulated the fraction.
+  Fractional seed ranks perturbed slack/tight-edge detection → x-coord NS picked
+  a different vertex of the weight=0 optimal face.
+- **Fix**: `Math.trunc(last + width)` in `lrRankPair` (position-aux.ts). One
+  site, C-faithful. honda's full NS solution now byte-matches C (Stage3/4 ranks
+  + all 18 pivots identical); honda node positions byte-match native.
+- **Validation**: 2420 tests pass, typecheck clean, survey:gate **PASS**, **0
+  verdict regressions on BOTH baselines**, **+12 graphs improved diverged→match**.
+  2471 node positions improved ~2400px.
+- **Tasks 4/4 complete.** Decisions logged: 0 flagged for review.
+
+### Known residuals (NOT x-coord NS — follow-ups)
+1. **honda edge-spline piece-count** (blocks honda's verdict): 2/40 edges differ
+   in bezier pieces on labeled edges (splines.c). README premise that weight=1
+   ⇒ byte-identical was DISPROVEN (still diverges at weight=1). Needs its own
+   mission. See `.agent-notes/xcoord-ns-lrconstraints-int-truncation.md`.
+2. **2796 cluster shift**: already-diverged cluster graph (port emits +1 edge)
+   shifts ~250px farther; uniform whole-cluster translation, no verdict change,
+   in gate pre-existing allowlist. Downstream of the cluster emit/ranking bug.
