@@ -14,7 +14,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import type { Bezier, Spline } from '../../model/geom.js';
+import type { Bezier, Spline, Port } from '../../model/geom.js';
 import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
 import { IGNORED, EDGE_LABEL } from './rank.js';
 import { markLowclusters } from './cluster.js';
@@ -310,14 +310,47 @@ export function collectNodeEdges(n: Node, edges: Edge[]): void {
 // ---------------------------------------------------------------------------
 
 /**
+ * portcmp == 0: both undefined, or both defined with an equal aiming point.
+ * @see lib/dotgen/dotsplines.c:portcmp
+ */
+function portEq(a: Port, b: Port): boolean {
+  if (!a.defined && !b.defined) return true;
+  if (!a.defined || !b.defined) return false;
+  return a.p.x === b.p.x && a.p.y === b.p.y;
+}
+
+/** C's group-gating edge: e itself when it carries a defined port, else its
+ *  main edge. @see lib/dotgen/dotsplines.c:dot_splines (ea/eb selection) */
+function portGateEdge(e: Edge): Edge {
+  return e.info.tail_port.defined || e.info.head_port.defined ? e : getMainEdge(e);
+}
+
+/**
  * Count how many consecutive entries in `edges` starting at `ind` share the
- * same main edge (i.e. belong to the same parallel group).
- * @see lib/dotgen/dotsplines.c:355-366
+ * same main edge (i.e. belong to the same parallel group). Cross-rank members
+ * whose tail/head ports differ are split into separate groups, as C does via
+ * portcmp — so two parallels carrying distinct samehead/sametail ports each get
+ * their own base spline. (C's ED_adjacent flat edges skip this and group as one;
+ * here flat same-rank edges are routed by a separate sweep, so the split is
+ * scoped to cross-rank edges.)
+ * @see lib/dotgen/dotsplines.c:dot_splines (355-376)
  */
 function groupSize(edges: Edge[], ind: number): number {
-  const le0 = getMainEdge(edges[ind]);
+  const e0 = edges[ind];
+  const le0 = getMainEdge(e0);
+  const crossRank = nodeRankOf(e0.tail) !== nodeRankOf(e0.head);
+  const ea = portGateEdge(e0);
   let cnt = 1;
-  while (ind + cnt < edges.length && getMainEdge(edges[ind + cnt]) === le0) cnt++;
+  while (ind + cnt < edges.length) {
+    const e1 = edges[ind + cnt];
+    if (getMainEdge(e1) !== le0) break;
+    if (crossRank) {
+      const eb = portGateEdge(e1);
+      if (!portEq(ea.info.tail_port, eb.info.tail_port)) break;
+      if (!portEq(ea.info.head_port, eb.info.head_port)) break;
+    }
+    cnt++;
+  }
   return cnt;
 }
 

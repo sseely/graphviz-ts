@@ -69,10 +69,34 @@ Per-edge piece-count diff recipe: see [batch-1/overview.md](batch-1/overview.md)
 ## Batches (sequential — each consumes the prior's output)
 | # | Goal | Status | Doc |
 |---|------|--------|-----|
-| 1 | Capture C spline oracle for honda's 2 divergent edges | [ ] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 | Instrument port, diff, localize first divergence | [ ] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 | Apply faithful fix + unit test | [ ] | [batch-3/overview.md](batch-3/overview.md) |
-| 4 | Revert instrument, validate, commit | [ ] | [batch-4/overview.md](batch-4/overview.md) |
+| 1 | Capture C spline oracle for honda's 2 divergent edges | [x] | [batch-1/overview.md](batch-1/overview.md) |
+| 2 | Instrument port, diff, localize first divergence | [x] | [batch-2/overview.md](batch-2/overview.md) |
+| 3 | Apply faithful fix + unit test | [x] | [batch-3/overview.md](batch-3/overview.md) |
+| 4 | Revert instrument, validate, commit | [x] | [batch-4/overview.md](batch-4/overview.md) |
+
+## Mission summary (complete 2026-06-26)
+- **Tasks**: 4/4 complete (T1 oracle, T2 localize, T3 fix+test, T4 validate+land).
+- **Root cause** (not the predicted fitter/piece-count class): `samehead`/
+  `sametail` edge attrs were never parsed into `e.info`, so the ported+wired
+  `dotSameports` never fired — honda's same-head edges routed to the node center
+  instead of C's merged shared head port.
+- **Fix** (commit `58cc5cd`): parse samehead/sametail in dotInitEdge; faithful
+  `shape_clip` in sameport.ts (rect stub → ellipse/poly bezier clip); parallel-
+  group base = port-defined member; groupSize portcmp split. + unit tests
+  (attr-init.test.ts).
+- **Result**: honda-tokoro **diverged → structural-match** (maxΔ 27.9 → 1.06; 0
+  piece-count `@d` diffs — the two target edges byte-match). **0 survey
+  regressions on BOTH baselines**; +8 improvements each (honda + the arrows
+  family `graphs-arrows`/`newarrows` & OS variants went diverged → byte-match;
+  2193/NaN/b102/b143/ports/xx improved). typecheck + `npm test` (2424) green.
+- **Known residual** (sub-pixel, not a structural/grouping issue): n012→n011
+  (two parallels with distinct samehead m005/m006) ends 1px off in y — a
+  `round(y1)` tie in the ellipse-clip of the shared-port direction. Keeps honda
+  at structural-match rather than byte-match. Candidate follow-up: align
+  `buildSharedPort`/`shapeClip` ellipse-boundary rounding with C `bezier_clip`.
+- **Decisions flagged for review**: write-set expansion to init.ts + sameport.ts
+  (approved); group-split + base-edge-selection added to splines.ts/splines-
+  route.ts (within approved scope, C-faithful, gate-clean).
 
 ## Index
 - [decisions.md](decisions.md) — ADR-1..5 + stop conditions

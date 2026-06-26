@@ -4,7 +4,7 @@ Single sequential task. Depends on T1's `oracle/c-dump.txt`.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T2 | Instrument port spline router; dump same 4 stages for the 2 edges; diff vs C; localize | orchestrator (debugger) | port temp instrument, `oracle/port-dump.txt`, decision-journal, new `.agent-notes/` note | T1 | [ ] |
+| T2 | Instrument port spline router; dump same 4 stages for the 2 edges; diff vs C; localize | orchestrator (debugger) | port temp instrument, `oracle/port-dump.txt`, decision-journal, new `.agent-notes/` note | T1 | [x] |
 
 Port dump sites (mirror C, gated on `globalThis.__XDUMP`): the regular-edge
 router (`edge-route-chain.ts` / `edge-route-faithful.ts` / `splines-route.ts`),

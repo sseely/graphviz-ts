@@ -372,7 +372,16 @@ export function routeParallelEdgeGroup(
 ): void {
   const cnt = edges.length;
   if (cnt === 0) return;
-  const base = baseSplineForGroup(g, edges[0]!);
+  // C routes the group base from `ea`, which is the first edge whose own port is
+  // defined (else its main edge). When a parallel group mixes a same-port edge
+  // (shared head_port from dot_sameports) with a plain sibling, the base must run
+  // through the shared port so all copies fan around it — not through the plain
+  // member's node-center port. @see lib/dotgen/dotsplines.c:dot_splines (ea = ...)
+  const baseEdge = edges.find(e => {
+    const o = resolveOrigEdge(e);
+    return o.info.head_port?.defined || o.info.tail_port?.defined;
+  }) ?? edges[0]!;
+  const base = baseSplineForGroup(g, baseEdge);
   if (base === null) return;
   if (cnt === 1) { installShiftedEdge(edges[0]!, base); return; }
   // dx = Multisep * (cnt-1) / 2 centres the fan on the base path.

@@ -301,6 +301,15 @@ export function dotInitEdge(e: Edge): void {
   // late_int semantics: default 1, minimum 0.
   // @see lib/dotgen/dotinit.c:85  ED_minlen(e) = late_int(e, E_minlen, 1, 0)
   e.info.minlen = lateInt(e.attrs.get('minlen'), 1, 0);
+  // samehead / sametail group ids for shared-port merging. C reads these via
+  // agxget(e, E_samehead/E_sametail) in dot_sameports and treats an empty
+  // string (id[0] == '\0') as "no group". Without populating these, the ported
+  // dotSameports (wired in index.ts) never fires and same-* edges route to the
+  // node center instead of a merged port. @see lib/dotgen/sameport.c:dot_sameports
+  const sh = e.attrs.get('samehead');
+  e.info.samehead = sh ? sh : undefined;
+  const st = e.attrs.get('sametail');
+  e.info.sametail = st ? st : undefined;
 }
 
 // ---------------------------------------------------------------------------

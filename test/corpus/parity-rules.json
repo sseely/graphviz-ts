@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-26T19:13:32.250Z",
+  "generatedAt": "2026-06-26T20:36:30.841Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 795,
   "counts": {
-    "byte-match": 422,
-    "structural-match": 229,
-    "diverged": 126,
+    "byte-match": 429,
+    "structural-match": 230,
+    "diverged": 118,
     "errored": 6,
     "timeout": 0,
     "oracle-error": 12
@@ -1100,15 +1100,13 @@
     {
       "id": "graphs-arrows",
       "path": "graphs/arrows.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-arrowsize",
       "path": "graphs/arrowsize.gv",
       "verdict": "structural-match",
-      "maxDelta": 75.04000000000002
+      "maxDelta": 59.81
     },
     {
       "id": "graphs-awilliams",
@@ -1622,9 +1620,8 @@
     {
       "id": "graphs-honda-tokoro",
       "path": "graphs/honda-tokoro.gv",
-      "verdict": "diverged",
-      "maxDelta": 27.900000000000006,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 1.0600000000000023
     },
     {
       "id": "graphs-html",
@@ -2010,9 +2007,7 @@
     {
       "id": "graphs-newarrows",
       "path": "graphs/newarrows.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-ngk10_4",
@@ -2521,9 +2516,7 @@
     {
       "id": "linux.x86-arrows_dot",
       "path": "linux.x86/arrows_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-compound_dot",
@@ -2691,9 +2684,7 @@
     {
       "id": "macosx-arrows_dot",
       "path": "macosx/arrows_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "macosx-compound_dot",
@@ -2752,9 +2743,7 @@
     {
       "id": "nshare-arrows_dot",
       "path": "nshare/arrows_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-compound_dot",
@@ -3720,9 +3709,7 @@
     {
       "id": "share-newarrows",
       "path": "share/newarrows.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "share-ngk10_4",
@@ -4333,9 +4320,7 @@
     {
       "id": "windows-newarrows",
       "path": "windows/newarrows.gv",
-      "verdict": "diverged",
-      "maxDelta": 75.04000000000002,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "windows-ngk10_4",
