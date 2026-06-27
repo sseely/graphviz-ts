@@ -70,3 +70,29 @@ commit IDs are referenced in the decision journal).
 - [diagrams/component-map.md](diagrams/component-map.md) — touched components
 - Batch overviews: [1](batch-1/overview.md) · [2](batch-2/overview.md) · [3](batch-3/overview.md)
 - `comparisons/` — T1 findings + T3 survey verification (created during execution)
+
+## Completion summary (2026-06-27)
+
+**Status: COMPLETE.** All 3 tasks done; merged to main via merge commit.
+
+- **Tasks:** T1 (investigate, found a write-set STOP — fix locus in `splines.ts`;
+  user approved expanding the write-set), T2 (faithful fix + golden + unit test),
+  T3 (survey verification + baseline refresh).
+- **Root cause:** the port routed a merged virtual chain (interior `spline_merge`
+  node) as a single spline, so the representative emitted one `<path>`. C gathers
+  the merge node's out-edge as a separate segment and `clip_and_install` appends a
+  second bezier. Fix: `routeMergedChain` (`edge-route-chain.ts`) splits a forward
+  chain into merge-bounded runs and installs one bezier per run on the
+  representative (trunk owned via `getMainEdge`); `splines.ts` dispatch intercepts
+  lone merged chains. `conc.ts`/`classify.ts` untouched.
+- **Result:** 2559 `diverged → byte-match` (exceeds the structural-match bar).
+  `survey:gate` regressions = 0. Net corpus: byte-match +56, total match +10,
+  diverged −10 (the fix is faithful for every shared-vnode merge, not just
+  concentrate). b69 improved 137→143 `<path>` (native 144), verdict unchanged.
+- **Gates:** `tsc` 0 · `vitest` 2454 pass / 1 pre-existing skip · gate 0 regr ·
+  branch diff = write-set only.
+- **Decisions of note:** write-set expansion to `splines.ts` (T1 STOP, user-
+  approved); committed `parity.json` recipe is Estimate-measurer + headless-15.1.0
+  (NOT LUT/pango — `survey:baseline` comment is stale post text-measurer cutover).
+- **Follow-ups:** none blocking. `splines.ts` (540) and the stale `survey:baseline`
+  LUT framing predate this work.
