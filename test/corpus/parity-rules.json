@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-27T13:08:32.591Z",
+  "generatedAt": "2026-06-27T17:47:07.197Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 442,
-    "structural-match": 230,
-    "diverged": 107,
+    "byte-match": 449,
+    "structural-match": 225,
+    "diverged": 105,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -273,8 +273,7 @@
     {
       "id": "1724",
       "path": "1724.dot",
-      "verdict": "structural-match",
-      "maxDelta": 64
+      "verdict": "byte-match"
     },
     {
       "id": "1767",
@@ -634,9 +633,7 @@
     {
       "id": "2458",
       "path": "2458.dot",
-      "verdict": "diverged",
-      "maxDelta": 74.8,
-      "firstDiffPath": "svg/g[1]/g[4][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "2460",
@@ -855,9 +852,7 @@
     {
       "id": "2682",
       "path": "2682.dot",
-      "verdict": "diverged",
-      "maxDelta": 80.8,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "2683",
@@ -2554,14 +2549,12 @@
     {
       "id": "linux.x86-pack_neato1",
       "path": "linux.x86/pack_neato1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 738
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-pack_neato2",
       "path": "linux.x86/pack_neato2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 675
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-ports_dot",
@@ -2778,14 +2771,12 @@
     {
       "id": "nshare-pack_neato1",
       "path": "nshare/pack_neato1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 738
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-pack_neato2",
       "path": "nshare/pack_neato2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 675
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-ports_dot",

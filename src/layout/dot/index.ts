@@ -34,6 +34,11 @@ import {
   dotGraphInit,
 } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
+import {
+  cccomps, getPack, getPackModeInfo, getPackInfo, PackMode,
+} from '../pack/index.js';
+import type { PackInfo } from '../pack/index.js';
+import { ratioIsNone, layoutAndPack, graphHasCluster } from './pack-components.js';
 
 // Re-export init helpers for external consumers.
 export {
@@ -117,18 +122,29 @@ export function dotPhaseInit(g: Graph): void {
 }
 
 /**
- * Phase 4: post-position passes — removeFill, sameports, splines, compound,
- * then gvPostprocess to rotate/translate coordinates per rankdir.
+ * Phase 4a: post-position passes WITHOUT the final gvPostprocess —
+ * removeFill, sameports, splines, compound. This is C's static `dotLayout`
+ * tail; the per-component pack branch runs exactly this (gvPostprocess is run
+ * once on the root afterwards, not per component).
  * @see lib/dotgen/dotinit.c:dotLayout (static)
- * @see lib/common/postproc.c:dotneato_postprocess
  */
-export function dotPhasePost(g: Graph): void {
+export function dotPhasePostNoFinish(g: Graph): void {
   removeFill(g);
   dotSameports(g);
   dotSplines(g);
   // C: if (mapbool(agget(g, "compound"))) dot_compoundEdges(g);
   // @see lib/dotgen/dotinit.c:338
   if (mapbool(g.attrs.get('compound'))) dotCompoundEdges(g);
+}
+
+/**
+ * Phase 4: post-position passes — the no-finish tail plus gvPostprocess to
+ * rotate/translate coordinates per rankdir.
+ * @see lib/dotgen/dotinit.c:dotLayout (static)
+ * @see lib/common/postproc.c:dotneato_postprocess
+ */
+export function dotPhasePost(g: Graph): void {
+  dotPhasePostNoFinish(g);
   gvPostprocess(g);
 }
 
@@ -157,6 +173,65 @@ export function dotLayoutPipeline(g: Graph): void {
 }
 
 // ---------------------------------------------------------------------------
+// doDot — the pack-aware layout dispatcher
+// @see lib/dotgen/dotinit.c:doDot
+// ---------------------------------------------------------------------------
+
+/** Offset/margin default for packing, in points. @see lib/pack/pack.h:CL_OFFSET */
+const CL_OFFSET = 8;
+
+/** A zeroed PackInfo the getPack* readers fill in. @see lib/pack/pack.h:pack_info */
+function newPackInfo(): PackInfo {
+  return {
+    aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: false,
+    mode: PackMode.Node, fixed: null, vals: null, flags: 0,
+  };
+}
+
+/**
+ * Port of C's `doDot`: when `pack`/`packmode` is set, decompose the graph into
+ * connected components, lay out each one, and polyomino-pack them; otherwise
+ * (and for a single component, or a non-R_NONE ratio) fall back to whole-graph
+ * `dotLayoutPipeline`. The thin component loop + cluster carry live in
+ * pack-components.ts (ADR-1). `dotLayoutPipeline` already includes the root
+ * `gvPostprocess`, so the simple arms map exactly to C's `dotLayout(g)` +
+ * `dotneato_postprocess(g)`; the pack arm runs `gvPostprocess` once inside
+ * `layoutAndPack`.
+ *
+ * @see lib/dotgen/dotinit.c:doDot
+ */
+export function doDot(g: Graph): void {
+  const pinfo = newPackInfo();
+  const Pack = getPack(g, -1, CL_OFFSET);
+  const mode = getPackModeInfo(g, PackMode.Undef, pinfo);
+  getPackInfo(g, PackMode.Node, CL_OFFSET, pinfo);
+  // No pack information: old dot with components handled during layout.
+  if (mode === PackMode.Undef && Pack < 0) {
+    dotLayoutPipeline(g);
+    return;
+  }
+  // Fill in default values (C doDot: l_undef → l_graph; Pack<0 → CL_OFFSET).
+  let pack = Pack;
+  if (mode === PackMode.Undef) pinfo.mode = PackMode.Graph;
+  else if (pack < 0) pack = CL_OFFSET;
+  pinfo.margin = pack; // pack >= 0 here
+  pinfo.fixed = null;
+  const comps = cccomps(g, '_cc');
+  if (comps.length === 1) {
+    dotLayoutPipeline(g);
+  } else if (ratioIsNone(g) && !graphHasCluster(g)) {
+    // T2 ports the cluster-FREE pack path. A clustered multi-component graph
+    // needs each component to carry its cluster tree (copyClusterInfo, T3);
+    // until then fall back to whole-graph layout so it is not regressed.
+    pinfo.doSplines = true;
+    layoutAndPack(g, comps, pinfo);
+  } else {
+    // Non-trivial ratio with multiple components: C lays out the whole graph.
+    dotLayoutPipeline(g);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // dotLayoutEntry — the public LayoutEngine.layout function
 // ---------------------------------------------------------------------------
 
@@ -168,7 +243,7 @@ export function dotLayoutPipeline(g: Graph): void {
  */
 export function dotLayoutEntry(g: Graph): void {
   if (g.nodes.size === 0) return;
-  dotLayoutPipeline(g);
+  doDot(g);
 }
 
 // ---------------------------------------------------------------------------
