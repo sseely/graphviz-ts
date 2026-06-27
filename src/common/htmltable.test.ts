@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: EPL-2.0
 import { describe, it, expect } from 'vitest';
-import { HtmlParseError, parseHtmlLabel, sizeHtmlLabel } from './htmltable.js';
+import { HtmlParseError, parseHtmlLabel, sizeHtmlLabel, cellBorder } from './htmltable.js';
 import type { TextMeasurer } from './htmltable.js';
+import type { HtmlCell, HtmlTable } from './htmltable-types.js';
 import type { TextVariantFlags } from './textmeasure.js';
 
 const mockMeasurer: TextMeasurer = {
@@ -93,5 +94,34 @@ describe('sizeHtmlLabel — AC4 colspan propagation', () => {
     const spacing = 2;
     const minW = (c1.dimen?.w ?? 0) + (c2.dimen?.w ?? 0) + spacing;
     expect(span.dimen?.w ?? 0).toBeGreaterThanOrEqual(minW);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// cellBorder — a cell with no BORDER of its own defaults, in order, to the
+// table's CELLBORDER (if >= 0), else the table's own BORDER value (when set,
+// including 0), else DEFAULT_BORDER. The middle case (graphviz 1622_0) is why
+// a cell in <TABLE BORDER="0"> with no CELLBORDER draws no border.
+// @see lib/common/htmltable.c:1115 size_html_tbl
+// ---------------------------------------------------------------------------
+
+describe('cellBorder default resolution', () => {
+  const cell = (over: Partial<HtmlCell> = {}): HtmlCell => ({ kind: 'cell', content: [], ...over });
+  const tbl = (over: Partial<HtmlTable> = {}): HtmlTable => ({ kind: 'table', rows: [], ...over });
+
+  it('uses the cell BORDER when set', () => {
+    expect(cellBorder(cell({ border: 3 }), tbl({ border: 0 }))).toBe(3);
+  });
+  it('uses table CELLBORDER when >= 0', () => {
+    expect(cellBorder(cell(), tbl({ cellborder: 2, border: 0 }))).toBe(2);
+  });
+  it('falls back to table BORDER=0 when CELLBORDER unset', () => {
+    expect(cellBorder(cell(), tbl({ border: 0 }))).toBe(0);
+  });
+  it('falls back to table BORDER value when CELLBORDER unset', () => {
+    expect(cellBorder(cell(), tbl({ border: 2 }))).toBe(2);
+  });
+  it('defaults to 1 when neither CELLBORDER nor BORDER is set', () => {
+    expect(cellBorder(cell(), tbl())).toBe(1);
   });
 });
