@@ -58,9 +58,9 @@ commit IDs are referenced in the decision journal).
 
 | Batch | Task | Status |
 |---|---|---|
-| 1 | [T1 — Pin the exact divergence point](batch-1/T1-investigate.md) | [ ] |
-| 2 | [T2 — Faithful fix + golden + unit test (TDD)](batch-2/T2-fix-and-test.md) | [ ] |
-| 3 | [T3 — Survey verification + comparison page](batch-3/T3-survey-verify.md) | [ ] |
+| 1 | [T1 — Pin the exact divergence point](batch-1/T1-investigate.md) | [x] |
+| 2 | [T2 — Faithful fix + golden + unit test (TDD)](batch-2/T2-fix-and-test.md) | [x] |
+| 3 | [T3 — Survey verification + comparison page](batch-3/T3-survey-verify.md) | [x] |
 
 ## Index
 
