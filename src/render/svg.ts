@@ -46,6 +46,8 @@ import {
   svgPolyline,
   svgComment,
   svgEdgePath,
+  svgEdgePathOrthoRounded,
+  orthoRoundedRadius,
   svgArrowPolygons,
   emitParallelEdgePaths,
   escapeXml,
@@ -148,8 +150,12 @@ export class SvgRenderer implements RendererPlugin {
       const { headColor, tailColor } = emitParallelEdgePaths(e, job, colorAttr);
       emitMulticolorArrows(e, job, headColor, tailColor);
     } else {
-      // Single-color branch — T4 path unchanged (byte-stable)
-      svgEdgePath(e, job);
+      // Single-color branch. Ortho edges with rounded corners (splines=ortho +
+      // radius/style=rounded) emit polyline segments + corner arcs; all other
+      // edges keep the byte-stable bezier <path>. @see lib/common/emit.c:2553
+      const orthoRadius = orthoRoundedRadius(e, job);
+      if (orthoRadius !== null) svgEdgePathOrthoRounded(e, orthoRadius, job);
+      else svgEdgePath(e, job);
       svgArrowPolygons(e, job);
     }
     if (anchored) this.endAnchor(job);

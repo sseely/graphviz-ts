@@ -56,6 +56,7 @@ export const SVG_PAD = 4;
 import { escapeXml, escapeXmlText } from './xml-escape.js';
 export { escapeXml, escapeXmlText };
 import { svgNodeId, svgEdgeId, svgNodeClass, svgEdgeClass } from './svg-id.js';
+import { orthoRoundedPolylines } from './svg-edge-ortho-radius.js';
 
 // ---------------------------------------------------------------------------
 // Color helpers
@@ -431,17 +432,78 @@ export function svgEdgePath(e: Edge, job: RenderJob): void {
   for (let si = 0; si < spl.size; si++) {
     const bz = spl.list[si] as Bezier | undefined;
     if (bz === undefined || bz.size < 4) continue;
-    // Emit exactly bz.size points: list is over-allocated (calloc'd) to the
-    // pre-clip length; the zeroed tail is never emitted. @see splines.c:new_spline
-    const pts = bz.list.slice(0, bz.size).map((p) => transformPoint(p, job));
-    job.write('<path fill="none" stroke="' + stroke + '"');
-    if (obj !== null && Math.abs(obj.penWidth - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
-      emitPenWidth(job, obj.penWidth);
+    emitOneBezierPath(bz, stroke, job);
+  }
+}
+
+/** Emit one bezier as a `<path d="M…C…">`. Extracted from svgEdgePath so the
+ *  ortho-rounded path can share the no-corner fallback. */
+function emitOneBezierPath(bz: Bezier, stroke: string, job: RenderJob): void {
+  const obj = job.obj;
+  // Emit exactly bz.size points: list is over-allocated (calloc'd) to the
+  // pre-clip length; the zeroed tail is never emitted. @see splines.c:new_spline
+  const pts = bz.list.slice(0, bz.size).map((p) => transformPoint(p, job));
+  job.write('<path fill="none" stroke="' + stroke + '"');
+  if (obj !== null && Math.abs(obj.penWidth - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
+    emitPenWidth(job, obj.penWidth);
+  }
+  if (obj !== null) emitDash(job, obj.pen);
+  job.write(' d="');
+  emitBezierPath(job, pts);
+  job.write('"/>\n');
+}
+
+/**
+ * If edge `e` should render with rounded ortho corners, return its corner
+ * radius; else null. Mirrors emit.c:2554-2581: graph `splines==ortho`, then
+ * `radius>0` (explicit, overrides style) or `style=rounded` → default radius
+ * `max(12, penwidth*8)`.
+ * @see lib/common/emit.c (is_ortho / want_rounded / radius)
+ */
+export function orthoRoundedRadius(e: Edge, job: RenderJob): number | null {
+  if (e.head.root.attrs.get('splines') !== 'ortho') return null;
+  let wantRounded = false;
+  let radius = 0;
+  const style = e.attrs.get('style');
+  if (style !== undefined &&
+      style.split(',').map((s) => s.trim()).includes('rounded')) {
+    wantRounded = true;
+  }
+  const radiusAttr = e.attrs.get('radius');
+  if (radiusAttr !== undefined && radiusAttr.length > 0) {
+    radius = parseFloat(radiusAttr) || 0; // atof: non-numeric → 0
+    wantRounded = radius > 0;             // explicit radius overrides style
+  }
+  if (wantRounded && radius === 0) {
+    const pw = job.obj !== null ? job.obj.penWidth : 1.0;
+    radius = Math.max(12.0, pw * 8.0);
+  }
+  return wantRounded && radius > 0 ? radius : null;
+}
+
+/**
+ * Emit an ortho edge whose corners are rounded (`splines=ortho` and `radius>0`
+ * or `style=rounded`): straight `<polyline>` segments between truncated corners
+ * plus an arc `<polyline>` per corner. Per-bezier fallback to the bezier `<path>`
+ * when a bezier has no orthogonal corner. @see lib/common/emit.c:2583-2666
+ */
+export function svgEdgePathOrthoRounded(e: Edge, radius: number, job: RenderJob): void {
+  const spl = e.info.spl;
+  if (spl === undefined || spl.size === 0) return;
+  const obj = job.obj;
+  const stroke = obj !== null ? paintStr(obj, false) : 'black';
+  for (let si = 0; si < spl.size; si++) {
+    const bz = spl.list[si] as Bezier | undefined;
+    if (bz === undefined || bz.size < 4) continue;
+    const internal = bz.list.slice(0, bz.size);
+    const polys = orthoRoundedPolylines(internal, radius);
+    if (polys.length === 0) {
+      emitOneBezierPath(bz, stroke, job); // no corner → bezier fallback
+    } else {
+      for (const poly of polys) {
+        svgPolyline(poly.map((p) => transformPoint(p, job)), job);
+      }
     }
-    if (obj !== null) emitDash(job, obj.pen);
-    job.write(' d="');
-    emitBezierPath(job, pts);
-    job.write('"/>\n');
   }
 }
 
