@@ -30,10 +30,23 @@ interface EdgePair {
   d: number;
 }
 
+/**
+ * Squared distance between the two endpoints' CENTERS — used only to order
+ * edges for routing. C uses `DIST2(ND_coord(tail), ND_coord(head))`, i.e. the
+ * node centres, NOT the bb corners: for nodes of differing width the corner-to-
+ * corner length reorders near-equal-length edges, and routing order drives maze
+ * channel occupancy (and thus corridor selection). Squared vs sqrt is immaterial
+ * to the ordering but kept squared to match C exactly.
+ * @see lib/ortho/ortho.c:1124 (edgeLen)
+ */
 function edgeLen(e: OrthoEdge): number {
-  const dx = e.tail.bb.LL.x - e.head.bb.LL.x;
-  const dy = e.tail.bb.LL.y - e.head.bb.LL.y;
-  return Math.sqrt(dx * dx + dy * dy);
+  const tcx = (e.tail.bb.LL.x + e.tail.bb.UR.x) / 2;
+  const tcy = (e.tail.bb.LL.y + e.tail.bb.UR.y) / 2;
+  const hcx = (e.head.bb.LL.x + e.head.bb.UR.x) / 2;
+  const hcy = (e.head.bb.LL.y + e.head.bb.UR.y) / 2;
+  const dx = tcx - hcx;
+  const dy = tcy - hcy;
+  return dx * dx + dy * dy;
 }
 
 function edgeCmp(a: EdgePair, b: EdgePair): number {

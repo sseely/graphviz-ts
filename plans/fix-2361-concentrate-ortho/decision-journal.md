@@ -57,4 +57,25 @@ leg). Sacred-C → port the actual ortho branch.
   (not regressed).
 - Refreshed `parity.json` ← `parity-rules.json` + regenerated `PARITY.md`.
 
-## Status: COMPLETE
+## Follow-up: maxΔ=144 residual investigated
+
+Root-caused the structural-match residual (edges `AC->IW` 144, `FF->IV` 110) to
+an **ortho maze shortest-path corridor tie-break**, NOT a cost/algorithm bug:
+
+- Node boxes byte-identical port vs C → identical cell partition, weights,
+  MARGIN, cost constants (delta/mu/BIG).
+- Found+fixed a real faithfulness bug: `edgeLen` used `bb.LL` corners; C uses
+  node centres (`ND_coord`, `DIST2`, ortho.c:1124). After the fix the port's
+  edge-order lengths exact-match C. **0 verdict changes** (kept as a faithful
+  correction; `src/ortho/index.ts`).
+- C maze route (`-Godb=r`) for `AC->IW` is the horizontal-first L; the port's is
+  the vertical-first L — both 1-bend, equal Manhattan length ⇒ exactly equal
+  cost. `fpq.ts` ≡ `fPQ.c` and the relax keeps the first path on ties, so the
+  divergence is purely **which equal-cost corridor the Dijkstra reaches first**,
+  governed by sgraph snode index / `adjEdgeList` insertion order from maze
+  construction. Same class as the known 2620 "ortho routing @d" residual; deep
+  and fragile, out of scope here. structural-match remains the accepted bar.
+
+Detail: `.agent-notes/2361-ortho-maze-corridor-tiebreak.md`.
+
+## Status: COMPLETE (residual characterized; not a bug)
