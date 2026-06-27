@@ -248,4 +248,13 @@ describe('subgraph as edge endpoint is registered (rank-set + AGSEQ)', () => {
     const g = parse('digraph G { a -> {b c}; subgraph cluster1 { x } }');
     expect(findSubg(g, 'cluster1')!.seq).toBe(2);
   });
+
+  it('node-set edges are created in AGSEQ order, not written order', () => {
+    // b,c,d are created first (ascending ids); the set lists them out of order.
+    // C walks the endpoint subgraph's node dict (sequence-ordered), so edges
+    // are a->b, a->c, a->d — fixing graphs-world's edge SVG id numbering.
+    const g = parse('digraph { b; c; d; a -> { d; c; b } }');
+    expect(g.edges.map((e) => e.head.name)).toEqual(['b', 'c', 'd']);
+    expect(g.edges.map((e) => e.graphSeq)).toEqual([1, 2, 3]);
+  });
 });

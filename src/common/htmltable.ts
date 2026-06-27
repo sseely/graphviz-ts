@@ -241,10 +241,19 @@ export const cellPad = (cell: HtmlCell, tbl: HtmlTable): number =>
   cell.cellpadding !== undefined ? cell.cellpadding
     : (tbl.cellpadding !== undefined ? tbl.cellpadding : DEFAULT_CELLPADDING);
 
+/**
+ * A cell with no BORDER of its own defaults, in order: the table's CELLBORDER
+ * (if >= 0), else the table's own BORDER value (when BORDER was set — including
+ * BORDER="0"), else DEFAULT_BORDER. The middle case is why a cell in a
+ * `<TABLE BORDER="0">` with no CELLBORDER draws no border, not a 1px one.
+ * @see lib/common/htmltable.c:1115 size_html_tbl (cp->data.border default)
+ */
 export const cellBorder = (cell: HtmlCell, tbl: HtmlTable): number => {
   if (cell.border !== undefined) return cell.border;
   const cb = tbl.cellborder;
-  return cb !== undefined && cb >= 0 ? cb : DEFAULT_BORDER;
+  if (cb !== undefined && cb >= 0) return cb;
+  if (tbl.border !== undefined) return tbl.border;
+  return DEFAULT_BORDER;
 };
 
 /** @see lib/common/htmltable.c:size_html_cell */
@@ -260,11 +269,19 @@ const getCellSize = (
     const s = sizeContentItem(item, measurer, env);
     cw = Math.max(cw, s.w); ch += s.h;
   }
-  if (cell.fixedsize && cell.width !== undefined && cell.height !== undefined)
-    return { w: 0, h: 0 };
+  // C: sz = content + margin; FIXED_FLAG with both width and height set zeroes
+  // sz (content size is ignored), then the box clamps UP to width/height via
+  // MAX below — so a fixed cell ends up exactly width x height, NOT 0 x 0.
+  // (C also warns "cell size too small for content" / "unspecified"; non-visual.)
+  // @see lib/common/htmltable.c:size_html_cell (FIXED_FLAG branch + box.UR MAX)
+  let szx = cw + margin;
+  let szy = ch + margin;
+  if (cell.fixedsize && cell.width && cell.height) {
+    szx = 0; szy = 0;
+  }
   const bw = cell.width !== undefined ? cell.width : 0;
   const bh = cell.height !== undefined ? cell.height : 0;
-  return { w: Math.max(cw + margin, bw), h: Math.max(ch + margin, bh) };
+  return { w: Math.max(szx, bw), h: Math.max(szy, bh) };
 };
 
 /** @see lib/common/htmltable.c:processTbl */

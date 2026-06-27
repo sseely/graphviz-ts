@@ -70,7 +70,15 @@ function applyLabelBorder(sg: Graph, dimen: Point): void {
  */
 export function doGraphLabel(sg: Graph, measurer: TextMeasurer | undefined): void {
   if (!measurer) return;
-  const str = sg.attrs.get('label');
+  // C reads agget(sg, "label"), which returns the value seeded at subgraph
+  // creation from the nearest ancestor's default (agmakeattrs copies the parent
+  // dict's defvals). So a cluster with no label of its own inherits a parent
+  // cluster's — or even the root graph's — label. graphviz #1323's nested
+  // cluster_mount1/cluster_mount2 (label commented out) inherit the enclosing
+  // cluster_vfsmount's "struct vfsmount" and each render it.
+  // @see lib/common/input.c:844 do_graph_label — agget(sg, "label")
+  // @see lib/cgraph/attr.c:165 agmakeattrs — copies parent defvals at creation
+  const str = graphAttrInherited(sg, 'label');
   if (!str) return;
 
   const { fontsize, fontname, fontcolor } = readFontParams(sg);

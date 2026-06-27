@@ -5,9 +5,9 @@
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 378,
+    "byte-match": 384,
     "structural-match": 278,
-    "diverged": 123,
+    "diverged": 117,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -53,16 +53,12 @@
     {
       "id": "1323",
       "path": "1323.dot",
-      "verdict": "diverged",
-      "maxDelta": 26.5,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "1323_1",
       "path": "1323_1.dot",
-      "verdict": "diverged",
-      "maxDelta": 26.5,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "1328",
@@ -157,9 +153,8 @@
     {
       "id": "1453",
       "path": "1453.dot",
-      "verdict": "diverged",
-      "maxDelta": 453.86,
-      "firstDiffPath": "svg/g[1]/g[38]/@id"
+      "verdict": "structural-match",
+      "maxDelta": 466.35
     },
     {
       "id": "1472",
@@ -199,15 +194,12 @@
     {
       "id": "1622_0",
       "path": "1622_0.dot",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "1622_1",
       "path": "1622_1.dot",
-      "verdict": "structural-match",
-      "maxDelta": 24
+      "verdict": "byte-match"
     },
     {
       "id": "1622_2",
@@ -347,9 +339,8 @@
     {
       "id": "1898",
       "path": "1898.dot",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "verdict": "structural-match",
+      "maxDelta": 202.56
     },
     {
       "id": "1902",
@@ -426,8 +417,7 @@
     {
       "id": "2159",
       "path": "2159.dot",
-      "verdict": "structural-match",
-      "maxDelta": 12.800000000000011
+      "verdict": "byte-match"
     },
     {
       "id": "2168",
@@ -2432,9 +2422,7 @@
     {
       "id": "graphs-world",
       "path": "graphs/world.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[34]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-xlabels",
