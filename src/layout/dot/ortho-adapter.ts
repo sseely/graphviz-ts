@@ -13,6 +13,8 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
+import { buildOutEdgeIndex } from '../../model/node.js';
+import { dotRoot } from './mincross-utils.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { orthoEdges } from '../../ortho/index.js';
@@ -41,16 +43,47 @@ function buildNodes(nodeArr: Node[]): OrthoNodeArr {
   }));
 }
 
+/**
+ * Gather edges to route, mirroring C's ortho gather loop exactly:
+ * iterate nodes in agfstnode (creation/seq) order, then each node's out-edges
+ * in agfstout order. When `concentrate` is set, dedup by the UNORDERED node
+ * pair via a point-set — the first edge between a pair (in either direction)
+ * is routed; any later edge sharing that pair (the reverse of a 2-cycle, or a
+ * parallel multi-edge) is skipped. This is ortho's own concentrate mechanism,
+ * distinct from class2's `edge_type == IGNORED` marking, and the keep-first
+ * decision depends on this iteration order matching C's.
+ * Self-loops (tail === head) are routed elsewhere and excluded here.
+ * @see lib/ortho/ortho.c:1207-1228 (orthoEdges edge gather + Concentrate PS)
+ */
 function buildEdges(
   g: Graph, nodeArr: Node[], orthoNodes: OrthoNodeArr,
 ): TaggedOrthoEdge[] {
-  return g.edges
-    .filter((e) => e.tail !== e.head)
-    .map((e) => ({
-      tail: orthoNodes[nodeArr.indexOf(e.tail)],
-      head: orthoNodes[nodeArr.indexOf(e.head)],
-      _edge: e,
-    } as TaggedOrthoEdge));
+  const concentrate = dotRoot(g).info.concentrate ?? false;
+  const nodeIndex = new Map<Node, number>();
+  nodeArr.forEach((n, i) => nodeIndex.set(n, i));
+  const outIndex = buildOutEdgeIndex(g);
+  const seen = new Set<string>();
+  const result: TaggedOrthoEdge[] = [];
+  for (const n of nodeArr) {
+    const oes = outIndex.get(n);
+    if (oes === undefined) continue;
+    for (const e of oes) {
+      if (e.tail === e.head) continue;
+      if (concentrate) {
+        const ti = e.tail.id;
+        const hi = e.head.id;
+        const key = ti <= hi ? `${ti},${hi}` : `${hi},${ti}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+      }
+      result.push({
+        tail: orthoNodes[nodeIndex.get(e.tail)!],
+        head: orthoNodes[nodeIndex.get(e.head)!],
+        _edge: e,
+      } as TaggedOrthoEdge);
+    }
+  }
+  return result;
 }
 
 /** Build an OrthoGraph from the dot Graph (tail≠head edges only). */
