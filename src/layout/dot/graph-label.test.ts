@@ -134,3 +134,58 @@ describe('doGraphLabel — font inheritance', () => {
     expect((g.info.label as TextlabelT).fontname).toBe('Times,serif');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Label inheritance — a cluster (subgraph) with no label of its own inherits
+// the nearest ancestor's label, mirroring C's agget(sg, "label"): the value is
+// seeded at subgraph creation from the parent dict default (agmakeattrs). This
+// is graphviz #1323, where nested cluster_mount1/cluster_mount2 (label
+// commented out) inherit the enclosing cluster_vfsmount's "struct vfsmount".
+// @see lib/common/input.c:844 do_graph_label
+// @see lib/cgraph/attr.c:165 agmakeattrs
+// ---------------------------------------------------------------------------
+
+describe('doGraphLabel — label inheritance', () => {
+  it('cluster inherits a parent cluster label when it sets none', () => {
+    const root = makeGraph();
+    const parent = makeCluster(root, { label: 'struct vfsmount' });
+    const nested = makeCluster(parent);
+    nested.parent = parent;
+    doGraphLabel(nested, stubMeasurer);
+    expect(nested.info.label).toBeDefined();
+    expect((nested.info.label as TextlabelT).text).toBe('struct vfsmount');
+  });
+
+  it('inherited cluster label text matches the ancestor', () => {
+    const root = makeGraph();
+    const parent = makeCluster(root, { label: 'OUTER' });
+    const nested = makeCluster(parent);
+    nested.parent = parent;
+    doGraphLabel(nested, stubMeasurer);
+    const lab = nested.info.label as TextlabelT;
+    expect(lab.text).toBe('OUTER');
+  });
+
+  it('cluster inherits the root graph label', () => {
+    const root = makeGraph({ label: 'ROOTLABEL' });
+    const sg = makeCluster(root);
+    doGraphLabel(sg, stubMeasurer);
+    expect((sg.info.label as TextlabelT).text).toBe('ROOTLABEL');
+  });
+
+  it('own label overrides an inherited ancestor label', () => {
+    const root = makeGraph();
+    const parent = makeCluster(root, { label: 'OUTER' });
+    const nested = makeCluster(parent, { label: 'INNER' });
+    nested.parent = parent;
+    doGraphLabel(nested, stubMeasurer);
+    expect((nested.info.label as TextlabelT).text).toBe('INNER');
+  });
+
+  it('no ancestor label leaves the cluster label undefined', () => {
+    const root = makeGraph();
+    const sg = makeCluster(root);
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label).toBeUndefined();
+  });
+});

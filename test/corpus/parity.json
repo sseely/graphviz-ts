@@ -5,9 +5,9 @@
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 378,
+    "byte-match": 380,
     "structural-match": 278,
-    "diverged": 123,
+    "diverged": 121,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -53,16 +53,12 @@
     {
       "id": "1323",
       "path": "1323.dot",
-      "verdict": "diverged",
-      "maxDelta": 26.5,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "1323_1",
       "path": "1323_1.dot",
-      "verdict": "diverged",
-      "maxDelta": 26.5,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "1328",
