@@ -22,9 +22,13 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
-import type { Point } from '../../model/geom.js';
+import type { Point, Box } from '../../model/geom.js';
 import type { PackInfo } from '../pack/index.js';
-import { packSubgraphs, buildSubgraph } from '../pack/index.js';
+import {
+  buildSubgraph, shiftGraphs, computeSubgraphBB, PackMode, PK_USER_VALS,
+} from '../pack/index.js';
+import { polyGraphs } from '../pack/poly-place.js';
+import { arrayRects } from '../pack/array-pack.js';
 import { agsubg } from '../../model/cgraph-ops.js';
 import { dotGraphInit } from './init.js';
 import { dotPhaseInit, dotPhasePostNoFinish } from './index.js';
@@ -356,6 +360,78 @@ function shiftComponentArrowOps(comps: Graph[], before: (Point | null)[]): void 
 }
 
 // ---------------------------------------------------------------------------
+// Cluster-inclusive root bbox (so gvPostprocess translates cluster boxes in)
+// ---------------------------------------------------------------------------
+
+/**
+ * Union a bbox with every top-level cluster boundary box of `g` (each already
+ * including its nested clusters). `computeSubgraphBB` is node-only, so a packed
+ * graph's bbox omits the cluster-boundary extent (the cluster margin); unioning
+ * it in is needed both for the per-component pack rectangle (correct spacing)
+ * and for the root translation (else cluster boxes clip outside the viewport).
+ * No extra margin is added: native pack mode draws the outermost cluster flush
+ * with the drawing origin, unlike the non-pack path's graph margin.
+ */
+function unionWithClusterBBs(bb: Box, g: Graph): Box {
+  let llx = bb.ll.x; let lly = bb.ll.y;
+  let urx = bb.ur.x; let ury = bb.ur.y;
+  const nClust = g.info.n_cluster ?? 0;
+  const clust = g.info.clust;
+  for (let c = 0; c < nClust; c++) {
+    const cb = clust?.[c]?.info.bb;
+    if (!cb) continue;
+    llx = Math.min(llx, cb.ll.x);
+    lly = Math.min(lly, cb.ll.y);
+    urx = Math.max(urx, cb.ur.x);
+    ury = Math.max(ury, cb.ur.y);
+  }
+  return { ll: { x: llx, y: lly }, ur: { x: urx, y: ury } };
+}
+
+/** Cluster-inclusive bbox of a laid-out component (node bbox ∪ its cluster bbs). */
+function clusterInclusiveBB(g: Graph): Box {
+  return unionWithClusterBBs(computeSubgraphBB(g, 0), g);
+}
+
+/** Expand the packed root bbox to enclose its cluster boundary boxes. */
+function expandRootBbForClusters(root: Graph): void {
+  if (root.info.bb) root.info.bb = unionWithClusterBBs(root.info.bb, root);
+}
+
+/**
+ * Pack the components using CLUSTER-INCLUSIVE bounding boxes, then update the
+ * root bbox — a cluster-aware `packSubgraphs`. The shared pack module's
+ * `putGraphs` uses node-only `computeSubgraphBB`, so adjacent clustered
+ * components would be spaced as if the cluster boundaries weren't there
+ * (packed too close / mis-aligned). We compute the placement here with
+ * cluster-inclusive rectangles (`genBox`/`arrayRects` place by bbox, and the
+ * shift delta is `grid − bb.ll`, so a larger bbox spaces correctly) and shift
+ * via the pack module's own `shiftGraphs`. The pack module is not modified
+ * (ADR-3); only its primitives are reused.
+ *
+ * @see lib/pack/pack.c:putGraphs / packGraphs / packSubgraphs
+ */
+function packComponentsClusterAware(root: Graph, comps: Graph[], pinfo: PackInfo): void {
+  const bbs = comps.map(clusterInclusiveBB);
+  comps.forEach((g, i) => { g.info.bb = bbs[i]; });
+  let pts: Point[] | null = null;
+  if (pinfo.mode <= PackMode.Graph) {
+    pts = polyGraphs(comps, root, pinfo, bbs);
+  } else if (pinfo.mode === PackMode.Array) {
+    if (pinfo.flags & PK_USER_VALS) {
+      pinfo.vals = comps.map((g) => {
+        const v = parseInt(g.attrs.get('sortv') ?? '', 10);
+        return !Number.isNaN(v) && v >= 0 ? v : 0;
+      });
+    }
+    pts = arrayRects(comps.length, bbs, pinfo);
+  }
+  if (pts) shiftGraphs(comps.length, comps, pts, root, pinfo.doSplines);
+  // C packSubgraphs: GD_bb(root) = compute_bb(root); expanded for clusters below.
+  root.info.bb = computeSubgraphBB(root, 0);
+}
+
+// ---------------------------------------------------------------------------
 // layoutAndPack — the R_NONE multi-component arm of doDot
 // @see lib/dotgen/dotinit.c:doDot (R_NONE branch, ≈476-486)
 // ---------------------------------------------------------------------------
@@ -384,14 +460,18 @@ export function layoutAndPack(
   // recovered to fix the port's pre-computed arrow ops (see below).
   const before = comps.map(witnessCoord);
   // C: attachPos(g) [points: unneeded]; packSubgraphs(ncc, ccs, g, &pinfo);
-  //    resetCoord(g) [points: unneeded];
-  packSubgraphs(comps.length, comps, root, pinfo);
+  //    resetCoord(g) [points: unneeded]. Cluster-inclusive bboxes so packed
+  //    clusters get native spacing (the pack module's bbox is node-only).
+  packComponentsClusterAware(root, comps, pinfo);
   // Port-only: shift pre-computed arrow draw-ops by the same pack delta the
   // pack module applied to the splines (it does not know about these ops).
   shiftComponentArrowOps(comps, before);
   // C: copyClusterInfo(ncc, ccs, g) — carry each component's cluster tree back
   // to the root (no-op when cluster-free; root.info.clust drives cluster emit).
   copyClusterInfo(comps, root, origOf);
+  // Expand the node-only packed root bbox to enclose the cluster boundary boxes,
+  // so gvPostprocess translates them into the viewport (else clusters clip).
+  expandRootBbForClusters(root);
   // C dot_layout: dotneato_postprocess(g) once on the root after doDot returns.
   gvPostprocess(root);
 }
