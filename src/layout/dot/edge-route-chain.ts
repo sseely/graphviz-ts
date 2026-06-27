@@ -33,7 +33,9 @@ import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
 import { routeRegularByType } from './splines-route-type.js';
-import { edgeType, EDGETYPE_LINE } from './splines.js';
+import { edgeType, EDGETYPE_LINE, getMainEdge } from './splines.js';
+import { clipAndInstall } from '../../common/splines-clip.js';
+import { buildDotSinfo } from './self-loop.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
 import { splineMerge, makeLineEdge, resizeVn, straightLen, straightPath } from './splines-route.js';
 import { EDGE_LABEL } from './rank.js';
@@ -73,11 +75,8 @@ function chainSegments(e: GraphEdge): GraphEdge[] {
   const segs: GraphEdge[] = [];
   let cur = e.info.to_virt;
   while (cur !== undefined) {
-    // Resolve the merge redirect: concentrate (dot_concentrate) sets to_virt on
-    // merged virtual edges so siblings share the representative chain. Following
-    // the raw edge lands on a drained dead-end node; follow to_virt to the
-    // representative, as C does (for rep=e; ED_to_virt(rep); rep=ED_to_virt(rep)).
-    // @see lib/dotgen/conc.c:rebuild_vlists
+    // Resolve the concentrate merge redirect to the representative chain (C: for
+    // rep=e; ED_to_virt(rep); rep=ED_to_virt(rep)). @see lib/dotgen/conc.c:rebuild_vlists
     while (cur.info.to_virt !== undefined) cur = cur.info.to_virt;
     segs.push(cur);
     if (cur.head === e.head) break;
@@ -260,15 +259,66 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
     if (line !== null) return line;
   }
   const segs = chainSegments(e);
-  // Route only a COMPLETE chain (the last segment reaches e.head). C builds a
-  // synthetic edge tail -> aghead(le) (le = the fully to_virt-resolved
-  // representative): when concentrate merges an edge's entire chain, that head IS
-  // e.head, giving a single direct tail->head segment that must still route (so
-  // segs.length === 1 is valid, not a bail). But a chain that ends at a virtual
-  // node is broken (a to_virt resolution that could not be reconstructed) — bail
-  // rather than crash the segment loop. @see dotsplines.c:make_regular_edge
+  // Route only a COMPLETE chain (last segment reaches e.head). segs.length===1 is
+  // valid (concentrate may merge the whole chain to a direct tail->head segment);
+  // a chain ending at a virtual node is broken — bail, don't crash the loop.
+  // @see dotsplines.c:make_regular_edge
   if (segs.length === 0 || segs[segs.length - 1].head !== e.head) return null;
   return routeChainSegmented(g, e, segs);
+}
+
+/** One merge-bounded run: segments ending at an interior spline_merge node. */
+interface ChainRun { segs: GraphEdge[]; tail: Node; head: Node; }
+
+/** Split a chain into runs at interior spline_merge boundaries — one bezier per
+ *  run. @see lib/dotgen/dotsplines.c:dot_splines_ (NORMAL || spline_merge gather) */
+function splitChainRuns(segs: GraphEdge[], eHead: Node): ChainRun[] {
+  const runs: ChainRun[] = [];
+  let cur: GraphEdge[] = [];
+  for (const s of segs) {
+    cur.push(s);
+    if (splineMerge(s.head) && s.head !== eHead) { runs.push({ segs: cur, tail: cur[0].tail, head: s.head }); cur = []; }
+  }
+  if (cur.length > 0) runs.push({ segs: cur, tail: cur[0].tail, head: cur[cur.length - 1].head });
+  return runs;
+}
+
+/** Synthetic forward edge for one run; `to_orig`=orig installs on the rep. */
+function runEdge(orig: GraphEdge, run: ChainRun): GraphEdge {
+  const tailPort = run.tail === orig.tail ? orig.info.tail_port : makePort();
+  const headPort = run.head === orig.head ? orig.info.head_port : makePort();
+  return { ...orig, tail: run.tail, head: run.head,
+    info: { ...orig.info, tail_port: tailPort, head_port: headPort, to_orig: orig, edge_type: VIRTUAL } } as GraphEdge;
+}
+
+/** Merge-bounded runs of e's forward chain, or null when none is interior. */
+function mergedChainRuns(g: Graph, e: GraphEdge): ChainRun[] | null {
+  const r = e.tail.info.rank, rh = e.head.info.rank;
+  if (g.info.rank === undefined || r === undefined || rh === undefined || rh <= r) return null;
+  const segs = chainSegments(e);
+  if (segs.length === 0 || segs[segs.length - 1].head !== e.head) return null;
+  const runs = splitChainRuns(segs, e.head);
+  return runs.length > 1 ? runs : null;
+}
+
+/**
+ * Route a concentrate-merged forward chain as one bezier per merge-bounded run,
+ * on the representative — C's per-segment gather + clip_and_install accumulation.
+ * A trunk run (starting at a merge node) is routed only by its owner (getMainEdge
+ * of its first segment), so a non-rep member draws only its lead-in. False ⇒
+ * plain chain; route as a single spline. @see dotsplines.c:make_regular_edge
+ */
+export function routeMergedChain(g: Graph, e: GraphEdge): boolean {
+  const runs = mergedChainRuns(g, e);
+  if (runs === null) return false;
+  const sinfo = buildDotSinfo();
+  for (const run of runs) {
+    if (getMainEdge(run.segs[0]) !== e) continue; // trunk owned by another representative
+    const fe = runEdge(e, run);
+    const pts = routeChainSegmented(g, fe, run.segs);
+    if (pts !== null) clipAndInstall(fe, run.head, pts, pts.length, sinfo);
+  }
+  return e.info.spl !== undefined;
 }
 
 /**

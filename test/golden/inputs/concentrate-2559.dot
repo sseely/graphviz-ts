@@ -1,0 +1,6 @@
+digraph {
+    concentrate=true
+    a -> b [label="1"]
+    c -> b
+    d -> b
+}
