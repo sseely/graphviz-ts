@@ -19,6 +19,7 @@ import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
 import { IGNORED, EDGE_LABEL } from './rank.js';
 import { markLowclusters } from './cluster.js';
 import { routeDotEdges, routeLoneEdge } from './edge-route.js';
+import { routeMergedChain } from './edge-route-chain.js';
 import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
 import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
@@ -391,7 +392,14 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
   const uniq = dedupByOrig(group);
   // Lone edge: route HERE at its edgecmp position (interleaved with groups), as C
   // does, so it reads recover_slack-moved vnodes correctly. @see root-cause.md
-  if (uniq.length <= 1) return routeLoneEdge(resolveOrigEdge(uniq[0]), g);
+  if (uniq.length <= 1) {
+    const lone = resolveOrigEdge(uniq[0]);
+    // A concentrate-merged chain routes as lead-in + shared trunk beziers on the
+    // representative; routeMergedChain declines (false) for plain chains, which
+    // route as a single spline. @see dotsplines.c:make_regular_edge (spline_merge)
+    if (!routeMergedChain(g, lone)) routeLoneEdge(lone, g);
+    return;
+  }
   // Sort by original seq so the first original gets the leftmost offset, matching
   // C's allocation order (e1<e2<e3). @see dotsplines.c:make_regular_edge:1885-1907
   uniq.sort((a, b) => origSeq(a) - origSeq(b));
