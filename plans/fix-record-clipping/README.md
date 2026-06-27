@@ -1,5 +1,21 @@
 # Mission: record-shape nodes clip under rankdir=LR (clipping watchlist)
 
+## Status: DONE (2026-06-27)
+
+Root cause: C's `record_init` sets only `ND_width`/`ND_height`; `ND_lw/rw/ht` come
+from `gv_nodesize(n, GD_flip)` which **swaps width↔height under rankdir=LR/RL**.
+The port's `recordInit` set `lw/rw/ht` directly from the record's field-flipped
+size (unflipped), so the node stayed un-rotated while `gvPostprocess` rotated the
+bbox → transposed (too-narrow) bbox → record drew outside the viewport.
+
+Fix (one site, `src/common/record.ts:recordInit`): derive `lw/rw/ht` via
+`gvNodesize(info.size.x, info.size.y+1, GD_flip)`, exactly as C does. TB records
+unchanged (flip=false is a no-op). Result: `record-LR`/`record-TB` byte-match;
+**925/hashtable/records clipOverflow → 0**; corpus **byte-match 450→454**, 5
+graphs diverged→structural-match (b56, b57, triedds family), **0 regressions**,
+**clip-watch 15→4** (only fuzzer-garbage/diverged remain). Regression test:
+`src/common/record-flip.test.ts`.
+
 ## Objective
 
 Fix the dot port so `shape=record` nodes no longer render geometry **outside the

@@ -20,6 +20,7 @@ import type { FieldT, TextlabelT } from './types.js';
 import type { TextMeasurer } from './textmeasure.js';
 import { makeLabel, makeAnyLabel } from './make-label.js';
 import { nodeAttr, readFontAttrs } from './poly-init.js';
+import { gvNodesize } from './poly-sizing.js';
 import { renderLabel, applyNodeStyle } from './poly-gencode.js';
 import { transformPoint } from '../gvc/device.js';
 import { emitRoundedBezier } from './poly-shapes.js';
@@ -390,12 +391,20 @@ export function recordInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   }
   resizeReclbl(info, sz, attrBool(n, g, 'nojustify'));
   posReclbl(info, { x: -sz.x / 2.0, y: sz.y / 2.0 }, BOTTOM | RIGHT | TOP | LEFT);
-  n.info.lw = info.size.x / 2;
-  n.info.rw = info.size.x / 2;
-  n.info.ht = info.size.y + 1;
-  // C: ND_width/ND_height in inches (+1 rounding kluge on height).
+  // C: ND_width/ND_height in inches (+1 rounding kluge on height) — stored in the
+  // record's own (field-flipped) orientation, NOT swapped.
   n.info.width = info.size.x / 72;
   n.info.height = (info.size.y + 1) / 72;
+  // C record_init sets only ND_width/ND_height; ND_lw/rw/ht come from
+  // gv_nodesize(n, GD_flip), which SWAPS width↔height under rankdir=LR/RL — the
+  // record gets the same flip every other shape does. Setting lw/rw/ht directly
+  // from info.size (unflipped) left the node un-rotated while gvPostprocess
+  // rotated the bbox → transposed bbox → record drew outside the viewport (925).
+  // @see lib/common/shapes.c:record_init + lib/common/utils.c:gv_nodesize
+  const ns = gvNodesize(info.size.x, info.size.y + 1, g.root.info.flip === true);
+  n.info.lw = ns.lw;
+  n.info.rw = ns.rw;
+  n.info.ht = ns.ht;
   n.info.shape_info = info;
 }
 
