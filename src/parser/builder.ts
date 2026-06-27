@@ -271,9 +271,18 @@ export class StmtProcessor {
       // (rank=same/min/max/source/sink), node membership, and anon-id/AGSEQ are
       // registered for collapse_sets; then expand the edge over its node names.
       this.processSubgraph(item, scope, root, directed);
-      return NameCollector.fromStmts(item.stmts).map(
+      // Ensure (create/look-up) the member nodes in written order, so NEW nodes
+      // take their AGSEQ in source order — then iterate them in AGSEQ (node id)
+      // order for edge creation. C builds `tail -> {set}` edges by walking the
+      // endpoint subgraph's node dictionary (sequence-ordered), not the written
+      // order; iterating out of order assigns the wrong graphSeq (SVG edge id)
+      // when the set lists pre-existing nodes out of creation order (graphs-world
+      // `37 -> {39;41;38;40}`: heads 38,40,39,41 by AGSEQ, not 39,41,38,40).
+      // @see lib/cgraph/edge.c:agedge — edges follow agfstnode/agnxtnode order
+      const nodes = NameCollector.fromStmts(item.stmts).map(
         (n) => this.registry.ensure(n, root, scope),
       );
+      return nodes.sort((a, b) => a.id - b.id);
     }
     return [this.registry.ensure((item as NodeId).id, root, scope)];
   }

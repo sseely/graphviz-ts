@@ -5,9 +5,9 @@
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 383,
-    "structural-match": 277,
-    "diverged": 119,
+    "byte-match": 384,
+    "structural-match": 278,
+    "diverged": 117,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -153,9 +153,8 @@
     {
       "id": "1453",
       "path": "1453.dot",
-      "verdict": "diverged",
-      "maxDelta": 453.86,
-      "firstDiffPath": "svg/g[1]/g[38]/@id"
+      "verdict": "structural-match",
+      "maxDelta": 466.35
     },
     {
       "id": "1472",
@@ -2423,9 +2422,7 @@
     {
       "id": "graphs-world",
       "path": "graphs/world.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[34]/@id"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-xlabels",
