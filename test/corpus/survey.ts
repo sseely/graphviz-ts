@@ -111,6 +111,14 @@ export interface SurveyResult {
   maxDelta?: number;
   firstDiffPath?: string;
   errMsg?: string;
+  /**
+   * Port-SPECIFIC clipping in points: how much farther drawn geometry falls
+   * outside the viewport in the port than in the native render
+   * (`max(0, portOverflow − nativeOverflow)`). The position-blind
+   * `structural-match` verdict cannot see this; the gate flags new/worse
+   * clipping as a regression. @see svgOverflow
+   */
+  clipOverflow?: number;
 }
 
 interface SpawnResult {
@@ -247,6 +255,41 @@ function portErrMsg(stderr: string): string {
   return firstLine(stderr);
 }
 
+/**
+ * Max distance (pt) any drawn geometry falls outside the SVG viewport, after
+ * the root group's `translate`. 0 means fully in view. Catches clipped renders
+ * that the position-blind structural-match verdict misses (e.g. packed cluster
+ * boxes that landed at negative coordinates).
+ */
+function svgOverflow(svg: string): number {
+  const vb = /viewBox="[\d.-]+ [\d.-]+ ([\d.]+) ([\d.]+)"/.exec(svg);
+  const tr = /transform="[^"]*translate\(([-\d.]+)[ ,]+([-\d.]+)\)/.exec(svg);
+  if (!vb || !tr) return 0;
+  const W = Number(vb[1]); const H = Number(vb[2]);
+  const tx = Number(tr[1]); const ty = Number(tr[2]);
+  let worst = 0;
+  const bump = (x: number, y: number): void => {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const X = x + tx; const Y = y + ty;
+    worst = Math.max(worst, -X, X - W, -Y, Y - H);
+  };
+  for (const m of svg.matchAll(/points="([^"]+)"/g)) {
+    for (const p of m[1].trim().split(/\s+/)) {
+      const a = p.split(','); bump(Number(a[0]), Number(a[1]));
+    }
+  }
+  for (const m of svg.matchAll(/<ellipse[^>]*cx="([-\d.]+)" cy="([-\d.]+)" rx="([-\d.]+)" ry="([-\d.]+)"/g)) {
+    const cx = Number(m[1]); const cy = Number(m[2]); const rx = Number(m[3]); const ry = Number(m[4]);
+    bump(cx - rx, cy - ry); bump(cx + rx, cy + ry);
+  }
+  return worst;
+}
+
+/** Port-specific clipping: how much more the port overflows the viewport than native. */
+function clipOverflow(port: string, oracle: string): number {
+  return Math.max(0, svgOverflow(port) - svgOverflow(oracle));
+}
+
 /** Classify a rendered pair: byte-match / structural-match / diverged. */
 function diffVerdict(port: string, oracle: string): Omit<SurveyResult, 'id' | 'path'> {
   let diffs: Diff[];
@@ -286,7 +329,12 @@ async function surveyOne(
   const budgetMs = Math.max(TIMEOUT_FLOOR_MS, Math.ceil(TIMEOUT_MULT * nativeMs));
   const port = await portSvg(absInput, tsx, budgetMs);
   if (port.svg === undefined) return { ...meta, verdict: port.verdict!, errMsg: port.errMsg };
-  return { ...meta, ...diffVerdict(port.svg, oracle.svg) };
+  const co = clipOverflow(port.svg, oracle.svg);
+  return {
+    ...meta,
+    ...diffVerdict(port.svg, oracle.svg),
+    ...(co > 0.5 ? { clipOverflow: Math.round(co * 10) / 10 } : {}),
+  };
 }
 
 /** Bounded worker pool: run `entries` `concurrency`-at-a-time, preserving order. */

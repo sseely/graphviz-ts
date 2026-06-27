@@ -12,7 +12,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 790
 - **byte-match:** 450 · **structural-match:** 225 → 675/790 structurally equal (85.4%)
-- **diverged:** 104 · **errored:** 0 · **timeout:** 0 · **oracle-error:** 11
+- **diverged:** 99 · **errored:** 0 · **timeout:** 5 · **oracle-error:** 11
 - **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3
 
 ## byte-match (450)
@@ -26,14 +26,12 @@ Port SVG matches the oracle within the `deterministic` tolerance (0.01).
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). These are near-misses — sub-pixel-to-modest position drift.
 
-## diverged (104) — worst-first
+## diverged (99) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
 | `2095_1` | 13573.49 | `svg/g[1]/g[173]/path[1]/@d` |
-| `2343` | 11146.45 | `svg/g[1]/g[3]/path[1]/@d` |
 | `2470` | 6967.87 | `svg/g[1]/g[353]/path[1]/@d` |
-| `2854` | 6027.60 | `svg/g[1]/g[20]/path[1]/@d` |
 | `2471` | 5728.00 | `svg/g[1][childCount]` |
 | `2239` | 5286.67 | `svg/g[1]/g[2][childCount]` |
 | `1718` | 3725.90 | `svg/g[1]/g[47]/path[1]/@d` |
@@ -61,7 +59,6 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-trapeziumlr` | 689.76 | `svg/g[1]/g[33]/path[1]/@d` |
 | `graphs-big` | 661.70 | `svg/g[1]/g[5]/path[1]/@d` |
 | `linux.i386-b29` | 613.84 | `svg/g[1]/g[57]/path[1]/@d` |
-| `2371` | 575.53 | `svg/g[1]/g[261]/path[1]/@d` |
 | `1436` | 564.90 | `svg/g[1]/g[25]/path[1]/@d` |
 | `1332` | 563.00 | `svg/g[1][childCount]` |
 | `share-b29` | 527.17 | `svg/g[1]/g[57]/path[1]/@d` |
@@ -78,7 +75,6 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-b29` | 376.29 | `svg/g[1]/g[39]/path[1]/@d` |
 | `windows-b29` | 376.25 | `svg/g[1]/g[39]/path[1]/@d` |
 | `graphs-shells` | 374.65 | `svg/g[1]/g[36]/path[1]/@d` |
-| `graphs-b100` | 351.90 | `svg/g[1]/g[1597]/path[1]/@d` |
 | `graphs-b104` | 351.90 | `svg/g[1]/g[1597]/path[1]/@d` |
 | `1939` | 348.00 | `svg/g[1]/g[8]/path[1]/@d` |
 | `graphs-cairo` | 341.73 | `svg/g[1]/g[13]/path[1]/@d` |
@@ -90,18 +86,27 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-b103` | 216.20 | `svg/g[1]/g[1220]/path[1]/@d` |
 | `1447` | 192.39 | `svg/g[1]/g[13]/path[1]/@d` |
 | `share-b51` | 158.15 | `svg/g[1]/g[25]/path[1]/@d` |
+| `windows-b51` | 157.24 | `svg/g[1]/g[25]/path[1]/@d` |
+| `graphs-triedds` | 154.53 | `svg/g[1]/g[11]/path[1]/@d` |
+| `share-triedds` | 154.53 | `svg/g[1]/g[11]/path[1]/@d` |
+| `windows-triedds` | 152.96 | `svg/g[1]/g[11]/path[1]/@d` |
 
-_… and 44 more diverged inputs (see parity.json + the buckets below)._
+_… and 39 more diverged inputs (see parity.json + the buckets below)._
 
 ## errored (0)
 
 | id | path | message |
 |---|---|---|
 
-## timeout (0)
+## timeout (5)
 
 | id | path | message |
 |---|---|---|
+| `2343` | `2343.dot` |  |
+| `2371` | `2371.dot` |  |
+| `2646` | `2646.dot` |  |
+| `2854` | `2854.dot` |  |
+| `graphs-b100` | `graphs/b100.gv` |  |
 
 ## oracle-error (11) — excluded from port scoring
 
@@ -130,7 +135,7 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 75 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 70 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
 | `element-count` | 23 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `color-stroke` | 2 | `1949`, `42` | fill/stroke value differs — color resolution or default styling |
 | `attr-or-tag` | 2 | `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
