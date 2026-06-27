@@ -20,6 +20,9 @@ import { fileURLToPath } from 'node:url';
 
 const MATCH = new Set(['byte-match', 'structural-match']);
 const OK_NONLAYOUT = new Set(['oracle-error']); // oracle couldn't render → not a rules signal
+// Verdicts where the PORT produced a full SVG (so clipOverflow is meaningful).
+// timeout/errored/oracle-error did not render, so their clipping state is unknown.
+const RENDERED = new Set(['byte-match', 'structural-match', 'diverged']);
 
 /**
  * Allowlisted match→diverged cases, each verified NOT to be a layout-rules
@@ -41,7 +44,17 @@ const ALLOWLIST: Record<string, string> = {
   '2168_2': 'widths match headless (rx 34.64); 1pt is node2 x under :sw compass port (x-NS gap, not measurement)',
 };
 
-interface Row { id: string; verdict: string; maxDelta?: number; firstDiffPath?: string }
+interface Row { id: string; verdict: string; maxDelta?: number; firstDiffPath?: string; clipOverflow?: number }
+
+/**
+ * Port-specific viewport overflow (pt) above this is treated as a clipped render
+ * — geometry drawn outside the canvas where native keeps it in view. Below it is
+ * sub-pixel/boundary noise (e.g. a node margin grazing the edge). The
+ * position-blind structural-match verdict cannot see clipping (corpus 2592 /
+ * packed clusters slipped through as "structural-match" while rendering clipped),
+ * so the gate checks it independently.
+ */
+const CLIP_THRESHOLD = 4;
 
 function load(p: string): Map<string, Row> {
   const j = JSON.parse(readFileSync(p, 'utf8'));
@@ -75,14 +88,40 @@ for (const [id, r] of rules) {
   preexisting.push(id); // diverged in both
 }
 
+// Clipping check (independent of the verdict): the port draws geometry outside
+// the viewport where native does not. Fail only on NEW clipping vs the baseline;
+// pre-existing port clipping is tracked as a watchlist (same philosophy as
+// pre-existing diverged). @see survey.ts:svgOverflow / clipOverflow
+const clipRegressions: string[] = [];
+const clipWatch: string[] = [];
+for (const [id, r] of rules) {
+  const co = r.clipOverflow ?? 0;
+  if (co <= CLIP_THRESHOLD) continue;
+  const b = base.get(id);
+  // A regression only if the baseline RENDERED in-view (so we know it didn't
+  // clip before). If the baseline timed out / errored, its clipping state is
+  // unknown — track it, don't fail (avoids false regressions from flaky timeouts).
+  const baselineWasInView = b !== undefined && RENDERED.has(b.verdict) && (b.clipOverflow ?? 0) <= CLIP_THRESHOLD;
+  if (baselineWasInView) {
+    clipRegressions.push(`${id} (port clips ${co.toFixed(1)}pt outside the viewport; native does not)`);
+  } else {
+    clipWatch.push(`${id} (${co.toFixed(1)}pt)`);
+  }
+}
+
 const out = process.stderr;
-out.write(`rules-gate: stable=${stable} improvements=${improvements.length} pre-existing=${preexisting.length} allowlisted=${allowlisted.length} regressions=${regressions.length}\n`);
+out.write(`rules-gate: stable=${stable} improvements=${improvements.length} pre-existing=${preexisting.length} allowlisted=${allowlisted.length} regressions=${regressions.length} clip-regressions=${clipRegressions.length} clip-watch=${clipWatch.length}\n`);
 if (improvements.length) out.write(`improved (baseline diverged → rules match): ${improvements.join(', ')}\n`);
 if (allowlisted.length) { out.write(`allowlisted match→diverged (verified non-rules; see rules-known-divergences.md):\n`); for (const a of allowlisted) out.write(`  ${a}\n`); }
 if (preexisting.length) out.write(`pre-existing (diverged in both, font-independent allowlist): ${preexisting.join(', ')}\n`);
+if (clipWatch.length) out.write(`clip-watch (port clips outside viewport, pre-existing): ${clipWatch.join(', ')}\n`);
 if (regressions.length) {
   out.write(`\nREGRESSIONS (GATE FAIL — estimate path made these worse):\n`);
   for (const r of regressions) out.write(`  ${r}\n`);
-  process.exit(1);
 }
-out.write('GATE PASS — no rules regressions vs the pango baseline.\n');
+if (clipRegressions.length) {
+  out.write(`\nCLIPPING REGRESSIONS (GATE FAIL — port now renders outside the viewport):\n`);
+  for (const r of clipRegressions) out.write(`  ${r}\n`);
+}
+if (regressions.length || clipRegressions.length) process.exit(1);
+out.write('GATE PASS — no rules or clipping regressions vs the baseline.\n');
