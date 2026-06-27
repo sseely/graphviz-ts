@@ -122,14 +122,15 @@ classifies each with cheap structural checks (no rendering — that is T2):
 | `include` / `non-graph` | `#include`, shape file, or not a DOT graph. |
 | `raster-only-ref` | only meaningful against a raster format the port does not emit. |
 | `parse-unsupported` | the parser legitimately rejects the input (usually surfaced by T2 as `errored`; feeds the parser-gap backlog). |
+| `malformed` | adversarial / fuzzer-corrupted input (random bytes, HTML-injection, invalid UTF-8). Native dot only renders it via permissive lex/yacc error-recovery (badly-delimited-number splitting + mid-graph syntax-error recovery) producing degenerate output. The port's PEG grammar is authoritative and rejects out-of-grammar input; we do not replicate yacc's recovery to match garbage. Hand-triaged in `enumerate.ts` `MANUAL_QUARANTINE`. |
 
 ### Current totals
 
 Run `npx tsx test/corpus/enumerate.ts` to regenerate. As of the last run over
 `~/git/graphviz/tests` (corpus 805 files):
 
-- **applicable: 796**
-- quarantined: `engine-deferred` 6, `multi-graph` 3
+- **applicable: 790**
+- quarantined: `malformed` 6, `engine-deferred` 6, `multi-graph` 3
 
 ## Verdicts (T2)
 

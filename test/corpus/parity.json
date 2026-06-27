@@ -3,12 +3,12 @@
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
-  "total": 795,
+  "total": 790,
   "counts": {
     "byte-match": 372,
     "structural-match": 278,
     "diverged": 129,
-    "errored": 5,
+    "errored": 0,
     "timeout": 0,
     "oracle-error": 11
   },
@@ -43,12 +43,6 @@
       "path": "1308.dot",
       "verdict": "structural-match",
       "maxDelta": 72
-    },
-    {
-      "id": "1308_1",
-      "path": "1308_1.dot",
-      "verdict": "errored",
-      "errMsg": "Expected \"#\", \"/*\", \"//\", [ \\t\\r\\n], or end of input but \"}\" found."
     },
     {
       "id": "1314",
@@ -175,24 +169,6 @@
       "errMsg": "Opening and ending tag mismatch: \"svg\" != \"g\""
     },
     {
-      "id": "1474",
-      "path": "1474.dot",
-      "verdict": "errored",
-      "errMsg": "Expected \"#\", \"/*\", \"//\", [ \\t\\r\\n], or end of input but \"L\" found."
-    },
-    {
-      "id": "1489",
-      "path": "1489.dot",
-      "verdict": "errored",
-      "errMsg": "Expected \"#\", \"/*\", \"//\", [ \\t\\r\\n], or end of input but \"õ\" found."
-    },
-    {
-      "id": "1494",
-      "path": "1494.dot",
-      "verdict": "errored",
-      "errMsg": "Expected \"#\", \"-\", \".\", \"/*\", \"//\", \":\", \";\", \"<\", \"[\", \"\\\"\", \"{\", \"}\", [ \\t\\r\\n], [0-9], [A-Za-z_0-9\\x80-\\u{FFFF}], [A-Za-z_\\x80-\\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but \",\" found."
-    },
-    {
       "id": "1514",
       "path": "1514.dot",
       "verdict": "structural-match",
@@ -290,12 +266,6 @@
       "id": "167",
       "path": "167.dot",
       "verdict": "byte-match"
-    },
-    {
-      "id": "1676",
-      "path": "1676.dot",
-      "verdict": "errored",
-      "errMsg": "Expected \"#\", \"-\", \".\", \"/*\", \"//\", \":\", \";\", \"<\", \"[\", \"\\\"\", \"{\", \"}\", [ \\t\\r\\n], [0-9], [A-Za-z_\\x80-\\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but \",\" found."
     },
     {
       "id": "1702",
