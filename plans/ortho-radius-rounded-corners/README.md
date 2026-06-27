@@ -57,7 +57,7 @@ regressions on BOTH baselines**; baselines + PARITY.md refreshed.
 | # | Goal | Status | Doc |
 |---|------|--------|-----|
 | 1 | `ellipse-wedge.ts` — arc tessellation | [x] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 | corner detection + truncation | [ ] | [batch-2/overview.md](batch-2/overview.md) |
+| 2 | corner detection + truncation | [x] | [batch-2/overview.md](batch-2/overview.md) |
 | 3 | segment + arc emit | [ ] | [batch-3/overview.md](batch-3/overview.md) |
 | 4 | `svg.ts endEdge` integration + golden | [ ] | [batch-4/overview.md](batch-4/overview.md) |
 | 5 | validate + refresh baselines + merge | [ ] | [batch-5/overview.md](batch-5/overview.md) |
