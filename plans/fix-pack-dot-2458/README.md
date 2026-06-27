@@ -64,7 +64,7 @@ IDs are referenced in the decision journal).
 
 | Batch | Task | Status |
 |---|---|---|
-| 1 | [T1 — Investigate pack wiring + cluster oracle](batch-1/T1-investigate.md) | [ ] |
+| 1 | [T1 — Investigate pack wiring + cluster oracle](batch-1/T1-investigate.md) | [x] |
 | 2 | [T2 — Core doDot + per-component pack + 2458 (TDD)](batch-2/T2-core-pack.md) | [ ] |
 | 3 | [T3 — copyClusterInfo + cluster-carry (TDD)](batch-3/T3-clusters.md) | [ ] |
 | 4 | [T4 — Survey verify + baseline refresh](batch-4/T4-survey-verify.md) | [ ] |
