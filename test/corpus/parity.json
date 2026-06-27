@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-27T00:03:04.906Z",
+  "generatedAt": "2026-06-27T01:48:07.111Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 372,
+    "byte-match": 378,
     "structural-match": 278,
-    "diverged": 129,
+    "diverged": 123,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -2135,9 +2135,7 @@
     {
       "id": "graphs-radius",
       "path": "graphs/radius.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-rd_rules",
@@ -2509,9 +2507,7 @@
     {
       "id": "linux.i386-radius_dot",
       "path": "linux.i386/radius_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "linux.i386-trivial_dot",
@@ -2629,9 +2625,7 @@
     {
       "id": "linux.x86-radius_dot",
       "path": "linux.x86/radius_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-rankdir_dot",
@@ -2727,9 +2721,7 @@
     {
       "id": "macosx-radius_dot",
       "path": "macosx/radius_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "macosx-rowcolsep_dot",
@@ -2863,9 +2855,7 @@
     {
       "id": "nshare-radius_dot",
       "path": "nshare/radius_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-rankdir_dot",
@@ -4405,9 +4395,7 @@
     {
       "id": "windows-radius_dot",
       "path": "windows/radius_dot.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[3][childCount]"
+      "verdict": "byte-match"
     },
     {
       "id": "windows-record2",
