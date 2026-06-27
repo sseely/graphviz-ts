@@ -70,6 +70,15 @@ describe('parseStyleFlags — remaining flags and edge cases', () => {
     expect(f.filled).toBe(true);
     expect(f.dashed).toBe(true);
   });
+
+  // C matches the style token with streq(p, "invis") (exact); "invisible" is an
+  // unrecognized token, ignored, so the object is still drawn (graphviz 1898:
+  // N19 [shape=point style=invisible] renders an ellipse in native dot).
+  // @see lib/common/shapes.c:495 / lib/common/emit.c:1823 (streq(p,"invis"))
+  it('treats "invisible" as an unknown token, not invis', () => {
+    const f = parseStyleFlags('invisible');
+    expect(f.invis).toBe(false);
+  });
 });
 
 describe('parseStyleFlags — setlinewidth + FUNLIMIT', () => {

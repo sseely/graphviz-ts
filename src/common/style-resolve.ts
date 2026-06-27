@@ -135,7 +135,6 @@ const TOKEN_FLAG: Readonly<Record<string, BoolFlagKey>> = {
   dotted: 'dotted',
   bold: 'bold',
   invis: 'invis',
-  invisible: 'invis',
   diagonals: 'diagonals',
   rounded: 'rounded',
   striped: 'striped',
