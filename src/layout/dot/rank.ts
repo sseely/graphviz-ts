@@ -476,7 +476,13 @@ export function expandRanksets(g: Graph): void {
   g.info.minrank = Number.MAX_SAFE_INTEGER;
   g.info.maxrank = -1;
   for (const n of g.nodes.values()) expandNode(g, n);
-  if (g === g.root) expandRankPostprocess(g);
+  // C gates the cluster min/max setup on `g == dot_root(g)`, NOT the cgraph
+  // root. A packed component laid out as its own dot-root (info.dotroot = self)
+  // has g.root === the TRUE root, so the old `g === g.root` skipped set_minmax
+  // for the component's clusters → undersized rankleader → null in build_skeleton.
+  // dotRoot = info.dotroot ?? g.root, so this is behavior-preserving for the
+  // whole-graph case. @see lib/dotgen/rank.c:expand_ranksets (g == dot_root(g))
+  if (g === (g.info.dotroot ?? g.root)) expandRankPostprocess(g);
 }
 
 /** @see lib/dotgen/rank.c:dot1_rank */
