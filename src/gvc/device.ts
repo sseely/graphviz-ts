@@ -15,17 +15,15 @@ import type { Point } from '../model/geom.js';
 import { parseDrawingSize, initJobViewportZoom, parseLandscape } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
-import { buildOutEdgeIndex } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import { gvrenderTextspan } from './textspan-emit.js';
 import { resolveEdgeAnchor, resolveObjAnchor, beginAnchorIf } from './anchor.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
-import {
-  type LayerInfo, parseLayers, nodeInLayer, edgeInLayer,
-} from '../common/layers.js';
+import { type LayerInfo, parseLayers } from '../common/layers.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM, createObjState, ObjType, EmitState } from './job.js';
+import { walkNodesAndEdges } from './emit-walk.js';
 import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
@@ -266,38 +264,6 @@ export function renderGraphLabel(g: Graph, renderer: RendererPlugin, job: Render
   // @see lib/common/emit.c:emit_begin_graph / getObjId (root graph → graph0)
   setHtmlAnchorObj(svgGraphId(g, job), labelTextOf(g.info.label));
   renderOneLabel(g.info.label as TextlabelT | undefined, renderer, job);
-}
-
-/**
- * Render nodes and edges in C's "breadth-first walk" order.
- * For each node: emit the node, then for each outgoing edge emit the
- * head node and the edge itself.  Matches the default (no-flag) path in
- * lib/common/emit.c:emit_graph.
- *
- * @see lib/common/emit.c:emit_graph (breadth-first default case)
- */
-/** Whether a node is shown in the current layer (always true off-layer). */
-function nodeShown(info: LayerInfo | undefined, job: RenderJob, n: Node, g: Graph): boolean {
-  return info === undefined || job.numLayers <= 1 || nodeInLayer(info, job.layerNum, n, g);
-}
-/** Whether an edge is shown in the current layer (always true off-layer). */
-function edgeShown(info: LayerInfo | undefined, job: RenderJob, e: Edge): boolean {
-  return info === undefined || job.numLayers <= 1 || edgeInLayer(info, job.layerNum, e);
-}
-
-export function walkNodesAndEdges(g: Graph, renderer: RendererPlugin, job: RenderJob, info?: LayerInfo): void {
-  const done = new Set<Node>();
-  // One out-edge index instead of n.outEdges(g) per node (O(N·E) → O(E log E));
-  // emission only writes the render device, never g.edges, and the index keeps
-  // outEdges' sorted order so element emission order is unchanged.
-  const outIdx = buildOutEdgeIndex(g);
-  for (const n of g.nodes.values()) {
-    if (nodeShown(info, job, n, g)) renderNode(n, renderer, job, done);
-    for (const e of outIdx.get(n) ?? []) {
-      if (nodeShown(info, job, e.head, g)) renderNode(e.head, renderer, job, done);
-      if (edgeShown(info, job, e)) renderEdge(e, renderer, job);
-    }
-  }
 }
 
 // ---------------------------------------------------------------------------

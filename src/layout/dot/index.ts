@@ -35,10 +35,10 @@ import {
 } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import {
-  cccomps, getPack, getPackModeInfo, getPackInfo, PackMode,
+  getPack, getPackModeInfo, getPackInfo, PackMode,
 } from '../pack/index.js';
 import type { PackInfo } from '../pack/index.js';
-import { ratioIsNone, layoutAndPack, graphHasCluster } from './pack-components.js';
+import { ratioIsNone, layoutAndPack, cccompsWithClusters } from './pack-components.js';
 
 // Re-export init helpers for external consumers.
 export {
@@ -216,15 +216,14 @@ export function doDot(g: Graph): void {
   else if (pack < 0) pack = CL_OFFSET;
   pinfo.margin = pack; // pack >= 0 here
   pinfo.fixed = null;
-  const comps = cccomps(g, '_cc');
+  // Cluster-aware decomposition: cluster members stay in one component, and each
+  // component carries a clone of its clusters/same-rank sets (C's cccomps).
+  const { comps, origOf } = cccompsWithClusters(g);
   if (comps.length === 1) {
     dotLayoutPipeline(g);
-  } else if (ratioIsNone(g) && !graphHasCluster(g)) {
-    // T2 ports the cluster-FREE pack path. A clustered multi-component graph
-    // needs each component to carry its cluster tree (copyClusterInfo, T3);
-    // until then fall back to whole-graph layout so it is not regressed.
+  } else if (ratioIsNone(g)) {
     pinfo.doSplines = true;
-    layoutAndPack(g, comps, pinfo);
+    layoutAndPack(g, comps, pinfo, origOf);
   } else {
     // Non-trivial ratio with multiple components: C lays out the whole graph.
     dotLayoutPipeline(g);

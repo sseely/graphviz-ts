@@ -21,9 +21,11 @@
  */
 
 import type { Graph } from '../../model/graph.js';
+import type { Node } from '../../model/node.js';
 import type { Point } from '../../model/geom.js';
 import type { PackInfo } from '../pack/index.js';
-import { packSubgraphs } from '../pack/index.js';
+import { packSubgraphs, buildSubgraph } from '../pack/index.js';
+import { agsubg } from '../../model/cgraph-ops.js';
 import { dotGraphInit } from './init.js';
 import { dotPhaseInit, dotPhasePostNoFinish } from './index.js';
 import { dotRank, isACluster } from './rank.js';
@@ -59,24 +61,111 @@ export function ratioIsNone(g: Graph): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// graphHasCluster — does the graph (recursively) contain a cluster subgraph?
+// Cluster-aware connected-component decomposition (C cccomps + projectG)
+// @see lib/pack/ccomps.c:cccomps / projectG / subgInduce / mapClust
 // ---------------------------------------------------------------------------
 
-/**
- * True if `g` contains any cluster subgraph at any depth. Used to scope the
- * pack branch to the cluster-free path in T2: a clustered multi-component graph
- * needs `cccomps` to project each component's cluster tree plus `copyCluster`/
- * `copyClusterInfo` to carry it back (T3). Until that is ported, such graphs
- * fall back to whole-graph `dotLayoutPipeline` so they are not regressed. T3
- * removes this guard and handles clustered graphs in the pack branch.
- *
- * @see lib/pack/ccomps.c:cccomps (cluster-carrying decomposition — T3)
- */
-export function graphHasCluster(g: Graph): boolean {
+/** Union-find find-with-path-compression over node names. */
+function ufFindName(parent: Map<string, string>, x: string): string {
+  let r = x;
+  while (parent.get(r) !== r) r = parent.get(r)!;
+  let c = x;
+  while (parent.get(c) !== r) { const n = parent.get(c)!; parent.set(c, r); c = n; }
+  return r;
+}
+
+/** Union the classes of names a and b. */
+function ufUnionName(parent: Map<string, string>, a: string, b: string): void {
+  const ra = ufFindName(parent, a);
+  const rb = ufFindName(parent, b);
+  if (ra !== rb) parent.set(ra, rb);
+}
+
+/** Collect every cluster subgraph under g, at any depth. */
+function collectClusters(g: Graph, out: Graph[]): void {
   for (const sg of g.subgraphs.values()) {
-    if (isACluster(sg) || graphHasCluster(sg)) return true;
+    if (isACluster(sg)) out.push(sg);
+    collectClusters(sg, out);
   }
-  return false;
+}
+
+/**
+ * Project one root subgraph `sub` onto component-or-clone `target`: if any of
+ * `sub`'s nodes are members of `target`, create a clone subgraph of `target`
+ * carrying those nodes and a copy of `sub`'s attributes, and (for clusters)
+ * record the clone→original mapping in `origOf`. Mirrors C's `projectG`.
+ * @see lib/pack/ccomps.c:projectG
+ */
+function projectOne(sub: Graph, target: Graph, comp: Graph, origOf: Map<Graph, Graph>): Graph | null {
+  let proj: Graph | null = null;
+  for (const n of sub.nodes.values()) {
+    if (target.nodes.get(n.name) !== n) continue;
+    if (proj === null) {
+      proj = agsubg(target, sub.name, true)!;
+      proj.attrs = new Map(sub.attrs); // C: agcopyattr(subg, proj)
+      // C stores GD_dotroot on the shared agroot, so dot_root() resolves to the
+      // COMPONENT being laid out for every subgraph under it. The port's dotRoot
+      // reads per-graph info.dotroot (falling back to the true root), so set it
+      // to the component here — else cluster mincross (merge_ranks → dotRoot)
+      // reads the empty true-root rank array. @see lib/dotgen/dotinit.c:dot_init_subg
+      proj.info.dotroot = comp;
+    }
+    proj.nodes.set(n.name, n);
+  }
+  if (proj !== null && isACluster(proj)) origOf.set(proj, sub); // C: ORIG_REC
+  return proj;
+}
+
+/**
+ * Recursively project all subgraphs of `origParent` (clusters AND rank=same
+ * sets) into `target`, so `dotLayoutPipeline(component)` rediscovers the cluster
+ * tree and same-rank sets via `collapseSets`. `comp` is the component being laid
+ * out (the dot-root every clone must resolve to). Mirrors C's `subgInduce`.
+ * @see lib/pack/ccomps.c:subgInduce
+ */
+function projectSubgraphs(origParent: Graph, target: Graph, comp: Graph, origOf: Map<Graph, Graph>): void {
+  for (const sub of origParent.subgraphs.values()) {
+    const proj = projectOne(sub, target, comp, origOf);
+    if (proj !== null) projectSubgraphs(sub, proj, comp, origOf);
+  }
+}
+
+/**
+ * Decompose `root` into "connected" components where nodes are connected by an
+ * edge OR by sharing a cluster (C's cluster-aware `cccomps`: cluster members
+ * stay in one component even with no edge between them). Each component carries
+ * a projected clone of every cluster/same-rank subgraph it owns; `origOf` maps
+ * each cluster clone back to its original root cluster (C's `mapClust`).
+ * @see lib/pack/ccomps.c:cccomps
+ */
+export function cccompsWithClusters(root: Graph): { comps: Graph[]; origOf: Map<Graph, Graph> } {
+  const parent = new Map<string, string>();
+  for (const n of root.nodes.values()) parent.set(n.name, n.name);
+  for (const e of root.edges) ufUnionName(parent, e.tail.name, e.head.name);
+  const clusters: Graph[] = [];
+  collectClusters(root, clusters);
+  for (const cl of clusters) {
+    let prev: string | undefined;
+    for (const n of cl.nodes.values()) {
+      if (prev !== undefined) ufUnionName(parent, prev, n.name);
+      prev = n.name;
+    }
+  }
+  const groups = new Map<string, Node[]>();
+  for (const n of root.nodes.values()) {
+    const r = ufFindName(parent, n.name);
+    const g = groups.get(r);
+    if (g) g.push(n); else groups.set(r, [n]);
+  }
+  const origOf = new Map<Graph, Graph>();
+  const comps: Graph[] = [];
+  let idx = 0;
+  for (const nodes of groups.values()) {
+    const comp = buildSubgraph(root, nodes, `_cc_${idx++}`);
+    projectSubgraphs(root, comp, comp, origOf); // C: subGInduce(g, out)
+    comps.push(comp);
+  }
+  return { comps, origOf };
 }
 
 // ---------------------------------------------------------------------------
@@ -158,25 +247,63 @@ export function dotLayoutComponent(sg: Graph, root: Graph): void {
 // @see lib/dotgen/dotinit.c:copyClusterInfo (412)
 // ---------------------------------------------------------------------------
 
+/** Map a cluster clone back to its original root cluster. C's `mapClust`. */
+function mapClust(clone: Graph, origOf: Map<Graph, Graph>): Graph {
+  const orig = origOf.get(clone);
+  if (orig === undefined) throw new Error(`mapClust: no original for cluster ${clone.name}`);
+  return orig;
+}
+
+/**
+ * Copy one laid-out cluster clone `scl`'s drawing-info onto the original
+ * cluster `cl` (bb, label position, border, nested cluster tree, label), then
+ * recurse into nested clusters. The label is transferred (cleared on the
+ * clone), exactly as C does.
+ * @see lib/dotgen/dotinit.c:copyCluster
+ */
+function copyCluster(scl: Graph, cl: Graph, origOf: Map<Graph, Graph>): void {
+  cl.info.bb = scl.info.bb;
+  cl.info.label_pos = scl.info.label_pos;
+  if (scl.info.border !== undefined) {
+    cl.info.border = [...scl.info.border] as [Point, Point, Point, Point];
+  }
+  const nclust = scl.info.n_cluster ?? 0;
+  cl.info.n_cluster = nclust;
+  cl.info.clust = [];
+  for (let j = 1; j <= nclust; j++) {
+    const childClone = scl.info.clust![j - 1];
+    const childOrig = mapClust(childClone, origOf);
+    cl.info.clust[j - 1] = childOrig;
+    copyCluster(childClone, childOrig, origOf);
+  }
+  cl.info.label = scl.info.label;
+  scl.info.label = undefined; // C: GD_label(scl) = NULL
+}
+
 /**
  * Copy the cluster tree and per-cluster drawing-info from each laid-out
- * component back to the root graph, so the root's `gvPostprocess` rotates the
- * cluster bounding boxes and the renderer draws them.
- *
- * T2 ports the cluster-free path only (corpus 2458 has no clusters): components
- * built by `cccomps` carry no cluster subgraphs (`n_cluster == 0`), so there is
- * nothing to copy. The full `copyCluster`/`mapClust` tree-copy for clustered
- * multi-component graphs is ported in T3.
+ * component back to the root, so the root's `gvPostprocess` rotates the cluster
+ * bounding boxes and the renderer (which reads `GD_clust(root)`) draws them at
+ * their packed positions.
  *
  * @see lib/dotgen/dotinit.c:copyClusterInfo
  */
-export function copyClusterInfo(comps: Graph[], root: Graph): void {
+export function copyClusterInfo(comps: Graph[], root: Graph, origOf: Map<Graph, Graph>): void {
   let nclust = 0;
   for (const sg of comps) nclust += sg.info.n_cluster ?? 0;
   // C: GD_n_cluster(root) = nclust; GD_clust(root) = calloc(nclust+1).
   root.info.n_cluster = nclust;
-  if (nclust === 0) return;
-  // T3: port copyCluster/mapClust to populate root.info.clust here.
+  root.info.clust = [];
+  let idx = 0;
+  for (const sg of comps) {
+    const nc = sg.info.n_cluster ?? 0;
+    for (let j = 1; j <= nc; j++) {
+      const clone = sg.info.clust![j - 1];
+      const orig = mapClust(clone, origOf);
+      root.info.clust[idx++] = orig;
+      copyCluster(clone, orig, origOf);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -246,7 +373,9 @@ function shiftComponentArrowOps(comps: Graph[], before: (Point | null)[]): void 
  * @see lib/dotgen/dotinit.c:doDot
  * @see lib/dotgen/dotinit.c:dot_layout (dotneato_postprocess on root)
  */
-export function layoutAndPack(root: Graph, comps: Graph[], pinfo: PackInfo): void {
+export function layoutAndPack(
+  root: Graph, comps: Graph[], pinfo: PackInfo, origOf: Map<Graph, Graph>,
+): void {
   // Seed the root's drawing-info (C: graph_init before doDot set GD_rankdir2 etc).
   dotGraphInit(root);
   // C: for each component { initSubg(sg, g); dotLayout(sg); }
@@ -260,8 +389,9 @@ export function layoutAndPack(root: Graph, comps: Graph[], pinfo: PackInfo): voi
   // Port-only: shift pre-computed arrow draw-ops by the same pack delta the
   // pack module applied to the splines (it does not know about these ops).
   shiftComponentArrowOps(comps, before);
-  // C: copyClusterInfo(ncc, ccs, g) — cluster carry-back (T3; no-op when cluster-free).
-  copyClusterInfo(comps, root);
+  // C: copyClusterInfo(ncc, ccs, g) — carry each component's cluster tree back
+  // to the root (no-op when cluster-free; root.info.clust drives cluster emit).
+  copyClusterInfo(comps, root, origOf);
   // C dot_layout: dotneato_postprocess(g) once on the root after doDot returns.
   gvPostprocess(root);
 }

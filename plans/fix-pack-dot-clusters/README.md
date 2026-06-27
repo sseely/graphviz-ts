@@ -1,5 +1,20 @@
 # Mission: dot pack branch for CLUSTERED multi-component graphs (T3 follow-up)
 
+## Status: DONE (2026-06-27)
+
+**2592 diverged → structural-match, 0 regressions** (gate: stable=675,
+improvements=1). The cluster carry (`cccompsWithClusters` + `projectG` +
+`copyClusterInfo`) works; the predicted cluster-mincross-core rework was
+unnecessary — the cascade was only 2 sites: `rank.ts:expandRanksets` (`dot_root`)
+and setting `info.dotroot = component` on the projected clones (in
+`pack-components.ts`, not cluster.ts). The remaining structural diff was the
+pre-existing `outputorder=nodesfirst` renderer gap, closed in `device.ts` +
+new `emit-walk.ts` (write-set expanded with user approval). Verified on synthetic
+flat + nested cluster fixtures. 2458/2682 stay byte-match; 2683 also improved.
+Residual: clustered-component pack POSITION offset from node-only pack bb
+(pack module, ADR-3) — harmless to the verdict; possible byte-match follow-up.
+See [decision-journal.md](decision-journal.md).
+
 ## Objective
 
 Complete the dot `doDot` pack branch for **clustered** multi-component graphs —

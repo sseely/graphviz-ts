@@ -84,3 +84,53 @@ describe('dot pack branch — multi-component packing (corpus 2458)', () => {
     expect(svg).toContain('<title>a&#45;&gt;b</title>');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Clustered multi-component packing (cccompsWithClusters + copyClusterInfo)
+// ---------------------------------------------------------------------------
+
+/** Cluster {id → title} pairs in render (emit) order. */
+function clusterTitles(svg: string): string[] {
+  return [...svg.matchAll(/<g id="([^"]+)" class="cluster">\s*<title>([^<]+)<\/title>/g)]
+    .map((m) => `${m[1]}:${m[2]}`);
+}
+
+/** Read a committed headless-15.1.0 golden ref. */
+function ref(name: string): string {
+  return readFileSync(join(__dirname, `../../../test/golden/refs/${name}`), 'utf8');
+}
+
+describe('dot pack branch — clustered multi-component (corpus 2592 + synthetic)', () => {
+  // C's cccomps keeps cluster members in one component (even across edge
+  // components); each component carries a projected clone of its clusters, and
+  // copyClusterInfo maps cluster bb/label back to the root. @see dotinit.c:doDot
+  it('packs corpus 2592 with both clusters, matching native emit structure', () => {
+    const svg = renderSvg(readFileSync(
+      join(__dirname, '../../../test/golden/inputs/pack-clusters-2592.dot'), 'utf8'), 'dot');
+    // cluster_b1 + cluster_b2 carried back to the root and emitted, with the
+    // same ids/titles and order as headless 15.1.0.
+    expect(clusterTitles(svg)).toEqual(clusterTitles(ref('pack-clusters-2592.svg')));
+    expect((svg.match(/class="cluster"/g) ?? []).length).toBe(2);
+  });
+
+  it('reproduces a NESTED cluster tree through copyCluster recursion', () => {
+    const svg = renderSvg(readFileSync(
+      join(__dirname, '../../../test/golden/inputs/pack-clusters-nested.dot'), 'utf8'), 'dot');
+    // cluster_a > cluster_a_inner (nested) in one component, cluster_b in the
+    // other — same nested tree + ids as native.
+    expect(clusterTitles(svg)).toEqual(clusterTitles(ref('pack-clusters-nested.svg')));
+    expect(clusterTitles(svg)).toEqual([
+      'clust1:cluster_a', 'clust2:cluster_a_inner', 'clust3:cluster_b',
+    ]);
+  });
+
+  it('honors outputorder=nodesfirst (all nodes then all edges)', () => {
+    // Cluster pack alone left 2592 diverged on node emit order; nodesfirst emit
+    // (C's EMIT_SORTED) closes it. @see lib/common/emit.c:emit_view
+    const svg = renderSvg(
+      'digraph { outputorder=nodesfirst; a -> b -> c }', 'dot');
+    const firstEdge = svg.indexOf('class="edge"');
+    const lastNode = svg.lastIndexOf('class="node"');
+    expect(lastNode).toBeLessThan(firstEdge); // every node emitted before any edge
+  });
+});
