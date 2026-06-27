@@ -10,6 +10,7 @@
 // internal y-up frame the spline is stored in; the SVG renderer negates y.
 
 import type { Point } from '../model/geom.js';
+import { ellipticWedge } from '../common/ellipse-wedge.js';
 
 /** Per-corner geometry, mirroring emit.c:corner_info_t. */
 export interface CornerInfo {
@@ -146,4 +147,82 @@ export function findOrthoCorners(pts: Point[], radius: number): CornerInfo[] {
   // Sort by corner index (emit.c sorts the list before segment rendering).
   corners.sort((a, b) => a.idx - b.idx);
   return corners;
+}
+
+/** True when `p` is within CORNER_TOL of any corner point. */
+function atAnyCorner(p: Point, pts: Point[], corners: CornerInfo[], tol: number): boolean {
+  for (const c of corners) {
+    const cp = pts[c.idx];
+    if (Math.hypot(p.x - cp.x, p.y - cp.y) < tol) return true;
+  }
+  return false;
+}
+
+/** Straight polyline segments between truncated corners.
+ *  @see lib/common/emit.c:2593-2654 (segment loop) */
+function segmentPolylines(pts: Point[], corners: CornerInfo[]): Point[][] {
+  const CORNER_TOL = 0.01;
+  const n = pts.length;
+  const out: Point[][] = [];
+
+  let segStartIdx = 0;
+  let segStartPt = pts[0];
+
+  for (let c = 0; c <= corners.length; c++) {
+    let segEndIdx: number;
+    let segEndPt: Point;
+    if (c < corners.length) {
+      segEndIdx = corners[c].idx;
+      segEndPt = corners[c].truncPrev;
+    } else {
+      segEndIdx = n - 1;
+      segEndPt = pts[n - 1];
+    }
+
+    const seg: Point[] = [segStartPt];
+    for (let pt = segStartIdx + 1; pt < segEndIdx; pt++) {
+      if (!atAnyCorner(pts[pt], pts, corners, CORNER_TOL)) seg.push(pts[pt]);
+    }
+    seg.push(segEndPt);
+    out.push(seg);
+
+    if (c < corners.length) {
+      // Skip all duplicates of this corner, then resume at its trunc_next.
+      let nextIdx = corners[c].idx + 1;
+      while (nextIdx < n && atAnyCorner(pts[nextIdx], pts, corners, CORNER_TOL)) nextIdx++;
+      segStartIdx = nextIdx;
+      segStartPt = corners[c].truncNext;
+    }
+  }
+  return out;
+}
+
+/** Arc polyline per corner: the wedge slice [3 .. pn-4].
+ *  @see lib/common/emit.c:draw_ortho_corner_markers / render_corner_arc */
+function cornerArcPolylines(corners: CornerInfo[], radius: number): Point[][] {
+  const out: Point[][] = [];
+  for (const ci of corners) {
+    const wedge = ellipticWedge(ci.wedgeCenter, radius, radius, ci.angle1, ci.angle2);
+    if (wedge.length > 4) {
+      const arcStart = 3;            // skip center, first arc point, AND duplicate
+      const arcEnd = wedge.length - 4; // skip duplicate endpoint, last arc point, AND center
+      const count = arcEnd >= arcStart ? arcEnd - arcStart + 1 : 0;
+      if (count >= 2) out.push(wedge.slice(arcStart, arcEnd + 1));
+    }
+  }
+  return out;
+}
+
+/**
+ * The full list of `<polyline>` point-arrays native emits for an ortho edge with
+ * rounded corners: straight segments between truncated corners first, then one
+ * arc polyline per corner — matching emit.c's order (segment loop, then
+ * draw_ortho_corner_markers). Returns `[]` when no orthogonal corner is found,
+ * so the caller falls back to the bezier `<path>`.
+ * @see lib/common/emit.c:2583-2662
+ */
+export function orthoRoundedPolylines(pts: Point[], radius: number): Point[][] {
+  const corners = findOrthoCorners(pts, radius);
+  if (corners.length === 0) return [];
+  return [...segmentPolylines(pts, corners), ...cornerArcPolylines(corners, radius)];
 }
