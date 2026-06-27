@@ -1,0 +1,8 @@
+digraph {
+	pack=20
+	subgraph cluster_a {
+		subgraph cluster_a_inner { a1 -> a2 }
+		a3 -> a1
+	}
+	subgraph cluster_b { b1 -> b2 }
+}
