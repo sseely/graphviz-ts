@@ -66,8 +66,25 @@ IDs are referenced in the decision journal).
 |---|---|---|
 | 1 | [T1 — Investigate pack wiring + cluster oracle](batch-1/T1-investigate.md) | [x] |
 | 2 | [T2 — Core doDot + per-component pack + 2458 (TDD)](batch-2/T2-core-pack.md) | [x] |
-| 3 | [T3 — copyClusterInfo + cluster-carry (TDD)](batch-3/T3-clusters.md) | [ ] |
-| 4 | [T4 — Survey verify + baseline refresh](batch-4/T4-survey-verify.md) | [ ] |
+| 3 | [T3 — copyClusterInfo + cluster-carry (TDD)](batch-3/T3-clusters.md) | [ ] HALTED — scope (see journal) |
+| 4 | [T4 — Survey verify + baseline refresh](batch-4/T4-survey-verify.md) | [ ] pending T3 decision |
+
+## Status (2026-06-27)
+
+**Primary objective MET + EXCEEDED.** Batches 1–2 complete; halted at the T2/T3
+boundary for a scope decision (see decision-journal T3 row).
+
+- **T1** ✓ — wiring + cluster oracle pinned (`comparisons/T1-investigation.md`).
+- **T2** ✓ — `doDot` pack branch (cluster-free path). **2458 diverged (maxΔ=74.8)
+  → BYTE-MATCH** vs headless 15.1.0; **2682 bonus improvement**; **0 regressions**
+  (gate: stable=672, improvements=2). tsc clean, full vitest green (2458 tests).
+- **T3** ⛔ HALTED — the cluster oracle 2592 proves cluster nodes span the port's
+  connected components, so T3 requires porting C's cluster-aware `cccomps`
+  (`deriveGraph`+`projectG`+`copyClusterInfo`) — a substantial subsystem port that
+  risks out-of-write-set edits and regressing the green gate. Recommend a dedicated
+  derisk mission. Clustered multi-component graphs currently fall back to whole-graph
+  layout (T2 guard `graphHasCluster`), so they are unchanged from baseline (no
+  regression). T4 (baseline refresh) pends this decision.
 
 ## Index
 
