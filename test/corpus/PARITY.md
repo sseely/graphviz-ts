@@ -12,7 +12,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 795
 - **byte-match:** 372 · **structural-match:** 278 → 650/795 structurally equal (81.8%)
-- **diverged:** 128 · **errored:** 6 · **timeout:** 0 · **oracle-error:** 11
+- **diverged:** 129 · **errored:** 5 · **timeout:** 0 · **oracle-error:** 11
 - **Quarantined (not surveyed, from corpus-manifest.json):** engine-deferred 6, multi-graph 3, malformed 1
 
 ## byte-match (372)
@@ -26,7 +26,7 @@ Port SVG matches the oracle within the `deterministic` tolerance (0.01).
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). These are near-misses — sub-pixel-to-modest position drift.
 
-## diverged (128) — worst-first
+## diverged (129) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
@@ -91,9 +91,9 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `graphs-shells` | 374.88 | `svg/g[1]/g[36]/path[1]/@d` |
 | `1939` | 348.00 | `svg/g[1]/g[8]/path[1]/@d` |
 
-_… and 68 more diverged inputs (see parity.json + the buckets below)._
+_… and 69 more diverged inputs (see parity.json + the buckets below)._
 
-## errored (6)
+## errored (5)
 
 | id | path | message |
 |---|---|---|
@@ -102,7 +102,6 @@ _… and 68 more diverged inputs (see parity.json + the buckets below)._
 | `1489` | `1489.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "õ" found. |
 | `1494` | `1494.dot` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_0-9\x80-\u{FFFF}], [A-Za-z_\x80-\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but "," found. |
 | `1676` | `1676.dot` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_\x80-\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but "," found. |
-| `2646` | `2646.dot` | Maximum call stack size exceeded |
 
 ## timeout (0)
 
@@ -136,7 +135,7 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 84 | `1213-1`, `1213-2`, `1332` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 85 | `1213-1`, `1213-2`, `1332` | edge path has a different command sequence or point count — spline routing structure |
 | `element-count` | 37 | `1323`, `1323_1`, `1367` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `attr-or-tag` | 5 | `1453`, `2592`, `42` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
@@ -147,5 +146,4 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
 | `parser-gap` | 5 | `1308_1`, `1474`, `1489` | peggy parser rejects DOT the native parser accepts — parser-gap backlog |
-| `maximum-call-stack-size-exceeded` | 1 | `2646` | port threw — see message; group for a focused fix |
 

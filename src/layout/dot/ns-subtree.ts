@@ -260,18 +260,31 @@ export function stExtractMin(heap: STheap): Subtree {
 // treeAdjust / mergeTrees
 // ---------------------------------------------------------------------------
 
-/** @see lib/common/ns.c:tree_adjust */
+/**
+ * Add `delta` to ND_rank of every node in the tight tree reachable from `v`
+ * (the parent back-edge to `from` excluded). C's `tree_adjust` is a recursive
+ * DFS; the tight tree is acyclic, so each node is visited exactly once and the
+ * mutation (`rank += delta`) is order-independent. Ported with an explicit
+ * stack instead of recursion: deep trees (e.g. corpus 2646, a 7-deep quadtree
+ * with thousands of nodes) overflow the JS call stack where C's larger native
+ * stack does not. Outcome is byte-identical to the recursive form.
+ * @see lib/common/ns.c:tree_adjust
+ */
 export function treeAdjust(v: Node, from: Node | undefined, delta: number): void {
-  v.info.rank = (v.info.rank ?? 0) + delta;
-  const ti = v.info.tree_in;
-  if (ti) for (let i = 0; i < ti.size; i++) {
-    const w = ti.list[i].tail;
-    if (w !== from) treeAdjust(w, v, delta);
-  }
-  const to = v.info.tree_out;
-  if (to) for (let i = 0; i < to.size; i++) {
-    const w = to.list[i].head;
-    if (w !== from) treeAdjust(w, v, delta);
+  const stack: Array<[Node, Node | undefined]> = [[v, from]];
+  while (stack.length > 0) {
+    const [n, f] = stack.pop()!;
+    n.info.rank = (n.info.rank ?? 0) + delta;
+    const ti = n.info.tree_in;
+    if (ti) for (let i = 0; i < ti.size; i++) {
+      const w = ti.list[i].tail;
+      if (w !== f) stack.push([w, n]);
+    }
+    const to = n.info.tree_out;
+    if (to) for (let i = 0; i < to.size; i++) {
+      const w = to.list[i].head;
+      if (w !== f) stack.push([w, n]);
+    }
   }
 }
 

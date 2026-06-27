@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-26T20:36:30.841Z",
+  "generatedAt": "2026-06-26T23:43:18.217Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -7,8 +7,8 @@
   "counts": {
     "byte-match": 429,
     "structural-match": 230,
-    "diverged": 118,
-    "errored": 6,
+    "diverged": 119,
+    "errored": 5,
     "timeout": 0,
     "oracle-error": 12
   },
@@ -884,8 +884,9 @@
     {
       "id": "2646",
       "path": "2646.dot",
-      "verdict": "errored",
-      "errMsg": "Maximum call stack size exceeded"
+      "verdict": "diverged",
+      "maxDelta": 114,
+      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
     },
     {
       "id": "2669",
