@@ -6,4 +6,4 @@ baseline. Depends on T2 + T3.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T4 | survey vs headless 15.1.0 (fresh cache); verify 2458 match + 0 regressions; comparison page; refresh parity.json + PARITY.md | (inline / general) | `plans/fix-pack-dot-2458/comparisons/T4-survey-verify.md`, `test/corpus/parity.json`, `test/corpus/PARITY.md` | T2, T3 | [ ] |
+| T4 | survey vs headless 15.1.0 (fresh cache); verify 2458 match + 0 regressions; comparison page; refresh parity.json + PARITY.md | (inline / general) | `plans/fix-pack-dot-2458/comparisons/T4-survey-verify.md`, `test/corpus/parity.json`, `test/corpus/PARITY.md` | T2, T3 | [x] (T2 scope; T3 deferred) |

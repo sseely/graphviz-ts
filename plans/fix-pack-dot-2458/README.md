@@ -67,7 +67,7 @@ IDs are referenced in the decision journal).
 | 1 | [T1 — Investigate pack wiring + cluster oracle](batch-1/T1-investigate.md) | [x] |
 | 2 | [T2 — Core doDot + per-component pack + 2458 (TDD)](batch-2/T2-core-pack.md) | [x] |
 | 3 | [T3 — copyClusterInfo + cluster-carry (TDD)](batch-3/T3-clusters.md) | [ ] HALTED — scope (see journal) |
-| 4 | [T4 — Survey verify + baseline refresh](batch-4/T4-survey-verify.md) | [ ] pending T3 decision |
+| 4 | [T4 — Survey verify + baseline refresh](batch-4/T4-survey-verify.md) | [x] (T2 scope) |
 
 ## Status (2026-06-27)
 
