@@ -78,13 +78,18 @@ boundary for a scope decision (see decision-journal T3 row).
 - **T2** ✓ — `doDot` pack branch (cluster-free path). **2458 diverged (maxΔ=74.8)
   → BYTE-MATCH** vs headless 15.1.0; **2682 bonus improvement**; **0 regressions**
   (gate: stable=672, improvements=2). tsc clean, full vitest green (2458 tests).
-- **T3** ⛔ HALTED — the cluster oracle 2592 proves cluster nodes span the port's
-  connected components, so T3 requires porting C's cluster-aware `cccomps`
-  (`deriveGraph`+`projectG`+`copyClusterInfo`) — a substantial subsystem port that
-  risks out-of-write-set edits and regressing the green gate. Recommend a dedicated
-  derisk mission. Clustered multi-component graphs currently fall back to whole-graph
-  layout (T2 guard `graphHasCluster`), so they are unchanged from baseline (no
-  regression). T4 (baseline refresh) pends this decision.
+- **T3** ⛔ HALTED (attempted, reverted to green T2) — the cluster-carry itself was
+  implemented dot-locally (cccompsWithClusters + projectG + copyClusterInfo,
+  tsc-clean, 2458 stayed byte-match), but laying out a clustered component crashes
+  in the **cluster mincross core** via a cascade of component-vs-root assumptions
+  (`rank.ts:expandRanksets` `g===g.root` vs C's `dot_root`; then
+  `cluster.ts:mergeRanks`/`cluster-path.ts:makeSlots` root-rank indexing; likely
+  more). Those are out-of-write-set edits in the most regression-prone subsystem —
+  a dedicated derisk effort. Reverted source to the committed T2 state; gate GREEN;
+  clustered graphs fall back via the `graphHasCluster` guard (no crash/regression).
+  Full cascade map + cluster-carry approach are in the decision journal; oracle
+  goldens kept at `test/golden/{inputs,refs}/pack-clusters-2592.*`. T4 (baseline
+  refresh) pends this decision.
 
 ## Index
 

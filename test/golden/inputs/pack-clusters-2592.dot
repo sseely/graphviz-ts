@@ -1,0 +1,97 @@
+digraph {
+    graph [TBbalance=min,
+        bgcolor=transparent,
+        compound=true,
+        fontname=Arial,
+        fontsize=15,
+        forcelabels=true,
+        labeljust=l,
+        labelloc=t,
+        layout=dot,
+        nodesep=1.389,
+        outputorder=nodesfirst,
+        pack=100,
+        packmode=array_3,
+        pad=0.209,
+        rankdir=TB,
+        ranksep=1.528,
+        splines=spline
+    ];
+    node [fontname=Arial,
+        height=2.5,
+        nojustify=true,
+        penwidth=0,
+        shape=rect,
+        style=filled,
+        width=4.445
+    ];
+    edge [arrowsize=0.75,
+        color="#6E6E6E",
+        fontcolor="#C6C6C6",
+        fontname=Arial,
+        fontsize=14,
+        nojustify=true,
+        penwidth=2
+    ];
+    subgraph cluster_b1 {
+        graph [color="#1b3d88",
+            fillcolor="#194b9e",
+            label=<<FONT POINT-SIZE="11" COLOR="#bfdbfeb3"><B>B1</B></FONT>>,
+            margin=32,
+            style=filled
+        ];
+        {
+            graph [rank=same];
+            b12 [color="#2563eb",
+                fillcolor="#3b82f6",
+                fontcolor="#eff6ff",
+                label=<<FONT POINT-SIZE="19">b12</FONT>>,
+                margin="0.362,0.362"];
+            b11 [color="#2563eb",
+                fillcolor="#3b82f6",
+                fontcolor="#eff6ff",
+                label=<<FONT POINT-SIZE="19">b11</FONT>>,
+                margin="0.362,0.362"];
+        }
+    }
+    subgraph cluster_b2 {
+        graph [color="#1b3d88",
+            fillcolor="#194b9e",
+            label=<<FONT POINT-SIZE="11" COLOR="#bfdbfeb3"><B>B2</B></FONT>>,
+            margin=32,
+            style=filled
+        ];
+        {
+            graph [rank=same];
+            b22 [color="#2563eb",
+                fillcolor="#3b82f6",
+                fontcolor="#eff6ff",
+                label=<<FONT POINT-SIZE="19">b22</FONT>>,
+                margin="0.362,0.362"];
+            b21 [color="#2563eb",
+                fillcolor="#3b82f6",
+                fontcolor="#eff6ff",
+                label=<<FONT POINT-SIZE="19">b21</FONT>>,
+                margin="0.362,0.362"];
+        }
+    }
+    a1 [color="#2563eb",
+        fillcolor="#3b82f6",
+        fontcolor="#eff6ff",
+        label=<<FONT POINT-SIZE="19">a1</FONT>>,
+        margin="0.362,0.362"];
+    a2 [color="#2563eb",
+        fillcolor="#3b82f6",
+        fontcolor="#eff6ff",
+        label=<<FONT POINT-SIZE="19">a2</FONT>>,
+        margin="0.362,0.362"];
+    a1 -> a2 [label=<<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" BGCOLOR="#18191bA0"><TR><TD ALIGN="TEXT" BALIGN="LEFT"><FONT POINT-SIZE="14">comment included</FONT></TD></TR></TABLE>>,
+        minlen=0,
+        style=dashed];
+    b12 -> b21 [style=invis];
+    b11 -> b22 [lhead=cluster_b2,
+        ltail=cluster_b1,
+        style=dashed,
+        xlabel=<<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" BGCOLOR="#18191bA0"><TR><TD ALIGN="TEXT" BALIGN="LEFT"><FONT POINT-SIZE="14">comment not included</FONT></TD></TR></TABLE>>];
+}
+
