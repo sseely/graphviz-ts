@@ -155,9 +155,27 @@ function slug(relPath: string): string {
  *   canvas from a nonsense `minlen=283647`; the survey reports maxDelta 5572860,
  *   a single offset element at that astronomical scale. Sub-pixel parity is
  *   meaningless, so it is left as poorly-formed rather than chased.
+ *
+ * - `1308_1.dot`, `1474.dot`, `1489.dot`, `1494.dot`, `1676.dot` — `malformed`:
+ *   oss-fuzz adversarial inputs (random bytes, HTML-injection payloads, NEL line
+ *   terminators, invalid UTF-8). Native dot renders them ONLY via two permissive
+ *   lex/yacc behaviours: (1) `scan.l` lets a NUMBER absorb one trailing letter
+ *   then `chkNum`+`yyless` splits a badly-delimited token like `1d0`/`-8p`/`0n`
+ *   into two atoms; (2) the yacc parser RECOVERS from syntax errors mid-graph
+ *   and renders the partial result (each emits "syntax error near …" yet still
+ *   produces SVG). The port's PEG grammar (`dot.pegjs`) is the spec and has no
+ *   yacc-style error recovery; it legitimately rejects out-of-grammar input.
+ *   Decision (2026-06): the grammar is authoritative — do NOT replicate yacc's
+ *   permissive recovery to match garbage output for adversarial fuzz. Quarantine
+ *   as malformed, mirroring the `2782.dot` precedent.
  */
 const MANUAL_QUARANTINE: Record<string, QuarantineReason> = {
   '2782.dot': 'malformed',
+  '1308_1.dot': 'malformed',
+  '1474.dot': 'malformed',
+  '1489.dot': 'malformed',
+  '1494.dot': 'malformed',
+  '1676.dot': 'malformed',
 };
 
 /** Build the manifest from the corpus root, ensuring unique ids. */

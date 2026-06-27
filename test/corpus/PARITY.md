@@ -10,10 +10,10 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 ## Summary
 
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
-- **Surveyed (applicable):** 795
-- **byte-match:** 372 · **structural-match:** 278 → 650/795 structurally equal (81.8%)
-- **diverged:** 129 · **errored:** 5 · **timeout:** 0 · **oracle-error:** 11
-- **Quarantined (not surveyed, from corpus-manifest.json):** engine-deferred 6, multi-graph 3, malformed 1
+- **Surveyed (applicable):** 790
+- **byte-match:** 372 · **structural-match:** 278 → 650/790 structurally equal (82.3%)
+- **diverged:** 129 · **errored:** 0 · **timeout:** 0 · **oracle-error:** 11
+- **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3
 
 ## byte-match (372)
 
@@ -93,15 +93,10 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 
 _… and 69 more diverged inputs (see parity.json + the buckets below)._
 
-## errored (5)
+## errored (0)
 
 | id | path | message |
 |---|---|---|
-| `1308_1` | `1308_1.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "}" found. |
-| `1474` | `1474.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "L" found. |
-| `1489` | `1489.dot` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "õ" found. |
-| `1494` | `1494.dot` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_0-9\x80-\u{FFFF}], [A-Za-z_\x80-\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but "," found. |
-| `1676` | `1676.dot` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_\x80-\u{FFFF}], [Ee], [Gg], [Nn], [Ss], or edge operator but "," found. |
 
 ## timeout (0)
 
@@ -141,9 +136,4 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
 | `color-stroke` | 1 | `2184` | fill/stroke value differs — color resolution or default styling |
 
-### errored — by thrown message
-
-| bucket | count | examples | hypothesis |
-|---|---:|---|---|
-| `parser-gap` | 5 | `1308_1`, `1474`, `1489` | peggy parser rejects DOT the native parser accepts — parser-gap backlog |
 

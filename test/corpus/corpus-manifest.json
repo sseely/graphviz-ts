@@ -33,7 +33,8 @@
     "id": "1308_1",
     "path": "1308_1.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "malformed"
   },
   {
     "id": "1314",
@@ -166,19 +167,22 @@
     "id": "1474",
     "path": "1474.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "malformed"
   },
   {
     "id": "1489",
     "path": "1489.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "malformed"
   },
   {
     "id": "1494",
     "path": "1494.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "malformed"
   },
   {
     "id": "1514",
@@ -293,7 +297,8 @@
     "id": "1676",
     "path": "1676.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "malformed"
   },
   {
     "id": "1702",
