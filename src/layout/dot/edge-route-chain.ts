@@ -16,24 +16,14 @@ import type { Edge as GraphEdge } from '../../model/edge.js';
 import type { Point, Box } from '../../model/geom.js';
 import type { Node } from '../../model/node.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
-import { normalizeVec, negateVec } from './edge-route-geom.js';
 import type { NodeBox } from './edge-route-geom.js';
-import { arrowDrawOpsForEnd, edgeArrowName, edgeArrowsize } from './edge-route-arrow.js';
-import {
-  bezierClipNode, arrowEndClip, tailArrowEndClip, arrowClipLength,
-} from './edge-route-clip.js';
-import { nodeInsideFn } from './edge-route-routing.js';
 import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
-import {
-  edgeRenderPenwidth, edgePenwidthAttr,
-  installEdgeSpline, defaultEdgeDir,
-} from './edge-route-helpers.js';
 import type { Path, PathendT } from '../../common/types.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
 import { routeRegularByType } from './splines-route-type.js';
-import { edgeType, EDGETYPE_LINE, getMainEdge } from './splines.js';
+import { edgeType, EDGETYPE_LINE, getMainEdge, swapEndsP, swapSpline } from './splines.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
@@ -345,81 +335,9 @@ function recoverSlack(segs: GraphEdge[], P: Path): void {
 }
 
 // ---------------------------------------------------------------------------
-// Compound bezier clipping
-// ---------------------------------------------------------------------------
-
-/** Clip first 4 pts of a compound bezier to tailBox. */
-export function clipCompoundTail(pts: Point[], box: NodeBox): Point[] {
-  const first4 = [pts[0]!, pts[1]!, pts[2]!, pts[3]!];
-  const clipped = bezierClipNode(first4, box.center.x, box.center.y, nodeInsideFn(box), true);
-  return [...clipped, ...pts.slice(4)];
-}
-
-/** Clip last 4 pts of a compound bezier to headBox. */
-export function clipCompoundHead(pts: Point[], box: NodeBox): Point[] {
-  const n = pts.length;
-  const last4 = [pts[n - 4]!, pts[n - 3]!, pts[n - 2]!, pts[n - 1]!];
-  const clipped = bezierClipNode(last4, box.center.x, box.center.y, nodeInsideFn(box), false);
-  return [...pts.slice(0, n - 4), ...clipped];
-}
-
-function arrowEndClipMulti(pts: Point[], arrowTip: Point, elen: number): Point[] {
-  if (pts.length <= 4) return arrowEndClip(pts, arrowTip, elen);
-  const n = pts.length;
-  const last4 = [pts[n - 4]!, pts[n - 3]!, pts[n - 2]!, pts[n - 1]!];
-  return [...pts.slice(0, n - 4), ...arrowEndClip(last4, arrowTip, elen)];
-}
-
-function tailArrowEndClipMulti(pts: Point[], tailTip: Point, elen: number): Point[] {
-  if (pts.length <= 4) return tailArrowEndClip(pts, tailTip, elen);
-  const first4 = [pts[0]!, pts[1]!, pts[2]!, pts[3]!];
-  return [...tailArrowEndClip(first4, tailTip, elen), ...pts.slice(4)];
-}
-
-// ---------------------------------------------------------------------------
 // Back-edge routing
 // @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag back-edge path)
 // ---------------------------------------------------------------------------
-
-function applyBackEdgeArrows(
-  e: GraphEdge, rev: Point[], arrowTip: Point, arrowDir: Point, dirAttr: string,
-): void {
-  const pw = edgeRenderPenwidth(e);
-  const pwAttr = edgePenwidthAttr(e);
-  const size = edgeArrowsize(e);
-  const wantHead = dirAttr === 'forward' || dirAttr === 'both';
-  const wantTail = dirAttr === 'back' || dirAttr === 'both';
-  let pts = rev;
-  if (wantTail) {
-    const tailTip = pts[0] as Point;
-    e.info.tailArrowOps = arrowDrawOpsForEnd(e, 'tail', tailTip, negateVec(arrowDir), pw);
-    const tlen = arrowClipLength(edgeArrowName(e, 'tail'), size, pwAttr);
-    pts = tailArrowEndClipMulti(pts, tailTip, tlen);
-  }
-  if (wantHead) {
-    const hlen = arrowClipLength(edgeArrowName(e, 'head'), size, pwAttr);
-    pts = arrowEndClipMulti(pts, arrowTip, hlen);
-    const arrowbase = pts[pts.length - 1] as Point;
-    const headDir = normalizeVec({ x: arrowbase.x - arrowTip.x, y: arrowbase.y - arrowTip.y });
-    e.info.headArrowOps = arrowDrawOpsForEnd(e, 'head', arrowTip, headDir, pw);
-  }
-  installEdgeSpline(e, pts, arrowTip);
-}
-
-/** Reverse and clip chain spline for a back-edge, return [clipped, arrowTip, arrowDir]. */
-function reverseClipBackChain(
-  fwd: Point[], tailBox: NodeBox, headBox: NodeBox,
-): { clipped: Point[]; arrowTip: Point; arrowDir: Point } {
-  const rev = fwd.slice().reverse();
-  const clipped = clipCompoundHead(clipCompoundTail(rev, tailBox), headBox);
-  const n = clipped.length;
-  const arrowTip = clipped[n - 1] as Point;
-  const arrowDir = normalizeVec({
-    x: (clipped[n - 2] as Point).x - arrowTip.x,
-    y: (clipped[n - 2] as Point).y - arrowTip.y,
-  });
-  return { clipped, arrowTip, arrowDir };
-}
 
 /**
  * Virtual-chain segments of a multi-rank back edge in low-rank → high-rank
@@ -470,31 +388,26 @@ export function makeFwdEdge(e: GraphEdge): GraphEdge {
   } as GraphEdge;
 }
 
-/**
- * Forward-geometry chain spline for a multi-rank back edge (low→high rank
- * order, i.e. e.head → e.tail), or null when it cannot be assembled. A back
- * edge is the forward edge with swapped ends (C makefwdedge); the caller
- * reverses + clips. @see lib/dotgen/dotsplines.c:make_regular_edge (BWDEDGE)
- */
-function faithfulBackFwdPoints(g: Graph, e: GraphEdge): Point[] | null {
-  const segs = backChainSegments(e);
-  if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return null;
-  // Shares routeChainSegmented (C runs make_regular_edge on the makefwdedge view),
-  // so back edges now also get smode segmentation and per-segment recover_slack.
-  return routeChainSegmented(g, makeFwdEdge(e), segs);
-}
 
 /**
- * Route a multi-rank back-edge via its virtual node chain: route the forward
- * geometry faithfully (make_regular_edge over the reversed chain) then reverse
- * + clip. Leaves the edge unrouted only if the faithful path cannot assemble
- * the chain (it always can for a real multi-rank back edge).
- * @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag back-edge path)
+ * Route a multi-rank back-edge via its virtual node chain, mirroring C exactly:
+ * make_regular_edge routes the makefwdedge (forward) view, clip_and_install
+ * clips THAT forward spline, and the spline is reversed afterward (swapSpline).
+ *
+ * Clipping the forward (un-reversed) spline is load-bearing: bezier_clip bisects
+ * each node end from the same direction C does. The previous reverse-then-clip
+ * path clipped the head node as a tail (bisecting the degenerate spline from the
+ * opposite parameter end), landing the 0.5-tolerance crossing ~0.26-0.33 off
+ * (1644, dfa family). clipAndInstall resolves the spline onto `e` via the
+ * fwdEdge's to_orig and gates arrows by ED_dir, so this also drops the bespoke
+ * reverse/arrow code. @see lib/dotgen/dotsplines.c:make_regular_edge (hackflag)
  */
-export function routeBackEdge(e: GraphEdge, tailBox: NodeBox, headBox: NodeBox, g: Graph): void {
-  const dirAttr = e.attrs.get('dir') ?? defaultEdgeDir(g);
-  const fwd = faithfulBackFwdPoints(g, e);
+export function routeBackEdge(e: GraphEdge, _tailBox: NodeBox, _headBox: NodeBox, g: Graph): void {
+  const segs = backChainSegments(e);
+  if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return;
+  const fwdEdge = makeFwdEdge(e);
+  const fwd = routeChainSegmented(g, fwdEdge, segs);
   if (fwd === null) return;
-  const { clipped, arrowTip, arrowDir } = reverseClipBackChain(fwd, tailBox, headBox);
-  applyBackEdgeArrows(e, clipped, arrowTip, arrowDir, dirAttr);
+  clipAndInstall(fwdEdge, fwdEdge.head, fwd, fwd.length, buildDotSinfo());
+  if (swapEndsP(e) && e.info.spl !== undefined) swapSpline(e.info.spl);
 }

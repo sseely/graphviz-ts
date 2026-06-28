@@ -132,3 +132,25 @@ penwidth, control points, pre-clip Y) is now ruled out or matches.
   will explain the 0.26. Until then the cause is genuinely unexplained.
 - This whole class is ≤0.33px on ~5 graphs; effort spent here is already very high
   relative to impact. Recommend pausing unless the step-diff is explicitly wanted.
+
+## SOLVED (2026-06-28) — clip the FORWARD spline + swapSpline, don't reverse-then-clip
+
+Step-level clip dump found it: the port REVERSED the chain before clipping, so it
+clipped each node's boundary as a TAIL (bezier_clip bisecting the degenerate
+spline from t=0). C clips the FORWARD (un-reversed) spline — the head node is
+clipped as a HEAD (bisecting from t=1). On the degenerate (p0,p0,p3,p3) spline the
+0.5-tolerance bisection from opposite parameter ends lands ~0.26-0.33 apart (both
+within tolerance, both valid — just different).
+
+FIX (routeBackEdge, edge-route-chain.ts): mirror routeFaithfulAdjacentBack —
+route the makefwdedge chain, clipAndInstall(fwdEdge, fwdEdge.head, fwd) on the
+FORWARD spline (resolves onto e via fwdEdge.to_orig + gates arrows by ED_dir),
+then swapSpline(e) for back-edge orientation. Dropped the bespoke
+reverseClipBackChain / applyBackEdgeArrows / clipCompoundTail/Head /
+faithfulBackFwdPoints (all dead).
+
+RESULT: 10 graphs structural-match → BYTE-MATCH (dfa + triedds families, 1644,
+1328, graphs-ER), 0 regressions, gate clean. byte-match 476→486.
+NOTE: the earlier clipAndInstall refactor attempt failed because it reversed the
+pts AND installed on e (not fwdEdge) without swapSpline — the orientation, not
+the clip stack, was the issue.

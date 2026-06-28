@@ -90,7 +90,6 @@ export {
   routeBezier, straightEdgeSplineWithRank,
 } from './edge-route-helpers.js';
 export {
-  clipCompoundTail, clipCompoundHead,
   routeBackEdge,
 } from './edge-route-chain.js';
 
