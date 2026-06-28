@@ -83,3 +83,29 @@ Findings for dfa n1->start (the straight back edge, pn=4):
   The divergence is in where the 0.5-tolerance bisection lands or the inside-test
   (penwidth/ellipse) — a sub-pixel clip-iteration mismatch. Deferred: deep, and
   this whole class is ≤0.33 on ~5 graphs.
+
+## Leading hypothesis after full investigation (2026-06-28) — clip PARAMETERIZATION
+
+Ruled out this session:
+- clipAndInstall refactor for back edges: REJECTED. 1644 byte-identical (no help);
+  dfa WORSE (0.33→50.9) — clipAndInstall's arrow clip assumes forward orientation,
+  the back-edge reversal breaks directed-edge arrow geometry.
+- penwidth inside-test: NOT it. Both port (makeEllipseInsideFn) and C use ry+pw/2
+  (~569.3 boundary for n1). Port lands 568.95, oracle 569.21 — BOTH within the
+  0.5 bezier_clip tolerance of 569.3, just at different t.
+
+LEADING CAUSE: the port's pre-clip back-edge spline is a DEGENERATE bezier with
+control points doubled at the endpoints — (p0,p0,p3,p3) = (105,638.6)(105,638.6)
+(105,551.8)(105,551.8). bezier_clip bisects in parameter t and evaluates position;
+a degenerate (p0,p0,p3,p3) parameterization traverses the straight line at a
+different speed than an interpolated (p0, 1/3, 2/3, p3) one, so the 0.5-tolerance
+bisection lands the boundary crossing at a different y → the 0.03-0.33. C likely
+builds the straight back-edge spline with interpolated control points.
+- NEXT (port-side testable): find where routeChainSegmented / the straightened
+  back-edge spline emits the degenerate (p0,p0,p3,p3) control points; try
+  interpolated (linearBezier 1/3,2/3) and see if the clip lands match oracle.
+  Confirm C's middle control points by re-instrumenting (dump all 4 pre-clip pts,
+  not just first/last).
+- STATUS: deep sub-pixel frontier, ≤0.33px on ~5 graphs (1644 + dfa family).
+  Checkpointed; not blocking. Both clip stacks + C agree on Y; only the t-landing
+  differs.
