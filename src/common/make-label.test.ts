@@ -125,14 +125,14 @@ describe('makeAnyLabel — HTML parse failure fallback', () => {
     expect(result.u.kind).toBe('txt');
   });
 
-  it('fallback preserves the markup text (port keeps markup; C uses object name)', () => {
-    // C uses nameOf(obj) because it has an object context; the port has no
-    // object so it keeps the markup text in lp->text, matching makeHtmlLabel's
-    // existing fallback behavior.
-    // @see lib/common/htmltable.c:make_html_label line 1894
+  it('HTML parse failure yields an empty label (C YYABORT leaves it empty)', () => {
+    // C aborts the HTML parse on a syntax error and leaves the label EMPTY — it
+    // does NOT fall back to the raw markup. Verified against native dot: both a
+    // text-before-<TABLE> error and a mismatched-tag error render a node with no
+    // <text> element. @see lib/common/htmlparse.y (cleanup + YYABORT)
     const badHtml = '<unclosed';
     const result = makeAnyLabel(badHtml, true, ARIAL, stubMeasurer);
-    expect(result.text).toBe(badHtml);
+    expect(result.text).toBe('');
   });
 });
 

@@ -464,7 +464,10 @@ export function makeHtmlLabel(
   try {
     lbl = parseHtmlLabel(content);
   } catch {
-    return makeLabel(content, fontname, fontsize, fontcolor, measurer);
+    // C aborts the HTML parse on a syntax error (YYABORT) and leaves the label
+    // EMPTY — it does not fall back to rendering the raw markup as plain text.
+    // @see lib/common/htmlparse.y (cleanup + YYABORT), htmllex.c htmlerror
+    return makeLabel('', fontname, fontsize, fontcolor, measurer);
   }
   sizeHtmlLabel(lbl, measurer, {
     fontsize, fontname, imageSizer,

@@ -518,6 +518,14 @@ export const parseHtmlLabel = (src: string): HtmlLabel => {
   const txt = parseText(s, fontStack);
   if (txt.items.length > 0) texts.push(txt);
   const nxt = peek(s);
+  // C's `table` rule aborts the whole label when non-space text precedes a
+  // top-level <TABLE> ("Syntax error: non-space string used before <TABLE>").
+  // parseText stopped at the <TABLE>; reaching it here means there was leading
+  // non-space text, so reject the label rather than leniently dropping the table.
+  // @see lib/common/htmlparse.y:288 (table rule nonSpace check)
+  if (nxt?.type === 'open' && nxt.tag === 'TABLE') {
+    throw new HtmlParseError('non-space string used before <TABLE>');
+  }
   if (nxt?.type === 'close' && nxt.tag === 'HTML') consume(s);
   return { kind: 'text', texts };
 };
