@@ -5,9 +5,9 @@
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 454,
-    "structural-match": 227,
-    "diverged": 98,
+    "byte-match": 455,
+    "structural-match": 228,
+    "diverged": 96,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
