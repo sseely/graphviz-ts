@@ -98,3 +98,48 @@ Instrumented C `edge_in_box` (emit.c) + `map_edge` (postproc.c). Definitive:
 - **C-instrument recipe (emit/postproc)**: printf in `edge_in_box` (emit.c,
   label pos + clip) gated by strcmp on the pair; `make -C ~/git/graphviz/build
   dot` (relinks libcommon); EDBG=1. Revert + rebuild after.
+
+## UPDATE 2 — the origin gap is the x-NETWORK-SIMPLEX ABSOLUTE ANCHOR (pivot order)
+
+Instrumented C `set_xcoords` to dump every node's x-aux NS rank (=ND_coord.x)
+for 2368_1, vs the port (XORG probe before gvPostprocess):
+
+| node | C xrank | port xrank | diff |
+|------|--------:|-----------:|-----:|
+| 376  |   -119  |     27     | 146  |
+| 196  |    -29  |    117     | 146  |
+| 256  |     43  |    189     | 146  |
+| 316  |    115  |    261     | 146  |
+| 76   |    205  |    351     | 146  |
+
+PERFECTLY UNIFORM +146 shift (2368: +228). The RELATIVE solution is identical
+(byte-match final); only the absolute anchor differs. Facts:
+- x-coords come from `rank(g, 2, …)` (NS balance=2 = LR_balance, which does NOT
+  `scan_and_normalize` — so coords are left un-normalized and CAN be negative).
+  The port's `rank2Balance` matches C exactly (balance 2 → lrBalance, no
+  normalize). `set_xcoords` = `coord.x = ND_rank(v)` in BOTH (no normalize). So
+  it's purely the NS-produced absolute value.
+- `init_rank` is byte-identical (BFS from priority-0, longest-path) and produces
+  NON-negative ranks. The negative anchor (-119, -120 slack) emerges from the
+  simplex iterations + `LR_balance` reranks, whose subtree shifts depend on the
+  NS pivot order (nlist + in/out edge-list iteration driving
+  leave_edge/enter_edge). C's pivot sequence anchors 146 lower than the port's.
+- C's x-aux graph also has SLACK (type 2) + VIRTUAL (type 1) nodes interleaved;
+  C's leftmost is a slack at -120 (left of real 376 at -119). bb.LL is from real
+  nodes only (376 left-edge -146 in C, 0 in port).
+
+**Foundational fix = bit-exact replication of C's x-NS pivot order** so the port
+lands on C's absolute anchor. Because the shift is uniform, an equivalent is to
+translate the port's whole internal x-frame by the (graph-specific) shift BEFORE
+gvPostprocess — final coords stay identical (bb.LL shifts too), and the
+untranslated degenerate labels then land in C's frame. BUT the shift amount
+(146/228) is an emergent NS property the port cannot derive without reproducing
+C's pivot sequence. This is a large, fragile change with blast radius over all
+490 byte-match graphs (every graph's internal x-frame), for the reward of a few
+degenerate-label edge cases — the relative layout is already perfect.
+
+**Status**: foundational root cause fully isolated (instrumented end to end);
+NOT landed. The fix is a dedicated NS-pivot-replication project (instrument both
+NS pivot sequences, find the nlist/edge-order divergence, align, full survey per
+iteration), not a single-session change. Recommend allowlisting 2368 unless/until
+that project is undertaken.
