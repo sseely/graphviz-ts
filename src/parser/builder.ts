@@ -312,9 +312,15 @@ export class StmtProcessor {
       // when the set lists pre-existing nodes out of creation order (graphs-world
       // `37 -> {39;41;38;40}`: heads 38,40,39,41 by AGSEQ, not 39,41,38,40).
       // @see lib/cgraph/edge.c:agedge — edges follow agfstnode/agnxtnode order
-      const nodes = NameCollector.fromStmts(item.stmts).map(
-        (n) => this.registry.ensure(n, root, scope),
-      );
+      // Dedup by node identity: a name appearing in several statements of the
+      // endpoint subgraph (e.g. a1 in both `a1->a2` and `b2->a1`) is ONE member
+      // in cgraph's node dictionary, so `subg -> x` expands to a single a1->x —
+      // not one per textual occurrence (1902 drew a1->a3 twice).
+      // @see lib/cgraph/edge.c:agedge (walks agfstnode/agnxtnode — unique nodes)
+      const seen = new Set<number>();
+      const nodes = NameCollector.fromStmts(item.stmts)
+        .map((n) => this.registry.ensure(n, root, scope))
+        .filter((nd) => (seen.has(nd.id) ? false : (seen.add(nd.id), true)));
       return nodes.sort((a, b) => a.id - b.id);
     }
     return [this.registry.ensure((item as NodeId).id, root, scope)];

@@ -130,8 +130,8 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 70 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
-| `element-count` | 18 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
+| `path-structure` | 72 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
+| `element-count` | 16 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `attr-or-tag` | 2 | `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
 | `text-content` | 1 | `1879` | rendered text string differs — label content, escaping, or character encoding |

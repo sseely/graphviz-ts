@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-28T17:28:30.425Z",
+  "generatedAt": "2026-06-28T18:01:27.278Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -344,8 +344,8 @@
       "id": "1902",
       "path": "1902.dot",
       "verdict": "diverged",
-      "maxDelta": 64,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "maxDelta": 172,
+      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
     },
     {
       "id": "1909",
@@ -1597,7 +1597,7 @@
       "path": "graphs/japanese.gv",
       "verdict": "diverged",
       "maxDelta": 144,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
     },
     {
       "id": "graphs-jcctree",
