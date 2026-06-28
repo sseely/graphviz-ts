@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-28T12:23:28.452Z",
+  "generatedAt": "2026-06-28T13:32:59.440Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 455,
-    "structural-match": 228,
+    "byte-match": 476,
+    "structural-match": 207,
     "diverged": 96,
     "errored": 0,
     "timeout": 0,
@@ -411,8 +411,7 @@
     {
       "id": "2108",
       "path": "2108.dot",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "byte-match"
     },
     {
       "id": "2159",
@@ -843,8 +842,7 @@
     {
       "id": "2669",
       "path": "2669.dot",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000005116
+      "verdict": "byte-match"
     },
     {
       "id": "2682",
@@ -1064,8 +1062,7 @@
     {
       "id": "graphs-awilliams",
       "path": "graphs/awilliams.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b",
@@ -1299,14 +1296,12 @@
     {
       "id": "graphs-b80",
       "path": "graphs/b80.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000005116
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b80a",
       "path": "graphs/b80a.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000005116
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b81",
@@ -1486,8 +1481,7 @@
     {
       "id": "graphs-fig6",
       "path": "graphs/fig6.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000019327
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-flatedge",
@@ -1504,8 +1498,7 @@
     {
       "id": "graphs-grammar",
       "path": "graphs/grammar.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000019327
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-grdangles",
@@ -1922,20 +1915,17 @@
     {
       "id": "graphs-lsunix1",
       "path": "graphs/lsunix1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-lsunix2",
       "path": "graphs/lsunix2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-lsunix3",
       "path": "graphs/lsunix3.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000019327
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-mike",
@@ -2317,8 +2307,7 @@
     {
       "id": "graphs-unix",
       "path": "graphs/unix.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-unix2",
@@ -2368,14 +2357,12 @@
     {
       "id": "graphs-viewport",
       "path": "graphs/viewport.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000218279
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-weight",
       "path": "graphs/weight.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-world",
@@ -2563,8 +2550,7 @@
     {
       "id": "linux.x86-rankdir_dot",
       "path": "linux.x86/rankdir_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-rankdir_dot1",
@@ -2616,8 +2602,7 @@
     {
       "id": "linux.x86-weight_dot",
       "path": "linux.x86/weight_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "macosx-arrows_dot",
@@ -2839,8 +2824,7 @@
     {
       "id": "nshare-weight_dot",
       "path": "nshare/weight_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "reference-test_reference-001.001",
@@ -3312,8 +3296,7 @@
     {
       "id": "share-fig6",
       "path": "share/fig6.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000019327
+      "verdict": "byte-match"
     },
     {
       "id": "share-flatedge",
@@ -3756,8 +3739,7 @@
     {
       "id": "share-unix",
       "path": "share/unix.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "share-unix2",
@@ -3926,8 +3908,7 @@
     {
       "id": "windows-fig6",
       "path": "windows/fig6.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000019327
+      "verdict": "byte-match"
     },
     {
       "id": "windows-fsm",
@@ -3938,8 +3919,7 @@
     {
       "id": "windows-grammar",
       "path": "windows/grammar.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000019327
+      "verdict": "byte-match"
     },
     {
       "id": "windows-hashtable",
@@ -4375,8 +4355,7 @@
     {
       "id": "windows-unix",
       "path": "windows/unix.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.010000000000104592
+      "verdict": "byte-match"
     },
     {
       "id": "windows-unix2",

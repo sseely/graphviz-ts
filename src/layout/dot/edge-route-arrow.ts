@@ -81,5 +81,7 @@ export function arrowDrawOpsForEnd(
   e: ArrowAttrEdge, end: 'head' | 'tail', tip: Point, dir: Point, penwidth: number,
 ): ArrowDrawOp[] {
   const comps = parseArrow(edgeArrowName(e, end)).map(resolveArrowType);
-  return arrowDrawOps(comps, tip, normalizeVec(dir), edgeArrowsize(e), penwidth);
+  // Pass the RAW direction (not normalized): componentU reproduces arrow_gen's
+  // EPSILON normalization, which is relative to the raw shaft magnitude.
+  return arrowDrawOps(comps, tip, dir, edgeArrowsize(e), penwidth);
 }

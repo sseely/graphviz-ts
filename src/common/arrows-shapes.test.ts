@@ -14,20 +14,25 @@ const op0 = (ops: ArrowDrawOp[]): ArrowDrawOp => ops[0];
 
 describe('dot/odot ellipse (G1 target)', () => {
   // Native dot rx=ry=4 (filled); odot fill="none". radius=lenfact*size*5.
+  // componentU reproduces arrow_gen's EPSILON normalization (.0001), so for the
+  // unit DIR used here the magnitudes carry an ~1e-8 epsilon offset and the
+  // axis-aligned shaft picks up an ~4e-4 perpendicular nudge (invisible at the
+  // 2-decimal SVG output). Tolerances reflect that rather than the pre-epsilon
+  // ideal. @see lib/common/arrows.c:arrow_gen
   it('AC1: dot → filled ellipse radius 4, center per C delta', () => {
     const op = op0(dispatchSimple(resolve('dot'), TIP, DIR, 1, 1).ops);
     if (op.kind !== 'ellipse') throw new Error('ellipse');
-    expect(op.rx).toBeCloseTo(4, 9);
-    expect(op.ry).toBeCloseTo(4, 9);
+    expect(op.rx).toBeCloseTo(4, 6);
+    expect(op.ry).toBeCloseTo(4, 6);
     expect(op.filled).toBe(true);
-    expect(op.center.x).toBeCloseTo(0, 9);
-    expect(op.center.y).toBeCloseTo(4.5, 9);
+    expect(op.center.x).toBeCloseTo(0, 3);
+    expect(op.center.y).toBeCloseTo(4.5, 6);
   });
   it('AC2: odot unfilled; arrowsize=2 → radius 8', () => {
     expect((op0(dispatchSimple(resolve('odot'), TIP, DIR, 1, 1).ops) as { filled: boolean }).filled).toBe(false);
     const big = op0(dispatchSimple(resolve('dot'), TIP, DIR, 2, 1).ops);
     if (big.kind !== 'ellipse') throw new Error('ellipse');
-    expect(big.rx).toBeCloseTo(8, 9);
+    expect(big.rx).toBeCloseTo(8, 6);
   });
 });
 

@@ -15,6 +15,9 @@ import {
   ARR_MOD_OPEN, ARR_MOD_LEFT, ARR_MOD_RIGHT,
 } from './arrows-constants.js';
 
+/** @see lib/common/arrows.c:#define EPSILON .0001 */
+const ARROW_EPSILON = 0.0001;
+
 // ---------------------------------------------------------------------------
 // pointf helpers (geomprocs.h add_pointf/sub_pointf/scale)
 // ---------------------------------------------------------------------------
@@ -60,19 +63,21 @@ export function axialProjection(phiSrc: Point, from: Point, to: Point, sign: num
 }
 
 /**
- * Shaft vector for one component: `dir` normalized to length
- * `ARROW_LENGTH * lenfact * arrowsize` (mirrors `arrow_gen` normalizing `u` to
- * ARROW_LENGTH, then `arrow_gen_type` scaling by `lenfact * arrowsize`).
+ * Shaft vector for one component, reproducing `arrow_gen`'s normalization of the
+ * RAW shaft vector exactly: `s = ARROW_LENGTH / (hypot(u) + EPSILON)`, then nudge
+ * each component by `±EPSILON`, then `arrow_gen_type` scales by `lenfact *
+ * arrowsize`. `dir` MUST be the raw (un-normalized) tip→base vector — its
+ * magnitude is load-bearing because the EPSILON terms are relative to it.
+ * Pre-normalizing `dir` to a unit vector shifts the result by ~one ULP at the
+ * 2-decimal output and breaks byte parity on arrowhead polygons.
  *
- * C's `arrow_gen` adds EPSILON only to guard a near-zero *raw shaft* vector
- * (length ≫ EPSILON for a real edge), so it is omitted here where `dir` is a
- * direction to normalize cleanly; the degenerate zero case is guarded.
+ * @see lib/common/arrows.c:arrow_gen, arrow_gen_type (EPSILON .0001)
  */
 export const componentU = (dir: Point, lenfact: number, arrowsize: number): Point => {
-  const len = Math.hypot(dir.x, dir.y);
-  if (len === 0) return { x: 0, y: 0 };
-  const s = (ARROW_LENGTH * lenfact * arrowsize) / len;
-  return { x: dir.x * s, y: dir.y * s };
+  const s = ARROW_LENGTH / (Math.hypot(dir.x, dir.y) + ARROW_EPSILON);
+  const ux = (dir.x + (dir.x >= 0 ? ARROW_EPSILON : -ARROW_EPSILON)) * s;
+  const uy = (dir.y + (dir.y >= 0 ? ARROW_EPSILON : -ARROW_EPSILON)) * s;
+  return { x: ux * lenfact * arrowsize, y: uy * lenfact * arrowsize };
 };
 
 /**
