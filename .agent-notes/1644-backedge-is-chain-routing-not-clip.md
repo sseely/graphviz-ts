@@ -109,3 +109,26 @@ builds the straight back-edge spline with interpolated control points.
 - STATUS: deep sub-pixel frontier, ≤0.33px on ~5 graphs (1644 + dfa family).
   Checkpointed; not blocking. Both clip stacks + C agree on Y; only the t-landing
   differs.
+
+## Control-point experiment DISPROVEN (2026-06-28)
+
+Re-instrumented C to dump ALL pre-clip points (not just first/last) for dfa's
+straight back edge. C pre-clip = (1.0,638.6)(1.0,638.6)(1.0,551.8)(1.0,551.8) —
+the SAME degenerate (p0,p0,p3,p3) structure as the port. So interpolated vs
+degenerate control points is NOT the cause. (C reverted + oracle restored.)
+
+CONFOUNDING STATE: C and port pre-clip splines are now structurally identical
+(degenerate, matching Y 638.6/551.8, each vertical through its own node-center x
+— C at x=1.00, port at x=105), same bezier_clip 0.5 tolerance, same ellipse+pw/2
+inside-test. By analysis the clip MUST land at the same y. Yet output differs
+(port 568.95 vs oracle 569.21, Δ0.26). Every hypothesis (clip stack, refactor,
+penwidth, control points, pre-clip Y) is now ruled out or matches.
+- The ONLY observable difference is the pre-clip x-frame (C 1.00 vs port 105),
+  which through-center clipping should make irrelevant to y.
+- DEFINITIVE NEXT EXPERIMENT (deep): step-level diff of the bisection — dump every
+  bezier_clip iteration (t, pt, inside?) for n1->start's tail clip in BOTH the
+  port (bezierClipLocal) and C (bezier_clip splines.c:120), on the identical
+  degenerate input, and find the first diverging step. That is the only thing that
+  will explain the 0.26. Until then the cause is genuinely unexplained.
+- This whole class is ≤0.33px on ~5 graphs; effort spent here is already very high
+  relative to impact. Recommend pausing unless the step-diff is explicitly wanted.
