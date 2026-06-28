@@ -313,6 +313,17 @@ export interface GraphInfo {
   has_flat_edges?: boolean;
 
   /**
+   * Parity correction for the rank-array renumbering done by `abomination`.
+   * C inserts a flat-label rank at index -1 (so real nodes keep their even rank
+   * index); this 0-based port instead shifts every `ND_rank` up by 1 (AD-2),
+   * which inverts the rank-index parity that `make_LR_constraints` uses to pick
+   * the LR separation (`sep[i & 1]`). Each shift increments this offset so
+   * `lrSep` can recover C's parity via `(rankIdx + abomShift) & 1`. 0 / unset
+   * means no abomination happened. @see lib/dotgen/flat.c:abomination
+   */
+  abomShift?: number;
+
+  /**
    * Show subdivision boxes for debugging; 0 means off.
    * @see lib/common/types.h:GD_showboxes
    */

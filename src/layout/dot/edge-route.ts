@@ -34,7 +34,7 @@ import {
   collectNonAdjacentFlatGroup, routeFlatEdgeGroupFaithful,
 } from './splines-flat-multi.js';
 import { makeFlatLabeledEdge, makeAdjFlatNoPortEdge } from './splines-flat-labeled.js';
-import { EDGETYPE_SPLINE, swapEndsP, swapSpline } from './splines.js';
+import { EDGETYPE_SPLINE, swapEndsP, swapSpline, getMainEdge } from './splines.js';
 import { FLATORDER } from './fastgr.js';
 import { IGNORED } from './rank.js';
 import { buildDotSinfo } from './self-loop.js';
@@ -443,6 +443,21 @@ export function routeLoneEdge(e: GraphEdge, g: Graph): void {
   // spline so emit draws only the representative. @see dotsplines.c:295
   const et = e.info.edge_type ?? 0;
   if (et === FLATORDER || et === IGNORED) return;
+  // A *labeled* flat edge merged into a same-rank representative (flat_rev:
+  // the cycle back-edge of an opposing flat pair `a->b`/`b->a`) draws nothing.
+  // C gathers it into ND_other, but because its label differs from the
+  // representative's, edgecmp's `ED_label(e0)!=ED_label(e1)` test breaks it into
+  // its own one-edge group, routed by make_flat_labeled_edge. There the label
+  // node resolves through `to_virt` to the representative's *tail* (a real node,
+  // not a deleted label vnode), so the spline boxes degenerate and routesplines
+  // returns no points — no spline is installed and the label is never drawn.
+  // An *unlabeled* merged edge instead shares the representative's null label,
+  // groups with it, and make_flat_edge routes every group member (both legs of
+  // an opposing pair are drawn), so it must NOT be skipped here.
+  // @see lib/dotgen/dotsplines.c:make_flat_edge / make_flat_labeled_edge,
+  //      lib/dotgen/mincross.c:flat_rev
+  if (e.tail.info.rank === e.head.info.rank
+      && e.info.label !== undefined && getMainEdge(e) !== e) return;
   if (e.tail === e.head) return;
   if (!hasValidCoords(e)) return;
   routeOneEdge(e, g);

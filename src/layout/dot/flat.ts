@@ -185,6 +185,10 @@ export function abomination(g: Graph): void {
     n.info.rank = (n.info.rank ?? 0) + 1;
   }
   g.info.maxrank = mx + 1;
+  // Record the +1 renumber so make_LR_constraints can recover C's rank-index
+  // parity: C inserts the label rank at -1 and keeps real nodes on even ranks;
+  // this 0-based shift puts them on odd ranks, inverting `sep[i & 1]`.
+  g.info.abomShift = (g.info.abomShift ?? 0) + 1;
 }
 
 // ---------------------------------------------------------------------------

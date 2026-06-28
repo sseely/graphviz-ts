@@ -127,11 +127,16 @@ export function allocateAuxEdges(g: Graph): void {
 // make_LR_constraints helpers
 // ---------------------------------------------------------------------------
 
-/** LR node separation for a rank (accounts for edge labels). */
+/** LR node separation for a rank (accounts for edge labels).
+ * C uses smaller separation (5) on odd ranks when the graph has edge labels
+ * (real nodes sit on even ranks 0,2,4…). `abomination` inserts a flat-label
+ * rank at -1 in C, but this 0-based port shifts every rank up by 1 instead
+ * (AD-2), inverting the parity; `abomShift` undoes that so the parity matches C.
+ * @see lib/dotgen/position.c:make_LR_constraints */
 export function lrSep(g: Graph, rankIdx: number): number {
   const nodesep = graphNodesep(g);
   if (!((g.info.has_labels ?? 0) & EDGE_LABEL)) return nodesep;
-  return rankIdx & 1 ? 5 : nodesep;
+  return (rankIdx + (g.info.abomShift ?? 0)) & 1 ? 5 : nodesep;
 }
 
 /** @see lib/dotgen/position.c:make_LR_constraints (single flat-edge constraint) */

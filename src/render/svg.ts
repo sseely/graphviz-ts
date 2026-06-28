@@ -86,10 +86,18 @@ function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailCo
  * label. C's gvrender defers the `<g>` until a draw op, so an edge with neither
  * (e.g. a concentrate-merged IGNORED duplicate) emits no group. begin/end edge
  * callbacks still fire, matching emit_edge. @see lib/common/emit.c:emit_edge
+ *
+ * The main `label` must be *placed* to count, mirroring C's `edge_in_box`
+ * (which tests `overlap_label`, i.e. the label's position). A flat edge merged
+ * into a same-rank representative (the back-edge of an opposing pair) keeps its
+ * `label` reference but its label vnode was deleted before placement, so the
+ * label never gets a position (`set` stays false) — C emits no group for it.
+ * @see lib/common/utils.c:overlap_label, lib/dotgen/mincross.c:flat_rev
  */
 function edgeHasDrawableContent(e: Edge): boolean {
   const i = e.info;
-  return i.spl !== undefined || i.label !== undefined || i.xlabel !== undefined
+  return i.spl !== undefined || (i.label !== undefined && i.label.set)
+    || i.xlabel !== undefined
     || i.head_label !== undefined || i.tail_label !== undefined;
 }
 
