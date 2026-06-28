@@ -101,11 +101,18 @@ describe('doGraphLabel — html label', () => {
 // Pre-fix the cluster label fell back to the Times,serif default.
 // ---------------------------------------------------------------------------
 
-/** A cluster subgraph parented to (and rooted at) `root`. */
+/** A cluster subgraph parented to (and rooted at) `root`. Captures the parent's
+ *  effective graph-attr defaults into graphDefaultsSnapshot, mirroring the
+ *  parser's parse-time snapshot that order-correct inheritance now reads. */
 function makeCluster(root: Graph, attrs: Record<string, string> = {}): Graph {
   const sg = new Graph('cluster_0', 'directed');
   sg.parent = root;
   sg.root = root;
+  const snap = new Map<string, string>();
+  for (let g: Graph | null = root; g !== null; g = g.parent) {
+    for (const [k, v] of g.attrs) if (!snap.has(k)) snap.set(k, v);
+  }
+  sg.graphDefaultsSnapshot = snap;
   for (const [k, v] of Object.entries(attrs)) sg.attrs.set(k, v);
   return sg;
 }

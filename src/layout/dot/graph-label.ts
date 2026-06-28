@@ -33,11 +33,11 @@ function readLabelPos(sg: Graph): number {
  * @see lib/common/input.c:do_graph_label
  */
 function graphAttrInherited(sg: Graph, key: string): string | undefined {
-  for (let g: Graph | null = sg; g !== null; g = g.parent) {
-    const v = g.attrs.get(key);
-    if (v !== undefined) return v;
-  }
-  return undefined;
+  // Own value wins; otherwise the ancestor defaults SNAPSHOTTED when this
+  // subgraph opened (not a live parent walk) — so an ancestor attribute set
+  // later in statement order does not retroactively apply (2184).
+  // @see lib/cgraph/graph.c:agsubg (parse-time defval copy)
+  return sg.attrs.get(key) ?? sg.graphDefaultsSnapshot?.get(key);
 }
 
 function readFontParams(sg: Graph): { fontsize: number; fontname: string; fontcolor: string } {

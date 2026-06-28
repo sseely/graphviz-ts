@@ -73,6 +73,26 @@ function effectiveNodeDefaults(scope: Graph): Map<string, string> {
   return eff;
 }
 
+/** Graph-attr keys do_graph_label inherits; seeded into subgraph attrs so the
+ *  inherited value survives the layout's cluster rebuilds. */
+const GRAPH_LABEL_INHERIT_KEYS = ['label', 'fontname', 'fontsize', 'fontcolor'] as const;
+
+/**
+ * Collect the graph-attribute defaults in effect at `scope`: walk scope -> root,
+ * inner overriding outer (first-found wins), reading each graph's own `attrs`.
+ * Snapshotted when a subgraph opens so an ancestor attribute set LATER in
+ * statement order does not retroactively apply (DOT's order-sensitive defaults).
+ */
+function effectiveGraphDefaults(scope: Graph): Map<string, string> {
+  const eff = new Map<string, string>();
+  for (let g: Graph | null = scope; g !== null; g = g.parent) {
+    for (const [k, v] of g.attrs) {
+      if (!eff.has(k)) eff.set(k, v);
+    }
+  }
+  return eff;
+}
+
 /** Manages the per-parse node ID counter and node creation. */
 export class NodeRegistry {
   private nextId = 0;
@@ -225,7 +245,20 @@ export class StmtProcessor {
     sg.root = root;
     if (prior !== undefined) sg.seq = prior.seq;
     else assignSubgSeq(graph, sg);
+    // Snapshot the enclosing graph-attribute defaults at OPEN time (before the
+    // body) so a later ancestor `graph [label=…]` does not apply to this
+    // subgraph — matching cgraph's parse-time defval copy (order-sensitive).
+    sg.graphDefaultsSnapshot = effectiveGraphDefaults(graph);
     buildGraph(stmt.stmts, sg, root, directed, this);
+    // Seed the order-correct inherited label-family defaults into the subgraph's
+    // OWN attrs (body wins) so they survive the layout's cluster rebuilds, which
+    // copy attrs but not the snapshot. Mirrors cgraph's agsubg defval copy; kept
+    // to the keys do_graph_label reads so the blast radius stays in label render.
+    // @see lib/common/input.c:do_graph_label (agget label/font*)
+    for (const key of GRAPH_LABEL_INHERIT_KEYS) {
+      const v = sg.graphDefaultsSnapshot.get(key);
+      if (v !== undefined && !sg.attrs.has(key)) sg.attrs.set(key, v);
+    }
     graph.subgraphs.set(sgName, sg);
     return sg;
   }

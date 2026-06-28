@@ -84,6 +84,17 @@ export class Graph {
   edgeDefaults: Map<string, string>;
 
   /**
+   * Snapshot of the enclosing graphs' graph-attribute defaults (this graph ->
+   * root, inner wins) captured when this subgraph was OPENED during parsing.
+   * Graph attributes set on an ancestor AFTER this subgraph was created are not
+   * included — mirroring cgraph's parse-time agsubg defval copy. Used for
+   * order-correct label/font inheritance (e.g. a root `label=` declared after a
+   * cluster must NOT apply to that cluster). Undefined on the root graph.
+   * @see lib/cgraph/graph.c:agsubg (attr defval copy)
+   */
+  graphDefaultsSnapshot?: Map<string, string>;
+
+  /**
    * Layout-engine info; replaces GD_* macros via agbindrec (AD-1).
    * @see lib/cgraph/cgraph.h:agbindrec
    */
