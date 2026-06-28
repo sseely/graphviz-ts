@@ -68,6 +68,7 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `1435` | 503.00 | `svg/g[1][childCount]` |
 | `graphs-b69` | 466.64 | `svg/g[1]/g[84]/path[2]` |
 | `1581` | 465.00 | `svg/g[1][childCount]` |
+| `1658` | 461.93 | `svg/g[1]/g[31]/path[1]/@d` |
 | `2825` | 461.00 | `svg/g[1][childCount]` |
 | `2619_1` | 443.00 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
 | `2619_2` | 440.00 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
@@ -84,12 +85,11 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `share-ldbxtried` | 323.00 | `svg/g[1]/g[23]/path[1]/@d` |
 | `windows-ldbxtried` | 322.00 | `svg/g[1]/g[19]/path[1]/@d` |
 | `2796` | 249.00 | `svg/g[1][childCount]` |
-| `2183` | 247.00 | `svg/g[1][childCount]` |
+| `2183` | 248.00 | `svg/g[1][childCount]` |
 | `graphs-b103` | 216.20 | `svg/g[1]/g[1220]/path[1]/@d` |
 | `1447` | 192.39 | `svg/g[1]/g[13]/path[1]/@d` |
 | `share-b51` | 158.15 | `svg/g[1]/g[25]/path[1]/@d` |
 | `windows-b51` | 157.24 | `svg/g[1]/g[25]/path[1]/@d` |
-| `1880` | 151.37 | `svg/g[1]/g[2][childCount]` |
 
 _… and 36 more diverged inputs (see parity.json + the buckets below)._
 
