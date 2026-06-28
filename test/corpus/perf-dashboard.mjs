@@ -92,7 +92,7 @@ const md = `<!-- SPDX-License-Identifier: EPL-2.0 -->
 
 Warm, in-process timing of graphviz-ts vs the native \`dot\` oracle over the dot
 test corpus. **Peer to [PARITY.md](./PARITY.md)** — PARITY tracks *correctness*,
-PERF tracks *speed*. A report, not a gate. The fidelity target is **≤3× native**.
+PERF tracks *speed*. A report, not a gate. The fidelity target is **≤${report.budgetMult}× native**.
 
 Regenerate: \`npm run build:js && node test/corpus/bench.mjs && node test/corpus/perf-dashboard.mjs\`.
 

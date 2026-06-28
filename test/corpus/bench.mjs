@@ -10,8 +10,9 @@
 //
 // Budget framing: the port's fidelity target is <=3x native. For each input we
 // report nativeMs, portMs (warm best), the ratio, and a verdict (ok / slow /
-// over-cap / errored / oracle-error). A hard per-render cap (default 180s)
-// catches true synchronous hangs via worker.terminate().
+// over-cap / errored / oracle-error). A hard per-render cap (5x the longest
+// canonical native time by default) catches true synchronous hangs via
+// worker.terminate().
 //
 // Parallelism: floor(cpus/2) workers so each render gets a ~dedicated core
 // (low contention); min-of-N denoises the rest. Timings are "lightly loaded";
@@ -51,7 +52,32 @@ function loadNativeTimings() {
 }
 
 const POOL = Number(process.env.BENCH_POOL ?? Math.max(1, Math.floor(availableParallelism() / 2)));
-const CAP_MS = Number(process.env.BENCH_CAP_MS ?? 180_000);
+const LONGEST_NATIVE_MS = (() => {
+  const times = Object.values(loadNativeTimings()).filter((v) => typeof v === 'number');
+  return times.length ? Math.max(...times) : 0;
+})();
+// PORT hang cap = CAP_MULT (default 5) x the longest canonical native time, i.e.
+// 5x the heaviest graph graphviz itself produces. The cap scales with the
+// corpus's true worst case rather than an arbitrary fixed wall-clock: it still
+// catches genuine port hangs (worker.terminate) while giving even the slowest
+// legitimate heavy graph generous headroom. BENCH_CAP_MS overrides; falls back
+// to 180s only if no native times are captured.
+const CAP_MULT = Number(process.env.BENCH_CAP_MULT ?? 5);
+function computeCapMs() {
+  const override = Number(process.env.BENCH_CAP_MS);
+  if (Number.isFinite(override) && override > 0) return override;
+  return LONGEST_NATIVE_MS > 0 ? Math.round(CAP_MULT * LONGEST_NATIVE_MS) : 180_000;
+}
+// NATIVE measurement cap is SEPARATE and deliberately NOT scaled by CAP_MULT:
+// the native phase only re-times inputs missing a canonical entry, and several
+// such inputs hang native dot indefinitely (oracle-errors). Scaling those to 5x
+// would make the native phase wait ~13 min per hang. A render slower than the
+// longest canonical native while still uncaptured is pathological, so cap at the
+// longest canonical native (with a 180s floor). BENCH_NATIVE_CAP_MS overrides.
+const NATIVE_CAP_MS = Number(
+  process.env.BENCH_NATIVE_CAP_MS ?? Math.max(180_000, LONGEST_NATIVE_MS),
+);
+const CAP_MS = computeCapMs();
 const BUDGET_MULT = Number(process.env.BENCH_BUDGET_MULT ?? 3);
 const SLOW_MS = 30_000; // a render slower than this self-warms; time it once
 const REPEAT_BUDGET_MS = 60_000; // stop repeat timed runs once this is spent
@@ -105,7 +131,7 @@ function timeNative(absInput, capMs) {
 async function nativeMs(absInput) {
   let best = Infinity;
   for (let i = 0; i < 3; i++) {
-    const r = await timeNative(absInput, CAP_MS);
+    const r = await timeNative(absInput, NATIVE_CAP_MS);
     if (!r.ok) return { err: 'oracle-error' };
     best = Math.min(best, r.ms);
     if (r.ms > 2_000) break; // stable + costly; one sample is enough
@@ -285,7 +311,9 @@ async function main() {
   }
   const entries = selectEntries();
   process.stderr.write(
-    `benching ${entries.length} inputs (pool ${POOL}, cap ${CAP_MS}ms, budget ${BUDGET_MULT}x native)\n` +
+    `benching ${entries.length} inputs (pool ${POOL}, port-cap ${CAP_MS}ms ` +
+      `= ${CAP_MULT}x longest-native ${LONGEST_NATIVE_MS}ms, native-cap ${NATIVE_CAP_MS}ms, ` +
+      `budget ${BUDGET_MULT}x native)\n` +
       `bundle ${BUNDLE}\noracle ${DOT_BIN}\n`,
   );
 

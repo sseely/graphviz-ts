@@ -19,71 +19,55 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
   inflates a concurrent big render's single sample materially (≈66% on 2620). Set
   `BENCH_HEAVY_POOL>1` for a faster, noisier scan.
 - **Native:** `dot -Tsvg` best-of-3 (min).
-- **Budget:** target ≤3× native. Per-render cap **180000ms**
+- **Budget:** target ≤3× native. Per-render cap **817795ms**
   (SIGKILL → `over-cap`, i.e. a true synchronous hang).
 - **Caveat:** light graphs are timed under up-to-6-way load; for a
   precise single number re-run `BENCH_POOL=1 BENCH_IDS=<id> node test/corpus/bench.mjs`.
 
 ## Summary
 
-- **Rated inputs:** 776 · **within ≤3× native:** 758 (97.7%)
-- **ok (≤3×):** 758 · **slow (>3×):** 18 · **over-cap (hang):** 2 · **errored:** 6 · **oracle-error:** 11
-- **ratio (port/native):** p50 0.01× · p90 0.18× · max 7.05×
+- **Rated inputs:** 778 · **within ≤3× native:** 762 (97.9%)
+- **ok (≤3×):** 762 · **slow (>3×):** 16 · **over-cap (hang):** 1 · **errored:** 0 · **oracle-error:** 11
+- **ratio (port/native):** p50 0.01× · p90 0.17× · max 6.18×
 
 ## Ratio distribution
 
 | band | count |
 |---|---:|
-| ≤1× (port ≥ native, warm) | 736 |
-| 1–2× | 11 |
-| 2–3× | 11 |
-| 3–4× | 9 |
-| 4–6× | 8 |
+| ≤1× (port ≥ native, warm) | 737 |
+| 1–2× | 15 |
+| 2–3× | 10 |
+| 3–4× | 15 |
+| 4–6× | 0 |
 | 6–10× | 1 |
 | >10× | 0 |
-| over-cap (≥180000ms, possible hang) | 2 |
+| over-cap (≥817795ms, possible hang) | 1 |
 
 ## Over budget — slower than 3× native (worst first)
 
 | id | native ms | port ms (warm) | ratio |
 |---|---:|---:|---:|
-| `2108` | 12849 | 90591 | 7.05× |
-| `graphs-b104` | 8635 | 50659 | 5.87× |
-| `graphs-b100` | 8646 | 47711 | 5.52× |
-| `2095_1` | 22309 | 99384 | 4.45× |
-| `2743` | 201 | 888 | 4.42× |
-| `nshare-root_circo` | 247 | 1072 | 4.34× |
-| `linux.x86-root_twopi` | 248 | 1030 | 4.15× |
-| `graphs-root` | 214 | 883 | 4.13× |
-| `linux.i386-b29` | 582 | 2388 | 4.1× |
-| `graphs-b103` | 1210 | 4749 | 3.92× |
-| `2620` | 371 | 1418 | 3.82× |
-| `graphs-badvoro` | 320 | 1183 | 3.7× |
-| `linux.x86-root_circo` | 245 | 891 | 3.64× |
-| `2095` | 261 | 942 | 3.61× |
-| `1718` | 11492 | 40673 | 3.54× |
-| `nshare-root_twopi` | 247 | 847 | 3.43× |
-| `graphs-b29` | 585 | 1952 | 3.34× |
-| `2343` | 44304 | 138930 | 3.14× |
+| `2108` | 12849 | 79370 | 6.18× |
+| `graphs-b104` | 8635 | 33395 | 3.87× |
+| `graphs-b100` | 8646 | 31228 | 3.61× |
+| `2743` | 201 | 704 | 3.5× |
+| `nshare-root_circo` | 247 | 865 | 3.5× |
+| `2646` | 97463 | 337497 | 3.46× |
+| `graphs-b103` | 1210 | 4109 | 3.4× |
+| `linux.x86-root_twopi` | 248 | 834 | 3.36× |
+| `graphs-root` | 214 | 712 | 3.33× |
+| `2095_1` | 22309 | 73128 | 3.28× |
+| `linux.x86-root_circo` | 245 | 798 | 3.26× |
+| `2620` | 371 | 1153 | 3.11× |
+| `nshare-root_twopi` | 247 | 768 | 3.11× |
+| `graphs-badvoro` | 320 | 991 | 3.1× |
+| `2095` | 261 | 794 | 3.04× |
+| `graphs-b29` | 585 | 1773 | 3.03× |
 
 ## Over-cap / possible hang
 
 | id | native ms | cap ms | native×budget | status |
 |---|---:|---:|---:|---|
-| `2371` | 73639 | 180000 | 220917 | inconclusive (3×native=220917ms > cap — huge graph, may be within budget) |
-| `2854` | 163559 | 180000 | 490677 | inconclusive (3×native=490677ms > cap — huge graph, may be within budget) |
+| `2854` | 163559 | 817795 | 490677 | exceeds budget (likely hang/runaway) |
 
 Raise `BENCH_CAP_MS` and re-run these ids to resolve an inconclusive status.
-
-## Errored (6)
-
-Port threw before producing output (often the same parser-gap inputs PARITY.md lists).
-
-| id | message |
-|---|---|
-| `1308_1` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "}" found. |
-| `1474` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "L" found. |
-| `1489` | Expected "#", "/*", "//", [ \t\r\n], or end of input but "õ" found. |
-| `1494` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_0-9\x80-\u{FFFF}], [A- |
-| `1676` | Expected "#", "-", ".", "/*", "//", ":", ";", "<", "[", "\"", "{", "}", [ \t\r\n], [0-9], [A-Za-z_\x80-\u{FFFF}], [Ee],  |
-| `2646` | Maximum call stack size exceeded |
