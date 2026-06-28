@@ -26,11 +26,19 @@ function emitArrowPenWidth(job: RenderJob, pw: number): void {
   if (Math.abs(pw - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) emitPenWidth(job, pw);
 }
 
+/** Emit ` <attr>="<opacity>"` when the pen color carries partial alpha. */
+function emitArrowOpacity(job: RenderJob, attr: string, opacity: string | null): void {
+  if (opacity !== null) job.write(' ' + attr + '="' + opacity + '"');
+}
+
 /** `<polygon>` with Adobe first-point repetition (matches svg_polygon). */
-function emitPolygonOp(points: Point[], filled: boolean, penColor: string, job: RenderJob, pw: number): void {
+function emitPolygonOp(points: Point[], filled: boolean, penColor: string, job: RenderJob, pw: number, opacity: string | null): void {
   const pts = points.map((p) => transformPoint(p, job));
-  job.write('<polygon fill="' + (filled ? penColor : 'none') + '" stroke="' + penColor + '"');
+  job.write('<polygon fill="' + (filled ? penColor : 'none') + '"');
+  if (filled) emitArrowOpacity(job, 'fill-opacity', opacity);
+  job.write(' stroke="' + penColor + '"');
   emitArrowPenWidth(job, pw);
+  emitArrowOpacity(job, 'stroke-opacity', opacity);
   job.write(' points="');
   emitPoints(job, pts);
   if (pts.length > 0) {
@@ -47,10 +55,13 @@ function emitPolygonOp(points: Point[], filled: boolean, penColor: string, job: 
 interface EllipseOp { center: Point; rx: number; ry: number; filled: boolean }
 
 /** `<ellipse>` (dot/odot). rx/ry are emitted in layout units (device scale 1). */
-function emitEllipseOp(op: EllipseOp, penColor: string, job: RenderJob, pw: number): void {
+function emitEllipseOp(op: EllipseOp, penColor: string, job: RenderJob, pw: number, opacity: string | null): void {
   const c = transformPoint(op.center, job);
-  job.write('<ellipse fill="' + (op.filled ? penColor : 'none') + '" stroke="' + penColor + '"');
+  job.write('<ellipse fill="' + (op.filled ? penColor : 'none') + '"');
+  if (op.filled) emitArrowOpacity(job, 'fill-opacity', opacity);
+  job.write(' stroke="' + penColor + '"');
   emitArrowPenWidth(job, pw);
+  emitArrowOpacity(job, 'stroke-opacity', opacity);
   job.write(' cx="');
   job.printDouble(c.x);
   job.write('" cy="');
@@ -63,20 +74,22 @@ function emitEllipseOp(op: EllipseOp, penColor: string, job: RenderJob, pw: numb
 }
 
 /** `<polyline>` (tee/box/gap/curve shaft) — never filled. */
-function emitPolylineOp(points: Point[], penColor: string, job: RenderJob, pw: number): void {
+function emitPolylineOp(points: Point[], penColor: string, job: RenderJob, pw: number, opacity: string | null): void {
   const pts = points.map((p) => transformPoint(p, job));
   job.write('<polyline fill="none" stroke="' + penColor + '"');
   emitArrowPenWidth(job, pw);
+  emitArrowOpacity(job, 'stroke-opacity', opacity);
   job.write(' points="');
   emitPoints(job, pts);
   job.write('"/>\n');
 }
 
 /** `<path>` cubic Bézier (curve/icurve arms) — never filled. */
-function emitBezierOp(points: Point[], penColor: string, job: RenderJob, pw: number): void {
+function emitBezierOp(points: Point[], penColor: string, job: RenderJob, pw: number, opacity: string | null): void {
   const pts = points.map((p) => transformPoint(p, job));
   job.write('<path fill="none" stroke="' + penColor + '"');
   emitArrowPenWidth(job, pw);
+  emitArrowOpacity(job, 'stroke-opacity', opacity);
   job.write(' d="');
   emitBezierPath(job, pts);
   job.write('"/>\n');
@@ -84,16 +97,17 @@ function emitBezierOp(points: Point[], penColor: string, job: RenderJob, pw: num
 
 /**
  * Emit one edge end's arrowhead draw-ops, in order, with the given pen color.
- *
- * @see lib/common/arrows.c:arrow_gen
+ * `opacity` is the stringified alpha (`colorOpacity`) or null when the pen color
+ * is opaque; it drives the SVG fill/stroke-opacity attributes (e.g. an edge
+ * color="#rrggbbaa"). @see lib/common/arrows.c:arrow_gen
  */
-export function emitArrowOps(ops: ArrowDrawOp[], penColor: string, job: RenderJob, pw: number): void {
+export function emitArrowOps(ops: ArrowDrawOp[], penColor: string, job: RenderJob, pw: number, opacity: string | null = null): void {
   for (const op of ops) {
     switch (op.kind) {
-      case 'polygon': emitPolygonOp(op.points, op.filled, penColor, job, pw); break;
-      case 'ellipse': emitEllipseOp(op, penColor, job, pw); break;
-      case 'polyline': emitPolylineOp(op.points, penColor, job, pw); break;
-      case 'bezier': emitBezierOp(op.points, penColor, job, pw); break;
+      case 'polygon': emitPolygonOp(op.points, op.filled, penColor, job, pw, opacity); break;
+      case 'ellipse': emitEllipseOp(op, penColor, job, pw, opacity); break;
+      case 'polyline': emitPolylineOp(op.points, penColor, job, pw, opacity); break;
+      case 'bezier': emitBezierOp(op.points, penColor, job, pw, opacity); break;
     }
   }
 }

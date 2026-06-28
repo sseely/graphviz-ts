@@ -53,6 +53,7 @@ import {
   escapeXml,
 } from './svg-helpers.js';
 import { emitArrowOps } from './svg-arrow-ops.js';
+import { resolveRenderColor, colorOpacity } from './color-resolve.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 import { emitSplitEdgePaths } from './svg-edge-split.js';
 
@@ -67,11 +68,11 @@ function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailCo
   const pw = obj !== null ? obj.penWidth : 1.0;
   const tailOps = e.info.tailArrowOps;
   if (tailOps?.length) {
-    emitArrowOps(tailOps, tailColor, job, pw);
+    emitArrowOps(tailOps, tailColor, job, pw, colorOpacity(resolveRenderColor(tailColor)));
   }
   const headOps = e.info.headArrowOps;
   if (headOps?.length) {
-    emitArrowOps(headOps, headColor, job, pw);
+    emitArrowOps(headOps, headColor, job, pw, colorOpacity(resolveRenderColor(headColor)));
   }
 }
 

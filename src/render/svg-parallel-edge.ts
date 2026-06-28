@@ -26,7 +26,7 @@ import type { Point, Bezier } from '../model/geom.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
 import { transformPoint } from '../gvc/device.js';
 import { emitBezierPath, emitDash, emitPenWidth } from './svg-helpers.js';
-import { resolveRenderColor, colorPaint } from './color-resolve.js';
+import { resolveRenderColor, colorPaint, colorOpacity } from './color-resolve.js';
 import { parseSegs } from '../common/multicolor.js';
 
 const PENWIDTH_NORMAL = 1.0;
@@ -55,6 +55,11 @@ function emitOffsetBezier(tmplist: Point[], job: RenderJob, color: string): void
     emitPenWidth(job, obj.penWidth);
   }
   if (obj !== null) emitDash(job, obj.pen);
+  // C svg_grstyle emits stroke-opacity (after stroke-width/dasharray) for an
+  // RGBA paint with partial alpha, e.g. an edge color="#rrggbbaa".
+  // @see plugin/core/gvrender_core_svg.c:207-210 svg_grstyle
+  const op = colorOpacity(resolved);
+  if (op !== null) job.write(' stroke-opacity="' + op + '"');
   job.write(' d="');
   emitBezierPath(job, tmplist);
   job.write('"/>\n');

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-28T15:19:34.283Z",
+  "generatedAt": "2026-06-28T16:01:55.546Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
     "byte-match": 486,
-    "structural-match": 197,
-    "diverged": 96,
+    "structural-match": 198,
+    "diverged": 95,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -925,9 +925,8 @@
     {
       "id": "42",
       "path": "42.dot",
-      "verdict": "diverged",
-      "maxDelta": 18.430000000000064,
-      "firstDiffPath": "svg/g[1]/g[1]/path[1]/@stroke-opacity"
+      "verdict": "structural-match",
+      "maxDelta": 18.430000000000064
     },
     {
       "id": "56",

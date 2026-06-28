@@ -448,6 +448,10 @@ function emitOneBezierPath(bz: Bezier, stroke: string, job: RenderJob): void {
     emitPenWidth(job, obj.penWidth);
   }
   if (obj !== null) emitDash(job, obj.pen);
+  // C svg_grstyle emits stroke-opacity (after stroke-width/dasharray) for an
+  // RGBA pen color with partial alpha (edge color="#rrggbbaa").
+  // @see plugin/core/gvrender_core_svg.c:207-210
+  if (obj !== null) emitOpacity(job, 'stroke-opacity', obj.penColor);
   job.write(' d="');
   emitBezierPath(job, pts);
   job.write('"/>\n');
@@ -539,11 +543,12 @@ export function emitArrowPolygon(rawPts: Point[], penColor: string, job: RenderJ
 export function svgArrowPolygons(e: Edge, job: RenderJob): void {
   const obj = job.obj;
   const penColor = obj !== null ? paintStr(obj, false) : 'black';
+  const opacity = obj !== null ? colorOpacity(obj.penColor) : null;
   const pw = obj !== null ? obj.penWidth : 1.0;
   const tailOps = e.info.tailArrowOps;
-  if (tailOps?.length) emitArrowOps(tailOps, penColor, job, pw);
+  if (tailOps?.length) emitArrowOps(tailOps, penColor, job, pw, opacity);
   const headOps = e.info.headArrowOps;
-  if (headOps?.length) emitArrowOps(headOps, penColor, job, pw);
+  if (headOps?.length) emitArrowOps(headOps, penColor, job, pw, opacity);
 }
 
 // ---------------------------------------------------------------------------
