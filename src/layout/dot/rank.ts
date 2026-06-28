@@ -439,7 +439,15 @@ export function minmaxEdges2(g: Graph, slen: [number, number]): boolean {
 
 /** @see lib/dotgen/rank.c:rank1 */
 export function rank1(g: Graph): void {
-  const nslimit1 = g.attrs.get('nslimit1');
+  // C reads agget(g, "nslimit1"), which INHERITS the root default — a cluster's
+  // local ranking (dot1Rank(subg) -> rank1) must see a root `nslimit1` too, or
+  // it runs full network simplex where native ran a capped/zero pass and gets a
+  // different rank assignment (1902: nslimit1=0 → b2 keeps its initial rank).
+  // The snapshot (order-correct) is preferred; the root is a robust fallback for
+  // cluster objects the layout rebuilt without it. @see lib/dotgen/rank.c:rank1
+  const nslimit1 = g.attrs.get('nslimit1')
+    ?? g.graphDefaultsSnapshot?.get('nslimit1')
+    ?? g.root.attrs.get('nslimit1');
   const maxiter = nslimit1
     ? scaleClamp(g.nodes.size, parseFloat(nslimit1))
     : Number.MAX_SAFE_INTEGER;

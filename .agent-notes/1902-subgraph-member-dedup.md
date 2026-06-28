@@ -19,3 +19,13 @@
   This is cluster ranking/positioning for nested clusters + a subgraph->node
   edge (nslimit1=0), NOT spline routing — a separate deep effort.
 - **Confidence**: High (dedup) — edges byte-match native, 0 corpus regressions.
+
+## RESOLVED — nslimit1 not inherited by cluster ranking (2026-06-28)
+
+The unmasked ranking divergence was nslimit1=0 (root) not reaching the cluster's
+local rank pass. rank1 read `g.attrs.get('nslimit1')` (own only); for a cluster
+ranked via dot1Rank(subg)->rank1 that is undefined → full network simplex, where
+native (agget inherits nslimit1=0 → maxiter=0) keeps the initial ranking. So b2
+got pulled to its longest-path rank (top) instead of native's initial rank.
+FIX: rank1 reads own ?? graphDefaultsSnapshot ?? root.attrs for nslimit1.
+1902 diverged → BYTE-MATCH (dedup + this), 0 regressions. byte-match 488→489.
