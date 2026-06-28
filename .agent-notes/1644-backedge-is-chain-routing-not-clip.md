@@ -53,3 +53,33 @@
   instrumenting native dot — rebuild gvplugin_dot_layout → /tmp/gvplugins and
   dump the pts in make_regular_edge before clip_and_install. See
   [[recover-slack-and-c-harness]]. Not a code-only fix; deferred.
+
+## C instrumentation results (2026-06-28) — pre-clip Y MATCHES; divergence is in the clip
+
+Instrumented native dot (make_regular_edge, cnt==1 clip site in dotsplines.c) to
+dump the pre-clip `pointfs` + node coords, gated on getenv("DUMP_EDGE"). Rebuilt
+gvplugin_dot_layout, regenerated /tmp/ghl, ran dfa. **C source reverted + plugin
+rebuilt clean afterward** (oracle verified back to n1->start=-569.21).
+
+Findings for dfa n1->start (the straight back edge, pn=4):
+- C pre-clip points: first=(_,638.60) last=(_,551.80). The Y MATCHES the port's
+  pre-clip (638.6 / 551.8) exactly. So the chain ROUTING (pre-clip spline) is
+  correct — not the divergence source after all.
+- C node coords during routing read x=1.00 — this is a SYNTHETIC fwdedge-node
+  artifact (back edges route via fwdedgeb.out, whose temp node coords aren't the
+  real 105.37); NOT a real coordinate-frame difference. The Y is the reliable
+  signal and it matches.
+- Therefore the 0.26-0.33 enters in the CLIP step: same pre-clip spline, but the
+  port's bezier_clip lands the node-boundary crossing ~0.26 off from C's. Both
+  port clip stacks (bezierClipNode and clipAndInstall/bezierClip) agree with each
+  other (1644 refactor was byte-identical), so the port's clip differs from C's
+  bezier_clip despite identical 0.5 tolerance (splines.c:146 == bezierClipLocal).
+- NOTE: the 1644 clipAndInstall refactor was tested only on 1644 (byte-identical).
+  It was NOT tested on dfa — dfa's head has an ARROW (directed) while 1644 is
+  undirected, so the arrow-clip path differs and the refactor's effect on dfa is
+  unverified.
+- NEXT: step-compare the port's bezier_clip bisection vs C's on the IDENTICAL
+  pre-clip spline (638.6→551.8 straight, node n1 ellipse + penwidth inside-test).
+  The divergence is in where the 0.5-tolerance bisection lands or the inside-test
+  (penwidth/ellipse) — a sub-pixel clip-iteration mismatch. Deferred: deep, and
+  this whole class is ≤0.33 on ~5 graphs.
