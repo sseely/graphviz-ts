@@ -22,7 +22,6 @@ import type { Edge } from '../../model/edge.js';
 import type { Node } from '../../model/node.js';
 import type { Port, Box } from '../../model/geom.js';
 import type { Path, PathendT } from '../../common/types.js';
-import { resolvePort } from '../../common/splines-path-shared.js';
 import { routeSplines } from '../../common/splines-routespl.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { graphRanksep } from './position-aux.js';
@@ -44,19 +43,12 @@ interface GroupRouteCtx {
   bottom: boolean;
   stepx: number;
   stepy: number;
+  /** Geometric left end node of the channel (lower order). routeSplines yields
+   * points left→right; an edge whose tail is the RIGHT node is reversed so the
+   * installed spline runs tail→head, matching C's clip_and_install orientation. */
+  leftNode: Node;
 }
 
-/**
- * True when either endpoint resolves to an active side-mask port. Mirrors
- * edge-route.ts:hasSidePort, re-implemented here to avoid a circular import
- * (T3 makes edge-route depend on this module).
- * @see lib/common/splines.c:beginpath (sidemask)
- */
-function hasSidePort(e: Edge): boolean {
-  const tp = resolvePort(e.tail, e.head, e.info.tail_port);
-  const hp = resolvePort(e.head, e.tail, e.info.head_port);
-  return (tp.side ?? 0) !== 0 || (hp.side ?? 0) !== 0;
-}
 
 /**
  * portcmp == 0: both undefined, or both defined with an equal aiming point.
@@ -75,12 +67,13 @@ function flatPortKey(e: Edge, lo: Node): { loP: Port; hiP: Port } {
     : { loP: e.info.head_port, hiP: e.info.tail_port };
 }
 
-/** True when x is an unrouted non-adjacent same-rank side-port flat edge. */
+/** True when x is an unrouted non-adjacent same-rank flat edge (C make_flat_edge
+ * routes EVERY non-adjacent flat; side ports are not a precondition). */
 function isNonAdjGroupable(x: Edge, g: Graph): boolean {
   return x.info.spl === undefined
     && x.tail.info.rank !== undefined
     && x.tail.info.rank === x.head.info.rank
-    && !isFlatAdjacent(g, x) && hasSidePort(x);
+    && !isFlatAdjacent(g, x);
 }
 
 /** True when x's ports (oriented to lo) equal the lead key (C portcmp == 0). */
@@ -102,8 +95,12 @@ export function collectNonAdjacentFlatGroup(e: Edge, g: Graph): Edge[] {
   const key = flatPortKey(e, lo);
   const sharesPair = (x: Edge): boolean =>
     (x.tail === u && x.head === v) || (x.tail === v && x.head === u);
+  // C's edgecmp keeps a flat group contiguous only while labels are equal
+  // (ED_label(e0)!=ED_label(e1) breaks the run); a labeled opposing leg must not
+  // be pulled into an unlabeled rep's group. @see lib/dotgen/dotsplines.c:edgecmp
   const group = g.edges.filter(
-    x => sharesPair(x) && isNonAdjGroupable(x, g) && samePortsAs(x, lo, key));
+    x => sharesPair(x) && isNonAdjGroupable(x, g) && samePortsAs(x, lo, key)
+      && x.info.label === e.info.label);
   group.sort((a, b) => Number(b.tail === lo) - Number(a.tail === lo) || a.seq - b.seq);
   return group;
 }
@@ -137,7 +134,13 @@ function routeGroupEdge(e: Edge, i: number, c: GroupRouteCtx): boolean {
   assembleFlatPath(c.P, copyPathEnd(c.tend), copyPathEnd(c.hend), mid);
   const pts = routeSplines(c.P);
   if (pts === null || pts.length === 0) return false;
-  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  // routeSplines returns points left→right (tend = leftNode). Reverse for an edge
+  // whose tail is the right node so the points run tail→head; pass ignoreSwap so
+  // clipAndInstall clips/arrows by the real tail/head instead of re-deriving the
+  // orientation from node order (which would undo the reversal).
+  // @see lib/dotgen/dotsplines.c:make_flat_edge (clip_and_install)
+  if (e.tail !== c.leftNode) pts.reverse();
+  clipAndInstall(e, e.head, pts, pts.length, { ...buildDotSinfo(), ignoreSwap: true });
   return true;
 }
 
@@ -150,20 +153,33 @@ function routeGroupEdge(e: Edge, i: number, c: GroupRouteCtx): boolean {
  */
 export function routeFlatEdgeGroupFaithful(g: Graph, edges: Edge[], cnt: number): boolean {
   const lead = edges[0];
-  const tn = lead.tail;
-  if (g.info.rank === undefined || tn.info.rank === undefined
-    || lead.head.info.rank !== tn.info.rank) return false;
-  const { bottom, side } = flatSide(lead);
+  if (g.info.rank === undefined || lead.tail.info.rank === undefined
+    || lead.head.info.rank !== lead.tail.info.rank) return false;
+  // C makefwdedge: build the channel left→right by node order, else the middle
+  // box inverts for a right-to-left (tail right of head) flat edge.
+  const tailIsLeft = (lead.tail.info.order ?? 0) <= (lead.head.info.order ?? 0);
+  const leftNode = tailIsLeft ? lead.tail : lead.head;
+  const rightNode = tailIsLeft ? lead.head : lead.tail;
+  // C makefwdedge: the box-building sample edge must run left→right so beginpath
+  // anchors the path START at the LEFT node (not the original tail). For a
+  // right-to-left flat edge, swap tail/head + ports for the sample only; the
+  // per-edge clip/install still uses the original edge.
+  // @see lib/dotgen/dotsplines.c:make_flat_edge (makefwdedge), makefwdedge
+  const sample: Edge = tailIsLeft ? lead : {
+    ...lead, tail: leftNode, head: rightNode,
+    info: { ...lead.info, tail_port: lead.info.head_port, head_port: lead.info.tail_port },
+  } as Edge;
+  const { bottom, side } = flatSide(sample);
   const ctx = flatBboxCtx(g);
   const ranksep = graphRanksep(g);
   const P = freshFlatPath();
-  const tend = makeFlatEndBox({ ctx, P, e: lead, n: tn, side, ranksep, isBegin: true });
-  const hend = makeFlatEndBox({ ctx, P, e: lead, n: lead.head, side, ranksep, isBegin: false });
+  const tend = makeFlatEndBox({ ctx, P, e: sample, n: leftNode, side, ranksep, isBegin: true });
+  const hend = makeFlatEndBox({ ctx, P, e: sample, n: rightNode, side, ranksep, isBegin: false });
   const stepx = (g.info.nodesep ?? 18) / (cnt + 1);
-  const stepy = flatVspace(g, tn, !bottom) / (cnt + 1);
+  const stepy = flatVspace(g, leftNode, !bottom) / (cnt + 1);
   const rc: GroupRouteCtx = {
     P, tend, hend, tlast: tend.boxes[tend.boxn - 1], hlast: hend.boxes[hend.boxn - 1],
-    bottom, stepx, stepy,
+    bottom, stepx, stepy, leftNode,
   };
   for (let i = 0; i < cnt; i++) {
     if (!routeGroupEdge(edges[i], i, rc)) return false;

@@ -434,7 +434,11 @@ export function flatVspace(g: Graph, tn: Node, top: boolean): number {
   if (top) {
     if (r <= 0) return graphRanksep(g);
     const prevIdx = (g.info.has_labels & EDGE_LABEL) !== 0 ? r - 2 : r - 1;
-    const prev = ranks[prevIdx];
+    // With EDGE_LABEL the previous *node* rank is r-2; after `abomination` shifts
+    // a flat-label rank in, r-2 can fall below minrank (no node rank above) —
+    // fall back to ranksep rather than dereferencing an absent rank.
+    const prev = prevIdx >= (g.info.minrank ?? 0) ? ranks[prevIdx] : undefined;
+    if (prev === undefined || prev.n === 0) return graphRanksep(g);
     return prev.v[0].info.coord.y - prev.ht1 - tn.info.coord.y - ranks[r].ht2;
   }
   if (r >= (g.info.maxrank ?? 0)) return graphRanksep(g);

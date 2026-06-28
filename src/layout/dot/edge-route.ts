@@ -386,6 +386,16 @@ function routeFlatEdge(e: GraphEdge, g: Graph): boolean {
   if (makeFlatLabeledEdge(g, e)) return true;
   if (makeAdjFlatNoPortEdge(g, e)) return true;
   if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return true;
+  // Non-adjacent unlabeled flat with no side port (e.g. a same-rank cross-cluster
+  // edge with an intervening node): C make_flat_edge routes it UP through the box
+  // corridor, not straight through. @see lib/dotgen/dotsplines.c:make_flat_edge
+  if (e.tail.info.rank !== undefined && e.tail.info.rank === e.head.info.rank
+      && !isFlatAdjacent(g, e)) {
+    const group = collectNonAdjacentFlatGroup(e, g);
+    if (group.length > 0
+        && routeFlatEdgeGroupFaithful(g, group, group.length)
+        && e.info.spl !== undefined) return true;
+  }
   return false;
 }
 
