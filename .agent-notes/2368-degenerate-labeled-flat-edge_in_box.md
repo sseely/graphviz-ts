@@ -58,3 +58,43 @@
 
 - **Confidence**: High on the mechanism (C-instrumented). The fix needs the
   abomination-frame edge_in_box reconciliation, which is a larger effort.
+
+## UPDATE — root cause bottoms out at the x-NS ABSOLUTE ORIGIN (foundational)
+
+Instrumented C `edge_in_box` (emit.c) + `map_edge` (postproc.c). Definitive:
+
+- C `map_edge` early-returns when `ED_spl(e)==NULL`, so a degenerate (pn=0)
+  labeled flat's label is NEVER translated — it stays at `ND_coord(ln)` in the
+  PRE-translate internal frame. C `edge_in_box` then draws it iff that stale pos
+  overlaps the final clip.
+  - 2368_1 `256->376`: stale label x=**-119**, clip LL.x=-4 → outside → NOT drawn.
+  - 2368   `256->376`/`376->256`: stale label x=**69**, clip UR.x=604 → inside → label-only drawn.
+- The port's `mapEdge` ALREADY early-returns on `spl===undefined` (faithful), and
+  splines run before `gvPostprocess` — yet the port's stale label lands at the
+  FINAL node pos (2368_1: 27, on-canvas), not C's -119. Why: the port's x-coord
+  network simplex picks a DIFFERENT ABSOLUTE ORIGIN than C. C's internal frame is
+  uniformly shifted (node 376: C-internal -119 vs port-internal 27, Δ=146 = C's
+  translate Offset); both reconcile to identical FINAL coords (all normal output
+  byte-matches), but the un-translated spline-less label exposes the origin gap.
+  x-NS solutions are translation-invariant (only relative positions are pinned),
+  so C and the port legitimately choose different absolute origins (NS
+  spanning-tree root). node-box byte-match proves the RELATIVE layout is correct.
+
+- **Therefore 2368 cannot be byte-matched without reproducing C's x-NS absolute
+  origin** (its NS tree-root choice) so spline-less labels land in C's frame.
+  That is a foundational change to x-coord assignment affecting every graph — far
+  beyond a targeted fix — and the origin is itself an arbitrary (if
+  deterministic) NS choice. The 3 NON-degenerate missing legs (`376->76`,
+  `196->376`, `256->436`) ARE routable, but the 2 degenerate legs are blocked,
+  so 2368 stays diverged regardless.
+
+- **Options for the future**: (a) allowlist 2368 as an accepted x-NS-origin /
+  untranslated-spline-less-label artifact (relative geometry correct; a C frame
+  quirk); (b) a foundational effort to match C's x-NS absolute origin; (c) a
+  partial fix routing only the 3 non-degenerate legs (reduces but does not
+  eliminate the divergence; needs a full corpus survey for regressions). NOT
+  landed — reverted to clean state (skip retained; 2368_1 + 1624 byte-match).
+
+- **C-instrument recipe (emit/postproc)**: printf in `edge_in_box` (emit.c,
+  label pos + clip) gated by strcmp on the pair; `make -C ~/git/graphviz/build
+  dot` (relinks libcommon); EDBG=1. Revert + rebuild after.
