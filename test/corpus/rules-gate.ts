@@ -35,7 +35,7 @@ const RENDERED = new Set(['byte-match', 'structural-match', 'diverged']);
 const ALLOWLIST: Record<string, string> = {
   // node geometry byte-exact (0.00); divergence is childCount/edge-emit between
   // the headless oracle and the port, not layout rules.
-  'graphs-structs': 'nodes 0.00; full-SVG childCount (record/text emit) artifact',
+  'graphs-structs': 'nodes 0.00; the DEV-BUILD oracle (/tmp/ghl 15.1.0~dev, 82 commits past 15.0.0) drops struct1:f2->struct3:here via a Pshortestpath REGRESSION ("destination point not in any triangle"). Stable graphviz 15.0.0 AND the port both render it (edge1 byte-identical to graphviz.org online). Oracle-build regression, not a port bug',
   'nshare-root_circo': 'nodes 0.00 (1054/1054); full-SVG childCount + one edge @d',
   'nshare-root_twopi': 'nodes 0.00 (1054/1054); full-SVG childCount + one edge @d',
   // node WIDTHS match headless exactly (rx 34.64); residual 1pt is node2's x under
