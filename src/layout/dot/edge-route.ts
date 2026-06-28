@@ -180,6 +180,11 @@ function routeEdgeNonForward(e: GraphEdge, g: Graph): void {
   const tailBox = nodeBoxOf(e.tail, g);
   const headBox = nodeBoxOf(e.head, g);
   if (dispatchMultiRankNonForward(e, tailBox, headBox, g)) return;
+  // Same-rank (flat) edges dispatch by topology regardless of ED_dir; the flat
+  // routers otherwise live only in the forward path, so reach them here too —
+  // e.g. a dir=both flat adjacent side-port edge (2437: AA3:se -> AA4:sw).
+  if (e.tail.info.rank !== undefined && e.tail.info.rank === e.head.info.rank
+    && routeFlatEdge(e, g)) return;
   routeFaithfulRegularPlain(e, g);
 }
 
@@ -364,18 +369,32 @@ function isLostFlatAdjRecordEdge(g: Graph, e: GraphEdge): boolean {
   return rec(e.tail.info.shape) || rec(e.head.info.shape);
 }
 
-/** Route + install a plain forward edge, attaching declared ports if any. */
-function routeForwardEdge(
-  e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
-): void {
-  if (isLostFlatAdjRecordEdge(g, e)) return; // #1323: lost edge, leave unrouted
+/**
+ * Dispatch a same-rank (flat) edge to its faithful router. C routes flat edges
+ * by topology in `dot_splines_` independent of ED_dir (only the arrowheads
+ * differ by direction), so this is reachable from both the forward and the
+ * non-forward (dir=both/back/none) paths. Returns true when the edge was
+ * consumed (routed, or intentionally left unrouted per #1323); false to let the
+ * caller fall through to the regular/fitter path.
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (flat edge group dispatch)
+ */
+function routeFlatEdge(e: GraphEdge, g: Graph): boolean {
+  if (isLostFlatAdjRecordEdge(g, e)) return true; // #1323: lost edge, leave unrouted
   // Labeled same-rank edges: non-adjacent routes around the flat label vnode
   // (make_flat_labeled_edge); adjacent no-port routes straight with the label
   // above (make_flat_adj_edges → makeSimpleFlatLabels). Both decline for every
   // other edge, so only labeled flats are diverted. @see dotsplines.c:1527-1533
-  if (makeFlatLabeledEdge(g, e)) return;
-  if (makeAdjFlatNoPortEdge(g, e)) return;
-  if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return;
+  if (makeFlatLabeledEdge(g, e)) return true;
+  if (makeAdjFlatNoPortEdge(g, e)) return true;
+  if (hasSidePort(e) && routeFaithfulSidePort(e, g)) return true;
+  return false;
+}
+
+/** Route + install a plain forward edge, attaching declared ports if any. */
+function routeForwardEdge(
+  e: GraphEdge, g: Graph, tailBox: NodeBox, headBox: NodeBox, pw: number,
+): void {
+  if (routeFlatEdge(e, g)) return;
   // T2 (AD-1/AD-2): plain adjacent-rank forward edges route through the faithful
   // pathplan path (make_regular_edge). routeRegularEdgeFaithful declines (null)
   // for anything not adjacent-rank, so the fitter below only handles declines.

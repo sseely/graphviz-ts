@@ -39,6 +39,7 @@ import { dotInitNodeEdge } from './init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import { newSpline } from '../../common/splines-clip.js';
 import { mapArrowOpPoints } from '../../common/arrows-shapes-util.js';
+import type { ArrowDrawOp } from '../../common/arrows-types.js';
 import { updateBbBz } from '../../common/splines-geom.js';
 import { placeRegularEdgeLabels, updateBB } from './splines-label.js';
 import { NORMAL, VIRTUAL } from './fastgr.js';
@@ -210,10 +211,19 @@ function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
  * but `headArrowOps` is absent (e.g. #241_0 `3:sw->2:se`).
  * @see lib/dotgen/dotsplines.c:make_flat_adj_edges */
 function copyFlatArrow(orig: Edge, auxe: Edge, del: Point, flip: boolean): void {
-  const head = auxe.info.headArrowOps
-    ?? (auxe.info.spl?.list[0]?.eflag ? auxe.info.tailArrowOps : undefined);
-  if (head !== undefined) {
-    orig.info.headArrowOps = head.map(op => mapArrowOpPoints(op, p => transformf(p, del, flip)));
+  const xf = (ops: ArrowDrawOp[]): ArrowDrawOp[] =>
+    ops.map(op => mapArrowOpPoints(op, p => transformf(p, del, flip)));
+  const eflag = auxe.info.spl?.list[0]?.eflag;
+  // Natural head: the aux head ops; reversed-clone fallback: the tail ops stand
+  // in for the head when the swapped spline carries eflag but no head ops were
+  // stashed (#241_0 `3:sw->2:se`).
+  const head = auxe.info.headArrowOps ?? (eflag ? auxe.info.tailArrowOps : undefined);
+  if (head !== undefined) orig.info.headArrowOps = xf(head);
+  // Natural tail arrow (dir=both / dir=back), unless the tail ops were already
+  // consumed as the head above (reversed clone: no head ops + eflag).
+  const tailConsumed = auxe.info.headArrowOps === undefined && eflag;
+  if (auxe.info.tailArrowOps !== undefined && !tailConsumed) {
+    orig.info.tailArrowOps = xf(auxe.info.tailArrowOps);
   }
 }
 
@@ -231,16 +241,21 @@ function copyFlatLabel(orig: Edge, auxe: Edge, del: Point, flip: boolean, g: Gra
 function copyOneFlatSpline(orig: Edge, auxe: Edge, del: Point, flip: boolean, g: Graph): void {
   const auxbz = auxe.info.spl?.list[0];
   if (auxbz === undefined) return;
-  const bz = newSpline(orig, auxbz.list.length);
+  // Copy bz.size points, not list.length: clip lowers `size` below the
+  // over-allocated `list` (e.g. an arrow-clipped head drops 7→4); emitting
+  // list.length would append the unclipped tail of the spline. @see the
+  // "emit uses bz.size not list.length" hazard (dotsplines.c install).
+  const sz = auxbz.size;
+  const bz = newSpline(orig, sz);
   bz.sflag = auxbz.sflag;
   bz.eflag = auxbz.eflag;
   bz.sp = transformf(auxbz.sp, del, flip);
   bz.ep = transformf(auxbz.ep, del, flip);
-  for (let j = 0; j < auxbz.list.length; j++) bz.list[j] = transformf(auxbz.list[j], del, flip);
+  for (let j = 0; j < sz; j++) bz.list[j] = transformf(auxbz.list[j], del, flip);
   // Grow the graph bb by each transformed bezier segment. @see dotsplines.c:1270
   const bb = g.info.bb;
   if (bb !== undefined) {
-    for (let j = 0; j + 3 < bz.list.length; j += 3) {
+    for (let j = 0; j + 3 < sz; j += 3) {
       updateBbBz(bb, [bz.list[j], bz.list[j + 1], bz.list[j + 2], bz.list[j + 3]]);
     }
   }
