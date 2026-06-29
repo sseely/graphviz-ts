@@ -115,6 +115,48 @@ The same node's other label line, `"93736-32246"`, measures **identically**
 (96.00 pt both) — so the error is string-dependent and accumulates per glyph,
 not a uniform scale factor.
 
+**Isolating the algorithm from the font backend — the injectable `TextMeasurer`.**
+A2 is only *diagnosable* — and provably distinct from a layout bug — because text
+measurement is a deliberate **seam**, not hard-wired into either engine. Both
+sides are driven through the **same estimation algorithm**, which holds the font
+backend fixed so the parity survey measures the *layout*, not the rasterizer:
+
+- **C side (the oracle).** The native `dot` oracle runs under a headless
+  `GVBINDIR` (`test/corpus/gen-headless-gvbindir.sh` → `/tmp/ghl`) that symlinks
+  **only** the `core` and `dot_layout` plugins — no `gd` / `pango` / `quartz`
+  text-layout plugin. With the text-layout slot empty, graphviz falls back to
+  `estimate_textspan_size`, its built-in deterministic estimator: no FreeType
+  rasterization, no font files, no per-platform variance. (Were the oracle left on
+  the FreeType/pango path, every label would carry rasterizer- and
+  platform-specific advances, and we could not separate a layout-algorithm
+  divergence from a font-backend difference — the whole corpus would be noise.)
+- **TS side.** `TextMeasurer` is a one-method interface
+  (`measure(text, font, size, flags) → {w, h, …}`, `src/common/textmeasure.ts`)
+  **dependency-injected** into every label-sizing call site — `polyInit`,
+  `recordInit`, `initEdgeLabels`, and `buildNodeLabel` each take the measurer as a
+  parameter; nothing measures text through a global. The Node default is
+  `EstimateTextMeasurer`, a faithful port of C's `estimate_textspan_size`,
+  resolved by `createMeasurer()` (`src/common/textmeasure-factory.ts`) and pinned
+  for tests/CI via `setTextMeasurer(...)` or `GV_TEXT_MEASURER=estimate`.
+
+With both engines on the *same estimate*, the only thing left that can diverge is
+the estimator's own per-glyph rounding (the +0.75 pt above) — a faithful-port
+residual *inside* the measurement primitive, with the entire ranking / ordering /
+network-simplex / spline pipeline held identical. That is what makes the survey a
+measurement of the **algorithm**: a verdict regression points at layout code, not
+at a font.
+
+**The seam also lets us *prove* a residual is 100% measurement, not algorithm.**
+Because the measurer is swappable, we can take one further step and feed the port
+the **exact widths C measured** (captured from the oracle), bypassing the
+estimator entirely. If the layout then reproduces C **bit-for-bit**, the
+divergence is provably upstream in measurement with *zero* contribution from the
+code under test. The `NaN` / `ratio=compress` case above is precisely this
+experiment: forcing the 9 mismeasured node half-widths to C's values collapses
+node-x, the network-simplex x-assignment, and the `Target<->TThread` spline all
+onto C (node-x `53/76 → 0/76` off; spline `7 → 4` points). That isolation — not a
+hand-wave — is what licenses the A2 verdict.
+
 **Downstream effect (why a 0.75 pt label delta is visible at all).** Label width
 feeds node size, which feeds the layout. The chain is deterministic:
 
