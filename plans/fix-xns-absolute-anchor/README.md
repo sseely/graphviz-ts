@@ -69,7 +69,7 @@ print by an env var, capture, then `git checkout` the C source and rebuild clean
 |-------|------|--------|
 | [0](batch-0/overview.md) | x-NS pivot-trace harness + baseline divergence capture | [x] |
 | [1](batch-1/overview.md) | ~~Align the absolute anchor (T1–T5)~~ **RE-SCOPED: remove port-only `normalizeXcoords`** | [x] |
-| [2](batch-2/overview.md) | Degenerate labeled-flat wiring (map_edge / edge_in_box) | [ ] |
+| [2](batch-2/overview.md) | Degenerate labeled-flat wiring (map_edge / edge_in_box) | [x] |
 | [3](batch-3/overview.md) | Full survey + baseline refresh | [ ] |
 
 > **Batch-0 finding re-scopes the mission.** The port's x-NS pivot order is

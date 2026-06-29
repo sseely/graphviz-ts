@@ -20,6 +20,7 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { Point, Box } from '../model/geom.js';
+import type { TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { RendererPlugin, LabelType } from '../gvc/context.js';
 import type { RenderJob } from '../gvc/job.js';
@@ -81,22 +82,49 @@ function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailCo
 // @see plugin/core/gvrender_core_svg.c:svg_engine
 // ---------------------------------------------------------------------------
 
+/** geom.h OVERLAP(b0,b1): true iff the two boxes intersect (inclusive).
+ * @see lib/common/geom.h:OVERLAP */
+function boxfOverlap(b0: Box, b1: Box): boolean {
+  return b0.ur.x >= b1.ll.x && b1.ur.x >= b0.ll.x
+    && b0.ur.y >= b1.ll.y && b1.ur.y >= b0.ll.y;
+}
+
+/** overlap_label: does the label's box (pos ± dimen/2) overlap clip box b?
+ * @see lib/common/utils.c:overlap_label */
+function overlapLabel(lp: TextlabelT, b: Box): boolean {
+  const sx = lp.dimen.x / 2;
+  const sy = lp.dimen.y / 2;
+  const bb: Box = {
+    ll: { x: lp.pos.x - sx, y: lp.pos.y - sy },
+    ur: { x: lp.pos.x + sx, y: lp.pos.y + sy },
+  };
+  return boxfOverlap(b, bb);
+}
+
 /**
- * True when an edge has something to draw: a spline (path + arrows) or any
- * label. C's gvrender defers the `<g>` until a draw op, so an edge with neither
- * (e.g. a concentrate-merged IGNORED duplicate) emits no group. begin/end edge
- * callbacks still fire, matching emit_edge. @see lib/common/emit.c:emit_edge
+ * Faithful-to-outcome `edge_in_box`: true when the edge has something to draw.
+ * C's gvrender defers the `<g>` until a draw op, so an edge whose content falls
+ * entirely outside the clip emits no group (emit.c:edge_in_box tests each piece
+ * vs job->clip via boxf_overlap/overlap_label).
  *
- * The main `label` must be *placed* to count, mirroring C's `edge_in_box`
- * (which tests `overlap_label`, i.e. the label's position). A flat edge merged
- * into a same-rank representative (the back-edge of an opposing pair) keeps its
- * `label` reference but its label vnode was deleted before placement, so the
- * label never gets a position (`set` stays false) — C emits no group for it.
- * @see lib/common/utils.c:overlap_label, lib/dotgen/mincross.c:flat_rev
+ * The only piece that can legitimately fall OUTSIDE the clip on this corpus is a
+ * degenerate labeled-flat label: it is spline-less, so map_edge leaves it at its
+ * internal (un-normalized) x-frame position while the clip is the final frame.
+ * The `overlapLabel` test on the main label reproduces C's draw-iff-overlap for
+ * exactly that case — on-canvas (2368) → drawn; off-canvas (2368_1, negative
+ * un-normalized x) → suppressed. A present spline always lies within the clip
+ * (GD_bb contains it), and head/tail/xlabels are positioned at on-canvas
+ * endpoints, so those keep their existing unconditional triggers — adding an
+ * overlap test there only risks suppressing legitimately-drawn content (it
+ * regressed neato/circo edges whose spl.bb is computed differently). The `set`
+ * guard on the main label is kept: the port retains an unplaced (`pos=0,0`,
+ * `set=false`) label on merged back-edges where C has none.
+ * @see lib/common/emit.c:edge_in_box, lib/common/utils.c:overlap_label
  */
-function edgeHasDrawableContent(e: Edge): boolean {
+function edgeHasDrawableContent(e: Edge, clip: Box): boolean {
   const i = e.info;
-  return i.spl !== undefined || (i.label !== undefined && i.label.set)
+  return i.spl !== undefined
+    || (i.label !== undefined && i.label.set && overlapLabel(i.label, clip))
     || i.xlabel !== undefined
     || i.head_label !== undefined || i.tail_label !== undefined;
 }
@@ -119,7 +147,9 @@ export class SvgRenderer implements RendererPlugin {
   beginNode(n: Node, job: RenderJob): void { svgBeginNode(n, job); }
   endNode(_n: Node, job: RenderJob): void { svgEndNode(job); }
   beginEdge(e: Edge, job: RenderJob): void {
-    this.edgeGroupOpen = edgeHasDrawableContent(e);
+    // job.bb is the final drawing bbox (= GD_bb / job->clip); emit_edge gates
+    // all edge drawing on edge_in_box(e, job->clip). @see lib/common/emit.c:emit_edge
+    this.edgeGroupOpen = edgeHasDrawableContent(e, job.bb);
     if (this.edgeGroupOpen) svgBeginEdge(e, job);
   }
 
