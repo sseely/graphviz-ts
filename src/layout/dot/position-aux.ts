@@ -146,11 +146,17 @@ export function processFlatEdge(g: Graph, u: Node, e: Edge): void {
   const t0 = isOrdered ? e.tail : e.head;
   const h0 = isOrdered ? e.head : e.tail;
   const width = nodeRw(t0) + nodeLw(h0);
-  const m0 = edgeMinlen(e) * nodesep + width;
+  // C declares `int m0` in make_LR_constraints (position.c), and ED_minlen is
+  // also int, so every assignment of the double `…+ width` (width is fractional
+  // from node rw/lw) truncates toward zero. Keeping m0 a float let a fractional
+  // minlen (e.g. 180.4138 on the multiline-label Octagon/Parallelogram pair)
+  // reach the x-coord network simplex, producing a fractional x-coordinate and a
+  // sub-pixel shift exposed by set_aspect (pgram). @see position.c:make_LR_constraints
+  let m0 = Math.trunc(edgeMinlen(e) * nodesep + width);
   const ex = findFastEdge(t0, h0);
   if (ex !== undefined) {
-    const m1 = Math.max(m0, width + nodesep + Math.round(edgeDist(e)));
-    ex.info.minlen = Math.max(ex.info.minlen ?? 1, m1);
+    m0 = Math.trunc(Math.max(m0, width + nodesep + Math.round(edgeDist(e))));
+    ex.info.minlen = Math.max(ex.info.minlen ?? 1, m0);
     ex.info.weight = Math.max(ex.info.weight ?? 0, edgeWeight(e));
   } else if (!e.info.label) {
     makeAuxEdge(t0, h0, m0, edgeWeight(e));
