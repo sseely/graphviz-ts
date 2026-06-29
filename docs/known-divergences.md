@@ -193,8 +193,9 @@ order, and y. The full renders are visually indistinguishable:
 |---|---|
 | ![proc3d rendered by C Graphviz](/img/proc3d-golden.svg) | ![proc3d rendered by graphviz-ts](/img/proc3d-ours.svg) |
 
-The standalone work-up (DOT source, per-metric numbers, reproduce command) is at
-`comparisons/a2-font-metrics/proc3d-a2.html`.
+The standalone work-up (root cause, per-metric numbers, reproduce command) is on
+its own rendered page:
+[**proc3d — the canonical A2 font-metric divergence**](/divergences-proc3d-a2).
 
 **Why accepted.** Byte-matching FreeType's per-glyph advances across every font
 and string would require replicating its metric tables, hinting, and rounding —
