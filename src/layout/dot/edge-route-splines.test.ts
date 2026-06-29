@@ -233,10 +233,18 @@ describe('T5: rankdir=LR/RL/BT regular edges via faithful pathplan (dot oracle)'
 // routeOneEdge — which now dispatches to the makefwdedge path (AD-1).
 //
 // The geometry of a centred bottom→top arrow-at-top adjacent edge is exactly
-// dot's rankdir=BT a->b (DOT_BT_CHAIN_AB above): the same 72pt gap, x=27,
-// arrow at the top node. SVG_y = -internal_y for this 2-node graph (node
-// centres a@90→-90, b@18→-18 confirm pure negation, no translate).
+// dot's rankdir=BT a->b (DOT_BT_CHAIN_AB above): the same 72pt gap and curve,
+// arrow at the top node. These tests route at maxphase=3 (pre-gvPostprocess),
+// so coords are in the internal frame. After the xns-absolute-anchor mission
+// removed the port-only normalizeXcoords, that internal frame is C's
+// un-normalized set_xcoords frame: the lone column sits at x=0 (C-verified),
+// not the post-translate x=27 of DOT_BT_CHAIN_AB. Y is unaffected (only X was
+// normalized), so the internal oracle is DOT_BT_CHAIN_AB with x:0.
 // ---------------------------------------------------------------------------
+
+/** DOT_BT_CHAIN_AB in the internal (pre-translate, un-normalized) frame: same
+ *  curve, lone column at x=0. @see edge-route-splines maxphase=3 routing note. */
+const DOT_BT_CHAIN_AB_INTERNAL: Pt[] = DOT_BT_CHAIN_AB.map(p => ({ x: 0, y: p.y }));
 
 /** Lay out `src` to maxphase=3 (ranks + coords, before spline routing). */
 function layoutToPosition(src: string): Graph {
@@ -277,9 +285,9 @@ describe('T1 (DOT-1b): faithful adjacent back edge via makefwdedge (dot oracle)'
     expect(ba).toBeDefined();
     routeOneEdge(ba!, g);
     const pts = splineSvgPts(ba!);
-    // Same geometry as dot's rankdir=BT a->b: centred, arrow at the top node.
-    expect(pts.length).toBe(DOT_BT_CHAIN_AB.length);
-    expect(maxDelta(pts, DOT_BT_CHAIN_AB)).toBeLessThanOrEqual(TOL);
+    // Same geometry as dot's rankdir=BT a->b, in the internal (x=0) frame.
+    expect(pts.length).toBe(DOT_BT_CHAIN_AB_INTERNAL.length);
+    expect(maxDelta(pts, DOT_BT_CHAIN_AB_INTERNAL)).toBeLessThanOrEqual(TOL);
     // Arrowhead emitted at a (top node, SVG y ~ -70, near a's lower boundary).
     const arr = arrowPts(ba!);
     expect(arr).toBeDefined();
@@ -292,9 +300,11 @@ describe('T1 (DOT-1b): faithful adjacent back edge via makefwdedge (dot oracle)'
     const ab = findEdge(g, 'a', 'b');
     expect(ab).toBeDefined();
     routeOneEdge(ab!, g);
-    // Lone `digraph{a->b}` dot 15.x: M27,-71.7 C27,-64.41 27,-55.73 27,-47.54.
+    // Lone `digraph{a->b}` dot 15.x final: M27,-71.7 C27,-64.41 27,-55.73 27,-47.54.
+    // maxphase=3 routes in the internal (pre-translate, un-normalized) frame, so
+    // the lone column is at x=0 (not the post-translate x=27); y is unchanged.
     const oracle: Pt[] = [
-      { x: 27, y: -71.7 }, { x: 27, y: -64.41 }, { x: 27, y: -55.73 }, { x: 27, y: -47.54 },
+      { x: 0, y: -71.7 }, { x: 0, y: -64.41 }, { x: 0, y: -55.73 }, { x: 0, y: -47.54 },
     ];
     expect(maxDelta(splineSvgPts(ab!), oracle)).toBeLessThanOrEqual(TOL);
   });
