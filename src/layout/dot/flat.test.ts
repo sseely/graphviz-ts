@@ -6,8 +6,42 @@
 
 import { describe, it, expect } from 'vitest';
 import { class2 } from './classify.js';
-import { abomination } from './flat.js';
+import { abomination, hasInterveningNode } from './flat.js';
+import { NORMAL, VIRTUAL } from './fastgr.js';
+import type { RankEntry } from '../../model/rankEntry.js';
+import type { Node } from '../../model/node.js';
 import { makeTestGraph, addTestEdge, setupRanks } from './position.test.js';
+
+/** Build a minimal RankEntry from (order, node_type, label?) triples. */
+function rankOf(specs: Array<{ order: number; type: number; label?: unknown }>): RankEntry {
+  const v = specs.map(s => ({ info: { order: s.order, node_type: s.type, label: s.label } })) as unknown as Node[];
+  return { n: v.length, v } as unknown as RankEntry;
+}
+
+// C checkFlatAdjacent (flat.c:211): a between-node blocks flat-edge adjacency
+// only when it is a NORMAL node or a LABELED virtual node; an unlabeled virtual
+// node (an edge merely passing through the rank) does NOT block.
+describe('hasInterveningNode — node-type aware (flat.c:checkFlatAdjacent)', () => {
+  it('a NORMAL node strictly between the endpoints blocks adjacency', () => {
+    const rk = rankOf([{ order: 0, type: NORMAL }, { order: 1, type: NORMAL }, { order: 2, type: NORMAL }]);
+    expect(hasInterveningNode(rk, 0, 2)).toBe(true);
+  });
+
+  it('an UNLABELED virtual node between does NOT block adjacency', () => {
+    const rk = rankOf([{ order: 0, type: NORMAL }, { order: 1, type: VIRTUAL }, { order: 2, type: NORMAL }]);
+    expect(hasInterveningNode(rk, 0, 2)).toBe(false);
+  });
+
+  it('a LABELED virtual node between blocks adjacency', () => {
+    const rk = rankOf([{ order: 0, type: NORMAL }, { order: 1, type: VIRTUAL, label: {} }, { order: 2, type: NORMAL }]);
+    expect(hasInterveningNode(rk, 0, 2)).toBe(true);
+  });
+
+  it('no node strictly between the endpoints → not blocked', () => {
+    const rk = rankOf([{ order: 0, type: NORMAL }, { order: 2, type: NORMAL }]);
+    expect(hasInterveningNode(rk, 0, 2)).toBe(false);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // AC1: flat edge in class2 → NodeInfo.flatOut + GraphInfo.hasFlatEdges
