@@ -212,6 +212,12 @@ export function hasInterveningNode(rk: RankEntry, lo: number, hi: number): boole
 
 /**
  * Mark flat edge as adjacent if no nodes fall between its endpoints in rank.
+ * When adjacent, C marks the edge AND every edge in its `to_virt` chain (the
+ * `do { ED_adjacent(e)=1; e=ED_to_virt(e); } while(e)` loop): the class rep must
+ * carry the flag too, because flat_edges' `other`-loop copies adjacency from the
+ * rep (`ED_adjacent(e) = ED_adjacent(le)`). Marking only the leaf left the rep
+ * unmarked, so that copy clobbered the flag back to 0 and the edge mis-routed
+ * through the generic fitter (a spurious y-slope on a flat edge).
  * @see lib/dotgen/flat.c:checkFlatAdjacent
  */
 export function checkFlatAdjacent(e: Edge): void {
@@ -219,10 +225,14 @@ export function checkFlatAdjacent(e: Edge): void {
   const hOrd = nodeOrder(e.head);
   const lo = Math.min(tOrd, hOrd);
   const hi = Math.max(tOrd, hOrd);
-  if (hi - lo <= 1) { e.info.adjacent = 1; return; }
-  const rank = e.tail.root.info.rank;
-  if (!rank) return;
-  if (!hasInterveningNode(rank[nodeRank(e.tail)], lo, hi)) e.info.adjacent = 1;
+  let adjacent = hi - lo <= 1;
+  if (!adjacent) {
+    const rank = e.tail.root.info.rank;
+    if (!rank) return;
+    adjacent = !hasInterveningNode(rank[nodeRank(e.tail)], lo, hi);
+  }
+  if (!adjacent) return;
+  for (let le: Edge | undefined = e; le; le = le.info.to_virt) le.info.adjacent = 1;
 }
 
 
