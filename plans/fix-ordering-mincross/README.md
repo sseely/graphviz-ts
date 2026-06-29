@@ -61,8 +61,8 @@ C is the spec. Instrument C before hypothesizing (rule
 | Batch | Goal | Status |
 |-------|------|--------|
 | [0](batch-0/overview.md) | Instrument C `do_ordering`/`ordered_edges` vs port; pin first divergence on b58; fix flat-geom-diff ellipse blind spot | [x] |
-| [1](batch-1/overview.md) | Implement the fix at the pinned site + `ordering=out`/`in` unit tests | [ ] |
-| [2](batch-2/overview.md) | Validate full survey (0 regressions) + baseline refresh | [ ] |
+| [1](batch-1/overview.md) | Implement the fix at the pinned site + `ordering=out`/`in` unit tests | [x] |
+| [2](batch-2/overview.md) | Validate full survey (0 regressions) + baseline refresh | [x] |
 
 ## Recipes (verified this session)
 
