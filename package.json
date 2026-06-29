@@ -40,8 +40,9 @@
     "survey:gate": "tsx test/corpus/rules-gate.ts",
     "survey:dashboard": "tsx test/corpus/dashboard.ts",
     "survey:baseline": "GV_TEXT_MEASURER=lut tsx test/corpus/survey.ts",
-    "docs:dev": "vitepress dev docs-site",
-    "docs:build": "vitepress build docs-site",
+    "docs:copy-reports": "node docs-site/copy-reports.mjs",
+    "docs:dev": "npm run docs:copy-reports && vitepress dev docs-site",
+    "docs:build": "npm run docs:copy-reports && vitepress build docs-site",
     "docs:preview": "vitepress preview docs-site"
   },
   "peerDependencies": {
