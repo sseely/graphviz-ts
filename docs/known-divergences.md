@@ -24,6 +24,15 @@ The authoritative, continuously-updated records are
 [`plans/port-catalog/README.md`](https://github.com/sseely/graphviz-ts/blob/main/plans/port-catalog/README.md)
 (algorithm-level port-status inventory).
 
+The **machine-readable** source of truth for which graphs are *accepted* (class 1
+below) is
+[`test/corpus/accepted-divergences.json`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/accepted-divergences.json).
+The tooling joins it at report time: `PARITY.md` splits **accepted deltas** from
+the **tracked** backlog, and the rules gate sources its allowlist from it. The
+prose sections below (A1/A2/A3) explain each entry; a CI test
+(`accepted-divergences.test.ts`) enforces that every accepted graph still
+diverges, so this list cannot silently rot.
+
 ---
 
 ## Accepted deltas (we deliberately do not byte-match)

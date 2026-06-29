@@ -41,8 +41,9 @@ GATE PASS
   (`1332`,`1323`,`clust5`), ports/arrows/weight, `Petersen`, etc. Out of scope.
 
 ## Allowlisted match→diverged (verified NOT a rules regression)
-Encoded in `rules-gate.ts:ALLOWLIST`. Each verified by direct node-position
-comparison (port EstimateTextMeasurer vs headless dot):
+Encoded in `accepted-divergences.json` (scope `rules`), joined by `rules-gate.ts`
+via `accepted.ts`. Each verified by direct node-position comparison (port
+EstimateTextMeasurer vs headless dot):
 
 | id | node-pos Δ | reason |
 |----|-----------|--------|
