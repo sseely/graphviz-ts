@@ -181,11 +181,15 @@ export class StmtProcessor {
 
   processAssign(stmt: AssignStmt, graph: Graph): void {
     graph.attrs.set(stmt.key, normaliseAttrValue(stmt.value));
+    // cgraph: assigning a graph attr on any (sub)graph declares it graph-wide
+    // with an empty default → the root sees "" for it. @see agattr declaration.
+    graph.root.declaredGraphAttrs.add(stmt.key);
   }
 
   processAttr(stmt: AttrStmt, graph: Graph): void {
     if (stmt.target === 'graph') {
       applyAttrs(stmt.attrs, graph.attrs);
+      for (const a of stmt.attrs) graph.root.declaredGraphAttrs.add(a.key);
     } else if (stmt.target === 'node') {
       applyAttrs(stmt.attrs, graph.nodeDefaults);
     } else {

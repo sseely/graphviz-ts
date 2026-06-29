@@ -131,6 +131,18 @@ export class Graph {
    */
   subgSeqCounter = 0;
 
+  /**
+   * Names of graph attributes (AGRAPH) declared anywhere in this hierarchy —
+   * the port's stand-in for cgraph's `Agsym_t` symbol table. Populated on the
+   * ROOT only, at parse time, whenever a graph attribute is assigned on any
+   * (sub)graph: setting `ordering=out` on a subgraph declares "ordering"
+   * graph-wide with an empty default, so `agGraphAttr(root, "ordering")` returns
+   * `""` (not undefined) — mirroring `agfindgraphattr`/`late_string`. Read via
+   * `agGraphAttr` (model/cgraph-ops.ts); empty on non-root graphs.
+   * @see lib/cgraph/attr.c:agattr (graph-wide declaration, "" default)
+   */
+  declaredGraphAttrs: Set<string> = new Set();
+
   /** @see lib/cgraph/graph.c:agopen */
   constructor(name: string, kind: GraphKind) {
     this.name = name;
