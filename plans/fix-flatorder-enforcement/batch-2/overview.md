@@ -2,7 +2,27 @@
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T2 | Final full survey; assert 0 regressions and which of the still-diverged `ordering` graphs now match; document any secondary-cause residuals; refresh the parity baseline | debugger | `test/corpus/parity.json`, `test/corpus/parity-rules.json`, `test/corpus/PARITY.md` | T1 | [ ] |
+| T2 | Final full survey; assert 0 regressions and which of the still-diverged `ordering` graphs now match; document any secondary-cause residuals; refresh the parity baseline | debugger | `test/corpus/parity.json`, `test/corpus/parity-rules.json`, `test/corpus/PARITY.md` | T1 | [x] |
+
+**T2 outcome.** Survey GATE PASS, **0 regressions / 0 clip-regressions, 4
+improvements** (run at Batch 1; no code changed since, so reused for the refresh).
+Baseline refreshed: `parity-probe.json` → `parity-rules.json` + `parity.json`;
+`PARITY.md` regenerated (byte-match **493 → 496**). Verified the baseline diff is
+EXACTLY the 4 expected verdict changes, no churn:
+
+| Graph | Before | After | Cause |
+|-------|--------|-------|-------|
+| `graphs-b58` | diverged | structural-match | node order now == C; residual 0.24px flat `4->5` spline (AD-5 secondary) |
+| `linux.x86-ordering_dot1` | diverged | byte-match | fully fixed |
+| `macosx-ordering_dot1` | diverged | byte-match | fully fixed |
+| `nshare-ordering_dot1` | diverged | byte-match | fully fixed |
+
+**Residuals (still diverged, SECONDARY cause — NOT FLATORDER, per AD-5 documented
+not chased; left in tracked backlog, NOT accepted):** `{graphs,share,windows}-pgram`
+(maxΔ 736–1108px), `{graphs,share,windows}-trapeziumlr` (maxΔ 690–931px), `1472`
+(no coord Δ → structural/element-count diff). The large pixel deltas confirm a
+different root cause (x-coord/spline/shape), unrelated to the flat-matrix index fix.
+Canary `graphs-in` stays byte-match.
 
 Execution rule: run the full survey + rules-gate. Confirm GATE PASS, 0 regressions.
 Record how many of the targeted `ordering` graphs (b58, ordering_dot1×3, pgram×3,
