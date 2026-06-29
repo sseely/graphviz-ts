@@ -87,6 +87,7 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `2619_2` | 440.00 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
 | `windows-shells` | 420.42 | `svg/g[1]/g[9]/path[1]/@d` |
 | `share-shells` | 420.38 | `svg/g[1]/g[9]/path[1]/@d` |
+| `2796` | 377.00 | `svg/g[1][childCount]` |
 | `graphs-b100` | 351.90 | `svg/g[1]/g[1597]/path[1]/@d` |
 | `graphs-b104` | 351.90 | `svg/g[1]/g[1597]/path[1]/@d` |
 | `1939` | 348.00 | `svg/g[1]/g[8]/path[1]/@d` |
@@ -95,7 +96,6 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `share-ldbxtried` | 323.00 | `svg/g[1]/g[23]/path[1]/@d` |
 | `windows-ldbxtried` | 322.00 | `svg/g[1]/g[19]/path[1]/@d` |
 | `graphs-shells` | 264.00 | `svg/g[1]/g[27]/path[1]/@d` |
-| `2796` | 249.00 | `svg/g[1][childCount]` |
 | `2183` | 248.00 | `svg/g[1][childCount]` |
 | `graphs-b103` | 216.20 | `svg/g[1]/g[1220]/path[1]/@d` |
 | `1447` | 192.39 | `svg/g[1]/g[13]/path[1]/@d` |
