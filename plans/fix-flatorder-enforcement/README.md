@@ -85,7 +85,7 @@ compare to the port's, before changing enforcement.
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [0](batch-0/overview.md) | Instrument C `build_ranks`/`enqueue_neighbors` install order + FLATORDER weight handling vs the port on b58; pin exactly how C orders 6-before-8 and where the port diverges | [ ] |
+| [0](batch-0/overview.md) | Instrument C `build_ranks`/`enqueue_neighbors` install order + FLATORDER weight handling vs the port on b58; pin exactly how C orders 6-before-8 and where the port diverges | [x] — weight-0 premise overturned; divergence pinned in `left2right` matrix index basis (`order-vStart` vs C `ND_low`) |
 | [1](batch-1/overview.md) | Implement the enforcement fix at the pinned site; b58 3/6/8 order == C; + unit tests | [ ] |
 | [2](batch-2/overview.md) | Full survey (0 regressions), record which ordering graphs clear, document residuals, refresh baseline | [ ] |
 
