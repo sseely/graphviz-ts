@@ -67,7 +67,7 @@ instrument-c-before-quarantine). Rebuild `gvplugin_dot_layout` under
 |-------|------|--------|
 | [0](batch-0/overview.md) | Instrument + isolate both residuals (C-vs-port flat-geom trace) | [x] |
 | [1](batch-1/overview.md) | Fix Issue 2: adjacent labeled-flat curve geometry | [x] |
-| [2](batch-2/overview.md) | Fix Issue 1: flat-label-rank vertical spacing | [ ] |
+| [2](batch-2/overview.md) | Fix Issue 1: flat-label-rank vertical spacing | [x] (no-op — resolved by B1) |
 | [3](batch-3/overview.md) | Conditional x-NS tie-break (T3) + validate & baseline refresh (T4) | [ ] |
 
 ## Docs
