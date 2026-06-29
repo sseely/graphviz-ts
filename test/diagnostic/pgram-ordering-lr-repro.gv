@@ -1,0 +1,12 @@
+// Minimal reproducer for the pgram A-Z rank ordering divergence.
+// C orders the target rank by DECLARATION (ACEBDF: houses then invhouses);
+// the port over-enforces ordering=out FLATORDER to ALPHABETICAL (ABCDEF).
+// Trigger: rankdir=LR + an ordering=out middle node (PP) that has an in-edge
+// (n1->PP) and a flat out-edge (PP->OCT, same rank) and fans out to a declared
+// rank=same target rank. Remove rankdir=LR (default TB) and C==port (ACEBDF).
+digraph { rankdir=LR;
+  { rank=same; node[shape=house]; A;C;E; node[shape=invhouse]; B;D;F; }
+  { rank=same; PP; node[shape=octagon]; OCT; ordering=out; }
+  PP->A;PP->B;PP->C;PP->D;PP->E;PP->F;
+  n1->PP->OCT;
+}

@@ -21,7 +21,7 @@ import {
 import { transpose, ncross, exchange } from './mincross-cross.js';
 import { CLUSTER, isACluster } from './rank.js';
 import { installCluster, expandCluster, markLowclusters } from './cluster.js';
-import { agnode, agsubg, agsubnode } from '../../model/cgraph-ops.js';
+import { agnode, agsubg, agsubnode, agGraphAttr } from '../../model/cgraph-ops.js';
 
 // betweenclust — @see lib/dotgen/mincross.c:betweenclust
 export function betweenclust(e: Edge): boolean {
@@ -348,7 +348,15 @@ export function doOrdering(ctx: MincrossContext, g: Graph, outflag: boolean): vo
 }
 
 export function orderedEdges(ctx: MincrossContext, g: Graph): void {
-  const ordering = g.attrs.get('ordering');
+  // @see lib/dotgen/mincross.c:ordered_edges (514). C reads
+  // `late_string(g, G_ordering, NULL)`, which is non-NULL (incl "") iff
+  // "ordering" is declared graph-wide. Because a subgraph-scoped `ordering=out`
+  // declares the attribute graph-wide with an empty default, the ROOT's value is
+  // "" → C takes the if-branch (matches neither "out"/"in"), does nothing, and
+  // does NOT recurse into subgraphs. So C silently ignores subgraph-scoped
+  // ordering; only a root-level (or cluster's own) "out"/"in" is applied.
+  // agGraphAttr reproduces the load-bearing "" vs undefined distinction.
+  const ordering = agGraphAttr(g, 'ordering');
   if (ordering !== undefined) {
     if (ordering === 'out') doOrdering(ctx, g, true);
     else if (ordering === 'in') doOrdering(ctx, g, false);

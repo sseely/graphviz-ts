@@ -11,7 +11,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 790
-- **byte-match:** 503 (63.7%) · structural-match: 199 → 702/790 structurally equal (88.9%)
+- **byte-match:** 503 (63.7%) · structural-match: 202 → 705/790 structurally equal (89.2%)
 - **Accepted deltas (documented, won't-fix):** 4 · **Tracked gaps (unaccepted, will-fix):** 272 → of 276 non-byte-match graphs
 - **errored:** 0 · **timeout:** 0 · **oracle-error:** 11 (excluded from scoring)
 - **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3
@@ -39,13 +39,13 @@ the diverged table and the backlog below.
 | `windows-NaN` | structural-match | 18.00 | A2 | maxΔ~18pt; fine x only | known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout |
 | `2368` | structural-match | 10.22 | A3 | maxΔ~10pt on one flat-edge arc (376->76); bbox/nodes/labels byte-match | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
 
-## Tracked structural-match (195)
+## Tracked structural-match (198)
 
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). Near-misses — sub-pixel-to-modest position drift — that we
 intend to close (accepted structural-match deltas are listed above instead).
 
-## Tracked diverged (77) — worst-first
+## Tracked diverged (74) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
@@ -74,10 +74,7 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `1367` | 1083.21 | `svg/g[1]/g[1][childCount]` |
 | `1879` | 940.87 | `svg/g[1]/g[99]/g[1]/a[1]/text[3]/text()[1]` |
 | `graphs-decorate` | 729.34 | `svg/g[1]/g[5][childCount]` |
-| `share-pgram` | 720.00 | `svg/g[1]/g[31]/path[1]/@d` |
-| `windows-pgram` | 720.00 | `svg/g[1]/g[31]/path[1]/@d` |
 | `graphs-big` | 661.70 | `svg/g[1]/g[5]/path[1]/@d` |
-| `graphs-pgram` | 648.42 | `svg/g[1]/g[30]/path[1]/@d` |
 | `2371` | 575.53 | `svg/g[1]/g[261]/path[1]/@d` |
 | `1436` | 564.90 | `svg/g[1]/g[25]/path[1]/@d` |
 | `2475_2` | 520.73 | `svg/g[1]/g[2779]/path[1]/@d` |
@@ -109,8 +106,11 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `graphs-japanese` | 144.00 | `svg/g[1]/g[5]/path[1]/@d` |
 | `graphs-b53` | 138.55 | `svg/g[1]/g[13]/path[1]/@d` |
 | `2646` | 114.00 | `svg/g[1]/g[3]/path[1]/@d` |
+| `graphs-biglabel` | 111.03 | `svg/g[1]/g[5]/path[1]/@d` |
+| `graphs-rowe` | 93.00 | `svg/g[1]/g[19]/path[1]/@d` |
+| `share-rowe` | 93.00 | `svg/g[1]/g[19]/path[1]/@d` |
 
-_… and 17 more diverged inputs (see parity.json + the buckets below)._
+_… and 14 more diverged inputs (see parity.json + the buckets below)._
 
 ## errored (0)
 
@@ -150,7 +150,7 @@ a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 57 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 54 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
 | `element-count` | 15 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `attr-or-tag` | 2 | `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |

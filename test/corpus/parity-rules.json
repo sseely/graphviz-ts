@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-29T16:50:28.696Z",
+  "generatedAt": "2026-06-29T18:30:40.829Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
     "byte-match": 503,
-    "structural-match": 199,
-    "diverged": 77,
+    "structural-match": 202,
+    "diverged": 74,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -1998,9 +1998,8 @@
     {
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
-      "verdict": "diverged",
-      "maxDelta": 648.4200000000001,
-      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.7899999999999636
     },
     {
       "id": "graphs-pm2way",
@@ -3602,9 +3601,8 @@
     {
       "id": "share-pgram",
       "path": "share/pgram.gv",
-      "verdict": "diverged",
-      "maxDelta": 720,
-      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.3100000000000591
     },
     {
       "id": "share-pm2way",
@@ -4202,9 +4200,8 @@
     {
       "id": "windows-pgram",
       "path": "windows/pgram.gv",
-      "verdict": "diverged",
-      "maxDelta": 720,
-      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.3100000000000591
     },
     {
       "id": "windows-pm2way",

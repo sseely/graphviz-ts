@@ -152,3 +152,24 @@ export function agdelnode(g: Graph, n: Node): void {
 export function agdelsubg(parent: Graph, sg: Graph): void {
   parent.subgraphs.delete(sg.name);
 }
+
+/**
+ * Faithful `agxget` for a graph attribute, mirroring C's
+ * `late_string(g, agfindgraphattr(g, name), NULL)`:
+ * - returns `g`'s explicit value if set;
+ * - else, if `name` was declared graph-wide (set on any (sub)graph at parse
+ *   time → present in `root.declaredGraphAttrs`), returns the empty-string
+ *   default `""` (cgraph's agsafeset default);
+ * - else returns `undefined` (the attribute symbol does not exist).
+ *
+ * The `undefined` vs `""` distinction is load-bearing: e.g. `ordered_edges`
+ * treats a non-NULL (incl. empty) value as "graph ordering present, do not
+ * recurse into subgraphs". A subgraph-scoped `ordering=out` therefore yields
+ * `""` at the root, so the root no-ops it exactly as C does.
+ * @see lib/cgraph/attr.c:agxget, lib/common/utils.c:late_string
+ */
+export function agGraphAttr(g: Graph, name: string): string | undefined {
+  const own = g.attrs.get(name);
+  if (own !== undefined) return own;
+  return g.root.declaredGraphAttrs.has(name) ? '' : undefined;
+}

@@ -3,12 +3,14 @@
 import { describe, it, expect } from 'vitest';
 import { Graph } from './graph.js';
 import { Node } from './node.js';
+import { parse } from '../parser/index.js';
 import {
   agnode,
   agsubg,
   agsubnode,
   agdelnode,
   agdelsubg,
+  agGraphAttr,
 } from './cgraph-ops.js';
 
 const NEW_RANK = '_new_rank';
@@ -106,5 +108,60 @@ describe('agdelsubg', () => {
     const sg = agsubg(root, NEW_RANK, true) as Graph;
     agdelsubg(root, sg);
     expect(agsubg(root, NEW_RANK, false)).toBeNull();
+  });
+});
+
+describe('agGraphAttr — faithful agxget for graph attributes', () => {
+  it("returns the graph's own value when set", () => {
+    const root = makeRoot();
+    root.attrs.set('ordering', 'out');
+    root.declaredGraphAttrs.add('ordering');
+    expect(agGraphAttr(root, 'ordering')).toBe('out');
+  });
+
+  it('returns "" (not undefined) for a declared-but-unset graph attribute', () => {
+    // cgraph: a subgraph setting ordering declares it graph-wide with "" default,
+    // so the root reads "" — the load-bearing distinction ordered_edges relies on.
+    const root = makeRoot();
+    root.declaredGraphAttrs.add('ordering'); // declared graph-wide (e.g. on a subgraph)
+    expect(root.attrs.get('ordering')).toBeUndefined();
+    expect(agGraphAttr(root, 'ordering')).toBe('');
+  });
+
+  it('returns undefined for an attribute never declared graph-wide', () => {
+    const root = makeRoot();
+    expect(agGraphAttr(root, 'ordering')).toBeUndefined();
+  });
+
+  it('reads the declared set from the ROOT, not the local graph', () => {
+    const root = makeRoot();
+    const sg = agsubg(root, 'sub', true)!;
+    root.declaredGraphAttrs.add('ordering');
+    // sg has no own value and an empty local declared set, but root declares it
+    expect(agGraphAttr(sg, 'ordering')).toBe('');
+  });
+});
+
+describe('declaredGraphAttrs population via parse (builder)', () => {
+  it('subgraph-scoped ordering=out → root sees "" (declared), not undefined', () => {
+    const g = parse('digraph { { rank=same; a; b; ordering=out; } a->b; }');
+    expect(g.declaredGraphAttrs.has('ordering')).toBe(true);
+    expect(g.attrs.get('ordering')).toBeUndefined();
+    expect(agGraphAttr(g, 'ordering')).toBe(''); // C ignores subgraph-scoped ordering
+  });
+
+  it('graph-level ordering=out → root value is "out"', () => {
+    const g = parse('digraph { ordering=out; a->b; }');
+    expect(agGraphAttr(g, 'ordering')).toBe('out');
+  });
+
+  it('graph[ordering=out] attr statement also declares it graph-wide', () => {
+    const g = parse('digraph { graph[ordering=out]; a->b; }');
+    expect(agGraphAttr(g, 'ordering')).toBe('out');
+  });
+
+  it('no ordering anywhere → agGraphAttr undefined', () => {
+    const g = parse('digraph { a->b; }');
+    expect(agGraphAttr(g, 'ordering')).toBeUndefined();
   });
 });
