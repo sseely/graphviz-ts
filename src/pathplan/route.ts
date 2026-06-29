@@ -189,13 +189,23 @@ class RouteHelper {
       const px = RouteHelper.B0(t)*p0.x + RouteHelper.B1(t)*cp1.x + RouteHelper.B2(t)*cp2.x + RouteHelper.B3(t)*p1.x;
       const py = RouteHelper.B0(t)*p0.y + RouteHelper.B1(t)*cp1.y + RouteHelper.B2(t)*cp2.y + RouteHelper.B3(t)*p1.y;
       const d = RouteHelper.ptDist({ x: px, y: py }, inps[i]);
-      // C `reallyroutespline` uses `if (d > maxd)` (strict): on equal deviations
-      // the FIRST index wins. That tie-break is only translation-equivariant in
-      // exact arithmetic — the absolute-coordinate bezier eval above carries
-      // ~1e-14 cancellation noise whose sign depends on absolute position, which
-      // flips a true geometric tie (e.g. #241_0 5:ne->8:nw). Absorb that noise so
-      // a tie deterministically keeps the first index, matching C.
-      // @see lib/pathplan/route.c:reallyroutespline (max-deviation split)
+      // C `reallyroutespline` uses strict `if (d > maxd)`. On a geometrically
+      // SYMMETRIC channel the two interior deviations are an exact tie, and the
+      // winner is then decided by ~1e-14 cancellation noise in the
+      // absolute-coordinate bezier eval above — whose sign depends on absolute
+      // position. So C is NOT consistent: it splits two translation-congruent
+      // arcs toward opposite corners (e.g. 2368 `376->76` mirrors `256->436`),
+      // because Apple's macOS libm `hypot` (which generated the oracle) is a
+      // proprietary ~1-ULP-divergent implementation that no portable hypot
+      // reproduces. We deliberately keep the tolerant tie-break: a true tie
+      // always resolves to the first index, so the port is TRANSLATION-
+      // EQUIVARIANT (same channel anywhere -> same spline). This matches C where
+      // C's noise also keeps-first (#241_0 5:ne->8:nw, and the cnt=3 oracle
+      // case) and consciously diverges where C's noise keeps-second (2368
+      // `376->76`, the lone surviving residual: structural-match, maxΔ ~10pt on
+      // one flat-edge arc). See .agent-notes/2368-residual-flat-label-ranksep.md
+      // and the pow precedent (src/common/arm-pow.ts) for the same Apple-libm
+      // boundary. @see lib/pathplan/route.c:reallyroutespline (max-deviation split)
       if (d > maxd * (1 + 1e-10) + 1e-10) { maxd = d; maxi = i; }
     }
     return maxi;
