@@ -154,10 +154,11 @@ describe('dotGraphInit: nodesep/ranksep attribute parsing', () => {
 });
 
 // ---------------------------------------------------------------------------
-// AC2c: dotGraphInit populates drawing for ratio=compress only (input.c:576,694)
+// AC2c: dotGraphInit populates drawing for ratio=compress + ratio=fill
+// (input.c:576,694). expand/value/auto stay deferred (drawing unset).
 // ---------------------------------------------------------------------------
 
-describe('dotGraphInit: ratio=compress → g.info.drawing', () => {
+describe('dotGraphInit: ratio → g.info.drawing', () => {
   it('ratio=compress + size="16,10" → drawing with size in points', () => {
     const g = makeGraph('rc');
     g.attrs.set('ratio', 'compress');
@@ -175,15 +176,32 @@ describe('dotGraphInit: ratio=compress → g.info.drawing', () => {
     expect(g.info.drawing?.size).toEqual({ x: 360, y: 360 });
   });
 
-  it('ratio=fill → drawing stays undefined (deferred, ADR-1)', () => {
+  it('ratio=fill + size="16,10" → drawing with ratioKind fill (setAspect R_FILL)', () => {
     const g = makeGraph('rf');
     g.attrs.set('ratio', 'fill');
+    g.attrs.set('size', '16,10');
+    dotGraphInit(g);
+    expect(g.info.drawing?.ratioKind).toBe('fill');
+    expect(g.info.drawing?.size).toEqual({ x: 1152, y: 720 }); // POINTS(16),POINTS(10)
+  });
+
+  it('ratio=fill with no size → drawing.size {0,0} (setAspect no-ops on size.x<=0)', () => {
+    const g = makeGraph('rfns');
+    g.attrs.set('ratio', 'fill');
+    dotGraphInit(g);
+    expect(g.info.drawing?.ratioKind).toBe('fill');
+    expect(g.info.drawing?.size).toEqual({ x: 0, y: 0 });
+  });
+
+  it('ratio=expand → drawing stays undefined (deferred: math ported, no corpus)', () => {
+    const g = makeGraph('re');
+    g.attrs.set('ratio', 'expand');
     g.attrs.set('size', '16,10');
     dotGraphInit(g);
     expect(g.info.drawing).toBeUndefined();
   });
 
-  it('ratio=auto → drawing stays undefined (no-op by omission)', () => {
+  it('ratio=auto → drawing stays undefined (deferred: needs idealsize)', () => {
     const g = makeGraph('ra');
     g.attrs.set('ratio', 'auto');
     dotGraphInit(g);

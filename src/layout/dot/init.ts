@@ -116,17 +116,21 @@ function parseRatioKind(g: Graph): RatioKind | undefined {
 }
 
 /**
- * Populate `g.info.drawing` for `ratio=compress` only (ADR-1). Other ratio kinds
- * (fill/expand/value/auto) intentionally leave `drawing` unset so `setAspect`
- * stays dead for them — the deferred ratio-aspect mission. compressGraph reads
- * `drawing.ratioKind`/`drawing.size` and runs the x-NS compression.
- * @see lib/dotgen/position.c:501 compress_graph
+ * Populate `g.info.drawing` for the ratio kinds whose layout reshape is ported
+ * AND corpus-validated: `compress` (compressGraph x-NS, position-cluster.ts) and
+ * `fill` (setAspect R_FILL, position-bbox.ts — scales node coords by
+ * size/bbox per axis). `expand`/`value` have the math in setAspect but no corpus
+ * coverage, and `auto` needs `idealsize` (unported); all three stay deferred —
+ * leaving `drawing` unset keeps setAspect/compressGraph a no-op for them.
+ * @see lib/dotgen/position.c:set_aspect (904), compress_graph (501);
+ *      lib/common/input.c:576 setRatio, 694 size
  */
-function parseRatioCompress(g: Graph): void {
-  if (parseRatioKind(g) !== 'compress') return;
+function parseRatioDrawing(g: Graph): void {
+  const kind = parseRatioKind(g);
+  if (kind !== 'compress' && kind !== 'fill') return;
   const sz = parseSizePoints(g.attrs.get('size'));
   g.info.drawing = makeDrawing({
-    ratioKind: 'compress',
+    ratioKind: kind,
     size: sz ? { x: sz.x, y: sz.y } : { x: 0, y: 0 },
     filled: sz?.filled ?? false,
   });
@@ -166,8 +170,9 @@ export function dotGraphInit(g: Graph): void {
   // before dotInitSubg's defaults and before ranking uses GD_ranksep.
   parseSepAttrs(g);
   // ratio + size → g.info.drawing (input.c:693-694: setRatio then size). Scoped
-  // to ratio=compress (ADR-1); activates compressGraph. @see input.c:576,694
-  parseRatioCompress(g);
+  // to ratio=compress (compressGraph) + ratio=fill (setAspect R_FILL).
+  // @see input.c:576,694
+  parseRatioDrawing(g);
   // concentrate (input.c:708-709): Concentrate = mapbool(agget(g,"concentrate")).
   // Gates both the class2 merge path (classify.ts) and dot_concentrate
   // (position.ts). @see lib/common/input.c:708, lib/common/globals.h:Concentrate
