@@ -23,7 +23,7 @@ import { routeSplines, routePolylines } from '../../common/splines-routespl.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP } from '../../common/splines-constants.js';
-import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE, getMainEdge } from './splines.js';
+import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE, getMainEdge, swapEndsP, swapSpline } from './splines.js';
 import { shortestPath, routeSpline, polyBarriers, makePolyline } from '../../pathplan/index.js';
 
 /** Space between stacked flat labels, in points. @see lib/dotgen/dotsplines.c:937 */
@@ -270,13 +270,18 @@ function setFlatLabel(e: Edge, x: number, y: number): void {
  * legs internally; the port stores points verbatim, so the caller reverses —
  * the same idiom makeFlatLabeledEdge uses (tailIsLeft + reverse + ignoreSwap).
  */
-function installFlatLeg(e: Edge, pts: Point[], tn: Node): void {
-  if (e.tail === tn) {
-    clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
-    return;
-  }
-  const rev = [...pts].reverse();
-  clipAndInstall(e, e.head, rev, rev.length, { ...buildDotSinfo(), ignoreSwap: true });
+function installFlatLeg(e: Edge, pts: Point[], _tn: Node): void {
+  // C makeSimpleFlat installs the tn->hn points FORWARD via
+  // `clip_and_install(e, aghead(e), points)`, letting clip_and_install swap
+  // tn/hn for a reversed flat edge (splines.c:252); the resulting spline is then
+  // emitted in the original tail->head direction (makefwdedge un-normalization).
+  // Clipping the FORWARD spline is load-bearing: bezier_clip's 0.5-tolerance
+  // bisection is direction-dependent, so clipping a PRE-reversed spline converged
+  // ~0.35px off C (pgram PP->OCT). So clip forward, then swap the spline back —
+  // exactly the regular back-edge pattern (edge-route-chain.ts:412).
+  // @see lib/dotgen/dotsplines.c:makeSimpleFlat, lib/common/splines.c:clip_and_install
+  clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+  if (swapEndsP(e) && e.info.spl !== undefined) swapSpline(e.info.spl);
 }
 
 /** Route the stacked (i>=1) edges of the group through simpleSplineRoute. */
