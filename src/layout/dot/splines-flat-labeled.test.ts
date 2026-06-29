@@ -220,3 +220,36 @@ describe('parallel adjacent flat labels vs dot 15.0.0', () => {
     expect(dist(labelByText(svg, 'y'), [72, -4.6])).toBeLessThanOrEqual(TOL);
   });
 });
+
+// OPPOSING adjacent labeled flats (mission 2368-byte-match, Batch 1). C's
+// make_flat_adj_edges groups the UNORDERED {tail,head} set: the wider label is
+// earray[0] (straight, above) and the opposing leg is earray[1] (a down-arc
+// routed via simpleSplineRoute, label below). The pre-fix port keyed the group
+// on the ordered (tail,head) pair, so the opposing leg formed its own cnt=1
+// group and was drawn as a straight 4-point stub. Grouping is gated on shared
+// getMainEdge so that an opposing pair NOT in the same flat class (no
+// concentrate / mixed-label) is NOT merged (cf. 2476). @see dotsplines.c:945
+const OPP_SRC = 'digraph{ node[fontsize=8,shape=box,height=0.1]; edge[fontsize=8]; '
+  + '{rank=same; a b} a->b[label="from1"]; b->a[label="to1"] }';
+// dot 15.1.0 oracle: a->b "from1" straight at the rank center (y=-13.5).
+const OPP_FROM1 = [[54.11, -13.5], [62.36, -13.5], [71.6, -13.5], [80.46, -13.5]];
+
+describe('opposing adjacent labeled flats (unordered group) vs dot 15.1.0', () => {
+  it('routes the wider label straight and the opposing leg as a down-arc', () => {
+    const svg = renderSvg(OPP_SRC, 'dot');
+    const paths = allPaths(svg);
+    expect(paths.length).toBe(2);
+    const from1 = paths[0], to1 = paths[1];
+    // earray[0]: "from1" straight (4 ctrl pts), matches the C oracle.
+    pinPath(from1, OPP_FROM1);
+    // earray[1]: "to1" is a 7-point ARC (the regression guard — a straight stub
+    // would be 4 points), and it runs tail->head = right->left (b is the right
+    // node), matching C's M93.31...59.87 orientation.
+    expect(to1.length).toBe(7);
+    expect(to1[0].x).toBeGreaterThan(to1[6].x);
+    // The arc dips toward the baseline (C peaks at y=0); the straight from1 sits
+    // above it. Labels: "from1" above the rank, "to1" below.
+    expect(Math.max(...to1.map(p => p.y))).toBeGreaterThan(-1);
+    expect(labelByText(svg, 'from1').y).toBeLessThan(labelByText(svg, 'to1').y);
+  });
+});

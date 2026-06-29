@@ -7,7 +7,14 @@ rank separation / `flatNode` height, NOT label placement.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T2 | Correct flat-label-rank ht/spacing per the T0 trace | debugger | `src/layout/dot/flat.ts` and/or `src/layout/dot/position-ycoords.ts` | T1 | [ ] |
+| T2 | Correct flat-label-rank ht/spacing per the T0 trace | debugger | `src/layout/dot/flat.ts` and/or `src/layout/dot/position-ycoords.ts` | T1 | [x] (NO-OP) |
+
+**Outcome: NO-OP.** T0 found the vspace was not a positioning delta (node inter-rank
+spans were identical) but the bbox failing to include the omitted down-arcs+labels.
+Batch 1 (drawing those arcs) grew the bbox; every 2368 node Y now byte-matches C
+(height 148, top group at -140.35). No `flat.ts`/`position-ycoords.ts` change was
+needed — consistent with C `flat_edges` storing only label WIDTH for adjacent flats
+(the `FIX:` comment: height not accounted). See decision-journal B2.
 
 Execution rule: apply the spacing the T0 trace pinned (the rank whose Y/ht
 differs by ~5pt), re-render 2368, run the full survey gate. Any byte-match→worse

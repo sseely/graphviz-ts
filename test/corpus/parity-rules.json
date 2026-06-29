@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-29T01:35:53.885Z",
+  "generatedAt": "2026-06-29T04:06:18.532Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
     "byte-match": 492,
-    "structural-match": 198,
-    "diverged": 89,
+    "structural-match": 199,
+    "diverged": 88,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -23,14 +23,14 @@
       "id": "1213-1",
       "path": "1213-1.dot",
       "verdict": "diverged",
-      "maxDelta": 84.02999999999997,
+      "maxDelta": 22.27000000000001,
       "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
     },
     {
       "id": "1213-2",
       "path": "1213-2.dot",
       "verdict": "diverged",
-      "maxDelta": 83.40000000000003,
+      "maxDelta": 21.839999999999975,
       "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
     },
     {
@@ -542,9 +542,8 @@
     {
       "id": "2368",
       "path": "2368.dot",
-      "verdict": "diverged",
-      "maxDelta": 65.25000000000003,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 10.220000000000027
     },
     {
       "id": "2368_1",
@@ -658,7 +657,7 @@
       "id": "2476",
       "path": "2476.dot",
       "verdict": "structural-match",
-      "maxDelta": 222.1400000000001
+      "maxDelta": 1.0899999999999181
     },
     {
       "id": "2484",
@@ -967,7 +966,7 @@
       "id": "graphs-KW91",
       "path": "graphs/KW91.gv",
       "verdict": "structural-match",
-      "maxDelta": 71.82
+      "maxDelta": 1.0300000000000296
     },
     {
       "id": "graphs-Latin1",
@@ -1470,7 +1469,7 @@
       "id": "graphs-flatedge",
       "path": "graphs/flatedge.gv",
       "verdict": "structural-match",
-      "maxDelta": 101.84
+      "maxDelta": 0.12000000000000455
     },
     {
       "id": "graphs-fsm",
@@ -1558,7 +1557,7 @@
       "id": "graphs-html2",
       "path": "graphs/html2.gv",
       "verdict": "structural-match",
-      "maxDelta": 122.57
+      "maxDelta": 35
     },
     {
       "id": "graphs-in",
@@ -1893,7 +1892,7 @@
       "id": "graphs-longflat",
       "path": "graphs/longflat.gv",
       "verdict": "structural-match",
-      "maxDelta": 50.75000000000001
+      "maxDelta": 0.28999999999999915
     },
     {
       "id": "graphs-lsunix1",
@@ -2452,13 +2451,13 @@
       "id": "linux.x86-flatedge_dot",
       "path": "linux.x86/flatedge_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 101.84
+      "maxDelta": 0.12000000000000455
     },
     {
       "id": "linux.x86-html2_dot",
       "path": "linux.x86/html2_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 122.57
+      "maxDelta": 35
     },
     {
       "id": "linux.x86-html_dot",
@@ -2671,13 +2670,13 @@
       "id": "nshare-flatedge_dot",
       "path": "nshare/flatedge_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 101.84
+      "maxDelta": 0.12000000000000455
     },
     {
       "id": "nshare-html2_dot",
       "path": "nshare/html2_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 122.57
+      "maxDelta": 35
     },
     {
       "id": "nshare-html_dot",
@@ -3123,7 +3122,7 @@
       "id": "share-KW91",
       "path": "share/KW91.gv",
       "verdict": "structural-match",
-      "maxDelta": 71.82
+      "maxDelta": 1.0300000000000296
     },
     {
       "id": "share-Latin1",
@@ -3282,7 +3281,7 @@
       "id": "share-flatedge",
       "path": "share/flatedge.gv",
       "verdict": "structural-match",
-      "maxDelta": 102.45999999999998
+      "maxDelta": 0.6200000000000045
     },
     {
       "id": "share-fsm",
@@ -3591,7 +3590,7 @@
       "id": "share-longflat",
       "path": "share/longflat.gv",
       "verdict": "structural-match",
-      "maxDelta": 50.75000000000001
+      "maxDelta": 0.28999999999999915
     },
     {
       "id": "share-mike",
@@ -3759,7 +3758,7 @@
       "id": "windows-KW91",
       "path": "windows/KW91.gv",
       "verdict": "structural-match",
-      "maxDelta": 71.82
+      "maxDelta": 1.0300000000000296
     },
     {
       "id": "windows-Latin1",
@@ -4195,7 +4194,7 @@
       "id": "windows-longflat",
       "path": "windows/longflat.gv",
       "verdict": "structural-match",
-      "maxDelta": 50.75000000000001
+      "maxDelta": 0.28999999999999915
     },
     {
       "id": "windows-mike",

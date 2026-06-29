@@ -23,7 +23,7 @@ import { routeSplines, routePolylines } from '../../common/splines-routespl.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP } from '../../common/splines-constants.js';
-import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE } from './splines.js';
+import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE, getMainEdge } from './splines.js';
 import { shortestPath, routeSpline, polyBarriers, makePolyline } from '../../pathplan/index.js';
 
 /** Space between stacked flat labels, in points. @see lib/dotgen/dotsplines.c:937 */
@@ -166,16 +166,35 @@ export function isAdjFlatCandidate(e: Edge): boolean {
 }
 
 /**
- * Parallel group: every no-port adjacent flat edge from e's tail to e's head.
- * Scans g.edges (not flat_out) — parallel siblings live in ND_other, only the
- * class representative is in flat_out. @see lib/dotgen/flat.c:flat_edges (ND_other)
+ * Group: every no-port adjacent flat edge between e's two endpoints, in BOTH
+ * directions (the UNORDERED {tail,head} set). C's make_flat_adj_edges groups by
+ * the unordered pair — opposing legs (a->b and b->a) and parallel siblings route
+ * as one call (dotsplines.c:1122; the dispatch loop's "all flat adjacent edges
+ * at once" at dotsplines.c:357). Keying on the ordered (tail,head) split the
+ * opposing leg into its own cnt=1 group, drawn straight instead of as the
+ * earray[1] arc. @see lib/dotgen/flat.c:flat_edges (ND_other)
  */
 export function collectAdjFlatGroup(g: Graph, e: Edge): Edge[] {
+  const me = getMainEdge(e);
   const out: Edge[] = [];
   for (const f of g.edges) {
-    if (f.tail === e.tail && f.head === e.head && isAdjFlatCandidate(f)) out.push(f);
+    const samePair = (f.tail === e.tail && f.head === e.head)
+      || (f.tail === e.head && f.head === e.tail);
+    if (samePair && isAdjFlatCandidate(f) && getMainEdge(f) === me) out.push(f);
   }
   return out;
+}
+
+/**
+ * The group's tail/head, oriented left→right by node order. C's
+ * make_flat_adj_edges takes tn/hn from the forward-normalized representative
+ * (makefwdedge makes the lower-order node the tail); every routing point is
+ * built tp(tn)→hp(hn) and clip_and_install re-orients each reversed leg.
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges 1136
+ */
+function groupTnHn(group: Edge[]): { tn: Node; hn: Node } {
+  const a = group[0].tail, b = group[0].head;
+  return (a.info.order ?? 0) <= (b.info.order ?? 0) ? { tn: a, hn: b } : { tn: b, hn: a };
 }
 
 /** edgelblcmpfn: labeled first; among labeled, larger dimen (x then y) first. */
@@ -201,7 +220,7 @@ function simpleSplineRoute(tp: Point, hp: Point, polyPts: Point[], polyline: boo
 interface FlatStack {
   miny: number; maxy: number; uminx: number; umaxx: number;
   lminx: number; lmaxx: number; leftend: number; rightend: number; ctrx: number;
-  tp: Point; hp: Point;
+  tp: Point; hp: Point; tn: Node;
 }
 
 /** Boundary poly for a flat edge routed BELOW the rank (i odd). @see dotsplines.c:1003-1010 */
@@ -243,6 +262,23 @@ function setFlatLabel(e: Edge, x: number, y: number): void {
   lbl.set = true;
 }
 
+/**
+ * Install one flat leg. Points are always built left→right (tn→hn). For a leg
+ * whose tail is the RIGHT node (e.tail !== tn) the stored spline must run
+ * tail→head (right→left), so reverse the points and install with ignoreSwap
+ * (orientation already fixed). C's clip_and_install reverses such reversed flat
+ * legs internally; the port stores points verbatim, so the caller reverses —
+ * the same idiom makeFlatLabeledEdge uses (tailIsLeft + reverse + ignoreSwap).
+ */
+function installFlatLeg(e: Edge, pts: Point[], tn: Node): void {
+  if (e.tail === tn) {
+    clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
+    return;
+  }
+  const rev = [...pts].reverse();
+  clipAndInstall(e, e.head, rev, rev.length, { ...buildDotSinfo(), ignoreSwap: true });
+}
+
 /** Route the stacked (i>=1) edges of the group through simpleSplineRoute. */
 function routeStackedFlats(earray: Edge[], nLbls: number, st: FlatStack, et: number): void {
   for (let i = 1; i < earray.length; i++) {
@@ -252,7 +288,7 @@ function routeStackedFlats(earray: Edge[], nLbls: number, st: FlatStack, et: num
     const ps = simpleSplineRoute(st.tp, st.hp, box, et === EDGETYPE_PLINE);
     if (ps === null || ps.length === 0) return;
     if (labeled) setFlatLabel(earray[i], st.ctrx, ctry);
-    clipAndInstall(earray[i], earray[i].head, ps, ps.length, buildDotSinfo());
+    installFlatLeg(earray[i], ps, st.tn);
   }
 }
 
@@ -263,19 +299,24 @@ function routeStackedFlats(earray: Edge[], nLbls: number, st: FlatStack, et: num
  */
 export function makeSimpleFlatLabels(group: Edge[], et: number): void {
   const earray = [...group].sort(edgeLblCmp);
-  const e0 = earray[0], tn = e0.tail, hn = e0.head;
+  // tn/hn are the group's left/right nodes (C: agtail/aghead of the
+  // forward-normalized rep), NOT earray[0]'s own direction — earray[0] (widest
+  // label) may run right->left. Every routing point is built tn->hn; the
+  // per-edge clip_and_install auto-swap (swapEndsP) re-orients each reversed leg.
+  const { tn, hn } = groupTnHn(group);
+  const e0 = earray[0];
   const tp = { x: tn.info.coord.x + e0.info.tail_port.p.x, y: tn.info.coord.y + e0.info.tail_port.p.y };
   const hp = { x: hn.info.coord.x + e0.info.head_port.p.x, y: hn.info.coord.y + e0.info.head_port.p.y };
   const leftend = tp.x + tn.info.rw, rightend = hp.x - hn.info.lw;
   const ctrx = (leftend + rightend) / 2;
   const nLbls = earray.filter(e => e.info.label !== undefined).length;
   const dim0 = e0.info.label!.dimen;
-  clipAndInstall(e0, hn, [tp, { ...tp }, hp, { ...hp }], 4, buildDotSinfo());
+  installFlatLeg(e0, [tp, { ...tp }, hp, { ...hp }], tn);
   setFlatLabel(e0, ctrx, tp.y + (dim0.y + LBL_SPACE) / 2);
   const st: FlatStack = {
     miny: tp.y + LBL_SPACE / 2, maxy: tp.y + LBL_SPACE / 2 + dim0.y,
     uminx: ctrx - dim0.x / 2, umaxx: ctrx + dim0.x / 2,
-    lminx: 0, lmaxx: 0, leftend, rightend, ctrx, tp, hp,
+    lminx: 0, lmaxx: 0, leftend, rightend, ctrx, tp, hp, tn,
   };
   routeStackedFlats(earray, nLbls, st, et);
 }
@@ -302,7 +343,8 @@ function simpleFlatPoints(tp: Point, hp: Point, dy: number, et: number): Point[]
  * @see lib/dotgen/dotsplines.c:makeSimpleFlat (1075)
  */
 export function makeSimpleFlat(group: Edge[], et: number): void {
-  const e0 = group[0], tn = e0.tail, hn = e0.head;
+  const e0 = group[0];
+  const { tn, hn } = groupTnHn(group);
   const tp = { x: tn.info.coord.x + e0.info.tail_port.p.x, y: tn.info.coord.y + e0.info.tail_port.p.y };
   const hp = { x: hn.info.coord.x + e0.info.head_port.p.x, y: hn.info.coord.y + e0.info.head_port.p.y };
   const cnt = group.length;
@@ -311,7 +353,7 @@ export function makeSimpleFlat(group: Edge[], et: number): void {
   for (let i = 0; i < cnt; i++) {
     const pts = simpleFlatPoints(tp, hp, dy, et);
     dy += stepy;
-    clipAndInstall(group[i], group[i].head, pts, pts.length, buildDotSinfo());
+    installFlatLeg(group[i], pts, tn);
   }
 }
 
@@ -324,6 +366,10 @@ export function makeSimpleFlat(group: Edge[], et: number): void {
  */
 export function makeAdjFlatNoPortEdge(g: Graph, e: Edge): boolean {
   if (!isAdjFlatCandidate(e)) return false;
+  // The group is rendered as a unit (both directions). When the opposing leg is
+  // dispatched later it is already installed — skip re-rendering but report it
+  // handled. C does the whole unordered group in one make_flat_adj_edges call.
+  if (e.info.spl !== undefined) return true;
   const group = collectAdjFlatGroup(g, e);
   const et = edgeType(g);
   if (group.some(x => x.info.label !== undefined)) makeSimpleFlatLabels(group, et);

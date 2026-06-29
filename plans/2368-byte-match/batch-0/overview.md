@@ -5,7 +5,7 @@ consumes a pinned first-divergence (AD-1). Diagnostic only — no behavior chang
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T0 | Instrument `makeSimpleFlatLabels` (rep-edge ctrl pts + arc boxes) and `flatNode`/rank `ht1/ht2`, C + port, env-gated; diff on 2368; pin each first-divergence | debugger | `test/diagnostic/flat-geom-trace.md`, `test/diagnostic/flat-geom-diff.mjs` | — | [ ] |
+| T0 | Instrument `makeSimpleFlatLabels` (rep-edge ctrl pts + arc boxes) and `flatNode`/rank `ht1/ht2`, C + port, env-gated; diff on 2368; pin each first-divergence | debugger | `test/diagnostic/flat-geom-trace.md`, `test/diagnostic/flat-geom-diff.mjs` | — | [x] |
 
 Notes:
 - C instrumentation in `~/git/graphviz/lib/dotgen/{dotsplines.c,flat.c,position.c}`
