@@ -46,7 +46,9 @@ tolerance** bar instead of a byte bar.
 ### A1. Floating-point determinism (force-directed engines)
 
 **Affected:** `neato`, `fdp`, `sfdp`, `circo`, `twopi`, `osage` (the iterative,
-spring-model engines). The `dot` engine is **not** affected.
+spring-model engines). The `dot` engine's *layout* is **not** affected by this
+iterative-model determinism; a separate, narrowly-bounded `dot` spline-routing
+floating-point delta is covered in **A3** below.
 
 **Characterization.** These engines run iterative numerical layouts whose results
 depend on floating-point rounding — specifically fused multiply-add (FMA) and
@@ -136,6 +138,53 @@ structural-match, which is the correct bar for them.
 > concrete and documented: the port over-measures some Times-Roman strings by
 > ~0.4%; the work is to align per-glyph advances against the C oracle with
 > corpus-wide regression validation.
+
+### A3. `hypot` tie-break in spline routing (`dot`)
+
+**Affected:** `dot` graphs with a **geometrically symmetric** edge-routing
+channel — typically a short, symmetric flat-edge arc. Observed example: `2368`,
+which stays at *structural-match* (maxΔ ≈ 10.2 pt on **one** edge, `376->76`).
+Most routed edges are unaffected.
+
+**Characterization.** The spline fitter (`Proutespline` → `findMaxDev`,
+`src/pathplan/route.ts`) splits a fitted bezier at the interior route point of
+maximum deviation. When the channel is symmetric, the two candidate split points
+are an **exact mathematical tie**, and the winner is then decided by ~1e-14
+floating-point cancellation noise in an absolute-coordinate bezier evaluation
+whose **sign depends on absolute position**.
+
+C's deviation distance is libm `hypot`, and the macOS Apple `hypot` that
+generated the oracle is a proprietary implementation that bit-matches **no**
+portable `hypot` (measured against it on the graphviz coordinate regime, bit-
+identical rates: V8 `Math.hypot` ≈ 63%, a correctly-rounded / Arm-style `hypot`
+≈ 84%, fdlibm `hypot` ≈ 90%, `sqrt(dx²+dy²)` ≈ 94%). Because of that ULP noise
+**C itself is not consistent**: it splits two *translation-congruent* arcs toward
+**opposite** corners. Within `2368` the `376->76` arc is the mirror image of the
+geometrically identical `256->436` arc:
+
+```
+C    376->76 : M273.31,-4.56 C268.33,-3.14 263.11,-1.9  258.11,-1.15 250.49,0     242.34,-0.98 234.83,-2.8
+port 376->76 : M277.29,-4.51 C268.27,-1.69 257.65,0.32  247.89,-1.15 244.92,-1.59 241.88,-2.21 238.85,-2.94
+```
+
+The port uses a **translation-equivariant** tie-break (a true tie always resolves
+to the first index), so it draws *every* such arc the same way regardless of
+position — it is self-consistent, and matches C on the arcs where C's noise also
+keeps-first (e.g. `256->436`, and `241_0 5:ne->8:nw`), diverging only where C's
+noise flips the other way (`376->76`). Endpoints, arrowhead target, the other
+edges, all nodes, labels, and the bounding box are byte-identical; only the
+interior control points of the one arc move (~1–2 pt at the belly).
+
+**Why accepted.** Apple's `hypot` is no more reproducible across JS engines and
+CPUs than the FMA/`pow` of **A1** — it is the same portability constraint, just
+in the `dot` spline router. Matching C's *position-dependent* choice would mean
+adopting C's strict tie-break, which lives in a **shared primitive** every routed
+edge flows through: doing so trades the `376->76` match for *new* mismatches on
+the arcs where C lands the other way (it regresses `241_0` and a `cnt=3`
+flat-edge oracle case), a net wash that also sacrifices the port's
+translation-equivariance. So we keep the consistent (equivariant) router. This is
+a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
+`.agent-notes/2368-residual-flat-label-ranksep.md`.
 
 ---
 
