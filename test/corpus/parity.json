@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-29T16:05:09.979Z",
+  "generatedAt": "2026-06-29T16:50:28.696Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 496,
+    "byte-match": 503,
     "structural-match": 199,
-    "diverged": 84,
+    "diverged": 77,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -287,9 +287,7 @@
     {
       "id": "1855",
       "path": "1855.dot",
-      "verdict": "diverged",
-      "maxDelta": 1240.58,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "1856",
@@ -1596,9 +1594,7 @@
     {
       "id": "graphs-jsort",
       "path": "graphs/jsort.gv",
-      "verdict": "diverged",
-      "maxDelta": 762.3499999999999,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-labelclust-fbc",
@@ -2003,8 +1999,8 @@
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 736.25,
-      "firstDiffPath": "svg/g[1]/g[32]/path[1]/@d"
+      "maxDelta": 648.4200000000001,
+      "firstDiffPath": "svg/g[1]/g[30]/path[1]/@d"
     },
     {
       "id": "graphs-pm2way",
@@ -2259,9 +2255,7 @@
     {
       "id": "graphs-trapeziumlr",
       "path": "graphs/trapeziumlr.gv",
-      "verdict": "diverged",
-      "maxDelta": 689.76,
-      "firstDiffPath": "svg/g[1]/g[33]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-tree",
@@ -3299,9 +3293,7 @@
     {
       "id": "share-jsort",
       "path": "share/jsort.gv",
-      "verdict": "diverged",
-      "maxDelta": 762.3499999999999,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "share-labelclust-fbc",
@@ -3611,8 +3603,8 @@
       "id": "share-pgram",
       "path": "share/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 1108.36,
-      "firstDiffPath": "svg/g[1]/g[29]/path[1]/@d"
+      "maxDelta": 720,
+      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
     },
     {
       "id": "share-pm2way",
@@ -3629,7 +3621,7 @@
       "id": "share-polypoly",
       "path": "share/polypoly.gv",
       "verdict": "structural-match",
-      "maxDelta": 856.05
+      "maxDelta": 10.360000000000127
     },
     {
       "id": "share-proc3d",
@@ -3687,9 +3679,7 @@
     {
       "id": "share-trapeziumlr",
       "path": "share/trapeziumlr.gv",
-      "verdict": "diverged",
-      "maxDelta": 930.8500000000001,
-      "firstDiffPath": "svg/g[1]/g[32]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "share-tree",
@@ -3903,9 +3893,7 @@
     {
       "id": "windows-jsort",
       "path": "windows/jsort.gv",
-      "verdict": "diverged",
-      "maxDelta": 762.3499999999999,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "windows-labelclust-fbc",
@@ -4215,8 +4203,8 @@
       "id": "windows-pgram",
       "path": "windows/pgram.gv",
       "verdict": "diverged",
-      "maxDelta": 1108.36,
-      "firstDiffPath": "svg/g[1]/g[29]/path[1]/@d"
+      "maxDelta": 720,
+      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
     },
     {
       "id": "windows-pm2way",
@@ -4233,7 +4221,7 @@
       "id": "windows-polypoly",
       "path": "windows/polypoly.gv",
       "verdict": "structural-match",
-      "maxDelta": 869.8400000000001
+      "maxDelta": 10.360000000000127
     },
     {
       "id": "windows-proc3d",
@@ -4296,9 +4284,7 @@
     {
       "id": "windows-trapeziumlr",
       "path": "windows/trapeziumlr.gv",
-      "verdict": "diverged",
-      "maxDelta": 930.1100000000001,
-      "firstDiffPath": "svg/g[1]/g[31]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "windows-tree",
