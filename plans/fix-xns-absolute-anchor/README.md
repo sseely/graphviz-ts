@@ -67,10 +67,18 @@ print by an env var, capture, then `git checkout` the C source and rebuild clean
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [0](batch-0/overview.md) | x-NS pivot-trace harness + baseline divergence capture | [ ] |
-| [1](batch-1/overview.md) | Align the absolute anchor (T1–T5, iterate via trace) | [ ] |
+| [0](batch-0/overview.md) | x-NS pivot-trace harness + baseline divergence capture | [x] |
+| [1](batch-1/overview.md) | ~~Align the absolute anchor (T1–T5)~~ **RE-SCOPED: remove port-only `normalizeXcoords`** | [ ] |
 | [2](batch-2/overview.md) | Degenerate labeled-flat wiring (map_edge / edge_in_box) | [ ] |
 | [3](batch-3/overview.md) | Full survey + baseline refresh | [ ] |
+
+> **Batch-0 finding re-scopes the mission.** The port's x-NS pivot order is
+> already bit-exact with C (T0 trace: internal frame byte-identical). The locked
+> premise AD-1 ("anchor diverges due to NS pivot order") is empirically wrong.
+> The entire internal-frame divergence is the **port-only** `normalizeXcoords`
+> call in `dotPosition` (C has no such step). Batch 1 is now a single change —
+> remove `normalizeXcoords` — proven 0-regression by the `XNS_NONORM` survey.
+> Batch-1 tasks T1–T5 (NS-pivot replication) are no-ops. See `decision-journal.md`.
 
 ## Docs
 
