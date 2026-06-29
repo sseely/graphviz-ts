@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-29T18:30:40.829Z",
+  "generatedAt": "2026-06-29T19:36:55.109Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 503,
-    "structural-match": 202,
+    "byte-match": 505,
+    "structural-match": 200,
     "diverged": 74,
     "errored": 0,
     "timeout": 0,
@@ -23,7 +23,7 @@
       "id": "1213-1",
       "path": "1213-1.dot",
       "verdict": "diverged",
-      "maxDelta": 22.27000000000001,
+      "maxDelta": 20.00999999999999,
       "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
     },
     {
@@ -155,7 +155,7 @@
       "id": "1453",
       "path": "1453.dot",
       "verdict": "structural-match",
-      "maxDelta": 466.35
+      "maxDelta": 465.65000000000003
     },
     {
       "id": "1472",
@@ -362,7 +362,7 @@
       "id": "1949",
       "path": "1949.dot",
       "verdict": "diverged",
-      "maxDelta": 91.08,
+      "maxDelta": 90.67999999999999,
       "firstDiffPath": "svg/g[1]/g[8]/polyline[1]/@stroke"
     },
     {
@@ -655,7 +655,7 @@
       "id": "2476",
       "path": "2476.dot",
       "verdict": "structural-match",
-      "maxDelta": 1.0899999999999181
+      "maxDelta": 0.16000000000008185
     },
     {
       "id": "2484",
@@ -964,7 +964,7 @@
       "id": "graphs-KW91",
       "path": "graphs/KW91.gv",
       "verdict": "structural-match",
-      "maxDelta": 1.0300000000000296
+      "maxDelta": 0.17000000000001592
     },
     {
       "id": "graphs-Latin1",
@@ -1466,7 +1466,7 @@
       "id": "graphs-flatedge",
       "path": "graphs/flatedge.gv",
       "verdict": "structural-match",
-      "maxDelta": 0.12000000000000455
+      "maxDelta": 0.15999999999996817
     },
     {
       "id": "graphs-fsm",
@@ -1554,7 +1554,7 @@
       "id": "graphs-html2",
       "path": "graphs/html2.gv",
       "verdict": "structural-match",
-      "maxDelta": 35
+      "maxDelta": 34.65999999999997
     },
     {
       "id": "graphs-in",
@@ -1999,7 +1999,7 @@
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
       "verdict": "structural-match",
-      "maxDelta": 0.7899999999999636
+      "maxDelta": 0.37999999999999545
     },
     {
       "id": "graphs-pm2way",
@@ -2442,13 +2442,13 @@
       "id": "linux.x86-flatedge_dot",
       "path": "linux.x86/flatedge_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 0.12000000000000455
+      "maxDelta": 0.15999999999996817
     },
     {
       "id": "linux.x86-html2_dot",
       "path": "linux.x86/html2_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 35
+      "maxDelta": 34.65999999999997
     },
     {
       "id": "linux.x86-html_dot",
@@ -2657,13 +2657,13 @@
       "id": "nshare-flatedge_dot",
       "path": "nshare/flatedge_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 0.12000000000000455
+      "maxDelta": 0.15999999999996817
     },
     {
       "id": "nshare-html2_dot",
       "path": "nshare/html2_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 35
+      "maxDelta": 34.65999999999997
     },
     {
       "id": "nshare-html_dot",
@@ -2725,7 +2725,7 @@
       "id": "nshare-ports_dot",
       "path": "nshare/ports_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 24.870000000000005
+      "maxDelta": 24.370000000000005
     },
     {
       "id": "nshare-radius_dot",
@@ -3107,7 +3107,7 @@
       "id": "share-KW91",
       "path": "share/KW91.gv",
       "verdict": "structural-match",
-      "maxDelta": 1.0300000000000296
+      "maxDelta": 0.17000000000001592
     },
     {
       "id": "share-Latin1",
@@ -3624,8 +3624,7 @@
     {
       "id": "share-proc3d",
       "path": "share/proc3d.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "byte-match"
     },
     {
       "id": "share-process",
@@ -3738,7 +3737,7 @@
       "id": "windows-KW91",
       "path": "windows/KW91.gv",
       "verdict": "structural-match",
-      "maxDelta": 1.0300000000000296
+      "maxDelta": 0.17000000000001592
     },
     {
       "id": "windows-Latin1",
@@ -4223,8 +4222,7 @@
     {
       "id": "windows-proc3d",
       "path": "windows/proc3d.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.06999999999993634
+      "verdict": "byte-match"
     },
     {
       "id": "windows-process",
