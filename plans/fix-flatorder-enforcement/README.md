@@ -85,9 +85,31 @@ compare to the port's, before changing enforcement.
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [0](batch-0/overview.md) | Instrument C `build_ranks`/`enqueue_neighbors` install order + FLATORDER weight handling vs the port on b58; pin exactly how C orders 6-before-8 and where the port diverges | [ ] |
-| [1](batch-1/overview.md) | Implement the enforcement fix at the pinned site; b58 3/6/8 order == C; + unit tests | [ ] |
-| [2](batch-2/overview.md) | Full survey (0 regressions), record which ordering graphs clear, document residuals, refresh baseline | [ ] |
+| [0](batch-0/overview.md) | Instrument C `build_ranks`/`enqueue_neighbors` install order + FLATORDER weight handling vs the port on b58; pin exactly how C orders 6-before-8 and where the port diverges | [x] — weight-0 premise overturned; divergence pinned in `left2right` matrix index basis (`order-vStart` vs C `ND_low`) |
+| [1](batch-1/overview.md) | Implement the enforcement fix at the pinned site; b58 3/6/8 order == C; + unit tests | [x] — `left2right` reads flat matrix by `low`; b58==C; GATE PASS 0 regr |
+| [2](batch-2/overview.md) | Full survey (0 regressions), record which ordering graphs clear, document residuals, refresh baseline | [x] — byte 493→496; 4 cleared; pgram/trapeziumlr/1472 residual (secondary) |
+
+## Mission summary (2026-06-29)
+
+**Complete. All 3 batches done; 0 regressions.**
+
+- **Root cause (B0):** README's weight-0 premise was wrong — C `new_virtual_edge(orig=NULL)`
+  sets `ED_weight=1` (fastgr.c:161-166), so both C and port build FLATORDER `6->8` as a
+  constraining weight-1 edge. The divergence was in `left2right` (`mincross-cross.ts`): the
+  flat constraint matrix is built indexed by `ND_low` but was read by `order - vStart`,
+  which drifts off `low` after any reorder pass. C reads by `flatindex(v)=ND_low(v)`.
+- **Fix (B1):** `left2right` reads the matrix by `v.info.low` (one site). Kept the port's
+  fused both-direction check; rejected the porting of C's `GD_flip` swap as behaviorally
+  inert (both consumers test only `!= 0`). + 3 unit tests.
+- **Result (B2):** byte-match 493→496. Cleared: `graphs-b58` (diverged→structural-match,
+  node order == C; 0.24px flat-spline residual), `{linux.x86,macosx,nshare}-ordering_dot1`
+  (diverged→byte-match). Canary `graphs-in` intact.
+- **Residuals (documented, not chased, AD-5):** `{graphs,share,windows}-pgram`,
+  `{graphs,share,windows}-trapeziumlr`, `1472` — still diverged on a SEPARATE secondary
+  cause (maxΔ 690–1108px = x-coord/spline/shape, not flat-matrix enforcement). Left in the
+  tracked-gap backlog, NOT accepted.
+- **Quality gates:** tsc 0, vitest 2481 pass, survey GATE PASS (0 regr / 0 clip-regr),
+  write-set respected. Commits: `0f610fe` (B0 diag), `59a74a2` (B1 fix), B2 (baseline).
 
 ## Recipes (carried from fix-ordering-mincross)
 

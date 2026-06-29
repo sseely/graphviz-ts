@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-29T14:31:51.601Z",
+  "generatedAt": "2026-06-29T16:05:09.979Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 493,
-    "structural-match": 198,
-    "diverged": 88,
+    "byte-match": 496,
+    "structural-match": 199,
+    "diverged": 84,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -1209,9 +1209,8 @@
     {
       "id": "graphs-b58",
       "path": "graphs/b58.gv",
-      "verdict": "diverged",
-      "maxDelta": 90,
-      "firstDiffPath": "svg/g[1]/g[12]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 0.23999999999999844
     },
     {
       "id": "graphs-b60",
@@ -2144,8 +2143,8 @@
       "id": "graphs-shells",
       "path": "graphs/shells.gv",
       "verdict": "diverged",
-      "maxDelta": 374.65,
-      "firstDiffPath": "svg/g[1]/g[36]/path[1]/@d"
+      "maxDelta": 264,
+      "firstDiffPath": "svg/g[1]/g[27]/path[1]/@d"
     },
     {
       "id": "graphs-sides",
@@ -2486,9 +2485,7 @@
     {
       "id": "linux.x86-ordering_dot1",
       "path": "linux.x86/ordering_dot1.gv",
-      "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-overlap_neato",
@@ -2611,9 +2608,7 @@
     {
       "id": "macosx-ordering_dot1",
       "path": "macosx/ordering_dot1.gv",
-      "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "macosx-radius_dot",
@@ -2706,9 +2701,7 @@
     {
       "id": "nshare-ordering_dot1",
       "path": "nshare/ordering_dot1.gv",
-      "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[11]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-overlap_neato",
@@ -3671,8 +3664,8 @@
       "id": "share-shells",
       "path": "share/shells.gv",
       "verdict": "diverged",
-      "maxDelta": 392.08000000000004,
-      "firstDiffPath": "svg/g[1]/g[23]/path[1]/@d"
+      "maxDelta": 420.38000000000005,
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "share-states",
@@ -4280,8 +4273,8 @@
       "id": "windows-shells",
       "path": "windows/shells.gv",
       "verdict": "diverged",
-      "maxDelta": 392.0400000000001,
-      "firstDiffPath": "svg/g[1]/g[23]/path[1]/@d"
+      "maxDelta": 420.42,
+      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
     },
     {
       "id": "windows-states",

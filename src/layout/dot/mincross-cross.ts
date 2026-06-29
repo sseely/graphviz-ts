@@ -87,11 +87,19 @@ export function left2right(g: Graph, v: Node, w: Node): number {
   const rk = gRank[r];
   const flat = rk.flat;
   if (!flat) return 0;
-  const vOrd = v.info.order !== undefined ? v.info.order : 0;
-  const wOrd = w.info.order !== undefined ? w.info.order : 0;
-  const vStart = rk.vStart !== undefined ? rk.vStart : 0;
-  if (matrixGet(flat, vOrd - vStart, wOrd - vStart)) return 1;
-  if (matrixGet(flat, wOrd - vStart, vOrd - vStart)) return -1;
+  // C indexes the flat matrix by flatindex(v) = ND_low(v) (mincross.c:115,578),
+  // and the matrix is BUILT by `low` (mincross-flat.ts matrixSet hLow/vLow,
+  // mirroring matrix_set(M, flatindex…) at mincross.c:1090/1097). Read must match
+  // build: use `low`, not `order - vStart`. The two coincide only immediately
+  // after flatBreakcycles assigns low=window-index; once a reorder pass changes
+  // `order`, `order - vStart` drifts off `low` and the lookup misses (b58 pass-1).
+  // C swaps v/w for GD_flip before its single-direction matrix_get; the port
+  // checks BOTH directions below, so that swap is subsumed (it would only flip the
+  // +1/-1 sign, which neither consumer reads — both test `!== 0`).
+  const vLow = v.info.low !== undefined ? v.info.low : 0;
+  const wLow = w.info.low !== undefined ? w.info.low : 0;
+  if (matrixGet(flat, vLow, wLow)) return 1;
+  if (matrixGet(flat, wLow, vLow)) return -1;
   return 0;
 }
 
