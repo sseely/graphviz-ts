@@ -172,9 +172,28 @@ feeds node size, which feeds the layout. The chain is deterministic:
 
 The **rank assignment, node ordering, edge topology, and y-coordinates are
 identical** to C; only fine x-positions move. For `proc3d` the entire effect is a
-**≤ 3.55 pt** difference in x-extent over a ~2620 pt drawing (**0.13%**). A visual
-golden-vs-ours overlay (the green/red fringe lands almost entirely on the long
-file-path oval labels) is at
+**≤ 3.55 pt** difference in x-extent over a ~2620 pt drawing (**0.13%**).
+
+The delta, overlaid in one frame — **green = native C `dot` (golden), red =
+graphviz-ts (ours)**. At full scale the two blend to brown; the shift is
+sub-perceptual (hence *structural-match*):
+
+![proc3d golden-vs-ours overlay: green = C, red = graphviz-ts](/img/proc3d-overlay.svg)
+
+Zoomed in, the green/red fringe appears **almost entirely on the long file-path
+oval labels** — exactly the wide strings the estimator over-measures (e.g.
+`/home/ek/work/src/lefty/lefty.c`). The code/box nodes stay coincident:
+
+![proc3d overlay, zoomed on the wide path-label ovals: green = C, red = graphviz-ts](/img/proc3d-overlay-zoom.png)
+
+Everything but those fine x-positions is identical — same bounding box, ranks,
+order, and y. The full renders are visually indistinguishable:
+
+| Golden — native `dot` | Ours — graphviz-ts |
+|---|---|
+| ![proc3d rendered by C Graphviz](/img/proc3d-golden.svg) | ![proc3d rendered by graphviz-ts](/img/proc3d-ours.svg) |
+
+The standalone work-up (DOT source, per-metric numbers, reproduce command) is at
 `comparisons/a2-font-metrics/proc3d-a2.html`.
 
 **Why accepted.** Byte-matching FreeType's per-glyph advances across every font
