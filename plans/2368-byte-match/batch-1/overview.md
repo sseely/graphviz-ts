@@ -6,7 +6,7 @@ dominant 2368 divergence (maxΔ 65 on 376→76).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T1 | Port C's `makeSimpleFlatLabels` rep-edge curve (+ extend flat-edge unit tests) | debugger | `src/layout/dot/splines-flat-labeled.ts` | T0 | [ ] |
+| T1 | Port C's `makeSimpleFlatLabels` rep-edge curve (+ extend flat-edge unit tests) | debugger | `src/layout/dot/splines-flat-labeled.ts` | T0 | [x] |
 
 Execution rule: implement the geometry the T0 trace pinned, re-render 2368, then
 run the full survey gate. Any byte-match→worse is STOP + revert (AD-4). Batch
