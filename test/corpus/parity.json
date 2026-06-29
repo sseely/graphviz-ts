@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-29T19:36:55.109Z",
+  "generatedAt": "2026-06-29T20:10:40.602Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -878,9 +878,9 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "diverged",
-      "maxDelta": 249,
+      "maxDelta": 377,
       "firstDiffPath": "svg/g[1][childCount]",
-      "clipOverflow": 397.2
+      "clipOverflow": 400.3
     },
     {
       "id": "2801",

@@ -20,7 +20,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { RankEntry } from '../../model/rankEntry.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
-import { FLATORDER, virtualNode, virtualEdge } from './fastgr.js';
+import { FLATORDER, NORMAL, VIRTUAL, virtualNode, virtualEdge } from './fastgr.js';
 import { recSaveVlists } from './mincross.js';
 import { checkLabelOrder } from './label-order.js';
 import {
@@ -198,7 +198,14 @@ export function abomination(g: Graph): void {
 export function hasInterveningNode(rk: RankEntry, lo: number, hi: number): boolean {
   for (let i = 0; i < rk.n; i++) {
     const ord = getOrd(rk, i);
-    if (ord > lo && ord < hi) return true;
+    if (ord <= lo || ord >= hi) continue;
+    // C only treats a between-node as blocking flat-edge adjacency when it is a
+    // NORMAL node or a LABELED virtual node; an UNLABELED virtual node (e.g. an
+    // edge merely passing through the rank) does NOT block. The port previously
+    // blocked on any node. @see lib/dotgen/flat.c:checkFlatAdjacent
+    const n = rk.v[i];
+    const t = n.info.node_type ?? NORMAL;
+    if (t === NORMAL || (t === VIRTUAL && n.info.label !== undefined)) return true;
   }
   return false;
 }
