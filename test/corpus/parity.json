@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-29T20:10:40.602Z",
+  "generatedAt": "2026-06-29T20:57:34.496Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 505,
-    "structural-match": 200,
+    "byte-match": 519,
+    "structural-match": 186,
     "diverged": 74,
     "errored": 0,
     "timeout": 0,
@@ -654,8 +654,7 @@
     {
       "id": "2476",
       "path": "2476.dot",
-      "verdict": "structural-match",
-      "maxDelta": 0.16000000000008185
+      "verdict": "byte-match"
     },
     {
       "id": "2484",
@@ -963,8 +962,7 @@
     {
       "id": "graphs-KW91",
       "path": "graphs/KW91.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.17000000000001592
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-Latin1",
@@ -1465,8 +1463,7 @@
     {
       "id": "graphs-flatedge",
       "path": "graphs/flatedge.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.15999999999996817
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-fsm",
@@ -1885,8 +1882,7 @@
     {
       "id": "graphs-longflat",
       "path": "graphs/longflat.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.28999999999999915
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-lsunix1",
@@ -1998,8 +1994,7 @@
     {
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.37999999999999545
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-pm2way",
@@ -2441,8 +2436,7 @@
     {
       "id": "linux.x86-flatedge_dot",
       "path": "linux.x86/flatedge_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.15999999999996817
+      "verdict": "byte-match"
     },
     {
       "id": "linux.x86-html2_dot",
@@ -2656,8 +2650,7 @@
     {
       "id": "nshare-flatedge_dot",
       "path": "nshare/flatedge_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.15999999999996817
+      "verdict": "byte-match"
     },
     {
       "id": "nshare-html2_dot",
@@ -3106,8 +3099,7 @@
     {
       "id": "share-KW91",
       "path": "share/KW91.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.17000000000001592
+      "verdict": "byte-match"
     },
     {
       "id": "share-Latin1",
@@ -3265,8 +3257,7 @@
     {
       "id": "share-flatedge",
       "path": "share/flatedge.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.6200000000000045
+      "verdict": "byte-match"
     },
     {
       "id": "share-fsm",
@@ -3572,8 +3563,7 @@
     {
       "id": "share-longflat",
       "path": "share/longflat.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.28999999999999915
+      "verdict": "byte-match"
     },
     {
       "id": "share-mike",
@@ -3601,8 +3591,7 @@
     {
       "id": "share-pgram",
       "path": "share/pgram.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.3100000000000591
+      "verdict": "byte-match"
     },
     {
       "id": "share-pm2way",
@@ -3736,8 +3725,7 @@
     {
       "id": "windows-KW91",
       "path": "windows/KW91.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.17000000000001592
+      "verdict": "byte-match"
     },
     {
       "id": "windows-Latin1",
@@ -4170,8 +4158,7 @@
     {
       "id": "windows-longflat",
       "path": "windows/longflat.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.28999999999999915
+      "verdict": "byte-match"
     },
     {
       "id": "windows-mike",
@@ -4199,8 +4186,7 @@
     {
       "id": "windows-pgram",
       "path": "windows/pgram.gv",
-      "verdict": "structural-match",
-      "maxDelta": 0.3100000000000591
+      "verdict": "byte-match"
     },
     {
       "id": "windows-pm2way",
