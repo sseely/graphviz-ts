@@ -47,8 +47,13 @@ function nums(s) {
 
 /**
  * Map title -> { kind, coords } for every <g class="node"|"edge">. For nodes,
- * coords is the polygon point list; for edges, the first <path d=...> numbers
- * (the spline) — the dominant geometry under test.
+ * coords is the polygon point list (or ellipse cx/cy/rx/ry when no polygon);
+ * for edges, the first <path d=...> numbers (the spline) — the dominant
+ * geometry under test.
+ *
+ * Ellipse fix: default-shape nodes emit <ellipse cx/cy/rx/ry> rather than
+ * <polygon points>. When no polygon is present, extract [cx, cy, rx, ry] from
+ * <ellipse .../> so that node-center deltas are real for ellipse graphs.
  */
 function elements(svg) {
   const out = new Map();
@@ -61,7 +66,17 @@ function elements(svg) {
       .replace(/&#45;/g, '-').replace(/&gt;/g, '>');
     let coords = [];
     if (kind === 'node') {
-      coords = nums(/points="([^"]*)"/.exec(body)?.[1] ?? '');
+      const polyMatch = /points="([^"]*)"/.exec(body);
+      if (polyMatch) {
+        coords = nums(polyMatch[1]);
+      } else {
+        // Ellipse node: extract cx, cy, rx, ry as the geometry
+        const ellipseMatch = /<ellipse[^>]*cx="([^"]*)"[^>]*cy="([^"]*)"[^>]*rx="([^"]*)"[^>]*ry="([^"]*)"/
+          .exec(body);
+        if (ellipseMatch) {
+          coords = [+ellipseMatch[1], +ellipseMatch[2], +ellipseMatch[3], +ellipseMatch[4]];
+        }
+      }
     } else {
       coords = nums(/<path[^>]*\bd="([^"]*)"/.exec(body)?.[1] ?? '');
     }

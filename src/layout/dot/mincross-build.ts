@@ -328,6 +328,9 @@ export function doOrderingNode(ctx: MincrossContext, g: Graph, n: Node, outflag:
   }
   if (sortlist.length <= 1) return;
   ctx.teList = sortlist;
+  // @see lib/dotgen/mincross.c:do_ordering_node — qsort by edgeidcmpf (AGSEQ).
+  // Virtual edges carry AGSEQ(orig) (set in newVirtualEdge, mirroring C's
+  // new_virtual_edge), so this orders by the original DOT-declaration order.
   sortlist.sort((a, b) => a.seq - b.seq);
   doOrderingAddFlatEdges(g, sortlist, outflag);
 }

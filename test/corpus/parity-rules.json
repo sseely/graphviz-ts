@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-29T04:06:18.532Z",
+  "generatedAt": "2026-06-29T14:31:51.601Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 790,
   "counts": {
-    "byte-match": 492,
-    "structural-match": 199,
+    "byte-match": 493,
+    "structural-match": 198,
     "diverged": 88,
     "errored": 0,
     "timeout": 0,
@@ -1210,8 +1210,8 @@
       "id": "graphs-b58",
       "path": "graphs/b58.gv",
       "verdict": "diverged",
-      "maxDelta": 162.17999999999998,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "maxDelta": 90,
+      "firstDiffPath": "svg/g[1]/g[12]/path[1]/@d"
     },
     {
       "id": "graphs-b60",
@@ -1562,8 +1562,7 @@
     {
       "id": "graphs-in",
       "path": "graphs/in.gv",
-      "verdict": "structural-match",
-      "maxDelta": 72
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-inv_inv",

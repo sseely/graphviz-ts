@@ -154,6 +154,11 @@ export function copyVirtualEdgeInfo(e: Edge, orig: Edge): void {
   e.info.xlabel = orig.info.xlabel;
   if (orig.info.to_virt === undefined) orig.info.to_virt = e;
   e.info.to_orig = orig;
+  // C: AGSEQ(e) = AGSEQ(orig) — the virtual edge inherits the original's
+  // sequence number so AGSEQ-keyed sorts (e.g. do_ordering_node's edgeidcmpf)
+  // order by DOT-declaration order rather than virtual-creation order.
+  // @see lib/dotgen/fastgr.c:new_virtual_edge
+  e.seq = orig.seq;
 }
 
 /**
