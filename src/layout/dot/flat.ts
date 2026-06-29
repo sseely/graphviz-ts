@@ -266,31 +266,66 @@ export function needsAbomination(g: Graph): boolean {
   return rankHasNonAdjacentLabel(rank[mn]);
 }
 
-export function applyLabelDist(g: Graph, e: Edge): void {
+/** Label width contribution (flip-aware), or 0 if no label dimen. */
+function labelWidth(g: Graph, e: Edge): number {
   const lbl = e.info.label as (LabelWithDimen | undefined);
-  if (!lbl || !lbl.dimen) return;
-  if (g.info.flip === true) e.info.dist = lbl.dimen.y;
-  else e.info.dist = lbl.dimen.x;
+  if (!lbl || !lbl.dimen) return 0;
+  return g.info.flip === true ? lbl.dimen.y : lbl.dimen.x;
 }
 
-export function processLabelEdge(g: Graph, e: Edge, reset: boolean): boolean {
+/** Store the representative's flat-label width directly. @see flat.c:300 */
+export function applyLabelDist(g: Graph, e: Edge): void {
+  e.info.dist = labelWidth(g, e);
+}
+
+/** Resolve a flat edge to its class representative via the to_virt chain.
+ *  @see lib/dotgen/flat.c:flat_edges (`while (ED_to_virt(le)) le = ED_to_virt(le)`) */
+function flatClassRep(e: Edge): Edge {
+  let le = e;
+  while (le.info.to_virt) le = le.info.to_virt;
+  return le;
+}
+
+/** flat_out loop body: store label dist on e (the rep), or add a label vnode.
+ *  @see lib/dotgen/flat.c:flat_edges 296-307 */
+export function processFlatOutLabel(g: Graph, e: Edge, reset: boolean): boolean {
   if (!isLabeledFlat(e)) return reset;
   if (e.info.adjacent) { applyLabelDist(g, e); return reset; }
   flatNode(e);
   return true;
 }
 
-export function processEdgeList(g: Graph, edges: EdgeList | undefined, reset: boolean): boolean {
-  if (!edges) return reset;
-  for (let i = 0; i < edges.size; i++) reset = processLabelEdge(g, edges.list[i], reset);
-  return reset;
+/** other loop body: inherit adjacency from the class rep, and for an adjacent
+ *  labeled edge MAX its label width onto the rep's dist (not the edge itself);
+ *  non-adjacent labeled edges add a label vnode. Skips cross-rank and self
+ *  edges. @see lib/dotgen/flat.c:flat_edges 309-326 */
+export function processOtherLabel(g: Graph, e: Edge, reset: boolean): boolean {
+  if (nodeRank(e.tail) !== nodeRank(e.head)) return reset;
+  if (e.tail === e.head) return reset;
+  const le = flatClassRep(e);
+  e.info.adjacent = le.info.adjacent;
+  if (!isLabeledFlat(e)) return reset;
+  if (e.info.adjacent) {
+    le.info.dist = Math.max(labelWidth(g, e), le.info.dist ?? 0);
+    return reset;
+  }
+  flatNode(e);
+  return true;
 }
 
+/**
+ * The flat_edges dist/label-vnode pass. C nests BOTH the flat_out and other
+ * loops inside `if (ND_flat_out(n).list)`, so a node with no flat_out processes
+ * neither. @see lib/dotgen/flat.c:flat_edges 288-330
+ */
 export function processNodes(g: Graph): boolean {
   let reset = false;
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
-    reset = processEdgeList(g, n.info.flat_out, reset);
-    reset = processEdgeList(g, n.info.other, reset);
+    const fo = n.info.flat_out;
+    if (!fo) continue;
+    for (let i = 0; i < fo.size; i++) reset = processFlatOutLabel(g, fo.list[i], reset);
+    const ot = n.info.other;
+    if (ot) for (let i = 0; i < ot.size; i++) reset = processOtherLabel(g, ot.list[i], reset);
   }
   return reset;
 }
