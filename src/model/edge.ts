@@ -39,9 +39,12 @@ export class Edge {
   /**
    * Monotone sequence number — equivalent to AGSEQ(e) in C.
    * Used by edgeidcmpf for stable sort ordering.
-   * @see lib/cgraph/cgraph.h:AGSEQ
+   *
+   * Mutable because C's new_virtual_edge overwrites a virtual edge's AGSEQ
+   * with AGSEQ(orig) after allocation; copyVirtualEdgeInfo mirrors that.
+   * @see lib/cgraph/cgraph.h:AGSEQ, lib/dotgen/fastgr.c:new_virtual_edge
    */
-  readonly seq: number;
+  seq: number;
 
   /**
    * Per-graph creation-order index (1-based).
