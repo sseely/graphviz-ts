@@ -127,11 +127,30 @@ export function makeFlatLabeledEdge(g: Graph, e: Edge): boolean {
   lbl.pos = { x: ln.info.coord.x, y: ln.info.coord.y };
   lbl.set = true;
   const et = edgeType(g);
-  const ps = et === EDGETYPE_LINE
-    ? flatLabeledLinePoints(e.tail, e.head, e)
-    : routeFlatLabeledChannel(g, e, ln, et);
-  if (ps === null || ps.length === 0) return false;
-  clipAndInstall(e, e.head, ps, ps.length, buildDotSinfo());
+  if (et === EDGETYPE_LINE) {
+    const ps = flatLabeledLinePoints(e.tail, e.head, e);
+    if (ps !== null && ps.length !== 0) clipAndInstall(e, e.head, ps, ps.length, buildDotSinfo());
+    return true;
+  }
+  // C make_flat_edge forward-normalizes a backward (tail right of head by node
+  // ORDER) flat edge via makefwdedge BEFORE make_flat_labeled_edge builds the
+  // left→right channel — else the middle box inverts (LL.x > UR.x) and
+  // routesplines returns no points. Build the channel on a left→right sample,
+  // then reverse the points for an edge whose tail is the right node so they run
+  // tail→head, and install with ignoreSwap (the orientation is already fixed).
+  // @see lib/dotgen/dotsplines.c:make_flat_edge (makefwdedge), make_flat_labeled_edge
+  const tailIsLeft = (e.tail.info.order ?? 0) <= (e.head.info.order ?? 0);
+  const sample: Edge = tailIsLeft ? e : {
+    ...e, tail: e.head, head: e.tail,
+    info: { ...e.info, tail_port: e.info.head_port, head_port: e.info.tail_port },
+  } as Edge;
+  const ps = routeFlatLabeledChannel(g, sample, ln, et);
+  // Degenerate route (routesplines pn=0): label set, no spline installed — C's
+  // make_flat_labeled_edge returns the same way; emit's edge_in_box then decides
+  // whether the (untranslated) label overlaps the clip. Still HANDLED → true.
+  if (ps === null || ps.length === 0) return true;
+  if (!tailIsLeft) ps.reverse();
+  clipAndInstall(e, e.head, ps, ps.length, { ...buildDotSinfo(), ignoreSwap: true });
   return true;
 }
 

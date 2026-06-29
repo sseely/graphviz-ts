@@ -39,13 +39,13 @@ or extra elements). These are near-misses — sub-pixel-to-modest position drift
 | `1718` | 3725.90 | `svg/g[1]/g[47]/path[1]/@d` |
 | `1447_1` | 3641.66 | `svg/g[1]/g[23]/path[1]/@d` |
 | `2620` | 3207.00 | `svg/g[1]/g[63]/path[1]/@d` |
-| `graphs-b124` | 2538.63 | `svg/g[1]/g[157]/path[1]/@d` |
-| `share-b124` | 2538.63 | `svg/g[1]/g[157]/path[1]/@d` |
-| `windows-b124` | 2538.63 | `svg/g[1]/g[157]/path[1]/@d` |
-| `linux.i386-b29` | 1922.56 | `svg/g[1]/g[57]/path[1]/@d` |
-| `share-b29` | 1922.56 | `svg/g[1]/g[57]/path[1]/@d` |
-| `graphs-b29` | 1902.25 | `svg/g[1]/g[39]/path[1]/@d` |
-| `windows-b29` | 1902.25 | `svg/g[1]/g[39]/path[1]/@d` |
+| `linux.i386-b29` | 2587.37 | `svg/g[1]/g[57]/path[1]/@d` |
+| `share-b29` | 2587.37 | `svg/g[1]/g[57]/path[1]/@d` |
+| `graphs-b29` | 2558.37 | `svg/g[1]/g[39]/path[1]/@d` |
+| `windows-b29` | 2558.37 | `svg/g[1]/g[39]/path[1]/@d` |
+| `share-b124` | 1989.63 | `svg/g[1]/g[157]/path[1]/@d` |
+| `graphs-b124` | 1988.63 | `svg/g[1]/g[157]/path[1]/@d` |
+| `windows-b124` | 1988.63 | `svg/g[1]/g[157]/path[1]/@d` |
 | `2413_2` | 1897.76 | `svg/g[1]/g[65]/path[1]/@d` |
 | `linux.i386-b106` | 1715.00 | `svg/g[1]/g[10]/path[1]/@d` |
 | `share-b106` | 1715.00 | `svg/g[1]/g[10]/path[1]/@d` |
@@ -130,8 +130,8 @@ Named buckets, largest first. Each is a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `path-structure` | 68 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
-| `element-count` | 16 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
+| `path-structure` | 69 | `1213-1`, `1213-2`, `1436` | edge path has a different command sequence or point count — spline routing structure |
+| `element-count` | 15 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `attr-or-tag` | 2 | `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
 | `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
 | `text-content` | 1 | `1879` | rendered text string differs — label content, escaping, or character encoding |

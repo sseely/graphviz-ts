@@ -7,13 +7,19 @@ and 2368 stays diverged throughout; progress is the internal-coord trace
 converging to C (AD-2).** The executor runs only the candidates the trace flags
 (likely a subset of T1–T5).
 
+> **RE-SCOPED by the Batch-0 finding.** The port's x-NS is already bit-exact
+> with C (T0 trace, byte-identical internal frame). T1–T5 (NS-pivot alignment)
+> are **no-ops** — there is no divergence to align. Batch 1 is the single change
+> below: remove the port-only `normalizeXcoords`. See `../decision-journal.md`.
+
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T1 | Align `GD_nlist` order for the x-aux graph (init_rank queue + leaveEdge sweep) | debugger | `src/layout/dot/fastgr.ts`, `src/layout/dot/position.ts` | T0 | [ ] |
-| T2 | Align in/out edge-list + aux-edge insertion order (fastEdge/makeAuxEdge/makeEdgePairs) | debugger | `src/layout/dot/fastgr.ts`, `src/layout/dot/position.ts`, `src/layout/dot/position-aux.ts` | T1 | [ ] |
-| T3 | Align `leaveEdge` selection (cyclic search + tie-break) | debugger | `src/layout/dot/ns.ts` | T2 | [ ] |
-| T4 | Align `enterEdge` + `update`/`rerank` | debugger | `src/layout/dot/ns.ts` | T3 | [ ] |
-| T5 | Align `lrBalance` (Tree_edge order, delta/2 trunc, rerank direction) | debugger | `src/layout/dot/ns.ts` | T4 | [ ] |
+| B1 | Remove port-only `normalizeXcoords` call + dead `minNormalLeftX`/`shiftAllXcoords` (C has no normalize for balance=2; raw x-NS frame already == C). Gate: `XNS_NONORM` survey GATE PASS, 0 regr. | orchestrator | `src/layout/dot/position.ts` | T0 | [x] |
+| T1 | ~~Align `GD_nlist` order for the x-aux graph~~ — NO-OP (trace already matches) | — | — | T0 | [x] |
+| T2 | ~~Align in/out edge-list + aux-edge insertion order~~ — NO-OP | — | — | T1 | [x] |
+| T3 | ~~Align `leaveEdge` selection~~ — NO-OP | — | — | T2 | [x] |
+| T4 | ~~Align `enterEdge` + `update`/`rerank`~~ — NO-OP | — | — | T3 | [x] |
+| T5 | ~~Align `lrBalance`~~ — NO-OP | — | — | T4 | [x] |
 
 Execution rule: after the trace shows a divergence at one of these sites, fix
 that site, re-run the Batch-0 trace + `xns-diff.mjs`, and run the survey gate.

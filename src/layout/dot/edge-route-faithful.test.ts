@@ -51,9 +51,14 @@ const MAX_Y = (pts: Point[]): number => Math.max(...pts.map(p => p.y));
 const MIN_Y = (pts: Point[]): number => Math.min(...pts.map(p => p.y));
 const MAX_X = (pts: Point[]): number => Math.max(...pts.map(p => p.x));
 
+// x-frame note: the router runs in the internal (pre-gvPostprocess) frame,
+// which is C's un-normalized set_xcoords frame (the port-only normalizeXcoords
+// was removed in the xns-absolute-anchor mission). For a single-column graph
+// the lone real node sits at x=0 (C-verified), so the 'n'/'s' compass ports —
+// at the node center x — attach at x=0, and the tail right face is at x=rw=27.
 describe('faithful router — A:n->B loop corridor (the T6b truncation case)', () => {
-  // A is the top rank node at coord (27,90); its TOP face is y=108, the 'n'
-  // port attaches at (27,108)+1. B sits below at (27,18). The spline must loop
+  // A is the top rank node at coord (0,90); its TOP face is y=108, the 'n'
+  // port attaches at (0,108)+1. B sits below at (0,18). The spline must loop
   // UP and over (the simplified fitter truncates this to a 4-pt straight line).
   it('produces a complete (non-truncated) spline, not the 4-pt straight line', () => {
     const pts = routeFirstEdge('digraph{A:n->B}');
@@ -65,8 +70,8 @@ describe('faithful router — A:n->B loop corridor (the T6b truncation case)', (
 
   it('attaches at the tail TOP port and loops above the tail node', () => {
     const pts = routeFirstEdge('digraph{A:n->B}')!;
-    // Start at the 'n' port (27, 108) nudged +1 by beginpath → (27, 109).
-    expect(Math.abs(pts[0].x - 27)).toBeLessThan(0.5);
+    // Start at the 'n' port (0, 108) nudged +1 by beginpath → (0, 109).
+    expect(Math.abs(pts[0].x)).toBeLessThan(0.5);
     expect(Math.abs(pts[0].y - 109)).toBeLessThan(0.5);
     // Apex loops up, above both the port start (109) and the node top (108).
     expect(MAX_Y(pts)).toBeGreaterThan(115);
@@ -74,8 +79,8 @@ describe('faithful router — A:n->B loop corridor (the T6b truncation case)', (
 
   it('bulges right of the node face and descends to reach B', () => {
     const pts = routeFirstEdge('digraph{A:n->B}')!;
-    // Tail node right face is x=54; the loop bulges out past it.
-    expect(MAX_X(pts)).toBeGreaterThan(56);
+    // Tail node right face is x=27 (center 0 + rw 27); the loop bulges past it.
+    expect(MAX_X(pts)).toBeGreaterThan(29);
     // Descends all the way down to B (head center is y=18; reaches ~19).
     expect(MIN_Y(pts)).toBeLessThan(40);
   });
@@ -85,11 +90,11 @@ describe('faithful router — opposing compass ports route sanely', () => {
   it('A:s->B:n is a complete spline from the tail bottom to the head top', () => {
     const pts = routeFirstEdge('digraph{A:s->B:n}');
     expect(pts).not.toBeNull();
-    // 's' port at A bottom (27,72) → 'n' port at B top (27,36): vertical run.
-    expect(Math.abs(pts![0].x - 27)).toBeLessThan(0.5);
+    // 's' port at A bottom (0,72) → 'n' port at B top (0,36): vertical run.
+    expect(Math.abs(pts![0].x)).toBeLessThan(0.5);
     expect(Math.abs(pts![0].y - 72)).toBeLessThan(0.5);
     const end = pts![pts!.length - 1];
-    expect(Math.abs(end.x - 27)).toBeLessThan(0.5);
+    expect(Math.abs(end.x)).toBeLessThan(0.5);
     expect(Math.abs(end.y - 36)).toBeLessThan(0.5);
   });
 

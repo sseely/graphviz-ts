@@ -67,10 +67,18 @@ print by an env var, capture, then `git checkout` the C source and rebuild clean
 
 | Batch | Goal | Status |
 |-------|------|--------|
-| [0](batch-0/overview.md) | x-NS pivot-trace harness + baseline divergence capture | [ ] |
-| [1](batch-1/overview.md) | Align the absolute anchor (T1–T5, iterate via trace) | [ ] |
-| [2](batch-2/overview.md) | Degenerate labeled-flat wiring (map_edge / edge_in_box) | [ ] |
-| [3](batch-3/overview.md) | Full survey + baseline refresh | [ ] |
+| [0](batch-0/overview.md) | x-NS pivot-trace harness + baseline divergence capture | [x] |
+| [1](batch-1/overview.md) | ~~Align the absolute anchor (T1–T5)~~ **RE-SCOPED: remove port-only `normalizeXcoords`** | [x] |
+| [2](batch-2/overview.md) | Degenerate labeled-flat wiring (map_edge / edge_in_box) | [x] |
+| [3](batch-3/overview.md) | Full survey + baseline refresh | [x] |
+
+> **Batch-0 finding re-scopes the mission.** The port's x-NS pivot order is
+> already bit-exact with C (T0 trace: internal frame byte-identical). The locked
+> premise AD-1 ("anchor diverges due to NS pivot order") is empirically wrong.
+> The entire internal-frame divergence is the **port-only** `normalizeXcoords`
+> call in `dotPosition` (C has no such step). Batch 1 is now a single change —
+> remove `normalizeXcoords` — proven 0-regression by the `XNS_NONORM` survey.
+> Batch-1 tasks T1–T5 (NS-pivot replication) are no-ops. See `decision-journal.md`.
 
 ## Docs
 
@@ -88,4 +96,36 @@ print by an env var, capture, then `git checkout` the C source and rebuild clean
   (or `make -C ~/git/graphviz/build dot` for emit.c/libcommon), then regen `/tmp/ghl`.
 - Survey writes to a probe file; refresh baseline only at Batch 3
   (`cp parity-probe.json parity.json && cp … parity-rules.json && npx tsx test/corpus/dashboard.ts`).
+
+## Session summary (mission complete)
+
+**Outcome: core objective delivered; the locked approach was wrong and was
+re-scoped from instrumented evidence.**
+
+- **Tasks**: Batch 0 (T0), Batch 1 (re-scoped B1; T1–T5 no-op), Batch 2 (T6),
+  Batch 3 (T7) — all complete. 5 commits on `feature/xns-absolute-anchor`.
+- **Key finding (re-scope)**: the port's x-network-simplex is ALREADY bit-exact
+  with C (T0 trace: internal `set_xcoords` frame byte-identical). AD-1 ("anchor
+  diverges due to NS pivot order") was empirically false. The whole divergence
+  was a port-only `normalizeXcoords` step C lacks. Batch 1 = remove it (not the
+  planned NS-pivot replication).
+- **Delivered**: internal x-frame now == C; faithful `edge_in_box`/`overlap_label`
+  emit gate replacing the band-aid skip; degenerate labeled flats draw/suppress
+  by clip overlap exactly as C. **2368_1 + 1624 byte-match** (the
+  degenerate-labeled-flat core); **2368 childCount divergence resolved** (6→11
+  edges, 9 paths, all 22 labels).
+- **Quality gates**: `tsc --noEmit` clean; `vitest run` 2467 pass / 1 skip;
+  survey GATE PASS, **0 regressions, 0 clip-regressions** (verdict counts
+  unchanged: 492 byte-match / 198 structural / 89 diverged / 11 oracle-error).
+- **Not achieved / follow-ups**: full **2368 byte-match** is blocked by TWO
+  separate, pre-existing issues the childCount divergence had masked —
+  (1) ~5pt flat-label-rank vertical spacing, (2) adjacent/merged labeled-flat
+  channel geometry (straight-stub vs C curve, e.g. 376→76). Both are flat-edge
+  routing fidelity gaps outside the degenerate-label scope; documented in
+  `.agent-notes/2368-residual-flat-label-ranksep.md`. 13 diverged graphs' maxΔ
+  shifted (some better, some worse) as previously-suppressed labeled flats now
+  draw imperfectly — no verdict regressions. User accepted the partial outcome
+  and the baseline refresh.
+- **Decision journal**: 12 entries; the re-scope (B0) and the Batch-3 stop point
+  flagged for review.
 </content>

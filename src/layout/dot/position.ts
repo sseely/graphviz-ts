@@ -9,7 +9,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { virtualNode, NORMAL } from './fastgr.js';
+import { virtualNode } from './fastgr.js';
 import { SLACKNODE, LEAFSET } from './rank.js';
 import { rank } from './ns.js';
 import { markLowclusters } from './cluster.js';
@@ -47,51 +47,6 @@ export function setXcoordsFromRank(g: Graph): void {
       v.info.rank = i;
     }
   }
-}
-
-/** Minimum left-edge x over all NORMAL nodes; INT_MAX if none. */
-export function minNormalLeftX(g: Graph): number {
-  const rankArr = g.info.rank!;
-  let minX = Number.MAX_SAFE_INTEGER;
-  for (let i = graphMinrank(g); i <= graphMaxrank(g); i++) {
-    const rk = rankArr[i];
-    for (let j = 0; j < rk.n; j++) {
-      const v = rk.v[j];
-      if ((v.info.node_type ?? 0) !== NORMAL) continue;
-      const lx = v.info.coord.x - (v.info.lw ?? 0);
-      if (lx < minX) minX = lx;
-    }
-  }
-  return minX;
-}
-
-/** Subtract delta from every node's coord.x across all ranks. */
-export function shiftAllXcoords(g: Graph, delta: number): void {
-  const rankArr = g.info.rank!;
-  for (let i = graphMinrank(g); i <= graphMaxrank(g); i++) {
-    const rk = rankArr[i];
-    for (let j = 0; j < rk.n; j++) rk.v[j].info.coord.x -= delta;
-  }
-}
-
-/**
- * Shift all node x-coords so the leftmost NORMAL node sits near x=0. C does not
- * normalize here (network simplex leaves GD_ln at rank=0 naturally with integer
- * x-coords); the port's NS leaves a non-zero leftmost, so we compensate.
- *
- * The shift delta is ROUNDED to an integer: minNormalLeftX = coord.x - lw, and
- * lw (half node-width) is non-integer, so subtracting it raw would inject a
- * fractional offset into every node and route splines in a frame shifted off
- * C's integer frame by a non-integer amount. maximal_bbox's round() then
- * straddles rounding boundaries differently than C, perturbing the
- * Pshortestpath corridor and flipping the fitter's bezier piece count on
- * knife-edge long edges. Rounding keeps the routing frame integer (matching C);
- * the fraction washes out in the postprocess translate, so final node positions
- * are unchanged. @see lib/dotgen/position.c:set_xcoords (no normalize step)
- */
-export function normalizeXcoords(g: Graph): void {
-  const minX = minNormalLeftX(g);
-  if (minX !== Number.MAX_SAFE_INTEGER && minX !== 0) shiftAllXcoords(g, Math.round(minX));
 }
 
 /** @see lib/dotgen/position.c:set_xcoords */
@@ -222,10 +177,15 @@ export function dotPosition(g: Graph): number {
     rank(g, 2, nsiter2(g));
   }
   setXcoords(g);
-  /* normalizeXcoords is a no-op in C (GD_ln ends at rank=0 naturally), but our
-   * NS may leave a non-zero leftmost edge. Skip for cluster graphs: the cluster
-   * offset (CL_OFFSET) is already correct from posClusters. */
-  if ((g.info.n_cluster ?? 0) === 0) normalizeXcoords(g);
+  /* C does NOT normalize the x-frame here: rank(g,2,…) is balance=2/LR_balance,
+   * which skips scan_and_normalize, so the frame stays un-normalized (the
+   * leftmost real node may be negative). The port's x-NS is bit-exact with C
+   * (T0: plans/fix-xns-absolute-anchor), so it already reproduces C's exact
+   * integer frame. A former port-only normalizeXcoords step shifted the leftmost
+   * NORMAL node to x≈0 — a band-aid for a since-fixed NS anchor mismatch that
+   * displaced un-translated spline-less edge labels off C's frame. Removed: it
+   * was 0-regression (XNS_NONORM survey) and required for faithful degenerate
+   * labeled-flat emission. @see lib/dotgen/position.c:set_xcoords (no normalize) */
   setAspect(g);
   placeGraphLabel(g);
   /* remove_aux_edges must come after set_aspect: GD_ln/GD_rn used for bbox width */
