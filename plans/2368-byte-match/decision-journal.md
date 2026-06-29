@@ -17,3 +17,29 @@
 | B3 | T3 | Issue 3 (x-NS) was NOT the deep 2371 optimal-face slack — FDIST instrumentation pinned it to a LOCALIZED missing `ED_dist` accumulation: the port set flat-label dist per-edge; C (flat.c:319-322) MAX-accumulates label width onto the class REP via the to_virt chain in the `other`-list loop. The {76,376} concentrate rep had dist=0 (invis), so make_LR_constraints reserved 90 not 92. | Localized + low-risk (flat-edge domain) → pursued per AD-3, not deferred. |
 | B3 | T3 | Fix: rewrote flat.ts flat_edges dist pass faithful to C — `processFlatOutLabel` (dist on rep) + `processOtherLabel` (resolve rep via to_virt, copy adjacency, MAX dist onto rep, rank/self guards), both gated on flat_out existing. RESULT: 2368 bbox byte-match (608×148) + EVERY node x byte-match C; 256→436/376→196 down-arcs now byte-identical. GATE PASS: stable=690, 0 regressions. | Huge improvement; far beyond AD-3's "≤1pt residual" target. |
 | B3 | T3 | Residual: ONLY 376→76 (maxΔ10.22) + 196→376 (0.14). C-instrumented (FGEOM box+ps dump, reverted): 376→76 & 256→436 down-boxes are TRANSLATIONALLY IDENTICAL (Δ274, perfectly symmetric about ctrx) yet C's Pshortestpath routes them as MIRROR images (376→76 dips left/touches right notch corner; 256→436 dips right). Port routes both translation-consistently (matches C on 256→436, not 376→76). | Deep core-pathplan Pshortestpath symmetric-box funnel tie-break — position-dependent in C; out of labeled-flat scope, high-risk (would touch the 25/25 route corpus). Documented residual per AD-3. |
+
+## Session summary
+
+**Tasks completed:** T0 (instrument), T1 (Issue 2 fix), T2 (no-op — Issue 1
+auto-resolved), T3 (localized ED_dist fix), T4 (validate + baseline refresh).
+All 5 tasks done; 4 commits (T0, T1, T2-docs, T3) + T4.
+
+**Result:** 2368 diverged maxΔ65.25 → structural-match maxΔ10.22 (rules-match).
+bbox (608×148), every node, every label, and all edges except `376->76`
+byte-match C. Survey: stable 689→691, 0 regressions across all batches.
+
+**Decisions of note:**
+- Issue 1 (vspace) and Issue 2 (arcs) had ONE root cause (missing arcs → bbox
+  short); fixing Issue 2 resolved Issue 1, making Batch 2 a no-op.
+- Grouping gated on `getMainEdge` (not raw unordered pair) to match C's dispatch
+  and avoid the 2476 regression (mixed-label opposing pair, no concentrate).
+- Issue 3 was a localized `ED_dist` rep-accumulation bug, NOT the deep 2371 x-NS
+  optimal-face — pursued (AD-3 localized+low-risk) rather than deferred.
+
+**Known residual (out of scope):** `376->76` maxΔ10.22 — a core `Pshortestpath`
+symmetric-box funnel tie-break (C is position-dependent; the port is
+translation-consistent). Fixing it means deep pathplan work risking the 25/25
+route corpus. Documented per AD-3 + stop-condition 5.
+
+**Quality gates (final):** `tsc --noEmit` exit 0; `vitest` 2468 pass / 1 skip;
+survey GATE PASS (0 regressions); write-sets matched each task.
