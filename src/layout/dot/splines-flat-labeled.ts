@@ -158,11 +158,32 @@ export function makeFlatLabeledEdge(g: Graph, e: Edge): boolean {
  * True when `e` is an adjacent, same-rank flat edge with no declared ports —
  * C's make_flat_adj_edges no-port dispatch (makeSimpleFlat / makeSimpleFlatLabels).
  * Port-bearing adjacent flats route via the rotated aux graph instead.
+ *
+ * `adjacent` is read from the flat representative — the end of the `to_virt`
+ * chain — not from `e` directly. C's `dot_splines_` routes the `flat_out`/`other`
+ * edge that `checkFlatAdjacent` marked; the port instead routes the cgraph
+ * out-edge, which for a nonconstraint cross-cluster flat (e.g. 258 `B->D`) is a
+ * *different* object linked to the marked representative through `to_virt`
+ * (R -> v -> M, with `adjacent` set on M). Following the chain reunites the
+ * routed edge with its flag. For an ordinary adjacent flat the chain is empty,
+ * so the rep is `e` itself. @see lib/dotgen/dotsplines.c:dot_splines_ (flat gather)
  */
 export function isAdjFlatCandidate(e: Edge): boolean {
-  if ((e.info.adjacent ?? 0) === 0) return false;
   if (e.tail.info.rank === undefined || e.tail.info.rank !== e.head.info.rank) return false;
-  return !e.info.tail_port.defined && !e.info.head_port.defined;
+  if (e.info.tail_port.defined || e.info.head_port.defined) return false;
+  // Resolve `adjacent` from the flat representative (to_virt chain end) ONLY
+  // when it is the SAME logical edge (same unordered endpoint pair). C's
+  // dot_splines_ routes the flat_out/other edge that carries the flag; the
+  // port routes the cgraph out-edge, which for a nonconstraint cross-cluster
+  // flat (258 B->D) reaches its marked rep through to_virt. The same-pair
+  // guard prevents inheriting an UNRELATED edge's adjacency on dense graphs
+  // (which would mis-route many edges through makeSimpleFlat). @see dotsplines.c
+  let rep = e;
+  while (rep.info.to_virt !== undefined && rep.info.to_virt !== rep) rep = rep.info.to_virt;
+  const samePair = (rep.tail === e.tail && rep.head === e.head)
+    || (rep.tail === e.head && rep.head === e.tail);
+  const adj = samePair ? rep.info.adjacent : e.info.adjacent;
+  return (adj ?? 0) !== 0;
 }
 
 /**
