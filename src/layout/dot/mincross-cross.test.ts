@@ -10,8 +10,9 @@
 
 import { describe, it, expect } from 'vitest';
 import {
-  shouldSwap, transposeCounts, left2rightCluster, setReMincross,
+  shouldSwap, transposeCounts, left2rightCluster, left2right, setReMincross,
 } from './mincross-cross.js';
+import { newMatrix, matrixSet } from './mincross-utils.js';
 import { CLUSTER } from './rank.js';
 import { VIRTUAL } from './fastgr.js';
 import type { Node } from '../../model/node.js';
@@ -96,5 +97,48 @@ describe('left2rightCluster — remincross', () => {
     expect(left2rightCluster(clNode(cA), clNode(undefined))).toBe(1);
     expect(left2rightCluster(clNode(cA, CLUSTER, VIRTUAL), clNode(cB))).toBe(1);
     setReMincross(false); // restore module global for other tests
+  });
+});
+
+// C indexes the flat adjacency matrix by flatindex(v) = ND_low(v) (mincross.c:115,
+// 578) and BUILDS it by `low` (mincross-flat.ts matrixSet hLow/vLow). The port's
+// left2right formerly read it by `order - vStart`, which equals `low` only right
+// after flatBreakcycles and drifts once a reorder pass mutates `order` — the b58
+// FLATORDER 6->8 enforcement bug (pass-1 mincrossIter wrongly swapped 6,8).
+/** Flat node at rank 0 with distinct low/order, no cluster. */
+function flatNode(low: number, order: number): Node {
+  return { info: { rank: 0, low, order, clust: undefined } } as unknown as Node;
+}
+/** Graph whose rank 0 carries a 3x3 flat matrix; vStart offsets order, not low. */
+function flatGraph(vStart: number): { g: Graph; setEdge: (a: number, b: number) => void } {
+  const flat = newMatrix(3, 3);
+  const g = { info: { rank: [{ flat, vStart, v: [], n: 0 }] } } as unknown as Graph;
+  return { g, setEdge: (a, b) => matrixSet(flat, a, b) };
+}
+
+describe('left2right — flat matrix indexed by low, not order', () => {
+  it('finds the 6->8 constraint by low even after order drifts (b58 regression)', () => {
+    setReMincross(false);
+    const { g, setEdge } = flatGraph(0);
+    setEdge(1, 2); // M[low(6)=1][low(8)=2] = "6 must be left of 8"
+    // Post-reorder state: 6.order=0, 8.order=1 — order != low. Reading by
+    // order-vStart would look up M[0][1] (unset) and miss; reading by low hits.
+    const six = flatNode(1, 0);
+    const eight = flatNode(2, 1);
+    expect(left2right(g, six, eight)).toBe(1);   // forced: 6 before 8
+    expect(left2right(g, eight, six)).toBe(-1);  // reverse direction
+  });
+
+  it('returns 0 when neither low-indexed direction is constrained', () => {
+    setReMincross(false);
+    const { g } = flatGraph(0); // empty matrix
+    expect(left2right(g, flatNode(1, 0), flatNode(2, 1))).toBe(0);
+  });
+
+  it('ignores vStart for the matrix index (low is already window-local)', () => {
+    setReMincross(false);
+    const { g, setEdge } = flatGraph(5); // nonzero vStart must not shift the lookup
+    setEdge(1, 2);
+    expect(left2right(g, flatNode(1, 0), flatNode(2, 1))).toBe(1);
   });
 });
