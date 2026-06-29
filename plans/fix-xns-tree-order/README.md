@@ -24,7 +24,7 @@ Full evidence: `.agent-notes/b51-blok60-is-xcoord-ns-selection.md`. Summary:
 
 ## Quality gates
 - `npx tsc --noEmit` → exit 0 (after every code change).
-- `npx vitest run src/layout/dot/ns-range.test.ts src/layout/dot/position.test.ts src/layout/dot/position-aux.test.ts` → all pass. (T1 may add an `ns-subtree.test.ts` locking the corrected order; run it too once it exists.)
+- `npx vitest run src/layout/dot/ns-subtree.test.ts src/layout/dot/ns-range.test.ts src/layout/dot/position.test.ts src/layout/dot/position-aux.test.ts` → all pass. `ns-subtree.test.ts` exists (baseline: STset union-find + subtree min-heap, the primitives the fix must NOT change); T1 extends it with an order-locking assertion.
 - **Integration gate (Batch 2):** full headless parity survey, **0 regressions** vs
   `test/corpus/parity.json` (baseline byte-match=522). Recipe in `batch-2/T2-survey-gate.md`.
 - Minimal repro: `~/git/graphviz/tests/share/b51.gv`, node `blok_60` → target

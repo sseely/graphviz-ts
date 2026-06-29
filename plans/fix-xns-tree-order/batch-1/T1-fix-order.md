@@ -21,7 +21,10 @@ assertion on blok_60's resulting x). Keep the change minimal and C-faithful.
 
 ## Write-set
 - The NS file T0 named (`ns-subtree.ts` and/or `ns-core.ts`).
-- A unit test asserting the corrected order / blok_60 outcome.
+- `src/layout/dot/ns-subtree.test.ts` (already exists with baseline union-find +
+  heap tests) — EXTEND it with an order-locking assertion: build the b51-like
+  case (or a minimal degenerate tree) and assert the `treeEdges` order / blok_60's
+  resulting x matches C. Keep the existing 8 tests passing.
 - Do NOT touch `ns.ts` (`lrBalance`/`enterEdge` are correct given right order).
 
 ## Acceptance (Given/When/Then)
