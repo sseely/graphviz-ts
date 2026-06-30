@@ -45,7 +45,8 @@ ordering (`mincross-cluster*.ts` / `mincross*.ts`) → x-coord NS
   - Result: `cluster-mincross-order`; fixTarget `src/layout/dot/cluster.ts::interclexp`
     (edge-iteration order ≠ C `agfstedge` → intercluster parallel multi-edge
     `n488->n2` xpenalty 1 vs C's 2 → wrong ReMincross best-order → X cascade).
-- [ ] **Batch 1** — Implement fix + ldbxtried oracle test → `batch-1/overview.md`
+- [x] **Batch 1** — Implement fix + ldbxtried oracle test → `batch-1/overview.md`
+  - `interclexp` agfstedge-order fix; node X conformant; golden un-skipped; 2512/2512.
 - [ ] **Batch 2** — Survey gate + baseline refresh → `batch-2/overview.md`
 
 ## Constraints
