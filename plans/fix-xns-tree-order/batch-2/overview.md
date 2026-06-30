@@ -6,6 +6,6 @@ graph, so the full headless parity survey must show 0 regressions before merge.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T2 | Full parity survey, 0 regressions, refresh baseline, commit | (inline/opus) | `test/corpus/parity.json`, `parity-rules.json`, `PARITY.md` | T1 | [ ] |
+| T2 | Full parity survey, 0 regressions, refresh baseline, commit | (inline/opus) | `test/corpus/parity.json`, `parity-rules.json`, `PARITY.md` | T1 | [x] |
 
 Spec: `T2-survey-gate.md`.
