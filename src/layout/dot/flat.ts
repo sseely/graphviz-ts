@@ -59,38 +59,98 @@ export function makeVnSlot(g: Graph, r: number, pos: number): Node {
 }
 
 // ---------------------------------------------------------------------------
-// flat_limits helpers  @see lib/dotgen/flat.c:flat_limits
+// flat_limits  @see lib/dotgen/flat.c:flat_limits / setbounds / findlr
+//
+// Placement of a labeled flat edge's label virtual node on rank r-1 is
+// topology-aware: it does NOT compare the r-1 vnodes' own orders against the
+// flat edge's endpoint orders (those live on a different rank). Instead, for
+// each node already on rank r-1, it inspects where that node's edges connect on
+// rank r relative to the flat edge's endpoint-order span [lpos,rpos], and
+// places the label at the midpoint of the resulting hard/soft bounds. A crude
+// order-vs-order comparison mis-placed the label (graphviz #1213: the back-edge
+// chain vnodes shifted +1 order, perturbing their positions and routing
+// corridors and warping every constraint=false back-edge spline).
 // ---------------------------------------------------------------------------
 
-export function limitsLeft(rk: RankEntry, tOrd: number, hOrd: number): number {
-  let left = 0;
-  for (let i = 0; i < rk.n; i++) {
-    const ord = getOrd(rk, i);
-    if (ord < tOrd && ord < hOrd) left = i + 1;
-  }
-  return left;
+// bound indices @see lib/dotgen/flat.c HLB/HRB/SLB/SRB
+const HLB = 0;
+const HRB = 1;
+const SLB = 2;
+const SRB = 3;
+
+/** Sorted [lo, hi] of the orders of u and v. @see lib/dotgen/flat.c:findlr */
+export function findlr(u: Node, v: Node): [number, number] {
+  const a = nodeOrder(u);
+  const b = nodeOrder(v);
+  return a > b ? [b, a] : [a, b];
 }
 
-export function limitsRight(rk: RankEntry, tOrd: number, hOrd: number): number {
-  let right = rk.n;
-  for (let i = rk.n - 1; i >= 0; i--) {
-    const ord = getOrd(rk, i);
-    if (ord > tOrd && ord > hOrd) right = i;
+/** A flat label vnode (no in-edges): bound by where its two endpoints sit
+ *  relative to [lpos,rpos]. @see lib/dotgen/flat.c:setbounds (flat branch) */
+export function setBoundsFlat(v: Node, bounds: number[], lpos: number, rpos: number): void {
+  const out = v.info.out;
+  if (out === undefined || out.size < 2) return; // C asserts size == 2
+  const ord = nodeOrder(v);
+  const [l, r] = findlr(out.list[0].head, out.list[1].head);
+  if (r <= lpos) { bounds[SLB] = bounds[HLB] = ord; }
+  else if (l >= rpos) { bounds[SRB] = bounds[HRB] = ord; }
+  else if (l < lpos && r > rpos) { /* spanning this one — ignore */ }
+  else {
+    if (l < lpos || (l === lpos && r < rpos)) bounds[SLB] = ord;
+    if (r > rpos || (r === rpos && l > lpos)) bounds[SRB] = ord;
   }
-  return right;
+}
+
+/** A forward chain vnode (has in-edges): hard-bound by whether all its
+ *  downstream connections fall left or right of the span.
+ *  @see lib/dotgen/flat.c:setbounds (forward branch) */
+export function setBoundsForward(v: Node, bounds: number[], lpos: number, rpos: number): void {
+  const out = v.info.out;
+  const size = out?.size ?? 0;
+  let onleft = false;
+  let onright = false;
+  for (let i = 0; i < size; i++) {
+    const ho = nodeOrder(out!.list[i].head);
+    if (ho <= lpos) { onleft = true; continue; }
+    if (ho >= rpos) { onright = true; continue; }
+  }
+  const ord = nodeOrder(v);
+  if (onleft && !onright) bounds[HLB] = ord + 1;
+  if (onright && !onleft) bounds[HRB] = ord - 1;
+}
+
+/** Update label-placement bounds from one rank-(r-1) node `v`, given the flat
+ *  edge's endpoint-order span [lpos,rpos] on rank r. @see lib/dotgen/flat.c:setbounds */
+export function setBounds(v: Node, bounds: number[], lpos: number, rpos: number): void {
+  if ((v.info.node_type ?? NORMAL) !== VIRTUAL) return;
+  if ((v.info.in?.size ?? 0) === 0) setBoundsFlat(v, bounds, lpos, rpos);
+  else setBoundsForward(v, bounds, lpos, rpos);
 }
 
 /**
- * Find best position for a flat-edge label virtual node in rank r-1.
+ * Find the best order position for a flat-edge label virtual node in rank r-1.
+ * Faithful port of C's bound-scan (NOT a simple order comparison).
  * @see lib/dotgen/flat.c:flat_limits
  */
 export function flatLimits(g: Graph, e: Edge): number {
   const r = nodeRank(e.tail) - 1;
   if (r < 0 || !g.info.rank) return 0;
   const rk = g.info.rank[r];
-  const tOrd = nodeOrder(e.tail);
-  const hOrd = nodeOrder(e.head);
-  return Math.floor((limitsLeft(rk, tOrd, hOrd) + limitsRight(rk, tOrd, hOrd)) / 2);
+  let lnode = 0;
+  let rnode = rk.n - 1;
+  // bounds = [HLB, HRB, SLB, SRB]
+  const bounds = [lnode - 1, rnode + 1, lnode - 1, rnode + 1];
+  const [lpos, rpos] = findlr(e.tail, e.head);
+  while (lnode <= rnode) {
+    setBounds(rk.v[lnode], bounds, lpos, rpos);
+    if (lnode !== rnode) setBounds(rk.v[rnode], bounds, lpos, rpos);
+    lnode++;
+    rnode--;
+    if (bounds[HRB] - bounds[HLB] <= 1) break;
+  }
+  // C integer division truncates toward zero (Math.trunc).
+  if (bounds[HLB] <= bounds[HRB]) return Math.trunc((bounds[HLB] + bounds[HRB] + 1) / 2);
+  return Math.trunc((bounds[SLB] + bounds[SRB] + 1) / 2);
 }
 
 // ---------------------------------------------------------------------------

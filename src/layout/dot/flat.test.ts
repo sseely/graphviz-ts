@@ -6,11 +6,12 @@
 
 import { describe, it, expect } from 'vitest';
 import { class2 } from './classify.js';
-import { abomination, hasInterveningNode } from './flat.js';
+import { abomination, hasInterveningNode, findlr } from './flat.js';
 import { NORMAL, VIRTUAL } from './fastgr.js';
 import type { RankEntry } from '../../model/rankEntry.js';
 import type { Node } from '../../model/node.js';
 import { makeTestGraph, addTestEdge, setupRanks } from './position.test.js';
+import { renderSvg } from '../../index.js';
 
 /** Build a minimal RankEntry from (order, node_type, label?) triples. */
 function rankOf(specs: Array<{ order: number; type: number; label?: unknown }>): RankEntry {
@@ -149,4 +150,105 @@ describe('abomination: new rank entry', () => {
     expect(g.info.rank![1]).toBe(old0);
     expect(g.info.rank![2]).toBe(old1);
   });
+});
+
+// ---------------------------------------------------------------------------
+// flat_limits / findlr — graphviz #1213
+//
+// A labeled flat edge's label virtual node must be placed on rank r-1 using C's
+// topology-aware flat_limits (setbounds/findlr), NOT a crude order comparison.
+// The previous port compared the r-1 vnodes' own orders against the flat edge's
+// rank-r endpoint orders and placed the label too far left (order 3 instead of
+// 8 for 1213-1's V1->V9). That shifted every constraint=false back-edge chain
+// vnode +1 in order, perturbing their positions and routing corridors and
+// warping V0->V2, V0->V3, V10->V6, V10->V7. The fix routes all 5 edges to byte
+// parity with the C oracle. @see lib/dotgen/flat.c:flat_limits
+// ---------------------------------------------------------------------------
+
+describe('findlr (flat.c:findlr): sorted endpoint orders', () => {
+  const nodeAt = (order: number): Node => ({ info: { order } }) as unknown as Node;
+  it('returns [lo, hi] regardless of argument order', () => {
+    expect(findlr(nodeAt(4), nodeAt(2))).toEqual([2, 4]);
+    expect(findlr(nodeAt(2), nodeAt(4))).toEqual([2, 4]);
+    expect(findlr(nodeAt(3), nodeAt(3))).toEqual([3, 3]);
+  });
+});
+
+/** Parse the absolute control points of an SVG path `d` attribute. */
+function pathPoints(d: string): Array<[number, number]> {
+  const out: Array<[number, number]> = [];
+  const re = /(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(d)) !== null) out.push([Number(m[1]), Number(m[2])]);
+  return out;
+}
+
+/** Extract edge title → path `d` from rendered SVG. */
+function edgePaths(svg: string): Map<string, string> {
+  const map = new Map<string, string>();
+  const parts = svg.split(/<g [^>]*class="edge"/);
+  for (let i = 1; i < parts.length; i++) {
+    const tm = parts[i].match(/<title>([^<]+)<\/title>/);
+    const dm = parts[i].match(/<path[^>]*\sd="([^"]+)"/);
+    if (tm && dm) map.set(tm[1].replace(/&#45;/g, '-').replace(/&gt;/g, '>'), dm[1]);
+  }
+  return map;
+}
+
+// 1213-1 (constraint=false back edges through clusters + one labeled flat edge).
+const DOT_1213_1 = `digraph G {
+V4
+V0
+V2
+subgraph cluster_0 { V3 V1 }
+subgraph cluster_1 { V10 V5 V11 }
+subgraph cluster_2 { V9 V8 V6 }
+V7
+V0 -> V3 [constraint=false]
+V4 -> V0
+V3 -> V1
+V0 -> V2 [constraint=false]
+V10 -> V6 [label=a,constraint=false]
+V11 -> V10
+V9 -> V8
+V6 -> V9
+V5 -> V11
+V10 -> V7 [constraint=false]
+V4 -> V5 [constraint=false]
+V3 -> V6 [constraint=false]
+V2 -> V7 [constraint=false]
+V1 -> V9 [label=b,constraint=false]
+V1 -> V8
+V0 -> V11 [constraint=false]
+V0 -> V10
+}`;
+
+// Oracle control points (native dot, GVBINDIR=/tmp/ghl, default Estimate
+// measurer, SVG frame). These are the five edges the #1213 bug warped; before
+// the flat_limits fix the port emitted extra bezier segments (e.g. V0->V2 had
+// 13 control points vs the oracle's 10) so the point-count assertion fails on
+// pre-fix code.
+const ORACLE_1213_1: Record<string, string> = {
+  'V0->V2': 'M50.15,-116.81C58.52,-119.74 68.1,-122.81 77,-125 151.47,-143.28 343.33,-160.37 418,-177.8 424.44,-179.3 431.22,-181.19 437.72,-183.15',
+  'V0->V3': 'M50.6,-116.22C58.92,-119.07 68.35,-122.24 77,-125 146.71,-147.28 228.82,-171.39 274.6,-184.63',
+  'V1->V9': 'M300.65,-124.3C290.66,-140.23 273.64,-160.44 254.5,-153.73 240.84,-148.95 227.99,-139.48 217.83,-130.31',
+  'V10->V6': 'M139.79,-44.84C145.4,-47.22 151.41,-49.73 157,-52 190.12,-65.44 211.79,-51.52 232,-81 250.74,-108.34 232.01,-145.94 215.31,-170.31',
+  'V10->V7': 'M138.65,-45.37C144.5,-47.85 150.9,-50.27 157,-52 240.04,-75.51 284.07,-24.14 349,-81 361.84,-92.25 371.9,-136.74 377.39,-166.65',
+};
+
+describe('flat_limits #1213: constraint=false splines match the C oracle', () => {
+  const svg = renderSvg(DOT_1213_1, 'dot');
+  const got = edgePaths(svg);
+  for (const [title, oracleD] of Object.entries(ORACLE_1213_1)) {
+    it(`${title} matches the oracle control points`, () => {
+      const a = pathPoints(oracleD);
+      const b = pathPoints(got.get(title) ?? '');
+      // Same number of bezier control points (pre-fix emitted extra segments).
+      expect(b.length).toBe(a.length);
+      for (let i = 0; i < a.length; i++) {
+        expect(b[i][0]).toBeCloseTo(a[i][0], 1);
+        expect(b[i][1]).toBeCloseTo(a[i][1], 1);
+      }
+    });
+  }
 });
