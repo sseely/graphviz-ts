@@ -109,10 +109,11 @@ describe('left2rightCluster — remincross', () => {
 function flatNode(low: number, order: number): Node {
   return { info: { rank: 0, low, order, clust: undefined } } as unknown as Node;
 }
-/** Graph whose rank 0 carries a 3x3 flat matrix; vStart offsets order, not low. */
-function flatGraph(vStart: number): { g: Graph; setEdge: (a: number, b: number) => void } {
+/** Graph whose rank 0 carries a 3x3 flat matrix; vStart offsets order, not low.
+ *  `flip` mirrors GD_flip(g): C swaps v,w before its single matrix_get. */
+function flatGraph(vStart: number, flip = false): { g: Graph; setEdge: (a: number, b: number) => void } {
   const flat = newMatrix(3, 3);
-  const g = { info: { rank: [{ flat, vStart, v: [], n: 0 }] } } as unknown as Graph;
+  const g = { info: { rank: [{ flat, vStart, v: [], n: 0 }], flip } } as unknown as Graph;
   return { g, setEdge: (a, b) => matrixSet(flat, a, b) };
 }
 
@@ -126,7 +127,6 @@ describe('left2right — flat matrix indexed by low, not order', () => {
     const six = flatNode(1, 0);
     const eight = flatNode(2, 1);
     expect(left2right(g, six, eight)).toBe(1);   // forced: 6 before 8
-    expect(left2right(g, eight, six)).toBe(-1);  // reverse direction
   });
 
   it('returns 0 when neither low-indexed direction is constrained', () => {
@@ -140,5 +140,32 @@ describe('left2right — flat matrix indexed by low, not order', () => {
     const { g, setEdge } = flatGraph(5); // nonzero vStart must not shift the lookup
     setEdge(1, 2);
     expect(left2right(g, flatNode(1, 0), flatNode(2, 1))).toBe(1);
+  });
+
+  // C left2right reads exactly ONE matrix cell, matrix_get(flatindex(v),
+  // flatindex(w)), with v,w pre-swapped iff GD_flip (mincross.c:575-578, bool).
+  // The OPPOSITE-direction pair must read as 0 (no constraint). A prior port
+  // read BOTH cells and returned -1 here, spuriously blocking a reorder swap and
+  // shifting the captured best order on graphs-shells (rc/KornShell, rank 7).
+  it('reads ONE direction: the reverse of a forward edge is unconstrained (shells)', () => {
+    setReMincross(false);
+    const { g, setEdge } = flatGraph(0);
+    setEdge(1, 2); // edge low(1)->low(2): "node@low1 must be left of node@low2"
+    const a = flatNode(1, 0);
+    const b = flatNode(2, 1);
+    expect(left2right(g, a, b)).toBe(1); // forward, constrained
+    expect(left2right(g, b, a)).toBe(0); // reverse: NOT constrained (was -1 pre-fix)
+  });
+
+  it('GD_flip selects the reverse cell, mirroring C SWAP(v,w)', () => {
+    setReMincross(false);
+    const { g, setEdge } = flatGraph(0, /* flip */ true);
+    setEdge(1, 2); // only the (1,2) cell is set
+    const a = flatNode(1, 0);
+    const b = flatNode(2, 1);
+    // flip=true => C reads matrix_get(flatindex(w), flatindex(v)); so the
+    // constrained pair is (b, a), reading cell (1,2); (a, b) reads (2,1) = unset.
+    expect(left2right(g, b, a)).toBe(1);
+    expect(left2right(g, a, b)).toBe(0);
   });
 });
