@@ -50,6 +50,18 @@ ordering (`mincross-cluster*.ts` / `mincross*.ts`) → x-coord NS
 - [x] **Batch 2** — Survey gate + baseline refresh → `batch-2/overview.md`
   - PASS: 0 regressions; conformant 533→536; all 3 ldbxtried-family graphs conformant.
 
+## Mission summary (complete 2026-06-30)
+- **Tasks:** 3/3 (T0 diagnose, T1 fix, T2 survey gate). No stop conditions hit.
+- **Fix:** `cluster.ts:interclexp` iterates `[...n.outEdges(g), ...n.inEdges(g)]`
+  (C `agfstedge` order) instead of `g.edges` insertion order — restores the
+  merged `ED_xpenalty` on parallel intercluster multi-edges.
+- **Gates:** tsc 0 · full unit suite 2512/2512 · golden 169/169 (un-skipped
+  `parallel-cluster-ldbxtried`) · survey 0 regressions / 0 new timeout/errored.
+- **Outcome:** graphs/share/windows-ldbxtried all diverged→conformant;
+  corpus conformant 533→536. Merged to main: merge commit `4491c16`
+  (per-task commits ad9c16e/20aa305/f3f3206).
+- **Follow-up:** none. Branch `feature/fix-ldbxtried` left for batched cleanup.
+
 ## Constraints
 **Stop conditions:**
 - Root cause falls OUTSIDE the ordering / x-coord / cluster surface (e.g. pure
