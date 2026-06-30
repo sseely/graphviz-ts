@@ -17,6 +17,7 @@ import {
   PK_TOP_ALIGN,
   PK_BOT_ALIGN,
 } from './types.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
 
 /** Internal info for one rectangle during array packing. */
 export interface AInfo {
@@ -110,11 +111,15 @@ export function cmpByPerimeter(a: AInfo, b: AInfo): number {
  */
 export function sortAInfo(info: AInfo[], pinfo: PackInfo): AInfo[] {
   const sinfo = [...info];
+  // C arrayRects sorts via gv_sort(ucmpf)/qsort(acmpf) — both libc qsort
+  // (gv_sort is a qsort_r wrapper), UNSTABLE. Both comparators return 0 on a
+  // tie (equal user-val, or equal height+width), so equal components' order is
+  // decided by qsort, not insertion order. @see util/bsd-qsort.ts · pack.c:arrayRects
   if ((pinfo.flags & PK_USER_VALS) && pinfo.vals !== null) {
     const vals = pinfo.vals;
-    sinfo.sort((a, b) => cmpByUserVals(a, b, vals));
+    gvQsort(sinfo, (a, b) => cmpByUserVals(a, b, vals));
   } else if (!(pinfo.flags & PK_INPUT_ORDER)) {
-    sinfo.sort(cmpByPerimeter);
+    gvQsort(sinfo, cmpByPerimeter);
   }
   return sinfo;
 }

@@ -18,6 +18,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { PackInfo } from './types.js';
 import { PackMode } from './types.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
 
 /** Max. avg. polyomino size. @see lib/pack/pack.c:C */
 const C_AVG = 100;
@@ -315,8 +316,9 @@ export function polyGraphs(
     gi.index = i;
     return gi;
   });
-  // descending by perimeter (C qsort with flipped comparator)
-  const sinfo = [...info].sort((a, b) => b.perim - a.perim);
+  // descending by perimeter (C qsort with flipped comparator); cmpf returns 0 on
+  // equal perimeter, so the tie order is qsort's, not insertion order. @see util/bsd-qsort.ts
+  const sinfo = gvQsort([...info], (a, b) => b.perim - a.perim);
   const ctx: PlaceCtx = {
     ps: new PointSet(),
     places: gs.map(() => ({ x: 0, y: 0 })),
