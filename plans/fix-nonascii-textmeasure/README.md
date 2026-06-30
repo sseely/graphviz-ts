@@ -85,8 +85,8 @@ case changes accepted status, reconcile `accepted-divergences.json` +
 
 | Batch | Status | Tasks |
 |---|---|---|
-| [Batch 1 — Fix](batch-1/overview.md) | [ ] | T1 |
-| [Batch 2 — Verify (survey-gated)](batch-2/overview.md) | [ ] | T2 |
+| [Batch 1 — Fix](batch-1/overview.md) | [x] | T1 |
+| [Batch 2 — Verify (survey-gated)](batch-2/overview.md) | [x] | T2 |
 
 ## Index
 
@@ -97,3 +97,26 @@ case changes accepted status, reconcile `accepted-divergences.json` +
 - [decision-journal.md](decision-journal.md)
 - Precedent: `plans/fix-root-twopi/` (same fix+survey-gate shape); memories
   `textmeasure-cutover-done`, `parity-text-charset-cluster-done`.
+
+## Mission summary (2026-06-30 — COMPLETE)
+
+- **Tasks:** 2/2 complete (T1 fix, T2 verify). Both batches `[x]`.
+- **Fix (T1, commit f1e5719):** added a `TextEncoder`-based UTF-8 byte helper and
+  iterated UTF-8 bytes (not UTF-16 units) in `estimate_text_width_1pt` and
+  `freetypeHintedWidth`, mirroring C's per-`(unsigned char)*c` loop. ASCII output
+  byte-identical. graphs-japanese (7 nodes) and graphs-Latin1 node widths match
+  the oracle **exactly**; Latin1 confirms C normalizes latin1→UTF-8 before
+  measuring (AD-3).
+- **Verify (T2, commit 84ae9b1):** survey + honest gate (against the true HEAD
+  baseline after catching a pre-contaminated on-disk `parity.json`): **0
+  regressions**. graphs-japanese diverged→conformant (objective met), +
+  graphs-cairo, 2413_2, and 8 structural→conformant non-ASCII graphs. 4
+  conformant watch-graphs unchanged. Net diverged 37→34. No accepted-divergences
+  reconciliation needed.
+- **Quality gates:** typecheck exit 0; `vitest src/common` pass (added
+  CJK/Cyrillic/Latin-1 + ASCII-identity tests); oracle width checks exact;
+  survey:gate 0 regressions; write-set within declared bounds.
+- **Decisions:** 1 non-trivial judgment call — restored the contaminated on-disk
+  baseline to HEAD before gating rather than gating against it (logged B2/T2).
+- **Known issues / follow-ups:** none. `survey.ts:416` logs "wrote parity.json"
+  verbatim regardless of `PARITY_OUT` (cosmetic; out of scope).
