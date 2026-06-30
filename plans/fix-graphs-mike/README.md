@@ -37,8 +37,8 @@ exact fix file before Batch 1 touches code. Likely surface (suspect order):
   `M387.79,-434.5C377.94,-424.92 364.85,-412.19 353.68,-401.34` (8 pts).
 
 ## Batches (sequential — each needs the prior)
-- [ ] **Batch 0** — Diagnose the L→U routing divergence; pin write-set → `batch-0/overview.md`
-- [ ] **Batch 1** — Implement fix + L→U oracle test → `batch-1/overview.md`
+- [x] **Batch 0** — Diagnosed: root cause is `ns.ts:tbSortNodes` (qsort tie-order in TB_balance rank phase), NOT edge-spline routing. Scope expanded with user authorization. → `batch-0/overview.md`
+- [x] **Batch 1** — Fixed via faithful BSD/libc qsort port (`bsd-qsort.ts`) in `tbSortNodes`; L→U + K→L byte-conformant on mike; +test → `batch-1/overview.md`
 - [ ] **Batch 2** — Survey gate + baseline refresh → `batch-2/overview.md`
 
 ## Constraints

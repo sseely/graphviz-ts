@@ -7,6 +7,7 @@ import type { NsCtx } from './ns-core.js';
 import { SEARCHSIZE, NORMAL, nsSlack, isTreeEdge, seq, invalidatePath, exchangeTreeEdges } from './ns-core.js';
 import { dfsRange } from './ns-range.js';
 import { feasibleTree } from './ns-subtree.js';
+import { gvQsort } from './bsd-qsort.js';
 
 // ---------------------------------------------------------------------------
 // Node / Edge accessor helpers — eliminate ?? from callers (each ?? is +1 CCN)
@@ -351,7 +352,11 @@ export function tbSortCompare(a: Node, b: Node, adj: number): number {
 export function tbSortNodes(ctx: NsCtx, nrank: number[], adj: number): Node[] {
   const nodes: Node[] = [];
   for (let n = ctx.g.info.nlist; n; n = n.info.next) nodes.push(n);
-  nodes.sort((a, b) => tbSortCompare(a, b, adj));
+  // C `LIST_SORT` is libc `qsort` (UNSTABLE). The walk below mutates `nrank` per
+  // node, so equal-rank tie order decides which rank a tied node lands on — JS's
+  // stable sort diverges from the oracle here (e.g. graphs/mike node L lands one
+  // rank too high). Reproduce qsort's permutation. @see bsd-qsort.ts
+  gvQsort(nodes, (a, b) => tbSortCompare(a, b, adj));
   for (const n of nodes) {
     if (nodeType(n) === NORMAL) nrank[nodeRank(n)]++;
   }
