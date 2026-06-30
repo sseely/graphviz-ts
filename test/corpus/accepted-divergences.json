@@ -53,20 +53,6 @@
       "ref": "rules-known-divergences.md"
     },
     {
-      "match": { "id": "nshare-root_circo" },
-      "class": "R-emit",
-      "scope": "rules",
-      "reason": "nodes 0.00 (1054/1054); divergence is full-SVG childCount + one edge @d between the headless oracle and the port, not layout rules.",
-      "ref": "rules-known-divergences.md"
-    },
-    {
-      "match": { "id": "nshare-root_twopi" },
-      "class": "R-emit",
-      "scope": "rules",
-      "reason": "nodes 0.00 (1054/1054); divergence is full-SVG childCount + one edge @d between the headless oracle and the port, not layout rules.",
-      "ref": "rules-known-divergences.md"
-    },
-    {
       "match": { "id": "2168_2" },
       "class": "R-xns",
       "scope": "rules",

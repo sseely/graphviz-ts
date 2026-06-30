@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-30T15:57:43.521Z",
+  "generatedAt": "2026-06-30T17:57:57.585Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 541,
-    "structural-match": 195,
-    "diverged": 42,
+    "conformant": 562,
+    "structural-match": 179,
+    "diverged": 37,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -389,8 +389,7 @@
     {
       "id": "2095_1",
       "path": "2095_1.dot",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "2108",
@@ -1030,35 +1029,29 @@
     {
       "id": "graphs-b100",
       "path": "graphs/b100.gv",
-      "verdict": "diverged",
-      "maxDelta": 351.90000000000873,
-      "firstDiffPath": "svg/g[1]/g[1597]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 20
     },
     {
       "id": "graphs-b102",
       "path": "graphs/b102.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b103",
       "path": "graphs/b103.gv",
-      "verdict": "diverged",
-      "maxDelta": 216.20000000000073,
-      "firstDiffPath": "svg/g[1]/g[1220]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b104",
       "path": "graphs/b104.gv",
-      "verdict": "diverged",
-      "maxDelta": 351.90000000000873,
-      "firstDiffPath": "svg/g[1]/g[1597]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 20
     },
     {
       "id": "graphs-b106",
       "path": "graphs/b106.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1.1299999999996544
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b117",
@@ -1085,8 +1078,7 @@
     {
       "id": "graphs-b143",
       "path": "graphs/b143.gv",
-      "verdict": "structural-match",
-      "maxDelta": 95.96000000000004
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b145",
@@ -1974,8 +1966,7 @@
     {
       "id": "graphs-pmpipe",
       "path": "graphs/pmpipe.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "graphs-polypoly",
@@ -1992,8 +1983,7 @@
     {
       "id": "graphs-proc3d",
       "path": "graphs/proc3d.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "graphs-process",
@@ -2044,8 +2034,7 @@
     {
       "id": "graphs-root",
       "path": "graphs/root.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4.100000000000364
+      "verdict": "conformant"
     },
     {
       "id": "graphs-rootlabel",
@@ -2310,8 +2299,7 @@
     {
       "id": "graphs-xx",
       "path": "graphs/xx.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "imagepath_test-base",
@@ -2327,14 +2315,12 @@
     {
       "id": "linux.i386-b102",
       "path": "linux.i386/b102.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "linux.i386-b106",
       "path": "linux.i386/b106.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1.1200000000003456
+      "verdict": "conformant"
     },
     {
       "id": "linux.i386-b29",
@@ -2497,14 +2483,12 @@
     {
       "id": "linux.x86-root_circo",
       "path": "linux.x86/root_circo.gv",
-      "verdict": "structural-match",
-      "maxDelta": 21
+      "verdict": "conformant"
     },
     {
       "id": "linux.x86-root_twopi",
       "path": "linux.x86/root_twopi.gv",
-      "verdict": "structural-match",
-      "maxDelta": 21
+      "verdict": "conformant"
     },
     {
       "id": "linux.x86-rowcolsep_dot",
@@ -2635,8 +2619,7 @@
     {
       "id": "nshare-neatosplines_neato1",
       "path": "nshare/neatosplines_neato1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "nshare-nestedclust_dot",
@@ -2712,16 +2695,12 @@
     {
       "id": "nshare-root_circo",
       "path": "nshare/root_circo.gv",
-      "verdict": "diverged",
-      "maxDelta": 21,
-      "firstDiffPath": "svg/g[1]/g[1313]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "nshare-root_twopi",
       "path": "nshare/root_twopi.gv",
-      "verdict": "diverged",
-      "maxDelta": 21,
-      "firstDiffPath": "svg/g[1]/g[1313]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "nshare-rowcolsep_dot",
@@ -3110,14 +3089,12 @@
     {
       "id": "share-b102",
       "path": "share/b102.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "share-b106",
       "path": "share/b106.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1.1200000000003456
+      "verdict": "conformant"
     },
     {
       "id": "share-b124",
@@ -3557,8 +3534,7 @@
     {
       "id": "share-pmpipe",
       "path": "share/pmpipe.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "share-polypoly",
@@ -3709,8 +3685,7 @@
     {
       "id": "windows-b102",
       "path": "windows/b102.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "windows-b106",
@@ -4139,8 +4114,7 @@
     {
       "id": "windows-pmpipe",
       "path": "windows/pmpipe.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1
+      "verdict": "conformant"
     },
     {
       "id": "windows-polypoly",
