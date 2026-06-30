@@ -72,7 +72,7 @@ Parity baseline refresh recipe (Batch 2, T3): `npm run survey` (writes
 | Batch | Status | Tasks |
 |---|---|---|
 | [Batch 1 — Diagnosis (gated)](batch-1/overview.md) | [x] | T1 |
-| [Batch 2 — Fix + verify](batch-2/overview.md) | [ ] | T2, T3 |
+| [Batch 2 — Fix + verify](batch-2/overview.md) | [x] | T2, T3 |
 
 ## Index
 

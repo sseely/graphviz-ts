@@ -8,6 +8,36 @@ Appended during execution. Batch 1 (T1) writes the mechanism artifact here
 |---|---|---|
 | 2026-06-30 | pre-mission | Diagnosis: graphs-shells `diverged` is a mincross within-rank flat-order swap on 3 ranks (POSIX/ksh-POSIX, System-V/ksh, esh/vsh), NOT the reported edge spline. Ranks all match. Siblings share/windows-shells identical. See `.agent-notes/graphs-shells-flat-order-divergence.md`. |
 | 2026-06-30 | B1/T1 | **MECHANISM PINNED (gated STOP — no fix applied).** Origin = `left2right` over-constraint: port reads BOTH flat-matrix directions, C reads ONE. See artifact below. |
+| 2026-06-30 | gate | Human confirmed: proceed to Batch 2 with the **GD_flip-gated** single-cell fix. |
+| 2026-06-30 | B2/T2 | Applied fix at `mincross-cross.ts:left2right` (single GD_flip-gated `matrixGet`, returns 1/0). Updated b58 test (its reverse=-1 assertion encoded the bug) + 2 new regression tests (single-direction; GD_flip gating). typecheck 0; vitest `src/layout/dot` 478 pass; shells renders `vsh esh`/`ksh System-V`/`ksh-POSIX POSIX`. Commit `dacbb20`. |
+| 2026-06-30 | B2/T3 | `survey:gate` PASS — **0 regressions**, 3 improvements. graphs/share/windows-shells diverged → **conformant**. Totals conformant 536→539, diverged 48→45. Baseline + PARITY.md refreshed. Commit `9d9dff8`. |
+
+## Mission summary (complete)
+
+**Outcome:** All three `*-shells` variants `diverged → conformant`, **0 net parity
+regressions**. Tasks completed 3/3 (T1, T2, T3); both batches done.
+
+**Root cause (one line):** the port's `left2right` read both flat-matrix directions
+(±1) where C reads a single `GD_flip`-gated cell (`bool`); the spurious reverse hit
+(`left2right(KornShell, rc)` = -1 vs C's 0 for edge `rc→KornShell`) marked a rank-7
+pair `muststay`, perturbing the crossing trajectory so `save_best` captured the
+opposite equal-cost (1-crossing) orientation of the three 0-cost symmetric flat ranks.
+
+**Fix:** `src/layout/dot/mincross-cross.ts` `left2right` →
+`matrixGet(flat, flip ? wLow : vLow, flip ? vLow : wLow) ? 1 : 0` (mirrors
+mincross.c:575-578). Single origin file (AD-2 honored); reversible (AD-4).
+
+**Quality gates:** typecheck exit 0 · `vitest src/layout/dot` 478 pass ·
+`survey` + `survey:gate` 0 regressions · 3 shells L-R order matches oracle ·
+`git diff --name-only` = declared write-set only.
+
+**Decisions of note:** chose the GD_flip-gated variant over forward-only (faithful
+for LR/flip graphs too, not just shells/TB). Corrects the prior memory
+`flatorder-enforce-left2right-low-done`'s claim that the both-direction read /
+`GD_flip` swap was "inert" — it was an over-constraint.
+
+**Known follow-up:** none for shells. The pre-existing 45 diverged ids are unrelated
+tracked gaps. All temporary C+port instrumentation reverted; C rebuilt clean.
 
 ## T1 mechanism artifact (Batch 1 — gated; STOP for confirmation before Batch 2)
 
