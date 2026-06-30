@@ -93,14 +93,18 @@ export function left2right(g: Graph, v: Node, w: Node): number {
   // build: use `low`, not `order - vStart`. The two coincide only immediately
   // after flatBreakcycles assigns low=window-index; once a reorder pass changes
   // `order`, `order - vStart` drifts off `low` and the lookup misses (b58 pass-1).
-  // C swaps v/w for GD_flip before its single-direction matrix_get; the port
-  // checks BOTH directions below, so that swap is subsumed (it would only flip the
-  // +1/-1 sign, which neither consumer reads — both test `!== 0`).
+  //
+  // C reads exactly ONE matrix cell — matrix_get(flatindex(v), flatindex(w)) —
+  // with v,w pre-swapped iff GD_flip(g) (mincross.c:575-578, returns bool). The
+  // direction is GD_flip-gated, NOT both-directions: a flat edge in the OPPOSITE
+  // direction must read as 0 (no constraint), else reorder/transpose wrongly treat
+  // the pair as `muststay`. (graphs-shells: with flat edge rc->KornShell,
+  // left2right(KornShell,rc) must be 0 like C — a prior both-direction read
+  // returned -1, blocking a reorder swap and shifting the captured best order.)
   const vLow = v.info.low !== undefined ? v.info.low : 0;
   const wLow = w.info.low !== undefined ? w.info.low : 0;
-  if (matrixGet(flat, vLow, wLow)) return 1;
-  if (matrixGet(flat, wLow, vLow)) return -1;
-  return 0;
+  const flip = g.info.flip ?? false;
+  return matrixGet(flat, flip ? wLow : vLow, flip ? vLow : wLow) ? 1 : 0;
 }
 
 // ---------------------------------------------------------------------------

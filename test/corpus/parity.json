@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-30T13:17:31.088Z",
+  "generatedAt": "2026-06-30T14:47:10.946Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 536,
+    "conformant": 539,
     "structural-match": 194,
-    "diverged": 48,
+    "diverged": 45,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -2106,9 +2106,7 @@
     {
       "id": "graphs-shells",
       "path": "graphs/shells.gv",
-      "verdict": "diverged",
-      "maxDelta": 264,
-      "firstDiffPath": "svg/g[1]/g[27]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sides",
@@ -3603,9 +3601,7 @@
     {
       "id": "share-shells",
       "path": "share/shells.gv",
-      "verdict": "diverged",
-      "maxDelta": 420.38000000000005,
-      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "share-states",
@@ -4192,9 +4188,7 @@
     {
       "id": "windows-shells",
       "path": "windows/shells.gv",
-      "verdict": "diverged",
-      "maxDelta": 420.42,
-      "firstDiffPath": "svg/g[1]/g[9]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "windows-states",
