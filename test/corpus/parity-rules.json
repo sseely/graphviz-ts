@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-30T17:57:57.585Z",
+  "generatedAt": "2026-06-30T18:39:40.871Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 562,
-    "structural-match": 179,
-    "diverged": 37,
+    "conformant": 574,
+    "structural-match": 170,
+    "diverged": 34,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -65,7 +65,7 @@
       "id": "1332",
       "path": "1332.dot",
       "verdict": "diverged",
-      "maxDelta": 7,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -308,7 +308,7 @@
       "id": "1879",
       "path": "1879.dot",
       "verdict": "diverged",
-      "maxDelta": 940.8699999999999,
+      "maxDelta": 942.0700000000002,
       "firstDiffPath": "svg/g[1]/g[99]/g[1]/a[1]/text[3]/text()[1]"
     },
     {
@@ -361,8 +361,7 @@
     {
       "id": "1990",
       "path": "1990.dot",
-      "verdict": "structural-match",
-      "maxDelta": 52.120000000000005
+      "verdict": "conformant"
     },
     {
       "id": "2064",
@@ -567,9 +566,8 @@
     {
       "id": "2413_2",
       "path": "2413_2.dot",
-      "verdict": "diverged",
-      "maxDelta": 1897.7600000000002,
-      "firstDiffPath": "svg/g[1]/g[65]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 1922.2600000000002
     },
     {
       "id": "241_0",
@@ -752,14 +750,14 @@
       "id": "2619_1",
       "path": "2619_1.dot",
       "verdict": "diverged",
-      "maxDelta": 443,
+      "maxDelta": 421,
       "firstDiffPath": "svg/g[1]/g[1]/g[1]/a[1][childCount]"
     },
     {
       "id": "2619_2",
       "path": "2619_2.dot",
       "verdict": "diverged",
-      "maxDelta": 440,
+      "maxDelta": 421,
       "firstDiffPath": "svg/g[1]/g[1]/g[1]/a[1][childCount]"
     },
     {
@@ -909,8 +907,7 @@
     {
       "id": "925",
       "path": "925.dot",
-      "verdict": "structural-match",
-      "maxDelta": 47.25000000000003
+      "verdict": "conformant"
     },
     {
       "id": "graphs-AvantGarde",
@@ -945,8 +942,7 @@
     {
       "id": "graphs-Latin1",
       "path": "graphs/Latin1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 82
+      "verdict": "conformant"
     },
     {
       "id": "graphs-NaN",
@@ -972,8 +968,7 @@
     {
       "id": "graphs-Symbol",
       "path": "graphs/Symbol.gv",
-      "verdict": "structural-match",
-      "maxDelta": 65.19
+      "verdict": "conformant"
     },
     {
       "id": "graphs-Times",
@@ -1127,8 +1122,7 @@
     {
       "id": "graphs-b34",
       "path": "graphs/b34.gv",
-      "verdict": "structural-match",
-      "maxDelta": 6
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b36",
@@ -1160,8 +1154,7 @@
     {
       "id": "graphs-b56",
       "path": "graphs/b56.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4.149999999999977
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b57",
@@ -1177,8 +1170,7 @@
     {
       "id": "graphs-b60",
       "path": "graphs/b60.gv",
-      "verdict": "structural-match",
-      "maxDelta": 66.80000000000007
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b62",
@@ -1294,9 +1286,7 @@
     {
       "id": "graphs-cairo",
       "path": "graphs/cairo.gv",
-      "verdict": "diverged",
-      "maxDelta": 341.73,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-center",
@@ -1545,9 +1535,7 @@
     {
       "id": "graphs-japanese",
       "path": "graphs/japanese.gv",
-      "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-jcctree",
@@ -2054,8 +2042,7 @@
     {
       "id": "graphs-russian",
       "path": "graphs/russian.gv",
-      "verdict": "structural-match",
-      "maxDelta": 537
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sb_box",
@@ -3047,8 +3034,7 @@
     {
       "id": "share-Latin1",
       "path": "share/Latin1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 34
+      "verdict": "conformant"
     },
     {
       "id": "share-NaN",
@@ -3658,8 +3644,7 @@
     {
       "id": "windows-Latin1",
       "path": "windows/Latin1.gv",
-      "verdict": "structural-match",
-      "maxDelta": 36
+      "verdict": "conformant"
     },
     {
       "id": "windows-NaN",
