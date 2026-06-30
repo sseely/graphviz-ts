@@ -85,7 +85,7 @@ case changes accepted status, reconcile `accepted-divergences.json` +
 
 | Batch | Status | Tasks |
 |---|---|---|
-| [Batch 1 — Fix](batch-1/overview.md) | [ ] | T1 |
+| [Batch 1 — Fix](batch-1/overview.md) | [x] | T1 |
 | [Batch 2 — Verify (survey-gated)](batch-2/overview.md) | [ ] | T2 |
 
 ## Index
