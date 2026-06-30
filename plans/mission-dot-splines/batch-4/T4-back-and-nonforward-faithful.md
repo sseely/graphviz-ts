@@ -14,7 +14,7 @@ reverse the spline (see [[dot-edge-multi-g1-g4]] — `installShiftedEdge`).
    then reverse, mirroring C (a back edge is the forward edge with swapped ends).
 2. Extend `routeBackEdge` / the chain faithful path as needed for plain back
    chains. Mirror C; no invented geometry.
-3. Goldens byte-identical; fix shifts as faithful-path bugs vs oracle.
+3. Goldens conformant; fix shifts as faithful-path bugs vs oracle.
 4. Pin a back-edge oracle (`a->b->c; c->a`) and a `dir=both` case at tol 0.5.
 
 ## Write-set
@@ -35,7 +35,7 @@ reverse the spline (see [[dot-edge-multi-g1-g4]] — `installShiftedEdge`).
 - **Given** `digraph{a->b->c; c->a}`, **then** the back edge `c->a` matches dot
   within 0.5pt.
 - **Given** a `dir=both` edge, **then** both arrowheads + spline match dot.
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 - **Given** the full suite, **then** passed >= baseline, 0 failed.
 
 ## Quality bar

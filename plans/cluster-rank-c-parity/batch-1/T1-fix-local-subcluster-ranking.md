@@ -59,7 +59,7 @@ offsets for inter-cluster edges reflect the tail's local-rank offset (not all
    computes its offset, then the offset includes the tail local-rank term
    (> 1 for a multi-rank cluster).
 4. Given a cluster-free graph and a single-small-cluster graph, when ranked,
-   then output is byte-identical to baseline (no regression — these match C
+   then output is conformant to baseline (no regression — these match C
    today).
 
 ## Quality bar

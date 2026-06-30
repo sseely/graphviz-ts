@@ -10,7 +10,7 @@ T6 and T7 run in parallel (disjoint write-sets); T8 after both.
 
 ¹ Took 2 agent runs (stream-timeout death mid-task); AD2 option A landed
 with the byte-identity gate verified by HEAD-worktree self-baseline
-(62/62 byte-identical). Ratified deviations: poly-init.ts unflipped
+(62/62 conformant). Ratified deviations: poly-init.ts unflipped
 vertex dims; +svg-graph.ts/nodeinit-adjacent arrow-winding fixes
 (journal). LR/BT/RL all PASS maxDelta=0.
 ² Took 3 agent runs (hook-wrangling death, then watchdog stall);

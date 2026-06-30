@@ -41,10 +41,10 @@ This reverses the band-aid skip added earlier (see
 ## Acceptance criteria
 - Given Batch 1 done, when 2368 renders, then `256->376`/`376->256` emit the
   label `<text>` (no path) and `376->76`/`196->376`/`256->436` emit path+label —
-  byte-match C (11 edges, 9 paths).
+  conformant C (11 edges, 9 paths).
 - Given 2368_1 renders, then `256->376` emits NOTHING (label off-canvas) —
-  byte-match preserved.
-- Given 1624 renders, then it stays byte-match.
+  conformant preserved.
+- Given 1624 renders, then it stays conformant.
 - Given the full survey, then 0 regressions.
 
 ## Observability / Rollback

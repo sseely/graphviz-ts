@@ -43,7 +43,7 @@ golden's TS ≠ C; cluster-free/crossing-free output changes; 2 consecutive gate
 failures.
 
 **PUSH FORWARD when:** localization lands anywhere in the 4-file set (AD-1); a
-cluster golden churns and new TS == C byte-for-byte (AD-2); 2471 reaches correct
+cluster golden churns and new TS == C conformant (AD-2); 2471 reaches correct
 mincross order but still doesn't render — record next divergence (predicted
 x-coord) as follow-up, not failure (AD-3).
 
@@ -76,7 +76,7 @@ stale `agContainsNode` port. Fixed both; mc3 1→0 with order == C.
 - Gates: `tsc` 0; vitest 1869→**1873** (4 TDD regressions, each verified
   red→green); **zero golden churn**; write-set ⊆ {mincross-cross, mincross-order,
   mincross}.ts + their tests.
-- AD-3 met: per-rank order **byte-identical TS==C** (mc3, 6-cluster chain).
+- AD-3 met: per-rank order **conformant TS==C** (mc3, 6-cluster chain).
 - Follow-up (AD-4, not a failure): 2471 still hangs in the **pre-existing**
   mincross transpose perf gap (HEAD~1 profiles identically, 97.6% transposeStep).
   Next mission: mincross transpose performance, then x-coord under clusters.

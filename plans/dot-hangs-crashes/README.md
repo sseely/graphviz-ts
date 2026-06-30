@@ -7,7 +7,7 @@
 Eliminate the `timeout` (7) and `errored` (5) verdicts in the dot parity
 survey. The hangs are **not infinite loops** — they are per-operation cost in
 the network-simplex hot path plus one V8 stack overflow on deep recursion. The
-fixes are **byte-identical internal refactors** that make the port *more*
+fixes are **conformant internal refactors** that make the port *more*
 faithful to C (C uses a flat value-struct DFS stack and a larger native stack).
 The crashes are fuzzer-corrupted inputs the strict peggy parser rejects.
 
@@ -49,7 +49,7 @@ renders without `--stack-size`; **zero parity regressions**; output unchanged.
 ## Constraints
 
 **Stop and ask the human when:**
-- Any byte-match or structural-match count **drops** in the survey (regression).
+- Any conformant or structural-match count **drops** in the survey (regression).
 - A "fix" changes emitted SVG for any currently-passing case.
 - 2108 still overflows after every O(V) recursion in the dot path is iterative
   (signals a missed recursion — find it; do **not** mask with `--stack-size`).
@@ -72,7 +72,7 @@ renders without `--stack-size`; **zero parity regressions**; output unchanged.
 | `npm run build:js` | exit 0 | fix_and_rerun |
 | `npx tsx test/corpus/survey.ts` | **0 regressions** vs pre-mission parity.json | stop |
 
-Regression check: compare `test/corpus/parity.json` byte-match + structural
+Regression check: compare `test/corpus/parity.json` conformant + structural
 counts before vs after. They must never decrease. See `decisions.md#AD-4`.
 
 ## Batches
@@ -97,7 +97,7 @@ What shipped:
 - **2108 renders at the default V8 stack** (was a stack overflow) and a synthetic
   **50k-node path renders** without overflow — browser-safe. ✓
 - **NodeInfo shape-stabilization**: 2471 27.5 s → 18.1 s in `dist` (~1.5×),
-  **byte-identical**. Benefits every layout path and production consumers.
+  **conformant**. Benefits every layout path and production consumers.
 - **Zero parity regressions**: final survey byte 312 / struct 256 / timeout 7,
   **0 changed verdicts** vs baseline; output unchanged. ✓
 - **T4**: 5 `errored` cases triaged → fuzzer corruption, won't-fix (no code change).
@@ -107,7 +107,7 @@ What did NOT happen (documented in `comparisons/timeout-cases.md`):
   still 47% after the SoA change; 386M steps identical to C). The bottleneck was
   slow-mode `n.info` access, fixed by shape-stab — but the residual is
   constant-factor JS-vs-C overhead on the *same* step count.
-- **timeout stays 7.** The byte-identical wins are real but don't cross the 20 s
+- **timeout stays 7.** The conformant wins are real but don't cross the 20 s
   **survey** budget, which is measured against the slower `tsx` harness; some
   cases (2222/2475_2/2108) are SVG-emission-bound, a separate subsystem.
 - **T3 (mincross) skipped** — ~12% of 2471; cannot bridge the gap (human chose

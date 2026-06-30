@@ -15,14 +15,14 @@ frame) and per-`<path>` cubic-piece counts; then re-test after the
 
 ## Findings
 
-| Row | nodes byte-match | diverging edges | piece-count delta | x-frame fix resolves? |
+| Row | nodes conformant | diverging edges | piece-count delta | x-frame fix resolves? |
 |-----|------------------|-----------------|-------------------|------------------------|
 | `linux.x86-rankdir_dot`  | yes | 1 (path[18]) | port 2 / oracle 1 | **no** |
 | `linux.x86-rankdir_dot2` | yes | 1            | off-by-one        | **no** |
 | `nshare-rankdir_dot`     | yes | 1            | off-by-one        | **no** |
 | `nshare-rankdir_dot2`    | yes | 1            | off-by-one        | **no** |
 
-- **Nodes byte-match** the oracle on all four rows, so the residual is NOT the
+- **Nodes conformant** the oracle on all four rows, so the residual is NOT the
   ~7.5pt label-height LAYOUT residual recorded in memory `size-attr-scaling-done`
   (that would move node positions). The text/ellipse coordinates are identical.
 - Each row has **exactly one** diverging edge: a single long edge where the port

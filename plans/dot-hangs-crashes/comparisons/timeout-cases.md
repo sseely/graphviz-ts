@@ -10,13 +10,13 @@ after this mission, plus the won't-fix `errored` set.
 ## Outcome summary
 
 All 7 cases **render correct output** (the network simplex and acyclic phases
-are byte-identical to before — verified by the full-corpus survey showing **0
+are conformant to before — verified by the full-corpus survey showing **0
 changed verdicts**). They remain `timeout` in the survey because they exceed the
 survey's **20 s wall-clock budget**, which is measured against the `tsx`
 on-the-fly-transpile harness (`test/corpus/render-one.ts`) — ~1.4–1.6× slower
 than the production esbuild `dist` bundle and run under multi-process CPU load.
 
-What changed this mission (all byte-identical, 0 regressions):
+What changed this mission (all conformant, 0 regressions):
 
 - **NS hot path** — flat SoA `dfsRange` stack + iterative `rerank` (commit
   `8c7c1e8`).
@@ -44,7 +44,7 @@ cost was slow-mode `n.info` property access. See the decision journal.
 (Port times are the production `dist` bundle, single-process; the `tsx` survey
 harness is slower still, so all 7 exceed 20 s there.)
 
-### Why these are not rescued by byte-identical micro-optimization
+### Why these are not rescued by conformant micro-optimization
 
 The remaining gap is **constant-factor JS-vs-C overhead on the identical step
 count**, not extra work. C runs `dfsRange`'s 386M steps at ~770M steps/s; the

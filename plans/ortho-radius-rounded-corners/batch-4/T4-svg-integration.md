@@ -35,11 +35,11 @@ multicolor / split branches.
 - `src/render/svg.ts` (modify — `endEdge`)
 - a golden/colocated test (e.g. `src/render/svg-edge-ortho-radius.golden.test.ts`)
   rendering `digraph{splines=ortho; nodesep=1.0; x->y[radius=8]; z->y;}` and
-  asserting edge1 emits `[title, polyline×3, polygon]` byte-matching native.
+  asserting edge1 emits `[title, polyline×3, polygon]` conformant with native.
 
 ## Acceptance criteria (Given/When/Then)
 - Given `x->y[radius=8]` with `splines=ortho`, When rendered, Then edge1's group
-  is `<title>` + three `<polyline>` + arrowhead `<polygon>`, byte-matching the
+  is `<title>` + three `<polyline>` + arrowhead `<polygon>`, conformant with the
   native SVG (the recorded oracle for graphs-radius).
 - Given `z->y` (ortho, NO radius) in the same graph, When rendered, Then it is
   unchanged — a single bezier `<path>` (byte-stable vs current output).
@@ -49,7 +49,7 @@ multicolor / split branches.
   Then it falls back to the bezier `<path>` (no crash, no empty polyline).
 
 ## Quality bar
-`npm run typecheck` clean; `npm test` green; the golden test byte-matches the
+`npm run typecheck` clean; `npm test` green; the golden test conforms to the
 native `graphs/radius.gv` SVG (render with `GVBINDIR=/tmp/ghl`).
 
 ## Observability / Rollback

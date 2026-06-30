@@ -9,7 +9,7 @@ machinery (`doOrderingNode`/`orderedEdges`, wired at `mincross.ts:164,274`) — 
 this is a BUG in constraint construction or its preservation through the
 median/transpose passes, NOT a missing feature. Make the port honor `ordering`
 the way C does, clearing as many of the ~13 diverged `ordering` graphs as
-possible WITHOUT regressing the 12 that already byte-match.
+possible WITHOUT regressing the 12 that already conformant.
 
 ## Reproducer (pinned facts)
 
@@ -24,13 +24,13 @@ of 5. Node x: **C** `{1:27,6:45,3:81,2:99,8:117,5:171,7:207,4:243}` vs **port**
 
 ## Corpus reach
 
-27 graphs set `ordering=`; 12 byte-match, ~13 diverge: `graphs-b58`,
+27 graphs set `ordering=`; 12 conformant, ~13 diverge: `graphs-b58`,
 `{linux.x86,macosx,nshare}-ordering_dot1`, `{graphs,share,windows}-pgram`,
 `{graphs,share,windows}-trapeziumlr`, `1472`, `1990`, `graphs-in`.
 
 ## Constraints
 
-**Stop** when: any byte-match→worse regression (revert); 2 consecutive gate
+**Stop** when: any conformant→worse regression (revert); 2 consecutive gate
 failures on the same check; a fix needs files outside its write-set; 3
 consecutive edits to one site without resolving it; a fix can't make b58 match C
 without regressing others (deeper than scoped — document + stop). See

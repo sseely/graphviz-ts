@@ -39,8 +39,8 @@ the fix exceeds the flat-routing branch; AD-5 extract helpers over bloating.
   `@d` byte/structural-match the oracle AND the cardinal `:e->:w` edges land at
   the oracle y (bbox shift resolved).
 - **Given** the survey, **then** `241_0` improves verdict (diverged ->
-  structural/byte-match) and the per-id diff shows **0 regressions**.
-- **Given** `npx vitest run`, **then** the 128 goldens are byte-identical and all
+  structural/conformant) and the per-id diff shows **0 regressions**.
+- **Given** `npx vitest run`, **then** the 128 goldens are conformant and all
   tests pass (incl. the new flat-routing test).
 - **Given** the changed files, **then** `tsc`/`lizard` clean (incl. the 500-line
   cap — extract per AD-5 if needed).
@@ -52,7 +52,7 @@ N/A.
 Reversible — revert the commit.
 
 ## Boundaries
-- **Always:** port C exactly; keep goldens byte-identical; extract helpers over
+- **Always:** port C exactly; keep goldens conformant; extract helpers over
   exceeding the file cap.
 - **Never:** modify the curated golden suite; touch the compass-port endpoint
   code (already correct).
@@ -63,5 +63,5 @@ Reversible — revert the commit.
 `fix(T2): port #241_0 flat-edge routing geometry`.
 
 ## Quality bar
-tsc 0; vitest 0 failures + 128 goldens byte-identical; survey 0 regressions +
+tsc 0; vitest 0 failures + 128 goldens conformant; survey 0 regressions +
 #241_0 improved; lizard clean. Return only the structured result.

@@ -9,7 +9,7 @@
 gradient `bgcolor` fills. Today the port emits a solid first-stop color for a
 gradient bgcolor (`bgcolor="yellow:violet"` → `fill="yellow"`) and omits the
 `<defs>`/`<linearGradient>`/`<radialGradient>`. Graph/cluster/node gradients are
-already byte-exact — only the HTML-table path drops the gradient.
+already conformant — only the HTML-table path drops the gradient.
 
 Strict TS, no `any`, no Node-only APIs, EPL-2.0 header on any new file. Tests
 are vitest, co-located (`*.test.ts`). TDD: write the failing test first.

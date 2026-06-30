@@ -118,7 +118,7 @@ export class Node {
 }
 
 /**
- * Build a tail→out-edges index for graph `g`. Each list is byte-identical to
+ * Build a tail→out-edges index for graph `g`. Each list is identical to
  * `node.outEdges(g)` (tail === node, self-loops included, sorted by head.id then
  * seq), but the whole index is O(E log E) instead of O(N·E log E) from calling
  * outEdges once per node. Use at sites that loop every node's out-edges and do

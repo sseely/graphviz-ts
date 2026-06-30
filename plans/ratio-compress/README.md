@@ -52,7 +52,7 @@ from `width 307 / scale 0.443 / translate -2596.58` to
 ## Acceptance canary
 
 `graphs/NaN.gv` (`landscape` + `ratio=compress` + `size="16,10"`) — currently
-**diverged, maxDelta 1906.99**. Must flip to **byte-match**, or to
+**diverged, maxDelta 1906.99**. Must flip to **conformant**, or to
 structural-match with maxDelta **≪ 1907** (the probe left a ~1pt width / ~7pt
 translate residual, almost certainly the same x-NS/font-metric class documented
 for proc3d — see `docs/known-divergences.md` A2 — not a compress bug).
@@ -81,7 +81,7 @@ for proc3d — see `docs/known-divergences.md` A2 — not a compress bug).
 | `npm run typecheck` | exit 0 |
 | `npm test` | exit 0, all green |
 | `~/.claude/hooks/.venv/bin/lizard <changed files> -C 10 -w` | no warnings |
-| survey: `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts` | diff `parity.json` vs `/tmp/parity.before.json`: **0 regressions; NaN → byte-match or maxDelta ≪ 1907** |
+| survey: `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts` | diff `parity.json` vs `/tmp/parity.before.json`: **0 regressions; NaN → conformant or maxDelta ≪ 1907** |
 
 Baseline before starting: `cp test/corpus/parity.json /tmp/parity.before.json`.
 
@@ -113,7 +113,7 @@ Per-node diff: dims/ranks match, within-rank x diverges (median 535). Promoted t
 > **Batch 2 is a captured inventory of dead/unported code, not a work order.**
 > Do NOT execute Batch 2 tasks in this mission. Each carries its own oracle
 > validation and regression risk (notably T2 fill vs `b22`, currently
-> byte-match). They exist so the dead ratio-aspect paths are tracked, not lost.
+> conformant). They exist so the dead ratio-aspect paths are tracked, not lost.
 
 ## Docs
 

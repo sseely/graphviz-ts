@@ -20,7 +20,7 @@ files (not `src/pathplan/`).
 
 ## Risk
 
-**HIGH — shared router.** Many graphs currently byte-match *through* the
+**HIGH — shared router.** Many graphs currently conformant *through* the
 straight/x-shift path. Expect broad survey churn; the 0-regression survey gate is
 the safety net (ADR-2, no feature flag). See [[opposing-edge-spline-divergence]].
 
@@ -90,7 +90,7 @@ not per-edge offset ports).
   fidelity on parallel/opposing multi-rank edges.
 - **Perf clean:** routing-changed graphs render 0.04–0.36× native; the heaviest
   input `2108` is identical 95s pre/post (mincross-bound, unaffected by the fix).
-- **Goldens:** `parallel-multirank-min` (cluster-free, byte-exact) pins the fix;
+- **Goldens:** `parallel-multirank-min` (cluster-free, conformant) pins the fix;
   `parallel-cluster-ldbxtried` is `knownResidual`. Full suite 2404 passed.
 
 **Known residual / follow-up (out of scope — `edge-route.ts`):** `ldbxtried` stays

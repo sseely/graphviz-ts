@@ -38,7 +38,7 @@ consumed by `beginPath(...)`/`endPath(...)` exactly as neato's caller does.
 - `A:n->B` renders a complete loop spline reaching B, within 0.5pt of dot
   15.0.0 at the attachment points (interior within 0.5pt or journaled).
 - `A:e->B`/`A:w->B` reproduce dot's lateral bulge within 0.5pt (or journaled).
-- Every existing dot golden is byte-identical (no edge has a side port).
+- Every existing dot golden is conformant (no edge has a side port).
 - `tsc` clean; suite ≥ baseline; write-set respected.
 
 **SR4 outcome (2026-06-14):** all six required cases PASS ≤0.5pt and are pinned

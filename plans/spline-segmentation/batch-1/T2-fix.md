@@ -37,10 +37,10 @@ AD-1 match C exactly; AD-3 oracle-pinned, curated gate untouched.
 - **Given** `jcctree`/`p2`/`pm2way`, **when** rendered, **then** each edge `@d`
   byte/structural-matches the oracle (control-point count + coords).
 - **Given** the survey, **when** re-run, **then** these inputs move
-  `diverged → byte-match`/`structural-match`, and the per-id diff vs the pre-task
+  `diverged → conformant`/`structural-match`, and the per-id diff vs the pre-task
   snapshot shows **0 regressions**.
 - **Given** the curated suite, **when** `npx vitest run`, **then** the 128
-  goldens are byte-identical and all tests pass (incl. the new spline test).
+  goldens are conformant and all tests pass (incl. the new spline test).
 - **Given** the changed files, **when** `lizard`/`tsc` run, **then** clean.
 
 ## Observability
@@ -51,7 +51,7 @@ Reversible — revert the commit.
 
 ## Boundaries
 - **Always:** port C exactly; verify each input vs the oracle; keep goldens
-  byte-identical.
+  conformant.
 - **Never:** modify `test/golden/manifest.json` / `suite.test.ts`; "improve" the
   bezier output; expand to large-delta routing cases.
 - **STOP:** if matching C requires files outside the T1 write-set, or the same
@@ -61,5 +61,5 @@ Reversible — revert the commit.
 `fix(T2): match C bezier segmentation for dot edge splines`.
 
 ## Quality bar
-tsc 0; vitest 0 failures + 128 goldens byte-identical; survey 0 regressions +
+tsc 0; vitest 0 failures + 128 goldens conformant; survey 0 regressions +
 targets improved; lizard clean. Return only the structured result.

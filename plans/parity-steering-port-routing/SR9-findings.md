@@ -16,7 +16,7 @@ path, and whether that would require re-minting any of the 115 existing
 
 1. Baseline (committed hybrid build): rendered all 68 dot goldens and compared
    each to its dot 15.0.0 C ref at the manifest tolerance.
-   → **68/68 pass, maxδ = 0.000pt.** The simplified fitter is byte-exact to C
+   → **68/68 pass, maxδ = 0.000pt.** The simplified fitter is conformant to C
    for every no-port golden.
 2. Forced the faithful path for *all* forward adjacent/flat edges and all
    multi-rank forward edges (dropped the `hasSidePort` gate in `routeForwardEdge`

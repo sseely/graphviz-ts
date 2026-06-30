@@ -6,7 +6,7 @@
 // vs native dot headless) against the existing PANGO baseline (port LutTextMeasurer
 // vs native dot pango). The decoupling claim is that the layout RULES are faithful,
 // so the rules survey must not REGRESS any graph relative to the baseline:
-//   - regression  : baseline match (byte/structural) -> rules diverged/errored  = GATE FAIL
+//   - regression  : baseline match (conformant/structural) -> rules diverged/errored = GATE FAIL
 //   - improvement : baseline diverged -> rules match                            = kerning fix
 //   - pre-existing : diverged in BOTH (font-independent, e.g. cluster bugs)      = allowlist
 //   - stable      : match in both
@@ -19,11 +19,11 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { loadAccepted, matchAccepted } from './accepted.js';
 
-const MATCH = new Set(['byte-match', 'structural-match']);
+const MATCH = new Set(['conformant', 'structural-match']);
 const OK_NONLAYOUT = new Set(['oracle-error']); // oracle couldn't render → not a rules signal
 // Verdicts where the PORT produced a full SVG (so clipOverflow is meaningful).
 // timeout/errored/oracle-error did not render, so their clipping state is unknown.
-const RENDERED = new Set(['byte-match', 'structural-match', 'diverged']);
+const RENDERED = new Set(['conformant', 'structural-match', 'diverged']);
 
 // Allowlisted match→diverged cases (verified NOT layout-rules regressions of the
 // measurement change) now live in the unified `accepted-divergences.json`

@@ -20,7 +20,7 @@ green state. Byte-match vs native oracle confirmed for dot/odot/crow/vee/diamond
 - Watch ADR-4 risk: T4 moves endpoints for non-normal arrows. After T4, run the
   golden suite — if a normal-arrow golden moved, the length math is wrong (normal
   must stay length 10 at size 1). After T6, before committing, spot-check a few
-  currently byte-matching corpus cases that use arrows (the full survey is T8).
+  currently conformant with corpus cases that use arrows (the full survey is T8).
 - The 4 layout sites currently call `arrowheadPolygon(tip, dir, pw)`. Replace with
   `arrowDrawOps(resolved, tip, dir, arrowsize, pw)`; read `arrowhead`/`arrowtail`
   + `arrowsize` from the edge (`nodeAttr`-style inheritance via `e.attrs`/defaults).

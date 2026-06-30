@@ -42,5 +42,5 @@
 
 - **Result**: 2437 diverged (maxΔ 8.42) → BYTE-MATCH (path + both arrowhead
   polygons identical to oracle). typecheck clean; 79 flat/edge unit tests pass.
-- **Confidence**: High — byte-match against native headless oracle; root causes
+- **Confidence**: High — conformant against native headless oracle; root causes
   confirmed by runtime probe (aux size=4/list=7, both arrow-op arrays present).

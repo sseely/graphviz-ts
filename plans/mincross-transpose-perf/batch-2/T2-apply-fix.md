@@ -6,7 +6,7 @@ graphviz-ts (faithful TS port of C graphviz; `~/git/graphviz` is the spec).
 Batch 1 (T1) measured the transpose perf gap and routed this fix. Read the T1
 journal row first — it names the dominant cause (AD-4: a/b/c) and the exact
 target site. The cardinal rule (AD-1): **output node order must stay
-byte-identical to C.** A faster result with a changed order is a failure.
+conformant to C.** A faster result with a changed order is a failure.
 
 ## Task
 
@@ -53,7 +53,7 @@ its per-call semantics must equal the prior fresh-allocation semantics.
   benchmark transpose time drops materially vs the pre-fix bundle (record the
   factor in the journal).
 - **Given** mc3 and the mid-size benchmark, **when** rendered, **then** per-rank
-  order is **byte-identical to C** (oracle order-probe diff, reverted after).
+  order is **conformant to C** (oracle order-probe diff, reverted after).
 - **Given** the full suite, **when** `npx vitest run`, **then** all pass with
   **zero golden churn** (any churn whose new value ≠ C → STOP).
 - **Given** the fix relies on an equivalence (reused buffer, pass-count), **when**

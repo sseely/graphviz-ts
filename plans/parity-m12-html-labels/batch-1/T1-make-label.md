@@ -61,7 +61,7 @@ shape otherwise. Exported from make-label.ts.
   path produces today)
 - Given plain text, then result deep-equals today's makeLabel output
 - Given the node main-label path switched over, then 72 goldens
-  byte-identical and suite 0 failed
+  conformant and suite 0 failed
 - Given C's parse-failure input, then the port's fallback matches
   C's documented behavior (test it; cite labels.c)
 

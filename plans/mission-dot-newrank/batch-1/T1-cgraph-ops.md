@@ -58,7 +58,7 @@ agdelsubg(parent: Graph, sg: Graph): void
 - **Given** `agdelnode(g, n)`, **then** `n` is absent from all member graphs.
 - **Given** `agdelsubg(parent, sg)`, **then** `agsubg(parent, sg.name, false)`
   returns null.
-- **Given** the 115 goldens, **then** all byte-identical (additive change).
+- **Given** the 115 goldens, **then** all conformant (additive change).
 
 ## Quality bar
 
@@ -68,4 +68,4 @@ Commit: `feat(T1): port cgraph subgraph/node ops for newrank fill nodes`.
 ## Observability / Rollback
 
 N/A — no new observable operations. Reversible (revert; additive, goldens
-byte-identical).
+conformant).

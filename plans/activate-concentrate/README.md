@@ -2,13 +2,13 @@
 
 Status: **MERGED to main (`274964e`, 2026-06-24).** Feature activated; ~10 latent
 bugs fixed (activation, 5 crashes, parallel-edge merge, merged-chain routing).
-Full survey: **0 verdict regressions, +1 byte-match (b62)**. 2384 tests pass.
+Full survey: **0 verdict regressions, +1 conformant (b62)**. 2384 tests pass.
 
 ## Result per concentrate corpus graph (vs native dot)
-- **b62**: diverged → **byte-match**.
-- **b71**: byte-match (unchanged — its concentrate is a no-op).
+- **b62**: diverged → **conformant**.
+- **b71**: conformant (unchanged — its concentrate is a no-op).
 - **b135**: node positions + edge count match C; stays diverged on other deltas.
-- **b69**: all 47 nodes byte-match C, edge count 137 = 137; stays diverged.
+- **b69**: all 47 nodes conformant C, edge count 137 = 137; stays diverged.
 - **b15**: renders (was un-rendered / crash); 150 of 153 edges.
 
 ## FOLLOW-UP (return here) — the 2 still-diverged items: b69, b15
@@ -94,7 +94,7 @@ concentrate feature is dead code. b69 (concentrate=true) renders un-concentrated
 
 | graph | main verdict | with WIP fix |
 |---|---|---|
-| b71  | byte-match | **byte-match** (concentrate now runs, correct) |
+| b71  | conformant | **conformant** (concentrate now runs, correct) |
 | b69  | diverged 116.69 | renders concentrated; under-merges 3 (Bug 4) |
 | b135 | diverged 0 | under-merges 1 (Bug 4) |
 | b62  | diverged 0 | under-merges 1 (Bug 4) |
@@ -109,7 +109,7 @@ Unit tests: 2384 pass with the WIP. Typecheck clean.
 2. Fix Bug 4 (under-merge) — oracle-instrument the candidate sweeps for b69's 3
    edges; pin the predicate/ordering divergence.
 3. Full corpus survey: require **0 regressions** (b15 back to ≥ diverged; b71
-   stays byte-match; b69/b135/b62 ideally improve). Then merge.
+   stays conformant; b69/b135/b62 ideally improve). Then merge.
 
 ## Oracle recipe
 `GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot -Tsvg <g>.gv` vs

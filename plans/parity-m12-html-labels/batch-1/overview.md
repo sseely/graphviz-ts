@@ -2,7 +2,7 @@
 
 Three foundation tasks, disjoint write-sets. None changes rendered
 output for existing inputs: the 72-golden byte-stability probe must
-pass byte-identical for every task.
+pass conformant for every task.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|

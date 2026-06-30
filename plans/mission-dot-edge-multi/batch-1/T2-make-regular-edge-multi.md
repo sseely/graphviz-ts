@@ -13,7 +13,7 @@ corpus (`route-reverification.md`) shows two regular-edge divergences:
 `makeRegularEdge` in `src/layout/dot/splines-route.ts:254` is a **stub**. Plain
 regular edges currently route correctly via the live path in `edge-route*.ts`
 (the simplified fitter / faithful side-port pipeline) — those MUST stay
-byte-identical (115 goldens). This task ports the C `make_regular_edge`
+conformant (115 goldens). This task ports the C `make_regular_edge`
 multi-edge (`cnt>1`) offset and label-virtual-node interior routing into the
 **live faithful router**, for the new cases only.
 
@@ -63,12 +63,12 @@ reach it.)
 - **Given** `digraph{a->b; b->a}`, **when** rendered, **then** the two paths are
   offset to opposite sides matching dot within 0.5pt (no malformed path).
 - **Given** plain edges (the 25-graph corpus MATCH set), **when** rendered,
-  **then** unchanged — 115 goldens byte-identical, ≥1789 pass / 0 fail.
+  **then** unchanged — 115 goldens conformant, ≥1789 pass / 0 fail.
 - Any sub-case not reaching 0.5pt is quarantined per AD-4 (comparison page).
 
 ## Quality bar
 
-`tsc --noEmit` 0; lizard clean; vitest green; 115 goldens byte-identical (hard
+`tsc --noEmit` 0; lizard clean; vitest green; 115 goldens conformant (hard
 gate). Oracle from the built dot. Commit: `feat(T2): port make_regular_edge
 multi-edge routing`.
 

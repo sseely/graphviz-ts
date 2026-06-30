@@ -47,7 +47,7 @@ with a **merge commit** when all gates pass, on Scott's go-ahead.
   pass: exit 0 AND failed == 0 AND passed >= 1466
   on_fail: fix_and_rerun
 - command: OUTDIR=/tmp/gf-x npx tsx .probes/render-all.ts + byte-diff vs pre-task baseline
-  pass: existing goldens byte-identical (82+RS until T6 lands, more after)
+  pass: existing goldens conformant (82+RS until T6 lands, more after)
   on_fail: stop
 - command: git diff --name-only HEAD~1..HEAD
   pass: within the task's declared write-set

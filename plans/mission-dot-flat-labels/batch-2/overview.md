@@ -7,7 +7,7 @@ and copy its position to the label).
 |----|-------------|-------|--------|------------|------|
 | T2 | Port `make_flat_labeled_edge` + dispatch from `makeFlatEdge`; wire labeled flats into the live path; emit the label | opus | `src/layout/dot/splines-flat.ts`, `src/layout/dot/splines-flat-labeled.test.ts` (new) | T1 | [x] |
 
-Done: spline case byte-exact to dot 15.0.0 (label `x` @ 117,-57.2 + 7-pt
+Done: spline case conformant to dot 15.0.0 (label `x` @ 117,-57.2 + 7-pt
 spline); line case quarantined (`splines=line` unported) →
 [comparisons/dot-flat-label-line.md](../comparisons/dot-flat-label-line.md),
 `flatLabeledLinePoints` unit-tested. Impl in new `splines-flat-labeled.ts`

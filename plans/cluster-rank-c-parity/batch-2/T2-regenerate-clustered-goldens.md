@@ -11,7 +11,7 @@ never hand-edited.
 
 Run the full suite. For each churned golden: confirm the graph has clusters
 (cluster-free/single-cluster churn → STOP, regression per Batch 1); regenerate
-it from the C binary; verify the new TS output == C byte-for-byte; record it.
+it from the C binary; verify the new TS output == C conformant; record it.
 
 ## Write-set
 
@@ -29,7 +29,7 @@ it from the C binary; verify the new TS output == C byte-for-byte; record it.
 
 1. Given the golden suite, when run after T1, then all tests pass.
 2. Given each churned golden, when regenerated, then it was produced by the C
-   binary and the post-fix TS output equals it byte-for-byte (STOP if TS ≠ C).
+   binary and the post-fix TS output equals it conformant (STOP if TS ≠ C).
 3. Given each regenerated golden, then the journal records: test name, old vs
    new `nranks` (or a short shape note), and the C-match confirmation.
 4. Given a churned golden whose graph has no clusters or one cluster, then STOP

@@ -13,7 +13,7 @@ confirmed (probes reverted), both **outside the write-set** → **STOPPED**:
    `order=j` ignores `vStart`; C's flip block uses `exchange()`
    (`mincross.c:1293-1300`). Breaks RL/flip + multi-component (`vStart>0`).
    Fix: `exchange(ctx, rankGet(rk,j), rankGet(rk,last-j))`. Makes TS transpose
-   byte-identical to C.
+   conformant to C.
 2. `cluster.ts:mergeRanksInstall:136` — `.slice(ipos)` copies the rank array;
    C aliases (`GD_rank(subg)[r].v = GD_rank(root)[r].v + ipos`). Cluster
    transpose swaps then never persist → 2nd non-convergence. Fix:

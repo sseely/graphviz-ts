@@ -76,7 +76,7 @@ Regression sub-gate: **no existing non-curved/non-compound golden changes.**
 | [1](batch-1/overview.md) | T1 — port `makeStraightEdges`(+`bend`/`get_cycle_centroid`) + curved dispatch + finish guards | [x] |
 | [2](batch-2/overview.md) | T2 — curved + compound goldens vs native C; verify compound, fix on divergence | [x] |
 
-**T2 note:** **All 5 goldens pass byte-exact** (curved-single, curved-parallel,
+**T2 note:** **All 5 goldens pass conformant** (curved-single, curved-parallel,
 curved-cycle, compound-splines, compound-lhead). Nothing quarantined.
 `dot-curved-cycle` and `dot-compound-lhead` were each briefly quarantined on
 wrong/incomplete hypotheses, then fixed via C instrumentation — see the decision
@@ -105,13 +105,13 @@ of `makeStraightEdges` (+`bend`/`get_cycle_centroid`/cycle helpers) in new
 `straight-edges.ts`, dispatched from `dotSplines_` with the resetRW + non-
 downgrading label warning (ADR-3) and the curved finish guard. Also fixed
 previously-unwired compound clipping (`g.info.compound` + `lhead`/`ltail` were
-never populated). 6 curved unit tests; 3 new native-C goldens pass byte-exact.
+never populated). 6 curved unit tests; 3 new native-C goldens pass conformant.
 
 **Quality gates (final):** typecheck 0 · 1949 tests pass / 141 files (0
-regressions, every baseline golden byte-identical) · build OK · C tree clean ·
+regressions, every baseline golden conformant) · build OK · C tree clean ·
 diff confined to `src/layout/dot/**`, `test/golden/**`, `plans/**`.
 
-**Final status: all 5 DOT-8 goldens pass byte-exact; nothing quarantined.**
+**Final status: all 5 DOT-8 goldens pass conformant; nothing quarantined.**
 Both `dot-curved-cycle` and `dot-compound-lhead` were briefly quarantined then
 resolved via C instrumentation:
 - `dot-curved-cycle` — bug was a direction-partition in the curved dispatch (C
@@ -120,4 +120,4 @@ resolved via C instrumentation:
 - `dot-compound-lhead` — compound arrowhead clip. Root cause was ORDER: C runs
   `arrowEndClip` during the head clip on the full spline, before `ltail` trims
   the start. Fixed: faithful index-form `arrowEndClip`/`arrowStartClip` in the
-  head/tail clip (C's order). All-byte-exact.
+  head/tail clip (C's order). All-conformant.

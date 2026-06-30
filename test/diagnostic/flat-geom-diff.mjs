@@ -3,7 +3,7 @@
 // flat-geom-diff.mjs — diff the rendered geometry of the C oracle SVG against
 // the graphviz-ts port SVG for a single graph, aligned by edge/node title.
 //
-// Built for mission 2368-byte-match (Batch 0, T0). The two flat-edge residuals
+// Built for mission 2368-conformant (Batch 0, T0). The two flat-edge residuals
 // it isolates:
 //   Issue 2 — adjacent labeled-flat curve geometry: C draws opposing flats as
 //             one unordered {tail,head} group (straight earray[0] + arc

@@ -97,11 +97,11 @@ Then: linearGradient x1/y1/x2/y2 reflect the 45-degree angle
 
 Given: BGCOLOR with single solid color (no colon)
 When: port renders
-Then: plain fill="<color>", byte-identical to pre-task baseline
+Then: plain fill="<color>", conformant to pre-task baseline
 ```
 
 ## Quality bar
 
 `npx tsc --noEmit` clean; `npx vitest run` 0 failed, passed ≥ 1466;
-82+ existing goldens byte-identical.
+82+ existing goldens conformant.
 Commit: `feat(T4): html-table BGCOLOR gradient emission (M12 AD4 unskip)`.

@@ -9,7 +9,7 @@ as a rounded-rectangle Bézier `<path>` — matching the native oracle — inste
 of the current square `<polygon>`. Also carry the cell/table **pen width** onto
 the bgcolor fill (oracle emits `stroke-width="N"` on bordered-cell fills even
 with `stroke="none"`). This closes the residual gap left by the
-`htmltable-gradient-fill` mission: the gradient emission is already byte-exact,
+`htmltable-gradient-fill` mission: the gradient emission is already conformant,
 but the fill *shape* is square, which also shifts the gradient bounding box by
 ~3.54pt. Fixing the shape fixes the gradient coords too.
 
@@ -19,16 +19,16 @@ but the fill *shape* is square, which also shifts the gradient bounding box by
 `grdradial_angle` (corpus ids `graphs-grd*`). All currently `diverged` at
 `svg/g[1]/g[2]/polygon[1]`, maxDelta 3.54. Each has a rounded table + 81
 bordered cells, so **both** gap A (rounded `<path>`) and gap B (fill
-`stroke-width`) are required for byte-match. Control byte-match cases that must
+`stroke-width`) are required for conformant. Control conformant cases that must
 NOT regress: `grdlinear_node`, `grdradial_node`, `grdshapes`, `grdangles`,
 `grdcluster`, `grdcolors`.
 
 ## De-risking (confirmed)
 
-`grdcluster` is a **byte-match control** and contains `style="filled,rounded"`
+`grdcluster` is a **conformant control** and contains `style="filled,rounded"`
 clusters with a `bgcolor="red:blue"` gradient. The rounded-shape + gradient-bbox
 renderer path (`emitRoundedBezier` → bezier renderer, gradient derived from the
-emitted path) is therefore **already proven byte-exact** for clusters and
+emitted path) is therefore **already proven conformant** for clusters and
 records. This mission only wires the HTML-table fill path into that same proven
 machinery.
 
@@ -64,9 +64,9 @@ branch from main. Do NOT branch from a main that lacks commits `1f18afa` /
 - 2 consecutive quality-gate failures on the same check.
 - The fix would require modifying `poly-shapes.ts` / `emitRoundedBezier` or the
   bezier/gradient renderer (signals the proven cluster/record path is NOT
-  reusable as assumed — `grdcluster` byte-match says it is; re-investigate
+  reusable as assumed — `grdcluster` conformant says it is; re-investigate
   before proceeding).
-- A control byte-match case (grdcluster, grdshapes, …) regresses for a reason
+- A control conformant case (grdcluster, grdshapes, …) regresses for a reason
   unrelated to the table-fill change.
 
 ### Push-forward (decide and log)
@@ -96,7 +96,7 @@ table + cell rounded arms; D3 include gap B (penwidth-on-fill); D4 golden choice
 
 | Batch | Status | Summary |
 |-------|--------|---------|
-| [batch-1](./batch-1/overview.md) | [x] | T1 rounded `<path>` fill (table+cell) + stroke-width-on-fill + unit tests; T2 oracle-pin 5 grd* → byte-match + golden + survey |
+| [batch-1](./batch-1/overview.md) | [x] | T1 rounded `<path>` fill (table+cell) + stroke-width-on-fill + unit tests; T2 oracle-pin 5 grd* → conformant + golden + survey |
 
 ## Outcome (2026-06-22)
 
@@ -106,12 +106,12 @@ table + cell rounded arms; D3 include gap B (penwidth-on-fill); D4 golden choice
   existing `emitRoundedBezier`; gap-B penwidth-leak (`htmlFillPen`, reset per
   top-level table) → bordered-cell fills carry `stroke-width`. Discovered gap A2
   (the table **border** also rounds — C `doBorder` rounded arm), ported it
-  (in-write-set). 6 new unit tests, all byte-exact vs dot 15.0.0. typecheck 0,
+  (in-write-set). 6 new unit tests, all conformant vs dot 15.0.0. typecheck 0,
   full suite 2296→2297.
-- **T2** (`64b5bed`): 5 grd* targets flip diverged→byte-match **+ bonus
+- **T2** (`64b5bed`): 5 grd* targets flip diverged→conformant **+ bonus
   `rd_rules`** (+6 total, 0 regressions). New `dot-htmltable-rounded-grad`
-  golden (manifest 156→157). Parity: byte-match 266→272, diverged 270→264,
-  structural 232 unchanged. 6 grd* controls stay byte-match.
+  golden (manifest 156→157). Parity: conformant 266→272, diverged 270→264,
+  structural 232 unchanged. 6 grd* controls stay conformant.
 - **Deviations:** registered `htmlFillPen` in `module-globals.fitness.test.ts`
   (mandatory allowlist, outside T1 write-set — logged). See decision journal.
 - **Tooling (user-requested mid-mission):** changed the global complexity hook

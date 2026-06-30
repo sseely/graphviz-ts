@@ -83,11 +83,11 @@ abstractions), AD-C1.
   where other is directly above n, then `rv.p.y > 0` (top of node),
   `rv.side === TOP`
 - Given `closestSide(n, other, { side: 0 })`, then returns null
-- tsc clean; 0 vitest failed; 82 goldens byte-identical (T6 needed for
+- tsc clean; 0 vitest failed; 82 goldens conformant (T6 needed for
   the geometric change to reach SVG output)
 
 ## Quality bar
 
 `npx tsc --noEmit` clean. `npx vitest run` 0 failed, ≥1466 passed.
-82 goldens byte-identical. Commit: `feat(T5): port closestSide and
+82 goldens conformant. Commit: `feat(T5): port closestSide and
 make resolvePort real`.

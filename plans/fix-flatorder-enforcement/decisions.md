@@ -25,14 +25,14 @@
   order and the weight defaults both need changing they are one logical unit.
 - **Consequences**: minimal blast radius; bisectable to one cause.
 
-## AD-3: Hard invariant — no byte-match regression
+## AD-3: Hard invariant — no conformant regression
 
 - **Context**: mincross/flat is tie-break-fragile (see memory notes
   `mincross-perf-is-perop-not-iteration`, `flat-edge-241-is-y-only`,
   `1624-flat-corridor-makefwdedge`, `ordering-agseq-inherit-done`). 493 graphs
-  byte-match overall; the prior mission's b58 node-7 fix and `graphs-in` are
+  conformant overall; the prior mission's b58 node-7 fix and `graphs-in` are
   explicit canaries here.
-- **Decision**: full survey after EVERY change; any byte-match→worse is STOP +
+- **Decision**: full survey after EVERY change; any conformant→worse is STOP +
   revert. The weight-0 experiment that broke node 7 is the cautionary precedent —
   enforcement changes ripple into ALL flat-edge graphs, not just ordering ones.
 - **Consequences**: ~17 min/iteration accepted.
@@ -57,7 +57,7 @@
 
 ## stop-conditions
 
-1. Any byte-match→worse regression in the survey. STOP + revert that change.
+1. Any conformant→worse regression in the survey. STOP + revert that change.
 2. 2 consecutive gate failures on the same check. STOP.
 3. A fix needs to write outside its declared write-set. STOP.
 4. 3 consecutive edits to the same site without resolving it. STOP.

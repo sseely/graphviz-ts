@@ -9,7 +9,7 @@ divergence is identifiable.
 | T0 | x-NS pivot trace (C + port, env-gated) + diff script; capture baseline divergence on 2368_1 | orchestrator | `test/diagnostic/xns-trace.md`, `test/diagnostic/xns-diff.mjs` | — | [x] |
 
 **T0 result (re-scopes the mission):** the port's x-NS frame at `set_xcoords` is
-**byte-identical to C** (2368_1: virtual −38/66, 376=−119, 196=−29, 256=43,
+**conformant to C** (2368_1: virtual −38/66, 376=−119, 196=−29, 256=43,
 316=115, 76=205; `xns-diff.mjs` reports MATCH). No NS pivot-order divergence
 exists. The internal-frame divergence is the **port-only** `normalizeXcoords`
 (`position.ts`), which C lacks. See `decision-journal.md` and `xns-trace.md`.

@@ -8,7 +8,7 @@ single divergence.
 
 Element-by-element diff of all 6 actual-vs-ref SVGs shows ONLY the
 cluster polygons differ — node polygons, text positions, fonts, and
-canvas dims are byte-identical. Our cluster bbs are still in the
+canvas dims are conformant. Our cluster bbs are still in the
 tree's centered coordinate system (e.g. patchwork-cluster:
 (-83.67,-83.67)..(83.67,83.67)); the ref has them translated so the
 root LL is the origin. Translating our cluster bbs by -root_bb.LL

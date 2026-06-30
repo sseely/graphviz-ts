@@ -18,7 +18,7 @@
   64->172 reflects this real layout gap, previously hidden by the extra edge.
   This is cluster ranking/positioning for nested clusters + a subgraph->node
   edge (nslimit1=0), NOT spline routing — a separate deep effort.
-- **Confidence**: High (dedup) — edges byte-match native, 0 corpus regressions.
+- **Confidence**: High (dedup) — edges conformant with native, 0 corpus regressions.
 
 ## RESOLVED — nslimit1 not inherited by cluster ranking (2026-06-28)
 
@@ -28,4 +28,4 @@ ranked via dot1Rank(subg)->rank1 that is undefined → full network simplex, whe
 native (agget inherits nslimit1=0 → maxiter=0) keeps the initial ranking. So b2
 got pulled to its longest-path rank (top) instead of native's initial rank.
 FIX: rank1 reads own ?? graphDefaultsSnapshot ?? root.attrs for nslimit1.
-1902 diverged → BYTE-MATCH (dedup + this), 0 regressions. byte-match 488→489.
+1902 diverged → BYTE-MATCH (dedup + this), 0 regressions. conformant 488→489.

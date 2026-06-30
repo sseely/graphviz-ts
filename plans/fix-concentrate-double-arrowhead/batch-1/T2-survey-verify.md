@@ -13,7 +13,7 @@ flagged regression against a FRESH oracle before treating it as real
 ## Task
 1. Regenerate: `npm run survey && npm run survey:dashboard`.
 2. Confirm verdict deltas:
-   - `graphs-b135`, `167`, `2087` → byte-match or structural (no childCount diff).
+   - `graphs-b135`, `167`, `2087` → conformant or structural (no childCount diff).
    - `2825`, `1453` → improved (childCount diff gone).
    - `graphs-b15`, `graphs-b69` → arrowhead diff gone; a separate x-coord residual
      may remain (expected — see [[b69-concentrate-undermerge]]).

@@ -76,19 +76,19 @@ coordinates. T2 changes only: (a) the group open `scale(1 1)` → `scale(Z Z)`
 (`render/svg-graph.ts:84`), and (b) `emitSvgTag` `width`/`height`/`viewBox` →
 size-fitted = `round(dim * Z)` (`render/svg-graph.ts:54`). Font-size stays
 unscaled (the group transform shrinks glyphs visually; oracle keeps
-`font-size="36"`). Verify no coordinate-level churn on the 278 byte-matches.
+`font-size="36"`). Verify no coordinate-level churn on the 278 conforms to.
 
 **Consequences:** Low blast radius; the raster ptf path is untouched and already
 correct once `job.zoom` is set.
 
 ## D5 — Regression floor: gate scaling on `size` present {#d5}
 
-**Context:** 278 rows currently byte-match. None set `size=` (else they would
+**Context:** 278 rows currently conformant. None set `size=` (else they would
 not match at scale 1). Applying `Z=1` when no `size` is given leaves them
-byte-identical.
+conformant.
 
 **Decision:** When `size` is absent/degenerate, `Z` stays `1.0` and all emitted
-bytes are unchanged. Acceptance includes **byte-match count ≥ 278, 0
+bytes are unchanged. Acceptance includes **conformant count ≥ 278, 0
 regressions** (T3 regression scan). If any non-`size` row changes a single byte,
 **stop** — the no-size path must be a pure no-op.
 

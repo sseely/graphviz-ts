@@ -35,7 +35,7 @@ untouched).
   improve toward it).
 - **Given** the survey, **then** `241_0` improves and the per-id diff shows **0
   regressions**.
-- **Given** `npx vitest run`, **then** the 128 goldens are byte-identical (esp.
+- **Given** `npx vitest run`, **then** the 128 goldens are conformant (esp.
   every REGULAR-edge golden — proof the FLATEDGE gating held) and all tests pass.
 - **Given** `git diff --name-only`, **then** only the FLATEDGE branch + its test
   changed; `tsc`/`lizard` clean.
@@ -47,7 +47,7 @@ N/A.
 Reversible — revert the commit.
 
 ## Boundaries
-- **Always:** gate to FLATEDGE; keep ALL goldens byte-identical; port C exactly.
+- **Always:** gate to FLATEDGE; keep ALL goldens conformant; port C exactly.
 - **Never:** modify the curated golden suite; alter regular-edge box-x; touch the
   adjacent `make_flat_adj_edges` path.
 - **STOP:** any regular-edge golden changes (gating failed); fix needs files
@@ -57,5 +57,5 @@ Reversible — revert the commit.
 `fix(T2): FLATEDGE-gate flat end-box x to node centre (match C)`.
 
 ## Quality bar
-tsc 0; vitest 0 failures + 128 goldens byte-identical; survey 0 regressions +
+tsc 0; vitest 0 failures + 128 goldens conformant; survey 0 regressions +
 #241_0 improved; lizard clean. Return only the structured result.

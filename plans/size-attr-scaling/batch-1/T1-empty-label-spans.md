@@ -66,7 +66,7 @@ None consumed downstream. Self-contained.
   **same `y` baselines** as before this change (blank lines still consume
   vertical space — the `y` advance is unconditional).
 - Given a single-line non-empty label, when rendered, then output is
-  **byte-identical** to before (no-op for the common case).
+  **conformant** to before (no-op for the common case).
 - Given the new golden `dot-label-blank-lines`, when `vitest run` executes the
   golden suite, then it passes within the `deterministic` tolerance.
 

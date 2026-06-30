@@ -79,7 +79,7 @@ cycle.
 
 **Quality gates (final):** tsc clean; vitest 1217/1217 (baseline 1138
 + 79 new, incl. the promoted golden); the original 66 goldens
-byte-identical across both batch 4 and the T6 emission wiring (own
+conformant across both batch 4 and the T6 emission wiring (own
 worktree/probe byte-diffs). One commit per task T1–T6 plus chore(plans)
 commits.
 

@@ -52,7 +52,7 @@
      clip. This frame reconciliation is the hard, unverified part.
   4. Find/fix the 1 missing non-degenerate path in 2368.
 
-- **Decision**: reverted; left 2368 at maxΔ 5.0, 2368_1 byte-match preserved.
+- **Decision**: reverted; left 2368 at maxΔ 5.0, 2368_1 conformant preserved.
   2368's small delta is misleading — it is gated by the abomination/edge_in_box
   frame, the same deep interaction as the rest of the hard family.
 
@@ -75,12 +75,12 @@ Instrumented C `edge_in_box` (emit.c) + `map_edge` (postproc.c). Definitive:
   network simplex picks a DIFFERENT ABSOLUTE ORIGIN than C. C's internal frame is
   uniformly shifted (node 376: C-internal -119 vs port-internal 27, Δ=146 = C's
   translate Offset); both reconcile to identical FINAL coords (all normal output
-  byte-matches), but the un-translated spline-less label exposes the origin gap.
+  conforms to), but the un-translated spline-less label exposes the origin gap.
   x-NS solutions are translation-invariant (only relative positions are pinned),
   so C and the port legitimately choose different absolute origins (NS
-  spanning-tree root). node-box byte-match proves the RELATIVE layout is correct.
+  spanning-tree root). node-box conformant proves the RELATIVE layout is correct.
 
-- **Therefore 2368 cannot be byte-matched without reproducing C's x-NS absolute
+- **Therefore 2368 cannot be conformant without reproducing C's x-NS absolute
   origin** (its NS tree-root choice) so spline-less labels land in C's frame.
   That is a foundational change to x-coord assignment affecting every graph — far
   beyond a targeted fix — and the origin is itself an arbitrary (if
@@ -93,7 +93,7 @@ Instrumented C `edge_in_box` (emit.c) + `map_edge` (postproc.c). Definitive:
   quirk); (b) a foundational effort to match C's x-NS absolute origin; (c) a
   partial fix routing only the 3 non-degenerate legs (reduces but does not
   eliminate the divergence; needs a full corpus survey for regressions). NOT
-  landed — reverted to clean state (skip retained; 2368_1 + 1624 byte-match).
+  landed — reverted to clean state (skip retained; 2368_1 + 1624 conformant).
 
 - **C-instrument recipe (emit/postproc)**: printf in `edge_in_box` (emit.c,
   label pos + clip) gated by strcmp on the pair; `make -C ~/git/graphviz/build
@@ -113,13 +113,13 @@ for 2368_1, vs the port (XORG probe before gvPostprocess):
 | 76   |    205  |    351     | 146  |
 
 PERFECTLY UNIFORM +146 shift (2368: +228). The RELATIVE solution is identical
-(byte-match final); only the absolute anchor differs. Facts:
+(conformant final); only the absolute anchor differs. Facts:
 - x-coords come from `rank(g, 2, …)` (NS balance=2 = LR_balance, which does NOT
   `scan_and_normalize` — so coords are left un-normalized and CAN be negative).
   The port's `rank2Balance` matches C exactly (balance 2 → lrBalance, no
   normalize). `set_xcoords` = `coord.x = ND_rank(v)` in BOTH (no normalize). So
   it's purely the NS-produced absolute value.
-- `init_rank` is byte-identical (BFS from priority-0, longest-path) and produces
+- `init_rank` is conformant (BFS from priority-0, longest-path) and produces
   NON-negative ranks. The negative anchor (-119, -120 slack) emerges from the
   simplex iterations + `LR_balance` reranks, whose subtree shifts depend on the
   NS pivot order (nlist + in/out edge-list iteration driving
@@ -135,7 +135,7 @@ gvPostprocess — final coords stay identical (bb.LL shifts too), and the
 untranslated degenerate labels then land in C's frame. BUT the shift amount
 (146/228) is an emergent NS property the port cannot derive without reproducing
 C's pivot sequence. This is a large, fragile change with blast radius over all
-490 byte-match graphs (every graph's internal x-frame), for the reward of a few
+490 conformant graphs (every graph's internal x-frame), for the reward of a few
 degenerate-label edge cases — the relative layout is already perfect.
 
 **Status**: foundational root cause fully isolated (instrumented end to end);

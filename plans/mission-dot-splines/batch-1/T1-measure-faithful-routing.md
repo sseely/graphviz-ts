@@ -22,7 +22,7 @@ parity.
    in `edge-route.ts` read by the dispatch (default OFF — no production change),
    OR drive `routeRegularEdgeFaithful` / `routeMultiRankEdgeFaithful` directly in
    the harness. If a flag is added, it must default OFF and not alter any
-   committed behavior (goldens byte-identical with the flag off).
+   committed behavior (goldens conformant with the flag off).
 3. Produce the **divergence inventory**: list every golden that shifts under
    faithful-all, tagged by edge category (adjacent-plain / multi-rank-plain /
    back / non-forward / rankdir), with worst Δ. Also list which corpus cases
@@ -36,7 +36,7 @@ parity.
 - `.probes/dot-splines-faithful-measure.ts` — new measurement harness
 - `plans/mission-dot-splines/decision-journal.md` — the inventory table
 - (optional) `src/layout/dot/edge-route.ts` — a default-OFF measurement flag ONLY
-  if needed; must keep goldens byte-identical with the flag off
+  if needed; must keep goldens conformant with the flag off
 
 ## Read-set
 
@@ -60,7 +60,7 @@ shifting golden, plus a corpus-parity summary. Categories: `adj-plain`,
 - **Given** the inventory, **when** written to the journal, **then** every
   shifting golden is tagged with a category and worst Δ.
 - **Given** the flag is OFF (or no flag added), **then** `npx vitest run` is
-  **1800 passed / 0 failed, 115 goldens byte-identical** (no behavior change).
+  **1800 passed / 0 failed, 115 goldens conformant** (no behavior change).
 - **Given** the shift set exceeds ~20 goldens, **then** STOP and flag for scope
   review.
 

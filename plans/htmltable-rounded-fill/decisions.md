@@ -12,8 +12,8 @@ with the gradient bbox derived from the rounded shape.
 `emitBgFill`, exactly as `record.ts:489` and `device.ts:320` do. Do NOT modify
 `poly-shapes.ts`, the bezier renderer, or `svg-gradient.ts`.
 
-**Consequences:** `grdcluster` (a byte-match control with a rounded gradient
-cluster) proves this path is byte-exact end-to-end, including the gradient bbox.
+**Consequences:** `grdcluster` (a conformant control with a rounded gradient
+cluster) proves this path is conformant end-to-end, including the gradient bbox.
 If a renderer change appears necessary, STOP (stop condition) — the premise is
 that the cluster/record path already works.
 
@@ -37,7 +37,7 @@ though the corpus doesn't trigger it (a unit test will).
 
 **Context:** The oracle emits `stroke-width="N"` on a bordered cell's fill
 polygon (even though `stroke="none"`); the port resets `penWidth` to 1 in
-`withHtmlPaint`. All 5 target graphs have 81 bordered cells, so byte-match is
+`withHtmlPaint`. All 5 target graphs have 81 bordered cells, so conformant is
 impossible without this.
 
 **Decision:** Thread the cell/table `border` (pen width) into the bgcolor fill
@@ -46,7 +46,7 @@ ordering (`emit_html_cell`: penwidth set before the fill, or leaked from the
 prior cell's `doBorder`) and mirror it faithfully — do not invent a value.
 
 **Consequences:** Fixes solid bordered-cell fills too (pre-existing). Kept in
-this mission because it is required for the byte-match acceptance criterion and
+this mission because it is required for the conformant acceptance criterion and
 lives in the same files as gap A (one writer per file).
 
 ## D4 — Golden: rounded gradient table (+ optional rounded solid)

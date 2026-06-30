@@ -30,7 +30,7 @@ vs fresh), same `/tmp/ghl` oracle:
 total ids: 795   changed verdicts: 17   IMPROVED: 17   REGRESSED: 0
 ```
 
-**17 improved (structural-match → byte-match):**
+**17 improved (structural-match → conformant):**
 `2193, graphs-b, graphs-b117, graphs-b94, graphs-nhg, graphs-states,
 graphs-url, graphs-xlabels, linux.i386-ER, share-ER, share-b94, share-nhg,
 share-states, windows-ER, windows-b94, windows-nhg, windows-states`
@@ -39,7 +39,7 @@ share-states, windows-ER, windows-b94, windows-nhg, windows-states`
 
 These are graphs where a lone edge shared a `recover_slack`-moved vnode or a
 neighbour spline with a group; routing them in C's single `edgecmp` order makes
-them **byte-exact** (previously structural-only). `graphs-url` and
+them **conformant** (previously structural-only). `graphs-url` and
 `graphs-xlabels` — long-standing "separate edge-spline `@d`" residuals from
 prior missions — resolve to byte here, confirming the residual was the lone-edge
 routing order.

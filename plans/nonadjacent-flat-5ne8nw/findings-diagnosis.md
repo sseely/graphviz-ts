@@ -6,7 +6,7 @@ merge 3106329). All evidence below is REPRODUCED, not assumed.
 ## TL;DR (the proven root finding)
 `5:ne->8:nw` is a **non-adjacent flat edge** routed by
 `routeFlatEdgeFaithful` (`splines-flat.ts`) → `routeSplines`
-(`splines-routespl.ts`). Its box channel **byte-matches C `make_flat_edge`
+(`splines-routespl.ts`). Its box channel **conforms to C `make_flat_edge`
 modulo a uniform +27 internal x-translation** (the benign frame offset already
 documented in memory `flat-edge-241-is-y-only`). **Yet the port's spline is an
 EXACT MIRROR of C's** (same endpoints, control sequence reversed, knot on the
@@ -19,7 +19,7 @@ port is not → the bug is inside `routeSplines` (or a sub-step:
 equivariance. **This is independently unit-testable without a full graph layout.**
 
 ## The graph (241_0.dot, nodes 5,6,7,8 same rank)
-All node positions in the port **byte-match** the oracle. Row at internal y=18
+All node positions in the port **conformant** the oracle. Row at internal y=18
 (svg y=-25.88). Nodes: 5@x387, 6@x459, 7@x531, 8@x603 (rw=27). The edge
 `5:ne->8:nw` bows over nodes 6,7. `nodesep=18`.
 

@@ -41,10 +41,10 @@ verified by SVG path `@d` parity, not a typed contract.
 
 ## Acceptance criteria
 - Given 2368, when rendered, then 376→76 / 196→376 / 256→436 path `@d`
-  byte-match the C oracle (no straight stub; the arc geometry matches).
+  conformant with the C oracle (no straight stub; the arc geometry matches).
 - Given the full survey, when run, then GATE PASS with 0 regressions
-  (no byte-match→worse) — else STOP + revert (AD-4).
-- Given 2368_1 and 1624, when rendered, then still byte-match.
+  (no conformant→worse) — else STOP + revert (AD-4).
+- Given 2368_1 and 1624, when rendered, then still conformant.
 - Given the flat-edge unit tests, when run, then green (extend them to pin the
   arc geometry, not the old straight line).
 

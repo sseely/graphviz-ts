@@ -56,7 +56,7 @@ feature/post-parity after batch-1 close).
 - Change needed outside the active task's write-set
 - 2 consecutive gate failures on the same check
 - Implementation contradicts AD1–AD7
-- AD2 gate breach: ported postprocess can't keep TB byte-identical AND
+- AD2 gate breach: ported postprocess can't keep TB conformant AND
   the conditional fallback also perturbs an existing golden
 - Consecutive-fix rule: same location/approach changed 3+ times without
   resolving the same failing comparison (esp. T3) — journal and stop
@@ -146,7 +146,7 @@ holds only dot-head-tail-label. Suite **1138 passed / 0 failed**
   multi-rank forward edges never taking the virtual-chain path.
 - rankdir: gv_postprocess ported (AD1), option A replacement (AD2)
   with the byte-identity gate proven via HEAD-worktree self-baseline
-  (62/62 byte-identical); LR/BT/RL all exact. RL golden added (AD3,
+  (62/62 conformant); LR/BT/RL all exact. RL golden added (AD3,
   provenance verified).
 - Edge attrs: minlen/constraint init (late_int/mapbool); multi-edge
   parallel offset (grouping + to_orig install + orig-seq ordering);

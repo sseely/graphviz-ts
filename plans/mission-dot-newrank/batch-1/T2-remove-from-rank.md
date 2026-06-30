@@ -36,7 +36,7 @@ removeFromRank(g: Graph, n: Node): void
   **then** it is removed from `rank[r].v` and `rank[r].n` is decremented.
 - **Given** `installInRank` then `removeFromRank` for the same node, **then**
   the rank entry's `v`/`n` match its pre-install state.
-- **Given** the 115 goldens, **then** all byte-identical (helper unused by
+- **Given** the 115 goldens, **then** all conformant (helper unused by
   default paths).
 
 ## Quality bar

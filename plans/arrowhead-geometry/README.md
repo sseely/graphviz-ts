@@ -9,7 +9,7 @@ deep **arrowhead-geometry** dot-corpus cases deferred by the
 `<ellipse>` (13 cases), `crow`/`vee` must emit the 9-point polygon (3 cases).
 Faithful per CLAUDE.md "the C is sacred": port the whole `Arrowtypes` dispatch
 (8 types) + modifiers (open/side) + compound stacking + `arrowsize`, not just
-the divergent types. Success = byte-match increases with **0 per-id
+the divergent types. Success = conformant increases with **0 per-id
 regressions** (`test/corpus/survey.ts`).
 
 ## Branch
@@ -36,7 +36,7 @@ Comparison pages: `../parity-low-hanging-fruit/comparisons/<id>.md`.
 - STOP if a per-id **regression** (byte→structural/diverged, structural→diverged,
   anything→errored/timeout caused by the change) cannot be resolved in the task.
 - STOP if the type-aware clip-length change (ADR-4) regresses a currently
-  byte-matching non-normal-arrow case — investigate before proceeding.
+  conformant with non-normal-arrow case — investigate before proceeding.
 - STOP if the oracle (native `dot`) is unavailable or unstable.
 
 ### Push forward
@@ -87,7 +87,7 @@ Appended during execution: [decision-journal.md](decision-journal.md).
 ## Operational readiness
 
 Pure layout/render library code. **Reversible** (git revert + regenerated
-artifacts). No SLI/dashboard/on-call (the "SLI" is parity byte-match, measured by
+artifacts). No SLI/dashboard/on-call (the "SLI" is parity conformant, measured by
 the survey). Backwards-compat: SVG arrow shapes change (intended); `renderSvg`
 signature unchanged; `getDrawOps`/xdot consumers gain ellipse/polyline arrow ops
 (non-breaking addition).

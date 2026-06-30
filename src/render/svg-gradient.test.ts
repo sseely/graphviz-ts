@@ -211,7 +211,7 @@ describe('gradientId', () => {
 
 describe('emitLinearGradient', () => {
   beforeEach(() => { /* setup done per-test via makeLinearJob */ });
-  it('angle=0 red:blue matches C oracle byte-for-byte', () => testLinearGradOracle());
+  it('angle=0 red:blue matches C oracle conformant', () => testLinearGradOracle());
   it('frac=0.3 → stops 0.299 and 0.300', () => testLinearGradFrac03());
 });
 

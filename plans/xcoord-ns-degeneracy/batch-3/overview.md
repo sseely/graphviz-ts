@@ -6,7 +6,7 @@ Single sequential task. Depends on T2's localized divergence point.
 |----|-------------|-------|--------|------------|------|
 | T3 | Port the faithful fix at the localized site; pin with a unit test | orchestrator (debugger) | the T2-named file (+ test) | T2 | [x] |
 
-Exit criterion: honda-tokoro all node cy + edge paths byte-match native;
+Exit criterion: honda-tokoro all node cy + edge paths conformant with native;
 `npm run typecheck` + `npm test` green. Port instrumentation removed. The exact
 write-set file is whatever T2 named; if it is outside the provisional set, the
 write-set-expansion rule was already cleared in T2.

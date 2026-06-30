@@ -18,7 +18,7 @@ never in `lib/dotgen/` or splines, so layout and routing are untouched.
 ## Architecture (locked — see decisions.md)
 
 1. **Group transform**, not ptf coord rotation: emit `rotate(-job.rotation)` in
-   the graph `<g>`; inner coords stay unrotated. Matches native byte-for-byte.
+   the graph `<g>`; inner coords stay unrotated. Matches native conformant.
 2. `job.rotation = 90` when landscape; `transformPoint` does **not** apply
    `applyRotation` (ptf rotation is raster-only, currently dead).
 3. Rotated translate derived from `bb` + pad + `rotate(-90)` geometry, validated
@@ -30,7 +30,7 @@ never in `lib/dotgen/` or splines, so layout and routing are untouched.
 
 `graphs/b68.gv` (landscape + `ratio=auto`, no other complications) — its inner
 coords already match native; only the transform/dims differ. **b68 must flip to
-byte-match.** NaN and proc3d will improve but stay diverged (separate blockers).
+conformant.** NaN and proc3d will improve but stay diverged (separate blockers).
 
 ## Constraints
 
@@ -55,7 +55,7 @@ byte-match.** NaN and proc3d will improve but stay diverged (separate blockers).
 | `npm run typecheck` | exit 0, no errors outside `instr-port`/`probe-edgeinfo` scratch |
 | `npm test` | exit 0, all green |
 | `~/.claude/hooks/.venv/bin/lizard <changed files> -C 10 -w` | no warnings |
-| survey: `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts` | diff `parity.json` vs `/tmp/parity.before.json`: **0 regressions on non-landscape graphs; b68 → byte-match** |
+| survey: `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts` | diff `parity.json` vs `/tmp/parity.before.json`: **0 regressions on non-landscape graphs; b68 → conformant** |
 
 Baseline before starting: `cp test/corpus/parity.json /tmp/parity.before.json`.
 
@@ -85,12 +85,12 @@ Baseline before starting: `cp test/corpus/parity.json /tmp/parity.before.json`.
 
 - **Tasks:** T1, T2 — both done. Commits `9dde0d0` (T1), `33236df` (T2) on
   `feature/orientation-land`.
-- **Result:** `b68` flips `structural-match → byte-match` (the canary) — the
+- **Result:** `b68` flips `structural-match → conformant` (the canary) — the
   only verdict change across all 795 corpus graphs. **0 non-landscape
   regressions** (byte-stability held; only the 4 landscape graphs change any
-  bytes). byte-match corpus count 324 → 325.
+  bytes). conformant corpus count 324 → 325.
 - **Landscape graphs (4, not 3):** NaN, b68, **b69** (uses quoted
-  `rotate = "90"`, missed by the initial grep), proc3d. b68 → byte-match;
+  `rotate = "90"`, missed by the initial grep), proc3d. b68 → conformant;
   the rest improve maxDelta but stay diverged on separate out-of-scope
   blockers (NaN: ratio=compress NaN; proc3d/b69: page=/rankdir residuals),
   none entering a worse bucket. proc3d 2620→217, b69 2728→117, NaN 2007→1907.

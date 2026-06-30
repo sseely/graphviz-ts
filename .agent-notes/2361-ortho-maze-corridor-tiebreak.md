@@ -3,7 +3,7 @@
 - **Context**: After the concentrate dedup fix, 2361 is structural-match with
   maxΔ=144 (edge `AC->IW`) + 110 (`FF->IV`). Investigated the residual.
 - **Finding** (instrumented both sides):
-  - Node boxes are **byte-identical** port vs C (all 14, all 4 edges) → the maze
+  - Node boxes are **conformant** port vs C (all 14, all 4 edges) → the maze
     cell partition, cell weights, MARGIN(36), and cost constants
     (delta=1, mu=500, BIG=16384) are identical.
   - Routing order matches C: fixed a real faithfulness bug first — port `edgeLen`
@@ -27,7 +27,7 @@
   order** from maze cell construction (the order cells/sides are created and
   `createSEdge` populates `adjEdgeList`), feeding the heap structure. This is the
   known 2620-class "ortho routing @d" residual — a deep, fragile area. Fixing it
-  means making snode indexing + adjacency order byte-identical to C's maze build,
+  means making snode indexing + adjacency order conformant to C's maze build,
   with regression risk across all ortho graphs. Out of scope for the concentrate
   mission; structural-match is the accepted bar. NOT a cost/algorithm bug.
 - **Confidence**: High (maze input identical + C route dump + faithful fPQ/relax

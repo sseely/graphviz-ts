@@ -14,7 +14,7 @@ flowchart TD
     P --> D
   end
   S --> per
-  D -->|pass@0.01| BM["byte-match"]
+  D -->|pass@0.01| BM["conformant"]
   D -->|numeric diffs only| SM["structural-match"]
   D -->|structural diff| DV["diverged"]
   P -.throw.-> ER["errored"]

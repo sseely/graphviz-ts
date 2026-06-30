@@ -69,6 +69,6 @@ Reversible — new file; delete to revert.
 
 ## Quality bar
 
-`npx tsc --noEmit` 0; `npx vitest run` 0 failed + 115 goldens byte-identical;
+`npx tsc --noEmit` 0; `npx vitest run` 0 failed + 115 goldens conformant;
 `npx lizard src/layout/dot/splines-route-type.ts -C 10 -L 30 -a 5` clean.
 Commit: `feat(T1): add routeRegularByType edge-type dispatch helper`.

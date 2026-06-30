@@ -9,8 +9,14 @@ SVG.
 
 The defining property: **pure TypeScript.** No Java, no native binary, no WASM.
 It runs in a browser or in Node with zero external dependencies at runtime. The
-goal is bit-for-bit fidelity to the C implementation, which is treated as the
-canonical specification (see [`CLAUDE.md`](./CLAUDE.md)).
+goal is the closest achievable fidelity to the C implementation, which is treated
+as the canonical specification (see [`CLAUDE.md`](./CLAUDE.md)). In practice the
+`dot` engine is **conformant** with the C binary on the golden corpus: numeric
+coordinates agree to a tight deterministic tolerance (±0.01) and non-numeric
+content is exactly equal. This is the measured "match" bar, not a claim of
+literal byte-for-byte SVG output — see [Conformance](./docs/conformance.md) for
+the exact definition and the comparison code, and
+[known divergences](./docs/known-divergences.md) for the documented exceptions.
 
 > **Status: `0.1.0` — in active development.** The port is mature enough to lay
 > out and render real graphs across all engines, but it is not yet published to

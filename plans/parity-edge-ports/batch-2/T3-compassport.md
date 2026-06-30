@@ -83,11 +83,11 @@ for exotic polygon shapes is deferred (open question AD2 in decisions.md).
   false` (center, no port)
 - Given `poly_port` called with portname `'n'` on a non-HTML node,
   then `port.side === TOP` and `port.defined === true`
-- tsc clean; 0 vitest failed; 82 goldens byte-identical (T6 needed
+- tsc clean; 0 vitest failed; 82 goldens conformant (T6 needed
   before goldens can change)
 
 ## Quality bar
 
 `npx tsc --noEmit` clean. `npx vitest run` 0 failed, ≥1466 passed.
-82 goldens byte-identical. Commit: `feat(T3): port compassPort and
+82 goldens conformant. Commit: `feat(T3): port compassPort and
 poly_port; wire POLY_FNS.portfn`.

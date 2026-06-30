@@ -63,7 +63,7 @@ sensitive.
   the cluster boundary fills `lightgrey`
 - Given cluster `bgcolor` without fillcolor, then bgcolor fills
   (backward-compat path)
-- Given no bgcolor / unfilled cluster, then output byte-identical to
+- Given no bgcolor / unfilled cluster, then output conformant to
   pre-task; 82 goldens stable
 
 ## Observability / rollback

@@ -31,7 +31,7 @@ logic. If a divergence implicates `maze`/`partition`/`ortho-route`, that is a
    `src/layout/dot/*` (the T1/T2 dot files). If a divergence clearly implicates
    `maze`/`partition`/`ortho-route`, **STOP**: it is a P2 gap (P2's fixture set
    missed it) — extend P2, do not patch `src/ortho/*` from this mission. Re-run
-   until all ortho goldens pass and every non-ortho golden is byte-identical.
+   until all ortho goldens pass and every non-ortho golden is conformant.
 
 ## Write-set
 - `test/golden/inputs/dot-ortho-*.dot` (create)
@@ -56,7 +56,7 @@ ADR-5. **No label-routing invention** (ADR-2) even if a label golden diverges.
 - Given each `dot-ortho-*.dot`, when rendered by the TS port to SVG, then it
   matches the native-C ref within the deterministic tolerance class.
 - Given the full golden suite, when run, then **every pre-existing non-ortho ref
-  is byte-identical** (no regression) and all new ortho refs pass.
+  is conformant** (no regression) and all new ortho refs pass.
 - Given a divergence was found, when fixed, then the fix is in `src/ortho/*` and
   is justified by a C dump (cite the C function + harness output in the commit).
 - Given the C tree after minting, then

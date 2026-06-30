@@ -74,12 +74,12 @@ default) state; batch-2 tasks mutate `job.obj.fillColor` / `.penColor`
 
 - Given a default node, when renderNode, then `job.obj` is non-null
   inside the codefn and the stack is balanced (null again after)
-- Given an unstyled graph, when rendered, then SVG byte-identical to
+- Given an unstyled graph, when rendered, then SVG conformant to
   pre-task (82 goldens) — the default ObjState reproduces monochrome
 - Given nested withHtmlPaint (html label on a node), then it pushes and
   pops correctly on top of the node's obj-state (M12 html goldens stay
-  byte-identical)
-- Given the suite, then 0 failed; 82 goldens byte-identical
+  conformant)
+- Given the suite, then 0 failed; 82 goldens conformant
 
 ## Observability / rollback
 

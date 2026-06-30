@@ -27,7 +27,7 @@ it never crashes or hangs on a bad input.
        wall-clock timeout; kill on overrun. Throw → `errored` (capture stderr
        first line); timeout/kill → `timeout`.
      - **Diff** (both rendered): `compareSvg(portSvg, oracleSvg, "deterministic")`
-       — pass → `byte-match`. If it fails, re-classify: all diffs numeric (no
+       — pass → `conformant`. If it fails, re-classify: all diffs numeric (no
        missing/extra node) → `structural-match`; any structural diff → `diverged`
        (record the worst `delta` and the first structural path).
    - Emit `parity.json`: `{ generatedWith, oracleVersion, total, counts:{...},
@@ -63,10 +63,10 @@ it never crashes or hangs on a bad input.
 ```jsonc
 // parity.json
 { "oracleVersion": "dot 15.0.0", "total": 240,
-  "counts": { "byte-match": 0, "structural-match": 0, "diverged": 0,
+  "counts": { "conformant": 0, "structural-match": 0, "diverged": 0,
               "errored": 0, "timeout": 0, "oracle-error": 0 },
   "results": [ { "id": "graphs-abstract", "path": "graphs/abstract.gv",
-                 "verdict": "byte-match" },
+                 "verdict": "conformant" },
                { "id": "graphs-unix", "path": "graphs/unix.gv",
                  "verdict": "diverged", "maxDelta": 3.4,
                  "firstDiffPath": "svg/g[12]/path/@d" } ] }
@@ -79,8 +79,8 @@ it never crashes or hangs on a bad input.
   still completes and exits 0.
 - **Given** an input that throws (unported attr), **when** surveyed, **then**
   verdict is `errored` with the captured message; no survey crash.
-- **Given** a byte-identical input, **when** surveyed, **then** verdict is
-  `byte-match` (e.g. a simple digraph already in the 25-case corpus).
+- **Given** a conformant input, **when** surveyed, **then** verdict is
+  `conformant` (e.g. a simple digraph already in the 25-case corpus).
 - **Given** the full applicable set, **when** `npx tsx test/corpus/survey.ts`
   runs, **then** it exits 0 and writes `parity.json` whose `counts` sum to
   `total`.

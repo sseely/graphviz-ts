@@ -88,4 +88,4 @@
   makeAnyLabel(obj). 14-case oracle matrix exact, incl. literal \\N,
   record escapes, and escaped node names in titles.
 - **Confidence**: High (all fixes verified case-by-case against dot
-  15.0.0; 82 goldens byte-identical throughout; suite 1449 tests).
+  15.0.0; 82 goldens conformant throughout; suite 1449 tests).

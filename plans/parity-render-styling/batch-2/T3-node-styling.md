@@ -58,7 +58,7 @@ emitStyle).
 - Given `style=dashed`, then `stroke-dasharray="5,2"`; dotted → "1,5"
 - Given `style=filled` (no fillcolor), then fill = the color attr or
   C default; verify against oracle
-- Given an UNstyled node, then output byte-identical to pre-task
+- Given an UNstyled node, then output conformant to pre-task
   (default obj-state → `fill="none" stroke="black"`); 82 goldens stable
 
 ## Observability / rollback

@@ -4,7 +4,7 @@
 
 2368's drawing is 5pt short (bbox 604×143 vs C 608×148); the top
 `{rank=same line7;136}` group and everything above the main flat band sits 5pt
-low. The 256→316 label vnode is byte-identical to C (20.0, 40.4), so this is NOT
+low. The 256→316 label vnode is conformant to C (20.0, 40.4), so this is NOT
 label-vnode placement — it is the flat-label ("abomination") rank's vertical
 separation, fed by `flatNode` height and/or rank `ht1`/`ht2`. C is the spec.
 
@@ -44,7 +44,7 @@ parity.
   `{line7;136}` group's Y matches C (the uniform ~5pt offset is gone).
 - Given the full survey, when run, then GATE PASS 0 regressions — else STOP +
   revert (AD-4). (Edge-labeled graphs are the risk surface — watch them.)
-- Given 2368_1 and 1624, when rendered, then still byte-match.
+- Given 2368_1 and 1624, when rendered, then still conformant.
 - Given the affected unit tests, when run, then green.
 
 ## Observability / Rollback

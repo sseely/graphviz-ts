@@ -13,11 +13,11 @@ and is referenced in the decision journal.
 
 1. **Capture baseline** (do this at mission start, before batch-1, if not already
    saved): copy `test/corpus/parity.json` to `/tmp/parity-baseline.json` and note
-   the byte-match / structural-match counts.
+   the conformant / structural-match counts.
 2. Regenerate the survey and dashboard:
    `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 3. **Regression check (hard gate):** diff new `parity.json` per-id verdicts vs
-   baseline. **No** id may move from `byte-match`→worse or `structural-match`→
+   baseline. **No** id may move from `conformant`→worse or `structural-match`→
    `diverged`/`errored`/`timeout`. If any does → STOP, revert the offending
    change, log it.
 4. **Verify rescues:** the 7 former `timeout` ids (`1718`, `2108`, `2222`,
@@ -52,7 +52,7 @@ and is referenced in the decision journal.
 ## Acceptance criteria
 
 - **Given** baseline vs post-mission `parity.json`, **when** diffed, **then**
-  byte-match and structural-match counts are **≥** baseline (zero regressions).
+  conformant and structural-match counts are **≥** baseline (zero regressions).
 - **Given** the 7 former timeouts, **when** the survey re-runs, **then** none is
   `timeout`; each has a logged new verdict + timing.
 - **Given** each rescued `diverged` case, **when** the mission closes, **then** a

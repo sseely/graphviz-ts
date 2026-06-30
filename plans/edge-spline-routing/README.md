@@ -8,7 +8,7 @@ Long edges (spanning many ranks) render with **one extra cubic bezier piece**
 versus the native `dot` oracle: the port subdivides a spline where C fits a
 single smooth bezier. This is the dominant remaining `path/@d` divergence on the
 `rankdir_dot*` cluster (and ~49 Helvetica corpus rows) after the font-metric fix
-landed node/text/label byte-match. The recursive fitter (`src/pathplan/route.ts`)
+landed node/text/label conformant. The recursive fitter (`src/pathplan/route.ts`)
 is a **faithful** port of C `reallyroutespline`; the bug is **upstream** — the
 box corridor, the input-point chain, or the endpoint slopes handed to
 `Proutespline`. The exact site is **not yet localized**: Batch 1 is a spike that
@@ -34,7 +34,7 @@ referenced in the journal; do not squash).
   `a<0.005`, `forceflag`, `distN` shortcut) — NOT the bug.
 - Minimal reproducer: `/tmp/le_long.gv` (rankdir=LR n0..n15 + long spans; path 23
   diverges oracle 1 cubic / port 2). Small 6-node chains do NOT reproduce.
-- Node positions byte-match the oracle, so box GEOMETRY should match unless the
+- Node positions conformant with the oracle, so box GEOMETRY should match unless the
   long-edge corridor construction (`src/common/splines-routespl.ts` / dot
   edge-route chain) diverges.
 
@@ -44,7 +44,7 @@ referenced in the journal; do not squash).
 that is in no other task's write-set; two consecutive quality-gate failures on
 the same check; the same location is changed ≥3× without resolving a failing
 check; the implementation would contradict [decisions.md](./decisions.md); **any
-of the 280 existing byte-match rows regress** (D-regress); the spike shows the
+of the 280 existing conformant rows regress** (D-regress); the spike shows the
 divergence is in the faithful fitter after all (contradicts the premise — stop
 and re-scope).
 
@@ -67,14 +67,14 @@ task; an obvious self-explanatory fix.
 ```
 
 Regression scan (Batch 3): `npx tsx test/corpus/survey.ts` then confirm
-`byte-match >= 280` and `errored`/`timeout`/`diverged` do not rise (per-id diff,
+`conformant >= 280` and `errored`/`timeout`/`diverged` do not rise (per-id diff,
 0 regressions). Oracle: `GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot`.
 
 ## Baseline (pre-flight — executor must confirm)
 
 - `feature/edge-spline-routing` does not exist.
 - `npx tsc --noEmit` clean; `npx vitest run` green (~2314).
-- `main` at the font-aware-vmetrics merge (parity byte-match 280).
+- `main` at the font-aware-vmetrics merge (parity conformant 280).
 
 ## Batches
 

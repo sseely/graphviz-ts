@@ -46,4 +46,4 @@
   survey/gate: pending verification in the working session.
 
 - **Confidence**: High — every value pinned to C instrumentation; 1624 + 2368_1
-  byte-match the headless oracle.
+  conformant with the headless oracle.

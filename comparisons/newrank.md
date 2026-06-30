@@ -7,7 +7,7 @@
 **RESOLVED** (2026-06-17, `mission-dot-newrank-2`). The two blocking defects
 below are fixed and `newrank=true` now reproduces the oracle exactly
 (`a=-178, b=-106, c=-106 (= b), e=-34, d=-34`, ≤0.5pt), with all 122 goldens
-byte-identical. Fixes: (1) `dotRank` reads `mapbool(agget(g,"newrank"))`
+conformant. Fixes: (1) `dotRank` reads `mapbool(agget(g,"newrank"))`
 (rank.c:523) — `fix(T2)`; (2) `markClusters` treats undefined `ranktype` as
 NORMAL (cluster.c:317) so a cross-cluster `rank=same` node gets `ND_clust` and
 is installed once, not double-installed (the `furthestNode` hang) — `fix(T3)`.

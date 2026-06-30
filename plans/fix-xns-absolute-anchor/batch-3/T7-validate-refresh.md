@@ -2,7 +2,7 @@
 
 ## Context
 Final gate for the mission. The anchor (Batch 1) + wiring (Batch 2) must yield
-2368/2368_1/1624 byte-match with zero regressions across the 790-graph corpus,
+2368/2368_1/1624 conformant with zero regressions across the 790-graph corpus,
 then the committed baseline is refreshed.
 
 ## Task
@@ -11,11 +11,11 @@ then the committed baseline is refreshed.
 2. Run the full survey to a probe file:
    `GVBINDIR=/tmp/ghl PARITY_OUT=parity-probe.json npx tsx test/corpus/survey.ts`.
 3. `npx tsx test/corpus/rules-gate.ts test/corpus/parity-probe.json` — require
-   `GATE PASS`, `regressions=0`, and `2368`/`2368_1`/`1624` = `byte-match`
+   `GATE PASS`, `regressions=0`, and `2368`/`2368_1`/`1624` = `conformant`
    (verify each in the probe file).
 4. Diff probe vs committed `parity.json`: the ONLY verdict changes should be
-   2368 (diverged→byte-match) and any sibling in the degenerate-labeled-flat
-   family that legitimately improved; no byte-match→worse.
+   2368 (diverged→conformant) and any sibling in the degenerate-labeled-flat
+   family that legitimately improved; no conformant→worse.
 5. Refresh baseline: `cp parity-probe.json parity.json`,
    `cp parity-probe.json parity-rules.json`, `rm parity-probe.json`,
    `npx tsx test/corpus/dashboard.ts`; re-run `survey:gate` → 0/0.
@@ -27,8 +27,8 @@ then the committed baseline is refreshed.
 - `test/corpus/rules-gate.ts`, `test/corpus/survey.ts`
 
 ## Acceptance criteria
-- Given the survey, then `regressions=0` and 2368/2368_1/1624 are byte-match.
-- Given the verdict diff, then no graph went byte-match→worse.
+- Given the survey, then `regressions=0` and 2368/2368_1/1624 are conformant.
+- Given the verdict diff, then no graph went conformant→worse.
 - Given the refreshed baseline, when `survey:gate` re-runs, then 0 regressions / 0
   improvements (baseline now includes the win).
 

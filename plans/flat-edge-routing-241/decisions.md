@@ -15,7 +15,7 @@ splines BEFORE editing `src/`.
 Consequences: T2 fixes exactly the named branch; no speculative edits.
 
 ## AD-3 — Oracle-pinned, curated gate untouched
-Context: 128 curated goldens are the byte-exactness backstop; bucket counts
+Context: 128 curated goldens are the conformantness backstop; bucket counts
 re-bucket misleadingly (memory `bucket-fix-rebucketing`).
 Decision: verify per-input vs the native oracle; judge by per-id verdict deltas
 (0 regressions); never modify `suite.test.ts`/`manifest.json` or regenerate refs.

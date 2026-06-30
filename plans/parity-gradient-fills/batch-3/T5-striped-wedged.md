@@ -102,5 +102,5 @@ Then: SVG contains 3 <path> elements with fills red, blue, green and
 ## Quality bar
 
 `npx tsc --noEmit` clean; `npx vitest run` 0 failed, passed ≥ 1466;
-82+ existing goldens byte-identical.
+82+ existing goldens conformant.
 Commit: `feat(T5): port stripedBox + wedgedEllipse multicolor fills`.

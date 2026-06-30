@@ -114,7 +114,7 @@ true; radial when style=radial). Pure data-in/data-out.
 - `resolveNodeFill({style:"filled", fillcolor:"red"})` → {kind:"solid",
   color:"red"} (single color unchanged).
 - Suite 0 failed; this module has no live importer until G3/G4 (97
-  goldens byte-identical trivially).
+  goldens conformant trivially).
 
 ## Quality bar
 

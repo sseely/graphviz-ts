@@ -21,7 +21,7 @@ GRADIENT (or RGRADIENT if a graph `style=radial`); `gvrender_box(clip,
 GRADIENT)` → the background polygon emits a `<defs><linearGradient
 id="l_0" …>` + `fill="url(#l_0)"`. The gradient angle comes from the
 graph `gradientangle` attr. Capture `printf 'digraph{bgcolor="red:blue";a}'
-| dot -Tsvg` and match the `<defs>` + background polygon byte-for-byte
+| dot -Tsvg` and match the `<defs>` + background polygon conformant
 (coords identical to the solid background polygon; only the fill becomes
 url()).
 
@@ -35,10 +35,10 @@ In src/render/svg-graph.ts:
   onto `job.obj` (the graph ObjState pushed in renderGraph) and route the
   polygon through the obj-state/emitStyle gradient path (G2), OR emit the
   `<defs>` + `fill="url(#id)"` polygon directly via the G2 svg-gradient
-  emitter (whichever keeps the background coords byte-identical). The
+  emitter (whichever keeps the background coords conformant). The
   graph background uses the page clip box as the gradient points (C passes
   the box to get_gradient_points).
-- Solid bgcolor / no bgcolor / transparent paths stay byte-identical
+- Solid bgcolor / no bgcolor / transparent paths stay conformant
   (the 97 goldens — all solid/white/none backgrounds).
 - Gradient id: the background gradient is the FIRST gradient emitted in
   the page, so `l_0` (no obj id prefix on the root graph, OR `graph0_l_0`
@@ -79,7 +79,7 @@ before the background polygon).
 - graph `style=radial bgcolor="red:blue"` → radial (if C supports it;
   verify — else linear; journal).
 - solid `bgcolor=lightyellow` → unchanged (parity); no bgcolor → white;
-  transparent → omitted. 97 goldens byte-identical.
+  transparent → omitted. 97 goldens conformant.
 
 ## Byte-stability gate
 

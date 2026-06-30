@@ -64,7 +64,7 @@ inputs match; the entire residual is upstream font metrics.
 No in-scope fix exists. The two levers are both out of scope:
 - **font metrics** — a shared primitive every corpus label flows through;
   adjusting it to win these strings risks regressing the hundreds of graphs that
-  currently byte-match (`known-divergences.md` §A2 rationale).
+  currently conformant (`known-divergences.md` §A2 rationale).
 - **spline router** — faithful; forbidden by the mission scope.
 
 NaN is the same class as `proc3d`/`b69` (accepted A2), except its accumulated

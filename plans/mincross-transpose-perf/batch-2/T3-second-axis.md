@@ -33,7 +33,7 @@ T2). Nothing else without re-planning.
 - **Given** T2 is merged, **when** the second axis is applied, **then** the
   benchmark transpose time drops further (record cumulative factor).
 - **Given** mc3 + mid-size benchmark, **when** rendered, **then** order
-  **byte-identical to C** (order-probe, reverted).
+  **conformant to C** (order-probe, reverted).
 - **Given** the full suite, **when** `npx vitest run`, **then** all pass, **zero
   golden churn**.
 

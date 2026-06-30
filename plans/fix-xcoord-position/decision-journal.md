@@ -14,7 +14,7 @@ Appended during execution. One row per non-trivial judgment call.
 
 ## Batch tallies (fill in during execution)
 ```
-B0 rules survey: <N> byte-exact / <M> allowlisted pre-existing / <K> FAIL
+B0 rules survey: <N> conformant / <M> allowlisted pre-existing / <K> FAIL
 B1 browser-bundle canvas-free: pass/fail
 B2 measurement unit tests: <counts>
 B3 full-corpus rules cutover: <N> exact / <M> allowlisted
@@ -23,8 +23,8 @@ B3 full-corpus rules cutover: <N> exact / <M> allowlisted
 ## Batch 0 — execution log
 | When | Task | Decision | Rationale |
 |------|------|----------|-----------|
-| 2026-06-24 | T0.1 | EstimateTextMeasurer h=fontsize*1.20 (LINESPACING), w=raw estimate | spike-proven byte-match to headless dot; const.h:70 LINESPACING=1.20 |
-| 2026-06-24 | T0.2 | Rules gate = per-graph no-regression vs pango baseline, not absolute byte-match | full-SVG compareSvg conflates node geometry with edge/text emit; the signal is "no graph gets worse" |
+| 2026-06-24 | T0.1 | EstimateTextMeasurer h=fontsize*1.20 (LINESPACING), w=raw estimate | spike-proven conformant to headless dot; const.h:70 LINESPACING=1.20 |
+| 2026-06-24 | T0.2 | Rules gate = per-graph no-regression vs pango baseline, not absolute conformant | full-SVG compareSvg conflates node geometry with edge/text emit; the signal is "no graph gets worse" |
 | 2026-06-24 | T0.2 | Allowlist 4 match→diverged after verifying node-position Δ directly | 3 are emit artifacts (nodes 0.00); 2168_2 widths match headless, 1pt is x-NS/compass-port (out of scope per DESIGN non-goals) |
 | 2026-06-24 | T0.2 | Reuse survey.ts via GVBINDIR=ghl + GV_TEXT_MEASURER=estimate + PARITY_OUT (all backward-compat) | side-by-side: default survey path provably unchanged (sample: 0 verdict changes) |
 

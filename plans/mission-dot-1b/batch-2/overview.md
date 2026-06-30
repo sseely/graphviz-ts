@@ -9,7 +9,7 @@ can delete it.
 |----|-------------|-------|--------|------------|------|
 | T3 | Faithful parallel/opposing group routing (mirror C shared-base) | opus | `src/layout/dot/splines-route.ts`, `src/layout/dot/edge-route-splines.test.ts`, `src/layout/dot/multi-edge.test.ts` | T1, T2 | [ ] |
 
-T2's pre-mission spike proved the recipe byte-exact; T3 implements it + resolves
+T2's pre-mission spike proved the recipe conformant; T3 implements it + resolves
 two small residuals (back-member point-order normalization, AC4 stale spacing).
 
 Gate per [../README.md](../README.md). One commit.

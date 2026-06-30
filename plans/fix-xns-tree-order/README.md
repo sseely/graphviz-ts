@@ -26,7 +26,7 @@ Full evidence: `.agent-notes/b51-blok60-is-xcoord-ns-selection.md`. Summary:
 - `npx tsc --noEmit` → exit 0 (after every code change).
 - `npx vitest run src/layout/dot/ns-subtree.test.ts src/layout/dot/ns-range.test.ts src/layout/dot/position.test.ts src/layout/dot/position-aux.test.ts` → all pass. `ns-subtree.test.ts` exists (baseline: STset union-find + subtree min-heap, the primitives the fix must NOT change); T1 extends it with an order-locking assertion.
 - **Integration gate (Batch 2):** full headless parity survey, **0 regressions** vs
-  `test/corpus/parity.json` (baseline byte-match=522). Recipe in `batch-2/T2-survey-gate.md`.
+  `test/corpus/parity.json` (baseline conformant=522). Recipe in `batch-2/T2-survey-gate.md`.
 - Minimal repro: `~/git/graphviz/tests/share/b51.gv`, node `blok_60` → target
   x-center **611.38** (NS rank 463).
 
@@ -37,10 +37,10 @@ Full evidence: `.agent-notes/b51-blok60-is-xcoord-ns-selection.md`. Summary:
 - [x] **Batch 1** — Fix applied in `classify.ts` (labelVnode lw → root nodesep);
       blok_60 matches C exactly (Δ0 on its coordinates). → `batch-1/overview.md`
 - [x] **Batch 2** — Survey: 0 regressions; deterministic-tolerance matches
-      (harness verdict `byte-match`, ±0.01) 522→525: share-b51, windows-b51,
-      graphs-b53 move diverged→`byte-match`. Baseline refreshed. → `batch-2/overview.md`
+      (harness verdict `conformant`, ±0.01) 522→525: share-b51, windows-b51,
+      graphs-b53 move diverged→`conformant`. Baseline refreshed. → `batch-2/overview.md`
 
-> Terminology: the survey verdict labelled `byte-match` is a numeric agreement
+> Terminology: the survey verdict labelled `conformant` is a numeric agreement
 > within ±0.01 on all coordinates/paths plus exact non-numeric content
 > (`compareSvg(..., 'deterministic')`, tolerance 0.01) — NOT literal byte
 > equality. Reported here as "deterministic-tolerance match".

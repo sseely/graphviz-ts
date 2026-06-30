@@ -27,7 +27,7 @@ Classify Layer 2 as exactly one of:
 - **(A) small-reproducible** — a small windowed graph diverges from C or shows
   dup-orders/oscillation. Capture the minimal repro + the first diverging
   rank/step. → Batch 2 diagnoses on this fast repro.
-- **(B) 2471-scale-only** — all small windowed repros are **byte-identical to C**
+- **(B) 2471-scale-only** — all small windowed repros are **conformant to C**
   and converge. → Batch 2 must diagnose on 2471 with the convergence-point
   harness; record that small repros are clean (rules out a pure reorder bug).
 

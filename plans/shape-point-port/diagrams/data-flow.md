@@ -30,5 +30,5 @@ sequenceDiagram
         G->>G: ellipse(filled=true, fill=findFillDflt(n,"black"))
         G->>G: SKIP renderLabel
     end
-    Note over N,G: rx=1.8, filled black, no label — byte-matches oracle
+    Note over N,G: rx=1.8, filled black, no label — conforms to oracle
 ```

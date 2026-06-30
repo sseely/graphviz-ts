@@ -12,7 +12,7 @@ Affected rows (all 6): `linux.x86-rankdir_dot{,1,2}`, `nshare-rankdir_dot{,1,2}`
 ## What T2 fixed (the size= scaling — correct)
 
 `rankdir_dot` sets `size="6,6"`. The SVG header and group transform now
-**byte-match** the oracle:
+**conformant** the oracle:
 
 | field | oracle | port (after T2) | before T2 |
 |-------|--------|-----------------|-----------|
@@ -74,7 +74,7 @@ so T1's empty-span guard is not implicated.
 **End-to-end fix proof (PoC, reverted):** branching `freetypeLineHeight` on
 Helvetica with ascent/descent `1537/2048` + `482/2048` (which reproduces the
 oracle line height at fontsizes 8–48 exactly) makes rankdir_dot's native height
-→ `1014` and `size=` height → `125` — **both byte-match the oracle**. The 7.5pt
+→ `1014` and `size=` height → `125` — **both conformant with the oracle**. The 7.5pt
 offset vanishes; only sub-pixel (~0.5pt) edge-spline routing differences remain
 (a separate, much smaller class).
 
@@ -88,7 +88,7 @@ the exact ascent/descent **split** per font from oracle baselines via TDD
 (line-height sum is determined; the split affects glyph baseline position).
 
 **Payoff:** 49 of the 251 currently-diverged rows reference Helvetica/Arial; 61
-corpus files use Helvetica labels. **Risk:** the ~280 byte-matches are all
+corpus files use Helvetica labels. **Risk:** the ~280 conforms to are all
 Times-based and untouched (Times path unchanged); each added font must be
 validated across fontsizes with zero regression.
 
@@ -97,7 +97,7 @@ validated across fontsizes with zero regression.
 The font-blind metric was fixed: `feature/font-aware-vmetrics` (merge `f5d3500`)
 added a name-keyed vertical-metric resolver (Helvetica ascender 1577/2048,
 descender 471/2048, exact vs oracle fs6-48). rankdir's graph height now
-byte-matches the oracle (1014 native / 125 with `size=`); all text, ellipses,
+conforms to the oracle (1014 native / 125 with `size=`); all text, ellipses,
 and node polygons align.
 
 **The +7.5pt label-height residual is gone.** What remains on rankdir_dot* is a
@@ -105,7 +105,7 @@ and node polygons align.
 arrowhead `<polygon>`, maxDelta ~40–68) — the dominant blocker now. The font fix
 flipped 0 verdicts (edge routing keeps these rows diverged) but reduced
 divergence broadly elsewhere (e.g. `graphs-xx` maxDelta 5030→1558) and was
-merged as a correctness fix. Next blocker for rankdir byte-match: edge-spline
+merged as a correctness fix. Next blocker for rankdir conformant: edge-spline
 routing precision (a separate mission).
 
 ## Conclusion

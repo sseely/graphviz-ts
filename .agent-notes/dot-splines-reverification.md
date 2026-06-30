@@ -9,13 +9,13 @@ each graph via `renderSvg` and the dot 15.0.0 oracle, matches edges by `<title>`
 
 **Pathplan is already ported and working.** `src/pathplan/` (shortest, route,
 triang, visibility) is complete — the flat-label splines (FU-2) routed through
-`shortestPath`/`routeSpline` and matched dot byte-exact. The gaps-doc estimate
+`shortestPath`/`routeSpline` and matched dot conformant. The gaps-doc estimate
 "~1,200 LOC new pathplan port" is STALE. `splines-route.ts:245` "pathplan not
 yet ported" is also stale.
 
 ## Observation: regular edge routing matches dot for most shapes
 - **Context:** ran 22 varied graphs vs the oracle.
-- **Finding:** byte-exact (Δ=0.00) for chain, tree, diamond, parallel-3,
+- **Finding:** conformant (Δ=0.00) for chain, tree, diamond, parallel-3,
   cluster, dense, wide, longspan (TB multi-rank), back-edge, self-loop,
   edge-label, fan2, fan3, narrow merges. Ports (`a:e->b:w`) within 0.33pt.
 - **Impact:** the 115 goldens are representative; standard routing is correct.
@@ -48,10 +48,10 @@ already exists but is gated to side-port / multi-rank-label edges
 (`computeSpline`/`buildRankCorridor`, edge-route-poly.ts), which degenerates on
 steep adjacent-rank diagonals. Fix candidate: route the diverging cases through
 the faithful pathplan path (or fix `computeSpline`), then mint goldens for the
-newly-correct cases (existing 115 already match C → must stay byte-identical).
+newly-correct cases (existing 115 already match C → must stay conformant).
 
 ## Scope for the mission brief
 1. Characterize the divergence boundary precisely (fan width onset, LR).
 2. Route steep adjacent-rank diagonals + LR spans through pathplan.
-3. Keep the 115 goldens byte-identical; pin the newly-fixed cases as oracles.
+3. Keep the 115 goldens conformant; pin the newly-fixed cases as oracles.
 NOT in scope: porting pathplan (done), curved/ortho (DOT-8), flat edges (done).

@@ -7,7 +7,7 @@
  * `p.x`. The port previously broke ties by the angular `port.order` (via `val`),
  * swapping the two compass-ported successors and mispositioning the tail node.
  *
- * Oracle: locally built dot 15.0.0. Coords are byte-exact integers, so these
+ * Oracle: locally built dot 15.0.0. Coords are conformant integers, so these
  * pins assert exact values (no tolerance).
  *
  * @see lib/dotgen/mincross.c:in_cross, out_cross

@@ -14,8 +14,8 @@ Depends on T1 only for sequential ownership of `gvc/device.ts` (T1 edits
 `renderOneLabel`, T2 edits `render()` — different functions, same file, so they
 must not run concurrently).
 
-Canary: the 6 `rankdir_dot*` corpus rows must reach **byte-match**.
+Canary: the 6 `rankdir_dot*` corpus rows must reach **conformant**.
 
 Gate after batch: `tsc --noEmit` clean; `vitest run` green; **no byte change on
-any input lacking `size=`** (spot-check 2-3 existing byte-match goldens);
+any input lacking `size=`** (spot-check 2-3 existing conformant goldens);
 `git diff --name-only main` ⊆ {T1, T2} write-sets.

@@ -19,4 +19,4 @@
 - **Result**: 42 diverged → structural-match, 0 regressions (only corpus graph
   with RGBA edge colors). Inert for opaque/string colors (colorOpacity→null).
   Residual 18.43 = a SEPARATE spline-geometry divergence (pos=/splines=true).
-- **Confidence**: High — byte-exact opacity attrs vs oracle; gate 0 regr.
+- **Confidence**: High — conformant opacity attrs vs oracle; gate 0 regr.

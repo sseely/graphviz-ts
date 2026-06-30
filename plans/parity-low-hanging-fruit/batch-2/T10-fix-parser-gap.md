@@ -23,7 +23,7 @@ For issue-numbered cases (`1308_1`, `1367`, …), consult the graphviz GitLab is
 
 ## Acceptance criteria
 - Given each simple case, when parsed, then it no longer throws and the rendered
-  SVG byte-matches the oracle (promoted from errored).
+  SVG conforms to the oracle (promoted from errored).
 - Given `dot.pegjs` change, then `dot.js` is regenerated and the full parser test
   suite stays green.
 - Given Latin1/russian cases, then each has a comparison page (deep).

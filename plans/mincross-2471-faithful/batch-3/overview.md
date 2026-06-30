@@ -8,10 +8,10 @@ full 2471 parity. Only runs if Batch 2 localized a root cause (not the STOP path
 | T4 | Apply Layer-2 fix; verify 2471 order==C + completes + zero churn | sonnet/opus | mincross-cross.ts (likely), +test | T3 | [ ] |
 
 Final gate (all must hold):
-- 2471 final per-rank order **byte-identical to C** (fingerprinted name dump
+- 2471 final per-rank order **conformant to C** (fingerprinted name dump
   diff == 0).
 - 2471 **completes < ~60s**.
 - **Zero golden churn**; mc3 / chain_24 TB+RL / port_rl / Batch-1 windowed repros
-  all byte-identical to C.
+  all conformant to C.
 - `npm run typecheck` 0 · `npm test` green · `npm run build` OK.
 - `git -C ~/git/graphviz status --porcelain lib/dotgen` empty (C reverted).

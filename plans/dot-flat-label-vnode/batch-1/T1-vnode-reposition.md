@@ -3,7 +3,7 @@
 ## Context
 
 graphviz-ts is a faithful TS port; C at `~/git/graphviz` (15.0.0) is the
-spec. For `{rank=same; a b} a:e->b:w[label="x"]`, the spline is byte-exact
+spec. For `{rank=same; a b} a:e->b:w[label="x"]`, the spline is conformant
 (DOT-11a) but the label lands ~26pt too high. Root cause (C-instrumented):
 in the aux graph's `dot_splines_`, routing the labeled cross-rank edge via
 `make_regular_edge` moves the label vnode onto the spline (x 33→11.71);

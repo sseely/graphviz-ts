@@ -5,7 +5,7 @@ color-list parser, and wires gradients into node, cluster, and
 graph-background fills. After this batch, `fillcolor="c1:c2"` (and
 `style=radial`) emit real `<defs><linearGradient>/<radialGradient>` +
 `fill="url(#id)"` instead of the parity-render-styling first-solid
-fallback. The 97 existing goldens stay byte-identical (gradient branches
+fallback. The 97 existing goldens stay conformant (gradient branches
 are gated on multicolor ObjState).
 
 | ID | Description | Agent | Writes | Depends On | Done |
@@ -34,7 +34,7 @@ existing `renderer.polygon/ellipse(..., filled=true, job)` makes
 emitter(s) and adds `linearGradId`/`radialGradId` to RenderJob.
 
 **Batch 1 complete (2026-06-13):** tsc 0; vitest 1626/0; 97 goldens
-byte-identical; 8/8 gradient oracle cases match dot 15.0.0 (node linear/
+conformant; 8/8 gradient oracle cases match dot 15.0.0 (node linear/
 radial/frac/angle/box, cluster, graph bgcolor, solid-unchanged). G3 set
 obj.id for the gradient id prefix (node1_l_0 / clust1_l_0 / graph0_l_0).
 Orchestrator added the G4 end-to-end bgcolor-gradient test (G4's run

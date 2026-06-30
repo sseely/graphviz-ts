@@ -13,7 +13,7 @@
   this is purely a formatting divergence on `.xx5` ties.
 - **Impact**: Any golden whose layout produces an exact-tie coordinate
   will byte-diverge from a C ref by 0.01 on that value. The existing
-  67 goldens contain no ties (byte-identical through M11 batch 2).
+  67 goldens contain no ties (conformant through M11 batch 2).
   Fix is confined to printDouble: implement round-half-to-even at
   2 dp. M11 stop condition hit: divergence traces outside the mission
   write-set (job.ts ported pre-M11).

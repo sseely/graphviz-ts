@@ -41,7 +41,7 @@ touch it).
   contribution.
 - **Given** the survey, **then** `241_0` improves and the per-id diff shows **0
   regressions**.
-- **Given** `npx vitest run`, **then** the 128 goldens are byte-identical and all
+- **Given** `npx vitest run`, **then** the 128 goldens are conformant and all
   tests pass (incl. the new curl test).
 - **Given** the changed files, **then** `tsc`/`lizard` clean.
 
@@ -52,7 +52,7 @@ N/A.
 Reversible — revert the commit.
 
 ## Boundaries
-- **Always:** port C exactly; keep goldens byte-identical; fix only the isolated
+- **Always:** port C exactly; keep goldens conformant; fix only the isolated
   cause(s).
 - **Never:** modify the curated golden suite; touch the flat-edge X; attempt a
   non-isolable multi-path rewrite (AD-4).
@@ -63,5 +63,5 @@ Reversible — revert the commit.
 `fix(T3): port #241_0 flat curl-Y geometry (<path>)`.
 
 ## Quality bar
-tsc 0; vitest 0 failures + 128 goldens byte-identical; survey 0 regressions +
+tsc 0; vitest 0 failures + 128 goldens conformant; survey 0 regressions +
 #241_0 improved; lizard clean. Return only the structured result.

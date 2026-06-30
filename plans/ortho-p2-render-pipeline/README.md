@@ -3,7 +3,7 @@
 ## Objective
 
 Validate the **ortho render pipeline** (`partition.ts` → `maze.ts` →
-`ortho-route.ts`) byte-for-byte against **native instrumented C**, standalone
+`ortho-route.ts`) conformant against **native instrumented C**, standalone
 and unwired. This de-risks the P3 dot-dispatch mission: once the pipeline is
 oracle-pinned, wiring `splines=ortho` into the dot engine becomes low-risk
 wiring whose goldens should pass without deep pipeline debugging. The bottom

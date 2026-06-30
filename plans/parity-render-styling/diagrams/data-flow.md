@@ -18,5 +18,5 @@ sequenceDiagram
   Emit->>Job: read obj.fillColor / penColor / pen / penWidth
   Emit-->>SVG: fill="..." stroke="..." stroke-width stroke-dasharray
   Walk->>Job: popObj()
-  Note over Job,SVG: unstyled node → default state → fill="none" stroke="black"<br/>(82 goldens byte-identical)
+  Note over Job,SVG: unstyled node → default state → fill="none" stroke="black"<br/>(82 goldens conformant)
 ```

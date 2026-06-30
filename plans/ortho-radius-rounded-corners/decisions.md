@@ -10,7 +10,7 @@
   ~25-point polyline, not a curve).
 - Decision: replicate exactly — generate the wedge bezier, slice
   `[arc_start_idx=3 .. arc_end_idx=pn-4]`, emit via `svgPolyline`.
-- Consequence: byte-match requires reproducing `genEllipticPath`'s control points
+- Consequence: conformant requires reproducing `genEllipticPath`'s control points
   precisely (the `dEta`/`alpha` math).
 
 **ADR-2 — Detect ortho+radius at emit time, reading attrs directly (mirrors emit.c).**
@@ -33,7 +33,7 @@
 1. A file outside the declared write-set must change (and is not owned by another
    task) — pause and report.
 2. 2 consecutive quality-gate failures on the same check.
-3. A stage cannot byte-match C and the C oracle cannot be instrumented to explain
+3. A stage cannot conformant C and the C oracle cannot be instrumented to explain
    the difference (record as candidate accepted-divergence).
 4. Any other corpus graph regresses (match→diverged) with no faithful variant.
 

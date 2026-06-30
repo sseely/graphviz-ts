@@ -10,8 +10,8 @@ bbox → transposed (too-narrow) bbox → record drew outside the viewport.
 
 Fix (one site, `src/common/record.ts:recordInit`): derive `lw/rw/ht` via
 `gvNodesize(info.size.x, info.size.y+1, GD_flip)`, exactly as C does. TB records
-unchanged (flip=false is a no-op). Result: `record-LR`/`record-TB` byte-match;
-**925/hashtable/records clipOverflow → 0**; corpus **byte-match 450→454**, 5
+unchanged (flip=false is a no-op). Result: `record-LR`/`record-TB` conformant;
+**925/hashtable/records clipOverflow → 0**; corpus **conformant 450→454**, 5
 graphs diverged→structural-match (b56, b57, triedds family), **0 regressions**,
 **clip-watch 15→4** (only fuzzer-garbage/diverged remain). Regression test:
 `src/common/record-flip.test.ts`.

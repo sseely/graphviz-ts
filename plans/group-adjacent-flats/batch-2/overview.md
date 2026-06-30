@@ -7,7 +7,7 @@ missions feared). T3 depends on T2.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T2 | Caller-side adjacent-flat grouping in the dispatch; turn the red test green | (orchestrator or backend/debugger) | `src/layout/dot/edge-route.ts` (+ a small helper if needed under `src/layout/dot/`) | T1 | [ ] |
-| T3 | Full regression: goldens byte-identical out-of-family + corpus survey net-improve; record per-id verdict deltas | debugger | `plans/group-adjacent-flats/findings-regression.md` | T2 | [ ] |
+| T3 | Full regression: goldens conformant out-of-family + corpus survey net-improve; record per-id verdict deltas | debugger | `plans/group-adjacent-flats/findings-regression.md` | T2 | [ ] |
 
 T2 touches the layout path — single writer, no parallel edits to `edge-route.ts`.
 
@@ -41,6 +41,6 @@ T2 touches the layout path — single writer, no parallel edits to `edge-route.t
 - `lizard` on changed files clean. C oracle cache restored native (AD-5).
 
 Exit criteria for the batch:
-- T1's red test is green; goldens byte-identical out-of-family; corpus survey
+- T1's red test is green; goldens conformant out-of-family; corpus survey
   net-improves with zero new diverges; `#241_0` residual closed (or the precise
   residual that remains is documented with its oracle delta).

@@ -24,6 +24,6 @@
   3. graph-label.ts: graphAttrInherited reads own attr ?? snapshot (no live walk).
 - **Result**: 2184 diverged → BYTE-MATCH (root label once; C2 black), 0
   regressions. 1323/1323_1 (label declared BEFORE nested clusters) still
-  byte-match; 2592 (Arial inherited before clusters) unchanged. byte-match
+  conformant; 2592 (Arial inherited before clusters) unchanged. conformant
   487→488. Supersedes the live-walk in [[1323-flat-adjacent-record-edge-done]].
-- **Confidence**: High — byte-match + cross-checked both order directions.
+- **Confidence**: High — conformant + cross-checked both order directions.

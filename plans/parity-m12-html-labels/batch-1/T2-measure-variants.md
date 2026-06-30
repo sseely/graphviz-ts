@@ -57,7 +57,7 @@ bold/italic; omitted = regular = today's behavior exactly.
   width and equals the LUT bold-table value
 - Given no flags argument, then results bit-identical to today
   (regression test against current values)
-- Given the suite + 72 goldens, then 0 failed / byte-identical (no
+- Given the suite + 72 goldens, then 0 failed / conformant (no
   existing caller passes flags yet)
 
 ## Observability / rollback

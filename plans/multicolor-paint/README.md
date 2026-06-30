@@ -37,7 +37,7 @@ back with a **merge commit** when all gates pass, on Scott's go-ahead.
   pass: exit 0 AND failed == 0 AND passed >= 1584 (grows as tasks add tests)
   on_fail: fix_and_rerun
 - command: OUTDIR=/tmp/mc-x npx tsx .probes/render-all.ts + diff vs pre-task baseline
-  pass: existing goldens byte-identical (97 until batch 4, ~97+N after)
+  pass: existing goldens conformant (97 until batch 4, ~97+N after)
   on_fail: stop
 - command: git diff --name-only HEAD~1..HEAD
   pass: within the task's declared write-set
@@ -53,7 +53,7 @@ Baseline at mission start: **1584 passed / 0 failed**, 97 goldens
 |-------|-------|--------|
 | 1 gradient | [G1 gradient resolution](batch-1/G1-gradient-resolution.md), [G2 gradient emitters](batch-1/G2-gradient-emitters.md), [G3 node+cluster gradient](batch-1/G3-node-cluster-gradient.md), [G4 graph bgcolor gradient](batch-1/G4-graph-bgcolor-gradient.md) | [x] |
 | 2 striped/wedged | [S1 striped + wedged node fills](batch-2/S1-striped-wedged.md) | [x] (striped byte-parity; wedged feature done, libm byte-divergence journaled) |
-| 3 multicolor edges | [M1 parallel-spline edges](batch-3/M1-multicolor-edges.md) | [x] (directed parallel edges byte-match; semicolon split-along-length + undirected routing are journaled follow-ups) |
+| 3 multicolor edges | [M1 parallel-spline edges](batch-3/M1-multicolor-edges.md) | [x] (directed parallel edges conformant; semicolon split-along-length + undirected routing are journaled follow-ups) |
 | 4 goldens | [T-gold goldens + C-oracle verify](batch-4/T-gold-goldens.md) (orchestrator inline) | [x] |
 
 Intra-batch sequencing (single-writer-per-file):
@@ -111,12 +111,12 @@ Intra-batch sequencing (single-writer-per-file):
 | G2 | gradient emitters | svg-gradient.ts (defs/stops) + emitStyle url branch + gradId counters |
 | G3 | node+cluster gradient | linear/radial fills, id-prefixed (node1_l_0 / clust1_l_0) |
 | G4 | graph bgcolor gradient | gradient page background (graph0_l_0) |
-| S1 | striped + wedged | striped byte-matches; wedged feature done (libm byte-divergence journaled) |
-| M1 | multicolor edges | directed parallel offset curves byte-match; semicolon/undirected journaled |
+| S1 | striped + wedged | striped conforms to; wedged feature done (libm byte-divergence journaled) |
+| M1 | multicolor edges | directed parallel offset curves conformant; semicolon/undirected journaled |
 | T-gold | goldens | 12 goldens vs dot 15.0.0; manifest 97→109 |
 
 **Final gates (full branch):** `tsc --noEmit` 0; `vitest run` 1697
-passed / 0 failed; prior 97 goldens byte-identical to the mission
+passed / 0 failed; prior 97 goldens conformant to the mission
 baseline; 12 new multicolor goldens pass at deterministic 0.01pt.
 
 **Reached C parity (goldens minted):** linear/radial gradient fills

@@ -18,6 +18,7 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Playground', link: '/playground' },
       { text: 'API', link: '/guide/api' },
+      { text: 'Conformance', link: '/conformance' },
       { text: 'Parity', link: '/parity' },
     ],
     sidebar: [
@@ -39,6 +40,7 @@ export default defineConfig({
         text: 'Reference',
         items: [
           { text: 'Playground', link: '/playground' },
+          { text: 'Conformance (what "match" means)', link: '/conformance' },
           { text: 'Known divergences', link: '/divergences' },
           { text: 'Parity dashboard', link: '/parity' },
           { text: 'Performance dashboard', link: '/perf' },

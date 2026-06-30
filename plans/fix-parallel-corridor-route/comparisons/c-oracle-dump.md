@@ -17,7 +17,7 @@
   applies a constant translation (≈ +29 x, y negated); structure is frame-invariant.
 
 ## Headline result — the divergence is PURE ROUTING
-`n0` and `n2` are **byte-identical in position** between headless-C and the port
+`n0` and `n2` are **conformant in position** between headless-C and the port
 (n0 polygon `351.39,-579.54 … 402.39,-537.94`; n2 ellipse `cx=848.89 cy=-203.39`;
 canvas `1111×628` both). So this is NOT a layout/x-coord divergence (unlike the
 superseded NaN case in `[[opposing-edge-spline-divergence]]`). It is entirely in

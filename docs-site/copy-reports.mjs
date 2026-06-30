@@ -18,8 +18,11 @@ const REPORTS = [
   {
     src: '../test/corpus/PARITY.md',
     dst: 'parity.md',
-    // ../../docs/known-divergences.md (from test/corpus) -> the site's /divergences page
-    rewrites: [[/\]\(\.\.\/\.\.\/docs\/known-divergences\.md\)/g, '](/divergences)']],
+    // ../../docs/{known-divergences,conformance}.md (from test/corpus) -> site pages
+    rewrites: [
+      [/\]\(\.\.\/\.\.\/docs\/known-divergences\.md\)/g, '](/divergences)'],
+      [/\]\(\.\.\/\.\.\/docs\/conformance\.md\)/g, '](/conformance)'],
+    ],
   },
   {
     src: '../test/corpus/PERF.md',

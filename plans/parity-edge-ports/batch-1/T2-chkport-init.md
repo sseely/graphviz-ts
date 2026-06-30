@@ -103,10 +103,10 @@ e.info.tail_port.p === { x: 0, y: 0 }
   `chkPort` is called with `(n, 'f0', 'ne')` (confirmed by stub)
 - Given an edge with `tailclip="false"`, when `initEdgeLabels`, then
   `e.info.tail_port.clip === false`
-- tsc clean; 0 vitest failed; 82 goldens byte-identical
+- tsc clean; 0 vitest failed; 82 goldens conformant
 
 ## Quality bar
 
 `npx tsc --noEmit` clean. `npx vitest run` 0 failed, ≥1466 passed.
-82 goldens byte-identical. Commit: `feat(T2): port chkPort and
+82 goldens conformant. Commit: `feat(T2): port chkPort and
 common_init_edge port block`.

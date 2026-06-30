@@ -5,13 +5,13 @@
 
 Fix the 8 **errored** dot-corpus cases — outright `RenderError` crashes during
 `dot` layout (surveyed in `test/corpus/PARITY.md`, errored bucket). Convert each
-`errored` → `byte-match`/`structural-match`/`diverged` with **0 per-id
+`errored` → `conformant`/`structural-match`/`diverged` with **0 per-id
 regressions**, measured by `test/corpus/survey.ts`. Faithful per CLAUDE.md "the C
 is sacred": root causes 1–3 are cluster/mincross invariant gaps that must be
 ported from C (`mincross.c`/`cluster.c`), never patched with defensive `?.`
 guards. Root cause 4 is an isolated parser-heuristic bug.
 
-Baseline (post arrowhead-geometry, dot 15.1.0): byte-match **249**, structural
+Baseline (post arrowhead-geometry, dot 15.1.0): conformant **249**, structural
 **222**, diverged **288**, errored **13**, timeout 9, oracle-error 15.
 
 ## Branch

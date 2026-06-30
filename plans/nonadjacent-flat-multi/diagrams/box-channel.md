@@ -33,5 +33,5 @@ flowchart TD
   Q -->|adjacent| R[collectAdjacentFlatGroup → makeFlatAdjEdges cnt=N]
   Q -->|non-adjacent NEW| S[collectNonAdjacentFlatGroup → routeFlatEdgeGroupFaithful cnt=N]
   S --> U[splines-flat-multi.ts:<br/>shared makeFlatEndBox<br/>loop i: topBoxes/bottomBoxes endStep= i+1·step, midStepY=stepy<br/>routeSplines → clipAndInstall edges i]
-  S -.cnt=1 reduces to.-> V[current routeFlatEdgeFaithful — byte-identical]
+  S -.cnt=1 reduces to.-> V[current routeFlatEdgeFaithful — conformant]
 ```

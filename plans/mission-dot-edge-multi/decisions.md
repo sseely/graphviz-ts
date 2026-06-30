@@ -11,13 +11,13 @@ spec, not a summary.
 
 ## AD-2: Extend the hybrid — new cases use the faithful pipeline only
 
-**Context:** Plain edges use a simplified fitter byte-exact to the 115 goldens;
+**Context:** Plain edges use a simplified fitter conformant to the 115 goldens;
 side-port/flat/steering edges use the faithful `routeSplines` pipeline (the
 project's standing AD2/AD3 hybrid).
 **Decision:** Route the NEW cases (multi-edge cnt>1, opposing pairs, labeled
 parallels, flat-labeled) through the faithful pipeline. Plain single edges keep
 the simplified fitter untouched.
-**Consequences:** The 115 goldens stay byte-identical (none uses these cases) —
+**Consequences:** The 115 goldens stay conformant (none uses these cases) —
 this is a hard gate. Do not replace the working plain-edge router.
 
 ## AD-3: Parity bar = dot-oracle pins at tol 0.5, verified vs built dot

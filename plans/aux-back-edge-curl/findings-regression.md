@@ -3,13 +3,13 @@
 ## Result: #241_0 CLOSED to the oracle; ZERO regressions
 
 The two fixes (T2 curl + the T3 arrow recovery) together move `#241_0`'s targeted
-geometry to **byte-match native `dot`**, and the corpus verdict from
+geometry to **conformant with native `dot`**, and the corpus verdict from
 **diverged → structural-match**, with **zero new diverges** anywhere.
 
 ## Curated goldens (`npx vitest run`)
 - **147 files / 1993 tests pass.** The `splines-flat-group.test.ts` xfail tripwire
   is now a normal passing test (`3:sw->2:se` = 7-pt curl, Y-range > 10pt).
-- **Zero out-of-`#241_0`-family golden churn** — every other golden byte-identical
+- **Zero out-of-`#241_0`-family golden churn** — every other golden conformant
   (the suite is all-green with no golden edits required).
 
 ## Corpus survey (AD-4 — the crux), per-id delta vs branch baseline
@@ -29,16 +29,16 @@ Baseline = `fix/group-adjacent-flats` (`/tmp/parity-baseline.json`):
 
 ## End-to-end confirm (`render-one` vs native oracle `dot 15.1.0`)
 `~/git/graphviz/tests/241_0.dot`, port vs native — **every node position and every
-edge path/arrow byte-matches the oracle EXCEPT one unrelated edge:**
+edge path/arrow conforms to the oracle EXCEPT one unrelated edge:**
 
-- `3:sw->2:se` (the mission target) — **byte-identical** path AND arrowhead:
+- `3:sw->2:se` (the mission target) — **conformant** path AND arrowhead:
   `d="M228.98,-10.86C…195.86,-3.95"` + `polygon points="193.93,-1.02 188.21,-9.93 198.24,-6.53 193.93,-1.02"`.
-- Cardinal `:e->:w` row (e.g. `3:e->4:w`, `8:e->9:w`) — **byte-identical**
-  (the +7.88 up-shift is restored; all nodes byte-match).
-- Forward corner `2:ne->3:nw` — **byte-identical** (unchanged, still a 7-pt curl).
+- Cardinal `:e->:w` row (e.g. `3:e->4:w`, `8:e->9:w`) — **conformant**
+  (the +7.88 up-shift is restored; all nodes conformant).
+- Forward corner `2:ne->3:nw` — **conformant** (unchanged, still a 7-pt curl).
 
 ### Documented residual (out of scope — NOT this mission)
-`241_0` stays `structural-match` (not `byte-match`) due to ONE pre-existing
+`241_0` stays `structural-match` (not `conformant`) due to ONE pre-existing
 divergence on a **different** edge:
 
 - `5:ne->8:nw` — a **non-adjacent flat edge** (box-channel routed, spans nodes

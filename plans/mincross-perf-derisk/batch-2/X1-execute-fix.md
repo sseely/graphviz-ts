@@ -53,7 +53,7 @@ render and be registered in `module-globals.fitness` allowlist
 - **Given** the prior vitest suite, **when** X1 lands, **then** `npm test` +
   `npm run typecheck` pass with zero expected-output changes.
 - **Given** 2108 rendered before/after, **when** SVGs are diffed, **then**
-  **byte-identical**.
+  **conformant**.
 - **Given** the named metric (pass count or `reorderInner` time), **when**
   re-measured, **then** it moves toward C's value as the verdict predicted.
 - **Given** a unit test, **when** run, **then** it pins the new behavior to C

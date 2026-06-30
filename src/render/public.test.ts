@@ -3,7 +3,7 @@
 /**
  * Tests for src/render/public.ts — multi-format render entry point.
  *
- * SVG parity: render(g,'svg') must be byte-identical to renderSvg(src,'dot')
+ * SVG parity: render(g,'svg') must be conformant to renderSvg(src,'dot')
  * for the same parsed graph.
  */
 
@@ -29,7 +29,7 @@ function parsedGraph() {
 // ---------------------------------------------------------------------------
 
 describe('render — format svg parity with renderSvg', () => {
-  it('produces byte-identical output to renderSvg for the same graph', () => {
+  it('produces conformant output to renderSvg for the same graph', () => {
     const g = parsedGraph();
     const fromRender = render(g, 'svg');
     const fromRenderSvg = renderSvg(DOT_SRC, 'dot');

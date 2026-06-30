@@ -62,7 +62,7 @@ image src/scale fields — names mirroring C struct fields (camelCase).
 - Given `<TD PORT="p1">`, then the cell stores the port name
 - Given invalid attr values, then warnings match C behavior
 - Given existing html inputs, then parse output unchanged; suite 0
-  failed; 72 goldens byte-identical
+  failed; 72 goldens conformant
 
 ## Observability / rollback
 

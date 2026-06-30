@@ -138,7 +138,7 @@ Each applicable input gets one verdict in `parity.json`:
 
 | verdict | meaning |
 |---------|---------|
-| `byte-match` | port SVG matches oracle within the `deterministic` tolerance (0.01). |
+| `conformant` | port SVG matches oracle within the `deterministic` tolerance (±0.01 on numeric values, exact non-numeric content). See [`docs/conformance.md`](../../docs/conformance.md). |
 | `structural-match` | same element tree; only numeric coordinate diffs above tolerance. |
 | `diverged` | a structural difference (missing/extra node, wrong tag, text mismatch). |
 | `errored` | the port threw (e.g. unported attribute, parser gap) — message captured. |

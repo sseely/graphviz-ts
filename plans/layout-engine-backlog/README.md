@@ -12,7 +12,7 @@ Read the per-engine gap files for full C citations and task outlines.
 
 - C source at `~/git/graphviz/lib/` tag **15.0.0** is the spec.
 - Quality bar per gap mission: `tsc --noEmit` exit 0, `vitest run`
-  passed >= 1466, goldens byte-identical for all unrelated engines.
+  passed >= 1466, goldens conformant for all unrelated engines.
 - One commit per task; merge commit (not squash) back to main.
 - Hook limits per file: 30 lines/fn, CCN 10, 5 params, 500 lines/file.
 
@@ -42,8 +42,8 @@ Reachability key:
 
 | Gap | Engine | Reachable via | Visual impact | Est. size | Suggested mission |
 |-----|--------|--------------|--------------|-----------|------------------|
-| DOT-1: `make_regular_edge` / pathplan spline routing | dot | **NEEDS RE-VERIFICATION** (NOT all edges — see note below) | UNCLEAR — standard multi-rank routing already matches C byte-for-byte; deferral likely bites only hard obstacle/port-constrained cases | ~1,200 LOC + pathplan port | `mission-dot-splines` |
-| DOT-2: `make_flat_edge` / flat spline routing | dot | ATTR (`rank=same` + label) | **LARGELY DONE (2026-06)** — flat label routing byte-exact to dot; residue in DOT-9/DOT-10 | done | `mission-dot-flat-labels` |
+| DOT-1: `make_regular_edge` / pathplan spline routing | dot | **NEEDS RE-VERIFICATION** (NOT all edges — see note below) | UNCLEAR — standard multi-rank routing already matches C conformant; deferral likely bites only hard obstacle/port-constrained cases | ~1,200 LOC + pathplan port | `mission-dot-splines` |
+| DOT-2: `make_flat_edge` / flat spline routing | dot | ATTR (`rank=same` + label) | **LARGELY DONE (2026-06)** — flat label routing conformant to dot; residue in DOT-9/DOT-10 | done | `mission-dot-flat-labels` |
 | DOT-3: `fillRanks` / `newrank` mode | dot | ATTR (`newrank=true`) | HIGH — rank assignment wrong for compound multi-graph layouts | ~250 LOC (isolated) | `mission-dot-newrank` |
 | DOT-4: `expand_leaves` | dot | ATTR (leafset clusters) | MEDIUM — LEAFSET nodes mispacked in rank slots | ~150 LOC | `mission-dot-newrank` (sub-task) |
 | DOT-5: `checkLabelOrder` / `recResetVlists` | dot | ATTR (flat labeled edges + mincross) | MEDIUM — label-node ordering not corrected; edge crossings may increase | ~200 LOC | `mission-dot-flat-labels` |
@@ -73,7 +73,7 @@ Reachability key:
 > **Orchestrator correction (2026-06-13, DOT-1):** The drafting agent
 > rated DOT-1 as "DEFAULT / CRITICAL — all regular edges are straight
 > lines." An oracle spot-check disproves that: `digraph { a->b->c; a->c }`
-> renders edge Beziers **byte-identical to `dot` 15.0.0**, including the
+> renders edge Beziers **conformant to `dot` 15.0.0**, including the
 > `a→c` edge bowing around `b`. The default rank-corridor spline path
 > (splines-route.ts + edge-route-poly.ts) is ported and working. The
 > `pathplan` deferral is real but narrower — it likely affects only hard

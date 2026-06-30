@@ -39,7 +39,7 @@ flowchart TD
 ## Constraints (stop / push-forward)
 
 **STOP when:** any golden churns (the reorder fires for 0 goldens, so they
-must stay byte-identical); `recResetVlists` ctx plumbing exceeds the
+must stay conformant); `recResetVlists` ctx plumbing exceeds the
 write-set; 2 consecutive gate failures; a fix needs a file outside the
 write-set.
 

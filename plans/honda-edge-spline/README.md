@@ -13,7 +13,7 @@ not honda-specific (ADR-3). This is the labeled-edge / fitter piece-count class.
 - Merge: `--no-ff` to `main`; **user pushes** (push is gated).
 
 ## What we already know (do not re-derive)
-- honda NODE positions byte-match native (x-coord NS fully fixed; full NS
+- honda NODE positions conformant with native (x-coord NS fully fixed; full NS
   solution + all 18 pivots match C). The residual is **purely edge-spline**.
 - Verdict stays "diverged": maxΔ ~27.9 (headless) / ~27.42 (pango),
   firstDiffPath `svg/g[1]/g[5]/path[1]/@d` (an edge path's `@d`).
@@ -27,7 +27,7 @@ not honda-specific (ADR-3). This is the labeled-edge / fitter piece-count class.
   n012->n011, n022->n009 each appear twice), several carry headlabel/edge
   labels. Fixture: `~/git/graphviz/tests/graphs/honda-tokoro.gv`.
 - DISPROVEN PREMISE: setting the weight=0 edges to weight=1 (two or all four)
-  does NOT make it byte-identical (still diverges ~27.7/26.3). weight=0 was
+  does NOT make it conformant (still diverges ~27.7/26.3). weight=0 was
   never the edge driver — do not chase it.
 - Class context + harness: `.agent-notes/xcoord-ns-lrconstraints-int-truncation.md`
   and memory notes `opposing-edge-spline-divergence`, `long-edge-undersegment-done`,
@@ -85,14 +85,14 @@ Per-edge piece-count diff recipe: see [batch-1/overview.md](batch-1/overview.md)
   group base = port-defined member; groupSize portcmp split. + unit tests
   (attr-init.test.ts).
 - **Result**: honda-tokoro **diverged → structural-match** (maxΔ 27.9 → 1.06; 0
-  piece-count `@d` diffs — the two target edges byte-match). **0 survey
+  piece-count `@d` diffs — the two target edges conformant). **0 survey
   regressions on BOTH baselines**; +8 improvements each (honda + the arrows
-  family `graphs-arrows`/`newarrows` & OS variants went diverged → byte-match;
+  family `graphs-arrows`/`newarrows` & OS variants went diverged → conformant;
   2193/NaN/b102/b143/ports/xx improved). typecheck + `npm test` (2424) green.
 - **Known residual** (sub-pixel, not a structural/grouping issue): n012→n011
   (two parallels with distinct samehead m005/m006) ends 1px off in y — a
   `round(y1)` tie in the ellipse-clip of the shared-port direction. Keeps honda
-  at structural-match rather than byte-match. Candidate follow-up: align
+  at structural-match rather than conformant. Candidate follow-up: align
   `buildSharedPort`/`shapeClip` ellipse-boundary rounding with C `bezier_clip`.
 - **Decisions flagged for review**: write-set expansion to init.ts + sameport.ts
   (approved); group-split + base-edge-selection added to splines.ts/splines-

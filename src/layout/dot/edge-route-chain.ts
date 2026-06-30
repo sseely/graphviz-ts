@@ -200,7 +200,7 @@ function finishChain(
 /**
  * Route a virtual-node chain through the faithful pipeline, accumulating the
  * make_regular_edge spline points. Below the straight_len threshold this emits a
- * single segment (byte-identical to the prior single-pass routing); a long
+ * single segment (identical to the prior single-pass routing); a long
  * collinear vnode run is split into spline-top + straight-middle + spline-bottom
  * via successive beginpath/endpath/routesplines calls, hugging the corridor.
  * `e` carries the real end ports (first beginpath, final endpath); the chain

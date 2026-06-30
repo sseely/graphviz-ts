@@ -56,7 +56,7 @@ until addXLabels places it); root has_labels gains NODE_XLABEL.
 - Given no xlabel attribute or an empty string, then n.info.xlabel is
   absent and the bit unset (C guards `str[0]`)
 - Given the existing suite + 67 goldens, then 0 failed and goldens
-  byte-identical (no label attrs → no behavior change)
+  conformant (no label attrs → no behavior change)
 
 ## Observability / rollback
 

@@ -9,7 +9,7 @@ multi-edge groups to it).
 
 > **T3 scope note (2026-06-16):** Implemented as a targeted dedup-by-orig, not a
 > full port of the C break-conditions (portcmp / MAINGRAPH / FLATEDGE-label).
-> The existing group-by-main-edge grouping is byte-exact on the 115 goldens;
+> The existing group-by-main-edge grouping is conformant on the 115 goldens;
 > adding break-conditions risks splitting golden groups (AD-2). None of the G1
 > corpus needs them. See the decision journal.
 

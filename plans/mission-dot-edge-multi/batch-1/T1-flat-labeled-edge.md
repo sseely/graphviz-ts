@@ -53,7 +53,7 @@ the journal) — this is the load-bearing nuance, do not stub around it.
 - **Given** the same graph at `EDGETYPE_LINE` (e.g. `splines=line`), **when**
   rendered, **then** the 7-point polyline matches dot within 0.5pt.
 - **Given** the full suite, **when** run, **then** ≥1789 pass, 0 fail, 115
-  goldens byte-identical.
+  goldens conformant.
 
 ## Quality bar
 

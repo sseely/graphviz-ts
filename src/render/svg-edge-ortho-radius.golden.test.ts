@@ -22,7 +22,7 @@ function edgeGroup(svg: string, id: string): string {
 describe('ortho radius — golden vs native graphs/radius.gv', () => {
   const svg = renderSvg(DOT, 'dot');
 
-  it('edge1 (x->y[radius=8]) emits 3 polylines + arrowhead, byte-matching native', () => {
+  it('edge1 (x->y[radius=8]) emits 3 polylines + arrowhead, conformant with native', () => {
     const g = edgeGroup(svg, 'edge1');
     expect(g).toContain(
       '<polyline fill="none" stroke="black" points="27,-71.83 27,-50.5 27,-26"/>',

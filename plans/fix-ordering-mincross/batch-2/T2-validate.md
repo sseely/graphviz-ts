@@ -56,4 +56,4 @@ GATE PASS before commit. One commit: `chore(T2): refresh parity baseline …`.
 ## Boundaries
 
 - **Never** refresh the baseline while the gate is failing; never accept a
-  byte-match regression to make a number look better.
+  conformant regression to make a number look better.

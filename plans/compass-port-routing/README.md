@@ -64,7 +64,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context). Fable 5 is disabled.
 STOP and wait for human input when:
 - A fix needs files outside the (T1/T2-determined) write-set.
 - ANY curated golden (`suite.test.ts` / `manifest.json`) changes — the
-  byte-exactness backstop; never modify or regenerate refs.
+  conformantness backstop; never modify or regenerate refs.
 - 2 consecutive gate failures on the same check; or the same code location is
   changed 3× without resolving the same failing check.
 - **AD-4:** the divergence is NOT an isolated compass-port endpoint/box branch
@@ -94,7 +94,7 @@ impact.
   `src/common/compass-port.ts`, gated to whole-node directional ports.
   - **Result:** survey **+8 / −0** — `#2168`+`2168_1..4` (diverged →
     byte/structural), bonus `1444`, `1444-2`, `graphs-b123`. 128→ goldens green
-    (1991 tests). `steering-east/west` now **byte-identical to the C ref** →
+    (1991 tests). `steering-east/west` now **conformant to the C ref** →
     promoted `iterative 0.5pt` → `deterministic`, retired their `portReference`
     drift-pins (user-approved; `refs-port/` files deleted).
 - **Follow-up (AD-4):** `#241_0` flat compass-port edges now have correct

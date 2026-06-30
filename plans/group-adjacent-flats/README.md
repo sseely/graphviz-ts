@@ -134,6 +134,6 @@ deltas, not bucket counts).
 ## Operational readiness
 N/A — offline browser layout library; no SLIs/dashboards/traces/on-call. This is
 a **behavior change on the layout path** (unlike the diagnosis): the safety net
-is the AD-4 regression gate (curated goldens byte-identical out-of-family +
+is the AD-4 regression gate (curated goldens conformant out-of-family +
 corpus survey net-improve). **Rollback: Reversible** (revert the merge commit).
 No API / schema / contract / backwards-compat impact (internal spline geometry).

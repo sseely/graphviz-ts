@@ -55,7 +55,7 @@ the known x-NS degeneracy floor and documented as an accepted delta (A-series in
 Instrumented `make_aux_edge` (C) vs `makeAuxEdge` (port) for NaN, with and
 without compress. Conclusions, all verified:
 
-1. **Compress is correct.** Simple compress graphs are byte-identical (0
+1. **Compress is correct.** Simple compress graphs are conformant (0
    displacement). For NaN, compress adds an *identical* 21 aux edges in both
    (with−without: C 471−450, port 483−462, both +21), and the weight-1000
    `ln→rn` edge matches exactly (`1152, 1000` both). Hypotheses 1 & 3 (compress

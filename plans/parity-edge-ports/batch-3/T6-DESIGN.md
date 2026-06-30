@@ -119,7 +119,7 @@ regular edges, so the simple path lands the bulk of the value first.
 ## 6. Byte-stability & tolerance
 
 - No-port edges: `PortRoute === undefined` → zero change. 115 goldens
-  byte-identical (hard gate, every task).
+  conformant (hard gate, every task).
 - Port goldens (T8): tolerance class **0.5pt** (AD6).
 - **Known risk (journal, don't chase):** the active fitter
   (`computeSpline` = shortestPath + pathplan) is NOT C's `routesplines`.

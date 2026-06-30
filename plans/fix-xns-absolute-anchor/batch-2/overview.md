@@ -20,7 +20,7 @@ the (set) main label vs `job.bb` (the spline/xlabel/head/tail triggers kept as
 HEAD-state to avoid suppressing on-canvas content — a spl.bb overlap test
 regressed neato/circo).
 
-**Outcome:** 2368_1 + 1624 byte-match; 2368 childCount divergence RESOLVED
+**Outcome:** 2368_1 + 1624 conformant; 2368 childCount divergence RESOLVED
 (11 edges, 9 paths, all 22 labels — was 6 edges). Survey GATE PASS, 0
 regressions. 2368 retains a SEPARATE pre-existing ~5pt flat-label-rank vspace +
 ~1pt x-NS-tiebreak residual (was masked by the childCount diff; documented in

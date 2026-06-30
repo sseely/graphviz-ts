@@ -48,7 +48,7 @@ golden-risk and never landed the fix. memory `bucket-fix-rebucketing`: judge by
 per-id verdict deltas, not bucket counts.
 **Decision:** Acceptance = (a) `#241_0` `3:sw->2:se` aux size 4→7 and its
 corpus verdict moves `diverged`→matches (or strictly smaller maxDelta); (b) EVERY
-curated golden byte-identical EXCEPT the intended `#241_0` adjacent-flat family;
+curated golden conformant EXCEPT the intended `#241_0` adjacent-flat family;
 (c) `test/corpus/survey.ts` shows ZERO new `diverged` verdicts corpus-wide. Any
 out-of-family golden flip or any new diverge ⇒ STOP. A bucket with a changed
 case is not "done" until its comparison verdict is recorded in the journal.

@@ -95,7 +95,7 @@ internal node x-coords are **uniformly +27** vs C (node1: 72 in C, 99 in port;
 likewise all nodes). Both compute the flat-end box `LL.x = coord.x + rw` with
 the SAME formula — so the +27 box-x delta this mission targeted is a
 **compensating internal-frame offset**, cancelled by the emit-time translate,
-NOT a bug. Proof: `1:se->6:sw`'s final X is byte-identical to the oracle
+NOT a bug. Proof: `1:se->6:sw`'s final X is conformant to the oracle
 (`M114.02 ... 374.6 ... 432.62`); only **Y** differs (0 vs -7.88).
 
 **Correction to the prior diagnosis:** flat-edge-routing-241 T1 read internal

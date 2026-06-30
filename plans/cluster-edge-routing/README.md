@@ -75,7 +75,7 @@ crash.
 
 **Fix:** `pruneForeignClusterNodes` (ported C node_induce first loop, reusing
 `agDeleteFromCluster` from defect C) — drops foreign nodes + their incident edges
-before `dot1Rank(cluster)`. After the fix b53's rank structure is **byte-identical
+before `dot1Rank(cluster)`. After the fix b53's rank structure is **conformant
 to C** (all 13 ranks, exact per-rank `n` and membership). No `cl_bound` port was
 needed — the corrupt rank was upstream, not in `maximal_bbox`.
 

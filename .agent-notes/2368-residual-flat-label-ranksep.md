@@ -6,7 +6,7 @@
   emission via faithful edge_in_box). After Batch 1 (remove normalizeXcoords) +
   Batch 2 (makeFlatLabeledEdge handled-on-degenerate, drop routeLoneEdge skip,
   edge_in_box overlap gate, fwd-normalize backward labeled flats), 2368_1 and
-  1624 byte-match; 2368's structural childCount divergence is RESOLVED.
+  1624 conformant; 2368's structural childCount divergence is RESOLVED.
 
 - **2368 before**: diverged, maxΔ 5, firstDiff `svg/g[1][childCount]` — port drew
   6 edges, C drew 11 (the degenerate + non-degenerate labeled-flat legs missing).
@@ -21,13 +21,13 @@
     136->196; everything sits ~5pt lower in the port. The discriminator is the
     vertical spacing of the edge-label ("abomination") rank between the top
     rank-group and the main flat band. 2368_1 (a single rank=same band) has no
-    such inter-group spacing and byte-matches; 2368 (three rank=same groups +
+    such inter-group spacing and conforms to; 2368 (three rank=same groups +
     edge labels) accumulates the 5pt.
   - Plus a ~1pt node-x delta (e.g. node 136 at x=255 port vs 256 C): x-coord NS
     tie-break among multiple optima (the 2371-class issue, see
     [[2371-is-xcoord-ns-solution-selection]]).
 
-- **Impact**: 2368 is dramatically improved (structural fix) but not byte-match.
+- **Impact**: 2368 is dramatically improved (structural fix) but not conformant.
   The residual is a SEPARATE, pre-existing root cause (edge-label rank vspace +
   x-NS tie-break) in the layout/ranking phase, orthogonal to the degenerate-label
   emission this mission targeted. Chasing it means flat-label-rank vertical
@@ -37,7 +37,7 @@
 - **Confidence**: High (C-instrumented label vnode identical; topmost element
   identified; matches pre-existing baseline maxΔ 5).
 
-## RESOLVED (mission plans/2368-byte-match): vspace was Issue-2 fallout; x = ED_dist; residual = Pshortestpath tie-break
+## RESOLVED (mission plans/2368-conformant): vspace was Issue-2 fallout; x = ED_dist; residual = Pshortestpath tie-break
 
 The 5pt vspace was NOT an independent ranking/ht issue. It was a CONSEQUENCE of
 the adjacent labeled-flat curve geometry being missing (Issue 2): the port drew
@@ -57,7 +57,7 @@ Fixes (all survey-gated, 0 regressions):
    `ED_dist` MAX-accumulation onto the flat class rep (flat.c:319-322): the port
    set dist per-edge, so a concentrate group whose rep is the unlabeled leg kept
    dist=0 → make_LR_constraints under-reserved (90 vs 92). Rewrote flat.ts
-   flat_edges dist pass faithful to C. **bbox + every node x now byte-match.**
+   flat_edges dist pass faithful to C. **bbox + every node x now conformant.**
 
 RESULT: 2368 diverged maxΔ65 → structural-match maxΔ10.22. The 1pt node-x delta
 this note predicted was the ED_dist bug, not x-NS optimal-face.
@@ -92,12 +92,12 @@ generated the oracle) bit-matches NO portable implementation — measured vs App
 sample: Math.hypot 98.4%, sqrt 89.5% — the graphviz regime is similar-magnitude
 dx≈dy, where sqrt wins). So reimplementing `hypot` from Arm would NOT help (84%).
 Same Apple-libm boundary already accepted for `pow` (src/common/arm-pow.ts; sfdp
-asserts 6-digit, not byte-match).
+asserts 6-digit, not conformant).
 
 Experiment (sqrt ptDist + strict `d>maxd`, faithful to C's code): corpus survey
 net-neutral (0 verdict/maxΔ/firstDiff changes across 790) BUT regressed 3
 oracle-pinned unit tests — `splines-routespl` #241_0 translation-equivariance +
-"knot on TAIL side", and `splines-flat-multi` cnt=3 byte-match-oracle. No
+"knot on TAIL side", and `splines-flat-multi` cnt=3 conformant-oracle. No
 comparison rule (tolerant or strict) matches BOTH #241_0 and 2368, because the
 port's FP != Apple's FP. So the tolerant (equivariant) tie-break is the correct
 deliberate design and **stands**. Reverted the experiment; tree clean; suite green.

@@ -21,7 +21,7 @@ p{margin:.6rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px
 <p class="status"><strong>2026-06-16.</strong> <code>digraph{a-&gt;b[label="1"]; a-&gt;b[label="2"]}</code>.
 Corpus baseline: a single wiggly path, pathΔ 23pt. After T2 routes labeled
 multi-rank edges through the faithful pipeline, <strong>edge "1" now matches dot
-byte-for-byte</strong> and both label texts render. The residual — edge "2"'s
+conformant</strong> and both label texts render. The residual — edge "2"'s
 straight-collapse and the label x-positions — is rooted outside this mission's
 write-set and is pinned at TS's actual output (AD-4).</p>
 <p class="legend">The drawings below are the actual rendered SVGs.</p>
@@ -47,7 +47,7 @@ write-set and is pinned at TS's actual output (AD-4).</p>
 multi-rank fitter. Routing labeled multi-rank edges through the faithful chain
 pipeline (<code>routeMultiRankEdgeFaithful</code> → <code>routeSplines</code>,
 gated on <code>ED_label</code> in <code>edge-route.ts</code>) bends the spline
-around the label virtual node exactly as dot does — byte-identical control
+around the label virtual node exactly as dot does — conformant control
 points. This is the G1 routing fix.</p>
 <p><strong>Edge "2" — dot's straight-run collapse is not ported.</strong> dot's
 <code>make_regular_edge</code> detects a straight run of virtual nodes

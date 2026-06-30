@@ -2,7 +2,7 @@
 # Batch 2 — SVG rotation emit
 
 Emit the rotation: `rotate(-job.rotation)` in the graph `<g>`, swap canvas W/H,
-and the rotated translate. This is the visible change; b68 flips to byte-match.
+and the rotated translate. This is the visible change; b68 flips to conformant.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
@@ -10,4 +10,4 @@ and the rotated translate. This is the visible change; b68 flips to byte-match.
 
 **Gate after batch:** typecheck + tests green; lizard clean; full survey diff vs
 `/tmp/parity.before.json` → **0 regressions on non-landscape graphs, b68 →
-byte-match**. NaN/proc3d may change maxDelta but must not enter a worse bucket.
+conformant**. NaN/proc3d may change maxDelta but must not enter a worse bucket.

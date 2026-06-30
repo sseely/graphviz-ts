@@ -20,7 +20,7 @@ enforcement models:
 Make the port enforce `ordering` the way C does — faithfully reproducing C's
 build_ranks install-order enforcement with weight-0 FLATORDER edges — clearing the
 ordering graphs still diverged after the construction fix, WITHOUT regressing the
-492+ byte-match graphs (now 493) or the node-order already corrected on b58.
+492+ conformant graphs (now 493) or the node-order already corrected on b58.
 
 ## Reproducer (pinned facts, from the prior mission)
 
@@ -53,7 +53,7 @@ Ordering graphs still diverged after the construction fix (this mission's target
 
 ## Constraints
 
-**Stop** when: any byte-match→worse regression (revert); 2 consecutive gate
+**Stop** when: any conformant→worse regression (revert); 2 consecutive gate
 failures on the same check; a fix needs files outside its write-set; 3 consecutive
 edits to one site without resolving it; the fix cannot make b58's 3/6/8 order match
 C without regressing others (deeper than scoped — document + stop). See
@@ -101,9 +101,9 @@ compare to the port's, before changing enforcement.
 - **Fix (B1):** `left2right` reads the matrix by `v.info.low` (one site). Kept the port's
   fused both-direction check; rejected the porting of C's `GD_flip` swap as behaviorally
   inert (both consumers test only `!= 0`). + 3 unit tests.
-- **Result (B2):** byte-match 493→496. Cleared: `graphs-b58` (diverged→structural-match,
+- **Result (B2):** conformant 493→496. Cleared: `graphs-b58` (diverged→structural-match,
   node order == C; 0.24px flat-spline residual), `{linux.x86,macosx,nshare}-ordering_dot1`
-  (diverged→byte-match). Canary `graphs-in` intact.
+  (diverged→conformant). Canary `graphs-in` intact.
 - **Residuals (documented, not chased, AD-5):** `{graphs,share,windows}-pgram`,
   `{graphs,share,windows}-trapeziumlr`, `1472` — still diverged on a SEPARATE secondary
   cause (maxΔ 690–1108px = x-coord/spline/shape, not flat-matrix enforcement). Left in the

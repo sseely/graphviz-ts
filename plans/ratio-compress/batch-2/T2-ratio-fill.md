@@ -14,14 +14,14 @@ T1 the wiring point exists; this task would populate `drawing` for `fill`.
 (`setRatio` → R_FILL).
 
 ## Corpus / risk
-`b22` (**byte-match today, without fill**), `polypoly` (structural 6.56),
+`b22` (**conformant today, without fill**), `polypoly` (structural 6.56),
 `jsort`/`pgram`/`trapeziumlr` (diverged ~700). **Primary risk: regressing b22.**
-That b22 byte-matches without fill suggests fill is a no-op for it (scale≈1); must
+That b22 conforms to without fill suggests fill is a no-op for it (scale≈1); must
 be confirmed against the oracle before activating. The three diverged fill graphs
 may improve.
 
 ## Why deferred
-Activating fill touches 5 graphs including a fragile byte-match (b22). Needs its
+Activating fill touches 5 graphs including a fragile conformant (b22). Needs its
 own baseline survey and per-graph oracle check — out of scope for ratio=compress.
 
 ## When taken up

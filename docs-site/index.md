@@ -16,7 +16,7 @@ hero:
       link: https://github.com/sseely/graphviz-ts
 features:
   - title: Faithful to C Graphviz
-    details: A line-by-line port of the canonical C implementation. The dot engine matches the native binary byte-for-byte on the golden corpus.
+    details: A line-by-line port of the canonical C implementation. The dot engine matches the native binary to a tight deterministic tolerance (±0.01 on coordinates, exact non-numeric content) on the golden corpus.
   - title: Browser-native, zero runtime deps
     details: No Java, no PlantUML server, no native binary, no WASM. The layout engine is TypeScript — bundle it and ship.
   - title: All eight layout engines

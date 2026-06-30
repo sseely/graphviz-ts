@@ -39,7 +39,7 @@ passing `it(...)` (remove `.fails`).
 of the saga. memory `bucket-fix-rebucketing`: judge by per-id verdict deltas.
 **Decision:** Acceptance = (a) the xfail tripwire flips to passing and `#241_0`
 moves `diverged`→matches (or strictly smaller maxDelta); (b) EVERY curated golden
-byte-identical except the intended `#241_0` family; (c) `survey.ts` shows ZERO
+conformant except the intended `#241_0` family; (c) `survey.ts` shows ZERO
 new `diverged` verdicts corpus-wide (errored↔timeout flakiness on already-failing
 ids excluded). Any out-of-family golden flip or any new diverge ⇒ STOP. Record
 the per-id delta table.

@@ -46,7 +46,7 @@ executor runs it directly.
    npx vitest run
    OUTDIR=/tmp/ep-refs npx tsx .probes/render-all.ts
    ```
-   Byte-compare all 82 existing refs — must be byte-identical.
+   Byte-compare all 82 existing refs — must be conformant.
    For each new fixture, compare TS output vs C ref at 0.5 pt
    tolerance; report any failures.
 
@@ -83,7 +83,7 @@ executor runs it directly.
 
 - Each new TS-rendered SVG matches its C oracle at ≤0.5 pt on every
   path control point
-- All 82 pre-existing golden refs are byte-identical to their state
+- All 82 pre-existing golden refs are conformant to their state
   before T1 ran
 - `npx vitest run` passes with 0 failed, ≥1466+N_new tests
 - `npx tsc --noEmit` exit 0

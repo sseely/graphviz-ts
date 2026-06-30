@@ -7,7 +7,7 @@
 - **Decision:** add `EstimateTextMeasurer` = `fontsize * estimate_text_width_1pt`
   (the existing raw, un-hinted, un-kerned function) with height `fontsize*1.20`
   (graphviz `LINESPACING`). This *is* graphviz `estimate_textspan_size`.
-- **Consequences:** byte-matches native dot run headless (spike: b69-min 0.00,
+- **Consequences:** conforms to native dot run headless (spike: b69-min 0.00,
   20/24 sample exact) → a deterministic, font-stack-independent reference.
 
 ## ADR-2 — Decouple layout rules from font metrics
@@ -17,7 +17,7 @@
   goldens (deterministic, cross-platform). Move **hinting/kerning/shaping/charset**
   fidelity to targeted unit tests against **bundled** fonts. Production uses the
   **system** measurer (host font).
-- **Consequences:** the layout corpus becomes a clean byte-exact pass/fail signal
+- **Consequences:** the layout corpus becomes a clean conformant pass/fail signal
   with no font noise; font fidelity is isolated and individually debuggable.
 
 ## ADR-3 — Side-by-side corpus migration, then cut over (NOT big-bang)

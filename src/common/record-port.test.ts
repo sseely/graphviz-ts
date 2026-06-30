@@ -73,7 +73,7 @@ describe('recordPort', () => {
 // the outer box is a rounded <path>; the field divider stays a <polyline>.
 // @see lib/common/shapes.c:record_gencode
 describe('record_gencode rounded outer box', () => {
-  it('Mrecord box is a rounded <path> byte-matching the oracle; divider unchanged', () => {
+  it('Mrecord box is a rounded <path> conformant with the oracle; divider unchanged', () => {
     const svg = renderSvg('digraph{a[shape=Mrecord,label="x|y"]}', 'dot');
     expect(svg).toContain('<polyline'); // field divider unchanged
     expect(svg).toContain(

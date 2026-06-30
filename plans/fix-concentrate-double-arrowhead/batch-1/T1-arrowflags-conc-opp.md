@@ -55,7 +55,7 @@ New behavior only when `e.info.conc_opp_flag === true`. Domain: `0|1`.
 ## Acceptance criteria (Given/When/Then)
 - Given `digraph{concentrate=true; A->B; B->A}`, when rendered to SVG, then the
   merged edge emits **two** black arrowhead polygons (one at each node boundary),
-  matching the headless oracle for `graphs-b135` byte-for-byte.
+  matching the headless oracle for `graphs-b135` conformant.
 - Given the same graph, when the edge spline `@d` is compared, then it is clipped
   at **both** ends (no unclipped tail overrun) — `b135` path matches the oracle.
 - Given any edge with `conc_opp_flag` unset, when `arrowFlags` runs, then the

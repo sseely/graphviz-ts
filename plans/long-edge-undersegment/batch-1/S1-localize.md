@@ -5,7 +5,7 @@
 ## Context
 
 Faithful port; `~/git/graphviz` is the spec. Mission `edge-spline-routing` made
-the port's edge routing order byte-identical to C, but the port still emits one
+the port's edge routing order conformant to C, but the port still emits one
 fewer cubic than the oracle on `sleep--runmem` (p3): port 3 / oracle 4, maxDelta
 0.48. The fitter `src/pathplan/route.ts` matches C `reallyroutespline` constants
 exactly, so the cause is the **box corridor** (barriers / `Pshortestpath` input)

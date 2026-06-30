@@ -54,7 +54,7 @@ formerly-empty rank, each installed into its rank's `v[]`.
   each gap rank got a `_new_rank` placeholder with the C field values.
 - **Given** a graph WITHOUT `newrank`, **then** `fillRanks` is never invoked
   (flag-gated) and rank arrays are unchanged.
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 
 ## Quality bar
 
@@ -63,4 +63,4 @@ Commit: `feat(T3): port fillRanks/realFillRanks for newrank placeholder ranks`.
 
 ## Observability / Rollback
 
-N/A. Reversible (revert; newrank-gated, goldens byte-identical).
+N/A. Reversible (revert; newrank-gated, goldens conformant).

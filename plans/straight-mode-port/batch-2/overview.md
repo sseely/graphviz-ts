@@ -8,7 +8,7 @@ loop cannot be committed working.
 |----|-------------|-------|--------|------------|------|
 | T2b | Add straight-mode branch to `routeChainSegmented` | implementation | `src/layout/dot/edge-route-chain.ts`, `src/layout/dot/edge-route-chain.straight.test.ts` | T1, T2a | [x] |
 
-Gate after batch: L5 byte-matches oracle; L3/L4 unchanged; `npx vitest run`
+Gate after batch: L5 conforms to oracle; L3/L4 unchanged; `npx vitest run`
 (all pass); `npx tsc --noEmit` clean; parity per-id deltas show 0 regressions.
 
 - [T2b](T2b-straight-mode.md)

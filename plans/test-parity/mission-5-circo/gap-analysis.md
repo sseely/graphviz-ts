@@ -25,7 +25,7 @@ baseline-after-m4.md). 6 circo goldens + the equal-radius unit test.
    (PS2INCH of the field-tree size); our recordInit leaves the
    neato defaults (0.75/0.5), which would starve largest_nodesize
    for circo-record.
-5. circogen is byte-identical 15.0.0..HEAD except the
+5. circogen is conformant 15.0.0..HEAD except the
    find_longest_path null-guard (15.0.0 form already noted in
    overview.md); our port must keep the guard.
 

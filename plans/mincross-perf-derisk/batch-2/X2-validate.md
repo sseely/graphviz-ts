@@ -36,8 +36,8 @@ and documents the outcome (project CLAUDE.md completion rule).
 ## Acceptance criteria
 
 - **Given** the post-fix survey, **when** diffed vs baseline, **then** 0 changed
-  verdicts and byte-match ≥ 312 / structural ≥ 256.
-- **Given** 2108 before/after SVGs, **when** diffed, **then** byte-identical.
+  verdicts and conformant ≥ 312 / structural ≥ 256.
+- **Given** 2108 before/after SVGs, **when** diffed, **then** conformant.
 - **Given** 2108 re-timed, **when** logged, **then** the comparison page records
   the new time vs native (14 s) and vs the pre-fix 84 s.
 - **Given** the mission, **when** complete, **then** the comparison page is

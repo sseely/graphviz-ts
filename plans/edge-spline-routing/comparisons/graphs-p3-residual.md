@@ -35,7 +35,7 @@ otherwise near-identical (maxDelta 0.48).
 
 ## Why this is NOT the T2 ordering bug
 
-The port's edge **routing order for p3 is byte-identical to C's**
+The port's edge **routing order for p3 is conformant to C's**
 `dot_splines_` order (verified by instrumenting the C route loop and diffing —
 all 14 edges in the same sequence). So `sleep--runmem` routes against the same
 corridor neighbours C uses; the one-fewer-piece result is a **separate residual

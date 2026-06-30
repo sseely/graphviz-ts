@@ -7,7 +7,7 @@ the C reference (see `decision-journal.md`).
 
 ## Task
 Faithfully port the C routing branch so the chosen case improves its verdict
-(`diverged → structural-match` or `byte-match`), guided by the issue's intent.
+(`diverged → structural-match` or `conformant`), guided by the issue's intent.
 Implement exactly what C does (AD-1). Add a test locking the corrected routing.
 
 1. Read the C function at `cRef` (+ callees); port the exact logic into
@@ -33,7 +33,7 @@ from the issue/MR.
   `@d` byte/structural-matches the oracle.
 - **Given** the survey, **when** re-run, **then** the case improves verdict and
   the per-id diff shows **0 regressions**.
-- **Given** `npx vitest run`, **then** the 128 goldens are byte-identical and all
+- **Given** `npx vitest run`, **then** the 128 goldens are conformant and all
   tests pass (incl. the new routing test).
 - **Given** the changed files, **then** `tsc`/`lizard` clean.
 
@@ -44,7 +44,7 @@ N/A.
 Reversible — revert the commit.
 
 ## Boundaries
-- **Always:** port C exactly; honor the issue's intent; keep goldens byte-identical.
+- **Always:** port C exactly; honor the issue's intent; keep goldens conformant.
 - **Never:** modify the curated golden suite; expand beyond the one case without
   a logged decision.
 - **STOP:** fix needs files outside the T3 write-set; same location changed 3×;
@@ -54,5 +54,5 @@ Reversible — revert the commit.
 `fix(T4): port issue-#<num> dot routing fix`.
 
 ## Quality bar
-tsc 0; vitest 0 failures + 128 goldens byte-identical; survey 0 regressions +
+tsc 0; vitest 0 failures + 128 goldens conformant; survey 0 regressions +
 target improved; lizard clean. Return only the structured result.

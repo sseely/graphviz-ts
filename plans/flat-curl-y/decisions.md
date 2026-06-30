@@ -15,7 +15,7 @@ paths BEFORE editing `src/`.
 Consequences: T3 fixes exactly the named cause(s).
 
 ## AD-3 — Oracle-pinned, curated gate untouched
-Context: 128 curated goldens are the byte-exactness backstop.
+Context: 128 curated goldens are the conformantness backstop.
 Decision: verify per-input vs the native oracle; judge by per-id verdict deltas
 (0 regressions); never modify `suite.test.ts`/`manifest.json` or regenerate refs.
 Consequences: a fix that regresses any id or changes any golden is rejected.

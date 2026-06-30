@@ -13,7 +13,7 @@ Recon facts (verified against the installed 15.0.0 oracle):
 - Default `overlap` for fdp is `"9:prism"` (xlayout.c DFLT_overlap):
   up to 9 tries of force-based `x_layout`, prism only if overlaps
   remain. **Prism never runs for any of the 6 golden inputs**
-  (`-Goverlap=9:` output is byte-identical to default) — do NOT port
+  (`-Goverlap=9:` output is conformant to default) — do NOT port
   prism/removeOverlapAs; throw/STOP comment if the fallback is reached.
 - The x_layout force-expansion pass IS load-bearing for all 6 tests
   (`-Goverlap=true` changes every output).

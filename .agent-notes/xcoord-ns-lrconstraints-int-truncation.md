@@ -21,21 +21,21 @@
   next;` (position-aux.ts:lrRankPair). C double→int assignment truncates toward
   zero; positions are always ≥0 so trunc == floor here. Faithful, derivable,
   no honda special-casing.
-- **Verification**: honda's entire x-coord NS solution now byte-matches C —
+- **Verification**: honda's entire x-coord NS solution now conforms to C —
   Stage 3 (pre-balance) + Stage 4 (post-LR_balance) named ranks identical, and
   ALL 18 pivots identical (count + sequence + virtual/slack refs). honda node
-  positions now byte-match native (28 node labels were off 5–7px → 0).
+  positions now conformant with native (28 node labels were off 5–7px → 0).
   Corpus: survey:gate PASS, 0 verdict regressions on BOTH baselines (headless +
   pango); **12 graphs improved diverged→match** (2193, graphs-NaN/b102/b143/
   ports/xx families). 2471 node positions improved ~2400px toward native.
 - **Confidence**: High (C int-truncation is a structural type fact; honda NS
-  byte-matches C end-to-end).
+  conforms to C end-to-end).
 
 ## RESIDUAL 1 (separate mission): honda edge-spline piece-count divergence
 
 honda still has verdict "diverged" (maxΔ ~27.9, firstDiffPath an edge `@d`)
 AFTER the x-coord fix. This is NOT x-coord NS:
-- Node positions byte-match C; the full NS pivot trajectory matches C.
+- Node positions conformant C; the full NS pivot trajectory matches C.
 - Only **2 of 40 edge paths** differ in bezier piece count (edge2: native
   2-seg / port 1-seg; edge27: native 2-seg / port 4-seg), plus coord deltas on
   labeled edges. The documented fitter piece-count / labeled-edge spline class

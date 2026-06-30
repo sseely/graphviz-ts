@@ -52,9 +52,9 @@ dispatch). Locked.
 
 - Given `{rank=same a b} a->b; a->b` (no ports, no labels), when routed,
   then both flats fan via `makeSimpleFlat` (distinct, non-overlapping
-  beziers) and match `dot -Tsvg` 15.0.0 byte-for-byte (oracle pin).
+  beziers) and match `dot -Tsvg` 15.0.0 conformant (oracle pin).
 - Given a single unlabeled adjacent flat, when routed, then all existing
-  goldens stay byte-identical.
+  goldens stay conformant.
 - Given `npx vitest run`, then pass count >= 1852 with zero regressions.
 
 ## Observability

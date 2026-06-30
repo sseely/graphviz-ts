@@ -10,16 +10,16 @@ and setting `info.dotroot = component` on the projected clones (in
 `pack-components.ts`, not cluster.ts). The remaining structural diff was the
 pre-existing `outputorder=nodesfirst` renderer gap, closed in `device.ts` +
 new `emit-walk.ts` (write-set expanded with user approval). Verified on synthetic
-flat + nested cluster fixtures. 2458/2682 stay byte-match; 2683 also improved.
+flat + nested cluster fixtures. 2458/2682 stay conformant; 2683 also improved.
 Residual: clustered-component pack POSITION offset from node-only pack bb
-(pack module, ADR-3) — harmless to the verdict; possible byte-match follow-up.
+(pack module, ADR-3) — harmless to the verdict; possible conformant follow-up.
 See [decision-journal.md](decision-journal.md).
 
 ## Objective
 
 Complete the dot `doDot` pack branch for **clustered** multi-component graphs —
 the deferred T3 of [`fix-pack-dot-2458`](../fix-pack-dot-2458/README.md). That
-mission landed the cluster-FREE pack path (2458 + 2682 → byte-match, 0
+mission landed the cluster-FREE pack path (2458 + 2682 → conformant, 0
 regressions, merged). Clustered multi-component graphs currently fall back to
 whole-graph layout via a `graphHasCluster` guard in `doDot`
 (`src/layout/dot/index.ts`). This mission removes that guard and makes a clustered
@@ -28,7 +28,7 @@ info back, matching headless dot 15.1.0.
 
 Targets: **2592** (`diverged` maxΔ=564) and **2683** (clustered, currently
 falls back) → structural-match, **zero survey regressions**, 2458/2682 stay
-byte-match.
+conformant.
 
 ## Why this is a separate mission (not finishable in fix-pack-dot-2458)
 

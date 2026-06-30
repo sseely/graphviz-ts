@@ -14,7 +14,7 @@
 ## AD-2: Batch-1 success is measured by the internal-coord trace, not the survey
 
 - **Context**: a correct anchor change does NOT alter final coords, so the survey
-  output is unchanged during Batch 1 (2368 stays diverged, 490 stay byte-match).
+  output is unchanged during Batch 1 (2368 stays diverged, 490 stay conformant).
 - **Decision**: Batch-1 done-criterion = port internal x-coords match C's
   (instrumented XORG/XNS probes converge) AND survey stays green (0 regressions).
 - **Consequences**: the survey is a *regression guard* in Batch 1, not a progress
@@ -22,14 +22,14 @@
 
 ## AD-3: Final coords are sacrosanct
 
-- **Context**: 490 graphs byte-match on final coords; that is the value already
+- **Context**: 490 graphs conformant on final coords; that is the value already
   banked.
-- **Decision**: any change that moves a final coordinate (byte-match→worse) is a
+- **Decision**: any change that moves a final coordinate (conformant→worse) is a
   STOP — it means the relative solution changed, which the anchor fix must never do.
 
 ## stop-conditions
 
-1. A pivot alignment changes the relative solution (any byte-match→worse). STOP.
+1. A pivot alignment changes the relative solution (any conformant→worse). STOP.
 2. A survey regression not resolved by the next candidate fix. STOP.
 3. Trace doesn't converge after exhausting T1–T5 (source outside candidate set). STOP + document.
 4. 2 consecutive gate failures on the same check, or 3 consecutive edits to the
@@ -54,5 +54,5 @@
 C: 376=-119 196=-29 256=43 316=115 76=205 (uniform -146 vs port).
 Port: 376=27 196=117 256=189 316=261 76=351, bb.LL.x=0.
 C also has slack(type2) at -120,-120,-71,44 and virtual(type1) at -38,66.
-`init_rank` byte-identical in both (non-negative); negative anchor from
+`init_rank` conformant in both (non-negative); negative anchor from
 simplex+LR_balance reranks → pivot order.

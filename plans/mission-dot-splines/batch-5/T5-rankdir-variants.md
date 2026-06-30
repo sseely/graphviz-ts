@@ -16,7 +16,7 @@ frame); this task verifies and fixes any residual.
 2. If residuals exist, fix the frame handling in `routeRegularEdgeFaithful` /
    `routeMultiRankEdgeFaithful` (the `GD_flip` / coordinate-rotation path) to
    mirror C. Reuse the flip handling already proven for flat side-port edges.
-3. Goldens byte-identical (the goldens include rankdir cases — guard them).
+3. Goldens conformant (the goldens include rankdir cases — guard them).
 4. Pin oracle tests: `rankdir=LR` long-span and LR fan, `rankdir=BT` chain, tol
    0.5. If no residual divergence remains, this task is pins-only — log that.
 
@@ -38,7 +38,7 @@ frame); this task verifies and fixes any residual.
   within 0.5pt.
 - **Given** `digraph{rankdir=LR; a->{b..f}}`, **then** no degenerate edge; all
   within 0.5pt.
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 
 ## Quality bar
 

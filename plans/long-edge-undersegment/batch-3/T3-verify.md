@@ -13,9 +13,9 @@ the journal.
 
 1. Regenerate: `npx tsx test/corpus/survey.ts` then `npx tsx test/corpus/dashboard.ts`.
 2. **Canary:** `graphs-p3` `sleep--runmem` matches the oracle's 4-cubic count and
-   flips forward (diverged → structural- or byte-match). For the rankdir_dot rows
+   flips forward (diverged → structural- or conformant). For the rankdir_dot rows
    S1 classified as this class, confirm their `path[1]` piece count now matches.
-3. **Regression floor (D4):** `byte-match ≥ 281`, **0 per-id regressions** vs
+3. **Regression floor (D4):** `conformant ≥ 281`, **0 per-id regressions** vs
    `main`'s `parity.json`; `errored`/`timeout` unchanged.
 4. **Reach (D5):** report each rankdir_dot row's verdict delta. Same-class rows
    must flip out of `diverged`; separate-class rows (D5) stay diverged — record
@@ -45,7 +45,7 @@ classification).
 
 - Given the regenerated survey, when inspecting `sleep--runmem`, then it matches
   the oracle's 4-cubic piece count and `graphs-p3` flips forward.
-- Given the survey vs baseline by id, then `byte-match ≥ 281` and **0 rows
+- Given the survey vs baseline by id, then `conformant ≥ 281` and **0 rows
   regressed**; `errored`/`timeout` unchanged.
 - Given the in-class rankdir rows, then they flip out of `diverged`;
   separate-class rows are documented as deferred.
@@ -63,7 +63,7 @@ N/A — survey is dev/test infra.
 
 Full-branch `tsc` + `vitest` green. Commit: `test(T3): refresh parity dashboard
 for long-edge under-segmentation fix`. Body: state the canary verdicts,
-byte-match delta, rankdir classification outcome, and any deferred residuals.
+conformant delta, rankdir classification outcome, and any deferred residuals.
 
 ## Boundaries
 

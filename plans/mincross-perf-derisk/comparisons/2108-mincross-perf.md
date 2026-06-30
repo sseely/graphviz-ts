@@ -4,7 +4,7 @@
 
 ## Outcome
 
-**Rescued partially: a per-op constant-factor speedup, byte-identical output.**
+**Rescued partially: a per-op constant-factor speedup, conformant output.**
 The mission diagnosed the 2108 slowdown as a **per-op constant factor** (the port
 runs the *identical* 1.59 billion `reorderInner` iterations as native C — see
 `../findings.md`), not an iteration-count gap. The fix therefore optimizes the
@@ -64,14 +64,14 @@ README STOP condition). So the achievable win is a constant factor, delivered.
 
 Full corpus survey (796 inputs) vs `parity-baseline.json`:
 
-- byte-match: **312 → 312** (floor 312 ✓)
+- conformant: **312 → 312** (floor 312 ✓)
 - structural-match: **256 → 256** (floor 256 ✓)
 - changed per-id verdicts: **0** (required 0 ✓)
-- **Result: GATE PASS** — output byte-identical corpus-wide.
+- **Result: GATE PASS** — output conformant corpus-wide.
 
 Primary-case proof: 2108 is a survey timeout (not byte-compared there), so a
 direct before/after self-diff (stash the fix, re-render, `cmp`) confirms the
-2108 SVG is byte-identical: **2108-before.svg == 2108-after.svg** (22,127,966
+2108 SVG is conformant: **2108-before.svg == 2108-after.svg** (22,127,966
 bytes). Combined with `svg_bytes` parity on b100/1718/b104 and 0/796 verdict
 changes, byte-identity (AD-3) is established.
 

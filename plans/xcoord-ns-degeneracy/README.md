@@ -15,9 +15,9 @@ honda-specific hack.
 
 ## What we already know (do not re-derive)
 - honda-tokoro diverges ONLY in within-rank cross-coord (cy in this LR graph);
-  ranks (cx) are byte-identical. Node groups shift 5/7px.
+  ranks (cx) are conformant. Node groups shift 5/7px.
 - Setting the two `weight="0"` edges (`n022->n004`, `n022->n008`) to
-  `weight="1"` makes native and port **byte-identical** → weight=0 slack is the
+  `weight="1"` makes native and port **conformant** → weight=0 slack is the
   driver.
 - `weight_class ?? 2` → `?? 0` (classify.ts:75) had **zero** effect (ruled out).
 - C runs the x-coord NS as `rank(g, 2, …)` (position.c:142) → balance mode 2 =
@@ -76,8 +76,8 @@ per user decision.**
   Fractional seed ranks perturbed slack/tight-edge detection → x-coord NS picked
   a different vertex of the weight=0 optimal face.
 - **Fix**: `Math.trunc(last + width)` in `lrRankPair` (position-aux.ts). One
-  site, C-faithful. honda's full NS solution now byte-matches C (Stage3/4 ranks
-  + all 18 pivots identical); honda node positions byte-match native.
+  site, C-faithful. honda's full NS solution now conforms to C (Stage3/4 ranks
+  + all 18 pivots identical); honda node positions conformant with native.
 - **Validation**: 2420 tests pass, typecheck clean, survey:gate **PASS**, **0
   verdict regressions on BOTH baselines**, **+12 graphs improved diverged→match**.
   2471 node positions improved ~2400px.
@@ -86,7 +86,7 @@ per user decision.**
 ### Known residuals (NOT x-coord NS — follow-ups)
 1. **honda edge-spline piece-count** (blocks honda's verdict): 2/40 edges differ
    in bezier pieces on labeled edges (splines.c). README premise that weight=1
-   ⇒ byte-identical was DISPROVEN (still diverges at weight=1). Needs its own
+   ⇒ conformant was DISPROVEN (still diverges at weight=1). Needs its own
    mission. See `.agent-notes/xcoord-ns-lrconstraints-int-truncation.md`.
 2. **2796 cluster shift**: already-diverged cluster graph (port emits +1 edge)
    shifts ~250px farther; uniform whole-cluster translation, no verdict change,

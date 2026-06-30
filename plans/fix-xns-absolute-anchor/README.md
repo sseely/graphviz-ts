@@ -3,7 +3,7 @@
 ## Objective
 
 Make the port's **internal (pre-`gvPostprocess`) x-coordinate frame** match
-Graphviz C's exactly — not just the relative layout (which already byte-matches).
+Graphviz C's exactly — not just the relative layout (which already conforms to).
 The x-coord network simplex (NS, `balance=2`/`LR_balance`, un-normalized) produces
 a solution that is a **perfectly uniform shift** of C's (e.g. +146 for corpus
 `2368_1`, +228 for `2368`): identical relative positions, different absolute
@@ -14,7 +14,7 @@ C leaves **spline-less edge labels untranslated** (`map_edge` early-returns when
 `ED_spl==NULL`); `edge_in_box` then draws such a label iff its un-normalized
 position overlaps the final clip. The port can't reproduce this until its internal
 x-anchor matches C. Aligning the anchor (Batch 1) + wiring the degenerate
-labeled-flat path (Batch 2) byte-matches `2368` and the opposing-labeled-flat
+labeled-flat path (Batch 2) conforms to `2368` and the opposing-labeled-flat
 family.
 
 Full root cause: `.agent-notes/2368-degenerate-labeled-flat-edge_in_box.md`.
@@ -31,11 +31,11 @@ repeat. Each step keeps the relative solution identical → final coords unchang
 
 ## Hard invariant (the whole mission rides on this)
 
-Batch 1 must NOT change any graph's **final** coordinates. The 490 byte-match
-corpus graphs stay byte-match throughout. Batch-1 success is measured by the
+Batch 1 must NOT change any graph's **final** coordinates. The 490 conformant
+corpus graphs stay conformant throughout. Batch-1 success is measured by the
 **internal-coordinate trace converging to C** (instrumented), with the survey
 staying green. Output only changes in Batch 2 (degenerate labels), where `2368`
-flips diverged→byte-match.
+flips diverged→conformant.
 
 ## Quality gates
 
@@ -48,7 +48,7 @@ flips diverged→byte-match.
 
 ## Constraints
 
-**Stop** when: a pivot alignment changes the relative solution (any byte-match
+**Stop** when: a pivot alignment changes the relative solution (any conformant
 regression); a survey regression isn't resolved by the next candidate; the trace
 doesn't converge after T1–T5; 2 consecutive gate failures on the same check; a
 write outside the write-set. See `decisions.md#stop-conditions`.
@@ -73,7 +73,7 @@ print by an env var, capture, then `git checkout` the C source and rebuild clean
 | [3](batch-3/overview.md) | Full survey + baseline refresh | [x] |
 
 > **Batch-0 finding re-scopes the mission.** The port's x-NS pivot order is
-> already bit-exact with C (T0 trace: internal frame byte-identical). The locked
+> already bit-exact with C (T0 trace: internal frame conformant). The locked
 > premise AD-1 ("anchor diverges due to NS pivot order") is empirically wrong.
 > The entire internal-frame divergence is the **port-only** `normalizeXcoords`
 > call in `dotPosition` (C has no such step). Batch 1 is now a single change —
@@ -105,19 +105,19 @@ re-scoped from instrumented evidence.**
 - **Tasks**: Batch 0 (T0), Batch 1 (re-scoped B1; T1–T5 no-op), Batch 2 (T6),
   Batch 3 (T7) — all complete. 5 commits on `feature/xns-absolute-anchor`.
 - **Key finding (re-scope)**: the port's x-network-simplex is ALREADY bit-exact
-  with C (T0 trace: internal `set_xcoords` frame byte-identical). AD-1 ("anchor
+  with C (T0 trace: internal `set_xcoords` frame conformant). AD-1 ("anchor
   diverges due to NS pivot order") was empirically false. The whole divergence
   was a port-only `normalizeXcoords` step C lacks. Batch 1 = remove it (not the
   planned NS-pivot replication).
 - **Delivered**: internal x-frame now == C; faithful `edge_in_box`/`overlap_label`
   emit gate replacing the band-aid skip; degenerate labeled flats draw/suppress
-  by clip overlap exactly as C. **2368_1 + 1624 byte-match** (the
+  by clip overlap exactly as C. **2368_1 + 1624 conformant** (the
   degenerate-labeled-flat core); **2368 childCount divergence resolved** (6→11
   edges, 9 paths, all 22 labels).
 - **Quality gates**: `tsc --noEmit` clean; `vitest run` 2467 pass / 1 skip;
   survey GATE PASS, **0 regressions, 0 clip-regressions** (verdict counts
-  unchanged: 492 byte-match / 198 structural / 89 diverged / 11 oracle-error).
-- **Not achieved / follow-ups**: full **2368 byte-match** is blocked by TWO
+  unchanged: 492 conformant / 198 structural / 89 diverged / 11 oracle-error).
+- **Not achieved / follow-ups**: full **2368 conformant** is blocked by TWO
   separate, pre-existing issues the childCount divergence had masked —
   (1) ~5pt flat-label-rank vertical spacing, (2) adjacent/merged labeled-flat
   channel geometry (straight-stub vs C curve, e.g. 376→76). Both are flat-edge

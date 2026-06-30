@@ -30,7 +30,7 @@
   for non-interacting graphs.
 
 ## ADR-4: Headless-oracle goldens; re-evaluate `ldbxtried` post-fix
-- **Context:** `n0->n1` byte-matches C once order is correct (proven with
+- **Context:** `n0->n1` conforms to C once order is correct (proven with
   recoverSlack disabled), but `n0->n2` keeps a ~1px Proutespline residual.
 - **Decision:** Refs via `GVBINDIR=/tmp/ghl dot -Tsvg`; flip the `ldbxtried`
   golden to its true post-fix verdict (byte / structural / knownResidual per the

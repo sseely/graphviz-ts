@@ -42,7 +42,7 @@ export function orthoRoundedPolylines(pts: Point[], radius: number): Point[][];
 
 ## Acceptance criteria (Given/When/Then)
 - Given graphs-radius edge1 spline + `radius=8`, When `orthoRoundedPolylines`
-  runs, Then it returns exactly 3 polylines whose points byte-match the three
+  runs, Then it returns exactly 3 polylines whose points conformant with the three
   native `<polyline>` point lists (vertical seg, horizontal seg, arc) —
   coordinate-for-coordinate.
 - Given an ortho spline with NO orthogonal corner, When run, Then it returns `[]`

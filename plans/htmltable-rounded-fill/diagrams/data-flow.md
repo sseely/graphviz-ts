@@ -26,5 +26,5 @@ sequenceDiagram
 The gradient machinery is unchanged; only which primitive carries the fill
 (`<path>` vs `<polygon>`) and the `stroke-width` attribute change. The renderer
 derives the gradient `x1/x2/y1/y2` from whichever shape it is given — proven
-byte-exact for the rounded case by `grdcluster` (a rounded gradient cluster
+conformant for the rounded case by `grdcluster` (a rounded gradient cluster
 control).

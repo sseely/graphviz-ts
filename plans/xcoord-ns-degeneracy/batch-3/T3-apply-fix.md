@@ -14,7 +14,7 @@ behaviour (see `decision-journal.md`). Apply it. The fix mirrors C
    the specific node cy values / NS balance outcome. Co-locate as
    `<fixed-file>.test.ts` or extend an existing NS/position test.
 4. Verify honda-tokoro: render port vs native, all node cy + all 29-ish edge
-   `path/@d` byte-match.
+   `path/@d` conformant.
 
 ## Verify
 ```
@@ -41,7 +41,7 @@ so `-Tsvg` output is clean. Final clean-oracle validation is T4.
 
 ## Acceptance criteria
 - Given the fix, when honda-tokoro renders, then every node `cy` and every edge
-  `path/@d` byte-matches native.
+  `path/@d` conforms to native.
 - Given the fix, when `npm run typecheck` runs, then no errors.
 - Given the fix, when `npm test` runs, then all pass (including the new test).
 - Given the code, when reviewed, then the change is a faithful C port with an

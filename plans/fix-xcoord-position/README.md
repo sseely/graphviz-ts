@@ -25,7 +25,7 @@ conversation decision log; the minimal repro is `repro/b69-min-noconc.gv`.
 
 ## Settled decisions (see decisions.md for ADRs)
 - **ADR-1** Reference measurer = raw `estimate_text_width_1pt` (no hint/kern,
-  h=`fontsize*1.20`) — byte-matches headless dot. Spike-proven.
+  h=`fontsize*1.20`) — conforms to headless dot. Spike-proven.
 - **ADR-2** Decouple: rules corpus uses the reference measurer vs **headless**
   goldens; kerning/shaping/charset move to targeted bundled-font tests.
 - **ADR-3** Corpus migration is **side-by-side, then cut over** (not big-bang).
@@ -41,7 +41,7 @@ conversation decision log; the minimal repro is `repro/b69-min-noconc.gv`.
   and *tests*, not sizing rules. Do not modify sizing geometry.
 - **Side-by-side migration (ADR-3):** never delete/replace the existing corpus or
   survey until the headless rules corpus is green and cut over in Batch 3.
-- **Determinism:** the reference + estimate paths must be byte-identical across
+- **Determinism:** the reference + estimate paths must be conformant across
   platforms (no system-font reads). Bundled-font tests read only committed fonts.
 - **Browser bundle must not pull node-canvas** — load it lazily/optionally.
 - Truth = the rules survey (reference vs headless goldens) + unit tests. Pre-existing
@@ -55,12 +55,12 @@ conversation decision log; the minimal repro is `repro/b69-min-noconc.gv`.
   vs `/tmp/parity.before.json` → **0 regressions** on the current corpus until
   the Batch-3 cutover. on_fail: STOP
 - **Rules gate (from Batch 0):** reference-measurer port vs headless goldens →
-  byte-exact except documented pre-existing divergences. on_fail: iterate (≤3×) then STOP
+  conformant except documented pre-existing divergences. on_fail: iterate (≤3×) then STOP
 - Browser build excludes node-canvas (Batch 1+): verify the browser entry has no
   static `canvas` import. on_fail: fix_and_rerun
 
 ## Stop conditions
-- The rules gate cannot reach byte-exact (after isolating pre-existing divergences)
+- The rules gate cannot reach conformant (after isolating pre-existing divergences)
   → STOP; the layout rules may not be as decoupled as the spike suggested.
 - Any **existing-corpus** regression introduced before cutover → STOP (side-by-side
   invariant violated).
@@ -77,7 +77,7 @@ conversation decision log; the minimal repro is `repro/b69-min-noconc.gv`.
 | Batch | Task | Writes | Gate |
 |-------|------|--------|------|
 | 0 | [x] [T0.1 EstimateTextMeasurer](batch-0/T0.1-estimate-measurer.md) | textmeasure.ts (+factory) | reference measurer exists, unit-tested |
-| 0 | [x] [T0.2 headless rules corpus (side-by-side)](batch-0/T0.2-headless-corpus.md) | test/corpus/* (new) | reference vs headless byte-exact (modulo pre-existing) |
+| 0 | [x] [T0.2 headless rules corpus (side-by-side)](batch-0/T0.2-headless-corpus.md) | test/corpus/* (new) | reference vs headless conformant (modulo pre-existing) |
 | 1 | [x] [T1.1 public setTextMeasurer + resolution chain](batch-1/T1.1-measurer-api.md) | textmeasure-factory.ts, context.ts, index.ts | API public; browser excludes node-canvas; LUT demoted |
 | 2 | [x] [T2.1 bundled-font measurement tests](batch-2/T2.1-bundled-tests.md) | test/fonts/*, test helpers | kern/ligature/charset unit tests pass |
 | 3 | [x] [T3.1 production wiring + docs](batch-3/T3.1-production.md) | factory, docs | Node→node-canvas, browser→canvas, warning advises install |

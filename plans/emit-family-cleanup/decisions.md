@@ -10,11 +10,11 @@
 ## Locked constraints (not decisions)
 
 - `emit-types.ts` is not touched in any task in this mission.
-- The 82 goldens must remain byte-identical throughout — the live
+- The 82 goldens must remain conformant throughout — the live
   render path (device.ts / svg*.ts) is not modified by this mission.
 - One commit per task; no WIP commits.
 - The safety proof is: `tsc clean + vitest >= 1466 + 82 goldens
-  byte-identical`. These three gates together constitute the
+  conformant`. These three gates together constitute the
   evidence that deletion was safe. Gate failure = stop, not fix.
 
 ## Operational readiness

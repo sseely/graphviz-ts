@@ -22,9 +22,9 @@ the unclipped spline. Same signature confirmed on `167` and `2087`.
 
 | Input | Current | After fix |
 |---|---|---|
-| `graphs-b135` | diverged (childCount) | byte-match (target) |
-| `167` | diverged (childCount) | byte-match / structural |
-| `2087` | diverged (childCount) | byte-match / structural |
+| `graphs-b135` | diverged (childCount) | conformant (target) |
+| `167` | diverged (childCount) | conformant / structural |
+| `2087` | diverged (childCount) | conformant / structural |
 | `2825`, `1453` | diverged (childCount) | improved → structural/byte |
 | `graphs-b15`, `graphs-b69` | diverged | improved; **retain** a separate known x-coord residual (see [[b69-concentrate-undermerge]]) |
 
@@ -42,7 +42,7 @@ a distinct sub-bug and is **out of scope** for this mission.
 - Two consecutive survey/test-gate failures on the same check.
 - The fix regresses any currently byte/structural-matching corpus input
   (survey 0-regression rule) and the cause is not immediately obvious.
-- `graphs-b135` does not reach byte-match after the fix AND the residual is not a
+- `graphs-b135` does not reach conformant after the fix AND the residual is not a
   pre-existing, separately-documented divergence.
 
 **Push-forward** (decide and log, don't stop):
@@ -83,10 +83,10 @@ concentrate edge now draws an arrowhead at both ends and the spline clips at the
 new tail end (one fix, both symptoms).
 
 - `graphs-b135`, `167`, `2087` → diverged → **structural-match** (goldens
-  `concentrate-b135`/`concentrate-167` byte-match the headless oracle).
+  `concentrate-b135`/`concentrate-167` conformant with the headless oracle).
 - `graphs-b69`, `1453` → arrowheads now correct, retain a separate
   childCount/x-coord residual.
-- `graphs-b15`, `2825` → byte-identical with/without the fix (no opposing-pair
+- `graphs-b15`, `2825` → conformant with/without the fix (no opposing-pair
   merge triggers there); divergence is unrelated to arrowheads.
 
 **Quality gates:** `npm run typecheck` exit 0; `npm test` 2403 passed (183 files,

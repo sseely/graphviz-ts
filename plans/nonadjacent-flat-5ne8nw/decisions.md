@@ -31,17 +31,17 @@ existing helpers; no new abstractions (CLAUDE.md YAGNI).
 structural-match, blocked only by this edge.
 **Decision:** Branch `fix/nonadjacent-flat-5ne8nw` off `main`. Do not revert or
 re-derive the curl/arrow fixes. The new equivariance test is the red test;
-`5:ne->8:nw` byte-match + `#241_0` structural→byte is the acceptance.
-**Consequences:** This mission delivers the final `#241_0` byte-match.
+`5:ne->8:nw` conformant + `#241_0` structural→byte is the acceptance.
+**Consequences:** This mission delivers the final `#241_0` conformant.
 
 ## AD-4: Full-corpus regression is the crux (highest blast radius of the saga)
 **Context:** `routeSplines` routes EVERY box-channel edge in the library (all
 multi-rank regular edges, all non-adjacent flats), not just the aux or back edges.
 memory `bucket-fix-rebucketing`: judge by per-id verdict deltas.
 **Decision:** Acceptance = (a) the new equivariance test passes and `5:ne->8:nw`
-byte-matches native `dot`; (b) EVERY curated golden byte-identical except the
+conforms to native `dot`; (b) EVERY curated golden conformant except the
 intended `#241_0` family; (c) `survey.ts` shows `#241_0` structural-match→
-byte-match (or strictly smaller maxDelta) AND ZERO new `diverged`/`structural`
+conformant (or strictly smaller maxDelta) AND ZERO new `diverged`/`structural`
 verdicts corpus-wide (errored↔timeout flakiness on already-failing ids excluded).
 Any out-of-family golden flip or any genuine new diverge ⇒ STOP. Record the per-id
 delta table.

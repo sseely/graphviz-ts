@@ -58,7 +58,7 @@ semantics; cite). GRAPH_LABEL bit on has_labels.
   postprocess semantics — match C, verify against
   `dot -Tsvg` viewBox for the same input)
 - Given labelloc="t", then top placement matches C
-- Given no graph label, then byte-identical 67 goldens
+- Given no graph label, then conformant 67 goldens
 
 ## Observability / rollback
 

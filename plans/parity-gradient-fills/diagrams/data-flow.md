@@ -25,5 +25,5 @@ sequenceDiagram
   Walk->>Job: popObj()
 
   Note over Job,SVG: solid fill node → FillType.Solid → fill="red" (render-styling path, unchanged)
-  Note over Job,SVG: no fill node → FillType.None → fill="none" (byte-identical to 82+ goldens)
+  Note over Job,SVG: no fill node → FillType.None → fill="none" (conformant to 82+ goldens)
 ```

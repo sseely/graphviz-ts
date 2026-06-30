@@ -42,7 +42,7 @@ After T2 the non-adjacent flat labeled edge emits its label. The ADJACENT case
   per AD-5 with a comparison page).
 - **Given** both adjacent and non-adjacent cases, **then** both are pinned as
   dot-oracle tests.
-- **Given** the full suite, **then** ≥1793 pass, 0 fail, 115 goldens byte-identical.
+- **Given** the full suite, **then** ≥1793 pass, 0 fail, 115 goldens conformant.
 
 ## Quality bar
 

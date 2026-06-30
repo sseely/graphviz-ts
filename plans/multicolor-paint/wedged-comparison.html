@@ -20,7 +20,7 @@ Wedged fills render correctly, but the elliptic-arc subdivision count differs: t
 <code>estimateError</code> lands at ~4.5e-6 in V8 vs &gt;1e-5 in glibc, straddling the 1e-5
 threshold — so the port emits <strong>fewer bezier segments per wedge</strong> than C
 (the "coord-pairs/path" counts below). The wedge geometry is visually equivalent; only the
-control points (and thus byte-for-byte parity with the glibc-generated refs) differ. The
+control points (and thus conformant parity with the glibc-generated refs) differ. The
 wedged golden is therefore excluded, not tolerance-pinned (a segment-count difference is
 structural, not within numeric tolerance).</p>
 

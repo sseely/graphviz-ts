@@ -29,4 +29,4 @@ fell back to the simplified fitter and the two flats overlapped as a
 single line. Pinned by
 `splines-flat-labeled.test.ts` → "DOT-9 — unlabeled parallel adjacent
 flats (makeSimpleFlat) vs dot 15.0.0". Full suite 1853 passed, all
-unrelated goldens byte-identical (single unlabeled flats unchanged).
+unrelated goldens conformant (single unlabeled flats unchanged).

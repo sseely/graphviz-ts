@@ -13,7 +13,7 @@
   `valid = false` (C uses `GD_rank(Root)`, not `g`, for valid).
 
 **Consequences:** Matches C bit-for-bit on transpose. The `valid` fix
-corrects stale `ncross()` after transpose. Goldens must stay byte-identical.
+corrects stale `ncross()` after transpose. Goldens must stay conformant.
 
 ## AD-2: trajectory-diff is the discovery method
 
@@ -27,10 +27,10 @@ re-diff, repeat.
 
 **Consequences:** Grounds Batch 3 in C ground truth rather than speculation.
 
-## AD-3: goldens are byte-exact from C — a churn means a bug
+## AD-3: goldens are conformant from C — a churn means a bug
 
 **Context:** Goldens are generated from the C binary. A faithful fix should
-keep them byte-identical.
+keep them conformant.
 
 **Decision:** If a fix that provably matches C churns a golden, the golden
 was generated before the gap existed or is stale — regenerate it from the C

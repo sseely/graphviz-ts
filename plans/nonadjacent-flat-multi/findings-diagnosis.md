@@ -6,7 +6,7 @@ REPRODUCED, not assumed.
 ## TL;DR
 For cnt≥2 non-adjacent flat edges between a same-rank node pair, C nests the splines
 (`(i+1)·Multisep/(cnt+1)`); the port routes each edge independently at `nodesep/2`,
-producing IDENTICAL overlapping splines. cnt=1 already byte-matches (it reduces to
+producing IDENTICAL overlapping splines. cnt=1 already conforms to (it reduces to
 the current code). ZERO corpus inputs trigger cnt≥2 — validated only synthetically.
 
 ## The divergence (oracle-confirmed)
@@ -59,10 +59,10 @@ end-step vs mid-step parameters.
 Across all 805 corpus inputs: 74 non-adjacent flat edges reach the box-channel
 branches, and **every one is cnt=1**. ZERO cnt≥2. So: (a) no real graph diverges
 today; (b) the fix is validated synthetically; (c) the regression bar is "the 74
-cnt=1 cases stay byte-identical" (cnt-loop with cnt=1, i=0 is the current code).
+cnt=1 cases stay conformant" (cnt-loop with cnt=1, i=0 is the current code).
 
 ## cnt=1 reduction (the safety proof)
 cnt=1 ⇒ `stepx = Multisep/2 = nodesep/2` (current), `(i+1) = 1` ⇒ end offset = `step`
 (current), middle = `stepy` (current). So the generalized cnt-loop with cnt=1 is
-byte-for-byte the existing single-route path. Any cnt=1 golden flip means the
+conformant with the existing single-route path. Any cnt=1 golden flip means the
 refactor introduced a bug, not a faithful change → STOP.

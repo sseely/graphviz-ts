@@ -3,7 +3,7 @@ import { compareSvg } from '../../../test/golden/compare.js';
 const port = readFileSync(process.argv[2],'utf8');
 const oracle = readFileSync(process.argv[3],'utf8');
 const cmp = compareSvg(port, oracle, 'deterministic');
-if (cmp.pass) { console.log('VERDICT byte-match'); process.exit(0); }
+if (cmp.pass) { console.log('VERDICT conformant'); process.exit(0); }
 const numeric = cmp.diffs.filter(d => d.delta !== undefined);
 const structural = cmp.diffs.find(d => d.delta === undefined);
 const maxDelta = numeric.reduce((mx,d)=>Math.max(mx,d.delta ?? 0),0);

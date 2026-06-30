@@ -14,7 +14,7 @@ A gap is worth promoting to a mission when:
 **✅ DONE — do NOT promote.** The REQUIRED pre-step (corpus diff vs the C
 binary) was run; the diverging subset was driven to zero by follow-on missions.
 The routing re-verification corpus (`.probes/route-corpus.ts`) is now **23 MATCH
-+ 2 near + 0 DIVERGE = 25/25 byte-exact** vs `dot` 15.0.0. DOT-1 (`make_regular_edge`
++ 2 near + 0 DIVERGE = 25/25 conformant** vs `dot` 15.0.0. DOT-1 (`make_regular_edge`
 + pathplan), DOT-1b (fitter retired), DOT-2 (flat edges), and the residue gaps
 (G1 opposing/labeled-parallel, G3 nested clusters, rankdir-LR, **G2** multi
 compass-port mincross tiebreak via `mission-dot-multiport`) are all closed and
@@ -24,7 +24,7 @@ The historical scoping below is retained for context only.
 
 **Correction (2026-06-13):** The original "DOT-1 is DEFAULT/CRITICAL — all
 edges are straight lines" rationale was disproven by an oracle check —
-standard multi-rank routing already matches `dot` 15.0.0 byte-for-byte
+standard multi-rank routing already matches `dot` 15.0.0 conformant
 (see gaps/dot.md DOT-1 and README correction). The 82 goldens are
 generated from the C binary, not the port, and they pass. So this is
 **not** confirmed as the top correctness gap.
@@ -48,7 +48,7 @@ the draft assigned it.
 3. Implement `make_flat_edge` in `src/layout/dot/splines-flat.ts`.
 4. Wire `clip_and_install` for both.
 5. Mint goldens for the newly-correct cases (existing 82 stay
-   byte-identical — they already match C).
+   conformant — they already match C).
 
 **Tasks (rough outline for mission brief):**
 - T1: Port `lib/pathplan/shortest.c` (visibility graph, Dijkstra on polygon obstacles)
@@ -76,7 +76,7 @@ circo/neato × dense graphs) diffed against the C binary (15.1):
   is attr-gated and unreachable at defaults (x_layout converges; comments
   in `fdp/xlayout.ts`, `sfdp/spring-driver.ts` are correct).
 - **Defaults are faithful.** fdp/sfdp/twopi/circo produce 0 overlapping
-  pairs; neato keeps overlaps at default AND matches C byte-for-byte.
+  pairs; neato keeps overlaps at default AND matches C conformant.
 - **The real (smaller) gap:** neato overlap-removal *modes* diverge — TS
   maps every `overlap=` value to VPSC, but C uses distinct methods
   (`false`/`prism` → prism scaling, `voronoi`, `scalexy`, `scan`). On

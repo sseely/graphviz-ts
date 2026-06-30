@@ -15,7 +15,7 @@ digraph{ {rank=same; a b} a:e->b:w[label="x"] }
 ## Port (this branch, after T1 + T2)
 
 `renderSvg(...)` emits `<text>x</text>` at **(72, −32.91)** within 0.5pt,
-and the spline matches byte-for-byte (DOT-11a, prior mission).
+and the spline matches conformant (DOT-11a, prior mission).
 
 ## Verdict
 

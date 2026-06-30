@@ -7,7 +7,7 @@ After the cluster-mincross fix (`mincross-clust-c-parity`, merged), 2471's
 ordering is correct but it still does not complete: a single `transpose()` call
 runs for >90s (V8 `--prof`: 98% in `transposeStep`→`transpose`→`mincrossStep`),
 while native C renders all of 2471 in 2.78s. The fix must make 2471 complete
-**without changing output** — every change is parity-preserving (byte-identical
+**without changing output** — every change is parity-preserving (conformant
 to C) or it is wrong.
 
 This is a prerequisite, not just next-in-sequence: x-coord assignment consumes
@@ -32,7 +32,7 @@ of three causes dominates (AD-4): **(a) pass-count**, **(b) non-convergence**,
 ## Success predicate (AD-1 + AD-4)
 
 1. `tests/2471.dot` renders to completion in TS.
-2. Output node order is **byte-identical to C** on every reproducer (oracle
+2. Output node order is **conformant to C** on every reproducer (oracle
    order-probe + zero golden churn) — the cardinal invariant.
 3. A mid-size benchmark graph shows a large transpose speedup vs the pre-fix
    bundle.

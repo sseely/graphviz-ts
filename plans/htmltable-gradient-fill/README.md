@@ -6,7 +6,7 @@
 
 Make HTML-like label tables emit **gradient** `bgcolor` fills (linear and
 radial) instead of collapsing them to a solid first-stop color. The port
-already emits graph/cluster/node gradients byte-exact; it drops the gradient
+already emits graph/cluster/node gradients conformant; it drops the gradient
 for `<TABLE>` and `<TD>` backgrounds, emitting `fill="yellow"` for
 `bgcolor="yellow:violet"`. The oracle emits ~73 gradients per grd* graph (3
 structural + ~70 table-cell); the port emits only the 3 structural ones. Wire
@@ -48,7 +48,7 @@ fields and auto-increments the `l_N` counter.
 - The fix would require touching `svg-gradient.ts` or the `l_N` counter (signals
   the renderer path is NOT already correct — re-investigate before proceeding;
   the premise is that node/cluster gradients prove it works).
-- A control byte-match case (grdlinear_node etc.) regresses and the cause is not
+- A control conformant case (grdlinear_node etc.) regresses and the cause is not
   a within-scope table-fill change.
 
 ### Push-forward (decide and log)
@@ -79,13 +79,13 @@ See [decisions.md](./decisions.md) — D1: gradient resolution lives in
 ## Outcome (2026-06-22)
 
 **Objective MET.** HTML-like tables/cells now emit gradient `bgcolor` fills
-(linear + radial) byte-matching the oracle. Commits: `1f18afa` (feat),
+(linear + radial) conformant with the oracle. Commits: `1f18afa` (feat),
 `1e3d1d3` (test).
 
 - Gradient counts verified against native `dot` 15.0.0 — all 5 grd* graphs emit
   the oracle's exact `<linearGradient>`/`<radialGradient>`/`fill="url(#…)"`
   counts (the ~70 dropped table-cell gradients per graph).
-- 2 goldens added (linear + radial), both byte-match the oracle. Manifest
+- 2 goldens added (linear + radial), both conformant with the oracle. Manifest
   154 → 156. Full suite 2285 / typecheck 0 / zero parity regressions.
 - **5 grd* corpus ids stay `diverged`** on a *separate pre-existing* gap — not
   the gradient. `style=rounded` tables emit `<polygon>` not `<path>` (gradient

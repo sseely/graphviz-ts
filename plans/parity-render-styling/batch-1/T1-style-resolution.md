@@ -85,7 +85,7 @@ mirror C. Document the chosen shape at the top of the file.
 - Given `color="#ff0000"`, when resolvePenColor, then "#ff0000";
   absent → "black"
 - Given the suite, then 0 failed (no caller wired yet → 82 goldens
-  byte-identical trivially; this file has no importers until batch 2)
+  conformant trivially; this file has no importers until batch 2)
 
 ## Observability / rollback
 

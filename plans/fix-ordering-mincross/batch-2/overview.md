@@ -5,8 +5,8 @@
 | T2 | Final full survey; assert 0 regressions and which of the 13 `ordering` graphs now match; document any secondary-cause residuals; refresh the parity baseline | debugger | `test/corpus/parity.json`, `test/corpus/parity-rules.json`, `test/corpus/PARITY.md` | T1 | [x] |
 
 **T2 outcome:** Survey GATE PASS, **0 regressions / 0 clip-regressions**. Of the ~13
-diverged `ordering` graphs, **1 cleared**: `graphs-in` (structural-match → byte-match;
-overall byte-match 492→493). The headline reproducer `b58` has its in-rank order
+diverged `ordering` graphs, **1 cleared**: `graphs-in` (structural-match → conformant;
+overall conformant 492→493). The headline reproducer `b58` has its in-rank order
 corrected for nodes 1,2,4,5,7 (node 7 now places 5 left of 4, matching C) but stays
 `diverged` on a **secondary cause** (nodes 3/6/8). Per AD-5 this residual is documented,
 not chased:
@@ -22,7 +22,7 @@ not chased:
 > flat-enforcement model to C's is out of scope for this mission.
 
 Baseline refreshed: `parity-probe.json` → `parity-rules.json` + `parity.json`;
-`PARITY.md` regenerated (byte-match 493). The residual `ordering` graphs remain in
+`PARITY.md` regenerated (conformant 493). The residual `ordering` graphs remain in
 the tracked-gap backlog (NOT promoted to accepted deltas) per the Batch-2 hygiene rule.
 
 Execution rule: run the full survey + rules-gate. Confirm GATE PASS, 0

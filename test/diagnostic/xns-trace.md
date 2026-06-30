@@ -93,7 +93,7 @@ Prints the first `(rank,order)` cell whose x differs, or confirms a full match.
 `xns-diff.mjs` reports **MATCH** on all 7 cells.
 
 **Conclusion.** The port's x-NS pivot sequence is already **bit-exact** with C:
-the internal x-frame at `set_xcoords` is byte-identical, virtual nodes included.
+the internal x-frame at `set_xcoords` is conformant, virtual nodes included.
 There is **no** NS pivot-order divergence to chase. The entire internal-frame
 divergence observed downstream (the uniform +146 shift recorded in the agent
 notes; node `376` landing at +27 instead of -119) is introduced by the
@@ -103,7 +103,7 @@ shifts it so the leftmost `NORMAL` node sits at x≈0.
 
 This re-scopes the mission: the fix lives in `normalizeXcoords`, not in `ns.ts`.
 The `XNS_NONORM=1` survey (normalize disabled) measures whether the step is
-load-bearing for the byte-match corpus. See the mission decision journal.
+load-bearing for the conformant corpus. See the mission decision journal.
 
 ## Deeper pivot trace (optional)
 

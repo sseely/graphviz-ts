@@ -20,5 +20,5 @@ before the copy-back surfaces it).
 - C aux label vnode: position (33,66.38) → reposition (33,45) → **after
   routing (11.71,45)** → label (19.96,45) → final (72,−32.91).
 - TS aux label vnode: stays (51,72) → label (60.75,59.25) → final (72,−54.2).
-- Spline byte-exact on main (DOT-11a). Only the label vnode x-reposition
+- Spline conformant on main (DOT-11a). Only the label vnode x-reposition
   is missing in TS.

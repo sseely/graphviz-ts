@@ -21,7 +21,7 @@ flowchart TD
   subgraph B3[Batch 3 — Regenerate]
     S[survey.ts] --> DB[dashboard.ts] --> R{0 regressions?}
   end
-  R -->|yes| DONE[byte-match increased]
+  R -->|yes| DONE[conformant increased]
   R -->|no| STOP[STOP + investigate]
 ```
 

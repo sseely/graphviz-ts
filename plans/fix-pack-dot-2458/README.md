@@ -80,7 +80,7 @@ boundary for a scope decision (see decision-journal T3 row).
   (gate: stable=672, improvements=2). tsc clean, full vitest green (2458 tests).
 - **T3** ⛔ HALTED (attempted, reverted to green T2) — the cluster-carry itself was
   implemented dot-locally (cccompsWithClusters + projectG + copyClusterInfo,
-  tsc-clean, 2458 stayed byte-match), but laying out a clustered component crashes
+  tsc-clean, 2458 stayed conformant), but laying out a clustered component crashes
   in the **cluster mincross core** via a cascade of component-vs-root assumptions
   (`rank.ts:expandRanksets` `g===g.root` vs C's `dot_root`; then
   `cluster.ts:mergeRanks`/`cluster-path.ts:makeSlots` root-rank indexing; likely

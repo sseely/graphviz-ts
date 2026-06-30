@@ -27,10 +27,10 @@ assumption on divergence: "my port differs from C here — find where exactly"
 
 Each fix is verified per-input against the cached native-oracle SVG via the
 existing survey harness (`render-one.ts` + `compare.ts`). The 3 segmentation
-inputs must reach `byte-match` or `structural-match`; the per-id verdict diff vs
+inputs must reach `conformant` or `structural-match`; the per-id verdict diff vs
 the pre-task `parity.json` must show **0 regressions**. The 128 curated goldens
 (`test/golden/suite.test.ts` / `manifest.json`) are a SEPARATE must-stay-green,
-byte-identical gate — never added to or modified.
+conformant gate — never added to or modified.
 
 ## AD-4 — Batch 2: recover intent from the issue + MR
 

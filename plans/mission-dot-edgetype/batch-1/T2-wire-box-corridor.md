@@ -42,12 +42,12 @@ committing. If reachable, note it for T3 scope expansion.
 
 - AD-1 (use the helper). Do NOT inline the straighten.
 - The default path is `EDGETYPE_SPLINE` → `routeRegularByType` delegates to
-  `routeSplines`, so default output is byte-identical (golden guard).
+  `routeSplines`, so default output is conformant (golden guard).
 
 ## Acceptance criteria
 
 - Given a default graph (no `splines`), when routed, then every golden stays
-  byte-identical (the dispatch is a pure pass-through for SPLINE).
+  conformant (the dispatch is a pure pass-through for SPLINE).
 - Given `splines=polyline` on a multi-rank graph, when rendered, then regular
   edge paths are polylines (routePolylines output), not spline beziers.
 - Given `splines=line` on an adjacent-rank graph, when rendered, then the
@@ -65,6 +65,6 @@ Reversible — revert the two edits.
 
 ## Quality bar
 
-tsc 0; vitest 0 failed + 115 goldens byte-identical (CRITICAL: a non-identical
+tsc 0; vitest 0 failed + 115 goldens conformant (CRITICAL: a non-identical
 golden = STOP); lizard clean on both files.
 Commit: `feat(T2): dispatch regular box-corridor edges on edge type`.

@@ -6,7 +6,7 @@ The mission objective (emit gradient `bgcolor` fills for HTML-like tables and
 cells) is **complete and verified**: after the fix the port emits exactly the
 same number of `<linearGradient>`/`<radialGradient>` defs and `fill="url(#…)"`
 references as the native oracle for all five `grd*` corpus graphs, and two new
-goldens (`dot-htmltable-grad-linear`, `dot-htmltable-grad-radial`) byte-match
+goldens (`dot-htmltable-grad-linear`, `dot-htmltable-grad-radial`) conformant
 the oracle.
 
 These five corpus graphs nevertheless remain `diverged` because each one also

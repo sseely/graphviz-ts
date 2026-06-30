@@ -114,18 +114,18 @@ const EXPECT_RECTANGLE = [
 // ─── tests ───────────────────────────────────────────────────────────────────
 
 describe("trapezoid — construct_trapezoids (C-oracle pinned, identity permute)", () => {
-  it("one segment: full trap table byte-matches C", () => {
+  it("one segment: full trap table conforms to C", () => {
     const tr = constructTrapezoids(1, buildOneSeg(), identity(1));
     expect(serialize(tr)).toEqual(EXPECT_ONE_SEG);
   });
 
-  it("triangle (3 segments): full trap table byte-matches C", () => {
+  it("triangle (3 segments): full trap table conforms to C", () => {
     const pts = [{ x: 0, y: 0 }, { x: 4, y: 0 }, { x: 2, y: 4 }];
     const tr = constructTrapezoids(3, buildPoly(pts), identity(3));
     expect(serialize(tr)).toEqual(EXPECT_TRIANGLE);
   });
 
-  it("rectangle (4 segments): full trap table byte-matches C", () => {
+  it("rectangle (4 segments): full trap table conforms to C", () => {
     const pts = [{ x: 0, y: 0 }, { x: 6, y: 0 }, { x: 6, y: 3 }, { x: 0, y: 3 }];
     const tr = constructTrapezoids(4, buildPoly(pts), identity(4));
     expect(serialize(tr)).toEqual(EXPECT_RECTANGLE);

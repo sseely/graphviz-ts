@@ -64,7 +64,7 @@ can't render. No clean e2e oracle pin exists.
 **Decision:** Correctness gate = a deterministic unit test of
 `fixLabelOrder`/`checkLabelOrder` (construct vnodes with conflicting
 intervals → assert the rank is reordered to interval order; non-conflicting
-→ unchanged). The full golden suite must stay byte-identical (the reorder
+→ unchanged). The full golden suite must stay conformant (the reorder
 fires for no golden).
 
 **Consequences:** Verifies the algorithm without a realistic triggering

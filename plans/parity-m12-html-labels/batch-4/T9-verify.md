@@ -54,7 +54,7 @@ golden selection. T10 mints ONLY cases T9 passed.
 - Given all per-slot + feature probes, then a per-case PASS/FAIL
   table with first-diff detail for any FAIL
 - Given a ported gap, then @see cites + its own tests
-- Given the suite + 72 goldens, then 0 failed / byte-identical
+- Given the suite + 72 goldens, then 0 failed / conformant
 
 ## Observability / rollback
 

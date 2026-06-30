@@ -18,7 +18,7 @@ corridor.
 `.agent-notes/parallel-corridor-fix-and-lone-recoverslack-followup.md`,
 memory `[[parallel-corridor-route-done]]`): `recover_slack` is byte-faithful;
 the miss is **routing ORDER**. Proven: port with `recoverSlack` disabled
-byte-matches C's 7-pt `n0->n1`.
+conforms to C's 7-pt `n0->n1`.
 
 **Investigation-first:** Batch 0 pins C's exact `edgecmp` order against an
 instrumented oracle and verifies the port's `edgecmp` reproduces it. Do not
@@ -27,7 +27,7 @@ dispatch files.
 
 ## Risk
 
-**HIGH — shared router, order-sensitive.** 395 graphs byte-match through the
+**HIGH — shared router, order-sensitive.** 395 graphs conformant through the
 two-pass structure. Unifying the pass changes the order in which every lone edge
 sees (a) `recover_slack`-moved vnodes and (b) neighbors' installed splines
 (`top_bound`/`bot_bound`). Expect broad survey churn; the 0-regression survey
@@ -104,13 +104,13 @@ All 6 tasks completed (T1.3 N/A as planned):
 | T1.2 Single-pass unify | ✅ | `dispatchEdgeGroup` routes lone edge in-place; `routeDotEdges` is skip-backstop |
 | T1.3 Comparator align | ✅ N/A | Port edgecmp == C; no comparator change needed |
 | T2.1 Survey + perf | ✅ | Gate PASS: 0 regressions, 17 headless improvements, focused golden GREEN |
-| T2.2 Baselines + close | ✅ | Pango baseline: byte-match 346→359 (+13), structural-match 265→252 (-13) |
+| T2.2 Baselines + close | ✅ | Pango baseline: conformant 346→359 (+13), structural-match 265→252 (-13) |
 
 ### Verdict deltas (pango baseline)
 
 | Before T1.2 | After T1.2 | Delta |
 |---|---|---|
-| byte-match: 346 | byte-match: 359 | **+13** |
+| conformant: 346 | conformant: 359 | **+13** |
 | structural-match: 265 | structural-match: 252 | **−13** |
 | diverged: 166 | diverged: 166 | 0 |
 | regressions: 0 | regressions: 0 | 0 ✓ |

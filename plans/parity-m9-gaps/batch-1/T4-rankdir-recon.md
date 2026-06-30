@@ -9,7 +9,7 @@ equivalent TB-case translation exists somewhere in the port (suspects:
 src/render/ or src/common/emit*, viewBox computation, or a per-engine
 translate). T6 (batch 2) will port gv_postprocess and needs to know
 exactly what to replace (AD2: prefer faithful replacement; hard gate =
-byte-identical port output for existing goldens).
+conformant port output for existing goldens).
 
 ## Task
 

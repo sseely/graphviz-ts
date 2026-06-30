@@ -20,7 +20,7 @@ localized and faithful to C.
 
 ## Acceptance criteria
 - Given each simple group, when fixed, then the affected cases' first-diff is
-  resolved and byte-matches the oracle.
+  resolved and conforms to the oracle.
 - Given a cross-platform family with one root cause, then one fix clears the
   family (verify each member).
 - Given the golden suite, then green; 0 per-id regressions.

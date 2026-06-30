@@ -2,14 +2,22 @@
 
 # Known divergences from C Graphviz
 
-graphviz-ts aims for **bit-for-bit fidelity** to the canonical C implementation.
-The C source is the specification; an unlisted difference is treated as a defect,
-not accepted behavior.
+graphviz-ts aims for the closest possible fidelity to the canonical C
+implementation. The C source is the specification; an unlisted difference is
+treated as a defect, not accepted behavior.
+
+> **What "match" means here.** The corpus parity verdict named `conformant`
+> is a **tight deterministic tolerance**, *not* literal byte-for-byte SVG
+> equality: numeric coordinates and paths must agree within **±0.01** and all
+> non-numeric content (tags, colors, text) must be exactly equal
+> (`compareSvg(…, 'deterministic')`). Throughout this document, "match" and
+> "conformant" refer to that tolerance verdict. Full definition:
+> [Conformance](./conformance.md).
 
 Where the output *does* differ, it falls into exactly one of three classes:
 
 1. **Accepted deltas** — differences we have investigated, understand to the root
-   cause, and have **deliberately chosen not to byte-match**. Each is bounded,
+   cause, and have **deliberately chosen not to make conformant**. Each is bounded,
    characterized, and justified below. These are not bugs and will not be
    "fixed" without a specific, separately-scoped reason.
 2. **Tracked long tail** — known gaps that *will* be closed, each with an
@@ -35,7 +43,7 @@ diverges, so this list cannot silently rot.
 
 ---
 
-## Accepted deltas (we deliberately do not byte-match)
+## Accepted deltas (we deliberately do not make conformant)
 
 We accept a delta — rather than chase byte-parity — only when **all** of the
 following hold:
@@ -45,7 +53,7 @@ following hold:
 - The difference is **sub-perceptual** and provably **bounded**.
 - A fix would have **disproportionate cost and blast radius** relative to the
   reward (typically: it would touch a shared primitive used by hundreds of
-  already-byte-matched graphs, risking regressions for a fraction-of-a-pixel
+  already-conformant graphs, risking regressions for a fraction-of-a-pixel
   gain).
 
 When we accept a delta we characterize it here so consumers are never surprised.
@@ -63,7 +71,7 @@ floating-point delta is covered in **A3** below.
 depend on floating-point rounding — specifically fused multiply-add (FMA) and
 `Math.pow`, which can differ across JavaScript engines and CPU architectures. The
 port matches C's operation order where it can (`src/common/fma.ts`,
-`src/common/arm-pow.ts`), but exact, byte-identical reproduction of these layouts
+`src/common/arm-pow.ts`), but exact, identical-coordinate reproduction of these layouts
 is **not guaranteed cross-platform**. The divergence is in fine node coordinates;
 topology is preserved and positions agree within a small epsilon.
 
@@ -149,7 +157,8 @@ at a font.
 **The seam also lets us *prove* a residual is 100% measurement, not algorithm.**
 Because the measurer is swappable, we can take one further step and feed the port
 the **exact widths C measured** (captured from the oracle), bypassing the
-estimator entirely. If the layout then reproduces C **bit-for-bit**, the
+estimator entirely. If the layout then reproduces C **exactly (within the
+deterministic tolerance)**, the
 divergence is provably upstream in measurement with *zero* contribution from the
 code under test. The `NaN` / `ratio=compress` case above is precisely this
 experiment: forcing the 9 mismeasured node half-widths to C's values collapses
@@ -202,7 +211,7 @@ and string would require replicating its metric tables, hinting, and rounding �
 large, fragile, and still not guaranteed exact. Critically, the text measurer is
 a **shared primitive**: every label in the corpus flows through it. Adjusting it
 to win one string risks regressing the hundreds of graphs that currently match
-byte-for-byte, for a sub-perceptual reward. The affected graphs remain
+within tolerance, for a sub-perceptual reward. The affected graphs remain
 structural-match, which is the correct bar for them.
 
 > If text-metric fidelity is ever pursued as its own effort, the target is
@@ -283,7 +292,7 @@ control point), where C's tie broke toward the opposite corner:
 
 ![2368 376->76 arc: green = C, red = graphviz-ts](/img/2368-376to76-overlay.png)
 
-Everything else is byte-identical — same bounding box (608×148), node positions,
+Everything else matches within tolerance — same bounding box (608×148), node positions,
 labels, arrowheads, and all other edges. The full renders are visually
 indistinguishable:
 
@@ -296,7 +305,7 @@ to the first index), so it draws *every* such arc the same way regardless of
 position — it is self-consistent, and matches C on the arcs where C's noise also
 keeps-first (e.g. `256->436`, and `241_0 5:ne->8:nw`), diverging only where C's
 noise flips the other way (`376->76`). Endpoints, arrowhead target, the other
-edges, all nodes, labels, and the bounding box are byte-identical; only the
+edges, all nodes, labels, and the bounding box match within tolerance; only the
 interior control points of the one arc move (~1–2 pt at the belly).
 
 **Why accepted.** Apple's `hypot` is no more reproducible across JS engines and
@@ -314,8 +323,9 @@ a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 
 ## Tracked long tail (`dot` attribute & edge-case)
 
-At **defaults**, the `dot` engine matches the C binary byte-for-byte on the
-golden corpus. The remaining differences are the **long tail of attributes and
+At **defaults**, the `dot` engine matches the C binary to a tight deterministic
+tolerance on the golden corpus (the `conformant` verdict; see the note at the
+top). The remaining differences are the **long tail of attributes and
 edge cases** — the historically hard part of any Graphviz port. Unlike the
 accepted deltas above, these *will* be closed; they are tracked live, with
 counts, in
@@ -329,7 +339,7 @@ counts, in
 | **parser-gap** | A small number of DOT inputs the parser does not yet fully accept. |
 
 If your graph uses only common attributes and the `dot` engine, you are almost
-certainly on the byte-exact path. If a layout looks wrong, check `PARITY.md` for
+certainly on the deterministic-tolerance match path. If a layout looks wrong, check `PARITY.md` for
 that input class — it is likely a tracked item with an oracle-pinned fix mission,
 not an unknown.
 
@@ -357,7 +367,7 @@ delta (x-network-simplex / compass-port), not an arrowhead defect:
   the `b69-concentrate-undermerge` agent note for the x-coord root cause.
 - **`1453`, `2825`** — still diverge on a top-level `element-count` cause
   unrelated to the conc_opp_flag arrowhead (for `2825` the port output is
-  byte-identical with and without the arrowhead fix — no opposing-pair merge is
+  identical with and without the arrowhead fix — no opposing-pair merge is
   triggered there).
 
 These are tracked x-coordinate / structural items, **not** arrowhead bugs.

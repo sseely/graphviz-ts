@@ -4,7 +4,7 @@
 
 - **Context**: 1644 (graph g {1--2;2--3;4--3;5--3;3--1}) structural-match maxΔ
   ~0.04. Only the `3--1` edge diverges — the lone multi-rank BACK edge (tail
-  rank2 > head rank0); the 4 adjacent-rank edges byte-match. Nodes byte-match.
+  rank2 > head rank0); the 4 adjacent-rank edges conformant. Nodes conformant.
 - **Disproven hypothesis (do NOT re-try)**: I suspected the back-edge path's
   custom clip (`reverseClipBackChain` → `bezierClipNode`/`nodeInsideFn`,
   edge-route-clip.ts) diverged from the faithful `clipAndInstall` (`bezierClip`,
@@ -23,13 +23,13 @@
   ~0.03 in the final bezier.
 - **Verdict**: sub-pixel back-edge chain-routing fidelity, single graph, 0.03.
   Not worth chasing alone.
-- **Confidence**: High — empirical (refactor byte-identical; center-snap hack
+- **Confidence**: High — empirical (refactor conformant; center-snap hack
   worse) pins it to pre-clip routing, not clip.
 
 ## dfa family CONFIRMED same class (2026-06-28)
 
 - dfa (graphs-dfa + share/windows/linux variants, ~0.33 maxΔ): 8 diverging edges,
-  all the BACK direction of labeled 2-cycles (start->n1 forward byte-matches;
+  all the BACK direction of labeled 2-cycles (start->n1 forward conforms to;
   n1->start diverges). The edge LABEL creates a vnode at an intermediate rank, so
   start(rank0)↔n1(rank2) span 3 ranks → n1->start is a MULTI-RANK back edge →
   `routeBackEdge` (SAME router as 1644). So dfa == 1644 class, larger magnitude.
@@ -72,9 +72,9 @@ Findings for dfa n1->start (the straight back edge, pn=4):
 - Therefore the 0.26-0.33 enters in the CLIP step: same pre-clip spline, but the
   port's bezier_clip lands the node-boundary crossing ~0.26 off from C's. Both
   port clip stacks (bezierClipNode and clipAndInstall/bezierClip) agree with each
-  other (1644 refactor was byte-identical), so the port's clip differs from C's
+  other (1644 refactor was conformant), so the port's clip differs from C's
   bezier_clip despite identical 0.5 tolerance (splines.c:146 == bezierClipLocal).
-- NOTE: the 1644 clipAndInstall refactor was tested only on 1644 (byte-identical).
+- NOTE: the 1644 clipAndInstall refactor was tested only on 1644 (conformant).
   It was NOT tested on dfa — dfa's head has an ARROW (directed) while 1644 is
   undirected, so the arrow-clip path differs and the refactor's effect on dfa is
   unverified.
@@ -87,7 +87,7 @@ Findings for dfa n1->start (the straight back edge, pn=4):
 ## Leading hypothesis after full investigation (2026-06-28) — clip PARAMETERIZATION
 
 Ruled out this session:
-- clipAndInstall refactor for back edges: REJECTED. 1644 byte-identical (no help);
+- clipAndInstall refactor for back edges: REJECTED. 1644 conformant (no help);
   dfa WORSE (0.33→50.9) — clipAndInstall's arrow clip assumes forward orientation,
   the back-edge reversal breaks directed-edge arrow geometry.
 - penwidth inside-test: NOT it. Both port (makeEllipseInsideFn) and C use ry+pw/2
@@ -150,7 +150,7 @@ reverseClipBackChain / applyBackEdgeArrows / clipCompoundTail/Head /
 faithfulBackFwdPoints (all dead).
 
 RESULT: 10 graphs structural-match → BYTE-MATCH (dfa + triedds families, 1644,
-1328, graphs-ER), 0 regressions, gate clean. byte-match 476→486.
+1328, graphs-ER), 0 regressions, gate clean. conformant 476→486.
 NOTE: the earlier clipAndInstall refactor attempt failed because it reversed the
 pts AND installed on e (not fwdEdge) without swapSpline — the orientation, not
 the clip stack, was the issue.

@@ -6,7 +6,7 @@
   graph (both forcing `vStart>0` on some rank). Compare their mincross order to
   C with the fingerprinted dump.
 - **Consequence:** If a small windowed graph diverges/dups → Layer 2 is a
-  `reorder` port bug with a fast loop. If all small repros are byte-identical →
+  `reorder` port bug with a fast loop. If all small repros are conformant →
   Layer 2 is scale/density-dependent and must be diagnosed on 2471. Either way
   the search space collapses.
 

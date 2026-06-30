@@ -29,22 +29,22 @@
 - **Decision**: pursue ONLY if 2368 still diverges by that delta AND a localized,
   low-risk fix exists. Otherwise mark T3 a no-op and document the residual.
 - **Consequences**: avoids dragging the deep x-NS optimal-face work into a 1pt
-  residual. 2368 may close to "≤1pt x-NS residual" rather than perfect byte-match
+  residual. 2368 may close to "≤1pt x-NS residual" rather than perfect conformant
   — an acceptable outcome if the alternative is high-risk.
 
-## AD-4: Hard invariant — the 492 byte-match corpus stays byte-match
+## AD-4: Hard invariant — the 492 conformant corpus stays conformant
 
-- **Context**: both fixes touch geometry that currently byte-matches on many
+- **Context**: both fixes touch geometry that currently conforms to on many
   graphs.
-- **Decision**: full survey after EVERY change; any byte-match→worse is STOP +
+- **Decision**: full survey after EVERY change; any conformant→worse is STOP +
   revert the change.
-- **Consequences**: 2368 byte-match is never bought at the cost of a regression
+- **Consequences**: 2368 conformant is never bought at the cost of a regression
   elsewhere. ~17 min/iteration accepted. If a faithful-to-C fix is impossible
   without regressing others, the divergence is deeper than scoped → stop.
 
 ## stop-conditions
 
-1. Any byte-match→worse regression in the survey. STOP + revert that change.
+1. Any conformant→worse regression in the survey. STOP + revert that change.
 2. 2 consecutive gate failures on the same check. STOP.
 3. A fix needs to write outside its declared write-set. STOP.
 4. 3 consecutive edits to the same site without resolving it. STOP (deeper
@@ -64,7 +64,7 @@
 
 ## Ground-truth data (2368, instrumented in the prior mission)
 
-- C label vnode for 256→316 = (20.0, 40.4), ht 9.6, lw/rw 3.3 — **byte-identical
+- C label vnode for 256→316 = (20.0, 40.4), ht 9.6, lw/rw 3.3 — **conformant
   to port** (so Issue 1 is rank spacing, not label vnode placement).
 - 376→76: C path = `M273.31,-4.56 C268.33,-3.14 263.11,-1.9 258.11,-1.15
   250.49,0 242.34,-0.98 234.83,-2.8` (7-pt arc); port =

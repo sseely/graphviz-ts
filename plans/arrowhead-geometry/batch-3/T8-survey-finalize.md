@@ -5,14 +5,14 @@ Measure the improvement and prove 0 regressions, then finalize the mission recor
 
 ## Task
 1. **BEFORE map:** read the current `test/corpus/parity.json` (baseline:
-   byte-match 245) and save per-id verdicts to `/tmp/parity-before-arrow.json`.
+   conformant 245) and save per-id verdicts to `/tmp/parity-before-arrow.json`.
 2. **Regenerate:** `npx tsx test/corpus/survey.ts` then
    `npx tsx test/corpus/dashboard.ts` (env defaults match this machine).
 3. **Regression check (HARD GATE):** per-id verdict diff BEFORE vs AFTER. Rank
    verdicts; ANY drop (byte→structural/diverged, structural→diverged,
    anything→errored/timeout caused by the change) → STOP and investigate.
    oracle-error transitions are noise.
-4. **Tally:** byte-match delta; confirm the 16 target cases improved (record each
+4. **Tally:** conformant delta; confirm the 16 target cases improved (record each
    id's before→after verdict).
 5. **Deferred audit:** if any target case is still deep (residual layout diff,
    not arrow geometry), update its `comparisons/<id>.md` with the new first-diff +
@@ -32,11 +32,11 @@ Measure the improvement and prove 0 regressions, then finalize the mission recor
 - decisions.md#adr-6
 
 ## Acceptance criteria
-- Given regeneration, then byte-match > 245 (the baseline).
+- Given regeneration, then conformant > 245 (the baseline).
 - Given the per-id diff, then **0 regressions** (every changed verdict is an
   improvement).
 - Given the 16 target cases, then each improved (diverged → structural or
-  byte-match); any still-deep case has an updated comparison page.
+  conformant); any still-deep case has an updated comparison page.
 - Given `npm test`, then green.
 
 ## Observability / Rollback

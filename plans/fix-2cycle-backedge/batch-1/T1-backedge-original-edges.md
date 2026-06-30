@@ -39,16 +39,16 @@ already proven on the repro.
 
 ## Acceptance (Given/When/Then)
 - Given `digraph{a->b;b->a}`, when laid out, then node positions are
-  byte-identical to native dot (no duplicate `a→b` fast edge; `make_edge_pairs`
+  conformant to native dot (no duplicate `a→b` fast edge; `make_edge_pairs`
   yields one `a→b` weight-2 edge).
 - Given `graphs/NaN.gv`, then within-rank node displacement vs native collapses
   (median → ~0; was 691); maxDelta drops sharply from 1601.
-- Given any non-cyclic graph, then output is byte-identical to before.
+- Given any non-cyclic graph, then output is conformant to before.
 - Given the full survey vs `/tmp/parity.before.json`: **0 regressions**; the
   2-cycle graphs (NaN ×3, 1447_1, …) improve.
 
 ## Tests
-- 2-cycle golden: `digraph{a->b;b->a}` byte-matches native (oracle-pinned).
+- 2-cycle golden: `digraph{a->b;b->a}` conforms to native (oracle-pinned).
 - A back-edge regression case (a longer cycle, e.g. `a->b->c->a`) stays correct.
 - Optional: assert post-`class2` that a 2-cycle node has a single merged fast
   out-edge (weight 2), if a unit hook is convenient.

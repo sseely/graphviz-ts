@@ -2,7 +2,7 @@
 
 Two foundation tasks, disjoint write-sets. Neither changes rendered
 output for existing inputs: the 82-golden byte-stability probe must
-pass byte-identical for both.
+pass conformant for both.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|

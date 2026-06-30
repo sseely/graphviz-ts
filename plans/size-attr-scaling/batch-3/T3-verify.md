@@ -18,10 +18,10 @@ comparison page exists and is referenced in the decision journal.
    ```
 2. **Confirm the canary:** the 6 `rankdir_dot*` rows
    (`linux.x86-rankdir_dot{,1,2}`, `nshare-rankdir_dot{,1,2}`) move out of
-   `diverged` — ideally to `byte-match`, at minimum to `structural-match`. If
+   `diverged` — ideally to `conformant`, at minimum to `structural-match`. If
    any remain `diverged`, capture the residual `firstDiffPath` and write a
    comparison note (see step 5).
-3. **Regression floor (D5):** `byte-match` count ≥ 278 and **no** row regresses
+3. **Regression floor (D5):** `conformant` count ≥ 278 and **no** row regresses
    (a previously byte/structural row must not become worse). Compare the new
    `parity.json` against the pre-mission baseline by id. `errored`/`timeout`
    counts must not rise.
@@ -56,10 +56,10 @@ None downstream. `parity.json` shape is the existing `SurveyResult[]`
 ## Acceptance criteria
 
 - Given the regenerated survey, when inspecting the 6 `rankdir_dot*` rows, then
-  all 6 are no longer `diverged` (byte-match preferred; structural-match
+  all 6 are no longer `diverged` (conformant preferred; structural-match
   acceptable with a logged residual).
 - Given the regenerated survey, when comparing to baseline by id, then
-  `byte-match ≥ 278` and **0 rows regressed**; `errored`/`timeout` unchanged.
+  `conformant ≥ 278` and **0 rows regressed**; `errored`/`timeout` unchanged.
 - Given a non-rankdir `size=` graph (spot-check), when surveyed, then it
   improved or is unchanged (never regressed).
 - Given any `ratio=` graph still diverging on position, when triaged, then it is
@@ -77,7 +77,7 @@ N/A — survey is dev/test infra (a report, not a gate per the dashboard's AD-1)
 
 Full-branch `npx tsc --noEmit --stableTypeOrdering` + `npx vitest run` green.
 Commit: `test(T3): refresh parity dashboard for size= scaling`. Body: state the
-rankdir verdicts, the byte-match delta, and any deferred `ratio=` residuals.
+rankdir verdicts, the conformant delta, and any deferred `ratio=` residuals.
 
 ## Boundaries
 

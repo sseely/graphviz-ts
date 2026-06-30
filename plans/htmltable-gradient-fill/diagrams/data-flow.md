@@ -28,4 +28,4 @@ sequenceDiagram
 
 The dashed branch (single color) is today's only path; the gradient branch is
 what T1 adds. The renderer + `svg-gradient.ts` side is already correct (proven by
-byte-exact graph/cluster/node gradients).
+conformant graph/cluster/node gradients).

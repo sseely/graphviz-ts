@@ -49,7 +49,7 @@ what grep proves unreferenced).
   remains.
 - **Given** `tsc --noEmit`, **then** exit 0 (no unused-import/dead-export errors).
 - **Given** the full suite, **then** 0 failed, passed ≥ 1810, 115 goldens
-  byte-identical, all DOT-1/DOT-1b oracle pins green.
+  conformant, all DOT-1/DOT-1b oracle pins green.
 - **Given** lizard on every changed file, **then** no violations.
 
 ## Quality bar

@@ -71,7 +71,7 @@ describe('dot pack branch — multi-component packing (corpus 2458)', () => {
     expect(renderSvg(DOT_2458, 'dot')).not.toContain('connected');
   });
 
-  it('matches the headless 15.1.0 golden ref body byte-for-byte', () => {
+  it('matches the headless 15.1.0 golden ref body conformant', () => {
     const refSvg = readFileSync(
       join(__dirname, '../../../test/golden/refs/pack-2458.svg'),
       'utf8',
@@ -137,7 +137,7 @@ describe('dot pack branch — clustered multi-component (corpus 2592 + synthetic
   // @see lib/dotgen/dotinit.c:doDot
 
   for (const name of ['pack-clusters-flat', 'pack-clusters-nested']) {
-    it(`${name}: full output byte-matches headless 15.1.0 (positions, not just ids)`, () => {
+    it(`${name}: full output conforms to headless 15.1.0 (positions, not just ids)`, () => {
       const svg = renderSvg(readFileSync(
         join(__dirname, `../../../test/golden/inputs/${name}.dot`), 'utf8'), 'dot');
       expect(strip(svg)).toBe(strip(ref(`${name}.svg`)));

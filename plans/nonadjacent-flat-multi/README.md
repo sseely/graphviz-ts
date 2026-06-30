@@ -38,7 +38,7 @@ no cnt-nesting. For cnt=1 these are algebraically identical (`Multisep/2 = nodes
 
 ## Execution model
 Run with **opus** (`claude-opus-4-8`, 1M). TDD: synthetic cnt=2/cnt=3 (top) + cnt=2
-(bottom) byte-match-vs-native-`dot` is the target; cnt=1 byte-identical is the gate.
+(bottom) conformant-vs-native-`dot` is the target; cnt=1 conformant is the gate.
 
 ## Oracle + harness
 - Native `dot`: `~/git/graphviz/build/cmd/dot/dot`, `GVBINDIR=/tmp/gvplugins`.
@@ -70,9 +70,9 @@ Run with **opus** (`claude-opus-4-8`, 1M). TDD: synthetic cnt=2/cnt=3 (top) + cn
 ## Batches
 | Batch | Task | Status |
 |-------|------|--------|
-| 1 | T1 generalize `topBoxes`/`bottomBoxes` (separate end/mid steps) + export helpers; cnt=1 byte-identical | [x] |
-| 2 | T2 create `splines-flat-multi.ts` (group collect + cnt-loop router, top+bottom) + unit tests byte-match oracle | [x] |
-| 3 | T3 wire `routeFaithfulSidePort` dispatch to collect+route the group; end-to-end synthetic byte-match | [x] |
+| 1 | T1 generalize `topBoxes`/`bottomBoxes` (separate end/mid steps) + export helpers; cnt=1 conformant | [x] |
+| 2 | T2 create `splines-flat-multi.ts` (group collect + cnt-loop router, top+bottom) + unit tests conformant oracle | [x] |
+| 3 | T3 wire `routeFaithfulSidePort` dispatch to collect+route the group; end-to-end synthetic conformant | [x] |
 | 4 | T4 full-corpus regression sweep (zero new diverges, 74 cnt=1 unchanged) + oracle restore + close | [x] |
 
 - [decisions.md](decisions.md) — AD-1..AD-5
@@ -86,10 +86,10 @@ Run with **opus** (`claude-opus-4-8`, 1M). TDD: synthetic cnt=2/cnt=3 (top) + cn
 
 ## Stop conditions
 - ANY of the 74 cnt=1 non-adjacent flats changes, or any out-of-family curated
-  golden flips ⇒ STOP (cnt=1 must be byte-identical; the cnt-loop with cnt=1 i=0 is
+  golden flips ⇒ STOP (cnt=1 must be conformant; the cnt-loop with cnt=1 i=0 is
   algebraically the current code — a flip means the refactor changed behavior).
 - Any genuine new corpus `diverged`/`structural` verdict ⇒ STOP (shared router).
-- Synthetic cnt≥2 doesn't byte-match native `dot` after the fix and can't be pinned
+- Synthetic cnt≥2 doesn't conformant with native `dot` after the fix and can't be pinned
   by instrumenting C ⇒ STOP; do not guess the box arithmetic.
 - A touched `.ts` file can't stay <500 lines, or functions can't stay ≤30 lines /
   CCN ≤10 / ≤5 params ⇒ STOP and re-scope the split.
@@ -104,7 +104,7 @@ Run with **opus** (`claude-opus-4-8`, 1M). TDD: synthetic cnt=2/cnt=3 (top) + cn
 
 ## Operational readiness
 N/A — offline browser layout library. **Behavior change confined to the
-non-adjacent flat path of the SHARED box-channel router; cnt=1 is byte-identical by
+non-adjacent flat path of the SHARED box-channel router; cnt=1 is conformant by
 construction, and the T4 corpus gate is the safety net.** **Rollback: Reversible**
 (revert the merge commit). No API/schema/contract impact (internal geometry).
 
@@ -112,21 +112,21 @@ construction, and the T4 corpus gate is the safety net.** **Rollback: Reversible
 **Done: all 4 tasks.** C `make_flat_edge`/`make_flat_bottom_edges` cnt-loop is
 now faithfully ported for cnt≥2 non-adjacent flats.
 - **T1** generalized `topBoxes`/`bottomBoxes` to `(endStepX,endStepY,midStepY)`
-  + exported the flat helpers (pure refactor, cnt=1 byte-identical).
+  + exported the flat helpers (pure refactor, cnt=1 conformant).
 - **T2** new `splines-flat-multi.ts`: `collectNonAdjacentFlatGroup` (identical-port
   group key, C portcmp) + `routeFlatEdgeGroupFaithful` (shared makeFlatEnd, edge i
   nested `(i+1)*step`). Found + fixed a latent hazard: `routeSplines` mutates its
   boxes in place and the port aliases them (C copies by value), so the cnt-loop
-  needs a per-iteration `copyPathEnd` deep-copy. 4 byte-match-vs-oracle tests.
+  needs a per-iteration `copyPathEnd` deep-copy. 4 conformant-vs-oracle tests.
 - **T3** wired `routeFaithfulSidePort` to collect+route the group once.
 - **T4** regression sweep below.
 
-**Results:** synthetic top cnt=2/cnt=3 + bottom cnt=2 byte-match native `dot`
+**Results:** synthetic top cnt=2/cnt=3 + bottom cnt=2 conformant with native `dot`
 15.1.0~dev.20260610.0127 (distinct nested splines; viewBox grows with the bulge);
-cnt=1 byte-identical. vitest **1999** (1995 unchanged + 4 new). Corpus survey:
+cnt=1 conformant. vitest **1999** (1995 unchanged + 4 new). Corpus survey:
 **ZERO new diverges** (diverged 356→356, structural 237→237); only flip is the
-flaky `2222` byte-match↔timeout (13 s render vs 20 s timeout under concurrency 8;
-SVG proven byte-identical to main) — `parity.json` left at baseline. C oracle
+flaky `2222` conformant↔timeout (13 s render vs 20 s timeout under concurrency 8;
+SVG proven conformant to main) — `parity.json` left at baseline. C oracle
 clean (no instrumentation used). Decisions: AD-1..AD-5 all upheld. See
 [findings-regression.md](findings-regression.md).
 
@@ -141,4 +141,4 @@ Lessons banked across the `#241_0` saga (memory `flat-edge-241-is-y-only`,
 `instrument-c-before-quarantine`, `corpus-scan-for-rare-triggers`): instrument C for
 ground truth before hypothesizing; never declare a fix sufficient without running the
 actual config against the native oracle; this gap has NO corpus trigger, so synthetic
-byte-match IS the validation and cnt=1-unchanged IS the regression bar.
+conformant IS the validation and cnt=1-unchanged IS the regression bar.

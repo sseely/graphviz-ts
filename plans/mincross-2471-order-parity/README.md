@@ -1,8 +1,8 @@
-# Mission: 2471 mincross order parity (byte-identical to C)
+# Mission: 2471 mincross order parity (conformant to C)
 
 ## Objective
 
-Make `tests/2471.dot`'s **final mincross node order byte-identical to C**. The
+Make `tests/2471.dot`'s **final mincross node order conformant to C**. The
 transpose hang is already closed (`mincross-transpose-perf`, merged), so 2471
 now completes — and that newly-visible output reveals a residual within-rank
 order divergence from C. This is the next onion layer: rank → mincross order
@@ -19,7 +19,7 @@ order divergence from C. This is the next onion layer: rank → mincross order
   rank, different within-rank **order**. So ranking is correct; mincross
   ordering diverges.
 - **NOT caused by the transpose-perf fixes** — every controlled reproducer is
-  byte-identical to C and golden churn is zero. The divergence needs 2471's full
+  conformant to C and golden churn is zero. The divergence needs 2471's full
   structure (it does not reproduce in small RL/cluster/port graphs).
 - **NOT the crossing tiebreak.** C's `in_cross`/`out_cross` (mincross.c:581-614)
   tiebreak on `port.p.x`; TS `accumCross` uses `val()` (`port.order`). Swapping
@@ -44,7 +44,7 @@ nodes + their edges).
 
 ## Success predicate
 
-1. 2471 final per-rank order **byte-identical to C** (name dump diff == 0).
+1. 2471 final per-rank order **conformant to C** (name dump diff == 0).
 2. Zero golden churn; order==C preserved on all prior reproducers.
 3. tsc 0; vitest all pass.
 

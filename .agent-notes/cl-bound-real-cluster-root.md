@@ -24,7 +24,7 @@
   branch) and `virtualAdjCluster` (orig tail/head). tcl/hcl keep raw
   `ND_clust(n)` (C does NOT wrap those). Thread `ctx.g` (the routing graph =
   root) into clBound.
-- **Result**: clust5 all edge paths + full geometry byte-match native. Survey:
-  **graphs-clust5 diverged→byte-match, 0 regressions** (rules-gate PASS, both
+- **Result**: clust5 all edge paths + full geometry conformant with native. Survey:
+  **graphs-clust5 diverged→conformant, 0 regressions** (rules-gate PASS, both
   baselines). Single-graph fix (no platform copies were diverged).
 - **Confidence**: High (C box-dump oracle + clean gate).

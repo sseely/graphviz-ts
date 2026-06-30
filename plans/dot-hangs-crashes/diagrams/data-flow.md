@@ -39,4 +39,4 @@ sequenceDiagram
 
 The fix changes only **how** `dfsRange` stores its traversal frames and **how**
 `rerank` recurses — never the loop count, pivot order, or computed ranks. Output
-SVG is byte-identical; the survey gate (AD-4) enforces this.
+SVG is conformant; the survey gate (AD-4) enforces this.

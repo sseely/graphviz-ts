@@ -18,7 +18,7 @@ parity/perf win cannot silently regress.
    Confirm against `tests/2471.dot` at whatever granularity is tractable (real
    nodes via `-Tplain` per-rank order at minimum).
 3. **Zero golden churn:** full `npx vitest run` green; every cluster golden still
-   byte-matches its C ref.
+   conforms to its C ref.
 4. **Permanent regression:** add a deterministic order-signature test on the
    mid-size cluster benchmark (a stable hash/string of the per-rank order), so
    any future order drift fails CI cheaply — the AD-1 guard.

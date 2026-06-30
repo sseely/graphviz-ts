@@ -4,7 +4,7 @@
 > bigger issue — the `concentrate` attribute was **never plumbed**, so the whole
 > feature was dead. Activation + the first two fixes (flag wiring + a concSlope
 > crash) live on branch `feature/activate-concentrate` (87b4e97). b71 now
-> byte-matches; b15 crashes on the cluster path; b69/b135/b62 still under-merge.
+> conforms to; b15 crashes on the cluster path; b69/b135/b62 still under-merge.
 > Full plan + remaining bugs: `plans/activate-concentrate/README.md`. The
 > original under-merge analysis below remains the lead for Bug 4.
 

@@ -21,7 +21,7 @@ is the sole regular-edge router — no non-faithful shortcut remains.
    (the `else` fallbacks the faithful path replaced).
 4. Delete or update any tests that asserted the fitter's (non-faithful) output.
 5. Full gate: `tsc` 0, lizard clean, `npx vitest run` 0 failed / passed >=
-   baseline, **115 goldens byte-identical**, all new oracle pins green.
+   baseline, **115 goldens conformant**, all new oracle pins green.
 
 ## Write-set
 
@@ -43,7 +43,7 @@ is the sole regular-edge router — no non-faithful shortcut remains.
 - **Given** the codebase, **when** grepping for the fitter symbols, **then** no
   live (non-test) references remain.
 - **Given** the full suite, **then** 0 failed, passed >= baseline, 115 goldens
-  byte-identical, all DOT-1 oracle pins green.
+  conformant, all DOT-1 oracle pins green.
 - **Given** `tsc --noEmit`, **then** exit 0 (no unused-import / dead-export errors).
 
 ## Quality bar

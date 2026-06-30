@@ -52,7 +52,7 @@ export function render(g: Graph, format: OutputFormat, opts?: RenderOptions): st
 
 ## Acceptance criteria
 
-- Given `format:'svg'` default engine, then output is byte-identical to
+- Given `format:'svg'` default engine, then output is conformant to
   `renderSvg(src,'dot')` on the same parsed graph.
 - Given `format:'plain'`, then plain text (`graph`/`node`/`edge`/`stop` lines)
   is returned.

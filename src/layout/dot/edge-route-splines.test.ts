@@ -13,7 +13,7 @@
  * Values are captured from the built dot (`~/git/graphviz/build/cmd/dot/dot`,
  * `GVBINDIR=/tmp/gvplugins`, 15.x), 2026-06-16. Coordinates are in the SVG frame
  * (y negated from graphviz-internal y-up). Tolerance 0.5pt (AD-3): the faithful
- * router is numerically close to but not byte-identical with C's routesplines.
+ * router is numerically close to but not conformant with C's routesplines.
  *
  * @see lib/dotgen/dotsplines.c:make_regular_edge
  */

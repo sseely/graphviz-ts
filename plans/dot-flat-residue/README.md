@@ -4,7 +4,7 @@
 
 Close the two remaining flat-edge routing gaps left after the
 flat-labels and edgetype missions, so adjacent same-rank edges route
-byte-identically to `dot` 15.0.0:
+conformantly to `dot` 15.0.0:
 
 - **DOT-9** — port `makeSimpleFlat` so a no-port, **no-label** group of
   adjacent same-rank edges fans into a spindle (today `cnt>1` parallel
@@ -23,7 +23,7 @@ byte-identically to `dot` 15.0.0:
 ## Constraints (stop / push-forward)
 
 **STOP and wait for human input when:**
-- Any existing golden churns. Goldens are byte-exact from the C binary;
+- Any existing golden churns. Goldens are conformant from the C binary;
   a change means a porting bug, not a new-correct case.
 - T2 feasibility spike fails: the aux pipeline does **not** leave
   `auxe.info.label.pos` set after `dotSplines_`. Reassess
@@ -72,14 +72,14 @@ referenced in `decision-journal.md`.
 ## Outcome (2026-06-17)
 
 - **T1 (DOT-9):** DONE — `makeSimpleFlat` ported; unlabeled parallel
-  adjacent flats fan byte-exact to dot 15.0.0. Suite 1853 passed, zero
+  adjacent flats fan conformant to dot 15.0.0. Suite 1853 passed, zero
   golden churn. Merged to main.
 - **T2 (DOT-10):** DEFERRED. The faithful copy-back was implemented and
-  verified, but the emitted label position is not byte-exact: it inherits
+  verified, but the emitted label position is not conformant: it inherits
   an upstream divergence in the aux pipeline's layout of a *labeled*
   cross-rank edge. Re-filed as **DOT-11** in
   `../layout-engine-backlog/gaps/dot.md`. T2 code reverted; copy-back lands
-  byte-exact once DOT-11 is fixed.
+  conformant once DOT-11 is fixed.
 
 ## Index
 

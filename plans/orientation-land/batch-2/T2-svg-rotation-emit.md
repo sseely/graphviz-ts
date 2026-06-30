@@ -7,7 +7,7 @@ Same project conventions as T1 (EPL header, `.js` imports, strict TS, vitest
 colocated, lizard caps, JSDoc `@see`). T1 has set `job.rotation = 90` for
 landscape graphs and neutralized `transformPoint` rotation. This task makes the
 SVG renderer emit the rotation via the graph group transform, matching native
-byte-for-byte (decisions.md ADR-1/-3). **Emit-only — do not touch layout.**
+conformant (decisions.md ADR-1/-3). **Emit-only — do not touch layout.**
 
 Concrete target (b68.gv native, the canary):
 ```
@@ -58,9 +58,9 @@ journal (per the consecutive-fix stop rule).
 - Given b68, then `<svg>` is `width="213pt" height="638pt"` with matching viewBox.
 - Given b68, then a sampled inner node coord equals the native value (unrotated).
 - Given any non-landscape graph (e.g. `digraph { a -> b }`), then the SVG
-  transform/dims are byte-identical to before (rotate(0), unswapped).
+  transform/dims are conformant to before (rotate(0), unswapped).
 - Given the full survey vs `/tmp/parity.before.json`: 0 regressions on
-  non-landscape graphs; `b68` flips to byte-match; no landscape graph enters a
+  non-landscape graphs; `b68` flips to conformant; no landscape graph enters a
   worse bucket.
 
 ## Observability

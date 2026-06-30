@@ -33,7 +33,7 @@ TDD — write the failing pin first, then the faithful fix.
      **25 MATCH** (the 2 `near` port residuals may remain `near` — they are
      pre-existing sub-pixel, not this mission's target; just prove no
      regression to DIVERGE).
-   - `npx vitest run` → 0 failures, **every golden byte-identical** (AD-3).
+   - `npx vitest run` → 0 failures, **every golden conformant** (AD-3).
    - `npx tsx .probes/route-diverge.ts` → `ports both dense` edges now match the
      oracle faces (`a:e->b` starts at a's east face for a@99, etc.).
 4. **Update status docs** (mark G2 resolved):
@@ -71,12 +71,12 @@ return shape unchanged.
 ## Acceptance criteria (Given/When/Then)
 
 - **Given** `digraph{a:e->b; a:w->c; a->d}`, **when** rendered via the dot
-  engine, **then** rank-1 order is `[c,d,b]` and node `a.cx == 99` — byte-exact
+  engine, **then** rank-1 order is `[c,d,b]` and node `a.cx == 99` — conformant
   to dot 15.0.0.
 - **Given** the full corpus probe, **when** run after the fix, **then**
   `ports both dense` is MATCH and 0 cases DIVERGE.
 - **Given** the golden suite, **when** `vitest run` executes, **then** 0 failures
-  and every golden is byte-identical (AD-3).
+  and every golden is conformant (AD-3).
 - **Given** a plain no-port multi-child graph, **when** rendered, **then** its
   node order is unchanged from pre-fix output (the tiebreak is a no-op when
   `p.x == 0`).
@@ -93,7 +93,7 @@ Reversible — revert the commit. No migration.
 
 ## Boundaries
 
-- **Always:** keep all goldens byte-identical; cite the C line in the code
+- **Always:** keep all goldens conformant; cite the C line in the code
   comment and commit body.
 - **Never:** change `mincross-order.ts` / the `port.order` VAL usage; fold `p.x`
   into the scaled order value; touch splines/position code (the splines are
@@ -108,6 +108,6 @@ Body: cite `mincross.c:593,611`; note corpus 24/25 → 25/25, goldens unchanged.
 
 ## Quality bar
 
-`tsc --noEmit` = 0; `vitest run` 0 failures + goldens byte-identical; corpus
+`tsc --noEmit` = 0; `vitest run` 0 failures + goldens conformant; corpus
 25/25; `lizard src/layout/dot/mincross-cross.ts -C 10 -L 30 -a 5` clean. Return
 only the structured result — no preamble.

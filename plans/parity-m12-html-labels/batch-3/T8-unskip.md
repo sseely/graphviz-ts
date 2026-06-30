@@ -24,7 +24,7 @@ label kind through emit_label, which routes html to emit_html_label
    html labels anchor differently than text baselines; match C).
 2. renderClusterLabel: add the html branch the same way.
 3. TDD: failing tests first — placed html edge label renders cells;
-   txt-only graphs byte-identical; set=false html labels skipped.
+   txt-only graphs conformant; set=false html labels skipped.
 
 ## Write-set (strict — nothing else)
 
@@ -51,7 +51,7 @@ None new — terminal emission. All 7 slots now render html end to end.
   render at lp, matching C's structural placement for the same input
 - Given an html cluster label, then it renders (no more silent no-op)
 - Given set=false or txt labels, then behavior unchanged; 72 goldens
-  byte-identical; suite 0 failed
+  conformant; suite 0 failed
 
 ## Observability / rollback
 

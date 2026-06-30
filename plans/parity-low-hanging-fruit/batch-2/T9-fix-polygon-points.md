@@ -19,7 +19,7 @@ a comparison page; a coordinate/rounding difference may be simple.
 
 ## Acceptance criteria
 - Given each simple case, when fixed, then its `@points` first-diff is resolved
-  and byte-matches the oracle.
+  and conforms to the oracle.
 - Given a count-difference case, then it is deferred with a comparison page.
 - Given the golden suite, then green; 0 per-id regressions.
 

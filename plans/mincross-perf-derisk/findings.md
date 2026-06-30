@@ -38,7 +38,7 @@ iteration-count gap.
 - **Per-pass trace:** native `dot -v` emits the same `mincross: pass P iter I …`
   line the port logs — compared directly with no recompile.
 
-## Per-pass convergence trace — byte-identical
+## Per-pass convergence trace — conformant
 
 `b100.gv`, single mincross invocation, both sides identical at every step:
 
@@ -126,5 +126,5 @@ the iteration count or any comparison outcome** (byte-identity is sacred, AD-3):
 
 Expectation: a **constant-factor** drop on the `reorder` portion (the dominant
 47%), not a collapse to ≤3× — the ≤3× target was explicitly contingent on an
-iteration-count gap, which does not exist. Output must remain byte-identical; the
-survey gate (byte-match ≥ 312, structural ≥ 256, 0 changed verdicts) is the proof.
+iteration-count gap, which does not exist. Output must remain conformant; the
+survey gate (conformant ≥ 312, structural ≥ 256, 0 changed verdicts) is the proof.

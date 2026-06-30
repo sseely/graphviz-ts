@@ -83,7 +83,7 @@ using `printNum`.
 The C source tracks an indentation `Level` in `state_t`. Each nesting level
 adds two spaces. TypeScript should use `JSON.stringify(obj, null, 2)` as the
 output mechanism, or replicate the C indentation manually — whichever produces
-byte-identical output for the test cases. Read the C source to determine exact
+conformant output for the test cases. Read the C source to determine exact
 indentation depth at each nesting level.
 
 ### Latin-1 encoding

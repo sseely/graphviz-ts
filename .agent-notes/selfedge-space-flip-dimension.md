@@ -19,9 +19,9 @@
 - **Fix**: read `e.head.root.info.flip` (faithful to `GD_flip(agraphof(aghead(e)))`,
   flip is set on root in init.ts and propagated to subgraphs) and pick
   `flip ? dimen.y : dimen.x`. Empty-label still returns bare SELF_EDGE_SIZE.
-- **Result**: all node positions + all 14 edge paths byte-match native (one
+- **Result**: all node positions + all 14 edge paths conformant with native (one
   arrowhead point off by 0.01 fp). Survey: **18 graphs** moved diverged→match
   (graphs/share/windows-fsm, graphs-NaN, *-b102, *-train11, graphs-ports,
   graphs-xx, 2193, ...), **0 regressions** (rules-gate PASS). All self-loop +
   labeled graphs under LR/RL were affected by the same bug.
-- **Confidence**: High (native oracle byte-match + gate clean).
+- **Confidence**: High (native oracle conformant + gate clean).

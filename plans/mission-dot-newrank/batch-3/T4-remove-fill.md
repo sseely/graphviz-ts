@@ -41,7 +41,7 @@ Then pin end-to-end parity in `newrank.test.ts`.
   nodes appear in the SVG (no stray nodes/titles).
 - **Given** the same graph WITHOUT `newrank`, **then** the layout differs (the
   non-reconciled baseline) — confirming the flag drives the change.
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 
 ## Quality bar
 
@@ -54,4 +54,4 @@ comparison page in `comparisons/newrank.md`) — do not regress a golden.
 
 ## Observability / Rollback
 
-N/A. Reversible (revert; newrank-gated, goldens byte-identical).
+N/A. Reversible (revert; newrank-gated, goldens conformant).

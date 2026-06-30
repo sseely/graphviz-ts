@@ -5,13 +5,13 @@
  * regular-edge routing (mission dot-edge-multi, G1).
  *
  * The new cases route through the faithful pipeline per AD-2; plain single edges
- * keep the simplified fitter (the 115 goldens stay byte-identical). Values are
+ * keep the simplified fitter (the 115 goldens stay conformant). Values are
  * captured from the built dot (`~/git/graphviz/build/cmd/dot/dot`,
  * `GVBINDIR=/tmp/gvplugins`, 15.x) via `.probes/probe-t2-gap.ts`, 2026-06-16.
  *
  * Coordinates are in the SVG frame (y negated from graphviz-internal y-up).
  * Tolerance 0.5pt (AD-3): the faithful fitter is numerically close to but not
- * byte-identical with C's routesplines (Proutespline renormalization + libm).
+ * conformant with C's routesplines (Proutespline renormalization + libm).
  *
  * Quarantined (AD-4, see comparisons/labeled-parallel.html):
  *  - labeled-parallel edge "2" path: dot collapses it to a straight 4-point line
@@ -81,7 +81,7 @@ const DOT_LABELED_EDGE1: Pt[] = [
 ];
 
 describe('regular multi-edge routing (G1, dot oracle)', () => {
-  it('parallel-x3 stays byte-identical to dot (no regression)', () => {
+  it('parallel-x3 stays conformant to dot (no regression)', () => {
     const paths = edgePaths(renderSvg('digraph{a->b;a->b;a->b}', 'dot'));
     expect(paths.length).toBe(3);
     for (let i = 0; i < 3; i++) expect(maxDelta(paths[i], DOT_PARALLEL_X3[i])).toBeLessThanOrEqual(TOL);

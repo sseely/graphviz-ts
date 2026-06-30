@@ -20,7 +20,7 @@
 - **Why it was hard to see**: arrows are generated in clipAndInstall via
   arrowDrawOpsForEnd → arrowDrawOps → dispatchSimple → componentU, NOT the
   legacy arrowheadPolygon path; and points are in internal (y-up) coords,
-  transformed before emit. The edge PATH byte-matches — only the arrowhead
+  transformed before emit. The edge PATH conforms to — only the arrowhead
   polygon diverged, proving the spline (and thus C's raw inputs) were identical.
 - **Fix**:
   - `componentU` (arrows-shapes-util.ts) now reproduces arrow_gen exactly:
@@ -36,6 +36,6 @@
 - **NOTE (unrelated pre-existing)**: golden `circo-biconn` fails with OR without
   this change — its ref (test/golden/refs/circo-biconn.svg) was already modified
   in the working tree before this session. Not caused by the arrow fix.
-- **Confidence**: High — byte-match vs native headless oracle on 8 graphs;
+- **Confidence**: High — conformant vs native headless oracle on 8 graphs;
   root cause confirmed by runtime probe (raw dir=(11.17,2.52) |dir|=11.45) and C
   source (arrow_gen EPSILON).

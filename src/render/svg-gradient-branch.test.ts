@@ -6,11 +6,11 @@
  *
  * Acceptance criteria (from G2 task spec):
  *  - Linear: svgEllipse emits <defs><linearGradient id="l_0"> + stops +
- *            <ellipse fill="url(#l_0)"> — matching C oracle byte-for-byte.
+ *            <ellipse fill="url(#l_0)"> — matching C oracle conformant.
  *  - Radial: id="r_0", fill="url(#r_0)".
  *  - Second gradient in same job → l_1 / r_1.
  *  - Solid fill unchanged; None fill → fill="none".
- *  - 97 goldens byte-identical (solid/none paths frozen).
+ *  - 97 goldens conformant (solid/none paths frozen).
  */
 
 import { describe, it, expect } from 'vitest';
@@ -101,7 +101,7 @@ export function testSecondGradientIncrementsCounter(): void {
 }
 
 export function testSolidFillUnchanged(): void {
-  // Solid fill must be byte-identical to pre-G2 behavior
+  // Solid fill must be conformant to pre-G2 behavior
   const job = makeJob();
   const obj = createObjState();
   obj.fill = FillType.Solid;

@@ -13,5 +13,5 @@ guard regression.
 | T4 | (CONTINGENT) seq-advance edge-endpoint subgraphs in `resolveEndpoint` | sonnet | `src/parser/builder.ts`, `src/parser/builder.test.ts` | T3 | [N/A] |
 
 Gate after batch: survey shows the 7 named targets no longer in `diverged`;
-`clust*`/`labelclust*` byte-match set unchanged; net byte+structural match count
+`clust*`/`labelclust*` conformant set unchanged; net byte+structural match count
 does not decrease.

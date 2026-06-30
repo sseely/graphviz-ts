@@ -65,7 +65,7 @@ report consumed by the orchestrator for T6 golden minting.
   (report per-kind PASS/FAIL with first-diff detail)
 - Given a ported gap, then it carries @see cites and its own tests
 - Given the existing suite + 67 goldens, then 0 failed /
-  byte-identical
+  conformant
 
 ## Observability / rollback
 

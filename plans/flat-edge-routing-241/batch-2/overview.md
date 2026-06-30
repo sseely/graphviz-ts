@@ -20,4 +20,4 @@ deeper routing change -> STOP.
 ## Quality gates
 All gates from [../README.md](../README.md). Snapshot `parity.json` before T2's
 survey run; require 0 regressions + `241_0` improves verdict
-(diverged -> structural/byte-match).
+(diverged -> structural/conformant).

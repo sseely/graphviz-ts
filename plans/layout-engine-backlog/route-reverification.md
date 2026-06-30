@@ -38,7 +38,7 @@ start-clip renorm), record ports (1.0pt). Not new work.
 | **G2: multiple compass ports off one node** ✅ **RESOLVED** (mission-dot-multiport, 2026-06-19) | ports both dense (66pt → 0.25pt MATCH) | ~~`a:w->c` stays at node center x=99 instead of the west face x=70~~. **Root cause was not splines** — mincross `accumCross` broke same-`ND_order` ties by the angular `port.order` instead of the geometric `p.x` that C `in_cross`/`out_cross` (`mincross.c:593,611`) uses, swapping rank-1 c/d and mispositioning `a` to x=126. Fix: tie by `p.x`. | DOT-1 residue → done |
 | **G3: nested clusters** | nested cluster (path 53pt, **vbΔ=64**) | node placement + drawing bbox wrong for a cluster inside a cluster; the edge just follows mis-placed nodes. Sibling clusters (two clusters) MATCH — only NESTING breaks. | not a routing gap — cluster layout |
 | **G4: flat labeled edge label dropped** | flat labeled (STRUCT: C 3 texts, TS 2) | TS emits no `<text>` for the label on a `rank=same` labeled edge. | DOT-2 / DOT-5 (`make_flat_labeled_edge`) |
-| (narrow) rankdir=LR skip edge | rankdir LR (8.3pt) | `a->b`,`b->c` byte-identical; only the transitive `a->c` is ~3.5pt off in LR. | low priority |
+| (narrow) rankdir=LR skip edge | rankdir LR (8.3pt) | `a->b`,`b->c` conformant; only the transitive `a->c` is ~3.5pt off in LR. | low priority |
 
 ## Implication for mission-dot-splines
 

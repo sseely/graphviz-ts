@@ -4,7 +4,7 @@
 
 ## Objective
 
-With edge routing order now byte-identical to C (mission `edge-spline-routing`,
+With edge routing order now conformant to C (mission `edge-spline-routing`,
 merge `465b24a`), the dot port still emits **one fewer cubic bezier piece** than
 the native `dot` oracle on some long (multi-rank) edges. The recursive fitter
 finds a 3-piece fit where C splits into 4, despite the corridor inputs now being
@@ -40,7 +40,7 @@ referenced in the journal; do not squash).
 - The fitter `src/pathplan/route.ts` is a **faithful** port of C
   `reallyroutespline` (`EPSILON1=1e-3`, `a=4`, `a<0.005`, `forceflag`, `distN`
   shortcut). Premise: NOT the bug. If S1 implicates it → **stop & re-scope**.
-- Routing order matches C **byte-for-byte** (verified in `edge-spline-routing`),
+- Routing order matches C **conformant** (verified in `edge-spline-routing`),
   so the corridor INPUTS are order-correct. The residual is in the box corridor
   geometry or the smode segmentation.
 - The port **UNDER**-segments (emits FEWER cubics). The old investigation note
@@ -54,7 +54,7 @@ referenced in the journal; do not squash).
 
 **Stop and ask** when: the spike implicates the faithful fitter (`route.ts`)
 after all (premise contradicted — re-scope); **any of the 281 existing
-byte-match rows regress**; the same location is changed ≥3× without resolving a
+conformant rows regress**; the same location is changed ≥3× without resolving a
 failing check; the fix needs a file outside the localized write-set that is in no
 other task's write-set; the `rankdir_dot` rows turn out to be blocked by a
 SEPARATE residual class (D5 — document with comparison pages, do not chase the
@@ -79,7 +79,7 @@ task; an obvious self-explanatory fix.
 ```
 
 Regression scan (Batch 3): `npx tsx test/corpus/survey.ts` then
-`npx tsx test/corpus/dashboard.ts`; confirm **byte-match ≥ 281** and
+`npx tsx test/corpus/dashboard.ts`; confirm **conformant ≥ 281** and
 `errored`/`timeout`/`diverged` do not rise (per-id diff vs `main`, **0
 regressions**). Oracle: `GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot`.
 
@@ -87,7 +87,7 @@ regressions**). Oracle: `GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/do
 
 - `feature/long-edge-undersegment` does not exist.
 - `npx tsc --noEmit` clean; `npx vitest run` green (~2320).
-- `main` at the `edge-spline-routing` merge (`465b24a`), parity byte-match **281**.
+- `main` at the `edge-spline-routing` merge (`465b24a`), parity conformant **281**.
 
 ## Batches
 
@@ -101,7 +101,7 @@ regressions**). Oracle: `GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/do
 non-integer delta → non-integer routing frame → `maximal_bbox` `round()`
 boundary-straddle → fitter piece-count flip. Fix = round the shift delta
 (integer frame matches C; final positions unchanged). **graphs-p3 diverged →
-byte-match**; survey **byte-match 282→297, 0 regressions, 18 improvements**;
+conformant**; survey **conformant 282→297, 0 regressions, 18 improvements**;
 vitest 2320 green. rankdir_dot/dot2 rows are a SEPARATE residual (D5) — the
 x-axis fix does not resolve them; documented, not chased (D3).
 

@@ -56,13 +56,13 @@ unchanged.
 `dfs_range`/`dfs_cutval` are already iterative in the port. Allowed by CLAUDE.md
 ("unless TypeScript forces a structural change" — V8's small stack forces it).
 
-## AD-4 — validation: byte-identical, zero regressions
+## AD-4 — validation: conformant, zero regressions
 
 **Context:** This is a refactor. Output must not change. The 7 timeout cases
 were never compared (they timed out), so they have no prior verdict.
 
 **Decision:** The gate is: full vitest green, `tsc` clean, and a fresh survey
-where **no byte-match or structural-match case regresses**. Capture
+where **no conformant or structural-match case regresses**. Capture
 `test/corpus/parity.json` (byte/structural counts + per-id verdicts) **before**
 starting; diff after. The 7 rescued cases get a **new baseline** verdict
 (expected: `diverged` or `structural-match` — whatever they are once they finish

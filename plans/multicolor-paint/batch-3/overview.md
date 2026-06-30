@@ -13,7 +13,7 @@ Single task. Geometry-heavy (offset-spline computation). Runs after
 Batch 1. Byte-stability: existing edge goldens are single-color, so this
 is new behavior; single-color edges keep the parity (T4) path.
 
-**Done (2026-06-13):** directed `color="c1:c2"` parallel edges byte-match
+**Done (2026-06-13):** directed `color="c1:c2"` parallel edges conformant
 dot 15.0.0 (SEP=2 offset via computeoffset_p/_qr). Dispatch landed in
 svg.ts endEdge (SVG plugin edge emission). The semicolon syntax
 (split-along-length multicolor()) and the pre-existing undirected-edge

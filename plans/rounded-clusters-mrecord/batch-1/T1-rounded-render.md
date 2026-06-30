@@ -15,7 +15,7 @@ invariant (AD-4).
    that takes absolute corner points + `renderer` + `job` + `filled` and emits
    the rounded `<path>` via `renderer.bezier` (reusing `interpolationPoints(...,
    true)`). Refactor `roundedDraw` to call it; poly-node output must stay
-   byte-identical.
+   conformant.
 2. **Wire cluster** (`src/gvc/device.ts`, AD-2): in `renderOneCluster`, when the
    cluster `style` flags include `rounded`, call the helper with the four
    transformed bb corners and the resolved `filled` instead of
@@ -59,17 +59,17 @@ interpolationPoints/bezier; match C constants.
 
 ## Acceptance criteria
 - AC1: Given `subgraph cluster_0{style=rounded;a}`, when rendered, then the
-  cluster boundary is a `<path>` (not `<polygon>`) and byte-matches the oracle.
+  cluster boundary is a `<path>` (not `<polygon>`) and conforms to the oracle.
 - AC2: Given `subgraph cluster_0{style="rounded,filled";fillcolor=grey95;a}`,
   when rendered, then one filled rounded `<path fill="grey95">` boundary,
-  byte-matching the oracle.
+  conformant with the oracle.
 - AC3: Given `a [shape=Mrecord, label="x|y"]`, when rendered, then the outer box
-  is a rounded `<path>` byte-matching the oracle; the field divider polyline is
+  is a rounded `<path>` conformant with the oracle; the field divider polyline is
   unchanged.
 - AC4: Given a plain `subgraph cluster_0{a}` and `a [shape=record,label="x|y"]`
   (no rounded), when rendered, then both still emit `<polygon>` (no regression).
 - AC5: Given `a [shape=box, style=rounded]` (the existing control), when
-  rendered, then its `<path>` output is byte-identical to pre-mission (the
+  rendered, then its `<path>` output is conformant to pre-mission (the
   helper extraction did not change poly-node rendering).
 
 ## Observability

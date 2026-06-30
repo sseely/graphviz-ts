@@ -14,4 +14,4 @@ harness state and C-oracle context carry forward. Its output (the Layer-2
 classification) is written to `../decision-journal.md` and gates Batch 2.
 
 Quality gate after T1: `npm run typecheck` + `npm test` green (the fix must not
-regress the 1874-test suite; small windowed graphs may already pass byte-exact).
+regress the 1874-test suite; small windowed graphs may already pass conformant).

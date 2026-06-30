@@ -39,7 +39,7 @@ when the cluster fill is a gradient. @see lib/common/emit.c:emit_clusters
 (:3857 findStopColor → GRADIENT/RGRADIENT block). The boundary polygon's
 filled flag stays the resolved truthy value.
 
-Keep all solid/none behavior byte-identical (the 97 goldens). Do NOT make
+Keep all solid/none behavior conformant (the 97 goldens). Do NOT make
 structural device.ts changes beyond the cluster fill obj-state lines.
 
 ## C ground truth (oracle-verify)
@@ -51,7 +51,7 @@ structural device.ts changes beyond the cluster fill obj-state lines.
 - `subgraph cluster_0 { style=filled; fillcolor="red:blue"; a }` →
   cluster gradient `id="clust1_l_0"` (or whatever the oracle shows).
 - `style="radial,filled"` → radial.
-Capture each with `dot -Tsvg` and match byte-for-byte.
+Capture each with `dot -Tsvg` and match conformant.
 
 ## Write-set (STRICT)
 
@@ -82,11 +82,11 @@ obj-state stack; gradients are a fill kind on it.
 ## Acceptance criteria (oracle-verify each)
 
 - node fillcolor="red:blue" → linear gradient defs + url, id-prefixed,
-  matching C byte-for-byte.
+  matching C conformant.
 - node style="radial,filled" fillcolor="red:blue" → radial.
 - cluster fillcolor="red:blue" style=filled → cluster gradient.
 - node fillcolor="red" (single) → solid, unchanged.
-- UNSTYLED node/cluster → byte-identical to pre-task; 97 goldens stable.
+- UNSTYLED node/cluster → conformant to pre-task; 97 goldens stable.
 
 ## Byte-stability gate
 

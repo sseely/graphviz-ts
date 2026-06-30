@@ -63,7 +63,7 @@ penWidth before svgEdgePath; arrows fill with the resolved pen color.
 - Given `[penwidth=2]`, then `stroke-width="2"` on the path
 - Given `[style=dashed]`, then `stroke-dasharray="5,2"` (no regression)
 - Given `[style=bold]`, then penwidth 2
-- Given an unstyled edge, output byte-identical to pre-task; 82 goldens
+- Given an unstyled edge, output conformant to pre-task; 82 goldens
   stable
 
 ## Observability / rollback

@@ -13,7 +13,7 @@ pipeline-level divergence is a **P2 gap — STOP**, do not patch `src/ortho/*` h
 **Write-set expanded (flagged, user faithfulness mandate):** the parity fix
 landed in `src/common/splines-clip.ts` (`arrowOrthoClip` port, `isOrtho`-gated),
 a shared-clip faithful gap — not dot-dispatch, not the P2 pipeline. All 119
-pre-existing goldens stayed byte-identical. See decision journal T3 rows.
+pre-existing goldens stayed conformant. See decision journal T3 rows.
 
 ## Dependency / file ownership
 - T3 needs T1+T2 (full dispatch incl. labels) **and ortho-P2 green** (pipeline
@@ -23,7 +23,7 @@ pre-existing goldens stayed byte-identical. See decision journal T3 rows.
 
 ## Gate after batch (full mission gate)
 - `npm run typecheck` 0 · `npm test` (all new ortho goldens pass against native-C
-  refs; **every existing non-ortho golden byte-identical**) · `npm run build` OK.
+  refs; **every existing non-ortho golden conformant**) · `npm run build` OK.
 - `git -C ~/git/graphviz status --porcelain lib/` shows no tracked `.c/.h` change.
 - `git diff --name-only` shows only `src/layout/dot/**`, `src/ortho/**`,
   `test/golden/**`, `plans/**`.

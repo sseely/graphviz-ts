@@ -28,12 +28,12 @@ fixed (mission `edge-spline-routing`).
 surfaces an unrelated routing or layout bug, log it and stop — do not chase it.
 **Consequences:** Keeps the mission bounded and the regression surface small.
 
-## D4 — Regression floor: 0 regressions, byte-match ≥ 281 {#d4}
+## D4 — Regression floor: 0 regressions, conformant ≥ 281 {#d4}
 
-**Context:** `main` (`465b24a`) has 281 byte-match rows; none must regress.
-**Decision:** Acceptance requires `byte-match ≥ 281` and **0 per-id regressions**
+**Context:** `main` (`465b24a`) has 281 conformant rows; none must regress.
+**Decision:** Acceptance requires `conformant ≥ 281` and **0 per-id regressions**
 (survey diff vs `main`). `graphs-p3` must flip forward (diverged → structural- or
-byte-match). If the fix cannot hold the floor, stop and re-scope.
+conformant). If the fix cannot hold the floor, stop and re-scope.
 **Consequences:** The fix must be narrow — gated on the exact corridor/segmentation
 condition that triggers the missing split, not a global change.
 
@@ -99,9 +99,9 @@ unchanged**. Pinned to C: C's routing frame is integer.
 
 **Consequences / blast radius:** Changes the *internal routing frame* of **every
 dot graph** by a sub-pixel fraction (final node positions preserved). Verified
-end-to-end: p3 `sleep--runmem` flips 3→4, full p3 SVG geometry now byte-identical
+end-to-end: p3 `sleep--runmem` flips 3→4, full p3 SVG geometry now conformant
 to the oracle. Regression risk = other knife-edge long-edge fits flipping; gated
-by the Batch-3 survey (D4: byte-match ≥ 281, 0 per-id regressions). The four
+by the Batch-3 survey (D4: conformant ≥ 281, 0 per-id regressions). The four
 `*-rankdir_dot`/`dot2` rows are **NOT** resolved by this x-axis fix (their
 residual survives in the LR-rotation/other-axis frame) → classified separate
 (D5), documented, not chased (D3).

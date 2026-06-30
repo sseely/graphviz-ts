@@ -57,12 +57,12 @@ routeFlatEdgeGroupFaithful(g: Graph, edges: GraphEdge[], cnt: number): boolean
 ```
 
 ## Acceptance criteria
-- Given a top cnt=2 synthetic, when routed, then the two installed splines byte-match
+- Given a top cnt=2 synthetic, when routed, then the two installed splines conformant
   native `dot` (two DISTINCT nested curves, not identical).
-- Given a top cnt=3 synthetic, when routed, then all three splines byte-match native.
-- Given a bottom cnt=2 synthetic (`:se->:sw`), when routed, then both byte-match native.
+- Given a top cnt=3 synthetic, when routed, then all three splines conformant with native.
+- Given a bottom cnt=2 synthetic (`:se->:sw`), when routed, then both conformant with native.
 - Given cnt=1 (one non-adjacent flat), when routed via this function, then the spline
-  equals the current `routeFlatEdgeFaithful` output (byte-identical reduction, AD-1).
+  equals the current `routeFlatEdgeFaithful` output (conformant reduction, AD-1).
 - `tsc` exit 0; `vitest run` green; `lizard` clean; both files <500 lines.
 
 ## Observability / Rollback
@@ -72,7 +72,7 @@ N/A. Reversible.
 - **Always do:** port BOTH branches; reuse T1 helpers; keep cnt=1 == current.
 - **Never do:** route labeled flats through the loop (they stay cnt=1); add cnt≥2
   heuristics beyond C; chase a frame offset.
-- **Stop if:** synthetic cnt≥2 won't byte-match after the port and you can't pin the
+- **Stop if:** synthetic cnt≥2 won't conformant after the port and you can't pin the
   box-channel mismatch by instrumenting C (AD-5); or files exceed the line cap.
 
 ## Commit

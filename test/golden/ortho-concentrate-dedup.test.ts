@@ -13,7 +13,7 @@
  * 25. This is a structure-strict guard (edge-group count + absence of the seven
  * concentrated-away reverse legs); it deliberately does not assert coordinates,
  * because 2361 is an HTML-free ortho graph whose residual is ortho maze
- * channel-assignment fidelity (structural-match, not byte-match).
+ * channel-assignment fidelity (structural-match, not conformant).
  *
  * @see lib/ortho/ortho.c:1207-1228 (orthoEdges Concentrate point-set)
  * @see src/layout/dot/ortho-adapter.ts buildEdges

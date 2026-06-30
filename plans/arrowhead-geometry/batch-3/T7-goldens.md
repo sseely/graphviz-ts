@@ -1,20 +1,20 @@
 # T7 — Goldens per arrow-type group
 
 ## Context
-Add one byte-matching golden per arrow-type group (ADR-5) to guard the new
+Add one conformant with golden per arrow-type group (ADR-5) to guard the new
 geometry. Normal/inv are already covered by existing goldens.
 
 ## Task
 For each group, create `test/golden/inputs/<id>.dot`, generate the ref with native
 `dot` (`GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot -Tsvg <in> > ref`),
 add a `manifest.json` entry, and bump the count in `suite.test.ts`. Verify the
-port byte-matches each (compareSvg deterministic) before committing.
+port conforms to each (compareSvg deterministic) before committing.
 Groups: `dot-arrow-dot` (dot/odot ellipse), `dot-arrow-crow` (crow/vee 9-pt),
 `dot-arrow-box`, `dot-arrow-diamond`, `dot-arrow-tee`, `dot-arrow-curve`,
 `dot-arrow-compound` (e.g. `crowdot`), `dot-arrow-side` (e.g. `lnormal`).
 Use a small graph; add `fixedsize=true` nodes where only the arrow shape matters
 so node-size font metrics don't perturb geometry. Prefer a representative corpus
-case (e.g. graphs-arrows / 2490) when it byte-matches; else synthetic.
+case (e.g. graphs-arrows / 2490) when it conforms to; else synthetic.
 
 ## Write-set
 - `test/golden/inputs/dot-arrow-*.dot` (create)

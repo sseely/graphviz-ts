@@ -51,13 +51,13 @@ See [decisions.md](decisions.md) for AD-1…AD-5 (all approved).
 - Any parity regression that is not strict re-bucketing to an equal-or-better
   verdict (0-regression rule; memory `bucket-fix-rebucketing`).
 - The change perturbs layout — ANY node/cluster position or bbox changes
-  (this is rendering-only; positions must be byte-identical).
+  (this is rendering-only; positions must be conformant).
 - Same divergence approached 3× without resolving; or 2 consecutive gate
   failures on the same check.
 - Any of AD-1…AD-5 would have to be contradicted.
 
 **PUSH FORWARD on own judgment:** the exact corner-curve interpolation needed
-to byte-match `round_corners`; golden graph choice + tolerance class
+to conformant `round_corners`; golden graph choice + tolerance class
 (`deterministic`) + corpus winner to pin; complexity-hook helper decomposition;
 fixing pre-existing 1–3 line violations in edited files; where the extracted
 helper lives within `poly-shapes.ts`.

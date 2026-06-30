@@ -33,7 +33,7 @@ file, then move on.
    journal entry, and its target file must be declared in your report.
 3. DELETE the 9 modules + emit.test.ts (git rm). emit-types.ts stays.
 4. Gates: tsc clean (proves nothing imported them), vitest 0 failed,
-   72 goldens byte-identical vs pre-task baseline.
+   72 goldens conformant vs pre-task baseline.
 
 ## Write-set
 
@@ -51,7 +51,7 @@ All 10 family files; src/gvc/device.ts; src/render/svg-helpers.ts;
 - Given every family export, when find_referencing_symbols runs, then
   only intra-family/test references exist (evidence in report)
 - Given the deletion, then tsc clean, vitest 0 failed, 72 goldens
-  byte-identical
+  conformant
 - Given any fold, then it carries @see cites + journal entry
 
 ## Rollback

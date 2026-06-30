@@ -18,7 +18,7 @@ at most 2 attempts per file, then move on.
 1. Run all four quality gates (same as T1):
    - `npx tsc --noEmit` → exit 0
    - `npx vitest run` → exit 0, failed == 0, passed >= 1466
-   - Golden probe + diff → 86 byte-identical
+   - Golden probe + diff → 86 conformant
    - `git diff --name-only HEAD~1..HEAD` → plan files only
 2. Confirm `ls .claude/worktrees/` shows the directory as empty (or
    the directory does not exist).
@@ -60,7 +60,7 @@ AD1, AD2, AD3, AD-C1.
 Given T1 and T2 completed:
 
 - When the four quality gates run, then all pass (exit 0, >= 1466
-  vitest, 86 byte-identical goldens, write-set clean).
+  vitest, 86 conformant goldens, write-set clean).
 - When `.claude/worktrees/` is listed, then empty or absent.
 - When `README.md` is read, then it contains a `## Mission Summary`
   section at the bottom with gate results and merge-readiness signal.

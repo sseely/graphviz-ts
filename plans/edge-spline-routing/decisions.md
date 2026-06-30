@@ -16,7 +16,7 @@ wrong-file guess; costs one extra batch boundary.
 **Context:** Routing geometry is decades of load-bearing C behavior (CLAUDE.md).
 **Decision:** Dump C's `routesplines`/`Proutespline` inputs+outputs (rebuild
 `gvplugin_dot_layout` → `/tmp/gvplugins`) for the reproducer's diverging edge and
-pin the port to them byte-for-byte. No "cleaner" reimplementation.
+pin the port to them conformant. No "cleaner" reimplementation.
 **Consequences:** Requires a C rebuild + instrumentation harness (S1).
 
 ## D3 — Scope to the long-edge extra-segment class only {#d3}
@@ -27,11 +27,11 @@ parallel) — most already ported/verified (route corpus 25/25).
 T2 surfaces an unrelated routing bug, log it and stop — do not chase it here.
 **Consequences:** Keeps the mission bounded and the regression surface small.
 
-## D4 — Regression floor: 0 regressions, byte-match ≥ 280 {#d4}
+## D4 — Regression floor: 0 regressions, conformant ≥ 280 {#d4}
 
-**Context:** `main` has 280 byte-match rows; none must regress. Edge routing is
+**Context:** `main` has 280 conformant rows; none must regress. Edge routing is
 shared, so a corridor/chain change can perturb many edges.
-**Decision:** Acceptance requires `byte-match ≥ 280` and **0 per-id regressions**
+**Decision:** Acceptance requires `conformant ≥ 280` and **0 per-id regressions**
 (survey diff vs `main`). The fix must leave currently-matching edges byte-
 identical. If it cannot, stop and re-scope.
 **Consequences:** The fix must be narrow — ideally gated on the exact condition
@@ -55,7 +55,7 @@ shortest-path polyline, hence the piece count):
 | output spline | **7 (2 cubics)** | **4 (1 cubic)** |
 | `v1` maximal-bbox right wall (box[2].UR.x) | 45 | 106 |
 
-Node centres byte-match the oracle; the endpoints' uniform +41 x is a benign
+Node centres conformant with the oracle; the endpoints' uniform +41 x is a benign
 internal-frame translation (cancels at render). After removing it, `v1` itself
 sits where C puts it, **but `v1`'s right neighbour (rank-13 order-1 virtual) is
 +12.7 too far right**, which widens `maximal_bbox(v1)` and erases the corridor
@@ -88,13 +88,13 @@ edgecmp-equal edges keep rank-major order (C batches those via the cnt-loop, so
 their relative routing order is immaterial).
 
 **Prototype verification (in S1, reverted):** rank-major collection + stable sort
-by rank-span ascending makes **all 26** reproducer paths byte-match the oracle,
+by rank-span ascending makes **all 26** reproducer paths conformant with the oracle,
 with the other 25 paths **unchanged**.
 
 **Consequences / blast radius:** This is a **global** routing-order change, not a
 gated corridor tweak (contra D4's "narrow fix" preference). It only perturbs
 output where `recover_slack` displaces a vnode shared as another edge's corridor
-neighbour — i.e. dense overlapping multi-rank graphs. Most of the 280 byte-match
+neighbour — i.e. dense overlapping multi-rank graphs. Most of the 280 conformant
 rows are simpler graphs and should be unaffected, but **T3's full survey is the
 D4 gate**: if any of the 280 rows regress, STOP and report (do not force the
 order).

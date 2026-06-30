@@ -22,5 +22,5 @@
   (an old test comment claimed "C uses object name"; disproven against native and
   the test was corrected).
 - **Result**: 2516 diverged → BYTE-MATCH, 0 regressions (no other corpus graph
-  relied on the raw-markup fallback). byte-match 486→487.
-- **Confidence**: High — byte-match + native cross-check on two error types.
+  relied on the raw-markup fallback). conformant 486→487.
+- **Confidence**: High — conformant + native cross-check on two error types.

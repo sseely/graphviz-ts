@@ -10,7 +10,7 @@ multiple optima and C/port pick different vertices. It is deep and corpus-wide
 
 ## Task (CONDITIONAL — AD-3)
 
-1. Re-render 2368 after T1+T2. If it byte-matches, mark T3 **no-op (not needed)**
+1. Re-render 2368 after T1+T2. If it conforms to, mark T3 **no-op (not needed)**
    and skip to T4.
 2. If only a ~1pt x delta remains, instrument the x-NS aux-graph construction
    order / pivot for 2368 vs C (the prior mission's `xns-diff.mjs` harness +
@@ -35,10 +35,10 @@ Do NOT undertake a general x-NS optimal-face replication for a 1pt residual.
 None.
 
 ## Acceptance criteria
-- Given 2368 after T1+T2 byte-matches, when T3 starts, then T3 is marked no-op
+- Given 2368 after T1+T2 conforms to, when T3 starts, then T3 is marked no-op
   (not needed) — no code change.
 - Given a ~1pt residual AND a localized low-risk fix, when applied, then 2368
-  byte-match AND full survey 0 regressions.
+  conformant AND full survey 0 regressions.
 - Given no localized fix, when assessed, then T3 is marked no-op + the residual
   documented in the decision journal — NOT pursued further (AD-3).
 

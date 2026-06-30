@@ -30,18 +30,18 @@ lands.
 Route an edge through the faithful path ONLY when it has an active side-mask
 port (`tail_port.side || head_port.side`). All other edges keep the current
 router. This contains blast radius: the 115 existing goldens (no side ports)
-are untouched and must stay byte-identical through batches 1–3.
+are untouched and must stay conformant through batches 1–3.
 - The gate is the same `portRouteOf`-style predicate T6a uses, extended to
   read `.side`.
 - AD3 revisits whether to widen the gate to all edges.
 
 ## AD3 — Golden strategy: byte-stability until an explicit, separate switch
 
-- Batches 1–3: NO existing ref changes. No-port goldens byte-identical
+- Batches 1–3: NO existing ref changes. No-port goldens conformant
   (hard gate). New steering-port goldens are APPENDED (AD-C1), 0.5pt class.
 - Batch 4 / SR9: routing *all* dot regular edges through the faithful path
   is a SEPARATE, explicitly-gated decision. The faithful fitter will not be
-  byte-identical to the simplified one; any ref re-mint requires oracle proof
+  conformant to the simplified one; any ref re-mint requires oracle proof
   the new output matches dot 15.0.0 better (or equal within tolerance) AND
   Scott's go-ahead. Default outcome if unproven: keep the hybrid (faithful
   for ported, simplified for the rest).

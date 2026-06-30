@@ -50,7 +50,7 @@ Use existing TS helpers: `makeFlatEndBox`, `routeSplines`, `clipAndInstall`,
   and the edge path matches dot within 0.5pt (or quarantine per AD-5).
 - **Given** the same at `EDGETYPE_LINE` (`splines=line`), **then** the 7-point
   polyline matches dot within 0.5pt.
-- **Given** the full suite, **then** ≥1793 pass, 0 fail, 115 goldens byte-identical.
+- **Given** the full suite, **then** ≥1793 pass, 0 fail, 115 goldens conformant.
 
 ## Quality bar
 

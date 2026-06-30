@@ -13,14 +13,14 @@ sets `e.seq = orig.seq`, mirroring C `new_virtual_edge`'s `AGSEQ(e)=AGSEQ(orig)`
 faithful `a.seq - b.seq`) + new `ordering.test.ts`. Write-set deviated from T0's
 pinned symptom file to the true root cause (user-approved; see decision journal).
 Commit `bcecf61`. Survey GATE PASS, 0 regressions, `graphs-in` cleared
-(structural→byte, byte-match 492→493). b58 node 7 fixed (5 left of 4); its 3/6/8
+(structural→byte, conformant 492→493). b58 node 7 fixed (5 left of 4); its 3/6/8
 residual and the other ordering graphs (ordering_dot1, pgram, trapeziumlr, 1472)
 remain diverged on a SEPARATE flat-enforcement cause (documented, AD-5).
 
 Execution rule: implement exactly what T0 pinned. Re-render `graphs/b58.gv` and
 `linux.x86/ordering_dot1.gv`; confirm per-node `<text>` x matches C
 (b58 target: `{1:27,6:45,3:81,2:99,8:117,5:171,7:207,4:243}`). Then run the full
-survey gate. **Any byte-match→worse is STOP + revert (AD-3)** — the 12
+survey gate. **Any conformant→worse is STOP + revert (AD-3)** — the 12
 already-matching `ordering` graphs are canaries. Batch done = b58 + ordering_dot1
 node order == C AND survey 0 regressions AND tsc + vitest green.
 

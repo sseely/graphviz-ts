@@ -15,7 +15,7 @@ Once T1 lands, "activating" each of these is mostly: (a) populate
 
 | ID | Kind | Consumer (state) | Corpus graphs | Primary risk | Done |
 |---|---|---|---|---|---|
-| [T2](T2-ratio-fill.md) | fill | `aspectFillScale` (ported, dead) | b22 (byte), polypoly (struct), jsort/pgram/trapeziumlr (diverged) | regress **b22** (currently byte-match) | [ ] |
+| [T2](T2-ratio-fill.md) | fill | `aspectFillScale` (ported, dead) | b22 (byte), polypoly (struct), jsort/pgram/trapeziumlr (diverged) | regress **b22** (currently conformant) | [ ] |
 | [T3](T3-ratio-expand.md) | expand | `aspectExpandScale` (ported, dead) | none in corpus today | low (no corpus coverage) | [ ] |
 | [T4](T4-ratio-value.md) | value | `aspectValueScale` (ported, dead) | none in corpus today | low (no corpus coverage) | [ ] |
 | [T5](T5-ratio-auto-idealsize.md) | auto | `idealsize` (UNPORTED) | b68 (byte, works by omission) | regress **b68**; new code | [ ] |

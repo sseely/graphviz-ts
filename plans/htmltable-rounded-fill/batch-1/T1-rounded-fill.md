@@ -80,7 +80,7 @@ In `htmltable-emit.test.ts` / `htmltable-emit-fill.test.ts`:
 
 Do NOT modify `src/common/poly-shapes.ts`, `poly-shapes-util.ts`, the bezier
 renderer, or `svg-gradient.ts` (D1). If you believe one needs changing, STOP and
-log to the decision journal — `grdcluster`/record byte-match says the path is
+log to the decision journal — `grdcluster`/record conformant says the path is
 reusable as-is.
 
 ## Read-set
@@ -109,7 +109,7 @@ After this task, rendering any `graphs-grd{fillcolor,linear,linear_angle,radial,
 radial_angle}` corpus input via `test/corpus/render-one.ts <input> dot` emits the
 table bgcolor fill as a rounded `<path fill="url(#l_N)">` (or `fill="<color>"`
 for solid), each bordered cell fill carries `stroke-width="<border>"`, and the
-output byte-matches the native oracle.
+output conforms to the native oracle.
 
 ## Acceptance criteria
 
@@ -144,5 +144,5 @@ own gate claims by running the commands. Return only a short summary.
 
 `feat(htmltable): emit rounded <path> bgcolor fills + fill stroke-width`
 Body: note the C `emit_html_tbl`/`emit_html_cell` rounded arm origin, reuse of
-`emitRoundedBezier` (proven byte-exact by grdcluster/record), and the gap-B
+`emitRoundedBezier` (proven conformant by grdcluster/record), and the gap-B
 pen-width-on-fill.

@@ -33,14 +33,14 @@ output changes (those match C today — any churn there is a regression).
 
 **PUSH FORWARD when:** diagnosis points into `classify.ts`/`cluster.ts` in the
 same call chain (AD-1); a clustered golden churns and new TS output == C
-byte-for-byte (AD-2, regenerate from oracle); 2471 rank structure matches C but
+conformant (AD-2, regenerate from oracle); 2471 rank structure matches C but
 it still doesn't fully render (AD-3 — perf gap is out of scope).
 
 ## Quality gates
 
 - `npx tsc --noEmit` → exit 0
 - `npx vitest run` → all pass; any churned golden regenerated from the C oracle
-  and confirmed TS==C byte-for-byte (documented in journal)
+  and confirmed TS==C conformant (documented in journal)
 - Hook limits: 30 lines/fn, CCN 10, 5 params, 500/file
 - `git diff --name-only` ⊆ declared write-set + regenerated goldens
 

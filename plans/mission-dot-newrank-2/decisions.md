@@ -13,11 +13,11 @@ dropped, cited line-by-line.
 **Consequences:** Slower than a patch, but correct and faithful (the C source is
 sacred). The trace is a durable artifact and de-risks the fix.
 
-## AD-2: 122 goldens stay byte-identical
+## AD-2: 122 goldens stay conformant
 
 **Context:** newrank/cluster-rank=same cases are attr-gated; the 122 existing
 goldens are default-attr.
-**Decision:** Land a change ONLY if all 122 goldens stay byte-identical. Never
+**Decision:** Land a change ONLY if all 122 goldens stay conformant. Never
 regenerate or quarantine an existing golden.
 **Consequences:** Zero golden churn; the dispatch fix must not alter any
 non-newrank graph (verified empirically — newrank is read only via the attr).
@@ -41,6 +41,6 @@ cap (500). Any in-session edit is blocked until split.
 **Decision:** Batch 0 splits it into cohesive modules (e.g. extract the
 flat-edge cycle-breaking/reorder group, or the fillRanks group, into
 `mincross-flat.ts` / `mincross-fill.ts`), preserving all exports and behaviour,
-goldens byte-identical, before any logic change.
+goldens conformant, before any logic change.
 **Consequences:** Unblocks in-session edits; pure mechanical refactor with zero
 output change. Re-exports keep import sites stable.

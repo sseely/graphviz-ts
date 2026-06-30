@@ -4,7 +4,7 @@
 Faithful TS port (root `CLAUDE.md`; C is spec). `partition(cells, bb)`
 (`src/ortho/partition.ts:132`, port of `lib/ortho/partition.c`) splits the gcell
 obstacle set into a set of rectangles, using the P1-pinned `construct_trapezoids`
-plus the monotone-chain logic. Pin it byte-for-byte to native C. Tests: vitest;
+plus the monotone-chain logic. Pin it conformant to native C. Tests: vitest;
 TS strict.
 
 ## Task

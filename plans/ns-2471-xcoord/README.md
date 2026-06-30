@@ -35,7 +35,7 @@ together once 2471 is end-to-end green).
 
 - **Faithful-only fix** (ADR-1): port the exact deviation from `ns.c`. **No
   non-C iteration cap or tie-break heuristic** — that yields wrong x-coords.
-- **Zero golden churn:** every other graph's x-coords stay byte-identical to C.
+- **Zero golden churn:** every other graph's x-coords stay conformant to C.
 - **C source is sacred:** revert all C instrumentation;
   `git -C ~/git/graphviz status --porcelain lib/` clean before any commit
   (scope to `lib/` — root-level `.gitignore`/`.agent-notes/`/`.mcp.json` are
@@ -81,7 +81,7 @@ under-constraining the x-coord network simplex into degenerate cycling. Fixing
 the read (same pattern as mincross Layers 1 & 2; root vStart=0 unchanged) makes
 the NS converge. **2471 now renders end-to-end ~6s** (was a hang), **1876 tests
 pass (zero golden churn)**, C source untouched, and **22/23 ranks' x-order are
-byte-identical to C**. The single rank-6 within-rank order difference (n264–n273)
+conformant to C**. The single rank-6 within-rank order difference (n264–n273)
 is a **pre-existing, separate mincross-order divergence** — proven independent of
 this fix (mincross order is identical with the fix on or off) — and is the only
 remaining follow-up for full x-order parity.

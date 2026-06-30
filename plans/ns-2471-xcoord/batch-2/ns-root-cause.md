@@ -58,7 +58,7 @@ native `dot -v` with `GVBINDIR=/tmp/gvmine`. **All instrumentation reverted**
    | posClusters | **19695** | **20028** ✗ (+7021 vs +7354) |
    | compress | 19695 | 20028 |
 
-   ⇒ TS and C are **byte-identical through `make_edge_pairs`**. The entire gap
+   ⇒ TS and C are **conformant through `make_edge_pairs`**. The entire gap
    is in `pos_clusters`.
 4. **Per-sub-function dump of `pos_clusters`:**
 
@@ -122,13 +122,13 @@ offset-pointer + absolute `ND_order`:
   `saveBest/restoreRank/restoreBest` honour `vStart`).
 
 This restores the 333 left-keepout constraints, making the x-coord aux graph
-byte-identical to C (20028 edges) — which (NS being faithful) is the necessary
+conformant to C (20028 edges) — which (NS being faithful) is the necessary
 and, by elimination, sufficient condition for C-equivalent convergence.
 
 ## Causation: by elimination (injection experiment was mechanically inconclusive)
 
 The only difference in the NS *input* between C and TS is these 333 cluster
-constraints (everything else byte-identical through `make_edge_pairs`, and the
+constraints (everything else conformant through `make_edge_pairs`, and the
 other three `pos_clusters` sub-functions match exactly). The NS *algorithm* is
 faithful. Therefore the missing constraints are the cause: they are precisely
 the high-relevance containment constraints that pin cluster nodes relative to

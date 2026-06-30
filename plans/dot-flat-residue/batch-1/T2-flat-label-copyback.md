@@ -56,7 +56,7 @@ AD-3 (reuse aux label pos + existing updateBB; spike first). Locked.
 - Given the same graph, when rendered, then the graph bb includes the
   label box.
 - Given `npx vitest run`, then pass count >= 1852, zero regressions, all
-  unrelated goldens byte-identical.
+  unrelated goldens conformant.
 
 ## Observability
 

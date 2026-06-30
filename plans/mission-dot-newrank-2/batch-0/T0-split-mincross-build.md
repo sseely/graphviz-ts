@@ -5,7 +5,7 @@
 `src/layout/dot/mincross-build.ts` is 529 lines (T3 of the prior mission pushed
 it over). The check-complexity.py PostToolUse hook blocks any edit to a file
 >500 lines, so this mission cannot touch it until it's split. Pure mechanical
-refactor — **zero behaviour change**, goldens byte-identical.
+refactor — **zero behaviour change**, goldens conformant.
 
 ## Task
 
@@ -43,7 +43,7 @@ Do NOT change any logic, signature, or order of operations.
   `mincross-flat.ts` is ≤ 500.
 - **Given** `npx tsc --noEmit`, **then** exit 0 (all imports resolve).
 - **Given** `npx vitest run`, **then** 1839 pass / 0 fail and all 122 goldens
-  byte-identical (no behaviour change).
+  conformant (no behaviour change).
 - **Given** `lizard` on both files, **then** no violations.
 
 ## Quality bar
@@ -53,4 +53,4 @@ Commit: `refactor(T0): split mincross-build.ts under the 500-line cap`.
 
 ## Observability / Rollback
 
-N/A. Reversible (revert; pure refactor, goldens byte-identical).
+N/A. Reversible (revert; pure refactor, goldens conformant).

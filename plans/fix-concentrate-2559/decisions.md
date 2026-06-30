@@ -41,11 +41,11 @@ version artifacts. Requires `survey:setup` before any survey run.
 
 **Context:** Native vs port differ in sub-pixel y-rounding (translate `128.5` vs
 `128.8`) from the EstimateTextMeasurer cutover — accepted pre-existing drift
-unrelated to this bug, so byte-match may be unreachable.
+unrelated to this bug, so conformant may be unreachable.
 
 **Decision:** The per-test success bar is 2559 `diverged → structural-match`
 (merged trunk present, same element structure, deltas within tolerance). The
-**hard mission gate** is `survey:gate` regressions = 0. Pursue byte-match only if
+**hard mission gate** is `survey:gate` regressions = 0. Pursue conformant only if
 it falls out naturally; do not switch text measurers to force it.
 
 **Consequences:** Realistic, achievable target; no scope creep into the

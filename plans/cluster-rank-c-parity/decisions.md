@@ -20,7 +20,7 @@ graphs; their goldens currently encode the buggy (overlapping) layout.
 
 **Decision:** Auto-regenerate churned goldens from the **native C binary**. For
 each, record in the journal: test name, old vs new `nranks`, and confirmation
-new TS output == C byte-for-byte. STOP only if TS ≠ C after the fix.
+new TS output == C conformant. STOP only if TS ≠ C after the fix.
 
 **Consequences:** A churn that matches C is correct behavior (the C binary is
 ground truth). Mirrors the prior mission's AD-3. Never hand-edit a golden.

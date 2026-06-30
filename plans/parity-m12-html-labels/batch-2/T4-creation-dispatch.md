@@ -57,7 +57,7 @@ placement — placement machinery is label-kind agnostic and untouched).
   unchanged from M11)
 - Given html on each of the 5 edge/graph slots, then the same per
   slot, with @see cites to the exact utils.c/input.c lines
-- Given plain-text attrs only, then 72 goldens byte-identical, suite
+- Given plain-text attrs only, then 72 goldens conformant, suite
   0 failed
 
 ## Observability / rollback

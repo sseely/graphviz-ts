@@ -132,6 +132,6 @@ bb.ll.y matches C, residual closes; canary `2:ne->3:nw` unaffected.
 
 **Decisions:** 0 flagged for blocking review; the DELIVERABLE row is marked
 `review` (it hands the named line to the fix mission). **Quality gates:** tsc 0,
-vitest 1991/1991 byte-identical (no `src/` change), lizard clean, C oracle
+vitest 1991/1991 conformant (no `src/` change), lizard clean, C oracle
 restored native (AD-6). **Known issue / follow-up:** the fix mission; T2's
 `rank=source` port gap remains a latent correctness gap for more complex graphs.

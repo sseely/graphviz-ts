@@ -75,7 +75,7 @@ geometry once given the right edge. **No pathplan change.** → **GO.**
 
 ## Residual risk (carried into Batch 1)
 ADR-3 shared-router risk stands: this changes the base for **every** multi-rank
-parallel/opposing group. Some graphs may currently byte-match *because* the buggy
+parallel/opposing group. Some graphs may currently conformant *because* the buggy
 short base happens to coincide with C (stacked endpoints / no obstacle). The
 0-regression survey gate (per-id verdicts vs a fresh oracle) is the safety net;
 commit incrementally for bisectability.

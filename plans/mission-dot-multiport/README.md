@@ -6,7 +6,7 @@ Close the **last remaining divergence** in the dot routing re-verification
 corpus: `ports both dense` (`digraph{a:e->b; a:w->c; a->d}`), backlog **G2**.
 A node with multiple compass-ported out-edges orders its successor rank wrong,
 mispositioning the node. Make the dot crossing-minimization tiebreak faithful to
-C so the corpus reaches **25/25 byte-exact**.
+C so the corpus reaches **25/25 conformant**.
 
 This is a **faithful port fix**, not a redesign. The C source
 (`~/git/graphviz`, tag 15.0.0) is the spec.
@@ -48,7 +48,7 @@ Anthropic — do not route autonomous execution to it.
   pass: exit 0
   on_fail: fix_and_rerun
 - command: npx vitest run
-  pass: exit 0 AND failed == 0 AND every golden byte-identical
+  pass: exit 0 AND failed == 0 AND every golden conformant
   on_fail: fix_and_rerun
 - command: npx tsx .probes/route-corpus.ts
   pass: 24 MATCH + ... → after T2: "ports both dense" is MATCH (25/25, 0 DIVERGE)
@@ -94,8 +94,8 @@ Architecture decisions (locked): see [decisions.md](decisions.md).
   (`mincross.c:593,611`), via 3 cited local helpers. `val()`/`port.order` and
   `mincross-order.ts` untouched (AD-2).
 - **Result:** corpus `ports both dense` 56.10 → 0.25pt **MATCH**; **25/25, 0
-  DIVERGE**. `a` now at x=99, rank-1 `[c,d,b]` — byte-exact to dot 15.0.0.
-- **Quality gates:** tsc 0; vitest 1951/1951; all goldens byte-identical (AD-3);
+  DIVERGE**. `a` now at x=99, rank-1 `[c,d,b]` — conformant to dot 15.0.0.
+- **Quality gates:** tsc 0; vitest 1951/1951; all goldens conformant (AD-3);
   lizard clean. 2 `near` residuals (compass/record ports) pre-existing, no
   regression.
 - **Decisions flagged for review:** (1) premise correction `order≠0`; (2) hook

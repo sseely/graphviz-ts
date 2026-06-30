@@ -10,4 +10,4 @@ transform still emits `rotate(0)` until T2. Establishes the interface T2 reads.
 | T1 | Parse rotate/orientation/landscape → `job.rotation`; guard transformPoint | single (sonnet) | `src/gvc/viewport.ts`, `src/gvc/device.ts`, `src/gvc/device.test.ts` | — | [x] |
 
 **Gate after batch:** `npm run typecheck` + `npm test` green; survey output
-**byte-identical** to `/tmp/parity.before.json` (T1 changes no rendered bytes).
+**conformant** to `/tmp/parity.before.json` (T1 changes no rendered bytes).

@@ -13,7 +13,7 @@ routing loop (C: `make_regular_edge` moves it 33→11.71; TS: stays 51).
 the instrumentation harness (dump the vnode coord across `make_regular_edge`
 internals), then port it. The aux graph runs the same TS routers as a real
 graph, so the fix must NOT change regular-edge label placement for non-aux
-graphs — verify the 1855 goldens stay byte-identical.
+graphs — verify the 1855 goldens stay conformant.
 
 **Consequences:** The fix lives in the regular-edge routing path
 (`edge-route*.ts` / wherever the labeled cross-rank edge positions its
@@ -40,7 +40,7 @@ label pos back. `copyOneFlatSpline` takes `bb` not `g`.
 add `copyFlatLabel(orig, auxe, del, flip, g)`, export the private
 `updateBB` from `splines-label.ts`. Stays ≤5 params.
 
-**Consequences:** Lands the label byte-exact once T1 positions the aux
+**Consequences:** Lands the label conformant once T1 positions the aux
 vnode correctly.
 
 ## AD-4: rollback / compatibility

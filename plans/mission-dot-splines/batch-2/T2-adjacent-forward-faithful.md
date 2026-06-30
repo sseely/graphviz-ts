@@ -16,10 +16,10 @@ algorithm. Make it the path for ALL adjacent-rank forward edges.
    flat-label dispatch (`makeFlatLabeledEdge`/`makeAdjFlatLabeledEdge`) ahead of
    it. The simplified-fitter branch becomes unreachable for this category.
 2. Extend `routeRegularEdgeFaithful` (`edge-route-faithful.ts`) as needed so it
-   is byte-exact to dot for plain adjacent-rank edges — including steep
+   is conformant to dot for plain adjacent-rank edges — including steep
    diagonals (fan-out/in) and straight verticals. Mirror the C box construction
    (`rank_box`/`maximal_bbox`/`beginpath`/`endpath`); do NOT invent geometry.
-3. Run the 115 goldens. Per AD-1/AD-3 they must stay byte-identical; any shift is
+3. Run the 115 goldens. Per AD-1/AD-3 they must stay conformant; any shift is
    a faithful-path bug — fix it against the dot oracle. If a golden matches dot
    but differs from the stored golden, STOP (stale golden).
 4. Pin new oracle tests in `edge-route-splines.test.ts`: wide fan-out
@@ -59,7 +59,7 @@ The caller (`routeFaithfulSidePort` / `routeForwardEdge`) clip+installs.
   edge routes from a to its head within 0.5pt of dot (no degenerate stub).
 - **Given** `digraph{b->z;c->z;d->z;e->z;f->z}`, **then** the outermost edges
   match dot within 0.5pt.
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 - **Given** the full suite, **then** passed >= baseline, 0 failed.
 
 ## Quality bar

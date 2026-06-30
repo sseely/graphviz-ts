@@ -7,5 +7,5 @@ marking all group edges routed in one pass (mirrors the adjacent-flat dispatch).
 |----|-------------|-------|--------|------------|------|
 | T3 | `routeFaithfulSidePort` collects the non-adjacent group + routes once via `routeFlatEdgeGroupFaithful` | direct (opus) | `src/layout/dot/edge-route.ts` | T2 | [ ] |
 
-Gate: `tsc` clean; `render-one.ts` on synthetic cnt=2/3/bottom byte-matches native
+Gate: `tsc` clean; `render-one.ts` on synthetic cnt=2/3/bottom conforms to native
 end-to-end; cnt=1 synthetic unchanged; `vitest run` green; `lizard` clean; <500 lines.

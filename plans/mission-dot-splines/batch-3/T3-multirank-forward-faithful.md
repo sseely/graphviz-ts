@@ -14,11 +14,11 @@ path for all multi-rank forward edges.
    `routeFaithfulMultiRank` / `routeMultiRankEdgeFaithful` (drop the
    `hasSidePort || hasMainLabel` gate for forward multi-rank), keeping label
    handling intact.
-2. Extend `routeMultiRankEdgeFaithful` so it is byte-exact for plain chains: walk
+2. Extend `routeMultiRankEdgeFaithful` so it is conformant for plain chains: walk
    the virtual chain (`walkFwdVirtChain`), build the per-rank boxes
    (`rank_box`/`maximal_bbox`), route via pathplan `routeSplines`. Mirror C
    `make_regular_edge` over the chain; do NOT invent geometry.
-3. Goldens must stay byte-identical (many goldens have multi-rank edges — this is
+3. Goldens must stay conformant (many goldens have multi-rank edges — this is
    the highest golden-risk batch). Fix any shift as a faithful-path bug vs the
    dot oracle. STOP on a stale-golden mismatch.
 4. Pin oracle tests: a 3-rank long-span (`a->b->c->d; a->d`) and a chain with a
@@ -46,7 +46,7 @@ multi-rank forward edge, or null when not multi-rank-forward.
 
 - **Given** `digraph{a->b->c->d; a->d}`, **then** the `a->d` long-span matches
   dot within 0.5pt (was ~Δ on the simplified path).
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 - **Given** the full suite, **then** passed >= baseline, 0 failed.
 
 ## Quality bar

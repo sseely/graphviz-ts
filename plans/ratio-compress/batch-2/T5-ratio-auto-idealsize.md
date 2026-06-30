@@ -5,7 +5,7 @@
 Unlike fill/expand/value, `ratio=auto`'s `set_aspect` behavior is **not ported at
 all**: `aspectScaleFactors` returns `null` for `'auto'`, and C's `idealsize` (the
 function that decides whether auto should fill) has **no port**. Auto currently
-"works by omission" — `b68` (`ratio=auto`) byte-matches because, for it,
+"works by omission" — `b68` (`ratio=auto`) conforms to because, for it,
 `idealsize` would return false (no scaling needed) and the port's null-return
 happens to produce the same result.
 
@@ -16,17 +16,17 @@ whether the drawing should be scaled to ~half the page and is the missing piece.
 `lib/common/input.c:578` (`setRatio` → R_AUTO).
 
 ## Corpus / risk
-`b68` is the only `ratio=auto` graph and is **byte-match today**. **Primary risk:
+`b68` is the only `ratio=auto` graph and is **conformant today**. **Primary risk:
 porting `idealsize` and populating `drawing` for auto could change b68** if the
 port's `idealsize` disagrees with C on the fill decision. New code (idealsize),
 not just wiring.
 
 ## Why deferred
-Real new logic (`idealsize`) plus a fragile byte-match (b68) to protect, for a
+Real new logic (`idealsize`) plus a fragile conformant (b68) to protect, for a
 single corpus graph that already passes. Lowest priority; captured so the
 unported `idealsize` / auto branch is on record.
 
 ## When taken up
 Port `idealsize` faithfully; populate `drawing` for auto; require `b68` stays
-byte-match and add an oracle-pinned auto-fills case (a graph where idealsize
+conformant and add an oracle-pinned auto-fills case (a graph where idealsize
 returns true) to exercise the live path.

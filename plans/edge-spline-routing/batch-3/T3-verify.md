@@ -17,7 +17,7 @@ the journal.
    rows move out of `diverged` (byte/structural). If any remain diverged,
    capture the residual `firstDiffPath` and write a comparison page under
    `plans/edge-spline-routing/comparisons/`.
-3. **Regression floor (D4):** `byte-match ≥ 280`, **0 per-id regressions** vs
+3. **Regression floor (D4):** `conformant ≥ 280`, **0 per-id regressions** vs
    `main`'s `parity.json`; `errored`/`timeout` unchanged.
 4. **Reach:** report how many long-edge / Helvetica rows improved (verdict +
    maxDelta deltas); spot-check 2-3.
@@ -43,7 +43,7 @@ D4 (floor ≥ 280, 0 regressions), D3 (unrelated residuals deferred).
 
 - Given the regenerated survey, when inspecting the reproducer + rankdir paths,
   then the previously extra-segment edges match the oracle piece counts.
-- Given the survey vs baseline by id, then `byte-match ≥ 280` and **0 rows
+- Given the survey vs baseline by id, then `conformant ≥ 280` and **0 rows
   regressed**; `errored`/`timeout` unchanged.
 - Given a currently-matching graph (spot-check), then it is unchanged.
 - Given any still-diverging improved row, then it is recorded as deferred, not
@@ -60,7 +60,7 @@ N/A — survey is dev/test infra.
 ## Quality bar
 
 Full-branch `tsc` + `vitest` green. Commit: `test(T3): refresh parity dashboard
-for long-edge spline fix`. Body: state the canary verdicts, byte-match delta,
+for long-edge spline fix`. Body: state the canary verdicts, conformant delta,
 and any deferred residuals.
 
 ## Boundaries

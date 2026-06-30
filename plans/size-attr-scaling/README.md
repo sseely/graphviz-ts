@@ -12,7 +12,7 @@ oracle does. Today the port ignores `size=` entirely — it hardcodes
 native oracle computes a zoom factor `Z` and emits `scale(Z)` plus
 size-fitted dimensions.
 
-This is the dominant byte-match blocker for the `rankdir_dot*` cluster (the
+This is the dominant conformant blocker for the `rankdir_dot*` cluster (the
 selected "best" target: 6 diverged rows) and generalizes to **~137 corpus
 inputs that set `size=`** (24 also set `ratio=`).
 
@@ -57,7 +57,7 @@ referenced in the decision journal; do not squash).
 in no other task's write-set; two consecutive quality-gate failures on the same
 check; the same code location is changed ≥3× without resolving a failing check;
 the implementation would contradict [decisions.md](./decisions.md); **any of the
-278 existing byte-match rows regress** (see D5); activating ratio-aspect layout
+278 existing conformant rows regress** (see D5); activating ratio-aspect layout
 reshaping appears necessary (out of scope — stop).
 
 **Push forward** (log to decision journal) when: a choice is purely stylistic;
@@ -79,7 +79,7 @@ constant (rounding mode, pad) directly from instrumented C output.
 ```
 
 Regression scan (T3): `npx tsx test/corpus/survey.ts` then confirm
-`byte-match >= 278` and `errored`/`timeout` counts do not rise.
+`conformant >= 278` and `errored`/`timeout` counts do not rise.
 
 ## Baseline (pre-flight verified 2026-06-22)
 
@@ -116,7 +116,7 @@ Batches are **sequential** (T2's zoom-compute and T1's guard both edit
   `dot-size-scaling`. Filled/upscale cases match the oracle exactly.
 - T3: survey/dashboard refreshed.
 
-**Results:** byte-match **278 → 280** (+2), structural 236 → 237, diverged
+**Results:** conformant **278 → 280** (+2), structural 236 → 237, diverged
 254 → 251; errored/timeout unchanged. **0 regressions** (per-id verified).
 All `size=` graphs' divergence shrank (rankdir `maxDelta 3075 → 43–68`).
 
@@ -132,7 +132,7 @@ All `size=` graphs' divergence shrank (rankdir `maxDelta 3075 → 43–68`).
 **Canary shortfall (for user review):** the 6 `rankdir_dot*` rows did NOT reach
 byte/structural — they remain `diverged` on a **pre-existing ~7.5pt graph-label
 height layout divergence** (uniform y-offset, x-coords exact), independent of
-`size=` and out of scope (D3/D4). The scaling itself byte-matches the oracle.
+`size=` and out of scope (D3/D4). The scaling itself conforms to the oracle.
 Comparison page: [comparisons/rankdir-dot-residual.md](./comparisons/rankdir-dot-residual.md).
 `ratio=fill` position residuals also deferred (R_FILL layout reshaping).
 

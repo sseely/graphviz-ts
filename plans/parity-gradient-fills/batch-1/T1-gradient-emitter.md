@@ -110,7 +110,7 @@ writes `fill="`).
 - Given `frac=0` (radial case): stops at `0` and `1`.
 - Given `gradientAngle=45` in linear case: `x1/y1/x2/y2` are
   non-trivial (geometry from `getGradientPoints`).
-- Suite: 0 failed, goldens byte-identical (no callers yet).
+- Suite: 0 failed, goldens conformant (no callers yet).
 
 ## Quality bar
 

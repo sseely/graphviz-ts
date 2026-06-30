@@ -2,10 +2,10 @@
 
 Locked before execution. Contradicting one is a STOP condition.
 
-## AD-1: cnt=1 must reduce to exactly current behavior (byte-identical)
+## AD-1: cnt=1 must reduce to exactly current behavior (conformant)
 **Context:** The cnt-loop with cnt=1, i=0 is algebraically the current single-route
 path (`Multisep/2 = nodesep/2`, `(0+1)·step = step`). 74 corpus cases are cnt=1.
-**Decision:** The generalized router MUST produce byte-identical splines for every
+**Decision:** The generalized router MUST produce conformant splines for every
 cnt=1 edge. The T1 box-helper refactor is pure (no behavior change); vitest stays
 1995 green. Any cnt=1 / out-of-family golden flip ⇒ STOP — it is a bug, not a
 faithful change.
@@ -22,13 +22,13 @@ and the cnt-loop router (`routeFlatEdgeGroupFaithful`) in a NEW
 
 ## AD-3: Group ordering = seq order, lead edge forward-normalized
 **Context:** Edge `i` gets offset `(i+1)·step`; the per-edge spline assignment must
-match C's order so the SVG byte-matches. C `dot_splines_` collects in sorted-edge
+match C's order so the SVG conforms to. C `dot_splines_` collects in sorted-edge
 order and forward-normalizes the lead (`makefwdedge`).
 **Decision:** `collectNonAdjacentFlatGroup` mirrors `collectAdjacentFlatGroup`:
 same node pair, identical ports, non-adjacent, ordered so the lead edge's tail is the
 left (lower-order) node, ties by `seq`. Confirm against the oracle's per-edge spline
 assignment; if C's order differs, follow C.
-**Consequences:** Deterministic nesting that byte-matches the oracle.
+**Consequences:** Deterministic nesting that conforms to the oracle.
 
 ## AD-4: Faithful match to C at both branches; no special-case, no new abstractions
 **Context:** CLAUDE.md YAGNI + "C defines completeness".
@@ -42,7 +42,7 @@ aren't multi-edges") — do not route labeled edges through the group loop.
 ## AD-5: Native C oracle; C instrumentation ephemeral; synthetic = validation
 **Context:** No corpus trigger; memory `oracle-native-not-wasm`,
 `instrument-c-before-quarantine`, `corpus-scan-for-rare-triggers`.
-**Decision:** Validate cnt≥2 byte-match ONLY against native `dot` on synthetic
+**Decision:** Validate cnt≥2 conformant ONLY against native `dot` on synthetic
 inputs (re-capture oracle SVGs at execution time — /tmp copies are throwaway). If a
 box-channel mismatch needs pinning, instrument by rebuilding `gvplugin_dot_layout`,
 copy `build/plugin/dot_layout/libgvplugin_dot_layout.8.dylib` → `/tmp/gvplugins`,

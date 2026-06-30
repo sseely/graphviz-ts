@@ -17,7 +17,7 @@ ellipse with pie wedges. Neither is a gradient.
 - `a [shape=box, style=striped, fillcolor="red:green:blue"]` → three
   side-by-side `<polygon fill="red"…/> <polygon fill="green"…/> <polygon
   fill="blue"…/>` filling the box, each 1/3 width, thin pen, plus the
-  node boundary. Capture `dot -Tsvg` and match byte-for-byte.
+  node boundary. Capture `dot -Tsvg` and match conformant.
 - `a [style=wedged, fillcolor="red:green:blue"]` (default ellipse) →
   three pie wedges as `<path fill="…" …/>` bezier curves. Match the
   oracle.
@@ -81,13 +81,13 @@ co-locating in svg-multicolor.ts if small.
 builds a Bézier path approximating an elliptic sector and depends on the
 arc-to-bezier machinery in that file. The C SVG output for a wedge is a
 dense `<path d="M.. C.. ..">` with ~40 control points at 2dp. STRIPED is
-pure rectangles (low risk, will byte-match). WEDGED depends on sin/cos in
+pure rectangles (low risk, will conformant). WEDGED depends on sin/cos in
 the arc approximation — if the port's libm trig diverges from C's at 2dp,
 the wedge control points will differ. That is the mission's FMA/libm
 stop-condition class: if the wedge path diverges and the cause is libm
 trig (not a port bug), DO NOT chase a code fix — journal it and let
 T-gold pin-or-exclude the wedged golden. STRIPED must still pass. Build
-striped first (verify byte-match), then wedged.
+striped first (verify conformant), then wedged.
 
 ## Read-set
 
@@ -108,7 +108,7 @@ bands/wedges (match C). The boundary is drawn unfilled after the regions.
 
 ## Acceptance criteria (oracle-verify each)
 
-- striped box 3-color → 3 bands + boundary, byte-for-byte vs C.
+- striped box 3-color → 3 bands + boundary, conformant vs C.
 - wedged ellipse 3-color → 3 wedge paths + boundary, vs C.
 - weighted fractions sized correctly.
 - single-color striped/wedged → unchanged (solid). 97 goldens stable.

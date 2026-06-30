@@ -38,7 +38,7 @@ Key behavioral contracts verified in the C source:
    An incomplete walk permanently suppresses resize.
 7. `dtstrhash` for null-terminated strings advances 2 bytes per step unless
    the second byte is `\0` — this is the exact loop from `dtstrhash.c` and
-   must be replicated byte-for-byte.
+   must be replicated conformant.
 
 ## Task
 

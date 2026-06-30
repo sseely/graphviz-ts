@@ -17,8 +17,8 @@ inputs and compares against the native `dot 15.1.0` oracle.
    `macosx-nestedclust_dot`, `nshare-nestedclust_dot`, `705`, `graphs-b7`,
    `1514`.
 3. Confirm **0 net regressions**: the `clust*` / `labelclust*` / `grdcluster`
-   byte-match cases (≈40, listed in the pre-change PARITY.md byte-match block)
-   remain byte-match. Compare pre/post `parity.json` per-id verdicts — judge by
+   conformant cases (≈40, listed in the pre-change PARITY.md conformant block)
+   remain conformant. Compare pre/post `parity.json` per-id verdicts — judge by
    per-id verdict deltas, not bucket counts (re-bucketing is expected for the
    multi-axis `@id` cases).
 4. Write a decision-journal entry: targets flipped, any re-bucketed, any
@@ -46,7 +46,7 @@ If any of the 7 targets did **not** flip, or a guard regressed:
 - Given pre vs post `parity.json`, when diffing per-id verdicts, then no id
   moves byte/structural → diverged (0 regressions).
 - Given `PARITY.md`, when read, then its summary counts reflect the new run
-  (byte-match increased, diverged decreased by ≥7 minus any re-bucket).
+  (conformant increased, diverged decreased by ≥7 minus any re-bucket).
 
 ## Observability
 N/A.

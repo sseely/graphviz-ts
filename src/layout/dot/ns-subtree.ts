@@ -267,7 +267,7 @@ export function stExtractMin(heap: STheap): Subtree {
  * mutation (`rank += delta`) is order-independent. Ported with an explicit
  * stack instead of recursion: deep trees (e.g. corpus 2646, a 7-deep quadtree
  * with thousands of nodes) overflow the JS call stack where C's larger native
- * stack does not. Outcome is byte-identical to the recursive form.
+ * stack does not. Outcome is identical to the recursive form.
  * @see lib/common/ns.c:tree_adjust
  */
 export function treeAdjust(v: Node, from: Node | undefined, delta: number): void {

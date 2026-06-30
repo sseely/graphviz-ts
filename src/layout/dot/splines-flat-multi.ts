@@ -9,7 +9,7 @@
  * `stepx = Multisep/(cnt+1)`, `stepy = vspace/(cnt+1)`; ONE shared makeFlatEnd
  * tail+head; then edge `i` is offset by `(i+1)*step` on the two END boxes while
  * the MIDDLE box keeps plain `stepy`. cnt=1 reduces to routeFlatEdgeFaithful
- * (`Multisep/2 = nodesep/2`, `(0+1)*step = step`) — byte-identical (AD-1).
+ * (`Multisep/2 = nodesep/2`, `(0+1)*step = step`) — identical (AD-1).
  *
  * The port routes each non-adjacent flat independently at `nodesep/2`, so cnt>=2
  * edges come out identical/overlapping; this module restores the nesting.

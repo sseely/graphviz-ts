@@ -91,7 +91,7 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 // ---------------------------------------------------------------------------
 
 // + 8 arrowhead-geometry goldens (one per arrow-type group: dot/crow/box/
-//   diamond/tee/curve/compound/side — dir=both head+tail, byte-matched)
+//   diamond/tee/curve/compound/side — dir=both head+tail, conformant)
 // + 2 HTML-table gradient bgcolor goldens (linear table+cell; radial cell)
 // + 1 rounded HTML-table gradient golden (rounded fill+border <path>,
 //   leaked stroke-width on bordered-cell fills)
@@ -109,7 +109,7 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //   stays diverged on a ~1px Proutespline residual + a separate lone-edge issue;
 //   the survey verdict is its active gate)
 // + 1 edgecmp-order fixture (fix-edge-route-order: edge-order-min — lone edge
-//   dispatched before a vnode-moving parallel group; byte-matches the oracle and
+//   dispatched before a vnode-moving parallel group; conforms to the oracle and
 //   guards the unified single-pass router against breaking simple cases)
 test('manifest has 165 entries', () => {
   expect(manifest).toHaveLength(165);

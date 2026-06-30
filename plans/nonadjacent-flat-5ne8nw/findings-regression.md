@@ -13,7 +13,7 @@ golden references the old head-side knot (558); none needed updating.
 ## Corpus survey — `npx tsx test/corpus/survey.ts` (THE CRUX)
 Counts (baseline `main` → after fix):
 ```
-byte-match        159 → 160   (+1)
+conformant        159 → 160   (+1)
 structural-match  238 → 237   (-1)
 diverged          356 → 356   ( 0)   <- ZERO new diverges
 errored            20 →  20   ( 0)
@@ -25,16 +25,16 @@ total 796
 Per-id verdict delta (only ids whose verdict OR maxDelta changed):
 | id | baseline | after | direction |
 |----|----------|-------|-----------|
-| **241_0**  | structural-match / maxDelta 126 | **byte-match** | BETTER (target) |
+| **241_0**  | structural-match / maxDelta 126 | **conformant** | BETTER (target) |
 | 2413_1 | structural-match / maxDelta 68.25 | structural-match / maxDelta **48.05** | BETTER (smaller delta) |
 
-**Exactly 2 ids changed; BOTH improved; ZERO regressed.** No byte-match→worse, no
+**Exactly 2 ids changed; BOTH improved; ZERO regressed.** No conformant→worse, no
 new diverged/structural verdict, no errored↔timeout flips. `2413_1` is another
 box-channel edge that benefited from the now-equivariant fitter (verdict unchanged,
 divergence strictly reduced) — confirms the fix generalizes correctly, not a
 241_0 special-case.
 
-## End-to-end — `241_0` byte-match vs native dot
+## End-to-end — `241_0` conformant vs native dot
 `render-one.ts ... 241_0.dot dot` vs native oracle: **all drawing content (paths,
 polygons, text) is BYTE-IDENTICAL.** The `5:ne->8:nw` edge is now
 ```
@@ -43,7 +43,7 @@ M402.02,-41.9C413.34,-53.22 416.67,-57.24 432,-61.88 495.11,-80.98 533.98,-90.24
 knot at svg x=**432 (tail-side)**, exactly the oracle (was 558, head-side). The only
 remaining file diff is the SVG generator-comment header + native's `<!-- node -->`
 comment lines — pre-existing emit differences present on every corpus input
-(normalized away by the survey's byte-match verdict), NOT introduced here. The
+(normalized away by the survey's conformant verdict), NOT introduced here. The
 0.35pt bbox-top residual from the diagnosis is also resolved (viewBox identical:
 `0.00 0.00 782.00 86.00`).
 
@@ -53,6 +53,6 @@ comment lines — pre-existing emit differences present on every corpus input
 - Oracle remains native ground truth.
 
 ## Verdict
-AD-4 gate PASSED: `#241_0` structural-match → byte-match, ZERO new diverges/
+AD-4 gate PASSED: `#241_0` structural-match → conformant, ZERO new diverges/
 regressions corpus-wide, one additional edge improved. The shared-fitter change is
 safe. `parity.json` updated to the new baseline.

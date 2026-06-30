@@ -5,7 +5,7 @@
  * (mincross-transpose-perf mission, AD-1 #2).
  *
  * Guards the two faithful-port corrections that close the tests/2471.dot
- * transpose hang while keeping node order byte-identical to C:
+ * transpose hang while keeping node order conformant to C:
  *  - buildRanksFlip: reverse each rank via exchange() (mincross.c:1293) so
  *    RL/flip + multi-component (vStart>0) passes do not corrupt orders.
  *  - mergeRanksInstall: alias the cluster vlist into the root array + vStart
@@ -15,7 +15,7 @@
  * The graph is RL (flip) with two clusters whose ranks hold multiple real
  * nodes and mutual crossings — the exact paths the fixes touch. The expected
  * per-rank left-to-right order was captured from the native C `dot` oracle
- * (graphviz 15.x) and must stay byte-identical. A regression in either fix
+ * (graphviz 15.x) and must stay conformant. A regression in either fix
  * reorders these ranks or fails to converge.
  *
  * @see lib/dotgen/mincross.c:build_ranks, lib/dotgen/cluster.c:merge_ranks
@@ -89,7 +89,7 @@ function perRankOrder(svg: string): string[][] {
 }
 
 describe('mincross cluster order parity (transpose-perf fixes)', () => {
-  it('RL two-cluster graph: per-rank order is byte-identical to C', () => {
+  it('RL two-cluster graph: per-rank order is conformant to C', () => {
     const svg = renderSvg(RL_TWO_CLUSTER, 'dot');
     expect(perRankOrder(svg)).toEqual(C_ORDER);
   });

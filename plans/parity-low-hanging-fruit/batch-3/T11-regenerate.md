@@ -13,11 +13,11 @@ improvement and prove 0 regressions, then finalize the mission record.
    `GVBINDIR=/tmp/gvplugins`, `CORPUS_ROOT=~/git/graphviz/tests`). This rewrites
    `parity.json` + `PARITY.md`.
 3. **Regression check (HARD GATE):** diff per-id verdicts BEFORE vs AFTER. Allowed
-   transitions: diverged/errored → structural/byte-match, structural → byte-match.
+   transitions: diverged/errored → structural/conformant, structural → conformant.
    ANY regression (byte→structural, structural→diverged, anything→errored/timeout
    that the fix could have caused) → STOP and investigate. Treat new timeouts as
    noise ONLY if the case still renders within a manual re-run; otherwise flag.
-4. **Tally:** record byte-match delta and the count of promoted cases per bucket.
+4. **Tally:** record conformant delta and the count of promoted cases per bucket.
 5. **Deferred-case audit:** confirm every case marked `deep` in the triage docs
    has a `comparisons/<id>.md` page; reference them in the decision journal
    (CLAUDE.md completeness gate).
@@ -30,7 +30,7 @@ improvement and prove 0 regressions, then finalize the mission record.
 - project memory under `.claude/projects/.../memory/` (append/update)
 
 ## Acceptance criteria
-- Given regeneration, when complete, then byte-match count > the pre-fix baseline.
+- Given regeneration, when complete, then conformant count > the pre-fix baseline.
 - Given the per-id diff, then there are **0 regressions** (every changed verdict
   is an improvement).
 - Given the triage docs, then every `deep` case has a referenced comparison page.

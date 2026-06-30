@@ -44,7 +44,7 @@ or the number of passes. Profile-guided micro-opt only.
 
 ## Acceptance criteria
 
-- **Given** 2471 before/after, **when** SVGs are diffed, **then** byte-identical.
+- **Given** 2471 before/after, **when** SVGs are diffed, **then** conformant.
 - **Given** 2471, **when** timed, **then** improved toward ≤ ~3× native; log the
   number. If still over after reasonable micro-opt, document the residual — do
   **not** alter the algorithm to hit the target.

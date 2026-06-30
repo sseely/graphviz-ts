@@ -163,24 +163,29 @@ function summary(
   const c = report.counts;
   const q = quarantineTotals(manifest);
   const qLine = Object.entries(q).map(([k, v]) => `${k} ${v}`).join(', ') || 'none';
-  const matched = c['byte-match'] + c['structural-match'];
+  const matched = c.conformant + c['structural-match'];
   return [
     '## Summary',
     '',
     `- **Oracle:** ${report.oracleVersion} · **corpus root:** \`${report.corpusRoot}\``,
     `- **Surveyed (applicable):** ${report.total}`,
-    `- **byte-match:** ${c['byte-match']} (${pct(c['byte-match'], report.total)}) · ` +
+    `- **conformant\\*:** ${c.conformant} (${pct(c.conformant, report.total)}) · ` +
       `structural-match: ${c['structural-match']} → ${matched}/${report.total} structurally equal ` +
       `(${pct(matched, report.total)})`,
     `- **Accepted deltas (documented, won't-fix):** ${accepted.length} · ` +
       `**Tracked gaps (unaccepted, will-fix):** ${tracked.length} ` +
-      `→ of ${matched - c['byte-match'] + c.diverged} non-byte-match graphs`,
+      `→ of ${matched - c.conformant + c.diverged} non-conformant graphs`,
     `- **errored:** ${c.errored} · **timeout:** ${c.timeout} · **oracle-error:** ${c['oracle-error']} (excluded from scoring)`,
     `- **Quarantined (not surveyed, from corpus-manifest.json):** ${qLine}`,
     '',
+    '\\* **conformant** is a *deterministic-tolerance* verdict, not literal byte ' +
+    'equality: numeric coordinates/paths agree within ±0.01 and all non-numeric ' +
+    'content (tags, colors, text) is exactly equal (`compareSvg(…, \'deterministic\')`). ' +
+    'Full definition: [docs/conformance.md](../../docs/conformance.md).',
+    '',
     'Accepted deltas are deliberate, root-caused, won\'t-fix differences ' +
     '(`test/corpus/accepted-divergences.json` → [Known divergences](../../docs/known-divergences.md)). ' +
-    'Everything else non-byte-match is a tracked gap we intend to close.',
+    'Everything else non-conformant is a tracked gap we intend to close.',
     '',
   ].join('\n');
 }
@@ -204,10 +209,10 @@ function pct(n: number, d: number): string {
 function buildMarkdown(report: ParityReport, manifest: CorpusEntry[]): string {
   const byVerdict = (v: Verdict): SurveyResult[] => report.results.filter((r) => r.verdict === v);
   const errored = byVerdict('errored');
-  const byteIds = byVerdict('byte-match').map((r) => r.id);
+  const conformantIds = byVerdict('conformant').map((r) => r.id);
 
   // Join parity.json × the accepted-divergence registry (parity scope). Every
-  // non-byte-match graph is either an ACCEPTED delta (documented, won't-fix) or
+  // non-conformant graph is either an ACCEPTED delta (documented, won't-fix) or
   // a TRACKED gap. Accepted graphs are pulled out of the worst-first table and
   // the backlog buckets so the backlog reflects only real, fixable work.
   const acceptedReg = loadAccepted();
@@ -237,15 +242,17 @@ function buildMarkdown(report: ParityReport, manifest: CorpusEntry[]): string {
     'test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.',
     '',
     summary(report, manifest, accepted, tracked),
-    `## byte-match (${byteIds.length})`,
+    `## conformant (${conformantIds.length})`,
     '',
-    'Port SVG matches the oracle within the `deterministic` tolerance (0.01).',
+    'Port SVG is *conformant* with the oracle: numeric coordinates/paths agree ' +
+    'within the `deterministic` tolerance (±0.01) and all non-numeric content is ' +
+    'exactly equal — not literal byte equality. See [docs/conformance.md](../../docs/conformance.md).',
     '',
-    collapsedIds(byteIds),
+    collapsedIds(conformantIds),
     '',
     `## Accepted deltas (${accepted.length}) — documented, not chased`,
     '',
-    'Deliberate, root-caused differences we have chosen not to byte-match (a',
+    'Deliberate, root-caused differences we have chosen not to make conformant (a',
     'portability constraint, sub-perceptual and bounded). Source of truth:',
     '`test/corpus/accepted-divergences.json`; rationale in',
     '[Known divergences](../../docs/known-divergences.md). These are excluded from',

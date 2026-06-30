@@ -41,20 +41,20 @@ Run with **opus** (`claude-opus-4-8`). Fable 5 is disabled.
   pass: exit 0
   on_fail: fix_and_rerun
 - command: npx vitest run
-  pass: exit 0 AND failed == 0 AND 115 goldens byte-identical (122 golden tests)
-  on_fail: fix_and_rerun   # a non-byte-identical golden is a HARD STOP (see below)
+  pass: exit 0 AND failed == 0 AND 115 goldens conformant (122 golden tests)
+  on_fail: fix_and_rerun   # a non-conformant golden is a HARD STOP (see below)
 - command: npx lizard <changed files> -C 10 -L 30 -a 5
   pass: exit 0 (30 lines/fn, CCN 10, 5 params, 500 lines/file)
   on_fail: fix_and_rerun
 ```
 
 Baseline (main @ branch point): tsc 0; vitest **1842 passed / 0 failed**;
-122 golden tests (115 goldens byte-identical).
+122 golden tests (115 goldens conformant).
 
 ## Constraints
 
 **STOP when:**
-- A golden becomes non-byte-identical — means the `et` dispatch leaked into the
+- A golden becomes non-conformant — means the `et` dispatch leaked into the
   default `EDGETYPE_SPLINE` path. This is the core safety invariant; hard stop.
 - Files outside the declared write-set need changes (and aren't in another
   task's write-set).

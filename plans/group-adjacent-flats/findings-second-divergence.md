@@ -59,7 +59,7 @@ back edge is intercepted by the straight back-edge path.
 ## Impact characterization (the grouping change alone)
 - Curated goldens: `vitest` 1992/1992 pass; the only non-pass is the `#241_0`
   back-edge assertion (now an `xfail` tripwire). Every existing golden
-  byte-identical.
+  conformant.
 - Corpus survey (796): **diverged 357 → 357 (zero new diverges)**; `#241_0`
   unchanged (diverged, maxDelta 126); the only 2 verdict deltas (`2743`, `2782`)
   are `errored↔timeout` flakiness, not geometry. `parity.json` restored to

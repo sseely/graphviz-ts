@@ -11,10 +11,10 @@ approach does not reproduce dot's opposing geometry; follow T2's recipe.
 
 ## Task
 
-> **Recipe captured AND prototyped byte-exact** by the T2 pre-mission spike — see
-> `decision-journal.md` → "T2 spike recipe" + "TS byte-exact proof". The recipe
+> **Recipe captured AND prototyped conformant** by the T2 pre-mission spike — see
+> `decision-journal.md` → "T2 spike recipe" + "TS conformant proof". The recipe
 > produced exact-oracle geometry for a→b, the exact b→a control points, and
-> byte-identical `dot-multi-edge`/`mc-edge-multicolor` goldens. Implement it
+> conformant `dot-multi-edge`/`mc-edge-multicolor` goldens. Implement it
 > verbatim. Only TWO small residuals remain:
 > 1. **Back-member point-order:** ensure the back member's spline installs on the
 >    ORIGINAL edge so `edgeNormalize` (splines.ts) reverses its point order once
@@ -22,7 +22,7 @@ approach does not reproduce dot's opposing geometry; follow T2's recipe.
 >    `clipAndInstall` install target when `fe` is a `makeFwdView` virtual). Do NOT
 >    double-reverse (the DOT-1 bug).
 > 2. **AC4 stale test:** `multi-edge.test.ts` AC4 expects spacing ~13.37; the
->    faithful spacing (~17.3) is correct (the byte-identical `dot-multi-edge`
+>    faithful spacing (~17.3) is correct (the conformant `dot-multi-edge`
 >    golden proves it). Update AC4's expected value to the oracle-derived spacing.
 
 1. Implement per **T2's recipe** + AD-2 (mirror C `make_regular_edge` cnt>1):
@@ -38,8 +38,8 @@ approach does not reproduce dot's opposing geometry; follow T2's recipe.
 2. Remove the fitter calls from `baseSplineForGroup`/`installShiftedEdge` (the
    functions become faithful); do NOT delete the now-unreferenced fitter
    functions themselves — that is T4.
-3. Keep all goldens byte-identical (AD-3). Fix any shift as a faithful-path bug
-   vs the dot oracle. If byte-exact parity is unreachable, STOP (do not regress).
+3. Keep all goldens conformant (AD-3). Fix any shift as a faithful-path bug
+   vs the dot oracle. If conformant parity is unreachable, STOP (do not regress).
 4. Pin oracle tests in `edge-route-splines.test.ts`: opposing pair
    (`a->b; b->a`) and a parallel-with-offset case (tol 0.5). Keep the existing
    `edge-route-multi.test.ts` opposing pin and `multi-edge.test.ts` AC4 green.
@@ -73,8 +73,8 @@ calls remain in `splines-route.ts`.
 - **Given** `digraph{a->b; b->a}`, **then** both edges match the dot oracle ≤0.5pt
   (the `edge-route-multi.test.ts` opposing pin passes).
 - **Given** `dot-multi-edge` and `mc-edge-multicolor` goldens, **then**
-  byte-identical; the `multi-edge.test.ts` AC4 spacing test passes.
-- **Given** the 115 goldens, **then** all byte-identical.
+  conformant; the `multi-edge.test.ts` AC4 spacing test passes.
+- **Given** the 115 goldens, **then** all conformant.
 - **Given** the full suite, **then** passed ≥ 1810, 0 failed.
 
 ## Quality bar
@@ -84,5 +84,5 @@ Commit: `feat(T3): route parallel/opposing edges through pathplan`.
 
 ## Observability / Rollback
 
-N/A — pure layout. Reversible. If byte-exact parity is unreachable for a case,
+N/A — pure layout. Reversible. If conformant parity is unreachable for a case,
 STOP per AD-3 (keep that fitter path; re-scope) — do not regress a golden.

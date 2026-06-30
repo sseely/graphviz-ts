@@ -77,7 +77,7 @@ endpoint: explicit attr wins — `tailport` remains `"e"`.
 
 - Given `A:s -> B:n`, when built, then `edge.attrs.get('tailport') ===
   's'` and `edge.attrs.get('headport') === 'n'`; tsc clean; 1466
-  vitest pass; 82 goldens byte-identical (no render change yet)
+  vitest pass; 82 goldens conformant (no render change yet)
 - Given `A:f0:ne -> B`, when built, then `edge.attrs.get('tailport') ===
   'f0:ne'`
 - Given `A -> B [tailport="e"]` (explicit attr only), when built, then
@@ -88,6 +88,6 @@ endpoint: explicit attr wins — `tailport` remains `"e"`.
 ## Quality bar
 
 `npx tsc --noEmit` clean. `npx vitest run` 0 failed, ≥1466 passed.
-82 goldens byte-identical. No `any` except documented C-interop.
+82 goldens conformant. No `any` except documented C-interop.
 Commit: `feat(T1): wire NodeId port/compass into edge tailport/headport
 attrs`.

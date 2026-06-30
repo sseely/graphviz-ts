@@ -48,7 +48,7 @@ mission.
 ## ADR-6: Parity regeneration is the success metric
 
 **Decision:** Batch 3 re-runs `survey.ts` + `dashboard.ts`; the committed
-`parity.json`/`PARITY.md` byte-match delta (with 0 per-id regressions) is the
+`parity.json`/`PARITY.md` conformant delta (with 0 per-id regressions) is the
 measured outcome.
 **Consequences:** Deterministic, oracle-grounded success criterion.
 

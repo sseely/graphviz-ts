@@ -30,7 +30,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context).
   pass: exit 0
   on_fail: fix_and_rerun
 - command: npx vitest run
-  pass: exit 0 AND failed == 0 AND 115 goldens byte-identical
+  pass: exit 0 AND failed == 0 AND 115 goldens conformant
   on_fail: fix_and_rerun
 - command: npx lizard <changed files> -C 10 -L 30 -a 5
   pass: no violations (30 lines/fn, CCN 10, 5 params, 500 lines/file)
@@ -40,7 +40,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context).
   on_fail: stop
 ```
 
-Baseline at mission start: **1814 passed / 0 failed, 115 goldens byte-identical**
+Baseline at mission start: **1814 passed / 0 failed, 115 goldens conformant**
 (main, post-DOT-1b). Oracle: `~/git/graphviz/build/cmd/dot/dot` with
 `GVBINDIR=/tmp/gvplugins`.
 
@@ -55,7 +55,7 @@ Baseline at mission start: **1814 passed / 0 failed, 115 goldens byte-identical*
 ## Constraints (stop / push-forward)
 
 **Stop and wait for human input when:**
-- Any of the 115 goldens changes byte-for-byte (AD-4 — hard invariant; never
+- Any of the 115 goldens changes conformant (AD-4 — hard invariant; never
   regenerate or quarantine an existing golden).
 - A fix requires changes outside the declared write-set (e.g. the ranking phase
   `dot2Rank` itself, or shape/position code).
@@ -75,9 +75,9 @@ Baseline at mission start: **1814 passed / 0 failed, 115 goldens byte-identical*
 ## Operational readiness
 
 - **Observability:** N/A — browser library, no runtime services/metrics. SLI =
-  "115 goldens byte-identical, newrank/LEAFSET oracle pins ≤0.5pt," verified by
+  "115 goldens conformant, newrank/LEAFSET oracle pins ≤0.5pt," verified by
   `npx vitest run`.
-- **Rollback:** Reversible — revert commits; goldens stay byte-identical so no
+- **Rollback:** Reversible — revert commits; goldens stay conformant so no
   data/format/output migration. New `ag*` primitives are additive.
 - **Backwards compat:** Non-breaking — `renderSvg` output unchanged for every
   non-`newrank`/non-`LEAFSET` input; new model functions add signatures without
@@ -104,7 +104,7 @@ Baseline at mission start: **1814 passed / 0 failed, 115 goldens byte-identical*
 | T4 removeFill | 7705284 | **RESCOPED** — removeFill ported & green; parity blocked |
 
 **Gates (final, HEAD):** `tsc --noEmit` 0 · `vitest` 1839 pass / 0 fail (123
-files) · **122 goldens byte-identical** · `lizard` 0 warnings on all changed
+files) · **122 goldens conformant** · `lizard` 0 warnings on all changed
 files. +25 mission tests. Baseline 1814→1839.
 
 **Why parity is unreachable (orchestrator-verified, both outside all

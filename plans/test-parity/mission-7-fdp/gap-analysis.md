@@ -35,7 +35,7 @@ Mlimit + ULP churn in exactly these files)
   Cell=3K=0.9, pass1=300. xparams: T0=T_T0/2, numIters=300,
   loopcnt=300, C stays 1.5 (static xParams; T_C=0 never overrides).
 - **Overlap pass:** DFLT_overlap="9:prism". Oracle experiments:
-  `-Goverlap=9:` is byte-identical to default on ALL 6 inputs →
+  `-Goverlap=9:` is conformant to default on ALL 6 inputs →
   prism NEVER runs (no prism/delaunay/sparse port needed).
   `-Goverlap=true` changes ALL 6 outputs → x_layout force expansion
   IS load-bearing everywhere. Guard the prism fallback with a throw.

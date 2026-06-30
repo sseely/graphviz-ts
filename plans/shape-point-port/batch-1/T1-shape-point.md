@@ -54,7 +54,7 @@ ellipse/inside; poly-inside.ts only under contingency.
 - AC4: Given `a [shape=point, width=0.2]`, when laid out, then ND_width ==
   ND_height == 0.2in (min-of-attrs honored, not DEF_POINT).
 - AC5: Given `digraph { a [shape=point]; b; a->b; }`, when rendered via the
-  port, then the `a`-node ellipse byte-matches the oracle
+  port, then the `a`-node ellipse conforms to the oracle
   (`GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot -Tsvg`): rx 1.8,
   fill black, no label.
 

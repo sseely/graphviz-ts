@@ -22,7 +22,7 @@
  *      divergence stays bounded at exactly 1px on the canonical case —
  *      if we ever drift FURTHER from C, this fails.
  *   3. They assert the divergence is confined to label-width-derived
- *      geometry: node-internal glyph positions remain byte-identical to
+ *      geometry: node-internal glyph positions remain conformant to
  *      C, and a node whose box is wide enough to absorb the difference
  *      shows no divergence at all.
  *
@@ -101,7 +101,7 @@ describe('shaping divergence — bounded versus C', () => {
 
   it('endpoint node glyphs match C exactly (gap is label-only)', () => {
     // A and B sit at node centers, unaffected by the edge label width —
-    // byte-identical to graphviz 15.0.0.
+    // conformant to graphviz 15.0.0.
     expect(EDGE_SVG).toContain('x="27" y="-101.45"');
     expect(EDGE_SVG).toContain('x="27" y="-12.95"');
   });

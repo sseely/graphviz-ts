@@ -36,11 +36,11 @@ Final SVG arrow primitives. (Terminal — consumed by the oracle/golden checks.)
 
 ## Acceptance criteria
 - Given `a->b[arrowhead=dot]`, when rendered, then the output contains
-  `<ellipse ... />` whose cx/cy/rx/ry byte-match native `dot -Tsvg`.
+  `<ellipse ... />` whose cx/cy/rx/ry conformant with native `dot -Tsvg`.
 - Given `arrowhead=odot`, then the ellipse has `fill="none"`.
 - Given `arrowhead=crow`, then a `<polygon>` with the 9-pt `points=` matching the
   oracle.
-- Given default `a->b`, then the `<polygon>` is byte-identical to today (normal
+- Given default `a->b`, then the `<polygon>` is conformant to today (normal
   arrow unchanged).
 - After this task, oracle-verify the 16 target cases: each no longer diverges on
   the arrow primitive (record per-id verdicts in the journal).

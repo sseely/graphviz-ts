@@ -40,7 +40,7 @@ function svgNode(attrs: string, shape = 'ellipse'): string {
 }
 
 // ---------------------------------------------------------------------------
-// Baseline: unstyled node MUST be byte-identical to pre-task output
+// Baseline: unstyled node MUST be conformant to pre-task output
 // ---------------------------------------------------------------------------
 
 describe('unstyled node — byte-stability gate', () => {
@@ -284,14 +284,14 @@ describe('S1: style=striped multicolor — poly_gencode dispatch', () => {
 });
 
 describe('S1: style=striped multicolor — band coordinates', () => {
-  it('oracle byte-match: red band points="0,0 18,0 18,-36 0,-36 0,0"', () => {
+  it('oracle conformant: red band points="0,0 18,0 18,-36 0,-36 0,0"', () => {
     const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
     const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
     expect(bands[0]).toContain('fill="red"');
     expect(bands[0]).toContain('points="0,0 18,0 18,-36 0,-36 0,0"');
   });
 
-  it('oracle byte-match: blue band points="36,0 54,0 54,-36 36,-36 36,0"', () => {
+  it('oracle conformant: blue band points="36,0 54,0 54,-36 36,-36 36,0"', () => {
     const svg = svgNode('style=striped fillcolor="red:green:blue"', 'box');
     const bands = polygons(svg).filter((p) => !p.includes('fill="none"'));
     expect(bands[2]).toContain('fill="blue"');

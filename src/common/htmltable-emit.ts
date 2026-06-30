@@ -10,7 +10,7 @@
  * Decoration (bgcolor fill, per-side borders, anchors, rules) fires
  * only when the corresponding metadata fields are present on the
  * PlacedCell / PlacedHtml — mirroring C's conditional structure.
- * Undecorated tables emit byte-identically to before T6.
+ * Undecorated tables emit identically to before T6.
  *
  * @see lib/common/htmltable.c:emit_html_tbl
  * @see lib/common/htmltable.c:emit_html_cell

@@ -96,7 +96,7 @@ const VERSION_RE = /version (\d+\.\d+\.\d+)/;
 
 /** Verdict for one surveyed input. */
 export type Verdict =
-  | 'byte-match'
+  | 'conformant'
   | 'structural-match'
   | 'diverged'
   | 'errored'
@@ -290,12 +290,12 @@ function clipOverflow(port: string, oracle: string): number {
   return Math.max(0, svgOverflow(port) - svgOverflow(oracle));
 }
 
-/** Classify a rendered pair: byte-match / structural-match / diverged. */
+/** Classify a rendered pair: conformant / structural-match / diverged. */
 function diffVerdict(port: string, oracle: string): Omit<SurveyResult, 'id' | 'path'> {
   let diffs: Diff[];
   try {
     const cmp = compareSvg(port, oracle, 'deterministic');
-    if (cmp.pass) return { verdict: 'byte-match' };
+    if (cmp.pass) return { verdict: 'conformant' };
     diffs = cmp.diffs;
   } catch (e) {
     return { verdict: 'diverged', firstDiffPath: '<compare-threw>', errMsg: errText(e) };
@@ -360,7 +360,7 @@ async function runPool(
 /** Tally verdict counts (keys cover every verdict; sum === total). */
 function tally(results: SurveyResult[]): Record<Verdict, number> {
   const counts: Record<Verdict, number> = {
-    'byte-match': 0,
+    conformant: 0,
     'structural-match': 0,
     diverged: 0,
     errored: 0,

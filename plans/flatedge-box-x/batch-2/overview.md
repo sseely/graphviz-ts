@@ -11,7 +11,7 @@ task.
 The fix MUST be gated to the flat-edge path (et === FLATEDGE / the makeFlatEnd
 call site). Regular-edge box-x is UNTOUCHED. A regular-edge golden changing is a
 STOP signal. Confirm via `git diff --name-only` that only the FLATEDGE branch
-changed, and that the 128 goldens stay byte-identical.
+changed, and that the 128 goldens stay conformant.
 
 ## Stop conditions
 Per README. AD-4/AD-5: if gating is not possible without altering regular-edge

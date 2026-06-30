@@ -20,7 +20,7 @@ import { EDGETYPE_SPLINE, EDGETYPE_LINE } from './splines.js';
 /**
  * Route the box corridor in `P` according to the edge type `et`.
  *
- * - `EDGETYPE_SPLINE` → `routeSplines` (the default; byte-identical to before).
+ * - `EDGETYPE_SPLINE` → `routeSplines` (the default; identical to before).
  * - any other type → `routePolylines`.
  * - `EDGETYPE_LINE` with a result of more than 4 points → straighten to the
  *   4-point line `[p0, p0, pLast, pLast]`.

@@ -5,7 +5,7 @@
  *
  * Each case pins the named edge's `<path d="M...">` control points to the
  * geometry emitted by the installed `dot` 15.0.0 binary (`dot -Tsvg`), captured
- * 2026-06-17. All five cases are byte-identical to C at capture time; tolerances
+ * 2026-06-17. All five cases are conformant to C at capture time; tolerances
  * follow the SR4 precedent (AD-3): polyline points 0.5pt, pure straight-line
  * endpoints 0.06pt.
  *

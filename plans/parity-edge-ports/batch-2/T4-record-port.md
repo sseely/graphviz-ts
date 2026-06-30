@@ -88,10 +88,10 @@ mission), AD6 (0.5 pt tolerance), AD-C1.
   non-existing id, returns null
 - Given `record_port` with portname matching a field id and compass
   `'n'`, then returned port has `side === TOP`
-- tsc clean; 0 vitest failed; 82 goldens byte-identical
+- tsc clean; 0 vitest failed; 82 goldens conformant
 
 ## Quality bar
 
 `npx tsc --noEmit` clean. `npx vitest run` 0 failed, ≥1466 passed.
-82 goldens byte-identical. Commit: `feat(T4): port map_rec_port and
+82 goldens conformant. Commit: `feat(T4): port map_rec_port and
 record_port; wire RECORD_FNS.portfn`.

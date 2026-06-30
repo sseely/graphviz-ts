@@ -62,7 +62,7 @@ Given the `feature/emit-family-cleanup` branch (containing `a785a86`):
 - When `npx tsc --noEmit` runs, then exit 0, zero errors.
 - When `npx vitest run` runs, then exit 0, failed == 0,
   passed >= 1466.
-- When the golden probe runs and diffs, then 86 files byte-identical.
+- When the golden probe runs and diffs, then 86 files conformant.
 - When `git diff --name-only HEAD~1..HEAD` is checked, then only
   plan files are touched (no src/ or test/ changes in this task).
 

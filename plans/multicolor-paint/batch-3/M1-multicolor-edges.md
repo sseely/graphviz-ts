@@ -13,7 +13,7 @@ curve per color, each offset perpendicular to the routed spline by
 emit.c:2442 — NOT the `multicolor()`/split-along-length path; that one is
 only for the SEMICOLON syntax `color="c1;f1:c2;f2"` when `numsemi && numc`.)
 
-## C ground truth (oracle-verify byte-for-byte)
+## C ground truth (oracle-verify conformant)
 
 `a -> b [color="red:blue"]` (digraph: head arrow only) →
 ```
@@ -63,7 +63,7 @@ multicolor:
   from the edge style on each curve.
 - Tail arrow filled with tailcolor, head arrow with headcolor — reuse the
   T4 arrow emitter with the per-end color.
-- Single-color edges keep the T4 path unchanged (byte-identical).
+- Single-color edges keep the T4 path unchanged (conformant).
 Set per-curve pen on `job.obj` (AD1/AD3 obj-state path), reuse the T4
 emit path; keep the T2 obj-state lifecycle intact. Do NOT make structural
 device.ts changes beyond the renderEdge multicolor branch.
@@ -105,9 +105,9 @@ emission).
 ## Acceptance criteria (oracle-verify each)
 
 - `color="red:blue"` → two parallel curves (red + blue, SEP apart) + head
-  arrow red, byte-for-byte vs C.
+  arrow red, conformant vs C.
 - `color="red:green:blue"` → three parallel curves.
-- single-color edge → unchanged (T4). 97 goldens byte-identical.
+- single-color edge → unchanged (T4). 97 goldens conformant.
 - offset geometry unit test passes.
 - If you did the semicolon case: `color="red;0.5:blue"` → split along
   length; else journal the fallback.

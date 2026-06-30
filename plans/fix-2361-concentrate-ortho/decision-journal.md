@@ -53,7 +53,7 @@ leg). Sacred-C → port the actual ortho branch.
   `test/golden/ortho-concentrate-dedup.test.ts`).
 - survey (`GVBINDIR=/tmp/ghl PARITY_OUT=parity-rules.json`) → 2361 match.
 - `rules-gate.ts` → regressions=0, clip-regressions=0; 2361 listed as improved.
-  Concentrate neighbours unmoved: 2559 stable byte-match; b69/b15 pre-existing
+  Concentrate neighbours unmoved: 2559 stable conformant; b69/b15 pre-existing
   (not regressed).
 - Refreshed `parity.json` ← `parity-rules.json` + regenerated `PARITY.md`.
 
@@ -62,7 +62,7 @@ leg). Sacred-C → port the actual ortho branch.
 Root-caused the structural-match residual (edges `AC->IW` 144, `FF->IV` 110) to
 an **ortho maze shortest-path corridor tie-break**, NOT a cost/algorithm bug:
 
-- Node boxes byte-identical port vs C → identical cell partition, weights,
+- Node boxes conformant port vs C → identical cell partition, weights,
   MARGIN, cost constants (delta/mu/BIG).
 - Found+fixed a real faithfulness bug: `edgeLen` used `bb.LL` corners; C uses
   node centres (`ND_coord`, `DIST2`, ortho.c:1124). After the fix the port's

@@ -37,7 +37,7 @@ Mirrors the arrowhead-geometry mission's T8.
 - decisions.md#adr-4, #adr-5
 
 ## Acceptance criteria
-- Given regeneration, then `errored` ≤ 13 − (cases fixed); byte-match and
+- Given regeneration, then `errored` ≤ 13 − (cases fixed); conformant and
   structural ≥ baseline (249 / 222).
 - Given the per-id diff, then **0 regressions** (every changed verdict is an
   improvement; oracle-error excluded).

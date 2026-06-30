@@ -14,8 +14,8 @@
 | 2026-06-18 | T3 | Minted 4 native-C refs via gvmine (rebuilt clean dot plugin first — C tree was clean, so plugin has no instrumentation): dot-ortho-{chain,branch,multirank,label}. Fixtures + manifest entries (deterministic class) added. | ADR-3 SVG-golden bar; oracle = native dot. |
 | 2026-06-18 | T3 | **Divergence (all 4 goldens): edge bezier CONTROL POINTS.** TS interpolated them (De Casteljau resample, e.g. -136.55) where C keeps them at the segment endpoints (degenerate straight, -143.83). Nodes + start point matched; rendered LINE was identical — pure representation diff. NOT pipeline (P2 pinned) and NOT dot-dispatch: root cause is a SHARED-CLIP faithful gap. | Localized via direct TS-vs-C path diff; ADR-3 drill. |
 | 2026-06-18 | T3 | **Faithful fix (root cause): ported `arrowOrthoClip`** (arrows.c:350) into `src/common/splines-clip.ts` and gated `arrowClip` on `info.isOrtho` (splines.c:90). For axis-aligned segments it shortens the arrowed end ALONG the axis and rewrites control points to the degenerate form (P0=P1, P2=P3), keeping the Bézier axis-aligned. TS previously used only the non-ortho De-Casteljau arrowStart/EndClip. | C has a dedicated isOrtho arrow clip; TS lacked it. |
-| 2026-06-18 | T3 | **WRITE-SET EXPANSION (flagged):** the fix is in `src/common/splines-clip.ts`, outside T3's stated `src/layout/dot/*` scope. Justified: it's a shared-clip faithful-port gap (not dispatch/adapter, not the P2 pipeline), `info.isOrtho`-gated so non-ortho is provably unaffected (all 119 pre-existing goldens byte-identical). Also hardens neato's existing ortho dispatch (it shares clipAndInstall). Same faithfulness-over-scope pattern the user authorized in P2 (sgraph.ts). | User mandate: match C exactly; ADR-4 regression sub-gate satisfied. |
-| 2026-06-18 | T3 | **DONE.** 4 ortho goldens pass vs native C. Updated the manifest-count guard 119→123 (suite.test.ts). Gates: typecheck 0 · full suite 1938 (1934 + 4 goldens; ALL 119 non-ortho refs byte-identical — no regression, ADR-4 ok) · build OK · C tree clean. | Full splines=ortho render now matches native dot end-to-end. |
+| 2026-06-18 | T3 | **WRITE-SET EXPANSION (flagged):** the fix is in `src/common/splines-clip.ts`, outside T3's stated `src/layout/dot/*` scope. Justified: it's a shared-clip faithful-port gap (not dispatch/adapter, not the P2 pipeline), `info.isOrtho`-gated so non-ortho is provably unaffected (all 119 pre-existing goldens conformant). Also hardens neato's existing ortho dispatch (it shares clipAndInstall). Same faithfulness-over-scope pattern the user authorized in P2 (sgraph.ts). | User mandate: match C exactly; ADR-4 regression sub-gate satisfied. |
+| 2026-06-18 | T3 | **DONE.** 4 ortho goldens pass vs native C. Updated the manifest-count guard 119→123 (suite.test.ts). Gates: typecheck 0 · full suite 1938 (1934 + 4 goldens; ALL 119 non-ortho refs conformant — no regression, ADR-4 ok) · build OK · C tree clean. | Full splines=ortho render now matches native dot end-to-end. |
 
 ## Mission summary (2026-06-18)
 
@@ -42,7 +42,7 @@ positioning, T3 goldens+validation).
 - Write-set expanded to `src/common/splines-clip.ts` (T3 arrowOrthoClip) and
   `src/layout/dot/splines-label.ts` (T2 updateBB) beyond the per-task write-set,
   under the faithfulness mandate; both `isOrtho`/caller-gated, zero non-ortho
-  impact (verified: 119 pre-existing goldens byte-identical).
+  impact (verified: 119 pre-existing goldens conformant).
 
 **Quality gates (final):** typecheck 0 · `npm test` 1938 passed (1926 inherited
 + 12 new: 5 dispatch, 3 labels, 4 goldens; manifest-count guard updated) ·

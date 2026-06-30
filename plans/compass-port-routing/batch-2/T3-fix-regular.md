@@ -33,7 +33,7 @@ the fix exceeds the compass-port branch.
   byte/structural-match the oracle.
 - **Given** the survey, **then** `2168` (+`2168_1..5` where applicable) improve
   verdict and the per-id diff shows **0 regressions**.
-- **Given** `npx vitest run`, **then** the 128 goldens are byte-identical and all
+- **Given** `npx vitest run`, **then** the 128 goldens are conformant and all
   tests pass (incl. the new endpoint test).
 - **Given** the changed files, **then** `tsc`/`lizard` clean.
 
@@ -44,7 +44,7 @@ N/A.
 Reversible — revert the commit.
 
 ## Boundaries
-- **Always:** port C exactly; keep goldens byte-identical.
+- **Always:** port C exactly; keep goldens conformant.
 - **Never:** modify the curated golden suite; touch the flat-edge path (T4's).
 - **STOP:** fix needs files outside the T1 write-set; same location changed 3×;
   any golden changes; cause exceeds the compass-port branch (AD-4).
@@ -53,5 +53,5 @@ Reversible — revert the commit.
 `fix(T3): port #2168 regular compass-port endpoint placement`.
 
 ## Quality bar
-tsc 0; vitest 0 failures + 128 goldens byte-identical; survey 0 regressions +
+tsc 0; vitest 0 failures + 128 goldens conformant; survey 0 regressions +
 #2168 improved; lizard clean. Return only the structured result.

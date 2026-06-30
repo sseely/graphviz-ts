@@ -21,10 +21,10 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-  T1[T1: makeSimpleFlatLabels rep-edge arc] --> FixH[376→76 / 196→376 / 256→436 byte-match]
+  T1[T1: makeSimpleFlatLabels rep-edge arc] --> FixH[376→76 / 196→376 / 256→436 conformant]
   T2[T2: flat-label rank vspace] --> FixD[bbox 608×148]
   T3[T3 conditional: x-NS tie-break] --> FixX[~1pt node-x, or documented residual]
-  FixH --> BM[2368 byte-match]
+  FixH --> BM[2368 conformant]
   FixD --> BM
   FixX -.optional.-> BM
 ```

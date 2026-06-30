@@ -58,7 +58,7 @@ comparisons pass; T9 judges).
 
 TextSpan instances out of buildLineRuns carry fontFlags + resolved
 fontName/fontSize/fontColor; svg textspan renders them. Plain-text
-spans (fontFlags=0, fontColor null) render byte-identically to today.
+spans (fontFlags=0, fontColor null) render conformantly to today.
 
 ## Acceptance criteria
 
@@ -68,7 +68,7 @@ spans (fontFlags=0, fontColor null) render byte-identically to today.
   in your report for T9)
 - Given `<font color="red" point-size="20">`, then fill + font-size
   reflect the env; nesting resolves innermost-wins per C
-- Given plain-text-only graphs, then 72 goldens byte-identical
+- Given plain-text-only graphs, then 72 goldens conformant
 - Given `<u>` / `<s>`, then text-decoration matches C's svg output
 
 ## Observability / rollback

@@ -59,7 +59,7 @@ None downstream — terminal emission. T5 compares full SVG against C.
   inside the node's <g> at the C-structural position
 - Given a placed graph label, then <text> appears where C puts it
   (verify group nesting against the oracle SVG)
-- Given set=false or absent labels, then output byte-identical to
+- Given set=false or absent labels, then output conformant to
   pre-task baseline (67-golden probe)
 
 ## Observability / rollback

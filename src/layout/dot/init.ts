@@ -56,7 +56,7 @@ function points(inches: number): number {
  * graph_init. nodesep is a plain late_double; ranksep additionally honours the
  * `equally` keyword (sets exact_ranksep) and a bare number that may be followed
  * by text. Absent attrs yield POINTS(DEFAULT_*) = 18 / 36, matching the prior
- * dotInitSubg defaults (so non-setting graphs stay byte-identical).
+ * dotInitSubg defaults (so non-setting graphs stay identical).
  * @see lib/common/input.c:665-681
  */
 function parseSepAttrs(g: Graph): void {

@@ -3,7 +3,7 @@
 Three tasks, disjoint write-sets. Each populates the obj-state (T2)
 using the resolvers (T1) for one object kind, then verifies the
 rendered styling against the C oracle. After this batch, styled graphs
-render in color; the 82 default-styled goldens stay byte-identical
+render in color; the 82 default-styled goldens stay conformant
 (unstyled objects resolve to the same default state).
 
 | ID | Description | Agent | Writes | Depends On | Done |

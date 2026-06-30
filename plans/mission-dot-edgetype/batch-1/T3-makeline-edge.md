@@ -56,7 +56,7 @@ If the T2 probe found `computeSpline` reachable for LINE/PLINE, also thread
   path is 7 points through the offset label position.
 - Given `delr === 1`, when `makeLineEdge` is called, then it declines (null)
   and the box-straighten path (T2) handles it.
-- Given a default graph, when routed, then goldens stay byte-identical
+- Given a default graph, when routed, then goldens stay conformant
   (`makeLineEdge` only runs for `EDGETYPE_LINE`).
 
 ## Observability
@@ -69,6 +69,6 @@ Reversible — revert edits; `makeLineEdge` is gated on `EDGETYPE_LINE`.
 
 ## Quality bar
 
-tsc 0; vitest 0 failed + 115 goldens byte-identical; lizard clean
+tsc 0; vitest 0 failed + 115 goldens conformant; lizard clean
 (`makeLineEdge` ≤30 lines/CCN 10 — split a label-points helper if needed).
 Commit: `feat(T3): port makeLineEdge for multi-rank splines=line`.

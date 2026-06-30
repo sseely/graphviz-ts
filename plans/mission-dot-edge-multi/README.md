@@ -30,11 +30,11 @@ time — do not route autonomous execution to it.
 
 ## The hybrid constraint (READ — AD2/AD3)
 
-graphviz-ts routes plain edges with a simplified fitter that is byte-exact to
+graphviz-ts routes plain edges with a simplified fitter that is conformant to
 the 115 goldens; only side-port / flat / steering edges use the faithful
 `routeSplines` pipeline. **The new multi-edge / labeled / opposing cases route
 through the faithful pipeline; plain single edges keep the simplified fitter.**
-The 115 goldens MUST stay byte-identical (none uses a multi/opposing/flat-label
+The 115 goldens MUST stay conformant (none uses a multi/opposing/flat-label
 edge). See [decisions.md](decisions.md).
 
 ## Oracle
@@ -50,7 +50,7 @@ Built `dot` at `~/git/graphviz/build/cmd/dot/dot` with `GVBINDIR=/tmp/gvplugins`
   pass: exit 0
   on_fail: fix_and_rerun
 - command: npx vitest run
-  pass: exit 0 AND passed >= 1789 AND failed == 0 AND 115 goldens byte-identical
+  pass: exit 0 AND passed >= 1789 AND failed == 0 AND 115 goldens conformant
   on_fail: fix_and_rerun
 - command: npx lizard <changed files> -C 10 -L 30 -a 5
   pass: no violations (30 lines/fn, CCN 10, 5 params, 500 lines/file)
@@ -60,7 +60,7 @@ Built `dot` at `~/git/graphviz/build/cmd/dot/dot` with `GVBINDIR=/tmp/gvplugins`
   on_fail: stop
 ```
 
-Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical**
+Baseline at mission start: **1789 passed / 0 failed, 115 goldens conformant**
 (main @ a7e2144, 2026-06-16).
 
 ## Batches
@@ -75,11 +75,11 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 - **Opposing `a->b; b->a`** — fully fixed, matches dot ≤0.2pt (was one straight +
   one malformed, pathΔ 53pt). Dedup-by-orig groups it as cnt=2; the back edge
   installs reversed.
-- **Labeled-parallel** — edge "1" now byte-identical to dot (was wiggly, pathΔ
+- **Labeled-parallel** — edge "1" now conformant to dot (was wiggly, pathΔ
   23pt); both labels render. Edge "2" straight-collapse + label x-positions are
   quarantined (AD-4, [comparisons/labeled-parallel.html](comparisons/labeled-parallel.html))
   — rooted in unported `smode` + position-phase label-vnode x-assignment.
-- **Plain edges / 115 goldens** — byte-identical (AD-2 held). Suite 1793 / 0.
+- **Plain edges / 115 goldens** — conformant (AD-2 held). Suite 1793 / 0.
 - **T1 / G4** — deferred to its own mission (ranking-phase `flat_node` +
   `abomination`).
 
@@ -107,7 +107,7 @@ Baseline at mission start: **1789 passed / 0 failed, 115 goldens byte-identical*
 - **Commits:** `1921ad5` (T1 deferral docs), `c2cc600` (T2), `1ebd36d` (T3) on
   `feature/dot-edge-multi`. **Not yet merged** — awaiting sign-off.
 - **Gate results:** `tsc --noEmit` exit 0; `vitest run` 1793 passed / 0 failed
-  (1789 baseline + 4 new oracle pins); 115 goldens byte-identical; lizard clean;
+  (1789 baseline + 4 new oracle pins); 115 goldens conformant; lizard clean;
   all writes inside declared write-sets.
 - **Quarantined (AD-4):** flat-labeled-edge (G4) and labeled-parallel edge "2" +
   label x-positions — comparison pages exist and are referenced in the journal.

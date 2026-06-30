@@ -50,10 +50,10 @@ separate residual), D4 (0 regressions), D5 (rankdir classified separate).
 
 ## Acceptance criteria
 
-- p3 `sleep--runmem`: 4 pieces, full p3 SVG geometry byte-identical to oracle. ✅
+- p3 `sleep--runmem`: 4 pieces, full p3 SVG geometry conformant to oracle. ✅
 - Final node positions unchanged for all graphs (fraction washes out in
   translate) — verified by survey 0 node regressions (T3).
-- byte-match ≥ 281, 0 per-id regressions vs `main` (T3 gate).
+- conformant ≥ 281, 0 per-id regressions vs `main` (T3 gate).
 - rankdir_dot rows: separate residual (D5), not required to flip.
 
 ## Rollback
@@ -67,6 +67,6 @@ separate residual), D4 (0 regressions), D5 (rankdir classified separate).
 
 ## Boundaries
 
-- **Always:** keep currently-matching rows byte-identical (D4); pin to C's
+- **Always:** keep currently-matching rows conformant (D4); pin to C's
   integer frame.
 - **Never:** reimplement the fitter; chase the rankdir separate residual (D3/D5).

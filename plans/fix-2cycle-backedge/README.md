@@ -48,7 +48,7 @@ Then **remove the now-unused local `outEdges` helper** (`classify.ts:347`), the
 only other user.
 
 **Candidate-fix results (already measured):**
-- minimal repro `digraph{a->b;b->a}` → node positions **byte-match** (was a
+- minimal repro `digraph{a->b;b->a}` → node positions **conformant** (was a
   duplicate edge); `make_edge_pairs` 1 `a→b w2` like C.
 - `NaN` (uncompressed): max node displacement **1784 → 43**, median **691 → 0**.
 - typecheck passes.
@@ -57,7 +57,7 @@ only other user.
 `feature/fix-2cycle-backedge` (from `main`; do not work on `main`).
 
 ## Acceptance canary
-1. `digraph{a->b;b->a}` renders **byte-identical** to native dot.
+1. `digraph{a->b;b->a}` renders **conformant** to native dot.
 2. `NaN` / `1447_1` maxDelta drop sharply (NaN node arrangement median → ~0; a
    small residual may remain — e.g. NaN `Trap` ~43 — that is a *separate*
    smaller issue, not this bug).
@@ -96,7 +96,7 @@ Baseline first: `cp test/corpus/parity.json /tmp/parity.before.json`.
 
 T1 shipped (`c8781c5`). `handleBackEdge` now iterates `e.head.outEdges(g)`
 (original cgraph edges); dead `outEdges` helper removed. Faithful: minimal repro
-+ fix-sensitive golden byte-match native; 167 aux-edge count 9==C. **Corpus: 16
++ fix-sensitive golden conformant with native; 167 aux-edge count 9==C. **Corpus: 16
 graphs diverged→structural-match, 0 verdict regressions** (cyclic graphs: dfa,
 dpd, ngk10_4, overlap, neato spline graphs). NaN arrangement → native (maxDelta
 1907→679; stays diverged here only because compress is a separate branch).

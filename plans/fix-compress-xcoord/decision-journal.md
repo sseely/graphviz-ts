@@ -46,7 +46,7 @@ downstream of `compressGraph`" in containNodes / size / x-NS — is **disproven*
 There is no compress-local fix. Reaching |dx| ≤ 1 requires changing the shared
 font-metric measurer, which is **explicitly out of scope** (A2: shared primitive;
 adjusting it to win these strings risks regressing the hundreds of graphs that
-currently byte-match) — and the spline router (the other lever) is also out of
+currently conformant) — and the spline router (the other lever) is also out of
 scope/forbidden. This matches two brief stop conditions: "fix would require
 touching the general x-NS / [font metrics] → stop; re-scope" and "task was
 mis-scoped." **Stopping after T2; no T3 fix exists in scope.** Escalated to human

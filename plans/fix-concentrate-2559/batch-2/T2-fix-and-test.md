@@ -46,7 +46,7 @@ comment with `@see lib/dotgen/dotsplines.c:make_regular_edge`.
 ## Architecture decisions (locked)
 
 - ADR-1: faithful C port, no special-case. ADR-2: 15.1.0 headless oracle for the
-  reference. ADR-3: structural-match is the bar; do not chase byte-match by
+  reference. ADR-3: structural-match is the bar; do not chase conformant by
   changing measurers. See [decisions.md](../decisions.md).
 
 ## Interface contract
@@ -82,7 +82,7 @@ Reversible. Single code commit; revert restores prior routing. No migration.
 
 - **Never:** edit `conc.ts`/`classify.ts`; add a special-case that doesn't track
   the C branch; widen the write-set beyond T1's `fixFile` + ≤2 named siblings;
-  switch text measurers to force byte-match.
+  switch text measurers to force conformant.
 - **Ask first:** if the fix needs a 4th source file or a file outside the three
   routing files — STOP (write-set / stop condition).
 - **Always:** keep the per-rank box-corridor routing faithful; cite the C line in

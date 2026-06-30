@@ -37,8 +37,8 @@ Use existing primitives: `ND_other`, `ED_to_orig`, `ports_eq` (cluster.ts),
   leaf-node positions match the dot oracle ≤0.5pt (capture from
   `~/git/graphviz/build/cmd/dot/dot`, `GVBINDIR=/tmp/gvplugins`).
 - **Given** any non-LEAFSET graph, **then** `expandLeaves` makes no change and
-  output is byte-identical.
-- **Given** the 115 goldens, **then** all byte-identical.
+  output is conformant.
+- **Given** the 115 goldens, **then** all conformant.
 
 ## Quality bar
 
@@ -49,4 +49,4 @@ comparison page in `comparisons/leafset.md`) — do not regress.
 
 ## Observability / Rollback
 
-N/A. Reversible (revert; LEAFSET-gated, goldens byte-identical).
+N/A. Reversible (revert; LEAFSET-gated, goldens conformant).

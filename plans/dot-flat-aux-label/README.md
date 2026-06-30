@@ -2,21 +2,21 @@
 
 ## Objective
 
-Make port-bearing adjacent labeled flat edges route byte-identically to
+Make port-bearing adjacent labeled flat edges route conformantly to
 `dot` 15.0.0. Two upstream bugs in `make_flat_adj_edges`'s rotated aux
 pipeline (`splines-flat.ts`), then the label copy-back:
 
 - **DOT-11a** — `repositionFlatAux` iterates the `nodes` Map, so the aux
   graph's virtual nodes (label vnode + routing vnodes) never get
   `y = midx`. C iterates `GD_nlist`. Fix: iterate `nlist`. Makes the
-  labeled-flat spline byte-exact and corrects the label X. **Proven in
+  labeled-flat spline conformant and corrects the label X. **Proven in
   diagnosis** (1853 pass, zero churn).
 - **DOT-11b** — even after 11a, the aux edge label `pos.y` is frozen at a
   pre-reposition value (59.25) instead of tracking the repositioned vnode
   `coord.y` (72). Localized to the aux label-placement
   (`placeVnlabel`/`placeRegularEdgeLabels`).
 - **DOT-10** — re-add the faithful label copy-back (`copyFlatLabel`,
-  `dotsplines.c:1273-1277`); with 11a+11b done it lands byte-exact.
+  `dotsplines.c:1273-1277`); with 11a+11b done it lands conformant.
 
 ## Branch / merge
 
@@ -26,7 +26,7 @@ pipeline (`splines-flat.ts`), then the label copy-back:
 ## Constraints (stop / push-forward)
 
 **STOP when:**
-- Any existing golden churns (goldens are byte-exact from C).
+- Any existing golden churns (goldens are conformant from C).
 - T2's fix would require changing label placement for **non-aux** graphs
   (regression risk) — keep the fix scoped to the aux pipeline.
 - 2 consecutive gate failures on the same check.
@@ -70,9 +70,9 @@ Input `digraph{ {rank=same; a b} a:e->b:w[label="x"] }`:
 ## Outcome (2026-06-17)
 
 - **T1 (DOT-11a):** DONE — `repositionFlatAux` iterates `nlist`; labeled-flat
-  spline byte-exact to dot 15.0.0, label X correct, no-label flat unchanged.
+  spline conformant to dot 15.0.0, label X correct, no-label flat unchanged.
   1855 pass, zero churn. Merged to main.
-- **T2 (DOT-11b) / T3 (DOT-10):** DEFERRED. `placeVnlabel` is byte-identical
+- **T2 (DOT-11b) / T3 (DOT-10):** DEFERRED. `placeVnlabel` is conformant
   to C; the residual label-Y error is in **shared** `gvPostprocess`, which
   rotates the aux graph and maps the label inconsistently with the spline
   (the label's `pos.x` centering offset rotates into a ~22pt y-error).

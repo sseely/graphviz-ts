@@ -108,11 +108,11 @@ Then: x1/y1/x2/y2 in linearGradient match dot -Tsvg (non-zero, angle-derived)
 
 Given: a graph with no gradient attrs (solid fill or unfilled)
 When: port renders to SVG
-Then: output is byte-identical to pre-task baseline
+Then: output is conformant to pre-task baseline
 ```
 
 ## Quality bar
 
 `npx tsc --noEmit` clean; `npx vitest run` 0 failed, passed ≥ 1466;
-82+ goldens byte-identical vs pre-task baseline.
+82+ goldens conformant vs pre-task baseline.
 Commit: `feat(T2): wire node linear/radial gradient fills`.

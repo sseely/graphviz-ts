@@ -49,7 +49,7 @@ reference it in `decision-journal.md`. Do NOT alter oracle values to pass.
 - Given a quarantined case, when the mission closes, then a comparison page
   exists and is referenced in the decision journal (mission incomplete
   otherwise — CLAUDE.md).
-- Given the full suite, when run, then 0 failed and 115 goldens byte-identical.
+- Given the full suite, when run, then 0 failed and 115 goldens conformant.
 
 ## Observability
 
@@ -61,5 +61,5 @@ Reversible — test-only + docs.
 
 ## Quality bar
 
-tsc 0; vitest 0 failed + 115 goldens byte-identical; lizard clean.
+tsc 0; vitest 0 failed + 115 goldens conformant; lizard clean.
 Commit: `test(T4): oracle-pin splines=line/polyline regular edges`.

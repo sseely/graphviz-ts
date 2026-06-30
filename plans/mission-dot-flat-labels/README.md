@@ -35,7 +35,7 @@ Run with **opus** (`claude-opus-4-8`). Fable 5 is disabled.
   pass: exit 0
   on_fail: fix_and_rerun
 - command: npx vitest run
-  pass: exit 0 AND passed >= 1793 AND failed == 0 AND 115 goldens byte-identical
+  pass: exit 0 AND passed >= 1793 AND failed == 0 AND 115 goldens conformant
   on_fail: fix_and_rerun
 - command: npx lizard <changed files> -C 10 -L 30 -a 5
   pass: no violations (30 lines/fn, CCN 10, 5 params)
@@ -45,7 +45,7 @@ Run with **opus** (`claude-opus-4-8`). Fable 5 is disabled.
   on_fail: stop
 ```
 
-Baseline at mission start: **1793 passed / 0 failed, 115 goldens byte-identical**
+Baseline at mission start: **1793 passed / 0 failed, 115 goldens conformant**
 (main @ 9428409, 2026-06-16). Oracle: `~/git/graphviz/build/cmd/dot/dot` with
 `GVBINDIR=/tmp/gvplugins`.
 
@@ -93,13 +93,13 @@ f0b452c).
 
 **Result vs corpus objective:**
 - Adjacent `{rank=same a b} a->b[label=x]`: TS now 3 `<text>` (was 2) = dot 3;
-  label + straight segment **byte-exact** to dot 15.0.0.
+  label + straight segment **conformant** to dot 15.0.0.
 - Non-adjacent `{rank=same a->c->b[invis]} a->b[label=x]`: TS now 4 `<text>`
-  (was 3) = dot 4; label `x` @ (117,-57.2) + 7-point spline **byte-exact**.
+  (was 3) = dot 4; label `x` @ (117,-57.2) + 7-point spline **conformant**.
 
 **Final gates:** `tsc --noEmit` 0; lizard clean on all changed files; vitest
 **1798 passed / 0 failed**; golden suite **122 passed (115 goldens
-byte-identical)**.
+conformant)**.
 
 **Quarantine (1):** `splines=line` full-render of the non-adjacent case
 ([comparisons/dot-flat-label-line.md](comparisons/dot-flat-label-line.md)) — the

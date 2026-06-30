@@ -8,6 +8,6 @@ Depends on Batch 2.
 | T8 | Regenerate parity, 0-regression check, finalize journal + memory | `test/corpus/parity.json`, `test/corpus/PARITY.md`, decision-journal.md, project memory, comparison pages | T7 | [x] |
 
 ## Gate after batch
-`npm run typecheck && npm test && npm run build` exit 0; byte-match increased;
+`npm run typecheck && npm test && npm run build` exit 0; conformant increased;
 **0 per-id regressions**; every target case's verdict recorded; comparison pages
 for any case that remains deep (e.g. a residual layout diff) updated/closed.

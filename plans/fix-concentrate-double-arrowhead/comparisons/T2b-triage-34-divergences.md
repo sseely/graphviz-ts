@@ -16,7 +16,7 @@ cache dir **not namespaced by oracle**. Two consequences:
 1. **Cross-contamination.** The headless rules survey (`GVBINDIR=/tmp/ghl`) and
    the pango baseline (`GVBINDIR=/tmp/gvplugins`) shared one cache keyed only by
    `id`. Whichever ran first populated it; the other read the **wrong oracle's**
-   SVGs. The committed `parity-rules.json` had byte-match **65** because the
+   SVGs. The committed `parity-rules.json` had conformant **65** because the
    estimate port was being diffed against **pango** oracle output.
 2. **Staleness on rebuild.** Entries are only written when absent, so a rebuilt
    `dot` (binary Jun-24 vs cache Jun-23) was never refreshed.
@@ -30,10 +30,10 @@ Re-ran both surveys with **isolated** caches (`ORACLE_CACHE` per oracle) on a
 | rules (`parity-rules.json`) | byte 65 / div 165 | **byte 392 / div 161** |
 | baseline (`parity.json`) | byte 338 / div 171 | byte 344 / div 168 (== committed refresh, **0 diff**) |
 
-- **All 34** flagged inputs are `byte-match`/`structural-match` in the fresh rules
+- **All 34** flagged inputs are `conformant`/`structural-match` in the fresh rules
   survey (`now-match=34, still-diverged=0`).
 - Spot-check vs fresh C (`badvoro`, `b94`, `xlabels`, `dpd`/`overlap`, the
-  `*_neato`/`*_overlap_neato` family): **0 node-geometry mismatches, byte-identical
+  `*_neato`/`*_overlap_neato` family): **0 node-geometry mismatches, conformant
   `@d`** — they match fresh C exactly. The survey's huge maxΔ (1153, 324, …) was
   the delta against the stale cached oracle, not against current C.
 - **`rules-gate` PASS** on the fresh files: `stable=603 improvements=10
@@ -55,5 +55,5 @@ but none of the 34 are real regressions vs a correct oracle.)
 - `test/corpus/survey.ts` — default oracle cache namespaced by
   `sha1(binary, GVBINDIR, binary-mtime)`; explicit `ORACLE_CACHE` still wins.
 - `test/corpus/parity-rules.json` — regenerated against the correct headless
-  oracle (byte-match 65 → 392; gate green).
+  oracle (conformant 65 → 392; gate green).
 - `test/corpus/rules-known-divergences.md` — gate figures refreshed (603/168/3).

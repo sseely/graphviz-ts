@@ -14,7 +14,7 @@ sequenceDiagram
   J-->>T2: read routing
   T2->>T2: apply parity-preserving fix (match C)
   T2->>C: order-probe diff (mc3, mid-size) == C ?
-  C-->>T2: byte-identical (else STOP)
+  C-->>T2: conformant (else STOP)
   T2->>J: speedup factor, parity evidence
   J-->>T4: read results
   T4->>T4: render 2471 to completion; full golden suite

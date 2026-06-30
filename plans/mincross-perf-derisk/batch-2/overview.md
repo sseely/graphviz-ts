@@ -26,7 +26,7 @@ the ask-gate (AD-4) or a STOP condition fires.
 
 ## X2 notes
 
-- The survey gate is the exit gate: byte-match ≥ 312, structural ≥ 256, **0
+- The survey gate is the exit gate: conformant ≥ 312, structural ≥ 256, **0
   changed per-id verdicts** vs `parity-baseline.json`. A mincross change that
   alters node order would ripple into positions → verdict changes = regression.
 - Re-time 2108 (primary) + b100/b104/1718; log C-vs-port before/after in the

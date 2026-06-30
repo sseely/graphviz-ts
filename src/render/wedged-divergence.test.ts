@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: EPL-2.0
 
 /**
- * DECISION GUARD — wedged node fills are "close enough" and do NOT byte-match
+ * DECISION GUARD — wedged node fills are "close enough" and do NOT conformant
  * C graphviz 15.0.0 / glibc. This is an accepted outcome, not a bug.
  *
  * Why: the elliptic-arc subdivision count differs by platform libm. The port's

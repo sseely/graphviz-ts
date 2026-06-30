@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 
-# Flat-geometry trace — 2368.dot (mission 2368-byte-match, Batch 0 / T0)
+# Flat-geometry trace — 2368.dot (mission 2368-conformant, Batch 0 / T0)
 
-Pins the two flat-edge residuals that block `2368.dot` byte-match. Diagnostic
+Pins the two flat-edge residuals that block `2368.dot` conformant. Diagnostic
 only — produced by temporary, env-gated C instrumentation (reverted after
 capture) plus the committed `flat-geom-diff.mjs` harness.
 
@@ -41,7 +41,7 @@ make_flat_adj_edges e0=436->256 tn=436 hn=256 cnt=2 labels=2  edges=[256->436 to
 ```
 
 (Plus four cnt=1 labels=0 groups: line16->316, 316->76, 196->436, line11->16,
-line7->136 — straight invis spindles, already byte-match.)
+line7->136 — straight invis spindles, already conformant.)
 
 ## Issue 2 (Batch 1) — adjacent labeled-flat curve geometry — PINNED
 

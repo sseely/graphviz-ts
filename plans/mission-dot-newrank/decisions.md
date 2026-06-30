@@ -28,11 +28,11 @@ synthetic unique name (`__fill_<rank>_<seq>`) via `agnode`.
 **Consequences:** Keeps `realFillRanks` within the 30-line/fn cap; one place
 owns placeholder-node shape.
 
-## AD-4: Deletion/parity gated on the byte-exact golden invariant
+## AD-4: Deletion/parity gated on the conformant golden invariant
 
 **Context:** `newrank`/`LEAFSET` are ATTR-gated; the 115 existing goldens are
 all default-attr and must not move.
-**Decision:** Land a feature ONLY if all 115 goldens stay byte-identical and the
+**Decision:** Land a feature ONLY if all 115 goldens stay conformant and the
 new newrank/LEAFSET cases reproduce the oracle ≤0.5pt. If parity is unreachable,
 STOP and keep current behaviour (re-scope with a comparison page) — never
 regress a golden.

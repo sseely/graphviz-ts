@@ -12,7 +12,7 @@ routing nodes keep their un-rotated `y`. Diagnosis confirmed: NLIST had
 `GD_nlist` / `ND_next`), special-casing `auxt`/`auxh` exactly as before.
 
 **Consequences:** Virtual nodes get `y = midx`; the labeled-flat spline
-becomes byte-exact and the label X corrects. Proven safe: 1853 pass, zero
+becomes conformant and the label X corrects. Proven safe: 1853 pass, zero
 golden churn. This is [[active-fitter-no-loop-corridors]]-adjacent: the
 Map-vs-nlist split is the same hazard family as [[calloc-zero-vs-undefined-port-hazard]].
 
@@ -48,7 +48,7 @@ internally), add `copyFlatLabel(orig, auxe, del, flip, g)`, and `export`
 the existing private `updateBB` from `splines-label.ts`.
 
 **Consequences:** Stays at 5 params, reuses `updateBB` (DRY). Lands the
-label byte-exact once T1+T2 are in. Validated end-to-end in diagnosis
+label conformant once T1+T2 are in. Validated end-to-end in diagnosis
 (label X already 72 after T1; T2 fixes Y).
 
 ## AD-4: rollback / compatibility

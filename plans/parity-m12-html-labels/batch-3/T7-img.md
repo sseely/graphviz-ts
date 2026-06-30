@@ -58,7 +58,7 @@ via the render options; consumed only by html IMG sizing.
   missing-image output for the same input (oracle: dot -Tsvg with a
   nonexistent image path)
 - Given graphs without IMG, then output unchanged; suite 0 failed;
-  72 goldens byte-identical
+  72 goldens conformant
 
 ## Observability / rollback
 

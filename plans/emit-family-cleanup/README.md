@@ -91,7 +91,7 @@ commit. Merge back with a **merge commit** when all gates pass.
   on_fail: fix_and_rerun
 
 - command: OUTDIR=/tmp/efc npx tsx .probes/render-all.ts && diff -r /tmp/efc test/golden/refs-port
-  pass: 82 goldens byte-identical
+  pass: 82 goldens conformant
   on_fail: stop
 
 - command: git diff --name-only HEAD~1..HEAD
@@ -103,7 +103,7 @@ Baseline at mission start: **1466 passed / 0 failed**, 82 goldens
 (2026-06-13, post-M12 + emit deletion on feature/post-parity).
 
 Deletion already in tree — vitest baseline excludes the 21 deleted
-`emit.test.ts` tests; 82 goldens are byte-identical to pre-deletion
+`emit.test.ts` tests; 82 goldens are conformant to pre-deletion
 output (live path unchanged). The suite and goldens are the proof the
 deletion was safe.
 

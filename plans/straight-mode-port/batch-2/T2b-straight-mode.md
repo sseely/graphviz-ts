@@ -48,7 +48,7 @@ Preserve C's order of operations exactly (AD-4). Keep the back-edge path
 
 ## Acceptance criteria
 - Given `digraph { a->b->c->d->e->f; a->f; }` (L5), when rendered, then the `a->f`
-  spline byte-matches `~/git/graphviz/build/cmd/dot/dot` (GVBINDIR=/tmp/gvplugins).
+  spline conforms to `~/git/graphviz/build/cmd/dot/dot` (GVBINDIR=/tmp/gvplugins).
 - Given `a->b->c->d; a->d` (L3) and `a->b->c->d->e; a->e` (L4), when rendered,
   then output is unchanged from T2a (no-op below threshold).
 - Given `graphs/p2.gv` (no clusters; `kernel--runmem`), when rendered, then that

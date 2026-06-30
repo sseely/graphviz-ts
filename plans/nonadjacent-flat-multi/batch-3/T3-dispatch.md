@@ -15,7 +15,7 @@ adjacent-flat branch just above it (≈326-330). READ `../decisions.md` (AD-1, A
    (every group edge has `spl` set). The main loop (`routeDotEdges`) then skips the
    already-routed siblings (`e.info.spl !== undefined`).
 2. Preserve the adjacent-flat branch and the non-same-rank (regular) branch exactly.
-3. cnt=1 (a lone non-adjacent flat) must still byte-match — the group is length 1 and
+3. cnt=1 (a lone non-adjacent flat) must still conformant — the group is length 1 and
    `routeFlatEdgeGroupFaithful` reduces to the current single route (AD-1).
 4. Keep `routeFlatEdgeFaithful` if still referenced; remove only if fully superseded
    (grep first — "looks unused" ≠ "is unused").
@@ -34,8 +34,8 @@ Consumes T2: `collectNonAdjacentFlatGroup`, `routeFlatEdgeGroupFaithful`.
 
 ## Acceptance criteria
 - Given the top cnt=2 synthetic, when `render-one.ts <case>.dot dot` runs, then the
-  full SVG drawing content byte-matches native `dot` (two distinct nested splines).
-- Given cnt=3 (top) and cnt=2 (bottom) synthetics, same — byte-match native.
+  full SVG drawing content conforms to native `dot` (two distinct nested splines).
+- Given cnt=3 (top) and cnt=2 (bottom) synthetics, same — conformant with native.
 - Given a cnt=1 non-adjacent flat (e.g. 241_0's 5:ne->8:nw), when rendered, then the
   spline is BYTE-IDENTICAL to before (no change).
 - `tsc` exit 0; `vitest run` green; `lizard` clean; `edge-route.ts` <500 lines.

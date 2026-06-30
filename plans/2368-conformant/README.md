@@ -1,15 +1,15 @@
-# Mission: byte-match 2368.dot
+# Mission: conformant 2368.dot
 
 ## Objective
 
-Close the remaining `2368.dot` divergence so it byte-matches the C oracle.
+Close the remaining `2368.dot` divergence so it conforms to the C oracle.
 The prior mission (`fix-xns-absolute-anchor`) fixed 2368's structural childCount
 divergence (degenerate labeled-flat emission); that **unmasked two pre-existing
 geometry residuals** the childCount diff had hidden:
 
 1. **Flat-label-rank vertical spacing** — 2368's bbox is 5pt short (608×148 in C
    vs 604×143 in port); the top `{rank=same line7;136}` group sits 5pt low. The
-   256→316 label vnode is byte-identical to C, so this is a rank-separation /
+   256→316 label vnode is conformant to C, so this is a rank-separation /
    `flatNode` height issue, NOT label placement.
 2. **Adjacent labeled-flat curve geometry** — 376→76, 196→376, 256→436 (adjacent
    labeled flats) draw straight stubs (`makeSimpleFlatLabels` installs
@@ -23,19 +23,19 @@ mission `plans/fix-xns-absolute-anchor/`.
 
 ## Branch
 
-`feature/2368-byte-match` off `main` (merge-commit, per mission convention).
+`feature/2368-conformant` off `main` (merge-commit, per mission convention).
 
 ## Risk profile (higher than the last mission)
 
 Both fixes touch flat-edge geometry shared corpus-wide (`makeSimpleFlatLabels`
 runs for every adjacent labeled flat; `flatNode`/rank spacing for every
 edge-labeled graph). Unlike the last mission (which removed a port-only
-deviation), this CHANGES geometry that currently byte-matches on many graphs.
-**Every change is full-survey-gated; any byte-match→worse is STOP + revert.**
+deviation), this CHANGES geometry that currently conforms to on many graphs.
+**Every change is full-survey-gated; any conformant→worse is STOP + revert.**
 
 ## Constraints
 
-**Stop** when: any byte-match→worse regression (revert); 2 consecutive gate
+**Stop** when: any conformant→worse regression (revert); 2 consecutive gate
 failures on the same check; a fix needs files outside its write-set; 3
 consecutive edits to one site without resolving it; **a 2368 geometry fix can't
 be made faithful to C without regressing other graphs** (deeper root cause —
@@ -74,7 +74,7 @@ instrument-c-before-quarantine). Rebuild `gvplugin_dot_layout` under
 
 2368: **diverged maxΔ65.25 → structural-match maxΔ10.22** (rules-match);
 survey **0 regressions**, stable 689→691. bbox, every node, every label, and all
-edges except one byte-match C.
+edges except one conformant C.
 
 - **Issue 1 (flat-label vspace)** — resolved automatically by Batch 1 (drawing the
   down-arcs grew the bbox); Batch 2 a no-op.

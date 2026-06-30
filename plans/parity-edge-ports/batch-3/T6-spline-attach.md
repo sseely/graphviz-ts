@@ -95,11 +95,11 @@ C oracle: `digraph G { rankdir=LR; A -> B [headport=w, tailport=e]; }`
 - dot -Tsvg produces path: `M54,-18C65.38,-18 70.68,-18 78.55,-18`
 - TS pipeline matches within 0.5 pt
 
-tsc clean; 0 vitest failed; 82 existing goldens byte-identical (port-
+tsc clean; 0 vitest failed; 82 existing goldens conformant (port-
 using goldens added in T8).
 
 ## Quality bar
 
 `npx tsc --noEmit` clean. `npx vitest run` 0 failed, ≥1466 passed.
-82 goldens byte-identical. Commit: `feat(T6): port beginpath/endpath
+82 goldens conformant. Commit: `feat(T6): port beginpath/endpath
 side-mask routing boxes for port attachment`.

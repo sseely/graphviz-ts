@@ -14,7 +14,7 @@ long edges match the oracle's piecewise geometry.
 ## Root cause (already diagnosed)
 
 - Minimal repro: `digraph { a->b->c->d->e->f; a->f; }` (L5). `a->d` (L3) and
-  `a->e` (L4) byte-match today; L5 diverges — the bow appears once a collinear
+  `a->e` (L4) conformant today; L5 diverges — the bow appears once a collinear
   vnode run reaches the straight_len threshold.
 - C routes `a->f` as TWO `routesplines` calls (5 boxes each), straight-lining the
   middle; the port does ONE call over all 9 boxes → coarse bowed fit.
@@ -43,7 +43,7 @@ See [decisions.md](decisions.md) for AD-1…AD-4 (all approved).
 
 **STOP conditions:**
 - A file outside the write-set needs changing.
-- T2a is not byte-identical (the no-op refactor must be pure).
+- T2a is not conformant (the no-op refactor must be pure).
 - T2b causes any parity regression that is not strict re-bucketing to an
   equal-or-better verdict (0-regression rule; see memory `bucket-fix-rebucketing`).
 - The segmented walk hangs / times out on any corpus input.

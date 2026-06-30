@@ -15,7 +15,7 @@ x-reference BEFORE editing `src/`.
 Consequences: T2 fixes exactly the named line.
 
 ## AD-3 — Oracle-pinned, curated gate untouched
-Context: 128 curated goldens are the byte-exactness backstop.
+Context: 128 curated goldens are the conformantness backstop.
 Decision: verify per-input vs the native oracle; judge by per-id verdict deltas
 (0 regressions); never modify `suite.test.ts`/`manifest.json` or regenerate refs.
 Consequences: a fix that regresses any id or changes any golden is rejected.
@@ -29,7 +29,7 @@ Consequences: bounded mission; honest partial delivery acceptable.
 
 ## AD-5 — FLATEDGE-gating (mission-critical)
 Context: the same begin/endpath helpers (`splines-path-begin.ts`,
-`splines-path-end.ts`) serve regular edges, whose goldens must stay byte-exact.
+`splines-path-end.ts`) serve regular edges, whose goldens must stay conformant.
 Decision: the box-x change MUST be gated to the flat-edge path (et === FLATEDGE
 or the `makeFlatEnd` call site), never altering the regular-edge box-x. A
 regular-edge golden changing is a STOP signal (the gating failed).

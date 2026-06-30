@@ -36,7 +36,7 @@ order equals C's. Consumed by Batch 2 verification (T4).
 2. Given the 6-cluster chain, then crossings reach C's count AND per-rank order
    matches C.
 3. Given a cluster-free graph and a crossing-free cluster graph, then output is
-   byte-identical to baseline (no regression).
+   conformant to baseline (no regression).
 4. Given the same swap-legality site changed 3× without mc3 reaching C's order,
    then STOP and document (the constraint model is wrong — AD/stop rule).
 

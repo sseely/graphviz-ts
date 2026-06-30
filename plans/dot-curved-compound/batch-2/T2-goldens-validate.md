@@ -51,7 +51,7 @@ golden may change), ADR-5 (faithful fixes traced to a C line). STOP on deviation
 ## Acceptance criteria
 - Given each `dot-curved-*` / `dot-compound-*` fixture, when rendered by the TS
   port, then it matches the native-C ref within the deterministic tolerance.
-- Given the full golden suite, then **every pre-existing ref is byte-identical**
+- Given the full golden suite, then **every pre-existing ref is conformant**
   (no regression) and all new curved/compound refs pass.
 - Given a divergence was fixed, then the fix is traced to a C function + dump in
   the commit message, and confined to `straight-edges.ts`/`compound*.ts`.

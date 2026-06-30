@@ -167,10 +167,10 @@ fall back to declaration order == C.
 **Regression analysis:**
 - Graph-LEVEL `ordering=out` (b58, ordering_dot1): root value is `"out"` (non-empty)
   → still `do_ordering(root)` → FLATORDER still built → those stay fixed. NO regression.
-- `trapeziumlr` (currently byte-match): it also has subgraph-scoped ordering and the
+- `trapeziumlr` (currently conformant): it also has subgraph-scoped ordering and the
   SAME houses/invhouses target rank; the port currently lands on declaration order
   anyway (TB-style masking), so removing the phantom FLATORDER keeps declaration
-  order → still byte-match. NO regression.
+  order → still conformant. NO regression.
 - Node-level `ordering` (N_ordering) graphs: handled by the else-branch
   `do_ordering_for_nodes`; the faithful guard must still reach that when only
   N_ordering is set and G value is empty — match C's exact `if (ordering)` /

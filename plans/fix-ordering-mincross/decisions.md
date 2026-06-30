@@ -24,12 +24,12 @@
   unit (one task, one commit).
 - **Consequences**: minimal blast radius; the change is bisectable to one cause.
 
-## AD-3: Hard invariant — no byte-match regression
+## AD-3: Hard invariant — no conformant regression
 
 - **Context**: mincross is a shared, tie-break-fragile primitive (see memory
   notes `mincross-perf-is-perop-not-iteration`, `ncross-nan-multicomponent-done`,
-  `2371`). 12 `ordering` graphs already byte-match; 492 graphs byte-match overall.
-- **Decision**: full survey after EVERY change; any byte-match→worse is STOP +
+  `2371`). 12 `ordering` graphs already conformant; 492 graphs conformant overall.
+- **Decision**: full survey after EVERY change; any conformant→worse is STOP +
   revert. The 12 matching `ordering` graphs are explicit canaries.
 - **Consequences**: ~17 min/iteration accepted. A fix that can't clear b58
   without regressing others is deeper than scoped → stop + document.
@@ -52,11 +52,11 @@
   secondary cause keeps it diverged, document the residual (which graph, which
   cause) and move on — do not chase unrelated causes in this mission.
 - **Consequences**: 2368-style honest outcome; the mission closes on the
-  ordering root cause, not on every graph reaching byte-match.
+  ordering root cause, not on every graph reaching conformant.
 
 ## stop-conditions
 
-1. Any byte-match→worse regression in the survey. STOP + revert that change.
+1. Any conformant→worse regression in the survey. STOP + revert that change.
 2. 2 consecutive gate failures on the same check. STOP.
 3. A fix needs to write outside its declared write-set. STOP.
 4. 3 consecutive edits to the same site without resolving it. STOP (deeper

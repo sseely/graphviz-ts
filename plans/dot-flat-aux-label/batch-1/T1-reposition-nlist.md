@@ -42,7 +42,7 @@ nlist idiom (see `splines-label.ts:setEdgeLabelPos`).
   spline equals the dot 15.0.0 oracle within 0.5pt:
   `M54,-18C62.13,-18 60.91,-26.42 68.62,-29 71.47,-29.95 72.53,-29.95 75.38,-29 78.03,-28.11 79.62,-26.54 80.91,-24.85`
 - Given a no-label ported flat (`a:e->b:w`), when routed, then the spline
-  stays byte-identical (`M54,-18C56.75,-18 58.79,-18 60.61,-18`).
+  stays conformant (`M54,-18C56.75,-18 58.79,-18 60.61,-18`).
 - Given `npx vitest run`, then >= 1853 pass, zero golden churn.
 
 ## Observability / Rollback

@@ -43,7 +43,7 @@ Evidence (spike, 2026-06-24, all instrumentation reverted):
 
 - A **raw-estimate** measurer in the port (`fontsize * estimate_text_width_1pt`,
   no hinting, no kerning, height `= fontsize * 1.20` — i.e. exactly graphviz's
-  `textspan_lut.c` `estimate_textspan_size`) makes the port **byte-match native
+  `textspan_lut.c` `estimate_textspan_size`) makes the port **conformant with native
   `dot` run in *headless* mode** (a `GVBINDIR` with no textlayout plugin →
   `estimate_textspan_size`):
   - b69-min: **max node delta 0.00**.
@@ -66,7 +66,7 @@ swappable, separately-tested concern.
 **Goals**
 - A clear, public way to choose the text measurer per runtime/use.
 - A **deterministic, cross-platform** test path that validates layout *rules*
-  with a clean byte-exact pass/fail signal (no font noise).
+  with a clean conformant pass/fail signal (no font noise).
 - A **platform-faithful** production path (real host font incl. kerning &
   ligatures) so node boxes fit the text the viewer renders.
 - A measurement-fidelity test path that is reproducible on Mac/Windows/Linux.
@@ -131,7 +131,7 @@ setTextMeasurer(m: TextMeasurer | undefined): void;   // undefined → auto
   GVBINDIR=ghl dot -Tsvg g.gv    # → estimate_textspan_size (raw, no kern/hint)
   ```
 - **Port:** `EstimateTextMeasurer`.
-- **Result:** byte-exact, font-stack-independent → identical on Mac/Windows/Linux.
+- **Result:** conformant, font-stack-independent → identical on Mac/Windows/Linux.
 - **Action:** regenerate the corpus goldens once in headless mode. This is a
   one-time baseline change; afterwards the rules corpus is a clean pass/fail
   signal with zero font noise.
@@ -155,7 +155,7 @@ setTextMeasurer(m: TextMeasurer | undefined): void;   // undefined → auto
 ## 6. Consequences
 
 **Easier**
-- Layout-rules regressions become unambiguous (byte-exact, no font noise).
+- Layout-rules regressions become unambiguous (conformant, no font noise).
 - Cross-platform CI: the rules corpus passes identically everywhere.
 - Font fidelity is isolated and individually debuggable.
 - Production output fits the renderer's font (boxes match text).
@@ -201,7 +201,7 @@ re-baselining. No data-model or public-render-API change beyond the additive
 ## 9. Migration plan (phases → mission brief)
 
 1. **Reference measurer + headless rules corpus.** Add `EstimateTextMeasurer`;
-   regenerate goldens headless; switch the rules survey to it. Gate: byte-exact
+   regenerate goldens headless; switch the rules survey to it. Gate: conformant
    on the rules corpus (modulo pre-existing, font-independent divergences like
    Petersen, which are documented, not introduced here).
 2. **Public `setTextMeasurer` + auto-resolution chain** (browser → node-canvas →
@@ -217,5 +217,5 @@ re-baselining. No data-model or public-render-API change beyond the additive
 - Faithfulness facts: native dot `estimate_textspan_size` is raw per-char (no
   hint/kern, `units_per_em=2048`); oracle used Pango/CoreText (hinted+kerned);
   port `LutTextMeasurer` = `freetypeHintedWidth` (hinted, un-kerned).
-- Spike numbers: raw-estimate port == headless dot byte-exact (b69-min 0.00;
+- Spike numbers: raw-estimate port == headless dot conformant (b69-min 0.00;
   20/24 sample exact). node-canvas kerned-but-unhinted, no hint control.

@@ -9,7 +9,7 @@
  * (edge-route.ts:routeForwardEdge). Non-adjacency is forced with an invisible
  * same-rank ordering chain `a->c->b`, placing c between a and b.
  *
- * Pinned to dot 15.0.0 below (all byte-exact): the EDGETYPE_SPLINE default, the
+ * Pinned to dot 15.0.0 below (all conformant): the EDGETYPE_SPLINE default, the
  * adjacent straight case, the `splines=line` 7-point polyline (the `splines`
  * attribute is now honored — see splines.ts:edgeTypeFromString), and parallel
  * adjacent labels stacked up/down via makeSimpleFlatLabels + simpleSplineRoute.
@@ -221,7 +221,7 @@ describe('parallel adjacent flat labels vs dot 15.0.0', () => {
   });
 });
 
-// OPPOSING adjacent labeled flats (mission 2368-byte-match, Batch 1). C's
+// OPPOSING adjacent labeled flats (mission 2368-conformant, Batch 1). C's
 // make_flat_adj_edges groups the UNORDERED {tail,head} set: the wider label is
 // earray[0] (straight, above) and the opposing leg is earray[1] (a down-arc
 // routed via simpleSplineRoute, label below). The pre-fix port keyed the group

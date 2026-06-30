@@ -103,7 +103,7 @@ describe('emitHtmlLine fontFlags passthrough', () => {
 
 // ---------------------------------------------------------------------------
 // T6 — cell decoration emission, end-to-end through the live pipeline.
-// Every expected string below was verified byte-for-byte against the
+// Every expected string below was verified conformant against the
 // installed C graphviz 15.0.0 (`dot -Tsvg`) on 2026-06-12.
 // @see lib/common/htmltable.c:emit_html_tbl / emit_html_cell
 // ---------------------------------------------------------------------------
@@ -325,7 +325,7 @@ describe('IMG SCALE fallback to node imagescale attr (emit_html_img:615-618)', (
 // rounded arm; doBorder rounded arm). A style="rounded" table/cell fills and
 // borders a rounded Bézier <path> instead of a square <polygon>; the bgcolor
 // fill also carries the leaked pen width as stroke-width (gap B). Every
-// expected string below was verified byte-for-byte against the installed C
+// expected string below was verified conformant against the installed C
 // graphviz 15.0.0 (`dot -Tsvg`) on 2026-06-22.
 // @see lib/common/htmltable.c:emit_html_tbl (:543), emit_html_cell (:644), doBorder (:271)
 // ---------------------------------------------------------------------------

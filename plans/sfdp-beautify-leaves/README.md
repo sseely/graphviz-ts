@@ -47,7 +47,7 @@ Source: `sfdp-oracle.c` (in this dir). Build:
 `cc -o /tmp/sfdp-oracle sfdp-oracle.c -I/opt/homebrew/opt/graphviz/include
 -L/opt/homebrew/opt/graphviz/lib -lgvc -lcgraph -lcdt`. Run:
 `printf '<dot>' | /tmp/sfdp-oracle`. Matches the embedded `SIMPLE_ORACLE_POS`
-byte-for-byte (verified same reference as the existing tests).
+conformant (verified same reference as the existing tests).
 
 ## Branch / merge
 

@@ -3,7 +3,7 @@
 Single task. `mincross-build.ts` (529 lines) exceeds the 500-line hook cap, so
 no in-session edit lands until it's split. Pure refactor: extract a cohesive
 group into a new module, re-export to keep import sites stable, goldens
-byte-identical.
+conformant.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|

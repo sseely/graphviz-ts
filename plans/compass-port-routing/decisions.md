@@ -16,7 +16,7 @@ the routed spline for #2168 and #241_0, plus the port's, BEFORE editing `src/`.
 Consequences: T3/T4 fix exactly the named branch; no speculative edits.
 
 ## AD-3 — Oracle-pinned, curated gate untouched
-Context: 128 curated goldens are the byte-exactness backstop; bucket counts
+Context: 128 curated goldens are the conformantness backstop; bucket counts
 re-bucket misleadingly (memory `bucket-fix-rebucketing`).
 Decision: verify per-input vs the native oracle SVG; judge by per-id verdict
 deltas (0 regressions); never modify `suite.test.ts`/`manifest.json` or

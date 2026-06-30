@@ -1,11 +1,11 @@
-# Mission: non-adjacent flat spline mirror (5:ne->8:nw — close #241_0 to byte-match)
+# Mission: non-adjacent flat spline mirror (5:ne->8:nw — close #241_0 to conformant)
 
 ## Objective
 Make the port's `routeSplines` produce the SAME spline as C `routesplines` for
 the `#241_0` non-adjacent flat edge `5:ne->8:nw`, so its two-bezier knot lands on
 the **tail side** (internal x≈405, like C) instead of the **head side** (x≈531),
-closing the last `#241_0` residual: `5:ne->8:nw` byte-matches native `dot` and
-`#241_0` moves **structural-match → byte-match** (maxDelta 126 → 0). **Zero
+closing the last `#241_0` residual: `5:ne->8:nw` conforms to native `dot` and
+`#241_0` moves **structural-match → conformant** (maxDelta 126 → 0). **Zero
 regressions** on every other box-channel-routed edge (the whole library).
 
 This is the follow-up named at the close of the `aux-back-edge-curl` mission. The
@@ -63,7 +63,7 @@ red test (Batch 1) is the target; it goes green when the fix lands.
   pass: 0 failures; the new equivariance test passes; every other curated golden
         BYTE-IDENTICAL. Any out-of-family golden flip ⇒ STOP (fitter regression).
 - command: npx tsx test/corpus/survey.ts          # THE CRUX (AD-4)
-  pass: #241_0 structural-match→byte-match (or strictly smaller maxDelta) AND ZERO
+  pass: #241_0 structural-match→conformant (or strictly smaller maxDelta) AND ZERO
         new diverged/structural verdicts corpus-wide (per-id vs baseline;
         errored↔timeout flakiness on already-failing ids excluded).
   on_fail: STOP — routeSplines is global; any new diverge means too broad.
@@ -74,7 +74,7 @@ red test (Batch 1) is the target; it goes green when the fix lands.
 | Batch | Tasks | Status |
 |-------|-------|--------|
 | 1 | T1 diagnose: build the translation-equivariance repro (pure `routeSplines`), dump the intermediate polyline `pl` vs C `Pshortestpath`, pin the exact sub-step + line where the mirror enters (funnel vs fit vs constraint-vectors vs absolute-bound), and the minimal fix. RED equivariance test added. | [x] PINNED: `routeSpline`/`findMaxDev` tie-break (fit, not funnel); fix=tolerant tie-break, confirmed on repro |
-| 2 | T2 implement the pinned fix (equivariance test + `5:ne->8:nw` go green); T3 full-corpus regression sweep (zero new diverges — the crux) | [x] DONE: #241_0 byte-match; 1995/1995 goldens; 0 new diverges; 2413_1 also improved |
+| 2 | T2 implement the pinned fix (equivariance test + `5:ne->8:nw` go green); T3 full-corpus regression sweep (zero new diverges — the crux) | [x] DONE: #241_0 conformant; 1995/1995 goldens; 0 new diverges; 2413_1 also improved |
 
 - [decisions.md](decisions.md) — AD-1..AD-5
 - [batch-1/T1-diagnose.md](batch-1/T1-diagnose.md)
@@ -85,7 +85,7 @@ red test (Batch 1) is the target; it goes green when the fix lands.
 - [findings-regression.md](findings-regression.md) — T3 corpus sweep result
 
 ## Mission summary — COMPLETE (2026-06-20)
-**`#241_0` FULLY CLOSED: structural-match → byte-match.** All tasks done; merged to
+**`#241_0` FULLY CLOSED: structural-match → conformant.** All tasks done; merged to
 `main` via merge commit (per-task IDs preserved).
 
 - **Root cause (T1):** the mirror was in the FIT (`routeSpline`), not the funnel
@@ -101,8 +101,8 @@ red test (Batch 1) is the target; it goes green when the fix lands.
   exact-arithmetic intent. No special-case (AD-2). Equivariance unit test green.
 - **Regression (T3, the crux):** 1995/1995 curated goldens pass, zero out-of-family
   flips; corpus survey: exactly 2 ids changed, both improved, zero regressed
-  (`241_0` → byte-match; `2413_1` maxDelta 68.25→48.05). `241_0` SVG drawing content
-  byte-identical to native dot; knot now svg x=432 (tail). Oracle restored native.
+  (`241_0` → conformant; `2413_1` maxDelta 68.25→48.05). `241_0` SVG drawing content
+  conformant to native dot; knot now svg x=432 (tail). Oracle restored native.
 - **Quality gates:** `tsc` clean · `vitest` 1995 pass · `lizard` clean · survey
   zero new diverges.
 - **Decisions:** 3 logged (T1/T2/T3), none flagged for review.

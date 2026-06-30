@@ -28,7 +28,7 @@ like `1896` or a minimal synthetic). Defer deep cases with a comparison page.
 
 ## Acceptance criteria
 - Given a `#RRGGBB`-uppercase input, when rendered, then the SVG fill is
-  lowercase `#rrggbb`, byte-matching the oracle.
+  lowercase `#rrggbb`, conformant with the oracle.
 - Given `1896`, then its first-diff (`polygon[1]/@fill`) is resolved.
 - Given the golden suite, then it is green with the new color golden(s); 0 per-id
   regressions vs the prior survey.

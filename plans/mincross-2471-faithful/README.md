@@ -2,7 +2,7 @@
 
 ## Objective
 
-Make `tests/2471.dot`'s final per-rank mincross node order **byte-identical to
+Make `tests/2471.dot`'s final per-rank mincross node order **conformant to
 C**, completing in reasonable time with **zero golden churn**. Two layers:
 1. **Known (mechanical):** `medians`/`reorder` ignore the `vStart` window offset
    — re-apply the verified fix in `../mincross-2471-order-parity/faithful-fix.md`.
@@ -28,9 +28,9 @@ C**, completing in reasonable time with **zero golden churn**. Two layers:
 
 ## Constraints (porting; cardinal = parity)
 
-- 2471 final per-rank order **byte-identical to C** (name dump diff == 0).
+- 2471 final per-rank order **conformant to C** (name dump diff == 0).
 - **Zero golden churn**; mc3 / chain_24 TB+RL / port_rl / new windowed repros
-  stay byte-identical to C.
+  stay conformant to C.
 - **C source is sacred:** revert all C instrumentation after use;
   `git -C ~/git/graphviz status` must be clean before any commit.
 - **Completion bar:** 2471 < ~60s (pre-fix ~40–49s; C 3s).

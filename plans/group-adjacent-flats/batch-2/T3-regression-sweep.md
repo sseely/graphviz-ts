@@ -48,7 +48,7 @@ for the in-family cases that now match the oracle.
   `flat-edge-241-is-y-only`
 
 ## Acceptance criteria
-- `npx vitest run` 0 failures; goldens byte-identical out-of-family.
+- `npx vitest run` 0 failures; goldens conformant out-of-family.
 - `parity.json`: `#241_0` improved; zero new diverges; per-id delta table recorded.
 - The `#241_0` SVG matches native C for `3:sw->2:se` and the `:e->:w` row (or the
   precise residual that remains is documented with its oracle delta and a

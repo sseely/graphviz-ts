@@ -19,7 +19,7 @@
   ObjState or push lightweight state; no per-node garbage in the walk
   (CLAUDE.md memory rules; quality-bar line, not a gate).
 - Byte-stability is the hardest gate: the 82 existing goldens are
-  monochrome/default-styled and MUST stay byte-identical. Populating
+  monochrome/default-styled and MUST stay conformant. Populating
   obj-state must reproduce today's `fill="none" stroke="black"` output
   for unstyled objects exactly (default ObjState = white fill unused,
   black pen, solid, penwidth 1 → emitStyle's current default output).

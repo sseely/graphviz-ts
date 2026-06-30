@@ -58,7 +58,7 @@ to identify exactly which 7 the port failed to merge — that pinpoints the path
 Oracle: headless 15.1.0 (`GVBINDIR=/tmp/ghl`), Estimate measurer. Refresh
 `parity.json` ← `parity-rules.json` + `dashboard.ts` on completion. Add a
 position/structure-strict test (e.g. assert 2361 edge-count matches native) —
-do NOT rely on byte-match (this is an HTML-free ortho graph; structural-match is
+do NOT rely on conformant (this is an HTML-free ortho graph; structural-match is
 the bar).
 
 ## Risk / stop conditions

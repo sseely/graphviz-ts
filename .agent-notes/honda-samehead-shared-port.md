@@ -33,16 +33,16 @@
      differ (C portcmp, dotsplines.c:373-376) so two parallels carrying distinct
      samehead/sametail ports each route their own base.
 - **Impact**: honda diverged→**structural-match** (maxΔ 27.9→1.06, 18→2
-  divergent edges, 0 piece-count diffs; target edges edge2/edge25 byte-match).
+  divergent edges, 0 piece-count diffs; target edges edge2/edge25 conformant).
   Survey **0 regressions on both baselines**; the same fix took the **arrows
-  family to byte-match** (graphs-arrows/newarrows + linux/macosx/nshare/share/
+  family to conformant** (graphs-arrows/newarrows + linux/macosx/nshare/share/
   windows variants) and improved 2193/NaN/b102/b143/ports/xx. 2424 tests green.
 - **Residual (sub-pixel, accepted — keeps honda at structural-match, ~1px on 2
   edges)**: n012→n011 (two parallels carrying DISTINCT samehead ids m005/m006).
   Investigated to ground truth (GV_XDUMP in `sameport`/`clip_and_install`/
   `make_regular_edge` vs `buildSharedPort`/`clipAndInstall`/`routeRegularEdge-
   Faithful`):
-  - **NOT the shared port** — `buildSharedPort` is byte-identical to C
+  - **NOT the shared port** — `buildSharedPort` is conformant to C
     `sameport`: same average dir, same `y1` (14.977842 / 15.021354), same
     `round` → `p=(-1,15)` / `(0,15)`. (Disproves the earlier "round(y1) tie in
     the shared-port clip" guess.)

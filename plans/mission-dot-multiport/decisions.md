@@ -28,7 +28,7 @@ compare order, then `p.x` on the tie, exactly as C does.
 - The `local_cross` port tiebreak already uses `p.x`
   (`mincross-cross.ts:239,245`, C `1500/1505`) and is correct.
 
-## AD-3 — Every golden stays byte-identical
+## AD-3 — Every golden stays conformant
 
 Non-ported edges have `port.p.x == 0`, so the tiebreak change is a no-op for
 them. Any golden that churns is a porting bug, not a new-correct case → STOP and

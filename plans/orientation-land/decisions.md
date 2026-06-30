@@ -4,11 +4,11 @@
 ## ADR-1: Rotation via group transform, not ptf coord rotation
 - **Context:** native keeps inner SVG coords in the unrotated frame and rotates
   via the graph `<g>` transform `rotate(-job->rotation)` (svg_begin_page);
-  verified — b68 inner coords are byte-identical to native, only transform/dims
+  verified — b68 inner coords are conformant to native, only transform/dims
   differ.
 - **Decision:** emit `rotate(-job.rotation)` in `emitGraphGroupOpen`; never bake
   rotation into inner coords.
-- **Consequences:** byte-match achievable; `applyRotation`/`transformPoint`
+- **Consequences:** conformant achievable; `applyRotation`/`transformPoint`
   rotation branch stays unused (raster-only).
 
 ## ADR-2: job.rotation = 90, transformPoint stays unrotated
@@ -34,5 +34,5 @@
 - **Context:** landscape graphs carry co-occurring unported features —
   `ratio=compress` (NaN), `page=` pagination + clusters (proc3d).
 - **Decision:** implement rotation only; leave `Z` size-fit on un-swapped dims.
-- **Consequences:** b68 (ratio=auto, Z=1) byte-matches; NaN/proc3d improve but
+- **Consequences:** b68 (ratio=auto, Z=1) conforms to; NaN/proc3d improve but
   stay diverged on their separate blockers (out of scope, not regressions).

@@ -67,7 +67,7 @@ Report: dot-self-loop PASS/FAIL with maxDelta/structural result.
   then it passes at dot tolerance class
 - Given multiple parallel self-loops on one node, when layout runs,
   then each gets distinct geometry (unit test; C: cnt loop)
-- Given the existing 57 goldens, then byte-identical port output
+- Given the existing 57 goldens, then conformant port output
   (1054+/0)
 
 ## Observability: N/A. Rollback: Reversible.

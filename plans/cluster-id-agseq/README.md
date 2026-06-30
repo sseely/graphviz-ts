@@ -34,7 +34,7 @@ brief: per-task commit ids referenced in the decision journal).
 ## Constraints
 
 ### Stop conditions
-- A `clust*` / `labelclust*` byte-match case regresses for a reason **other
+- A `clust*` / `labelclust*` conformant case regresses for a reason **other
   than** edge-endpoint-subgraph seq drift → stop, document.
 - Two consecutive survey runs show net regressions.
 - The fix would require changing node or edge id assignment — out of scope;
@@ -58,7 +58,7 @@ Run between batches. See `~/.claude/rules/autonomous-execution.md`.
   on_fail: fix_and_rerun
 - command: npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts
   pass: 7 targets flip out of diverged; 0 net regressions (clust*/labelclust*
-        byte-matches preserved)
+        conforms to preserved)
   on_fail: fix_and_rerun
 - command: git diff --name-only HEAD~1
   pass: matches the task's declared write-set only
@@ -93,8 +93,8 @@ Run between batches. See `~/.claude/rules/autonomous-execution.md`.
   `job.clusterId` retired.
 - **Survey:** 7/7 confirmed targets flipped out of `diverged`
   (graphs-nestedclust, linux.x86/macosx/nshare-nestedclust_dot, 705, graphs-b7
-  → byte-match; 1514 → structural-match). **0 regressions.** Counts:
-  byte-match 272→278, structural 232→236, diverged 264→254. Re-bucketed
+  → conformant; 1514 → structural-match). **0 regressions.** Counts:
+  conformant 272→278, structural 232→236, diverged 264→254. Re-bucketed
   (progress): 121/258/2242 diverged→structural-match.
 - **Quality gates:** `tsc --noEmit` exit 0; vitest 2304/2304 green
   (2301 baseline + 3 new T2 render tests + 4 new T1 seq tests, minus overlap).

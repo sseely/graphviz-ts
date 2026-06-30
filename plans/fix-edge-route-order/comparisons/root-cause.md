@@ -64,7 +64,7 @@ originals, so their `edgecmp` order (pass-1 keys) equals their current
 `edgeRouteCmp` order (pass-2 keys) — same `|rank diff|`, `|x diff|`, `seq`. Only
 the **lone-vs-group** interleaving changes, and only graphs where a lone edge
 shares a `recover_slack`'d vnode or a `top_bound`/`bot_bound` spline with a group
-on the other side of it in `edgecmp` order will move. For the 395 byte-matching
+on the other side of it in `edgecmp` order will move. For the 395 conformant with
 graphs with no such interaction, output is unchanged. HIGH blast radius
 (shared router) → the **0-regression headless survey + golden pins are the safety
 net** (ADR-2).

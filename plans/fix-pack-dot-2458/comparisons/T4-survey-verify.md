@@ -12,28 +12,28 @@ Survey counts (committed baseline → post-fix):
 
 | verdict | baseline | post-fix | Δ |
 |---|---|---|---|
-| byte-match | 442 | 449 | **+7** |
+| conformant | 442 | 449 | **+7** |
 | structural-match | 230 | 225 | −5 |
 | diverged | 107 | 105 | **−2** |
 | errored | 0 | 0 | 0 |
 | oracle-error | 11 | 11 | 0 |
 
-Net: 2 graphs left `diverged` (→ byte-match) and 5 more tightened
+Net: 2 graphs left `diverged` (→ conformant) and 5 more tightened
 structural→byte; **no downgrades**.
 
 ## Verdict transition matrix (all 7 moves — every one an improvement)
 
 | id | baseline | post-fix | cause |
 |---|---|---|---|
-| **2458** | diverged (maxΔ=74.8) | **byte-match** | THIS fix (dot pack branch) — verified byte vs headless |
-| **2682** | diverged (maxΔ=80.8) | **byte-match** | THIS fix (dot pack branch) — verified byte vs headless |
-| 1724 | structural-match | byte-match | not this change (dot pack branch is inert for it); stale-baseline tighten, improvement |
-| linux.x86-pack_neato1 | structural-match | byte-match | neato engine (untouched by this fix); stale-baseline tighten, improvement |
-| linux.x86-pack_neato2 | structural-match | byte-match | neato engine; improvement |
-| nshare-pack_neato1 | structural-match | byte-match | neato engine; improvement |
-| nshare-pack_neato2 | structural-match | byte-match | neato engine; improvement |
+| **2458** | diverged (maxΔ=74.8) | **conformant** | THIS fix (dot pack branch) — verified byte vs headless |
+| **2682** | diverged (maxΔ=80.8) | **conformant** | THIS fix (dot pack branch) — verified byte vs headless |
+| 1724 | structural-match | conformant | not this change (dot pack branch is inert for it); stale-baseline tighten, improvement |
+| linux.x86-pack_neato1 | structural-match | conformant | neato engine (untouched by this fix); stale-baseline tighten, improvement |
+| linux.x86-pack_neato2 | structural-match | conformant | neato engine; improvement |
+| nshare-pack_neato1 | structural-match | conformant | neato engine; improvement |
+| nshare-pack_neato2 | structural-match | conformant | neato engine; improvement |
 
-The two `diverged → byte-match` moves are the dot pack branch (T2), each proven
+The two `diverged → conformant` moves are the dot pack branch (T2), each proven
 real by a direct port-vs-headless-15.1.0 render. The five `structural → byte`
 moves are not produced by this dot-only change (neato graphs / inert case); they
 are pre-existing improvements the committed baseline had not yet captured. All
@@ -53,6 +53,6 @@ seven are improvements, so per T4 there is no STOP — only regressions would ha
 
 ## Scope note
 
-T1+T2 complete (2458 + 2682 byte-match, 0 regressions). T3 (clustered
+T1+T2 complete (2458 + 2682 conformant, 0 regressions). T3 (clustered
 multi-component packing) is deferred to a dedicated cluster-mincross derisk
 mission — see `decision-journal.md` (T3 rows) for the cascade map.

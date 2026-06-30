@@ -83,10 +83,10 @@ Point` already exists.
 ## Acceptance criteria
 
 - Given `rankdir_dot`, `rankdir_dot1`, `rankdir_dot2` (each × `linux.x86`,
-  `nshare` = **6 rows**), when surveyed, then all reach **byte-match** (combined
+  `nshare` = **6 rows**), when surveyed, then all reach **conformant** (combined
   with T1's empty-span fix).
 - Given any graph with **no** `size=`/`ratio=fill`, when rendered, then the SVG
-  is **byte-identical** to before (Z=1 no-op) — D5.
+  is **conformant** to before (Z=1 no-op) — D5.
 - Given `size="6,6"` on a drawing larger than 6in, when rendered, then the root
   `<g>` has `transform="scale(Z …)"` with `Z = min(432/sz.x, 432/sz.y)` and
   `width`/`height`/`viewBox` equal the oracle's to the `deterministic`
@@ -122,7 +122,7 @@ N/A — render-path geometry; no new runtime operations or metrics.
 ## Quality bar
 
 `npx tsc --noEmit --stableTypeOrdering` clean; `npx vitest run` green incl. new
-golden; spot-check ≥2 existing byte-match goldens for zero byte change. Commit:
+golden; spot-check ≥2 existing conformant goldens for zero byte change. Commit:
 `feat(T2): scale SVG output to size= via init_job_viewport zoom`. Body: explain
 the zoom formula and the SVG-coords-stay-full-size decision (D4); reference
 `emit.c:3356`.
@@ -131,7 +131,7 @@ the zoom formula and the SVG-coords-stay-full-size decision (D4); reference
 
 - **Always:** keep `Z=1` a pure no-op for non-`size` inputs (D5); pin rounding
   to instrumented C.
-- **Ask first:** if reaching byte-match appears to require setting `ratioKind`
+- **Ask first:** if reaching conformant appears to require setting `ratioKind`
   for layout (it should not — D3) or changing node/edge coordinates (D4).
 - **Never:** activate `aspectFillScale`/`Expand`/`Value` layout reshaping; scale
   inner SVG coordinates; alter the raster ptf path.

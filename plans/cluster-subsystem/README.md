@@ -78,8 +78,8 @@ native dot, revert C instrumentation + rebuild before finishing.
 
 ### Progress (2026-06-22) — MERGE GATE GREEN
 All defects implemented on `feature/cluster-membership-fix`. Parity regenerated:
-**errored 8→5, timeout 8→6, byte-match 249→251, 0 per-id regressions.** All six
-targets render: 1221 + 2721 byte-match; 1332, 1767, b53 diverged (ADR-4); 2825
+**errored 8→5, timeout 8→6, conformant 249→251, 0 per-id regressions.** All six
+targets render: 1221 + 2721 conformant; 1332, 1767, b53 diverged (ADR-4); 2825
 diverged (unchanged). Full vitest suite **2260 pass**, typecheck 0, build 0.
 Defect D was mis-scoped as routing — the real cause was a rank-phase membership
 gap (`nodeInduce` missing C's foreign-node prune), the same agdelete pattern as

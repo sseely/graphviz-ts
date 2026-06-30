@@ -4,8 +4,8 @@
 // Keeps the accepted list honest so PARITY.md and the rules gate describe reality:
 //   - every entry is well-formed (class/scope/reason/ref + exactly one selector),
 //   - every per-id entry names a real corpus graph,
-//   - every parity/both per-id entry is STILL non-byte-match (a graph we
-//     "accepted" that now byte-matches is a STALE entry → remove it),
+//   - every parity/both per-id entry is STILL non-conformant (a graph we
+//     "accepted" that now conforms to is a STALE entry → remove it),
 //   - matchAccepted resolves the documented A* and migrated R-* entries.
 
 import { readFileSync } from 'node:fs';
@@ -48,21 +48,21 @@ describe('accepted-divergences registry', () => {
     expect(missing, 'unknown ids in registry').toEqual([]);
   });
 
-  it('every parity-scoped per-id entry is still non-byte-match (no stale acceptance)', () => {
+  it('every parity-scoped per-id entry is still non-conformant (no stale acceptance)', () => {
     const stale: string[] = [];
     for (const e of entries) {
       if (!idEntries(e) || !parityScoped(e)) continue;
       const v = verdictById.get(e.match.id!);
-      // accepted graphs must remain a real divergence; byte-match (or absent) = stale.
-      if (v === undefined || v === 'byte-match') stale.push(`${e.match.id} (${v ?? 'absent'})`);
+      // accepted graphs must remain a real divergence; conformant (or absent) = stale.
+      if (v === undefined || v === 'conformant') stale.push(`${e.match.id} (${v ?? 'absent'})`);
     }
-    expect(stale, 'stale accepted entries — graph now byte-matches, remove from registry').toEqual([]);
+    expect(stale, 'stale accepted entries — graph is now conformant, remove from registry').toEqual([]);
   });
 
   it('resolves the documented A-class deltas under the parity scope', () => {
     expect(matchAccepted('2368', 'dot', 'parity', entries)?.class).toBe('A3');
     expect(matchAccepted('graphs-NaN', 'dot', 'parity', entries)?.class).toBe('A2');
-    // a known byte-match graph is NOT accepted
+    // a known conformant graph is NOT accepted
     expect(matchAccepted('121', 'dot', 'parity', entries)).toBeNull();
   });
 

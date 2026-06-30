@@ -3,7 +3,7 @@
 ## Context
 
 graphviz-ts is a faithful TS port of Graphviz C. After the prior mission,
-`2368.dot` byte-matches C on edge count/labels but diverges geometrically by two
+`2368.dot` conforms to C on edge count/labels but diverges geometrically by two
 root causes (see `decisions.md#ground-truth-data`). Pin each to its exact C-vs-
 port first-divergence before any fix. C is the spec.
 
@@ -68,4 +68,4 @@ N/A — diagnostic only. Reversible (delete the two files).
 
 ## Quality bar
 `npx tsc --noEmit` clean; `npx vitest run` green (diagnostic files must not break
-collection). Commit: `test(diagnostic): flat-geometry trace for 2368 byte-match`.
+collection). Commit: `test(diagnostic): flat-geometry trace for 2368 conformant`.

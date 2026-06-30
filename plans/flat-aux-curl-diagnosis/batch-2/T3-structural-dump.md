@@ -80,7 +80,7 @@ N/A — diagnosis.
 Reversible — findings doc only; C instrumentation reverted (AD-6).
 
 ## Quality bar
-`npx tsc --noEmit` exit 0 (harness still typechecks); goldens byte-identical;
+`npx tsc --noEmit` exit 0 (harness still typechecks); goldens conformant;
 `npx tsx test/corpus/survey.ts` shows `parity.json` unchanged (0 delta — no src
 change). One commit: `docs(diag): name aux rank divergence for 3->2 + fix
 hypothesis`.

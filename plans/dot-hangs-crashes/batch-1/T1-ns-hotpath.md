@@ -14,7 +14,7 @@ port heap-allocates one object per frame (~55× per-frame overhead). Separately,
 `rerank` recurses to depth O(V) and overflows V8's ~1MB stack on 2108
 (`--stack-size=2000` confirms it is pure depth).
 
-This is a **byte-identical refactor**: representation and per-op cost change,
+This is a **conformant refactor**: representation and per-op cost change,
 algorithm and iteration count do **not**. Read `decisions.md` AD-1, AD-2, AD-3,
 AD-4 in full before starting.
 
@@ -72,7 +72,7 @@ allowlist if the repo's fitness check requires it.
 - **Given** the pre-mission vitest suite, **when** T1 lands, **then** `npm test`
   and `npm run typecheck` pass with zero changes to expected outputs.
 - **Given** 2471 rendered before and after, **when** SVGs are diffed, **then**
-  they are **byte-identical** (representation change only).
+  they are **conformant** (representation change only).
 - **Given** 2108 at **default** V8 stack, **when** rendered via the port, **then**
   it completes without "Maximum call stack size exceeded".
 - **Given** 2471, **when** timed (port vs `dot -Tsvg`), **then** it is within ~3×
@@ -80,7 +80,7 @@ allowlist if the repo's fitness check requires it.
   for T3 — do not force it by altering the algorithm.
 - **Given** a unit test, **when** `dfsRange`/`rerank` run on a small fixed tree,
   **then** asserted `low`/`lim`/`rank` values match the recursive/object version
-  exactly (lock the byte-for-byte equivalence).
+  exactly (lock the conformant equivalence).
 
 ## Verify byte-identity (recipe)
 
@@ -95,7 +95,7 @@ npm run build:js && node -e '...same, write /tmp/after.svg...' .../2471.dot
 diff /tmp/before.svg /tmp/after.svg && echo BYTE-IDENTICAL
 ```
 
-Do this for 2471, 1718, 2475_2, and a handful of currently byte-matching cases
+Do this for 2471, 1718, 2475_2, and a handful of currently conformant with cases
 (`graphs-abstract`, `graphs-b7`) to prove no collateral change.
 
 ## Observability

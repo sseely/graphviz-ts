@@ -20,7 +20,7 @@ totals.
 2. **Corpus survey (AD-4 — the crux):** `npx tsx test/corpus/survey.ts`. Compare
    new `test/corpus/parity.json` to the `main` baseline (diverged 356; `#241_0`
    structural-match maxDelta 126):
-   - `#241_0` must move structural-match→byte-match (or strictly smaller maxDelta).
+   - `#241_0` must move structural-match→conformant (or strictly smaller maxDelta).
    - ZERO new `diverged` OR `structural-match` (regression) verdicts. (Ignore
      `errored↔timeout` flips on already-failing ids — flaky timing; verify each was
      already failing in baseline.) Any genuine new diverge/regression ⇒ STOP.
@@ -28,7 +28,7 @@ totals.
      non-adjacent flats and multi-rank regular edges (the fitter's heaviest users).
 3. **End-to-end confirm:** `npx tsx test/corpus/render-one.ts
    ~/git/graphviz/tests/241_0.dot dot` vs native oracle — `5:ne->8:nw` now
-   byte-matches (knot at svg x=432) and the whole 241_0 SVG is byte-identical.
+   conforms to (knot at svg x=432) and the whole 241_0 SVG is conformant.
 4. **Restore native oracle (AD-5):** no instrumented plugin left in
    `/tmp/gvplugins`; `git -C ~/git/graphviz status` clean.
 
@@ -48,22 +48,22 @@ in-family cases that now match the oracle.
   `flat-edge-241-is-y-only`
 
 ## Acceptance criteria
-- `vitest` 0 failures; goldens byte-identical out-of-family; the equivariance test
+- `vitest` 0 failures; goldens conformant out-of-family; the equivariance test
   passes (done by T2).
-- `parity.json`: `#241_0` byte-match (or strictly smaller maxDelta); ZERO new
+- `parity.json`: `#241_0` conformant (or strictly smaller maxDelta); ZERO new
   diverges/regressions; per-id delta table recorded.
-- `#241_0` SVG byte-matches native C end-to-end (or the precise residual is
+- `#241_0` SVG conforms to native C end-to-end (or the precise residual is
   documented with its oracle delta).
 - `lizard` on changed files clean; C oracle restored native.
 
 ## Observability / Rollback
 N/A offline lib. Reversible. One commit:
-`test(spline): regression sweep — #241_0 byte-match, 0 new diverges`. Return:
+`test(spline): regression sweep — #241_0 conformant, 0 new diverges`. Return:
 vitest result, the per-id survey delta (esp. `#241_0` before/after), in-family
 goldens updated, confirmation zero out-of-family changes + oracle native.
 
 ## Mission close (orchestrator, after T3 green)
 Run final gates on the full branch; merge `fix/nonadjacent-flat-5ne8nw` → `main`
 with a merge commit (preserve per-task IDs). Write the mission summary in README.
-Update memory `flat-edge-241-is-y-only` to mark `#241_0` FULLY CLOSED (byte-match)
+Update memory `flat-edge-241-is-y-only` to mark `#241_0` FULLY CLOSED (conformant)
 — or document the precise residual if any remains.

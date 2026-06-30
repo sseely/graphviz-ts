@@ -143,7 +143,7 @@ describe('fitness: module-level globals (multi-diagram safety)', () => {
 // justification; this one exercises the render path and fails if a global is
 // read-before-set in a way that changes OUTPUT. Render a probe, render a
 // pollution battery touching the known globals, render the probe again, require
-// byte-identical output.
+// conformant output.
 //
 // Coverage model: this catches GEOMETRY-AFFECTING leaks — proven against a
 // broken Rankdir reset (which would rotate every subsequent graph). It does NOT

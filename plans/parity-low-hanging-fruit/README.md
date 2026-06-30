@@ -6,7 +6,7 @@ Improve dot-corpus parity by clearing the **simplest** divergences first. Triage
 the 62 cases in the five smallest buckets (color-stroke, text-content,
 attr-or-tag, polygon-points, parser-gap), fix every case with a localized,
 oracle-pinned root cause (≤~30 lines, single module, faithful to C), and defer
-the deep ones with a comparison page. Success = byte-match increases with **0
+the deep ones with a comparison page. Success = conformant increases with **0
 per-id regressions**. The two heavy buckets (`path-structure` 158,
 `element-count` 109) are explicitly out of scope.
 

@@ -4,7 +4,7 @@
 ## Context
 Faithful TS port of C graphviz. Before adding straight-mode behavior (T2b), turn
 the current single-path chain routing into a function shaped like C's segmented
-loop — but producing exactly ONE segment, so output is byte-identical. This is a
+loop — but producing exactly ONE segment, so output is conformant. This is a
 pure structural refactor and a safe checkpoint.
 
 ## Task
@@ -37,7 +37,7 @@ cannot be assembled. T2b extends its internal loop with the smode branch.
 
 ## Acceptance criteria
 - Given EVERY current corpus input, when rendered via `render-one.ts`, then the
-  SVG is **byte-identical** to pre-refactor output (verify a sample incl. L5,
+  SVG is **conformant** to pre-refactor output (verify a sample incl. L5,
   p2, try, clust1, and ≥20 others; ideally diff full parity.json — verdicts
   unchanged for all ids).
 - Given `npx vitest run`, then all 2000 tests pass.

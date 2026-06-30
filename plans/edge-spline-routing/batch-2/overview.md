@@ -13,5 +13,5 @@ Dependency: T2 cannot start until S1 fills `#d-fixsite` and rewrites
 [T2-fix.md](./T2-fix.md).
 
 Gate after batch: `tsc` clean; `vitest` green incl. new test; the reproducer's
-diverging edge byte-matches the oracle; spot-check ≥2 currently-matching edges
+diverging edge conforms to the oracle; spot-check ≥2 currently-matching edges
 for zero byte change; `git diff --name-only main` ⊆ {S1 docs, T2 write-set}.

@@ -6,7 +6,7 @@ primary file region, so not parallelizable.
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
 | T1 | Faithful C-vs-TS diagnosis of G2; confirm `accumCross` tiebreak metric and that `port.p.x` is populated pre-mincross | opus | `docs/dot-g2-trace.md` | — | [x] |
-| T2 | TDD oracle pin + faithful `accumCross` tiebreak fix (`p.x` like C); verify 25/25 corpus + all goldens byte-identical; update status docs | opus | `src/layout/dot/mincross-cross.ts`, `src/layout/dot/mincross-port-order.test.ts` (new), `plans/layout-engine-backlog/route-reverification.md`, `plans/layout-engine-backlog/gaps/dot.md`, `plans/port-catalog/README.md` | T1 | [x] |
+| T2 | TDD oracle pin + faithful `accumCross` tiebreak fix (`p.x` like C); verify 25/25 corpus + all goldens conformant; update status docs | opus | `src/layout/dot/mincross-cross.ts`, `src/layout/dot/mincross-port-order.test.ts` (new), `plans/layout-engine-backlog/route-reverification.md`, `plans/layout-engine-backlog/gaps/dot.md`, `plans/port-catalog/README.md` | T1 | [x] |
 
 ## Dependency summary
 
@@ -30,7 +30,7 @@ STOP and wait for human input when:
   split it and log the split in the decision journal.
 - A choice is purely stylistic and does not change routed geometry or order.
 - The 2nd corpus port case (`compass ports`, `record ports`) needs a ≤0.5pt
-  tolerance pin rather than byte-exact — use it (those are pre-existing
+  tolerance pin rather than conformant — use it (those are pre-existing
   sub-pixel "near" residuals, not this mission's target; just prove no
   regression).
 

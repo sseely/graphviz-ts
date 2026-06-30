@@ -8,7 +8,7 @@ divergence is the trigger for any fix, not an assumption.
 |----|-------------|-------|--------|------------|------|
 | T2 | curved + compound fixtures + native-C refs + manifest; validate; fix on divergence | sonnet | `test/golden/inputs/dot-{curved,compound}-*.dot`, `test/golden/refs/dot-{curved,compound}-*.svg`, `test/golden/manifest.json`, `src/layout/dot/splines.ts` (curved group fix), `src/layout/dot/compound.ts`+`index.ts` (compound wiring fix) | T1 | [x] |
 
-**Outcome:** **All 5 goldens pass byte-exact** vs native C (curved-single,
+**Outcome:** **All 5 goldens pass conformant** vs native C (curved-single,
 curved-parallel, curved-cycle, compound-splines, compound-lhead). Nothing
 quarantined. `dot-curved-cycle` (grouping bug) and `dot-compound-lhead` (compound
 `arrowEndClip` order) were each briefly quarantined then fixed via C
@@ -20,7 +20,7 @@ instrumentation — see decision journal (2026-06-19, post-merge).
 
 ## Gate after batch (full mission gate)
 - `npm run typecheck` 0 · `npm test` (new curved/compound goldens pass vs native-C
-  refs; **every existing golden byte-identical**) · `npm run build` OK.
+  refs; **every existing golden conformant**) · `npm run build` OK.
 - `git -C ~/git/graphviz status --porcelain lib/` clean.
 - `git diff --name-only` shows only `src/layout/dot/**`, `test/golden/**`,
   `plans/**`.

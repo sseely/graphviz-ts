@@ -43,7 +43,7 @@ export function dotRank(g: Graph): void {
   by observing the NEW_RANK bit post-call).
 - **Given** a graph without the attr (or `newrank=false`), **then** `dot1Rank`
   is taken and `NEW_RANK` is NOT set.
-- **Given** the 122 goldens, **then** byte-identical (no golden sets newrank).
+- **Given** the 122 goldens, **then** conformant (no golden sets newrank).
 
 ## Dependency / ordering
 
@@ -52,7 +52,7 @@ state where `newrank=true` hangs. If T3 isn't done, this commit waits.
 
 ## Quality bar
 
-`tsc --noEmit` 0; lizard clean; vitest green; goldens byte-identical.
+`tsc --noEmit` 0; lizard clean; vitest green; goldens conformant.
 Commit: `fix(T2): dotRank honours the newrank attribute`.
 
 ## Observability / Rollback

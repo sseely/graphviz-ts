@@ -42,7 +42,7 @@ commit IDs are referenced in the decision journal).
 - Exact spline control points / minor structural shape, as long as the merged
   trunk is present and survey is green.
 - Which of the ≤3 routing files actually needs the edit (T1 decides).
-- Whether byte-match falls out naturally (pursue if free; not required — ADR-3).
+- Whether conformant falls out naturally (pursue if free; not required — ADR-3).
 
 ## Quality gates
 
@@ -85,8 +85,8 @@ commit IDs are referenced in the decision journal).
   chain into merge-bounded runs and installs one bezier per run on the
   representative (trunk owned via `getMainEdge`); `splines.ts` dispatch intercepts
   lone merged chains. `conc.ts`/`classify.ts` untouched.
-- **Result:** 2559 `diverged → byte-match` (exceeds the structural-match bar).
-  `survey:gate` regressions = 0. Net corpus: byte-match +56, total match +10,
+- **Result:** 2559 `diverged → conformant` (exceeds the structural-match bar).
+  `survey:gate` regressions = 0. Net corpus: conformant +56, total match +10,
   diverged −10 (the fix is faithful for every shared-vnode merge, not just
   concentrate). b69 improved 137→143 `<path>` (native 144), verdict unchanged.
 - **Gates:** `tsc` 0 · `vitest` 2454 pass / 1 pre-existing skip · gate 0 regr ·

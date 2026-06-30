@@ -73,7 +73,7 @@ match reality. Use Tier-1 verbs: **enumerate**, **verify**, **identify all**.
   within 0.5pt; if the curve interior diverges, quantify it for AD3).
 - **Given** the no-port golden-risk probe, **when** one regular edge is routed
   via the faithful path, **then** the diff vs its current ref is quantified
-  (byte-identical / within Npt / diverges), feeding AD3.
+  (conformant / within Npt / diverges), feeding AD3.
 - **Given** the findings doc, **when** batch 2 starts, **then** SR2–SR4 have
   concrete write-sets and the beginPath input contract is fully specified.
 

@@ -48,7 +48,7 @@ swapped when the edge runs high→low rank, fresh `makePort()` ends, shared
 
 - **Given** `digraph{a->b; b->a}` with the parallel-group path bypassed, **when**
   b→a routes, **then** it matches the dot oracle ≤0.5pt with the arrow at a.
-- **Given** the 115 goldens, **then** all byte-identical.
+- **Given** the 115 goldens, **then** all conformant.
 - **Given** the full suite, **then** passed ≥ 1810, 0 failed.
 
 ## Quality bar
@@ -59,4 +59,4 @@ Commit: `feat(T1): route adjacent back edges through pathplan`.
 ## Observability / Rollback
 
 N/A — pure layout, no new observable operations. Reversible (revert; goldens
-byte-identical).
+conformant).

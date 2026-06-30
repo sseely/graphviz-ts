@@ -6,7 +6,7 @@
   `LR_balance`'s degenerate-vertex selection. We could (a) replicate C's exact
   add order, or (b) impose some other deterministic order and accept different
   (still-optimal) vertices.
-- **Decision:** replicate C's exact order. The project bar is byte-match to C
+- **Decision:** replicate C's exact order. The project bar is conformant to C
   (CLAUDE.md: "the C source is the spec"); a "different but valid" optimum still
   diverges in the SVG and fails the gate.
 - **Consequences:** the fix is a faithful port of C's subtree-merge ordering

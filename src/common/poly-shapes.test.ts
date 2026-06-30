@@ -63,8 +63,8 @@ describe('special node shapes (round_corners port)', () => {
 
   // AC5 (rounded-clusters-mrecord): extracting emitRoundedBezier out of
   // roundedDraw must not change box-node output. This control already
-  // byte-matched the oracle pre-mission; lock its exact <path d>.
-  it('rounded box-node <path> is byte-identical to the oracle after extraction', () => {
+  // conformant with the oracle pre-mission; lock its exact <path d>.
+  it('rounded box-node <path> is conformant to the oracle after extraction', () => {
     const svg = renderSvg('digraph{a[shape=box,style=rounded]}', 'dot');
     expect(svg).toContain(
       'd="M42,-36C42,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 ' +

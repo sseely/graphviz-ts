@@ -385,7 +385,7 @@ export function makeNodeInfo(): NodeInfo {
   // dictionary (slow) mode — the dominant cost of the network-simplex DFS hot
   // path on large graphs (~26x per-op vs C). No code reads node.info via
   // `in`/spread/Object.keys, so adding the keys is behavior-free (verified
-  // byte-identical across the full dot corpus). Keep in sync with NodeInfo.
+  // identical across the full dot corpus). Keep in sync with NodeInfo.
   return {
     coord: { x: 0, y: 0 },
     width: 0,

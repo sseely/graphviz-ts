@@ -43,7 +43,7 @@ fixes are preferred (bigger, safer wins).
 **Context:** This is a perf/faithfulness change to a correct pipeline.
 
 **Decision:** Output must not change. Gate = full vitest green, `tsc` clean, and
-a survey where **no byte-match or structural-match case regresses** and **no
+a survey where **no conformant or structural-match case regresses** and **no
 per-id verdict changes** (mincross order changes ripple into positions/splines,
 so any verdict change is a real regression). Capture `parity-baseline.json`
 before; diff after. A faithfulness fix that matches C's iteration count must

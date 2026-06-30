@@ -6,7 +6,7 @@
 | T4 | Per-rank ORDER verification vs C (all reproducers) + 2471 re-test | `decision-journal.md` (summary) | T2, T3 | [x] |
 
 > T3: zero golden churn (measured) — no corpus graph triggers the path; nothing
-> to regenerate. T4: order byte-identical TS==C on mc3 + 6-cluster chain; 2471
+> to regenerate. T4: order conformant TS==C on mc3 + 6-cluster chain; 2471
 > still hangs in the pre-existing mincross transpose perf gap (HEAD~1 hangs
 > identically) — next mission, not a failure (AD-4).
 
@@ -27,7 +27,7 @@ from BOTH C and TS for each reproducer; diff per rank. This — not crossing cou
 
 `mc3` (minimal stuck), 6-cluster chain (`/tmp/ab_clusters_tb.dot`), and the
 ablation cluster variants. Cluster-free / crossing-free graphs must stay
-byte-identical.
+conformant.
 
 ## 2471 (AD-4)
 

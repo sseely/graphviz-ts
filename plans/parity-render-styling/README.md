@@ -45,7 +45,7 @@ with a **merge commit** when all gates pass, on Scott's go-ahead.
   pass: exit 0 AND failed == 0 AND passed >= 1466
   on_fail: fix_and_rerun
 - command: OUTDIR=/tmp/rs-x npx tsx .probes/render-all.ts + byte-diff vs pre-task baseline
-  pass: existing goldens byte-identical (82 until T6 lands, ~97 after)
+  pass: existing goldens conformant (82 until T6 lands, ~97 after)
   on_fail: stop
 - command: git diff --name-only HEAD~1..HEAD
   pass: within the task's declared write-set
@@ -113,7 +113,7 @@ Baseline at mission start: **1466 passed / 0 failed**, 82 goldens
 | T6 | `2c02b97` | 15 styled goldens vs dot 15.0.0; manifest 82→97 |
 
 **Final gates (full branch):** `tsc --noEmit` 0 errors; `vitest run`
-1584 passed / 0 failed; prior 82 goldens byte-identical to the mission
+1584 passed / 0 failed; prior 82 goldens conformant to the mission
 baseline (0 diffs); 15 new styled goldens pass at deterministic 0.01pt.
 
 **Decisions of note (see decision-journal.md):**

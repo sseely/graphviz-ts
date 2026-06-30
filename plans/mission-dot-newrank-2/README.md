@@ -51,7 +51,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context).
   pass: exit 0
   on_fail: fix_and_rerun
 - command: npx vitest run
-  pass: exit 0 AND failed == 0 AND 122 goldens byte-identical
+  pass: exit 0 AND failed == 0 AND 122 goldens conformant
   on_fail: fix_and_rerun
 - command: lizard <changed files> -C 10 -L 30 -a 5   # binary at /opt/anaconda3/bin/lizard
   pass: no violations (30 lines/fn, CCN 10, 5 params)
@@ -64,7 +64,7 @@ Run with **opus** (`claude-opus-4-8`, native 1M context).
 ```
 
 Baseline at mission start (main): **1839 passed / 0 failed, 122 goldens
-byte-identical**. Oracle: `~/git/graphviz/build/cmd/dot/dot` with
+conformant**. Oracle: `~/git/graphviz/build/cmd/dot/dot` with
 `GVBINDIR=/tmp/gvplugins`. Repro file: `/tmp/newrank-repro.dot`.
 
 ## Batches
@@ -80,7 +80,7 @@ byte-identical**. Oracle: `~/git/graphviz/build/cmd/dot/dot` with
 
 **Objective achieved.** `newrank=true` reproduces the dot oracle exactly
 (`a=-178, b=-106, c=-106 (=b), e=-34, d=-34`, ≤0.5pt) with all 122 goldens
-byte-identical. The fix was **2 faithful one-liners**, not a fix-chain.
+conformant. The fix was **2 faithful one-liners**, not a fix-chain.
 
 | Task | Commit | Result |
 |------|--------|--------|
@@ -99,14 +99,14 @@ cross-cluster `rank=same` node was installed twice into the root rank array →
 unaffected (non-newrank nodes already get `ranktype=0` via `UF_singleton`).
 
 **Gates (final):** tsc 0 · vitest **1842 pass / 0 fail (124 files)** · 122
-goldens byte-identical · lizard clean · all touched files ≤500 lines. AD-3 cap
+goldens conformant · lizard clean · all touched files ≤500 lines. AD-3 cap
 not approached (1 logic fix beyond the dispatch). Merged to `main` with a merge
 commit.
 
 ## Constraints (stop / push-forward)
 
 **Stop and wait for human input when:**
-- Any of the 122 goldens changes byte-for-byte (AD-2 — hard invariant).
+- Any of the 122 goldens changes conformant (AD-2 — hard invariant).
 - The faithful fix would require changes **outside** the allowed write-set
   `{rank.ts, rank-dot2.ts, mincross-build.ts (+ its split modules),
   mincross-order.ts, mincross-utils.ts, cluster.ts, classify.ts, decomp.ts}`
@@ -127,9 +127,9 @@ commit.
 ## Operational readiness
 
 - **Observability:** N/A — browser library, no runtime services. SLI = "122
-  goldens byte-identical; newrank repro reproduces oracle (`c` aligns with `b`,
+  goldens conformant; newrank repro reproduces oracle (`c` aligns with `b`,
   ≤0.5pt); newrank renders without hanging," verified by `npx vitest run`.
-- **Rollback:** Reversible — revert commits; goldens stay byte-identical (no
+- **Rollback:** Reversible — revert commits; goldens stay conformant (no
   data/format/output migration). newrank is attr-gated.
 - **Backwards compat:** Non-breaking — `renderSvg` output unchanged for every
   non-`newrank` input. Turning on the dispatch changes behaviour ONLY for

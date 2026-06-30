@@ -45,16 +45,16 @@ fixed `ARROW_LENGTH=10` (normal only), so non-normal-arrow endpoints are wrong.
 **Decision:** Clip using `arrowLength` per type/compound. This moves spline
 endpoints for edges with non-normal arrows.
 **Consequences:** Those edges are all currently *diverged* (correct length never
-applied) → only-improvement expected. **Risk:** a currently byte-matching case
+applied) → only-improvement expected. **Risk:** a currently conformant with case
 that uses a non-normal arrow and coincidentally matched at length 10 would
 regress — guarded by the per-id 0-regression gate (ADR-6); STOP and investigate
 if seen.
 
 ## ADR-5: One golden per arrow-type group
 
-**Decision:** Add one byte-matching golden per type group: dot/odot (ellipse),
+**Decision:** Add one conformant with golden per type group: dot/odot (ellipse),
 crow/vee (9-pt), box, diamond, tee, curve, a compound (e.g. `crowdot`/`onormalodot`),
-and a side-modifier sample. Use a corpus case where it byte-matches, else a
+and a side-modifier sample. Use a corpus case where it conforms to, else a
 synthetic with `fixedsize` to pin geometry. Normal/inv are already covered.
 **Consequences:** Curated golden suite guards the new geometry; the corpus survey
 remains the broad report.
@@ -62,7 +62,7 @@ remains the broad report.
 ## ADR-6: Parity regeneration is the success metric
 
 **Decision:** Batch 3 re-runs `survey.ts` + `dashboard.ts`; the committed
-`parity.json`/`PARITY.md` byte-match delta with **0 per-id regressions** (judged
+`parity.json`/`PARITY.md` conformant delta with **0 per-id regressions** (judged
 by per-id verdict deltas, not aggregate counts) is the measured outcome.
 **Consequences:** Deterministic, oracle-grounded success criterion.
 

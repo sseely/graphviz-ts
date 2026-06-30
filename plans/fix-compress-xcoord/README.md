@@ -33,7 +33,7 @@ The original plan below is retained for reference.
 Under `ratio=compress`, the dot port assigns node **x-coordinates** that diverge
 from native graphviz by up to ~5pt across most nodes. This is NaN.gv's last
 blocker to structural-match. Bring the compress x-coordinate assignment to parity
-with C so NaN reaches **structural-match** (ideally byte-match) with **0 corpus
+with C so NaN reaches **structural-match** (ideally conformant) with **0 corpus
 regressions**.
 
 ## Why this exists / how we got here
@@ -161,7 +161,7 @@ fix the x-coordinate residual and verify, then the whole thing merges.
   it is faithful; the input positions are the defect.
 - General (non-compress) x-coordinate assignment — NaN's x matches C without
   compress (per prior analysis); do not perturb it.
-- `orientation=landscape` rotation (already shipped, byte-match).
+- `orientation=landscape` rotation (already shipped, conformant).
 
 ## Risk
 **Medium.** The compress path is exercised by only ~4 corpus graphs (NaN×3,

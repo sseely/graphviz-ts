@@ -37,4 +37,4 @@ graph LR
 ```
 
 The diagnostic (Batch 1) decides which branch is real by diffing C-vs-port
-counters; Batch 2 fixes the indicated branch byte-identically.
+counters; Batch 2 fixes the indicated branch conformantly.

@@ -14,7 +14,7 @@ commit. See [README quality gates](../README.md) and ADR-5.
    cmake --build ~/git/graphviz/build --target gvplugin_dot_layout dot
    sh test/corpus/gen-headless-gvbindir.sh         # /tmp/ghl
    ```
-   Sanity: honda-tokoro native SVG still byte-matches the port from T3.
+   Sanity: honda-tokoro native SVG still conforms to the port from T3.
 3. **Headless survey + gate** (require 0 regressions):
    ```
    npm run survey
@@ -51,7 +51,7 @@ commit. See [README quality gates](../README.md) and ADR-5.
 - Given the reverted C source, when `git -C ~/git/graphviz diff --stat` runs,
   then it is empty (oracle is clean).
 - Given the clean oracle, when honda-tokoro renders native vs port, then cy +
-  edge paths still byte-match.
+  edge paths still conformant.
 - Given the headless survey, when `survey:gate` runs, then "GATE PASS" with 0
   regressions.
 - Given the honest transition check, when run on both baselines, then

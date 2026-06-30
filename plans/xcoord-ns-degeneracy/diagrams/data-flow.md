@@ -5,7 +5,7 @@ oracle diff that localizes the fix.
 
 ```mermaid
 flowchart TD
-  A[ranks + mincross order fixed<br/>cx identical, byte-match] --> B[create_aux_edges<br/>position.ts / position-aux.ts]
+  A[ranks + mincross order fixed<br/>cx identical, conformant] --> B[create_aux_edges<br/>position.ts / position-aux.ts]
   B --> C["x-coord NS: rank(g, 2)<br/>ns.ts feasibleTree + pivots"]
   C --> D["LR_balance (mode 2)<br/>ns.ts lrBalance"]
   D --> E[set_xcoords -> ND_coord.x<br/>= cy in this LR graph]

@@ -72,7 +72,7 @@ correct; do not suppress.
 - Given both on one edge, then fi is initialized exactly once (C
   laziness preserved)
 - Given neither, then absent; suite 0 failed; 67 goldens
-  byte-identical
+  conformant
 
 ## Observability / rollback
 

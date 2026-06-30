@@ -1,17 +1,17 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 
-# T2 — Oracle-pin the 5 grd* cases to byte-match + golden + survey
+# T2 — Oracle-pin the 5 grd* cases to conformant + golden + survey
 
 ## Context
 
 Depends on **T1** (rounded `<path>` fill + fill stroke-width implemented). This
-task proves the 5 grd* cases now byte-match the native `dot` oracle, locks the
+task proves the 5 grd* cases now conformant with the native `dot` oracle, locks the
 rounded behavior as a golden, and refreshes the parity survey. Native oracle =
 the installed `dot` (15.0.0); never WASM (per `oracle-native-not-wasm`).
 
 ## Task
 
-1. **Verify byte-match for all 5 targets.** For each of `grdfillcolor`,
+1. **Verify conformant for all 5 targets.** For each of `grdfillcolor`,
    `grdlinear`, `grdlinear_angle`, `grdradial`, `grdradial_angle` (inputs under
    `~/git/graphviz/tests/graphs/`):
    - `npx tsx test/corpus/render-one.ts <input> dot > /tmp/port.svg`
@@ -39,12 +39,12 @@ the installed `dot` (15.0.0); never WASM (per `oracle-native-not-wasm`).
      pass within `deterministic` tolerance.
 3. **Regenerate the parity survey**:
    `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
-   Confirm the 5 `graphs-grd*` ids move from `diverged` to **byte-match** and
-   the byte-match total rises by exactly 5 with **zero regressions** elsewhere
-   (compare before/after totals; the 6 grd* control cases stay byte-match).
+   Confirm the 5 `graphs-grd*` ids move from `diverged` to **conformant** and
+   the conformant total rises by exactly 5 with **zero regressions** elsewhere
+   (compare before/after totals; the 6 grd* control cases stay conformant).
 4. **Append a decision-journal entry**: cases flipped, before/after parity
-   totals (byte-match / structural / diverged), golden(s) added, any holdout.
-   If any case did NOT reach byte-match, write a comparison page for it under
+   totals (conformant / structural / diverged), golden(s) added, any holdout.
+   If any case did NOT reach conformant, write a comparison page for it under
    `plans/htmltable-rounded-fill/comparisons/` and reference it (CLAUDE.md
    completeness rule).
 
@@ -73,17 +73,17 @@ STOP and route back to T1.
 ## Interface inputs (from T1)
 
 Port emits the table bgcolor fill as a rounded `<path fill="url(#l_N)">` (or
-solid), bordered-cell fills carry `stroke-width="<border>"`, output byte-matches
+solid), bordered-cell fills carry `stroke-width="<border>"`, output conforms to
 the oracle for all 5 grd* graphs.
 
 ## Acceptance criteria
 
 - Given each of the 5 grd* inputs, when rendered by the port, then it
-  byte-matches the native oracle (modulo the standard SVG preamble).
+  conforms to the native oracle (modulo the standard SVG preamble).
 - Given the new golden, when `vitest run test/golden/suite.test.ts` runs, then it
   passes and the manifest count increased.
 - Given the regenerated `parity.json`, then the 5 `graphs-grd*` ids are
-  `byte-match` (byte-match total +5) and no previously-passing id regressed.
+  `conformant` (conformant total +5) and no previously-passing id regressed.
 
 ## Observability / Rollback
 
@@ -92,8 +92,8 @@ N/A — test artifacts only. Reversible (revert commit).
 ## Quality bar
 
 `npx vitest run` exits 0. Report only: cases flipped, parity delta
-(byte-match / structural / diverged before→after), goldens added, any holdout.
+(conformant / structural / diverged before→after), goldens added, any holdout.
 
 ## Commit
 
-`test(htmltable): byte-match + golden for rounded table gradient fills`
+`test(htmltable): conformant + golden for rounded table gradient fills`

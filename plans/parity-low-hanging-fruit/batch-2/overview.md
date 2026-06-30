@@ -18,7 +18,7 @@ Simple fixes landed (commits 229ceaf T6, e01d906 T7, 8731c28 T8, 68185ec T10;
 c019616 deep comparison pages). Byte-match goldens added: 146 total (+11). T9
 had 0 simple cases (all crow/vee arrowhead geometry → deep). 38 deep cases each
 have a comparison page under `comparisons/`. Gate: tsc 0, 2202 tests, build 0.
-Per-id wins (full byte-match): graphs-b155, 2325, 2801, graphs-grdcluster
+Per-id wins (full conformant): graphs-b155, 2325, 2801, graphs-grdcluster
 (color); 2497, 2563 (attr); + improvements (errored/diverged→closer) on
 1896/style/proc3d, 1990/b81, 2682/2108/russian, 2184/2258/2613/2734/2183/triedds.
 
@@ -33,7 +33,7 @@ For each **confirmed-simple root-cause group** in the bucket's triage doc:
 1. **Implement** the faithful, localized fix (ADR-3, ≤~30 lines, single module).
    Read the C source under `~/git/graphviz` for the correct behavior — "the C is
    the spec." Cite it in a JSDoc `@see`.
-2. **Oracle-pin:** verify the port output now byte-matches native `dot -Tsvg`
+2. **Oracle-pin:** verify the port output now conforms to native `dot -Tsvg`
    for the affected cases.
 3. **Add ONE golden** per group (ADR-4): copy the representative input to
    `test/golden/inputs/<id>.dot`, generate the ref with the native oracle to
@@ -50,7 +50,7 @@ why it is deep + which follow-on bucket it belongs to). Reference it in the
 decision journal. Do NOT attempt the deep fix (STOP condition).
 
 ## Regression rule (hard)
-After each fix, no previously byte-matching or structural case may regress. If a
+After each fix, no previously conformant with or structural case may regress. If a
 fix trades one case's improvement for another's regression, STOP and reconsider
 (memory: "bucket-fix re-bucketing" — judge per-id deltas, not aggregate counts).
 

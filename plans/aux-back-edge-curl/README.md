@@ -131,17 +131,17 @@ oracle.
   (push-forward; source + cached oracle already establish C=7).
 - **Fix 1 (T2):** `makeFwdEdge` swaps the ports like C. Naturally gated by port
   presence (port-less back edges swap empty ports = no change); no extra gate
-  needed. Curl now byte-matches the oracle.
+  needed. Curl now conforms to the oracle.
 - **Fix 2 (T3):** verification surfaced a pre-existing second defect — the reversed
   clone stashed its head arrow under `_tailArrowPts` (j-swap) before `swapSpline`,
   but `copyFlatArrow` only transferred `_arrowPts`, dropping the arrowhead.
   `copyFlatArrow` now recovers it (gated by `eflag` + absent `_arrowPts`). Arrow
-  now byte-matches.
+  now conforms to.
 - **Quality gates:** `tsc` 0; `vitest` 147 files / 1993 pass (xfail flipped to a
   normal passing test; zero out-of-family golden churn); `lizard` clean; corpus
   survey **diverged 357→356**, `#241_0` **diverged→structural-match**, ZERO new
   diverges (AD-4). Oracle restored native (AD-5; C tree never modified).
-- **Residual (out of scope):** `#241_0` is `structural-match` (not `byte-match`)
+- **Residual (out of scope):** `#241_0` is `structural-match` (not `conformant`)
   only because of the unrelated `5:ne->8:nw` **non-adjacent flat edge**
   (box-channel routing, maxDelta 126) — a separate pre-existing mechanism.
   Recommend a follow-up mission. See `findings-regression.md`.

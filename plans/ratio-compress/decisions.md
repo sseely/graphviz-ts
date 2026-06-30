@@ -4,7 +4,7 @@
 ## ADR-1: Compress-only scope; do not activate fill/expand/value/auto
 - **Context:** populating `g.info.drawing` faithfully (`setRatio` for all kinds)
   also activates `setAspect` for the 5 `ratio=fill` graphs. `b22` (fill) is
-  currently **byte-match** without fill applied; activating fill risks
+  currently **conformant** without fill applied; activating fill risks
   regressing it, and `jsort`/`pgram`/`trapeziumlr` (diverged) would change too.
   This is the separate, deliberately-deferred "ratio-aspect-layout" mission
   (see the `device.ts:466` note).
@@ -32,7 +32,7 @@
   vs -2003 — a sub-pixel/low-single-digit residual after compression is correct.
 - **Decision:** if that residual matches the proc3d-class x-NS/font-metric delta
   (`docs/known-divergences.md` A2), accept structural-match; do not chase it in
-  this mission. byte-match is the goal but not the bar — a large maxDelta drop
+  this mission. conformant is the goal but not the bar — a large maxDelta drop
   from 1907 with 0 regressions is success.
 - **Consequences:** mission completes on a big, correct improvement even if the
   last point is the known text-metric floor.

@@ -11,7 +11,7 @@ comparison page `CLAUDE.md` requires.
 
 1. `dashboard.ts` — read `parity.json`, write `PARITY.md`:
    - **Summary** at the top (front-loaded): total, and counts per verdict
-     (`byte-match` / `structural-match` / `diverged` / `errored` / `timeout` /
+     (`conformant` / `structural-match` / `diverged` / `errored` / `timeout` /
      `oracle-error`), plus the quarantine totals per reason (from
      `corpus-manifest.json`).
    - **Diverged + errored tables**: one row per input — `id`, `verdict`,
@@ -53,7 +53,7 @@ Do NOT fix any divergence (AD-5). Triage = categorize + hypothesize, not fix.
   hypothesis — usable directly as the next-mission backlog.
 - **Given** the port-catalog, **when** read after T3, **then** it links
   `test/corpus/PARITY.md` as the parity dashboard and states the headline
-  byte-match / diverged counts.
+  conformant / diverged counts.
 - **Given** the dashboard, **when** reviewed, **then** no `src/` file was changed
   (AD-5) — `git diff --name-only` shows only `test/corpus/*` and the catalog doc.
 

@@ -96,7 +96,7 @@ Oracle for goldens: `~/git/graphviz/build/cmd/dot/dot` with
 - **Decisions:** 7 logged; none contradicted AD-1…AD-5. AD-5 contingency
   (poly-inside port) not needed.
 - **Quality gates:** `npx vitest run` 2029 pass; `npx tsc --noEmit` clean;
-  complexity hook clean; golden `dot-point-shape` byte-matches dot 15.1.0
+  complexity hook clean; golden `dot-point-shape` conforms to dot 15.1.0
   (manifest 132). Parity per-id deltas vs branch-point baseline: **IMPROVED 4**
   (graphs/shapes, linux.x86/shapes_dot, nshare/shapes_dot,
   regression_tests/shapes/reference/point), **REGRESSED 0**.

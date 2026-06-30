@@ -11,7 +11,7 @@ not the port. This is flat-edge curl-Y geometry across two code paths
 (`routeFlatEdgeFaithful` non-adjacent; `make_flat_adj_edges` adjacent).
 Faithful-port fidelity fix; no data-model / API / dependency change.
 
-NB: the flat-edge X already matches C byte-for-byte; the divergence is Y-only
+NB: the flat-edge X already matches C conformant; the divergence is Y-only
 (memory `flat-edge-241-is-y-only`). Compare FINAL SVG coords, not internal box
 coords (internal frame is +27 in x and compensates at emit).
 

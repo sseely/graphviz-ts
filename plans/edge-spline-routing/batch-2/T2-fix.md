@@ -58,7 +58,7 @@ its corridor waist vanishes, and `Pshortestpath` returns a straight 2-pt polylin
   `n12->n14`-class spline matches the oracle's piece count.
 - `test/golden/inputs/dot-long-edge-order.dot` + `refs/…svg` + `manifest.json` —
   a golden capturing a 2-rank forward edge whose corridor waist depends on
-  routing order (the reproducer is a good basis), now byte-matching.
+  routing order (the reproducer is a good basis), now conformant with.
 
 ## Read-set
 
@@ -71,7 +71,7 @@ its corridor waist vanishes, and `Pshortestpath` returns a straight 2-pt polylin
 ## Architecture decisions
 
 D2 (pin to C), D3 (long-edge class only), D4 (**0 regressions** — the global
-reorder must not regress any of the 280 byte-match rows; T3 is the gate).
+reorder must not regress any of the 280 conformant rows; T3 is the gate).
 
 ## Interface contracts
 
@@ -80,9 +80,9 @@ None downstream beyond T3's verification.
 ## Acceptance criteria
 
 - Given the reproducer `/tmp/le_long.gv`, when rendered, then **every** edge path
-  byte-matches the oracle (`n12->n14` = 2 cubics; the other 25 unchanged).
+  conforms to the oracle (`n12->n14` = 2 cubics; the other 25 unchanged).
 - Given the `edgecmp` unit test, then ordering matches C for type/span/|Δx|/AGSEQ.
-- Given the full corpus survey (T3), then `byte-match ≥ 280` and **0 per-id
+- Given the full corpus survey (T3), then `conformant ≥ 280` and **0 per-id
   regressions**. If any row regresses, STOP (D4) — the reorder is not free; report
   to the user with the regressed ids before forcing it.
 - Given the new golden, when the golden suite runs, then it passes.
@@ -104,7 +104,7 @@ N/A — render-path geometry.
 ## Boundaries
 
 - **Always:** pin the order to C (`dot_splines_` + `edgecmp`); keep `routeOneEdge`
-  and corridor/recover_slack code byte-identical.
+  and corridor/recover_slack code conformant.
 - **Never:** reimplement the fitter or the corridor math (both faithful);
   hand-gate a per-edge corridor hack instead of fixing the order; force the
   reorder if T3 shows ≥1 regression (stop + report per D4).

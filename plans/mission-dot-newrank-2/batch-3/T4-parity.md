@@ -43,13 +43,13 @@ output) into oracle-parity pins.
 - **Given** the same graph WITHOUT `newrank`, **then** `c` does NOT align with
   `b` (flag drives the change).
 - **Given** the corpus cases, **then** each matches the oracle ≤0.5pt.
-- **Given** the 122 goldens, **then** byte-identical.
+- **Given** the 122 goldens, **then** conformant.
 
 ## Quality bar
 
-`tsc --noEmit` 0; lizard clean; vitest green; goldens byte-identical.
+`tsc --noEmit` 0; lizard clean; vitest green; goldens conformant.
 Commit: `feat(T4): newrank reaches dot oracle parity (cross-cluster rank=same)`.
 
 ## Observability / Rollback
 
-N/A. Reversible (revert; newrank-gated, goldens byte-identical).
+N/A. Reversible (revert; newrank-gated, goldens conformant).

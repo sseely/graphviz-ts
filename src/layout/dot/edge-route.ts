@@ -282,7 +282,7 @@ function routeFaithfulMultiRank(e: GraphEdge, g: Graph): boolean {
  * True when either endpoint resolves to an active side-mask port (after dyna
  * resolution). Such edges route through the faithful box-channel pipeline
  * (AD2); plain and centre-only-port edges keep the simplified fitter so the
- * 115 no-side-port goldens stay byte-identical (AD3).
+ * 115 no-side-port goldens stay identical (AD3).
  * @see lib/common/splines.c:beginpath (sidemask)
  */
 function hasSidePort(e: GraphEdge): boolean {

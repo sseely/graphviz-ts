@@ -11,7 +11,7 @@
  * 2026-06-14 via `.probes/sr4-oracle.ts`.
  *
  * Tolerance (AD6 / T6a precedent): the faithful fitter is numerically close to
- * but not byte-identical with C's `routesplines` (Proutespline renormalization +
+ * but not conformant with C's `routesplines` (Proutespline renormalization +
  * libm), so attachment + interior points are pinned at 0.5pt. Cases whose start
  * matches C exactly are additionally pinned tight at 0.06pt.
  *

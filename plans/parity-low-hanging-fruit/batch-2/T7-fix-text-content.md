@@ -17,7 +17,7 @@ comparison pages, do NOT attempt the encoding infrastructure.
 
 ## Acceptance criteria
 - Given each simple case, when fixed, then its `text()` first-diff is resolved and
-  byte-matches the oracle.
+  conforms to the oracle.
 - Given Latin1/Symbol cases, then each has a comparison page marking it deep.
 - Given the golden suite, then green; 0 per-id regressions.
 

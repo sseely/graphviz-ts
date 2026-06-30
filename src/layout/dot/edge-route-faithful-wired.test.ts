@@ -12,7 +12,7 @@
  * down to B — the case the simplified fitter could not express.
  *
  * Plain (no-side-port) edges keep the simplified fitter so the 115 existing
- * goldens stay byte-identical (AD3); that is asserted here as a control.
+ * goldens stay conformant (AD3); that is asserted here as a control.
  *
  * Coordinates are in the SVG frame (y negated from graphviz-internal y-up).
  *

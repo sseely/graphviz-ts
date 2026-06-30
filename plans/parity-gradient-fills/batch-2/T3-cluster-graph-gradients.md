@@ -80,11 +80,11 @@ Then: SVG contains <linearGradient id="graph0_l_N" ...> and
 
 Given: a graph with no bgcolor or with solid bgcolor
 When: port renders
-Then: SVG byte-identical to pre-task baseline
+Then: SVG conformant to pre-task baseline
 ```
 
 ## Quality bar
 
 `npx tsc --noEmit` clean; `npx vitest run` 0 failed, passed ≥ 1466;
-82+ existing goldens byte-identical.
+82+ existing goldens conformant.
 Commit: `feat(T3): cluster + graph bgcolor gradient fills`.

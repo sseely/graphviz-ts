@@ -25,11 +25,11 @@ full 2471 parity. The T1 vStart fix is already in place.
 
 ## Acceptance criteria
 - Given the fix, when 2471 is rendered, then its final per-rank order is
-  **byte-identical to C** (fingerprinted name dump diff == 0).
+  **conformant to C** (fingerprinted name dump diff == 0).
 - Given the fix, when 2471 runs, then it **completes in < ~60s** (no hang).
 - Given the fix, when `npm test`, then **zero golden churn** and all prior
   reproducers (mc3, chain_24 TB+RL, port_rl, Batch-1 windowed) stay
-  byte-identical to C; all tests pass.
+  conformant to C; all tests pass.
 - Given the fix, when `npm run typecheck` / `npm run build`, then exit 0.
 - Given completion, then `git -C ~/git/graphviz status --porcelain lib/dotgen`
   is empty.
@@ -39,7 +39,7 @@ N/A — layout-algorithm internals.
 
 ## Rollback
 Reversible — revert the commit (returns to T1-applied state, which hangs 2471;
-so T4 is only "done" when 2471 completes byte-exact). Do not merge a state where
+so T4 is only "done" when 2471 completes conformant). Do not merge a state where
 2471 hangs.
 
 ## Quality bar

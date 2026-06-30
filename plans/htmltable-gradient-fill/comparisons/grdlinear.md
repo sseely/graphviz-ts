@@ -23,7 +23,7 @@ fill polygons.
 
 **Gradient emission: FIXED** in this mission. Gradient def count + `url()`
 references now match the oracle exactly; goldens `dot-htmltable-grad-linear` /
-`dot-htmltable-grad-radial` byte-match.
+`dot-htmltable-grad-radial` conformant.
 
 **Residual divergence: EXCLUDED** — rounded HTML-table `<path>` emission is a
 separate follow-on (reuse `emitRoundedBezier`, as for rounded clusters/Mrecord).

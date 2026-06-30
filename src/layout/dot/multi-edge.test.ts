@@ -214,7 +214,7 @@ function assertAscendingX(edges: Edge[]): void {
 // fitter (which reported ~13.37). This fixture ranks A above B (rank 1 over
 // rank 0), so its A->B edges are back members: they install through makefwdedge
 // and are reversed to tail->head, hence cp1x is read on the reversed spline.
-// Authoritative parity is the byte-identical dot-multi-edge golden (forward
+// Authoritative parity is the conformant dot-multi-edge golden (forward
 // 3-parallel). @see lib/common/splines.c:bezier_clip
 function assertSpacing(edges: Edge[], _multisep: number): void {
   const spacing1 = cp1x(edges[1]!) - cp1x(edges[0]!);

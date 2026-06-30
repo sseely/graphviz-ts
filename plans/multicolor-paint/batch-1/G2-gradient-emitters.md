@@ -12,7 +12,7 @@ The render path emits node/cluster/graph shapes via `emitStyle` (reads
 (src/render/context.ts). This task ports the SVG gradient emitters and
 extends emitStyle to emit `<defs>` + `fill="url(#id)"` when the obj-state
 fill is Linear/Radial. G3/G4 will SET those obj-state fields; this task
-makes the EMISSION correct and keeps solid/none byte-identical.
+makes the EMISSION correct and keeps solid/none conformant.
 
 ## C ground truth (verified — match exactly)
 
@@ -31,7 +31,7 @@ before the `<ellipse>`:
 r="75%" fx="..%" fy="..%">` + two stops, `fill="url(#r_0)"`. The id is
 `<obj.id>_l_<n>` when the object has an id, else `l_<n>` (and `r_<n>`).
 Capture the exact `dot -Tsvg` output for several cases and match it
-byte-for-byte (run the oracle).
+conformant (run the oracle).
 
 ## Task (TDD — failing tests first)
 
@@ -80,7 +80,7 @@ In `emitStyle` (and/or the shape emitters svgEllipse/svgPolygon/svgBezier
   AD2) by calling the svg-gradient emitter (allocate the id via the
   job counter), THEN emit `fill="url(#<id>)"` instead of the solid
   paint. The stroke/penwidth/dash emission is UNCHANGED.
-- For the SOLID and NONE cases, emitStyle output is byte-identical to
+- For the SOLID and NONE cases, emitStyle output is conformant to
   today (the 97 goldens). The gradient branch is reached ONLY when
   obj.fill is Linear/Radial, which no default/solid object sets.
 The shape emitters pass `pts` (the polygon/ellipse points) to the
@@ -124,11 +124,11 @@ to keep svg-helpers.ts < 500 lines).
 - A test that manually sets obj.fill=Linear, fillColor=red, stopColor=
   blue, frac=0, angle=0 on a pushed obj, then calls svgEllipse with
   filled=true, emits the `<defs><linearGradient id="l_0" …>` + two stops
-  + `<ellipse fill="url(#l_0)" …>` matching the C oracle byte-for-byte.
+  + `<ellipse fill="url(#l_0)" …>` matching the C oracle conformant.
 - Radial variant → `<radialGradient id="r_0" …>` + `url(#r_0)`.
 - A second gradient in the same job → `l_1` / `r_1` (counter increments).
-- obj.fill=Solid → output byte-identical to today; obj.fill=None →
-  `fill="none"`. 97 goldens byte-identical (no obj sets Linear/Radial yet).
+- obj.fill=Solid → output conformant to today; obj.fill=None →
+  `fill="none"`. 97 goldens conformant (no obj sets Linear/Radial yet).
 - frac>0 (e.g. 0.3) → first stop offset 0.299, second 0.3 (match C's
   frac-0.001 / frac).
 

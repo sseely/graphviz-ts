@@ -2,7 +2,7 @@
 # Batch 1 — shape=point implementation
 
 One task. Sizing, fill, and label suppression are a tightly-coupled unit: the
-golden cannot byte-match with any one alone, and existing point tests would
+golden cannot conformant with any one alone, and existing point tests would
 break on a partial state. Kept whole, committed working.
 
 | ID | Description | Agent | Writes | Depends On | Done |
@@ -12,7 +12,7 @@ break on a partial state. Kept whole, committed working.
 Execute solo (delicate faithful port; default single-agent).
 
 Gate after batch: `npx vitest run` (all pass), `npx tsc --noEmit` clean,
-synthetic repro point-node ellipse byte-matches the oracle (rx 1.8, fill black,
+synthetic repro point-node ellipse conforms to the oracle (rx 1.8, fill black,
 no `<text>`).
 
 - [T1](T1-shape-point.md)

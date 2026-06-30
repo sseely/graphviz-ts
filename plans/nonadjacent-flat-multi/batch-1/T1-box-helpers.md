@@ -15,7 +15,7 @@ NO behavior change. READ `../findings-diagnosis.md` and `../decisions.md` (AD-1,
    matching C's plain `stepy`). Keep the exact box arithmetic otherwise.
 2. Update the single existing call in `routeFlatEdgeFaithful` to pass
    `(stepx, stepy, stepy)` (i.e. endStepX=stepx, endStepY=stepy, midStepY=stepy) so
-   cnt=1 behavior is byte-identical.
+   cnt=1 behavior is conformant.
 3. Export (add `export`) the helpers Batch 2's new module needs:
    `topBoxes`, `bottomBoxes`, `makeFlatEndBox`, `flatSide`, `flatVspace`,
    `freshFlatPath`, `assembleFlatPath`. (`FlatEndParts` type too if referenced.)
@@ -27,7 +27,7 @@ NO behavior change. READ `../findings-diagnosis.md` and `../decisions.md` (AD-1,
 
 ## Read-set
 - `../findings-diagnosis.md` (C box arithmetic, cnt=1 reduction)
-- `../decisions.md#ad-1` (byte-identical), `#ad-2` (exports)
+- `../decisions.md#ad-1` (conformant), `#ad-2` (exports)
 - `src/layout/dot/splines-flat.ts:370-404` (topBoxes/bottomBoxes),
   `:473-492` (routeFlatEdgeFaithful call site)
 

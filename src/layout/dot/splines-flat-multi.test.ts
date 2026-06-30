@@ -78,24 +78,24 @@ function edgePaths(svg: string, encTitle: string): string[] {
     .filter(Boolean);
 }
 
-describe('routeFlatEdgeGroupFaithful — cnt>=2 non-adjacent flats (byte-match native dot)', () => {
-  it('top cnt=2: two DISTINCT nested splines byte-match the oracle', () => {
+describe('routeFlatEdgeGroupFaithful — cnt>=2 non-adjacent flats (conformant with native dot)', () => {
+  it('top cnt=2: two DISTINCT nested splines conformant with the oracle', () => {
     const paths = renderGroupSplines(SRC_TOP2, TITLE_TOP);
     expect(paths).toEqual(ORACLE_TOP2);
     expect(paths[0]).not.toEqual(paths[1]); // not overlapping (the bug)
   });
 
-  it('top cnt=3: three nested splines byte-match the oracle', () => {
+  it('top cnt=3: three nested splines conformant with the oracle', () => {
     expect(renderGroupSplines(SRC_TOP3, TITLE_TOP)).toEqual(ORACLE_TOP3);
   });
 
-  it('bottom cnt=2 (:se->:sw): both splines byte-match the oracle', () => {
+  it('bottom cnt=2 (:se->:sw): both splines conformant with the oracle', () => {
     const paths = renderGroupSplines(SRC_BOT2, TITLE_BOT);
     expect(paths).toEqual(ORACLE_BOT2);
     expect(paths[0]).not.toEqual(paths[1]);
   });
 
-  it('cnt=1 reduces to the single-route spline (AD-1, byte-identical)', () => {
+  it('cnt=1 reduces to the single-route spline (AD-1, conformant)', () => {
     expect(renderGroupSplines(SRC_TOP1, TITLE_TOP)).toEqual(ORACLE_TOP1);
   });
 });

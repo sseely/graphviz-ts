@@ -1,5 +1,5 @@
 {
-  "comment": "Single source of truth for ACCEPTED / known divergences from C Graphviz. Joined at report-time into PARITY.md (dashboard.ts) and the rules gate (rules-gate.ts) via accepted.ts — parity.json itself stays pure (verdict only). An accepted delta is a deliberate, documented, won't-fix difference; everything non-byte-match NOT listed here is an unaccepted 'tracked' gap we intend to close. Adding/removing an entry must be paired with the prose in docs/known-divergences.md (the accepted-divergences.test.ts guard enforces that per-id parity entries are still non-byte-match, so the list cannot rot silently). match: {id} exact | {idPattern} glob | {engineIn} engine list. scope: parity (dashboard) | rules (rules-gate) | both.",
+  "comment": "Single source of truth for ACCEPTED / known divergences from C Graphviz. Joined at report-time into PARITY.md (dashboard.ts) and the rules gate (rules-gate.ts) via accepted.ts — parity.json itself stays pure (verdict only). An accepted delta is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted 'tracked' gap we intend to close. Adding/removing an entry must be paired with the prose in docs/known-divergences.md (the accepted-divergences.test.ts guard enforces that per-id parity entries are still non-conformant, so the list cannot rot silently). match: {id} exact | {idPattern} glob | {engineIn} engine list. scope: parity (dashboard) | rules (rules-gate) | both.",
   "entries": [
     {
       "match": { "engineIn": ["neato", "fdp", "sfdp", "circo", "twopi", "osage"] },
@@ -41,7 +41,7 @@
       "class": "A3",
       "scope": "parity",
       "verdict": "structural-match",
-      "bound": "maxΔ~10pt on one flat-edge arc (376->76); bbox/nodes/labels byte-match",
+      "bound": "maxΔ~10pt on one flat-edge arc (376->76); bbox/nodes/labels conformant",
       "reason": "symmetric-channel bezier-split tie broken by ~1e-14 noise; Apple macOS libm hypot is position-dependent (mirrors congruent arcs) and matches no portable hypot, so the port keeps a consistent translation-equivariant tie-break.",
       "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
     },
@@ -49,7 +49,7 @@
       "match": { "id": "graphs-structs" },
       "class": "R-oracle",
       "scope": "rules",
-      "reason": "node geometry 0.00; the dev-build headless oracle (15.1.0~dev) drops struct1:f2->struct3:here via a Pshortestpath regression. Stable graphviz 15.0.0 AND the port both render it (edge1 byte-identical to graphviz.org). Oracle-build regression, not a port bug.",
+      "reason": "node geometry 0.00; the dev-build headless oracle (15.1.0~dev) drops struct1:f2->struct3:here via a Pshortestpath regression. Stable graphviz 15.0.0 AND the port both render it (edge1 conformant to graphviz.org). Oracle-build regression, not a port bug.",
       "ref": "rules-known-divergences.md"
     },
     {

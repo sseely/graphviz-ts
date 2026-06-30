@@ -54,13 +54,13 @@ their label vnodes). T3 supplies those groups in the C-faithful order.
 - **Given** `digraph{a->b[label="1"]; a->b[label="2"]}`, **when** rendered,
   **then** both paths + both labels match dot within 0.5pt.
 - **Given** `digraph{a->b;a->b;a->b}` (unlabeled parallel-x3), **when**
-  rendered, **then** still byte-identical to dot (no regression).
+  rendered, **then** still conformant to dot (no regression).
 - **Given** the full suite, **then** ≥1789 pass / 0 fail, 115 goldens
-  byte-identical.
+  conformant.
 
 ## Quality bar
 
-`tsc --noEmit` 0; lizard clean; vitest green; goldens byte-identical. Commit:
+`tsc --noEmit` 0; lizard clean; vitest green; goldens conformant. Commit:
 `feat(T3): port dot_splines edge-grouping loop + multi-edge oracle pins`.
 
 ## Observability / Rollback

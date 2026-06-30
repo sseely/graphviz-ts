@@ -27,7 +27,7 @@ passes** than native.
   function(s) and the exact divergence.
 - **Execution (Batch 2):** apply the byte-safe fix; **2108 render time drops
   meaningfully** (target: toward ≤3× native / under the 20 s budget if the gap
-  is iteration-count); **zero parity regressions**; **output byte-identical**.
+  is iteration-count); **zero parity regressions**; **output conformant**.
 - If diagnosis shows the only lever is an algorithm change → STOP, report,
   do not implement.
 
@@ -68,7 +68,7 @@ expand):**
 | `npm run build:js` | exit 0 | fix_and_rerun |
 | `npx tsx test/corpus/survey.ts` | **0 regressions** vs `parity-baseline.json` | stop |
 
-Regression check: byte-match (312) + structural (256) must never decrease;
+Regression check: conformant (312) + structural (256) must never decrease;
 diff per-id verdicts (0 changed for a pure perf fix). See `decisions.md#ad-3`.
 
 ## Batches
@@ -91,7 +91,7 @@ diff per-id verdicts (0 changed for a pure perf fix). See `decisions.md#ad-3`.
 **Status: COMPLETE.** Tasks 5/5 (D1, D2, D3, X1, X2).
 
 - **Verdict (Batch 1):** per-op constant factor, **not** an iteration-count gap.
-  Port vs native-C counters are byte-identical — 2108 runs the *same*
+  Port vs native-C counters are conformant — 2108 runs the *same*
   1,591,556,868 `reorderInner` iterations as C; per-pass `mincross:` Verbose
   trace identical. The primary hypothesis (port `ncross()` runs more passes) was
   **disproven**. Full side-by-side in `findings.md`.
@@ -100,8 +100,8 @@ diff per-id verdicts (0 changed for a pure perf fix). See `decisions.md#ad-3`.
   allocation-free scratch). Commit `8d2ff15`. Test:
   `mincross-reorder-perf.test.ts`. No AD-4 write-set expansion needed.
 - **Gates:** typecheck 0 · `npm test` 2334 pass (+5) · build 0 · survey
-  **byte-match 312→312, structural 256→256, 0/796 changed verdicts** · 2108 SVG
-  byte-identical before/after (direct `cmp`).
+  **conformant 312→312, structural 256→256, 0/796 changed verdicts** · 2108 SVG
+  conformant before/after (direct `cmp`).
 - **Timing (bundle, best-of-2):** 2108 83.6→72.3 s (−13.6%), b100 37.7→30.1 s
   (−20%), 1718 30.6→24.6 s (−20%), b104 33.2→29.9 s (−10%).
 - **Decisions:** Used `dot -v` for C's pass trace (no recompile) + a rebuilt

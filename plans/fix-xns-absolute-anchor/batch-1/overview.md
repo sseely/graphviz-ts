@@ -8,7 +8,7 @@ converging to C (AD-2).** The executor runs only the candidates the trace flags
 (likely a subset of T1–T5).
 
 > **RE-SCOPED by the Batch-0 finding.** The port's x-NS is already bit-exact
-> with C (T0 trace, byte-identical internal frame). T1–T5 (NS-pivot alignment)
+> with C (T0 trace, conformant internal frame). T1–T5 (NS-pivot alignment)
 > are **no-ops** — there is no divergence to align. Batch 1 is the single change
 > below: remove the port-only `normalizeXcoords`. See `../decision-journal.md`.
 

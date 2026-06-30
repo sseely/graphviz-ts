@@ -75,7 +75,7 @@ bits); src/common/emit-edge.ts:90-120 (read-only); batch-4/overview.md
 ## Acceptance criteria
 
 - Given a graph with no external labels, addXLabels returns at the
-  guard; all 66 goldens byte-identical to the HEAD-worktree baseline
+  guard; all 66 goldens conformant to the HEAD-worktree baseline
 - Given EDGE_LABEL-only labels with edgeLabelsDone set, the guard
   returns (unit test)
 - Given Flip, addXLabel swaps label sz dims (unit test)

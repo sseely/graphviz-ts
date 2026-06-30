@@ -34,10 +34,10 @@ survey. Native oracle = the installed `dot` (15.1.0); never WASM/approximation
      goes 154 → 155 (or 156 with the radial golden).
 3. **Regenerate the parity survey** so the dashboard reflects the wins:
    `npx tsx test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
-   Confirm the 5 `graphs-grd*` ids move out of `diverged` (to byte-match or
+   Confirm the 5 `graphs-grd*` ids move out of `diverged` (to conformant or
    structural-match) with **zero regressions** elsewhere (compare the
-   byte-match/structural/diverged totals before vs after; the 6 grd* control
-   cases stay byte-match).
+   conformant/structural/diverged totals before vs after; the 6 grd* control
+   cases stay conformant).
 4. **Append a decision-journal entry**: cases fixed, before/after parity totals,
    any case that did NOT flip and why, golden(s) added.
 
@@ -81,7 +81,7 @@ N/A — test artifacts only. Reversible (revert commit).
 ## Quality bar
 
 `npx vitest run` exits 0. Report only: cases flipped, parity delta
-(byte-match/structural/diverged before→after), goldens added, any holdout.
+(conformant/structural/diverged before→after), goldens added, any holdout.
 
 ## Commit
 

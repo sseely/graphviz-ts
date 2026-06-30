@@ -5,14 +5,14 @@
 (`setEdgeTypeFromAttr` in `src/layout/dot/index.ts` + `edgeTypeFromString` in
 `splines.ts`, porting `lib/common/utils.c:setEdgeType`/`edgeType`). With
 `splines=line` honored, the non-adjacent flat label now renders the 7-point
-polyline **byte-exact** to dot 15.0.0 and is pinned as a full-render oracle test
+polyline **conformant** to dot 15.0.0 and is pinned as a full-render oracle test
 in `splines-flat-labeled.test.ts` (`splines=line — non-adjacent flat label`).
 The historical context below is retained for reference.
 
 ---
 
 **Original quarantine (2026-06-16, T2).** The `EDGETYPE_SPLINE` (dot default)
-case is **byte-exact** to dot 15.0.0 and pinned in `splines-flat-labeled.test.ts`.
+case is **conformant** to dot 15.0.0 and pinned in `splines-flat-labeled.test.ts`.
 The `splines=line` sub-case was **quarantined**: it could not be exercised
 end-to-end because the `splines` graph attribute was **not wired** into the edge
 type — `dotPhaseInit` hardcoded `setEdgeType(g, EDGETYPE_SPLINE)`, and
@@ -43,7 +43,7 @@ graphviz 15.0.0.
 
 `splines=line` is ignored, so TS renders the **spline** path instead:
 `M45.88,-31.26C62.74,-42.24 88.59,-57 113.62,-63.12 138.5,-69.21 164.55,-54.61 182.8,-40.43`
-(byte-identical to dot's **spline** output). The label `x` is emitted at the
+(conformant to dot's **spline** output). The label `x` is emitted at the
 correct `(117, -57.2)`.
 
 ## Root cause

@@ -5,7 +5,7 @@ Executed on branch `fix/nonadjacent-flat-multi` (T1+T2+T3 committed), 2026-06-20
 ## 1. Curated goldens (vitest)
 `npx vitest run` → **1999 passed, 0 failed** (149 files). Baseline was 1995;
 the delta is exactly the 4 new synthetic cnt≥2 tests in
-`splines-flat-multi.test.ts`. **Every pre-existing golden is byte-identical** —
+`splines-flat-multi.test.ts`. **Every pre-existing golden is conformant** —
 no out-of-family flip — so all cnt=1 flat behavior is unchanged (AD-1).
 
 ## 2. Corpus survey (the gate)
@@ -14,7 +14,7 @@ pre-mission baseline (`/tmp/parity-baseline.json`, = committed `parity.json`):
 
 | verdict        | baseline | survey | delta |
 |----------------|----------|--------|-------|
-| byte-match     | 160      | 159    | −1*   |
+| conformant     | 160      | 159    | −1*   |
 | structural-match | 237    | 237    | 0     |
 | diverged       | 356      | 356    | **0** |
 | errored        | 20       | 20     | 0     |
@@ -22,7 +22,7 @@ pre-mission baseline (`/tmp/parity-baseline.json`, = committed `parity.json`):
 | oracle-error   | 15       | 15     | 0     |
 
 **ZERO new `diverged`/`structural-match` (regression) verdicts.** Exactly one id
-changed: `2222` byte-match → timeout (*the −1/+1 above are the same id).
+changed: `2222` conformant → timeout (*the −1/+1 above are the same id).
 
 ### `2222` is a flaky timeout, NOT a regression (proven)
 - `tests/2222.dot` is 2.3 MB → a 22 MB SVG; the port renders it in a steady
@@ -34,18 +34,18 @@ changed: `2222` byte-match → timeout (*the −1/+1 above are the same id).
 - The decisive check: `2222`'s SVG output is **BYTE-IDENTICAL** between `main`
   and this branch (`cmp` clean). The change does not touch `2222` at all.
 - Action: restored the committed `parity.json` (no legitimate verdict change);
-  `2222`'s true verdict is byte-match.
+  `2222`'s true verdict is conformant.
 
 ### cnt=1 non-adjacent flats unchanged
 All 74 corpus non-adjacent flats are cnt=1 (findings-diagnosis.md) and route
 through the same shared box channel; the cnt-loop with cnt=1, i=0 is the prior
 single route. `241_0` (the `5:ne->8:nw` cnt=1 case from the #241_0 saga) is a
-curated golden and stays byte-identical in the vitest run.
+curated golden and stays conformant in the vitest run.
 
-## 3. End-to-end synthetic byte-match (re-captured oracle, AD-5)
+## 3. End-to-end synthetic conformant (re-captured oracle, AD-5)
 Native `dot` 15.1.0~dev.20260610.0127, `GVBINDIR=/tmp/gvplugins`. `render-one.ts`
 port output vs fresh oracle, **drawing elements** (`path`/`polygon`/`ellipse`/
-`text`) byte-identical:
+`text`) conformant:
 
 | case            | result |
 |-----------------|--------|
@@ -66,6 +66,6 @@ clean); a `dot -Tsvg` render emits 0 probe markers on stderr; `/tmp/gvplugins`
 holds the standard build.
 
 ## Conclusion
-Zero new diverges, zero golden flips, cnt=1 byte-identical, cnt≥2 byte-matches
+Zero new diverges, zero golden flips, cnt=1 conformant, cnt≥2 conforms to
 native `dot`. The single survey verdict change (`2222`) is a load-induced flake
-with byte-identical output. **Gate satisfied.**
+with conformant output. **Gate satisfied.**

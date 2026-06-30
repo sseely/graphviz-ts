@@ -27,7 +27,7 @@ washes out in the postprocess translate, so final node positions are unchanged.
 ## After
 
 - Port emits **4 pieces** (`final pts=13 pieces=4`).
-- Full p3 SVG **geometry byte-identical** to the oracle
+- Full p3 SVG **geometry conformant** to the oracle
   (`diff` over `<ellipse|path|polygon|text|polyline>` = 0 differing lines; only
   the generator-comment header differs, which the survey normalizes).
 

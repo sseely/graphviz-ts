@@ -38,7 +38,7 @@ STOP (stop-condition 3).
 
 ## Architecture decisions (locked)
 
-- AD-2 write-set = the pinned file(s) only. AD-3 no byte-match regression. AD-4
+- AD-2 write-set = the pinned file(s) only. AD-3 no conformant regression. AD-4
   fix `out` and `in`; per-node `ordering` only if same root cause.
 
 ## Acceptance criteria
@@ -50,12 +50,12 @@ STOP (stop-condition 3).
 - Given an `ordering=out` unit graph (b58-shaped) and an `ordering=in` unit graph,
   when laid out, then in-rank order matches the C oracle (pinned in the test).
 - Given the full survey, when the gate runs, then GATE PASS with **0 regressions**
-  (the 12 byte-matching `ordering` graphs stay byte-match).
+  (the 12 conformant with `ordering` graphs stay conformant).
 - Given `npx tsc --noEmit` and `npx vitest run`, then both exit 0.
 
 ## Observability / Rollback
 
-N/A — offline layout. Reversible (revert commit). On any byte-match→worse: revert
+N/A — offline layout. Reversible (revert commit). On any conformant→worse: revert
 this change (AD-3) and record in the decision journal.
 
 ## Quality bar
@@ -70,4 +70,4 @@ Run tsc + vitest, then the full survey gate before committing. One commit:
   commit.
 - **Ask first**: nothing (autonomous within the write-set).
 - **Never**: optimize/refactor mincross beyond the pinned fix; expand the
-  write-set; accept any byte-match regression.
+  write-set; accept any conformant regression.

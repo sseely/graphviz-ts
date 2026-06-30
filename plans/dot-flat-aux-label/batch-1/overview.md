@@ -19,6 +19,6 @@ label must be correctly positioned in the aux before copy-back).
 
 ## Diagnosis artifacts (from planning session)
 
-- After T1 fix: spline byte-exact, label = (72, **-54.2**) — X right, Y wrong.
+- After T1 fix: spline conformant, label = (72, **-54.2**) — X right, Y wrong.
 - Aux label vnode pre-splines: `type 1, in 1, out 1, coord {51,72}`.
 - Aux label `pos = {60.75, 59.25}` (frozen pre-reposition) vs needed y≈72.

@@ -55,7 +55,7 @@ describe('findOrthoCorners — oracle-pinned vs native emit.c', () => {
 });
 
 describe('orthoRoundedPolylines — emit order matches native (seg1, seg2, arc)', () => {
-  it('emits 3 polylines byte-matching graphs-radius edge1', () => {
+  it('emits 3 polylines conformant with graphs-radius edge1', () => {
     const polys = orthoRoundedPolylines(EDGE1, 8);
     expect(polys.length).toBe(3);
     // seg1: start → through (27,50.5) → trunc_prev (27,26)

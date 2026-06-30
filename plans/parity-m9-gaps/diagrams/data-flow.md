@@ -18,7 +18,7 @@ sequenceDiagram
     PP->>PP: map_point = ccwrotate(p, rankdir*90) − Offset
     PP->>PP: translate_drawing: nodes, splines, labels;<br/>unswap sizes EXCEPT rankdir=BT
     PP->>E: coordinates in final space
-    E->>E: SVG emission (byte-identical for TB — AD2 gate)
+    E->>E: SVG emission (conformant for TB — AD2 gate)
 ```
 
 # Data flow — golden promotion (T5/T8/T10)

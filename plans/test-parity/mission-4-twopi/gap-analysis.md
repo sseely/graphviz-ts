@@ -6,7 +6,7 @@ baseline-after-m3.md). 6 twopi goldens + 1 unit test fail.
 ## Per-test findings
 
 - **twopi-star / twopi-tree / twopi-root-attr** (`g[3][childCount]`
-  1 vs 2): node ellipses/text are byte-identical to the refs; the
+  1 vs 2): node ellipses/text are conformant to the refs; the
   edge groups are missing their `<path>` elements. Root cause: C
   twopi_init_graph calls `setEdgeType(g, EDGETYPE_LINE)`; our
   twopiInitGraph never sets the edge-type nibble in g.info.flags, so

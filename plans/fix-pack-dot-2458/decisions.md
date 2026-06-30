@@ -72,7 +72,7 @@ Estimate-measurer + headless-15.1.0 baseline (NOT LUT/pango — memory
 **15.1.0** oracle (`GVBINDIR=/tmp/ghl`, `npm run survey:setup`) with a fresh cache.
 Per-test bar: 2458 `diverged → structural-match`. Hard gate: `rules-gate.ts`
 regressions=0. Refresh `parity.json`/`PARITY.md` via `cp parity-rules.json
-parity.json` + `dashboard.ts`. Pursue byte-match only if free.
+parity.json` + `dashboard.ts`. Pursue conformant only if free.
 
 **Consequences:** Realistic, regression-safe; consistent with the prior mission.
 

@@ -13,7 +13,7 @@ missions add `partition`/`maze` (P2) and `orthoEdges` + spline emission + dispat
 ## Carried-in facts (do NOT re-derive)
 
 - **pathplan is already ported** and the default/cluster/self/parallel routing
-  matches C byte-for-byte (see `../layout-engine-backlog/route-reverification.md`).
+  matches C conformant (see `../layout-engine-backlog/route-reverification.md`).
   The ONLY unported edge-routing feature is `splines=ortho|curved|compound`
   (DOT-8). This mission is the `ortho` foundation.
 - `EDGETYPE_ORTHO=4` is already parsed (`splines.ts:55,67`); it's just never

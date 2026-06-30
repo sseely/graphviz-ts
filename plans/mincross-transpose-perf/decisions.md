@@ -6,7 +6,7 @@
 node order; downstream x-coord/spline consumers would then diverge, far costlier
 to trace from 2471 than to catch here.
 
-**Decision:** Output node order must stay **byte-identical to C**. Verified three
+**Decision:** Output node order must stay **conformant to C**. Verified three
 ways: (1) existing golden suite with **zero churn**; (2) a *new permanent*
 deterministic order-signature regression on a mid-size cluster graph; (3) a
 one-time both-sides order-probe vs the C oracle in Batch 1. A value-changing

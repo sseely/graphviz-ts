@@ -12,7 +12,7 @@ Run the full survey, diff per-id vs baseline, require 0 regressions, then refres
 the baseline and commit.
 
 ## Read-set
-- `test/corpus/parity.json` (baseline: byte-match **522**, struct 183, diverged 73)
+- `test/corpus/parity.json` (baseline: conformant **522**, struct 183, diverged 73)
 - Recipe memory: parity.json & parity-rules.json share the Estimate+headless recipe.
 
 ## Method (commands)
@@ -21,7 +21,7 @@ the baseline and commit.
 sh test/corpus/gen-headless-gvbindir.sh
 # 2. full survey (789 applicable; 2854 is quarantined perf; ~25 min)
 GVBINDIR=/tmp/ghl PARITY_OUT=parity-rules.json npx tsx test/corpus/survey.ts
-# 3. per-id diff vs baseline (rank: byte-match>structural>diverged)
+# 3. per-id diff vs baseline (rank: conformant>structural>diverged)
 node -e '<per-id improved/regressed diff; see prior session pattern>'
 ```
 Wait for completion (slow tail: 2646 ~5.6min, 2371 ~3.2min, etc. — do NOT kill;
@@ -30,8 +30,8 @@ a graph being slow is not a hang. See the 2854 false-alarm lesson in
 
 ## Acceptance (Given/When/Then)
 - Given the survey output, when per-id diffed vs baseline, then **0 regressions**
-  (no byte-match or structural graph moves to a worse verdict).
-- Given share-b51, then it IMPROVES (diverged → structural-match or byte-match),
+  (no conformant or structural graph moves to a worse verdict).
+- Given share-b51, then it IMPROVES (diverged → structural-match or conformant),
   and ideally graphs-b51 / windows-b51 too.
 - Given a clean diff, when the baseline is refreshed
   (`cp parity-rules.json parity.json` + `GVBINDIR=/tmp/ghl npx tsx

@@ -85,7 +85,7 @@ result; which AD2 option landed.
 ## Acceptance criteria
 
 - Given default/TB graphs (all 62 goldens), when the suite runs, then
-  port SVG output is byte-identical to pre-change capture
+  port SVG output is conformant to pre-change capture
 - Given the quarantined dot-rankdir-lr input, then it passes at dot
   tolerance; same for dot-rankdir-bt
 - Given rankdir=RL on a smoke graph, when compared against the C

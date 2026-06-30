@@ -122,7 +122,7 @@ the Classification principle).
 ## Honest scope summary
 
 Defaults and the core pipeline are solid: all 8 engines run at defaults and
-match the C binary byte-for-byte on the golden corpus. But **full attribute /
+match the C binary conformant on the golden corpus. But **full attribute /
 edge-case compatibility has a real long tail** — exactly where the previous
 attempts broke. The remaining `[ ]` / `[~]` work, by area:
 
@@ -268,7 +268,7 @@ Everything below is the full per-module catalog backing this list.
   - [ ] `nslimit` (nsiter2 cap) — DOT-6
   - [ ] `expand_leaves` (newrank leafsets) — DOT-4
 - [~] dotsplines.c (~2309) → `splines*.ts`/`edge-route*.ts` — dispatch + flat +
-  `line`/`polyline`/`ortho` byte-exact;
+  `line`/`polyline`/`ortho` conformant;
   - [ ] `splines=curved` (active mission)
   - [ ] `make_regular_edge` obstacle path (dense/port-constrained) — re-verify scope
   - [x] `splines=compound` clip wired (mission verifies)
@@ -408,14 +408,14 @@ Headline, dot engine, oracle `dot 15.1.0`, **796 applicable** inputs
 
 | verdict | count | |
 |---------|------:|---|
-| byte-match | 112 | port == oracle within 0.01 |
+| conformant | 112 | port == oracle within 0.01 |
 | structural-match | 218 | same tree, coordinate drift only |
 | **diverged** | **422** | structural difference (the backlog) |
 | errored | 20 | port threw |
 | timeout | 8 | port hung (killed) |
 | oracle-error | 16 | no oracle reference (excluded) |
 
-`byte-match + structural-match = 330/796 (41.5%)` structurally equal. The
+`conformant + structural-match = 330/796 (41.5%)` structurally equal. The
 `diverged` + `errored` sets are triaged into named buckets in PARITY.md — that
 bucket list is the prioritized backlog for follow-on oracle-pinned fix missions
 (largest first: element-count 157, path-structure 109, color-stroke 56,
@@ -452,14 +452,14 @@ is inapplicable (ps/png/jpg references, gvpr, C-API memory/lifecycle tests).
    the established oracle pattern) and through graphviz-ts, then diff. Scales to
    ~800 inputs without authoring ~800 tests.
 3. **Tier the comparison by engine.** `dot` is **byte-targetable** (goldens
-   already byte-exact) → byte-diff is the bar. Force engines (sfdp/neato/fdp)
-   are **not** byte-identical cross-platform (the FP/FMA/`pow` boundary above) →
+   already conformant) → byte-diff is the bar. Force engines (sfdp/neato/fdp)
+   are **not** conformant cross-platform (the FP/FMA/`pow` boundary above) →
    structural/tolerance comparison (same topology, positions within ε), else
    false failures.
 4. **Sequence dot-first.** The primary consumer (plantuml-js) is dot-centric, so
    the dot subset of the corpus carries most of the payoff. A tractable first cut
    is just the `.gv`/`.dot` inputs exercising `dot`, rendered to `-Tsvg`/`-Txdot`.
-5. **Parity dashboard.** Per input: `byte-match | structural-match | diverged |
+5. **Parity dashboard.** Per input: `conformant | structural-match | diverged |
    quarantined-inapplicable`. This doubles as the "comparison page for every
    excluded case" that `CLAUDE.md` requires. **Realized** for dot at
    [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md) (see headline above).

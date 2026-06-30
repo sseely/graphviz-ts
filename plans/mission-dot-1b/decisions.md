@@ -28,13 +28,13 @@ swapEnds/swapSpline interaction that DOT-1 left unresolved — hence the T2
 measure-first step. Higher implementation risk than a rewrite, lower divergence
 risk.
 
-## AD-3: Deletion gated on byte-exact parity (safety invariant)
+## AD-3: Deletion gated on conformant parity (safety invariant)
 
 **Context:** The targets are *existing* goldens — they cannot be quarantined or
 regenerated.
 **Decision:** Delete a fitter path ONLY after its faithful replacement reproduces
-every affected golden byte-for-byte (0.01pt). If a faithful port cannot reach
-byte-exact, STOP and keep that fitter path rather than regress — partial deletion
+every affected golden conformant (0.01pt). If a faithful port cannot reach
+conformant, STOP and keep that fitter path rather than regress — partial deletion
 is acceptable, regression is not.
 **Consequences:** Guarantees zero golden churn. Worst case DOT-1b deletes less
 than 100% and a residual is re-scoped (as T6 was in DOT-1).

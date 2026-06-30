@@ -72,7 +72,7 @@ it('L3 stays below threshold: single spline, no straight-middle duplicates', () 
   expect(duplicatePairs(pts)).toBe(0);
 });
 
-it('L5 long-edge spline byte-matches the canonical oracle geometry', () => {
+it('L5 long-edge spline conforms to the canonical oracle geometry', () => {
   // Pinned from GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot (15.1.0).
   const oracle =
     'M59.53,-360.16C67.69,-333.79 82,-280.98 82,-235 82,-235 82,-235 82,-161 '
@@ -93,18 +93,18 @@ it('smode segments a polyline long edge with a corridor-pinned straight middle',
   expect(dup.x).toBe(Math.max(...pts.map((p) => p.x)));
 });
 
-it('polyline L4 stays below threshold: single polyline byte-matches the oracle', () => {
+it('polyline L4 stays below threshold: single polyline conforms to the oracle', () => {
   // Below threshold → one routepolylines call; the run hugs the bow x=63, not a
   // segmented corridor. (Polylines always encode straight runs as duplicate
   // control points, so the dup-pair heuristic cannot distinguish smode here —
-  // the oracle byte-match is the authoritative below-threshold check.)
+  // the oracle conformant is the authoritative below-threshold check.)
   const oracle =
     'M56.95,-287.65C59.57,-272.19 63,-252 63,-252 63,-252 63,-72 63,-72 63,-72 '
     + '60.99,-60.17 58.87,-47.68';
   expect(edgePath(renderSvg(POLY_L4, 'dot'), 'a', 'e')).toBe(oracle);
 });
 
-it('polyline L5 long edge byte-matches the canonical oracle geometry', () => {
+it('polyline L5 long edge conforms to the canonical oracle geometry', () => {
   // Pinned from GVBINDIR=/tmp/gvplugins ~/git/graphviz/build/cmd/dot/dot (15.1.0).
   const oracle =
     'M57.38,-359.87C64.82,-322.1 82,-235 82,-235 82,-235 82,-235 82,-161 82,-161 '

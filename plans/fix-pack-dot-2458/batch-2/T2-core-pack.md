@@ -63,7 +63,7 @@ testFile, commitSha }`.
 ## Acceptance criteria
 
 - Given `pack` unset, when `dotLayoutEntry` runs, then `dotLayoutPipeline(g)` is
-  called unchanged (assert a non-pack graph's output is byte-identical to pre-change).
+  called unchanged (assert a non-pack graph's output is conformant to pre-change).
 - Given 2458 (pack=1, 2 comps, no clusters), when laid out, then the SVG structurally
   matches headless 15.1.0 (132×116; q16 packed bottom-right cy≈-32; q1/q2 left column).
 - Given a multi-component graph with `ratio` set, when laid out, then it falls back

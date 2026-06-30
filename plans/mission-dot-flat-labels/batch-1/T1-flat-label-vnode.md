@@ -70,7 +70,7 @@ walks `ED_to_virt(e)` to find `ln`).
   ranks), and no exception is thrown.
 - **Given** a plain flat edge (`{rank=same a b} a->b`, no label), **when** laid
   out, **then** no abomination runs and no extra rank is created (unchanged).
-- **Given** the full suite, **then** ≥1793 pass, 0 fail, 115 goldens byte-identical.
+- **Given** the full suite, **then** ≥1793 pass, 0 fail, 115 goldens conformant.
 
 ## Quality bar
 

@@ -3,7 +3,7 @@
 ## Objective
 
 Make port-bearing adjacent labeled flat edges emit their label at the
-dot 15.0.0 position. The spline is already byte-exact (DOT-11a, merged);
+dot 15.0.0 position. The spline is already conformant (DOT-11a, merged);
 only the label is wrong/dropped. A deep C-instrumented dive (2026-06-17)
 pinned the root cause:
 
@@ -32,7 +32,7 @@ the un-repositioned label vnode.
 | label.pos post-postproc | (87.75, 37.96) | (60.75, 59.25) |
 | **final label** | **(72, −32.91)** | (72, −54.2) |
 
-Oracle spline (already byte-exact on main):
+Oracle spline (already conformant on main):
 `M54,-18C62.13,-18 60.91,-26.42 68.62,-29 71.47,-29.95 72.53,-29.95 75.38,-29 78.03,-28.11 79.62,-26.54 80.91,-24.85`
 
 ## C-instrumentation harness (validated)
@@ -79,7 +79,7 @@ fix needs a file outside the write-set.
 ## Outcome (2026-06-17) — DONE
 
 Both DOT-12 and DOT-10 fixed. The port-bearing labeled flat
-`a:e->b:w[label="x"]` now emits its label at **(72, −32.91)**, byte-exact
+`a:e->b:w[label="x"]` now emits its label at **(72, −32.91)**, conformant
 to dot 15.0.0. Root cause was the un-ported `recover_slack` (the aux label
 vnode was never repositioned onto its spline). 1856 pass, zero golden
 churn. Merged to main.

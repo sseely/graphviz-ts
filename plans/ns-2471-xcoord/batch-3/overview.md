@@ -11,7 +11,7 @@ path).
 Final gate (all must hold):
 - 2471 renders **end-to-end < ~60s**.
 - 2471 x-order per rank **identical to C** (native-oracle comparator).
-- **Zero golden churn**; all existing graphs' x-coords byte-identical to C.
+- **Zero golden churn**; all existing graphs' x-coords conformant to C.
 - `npm run typecheck` 0 · `npm test` green (>=1876) · `npm run build` OK.
 - `git -C ~/git/graphviz status --porcelain lib/` empty (C source reverted).
 - On green: `feature/mincross-2471-faithful` is merge-ready (mincross + position

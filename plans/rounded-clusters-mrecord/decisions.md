@@ -9,7 +9,7 @@
 - Decision: extract the rounded-bezier core into a reusable exported helper that
   takes absolute corner points + the renderer + job + `filled`, and emits the
   rounded `<path>` via `renderer.bezier`. Refactor `roundedDraw` to call it so
-  the poly path stays byte-identical. Cluster and record call the same helper.
+  the poly path stays conformant. Cluster and record call the same helper.
 - Consequences: faithful to C's single round_corners; no duplicated curve math;
   poly nodes unchanged (regression-checked).
 
@@ -38,7 +38,7 @@
 - Context: rounding changes the boundary stroke shape, not the box extent.
 - Decision: do NOT touch sizing/layout. The rounded path is inscribed in the
   SAME bb as the sharp polygon; every node and cluster position, and every bbox,
-  must remain byte-identical to pre-mission. Verify in the parity survey: only
+  must remain conformant to pre-mission. Verify in the parity survey: only
   `<polygon>→<path>` element-kind diffs are permitted; zero coordinate deltas on
   unrelated geometry.
 - Consequences: bounds the blast radius to rendering; layout fidelity gaps
@@ -46,11 +46,11 @@
   `2471-blocker-is-cluster-ranking`) are explicitly out of scope.
 
 ## AD-5: Reuse `interpolationPoints` + `renderShapeBezier`; match the C constants
-- Context: the corner-curve interpolation must byte-match `round_corners`.
+- Context: the corner-curve interpolation must conformant `round_corners`.
 - Decision: the AD-1 helper reuses the existing `interpolationPoints(..., true)`
   and bezier emission used by `roundedDraw` (already oracle-aligned for box
   nodes). Do not introduce new curve constants. Verify rounded-box bezier control
-  points byte-match the oracle for both a cluster and an Mrecord.
+  points conformant with the oracle for both a cluster and an Mrecord.
 - Consequences: rounded clusters/records inherit the already-correct box-node
   corner curve; no new geometry to validate beyond wiring.
 

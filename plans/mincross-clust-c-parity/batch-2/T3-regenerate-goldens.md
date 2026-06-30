@@ -10,7 +10,7 @@ binary, never hand-edited.
 
 Run the full suite. For each churned golden: confirm it is a clustered graph
 (cluster-free/crossing-free churn → STOP, regression); regenerate from the C
-binary; verify post-fix TS output == C byte-for-byte; record it.
+binary; verify post-fix TS output == C conformant; record it.
 
 ## Write-set
 
@@ -27,7 +27,7 @@ binary; verify post-fix TS output == C byte-for-byte; record it.
 
 1. Given the suite after T2, when run, then all tests pass.
 2. Given each churned golden, then it was regenerated from C and post-fix TS ==
-   C byte-for-byte (STOP if TS ≠ C).
+   C conformant (STOP if TS ≠ C).
 3. Given each regenerated golden, then the journal records test name + old/new
    crossing count + C-match confirmation.
 4. Given a churned golden with no clusters or no inter-cluster crossing, then

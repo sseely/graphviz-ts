@@ -41,13 +41,13 @@ a change that needs >1 file or a 2nd distinct fix surfaces, follow AD-3: at most
 - **Given** a unit test on the named function, **then** the cross-cluster
   `rank=same` node is routed/installed exactly once (assert the rank array / the
   install path directly).
-- **Given** the 122 goldens, **then** byte-identical.
+- **Given** the 122 goldens, **then** conformant.
 - Full oracle-coordinate parity is T4's job; T3's bar is "terminates + no
   duplicate + goldens intact."
 
 ## Quality bar
 
-`tsc --noEmit` 0; lizard clean; vitest green; goldens byte-identical; any
+`tsc --noEmit` 0; lizard clean; vitest green; goldens conformant; any
 touched file ≤500 lines.
 Commit: `fix(T3): <faithful change per C trace> (no cross-cluster double install)`.
 If the trace's fix is outside AD-3's write-set, STOP per AD-3.
