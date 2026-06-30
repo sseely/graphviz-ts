@@ -69,3 +69,34 @@ experiment drives ALL 58 edges to 0.0000.
 no instrumentation). C plugin rebuilt clean; oracle byte-identical to the probed
 oracle. Ready for Batch 2 T2 (apply the 4-site fix) + T3 (full survey gate +
 parity baseline). STOPPING per AD-1.
+
+## Batch 2 (gate confirmed by human → proceed)
+
+| date | batch/task | decision / finding |
+|---|---|---|
+| 2026-06-30 | T2 | Added `roundCoord` (C `round()`, half away from zero) to `edge-route-faithful.ts`; replaced the 4 `Math.round` at `bboxLeftX`/`bboxRightX` wall sites. Mirrors `dotsplines.c:maximal_bbox` `round(b)`. Regression test `edge-route-faithful-round.test.ts` drives `maximalBbox` on the exact root_twopi negative-half-integer walls (-30823.5→-30824, -46708.5→-46709); fails on the pre-fix `Math.round` (which gave -30823/-46708). root_twopi: all 58 diverging edges → maxΔ **0.0000** vs the clean oracle. typecheck 0, `vitest src/layout/dot` 487 green. Committed `1deaf16`. |
+| 2026-06-30 | T3 | `npm run survey` (estimate + /tmp/ghl) → `survey:gate` **PASS, 0 regressions, 5 improvements**: `nshare-root_twopi` + `nshare-root_circo` (both diverged maxΔ21 → **conformant**, maxΔ None), `graphs-b103` → conformant, `graphs-b100`/`graphs-b104` (diverged maxΔ351.9 → **structural-match**, residual 20 = separate pre-existing gap). The same `maximal_bbox` round fix resolved root_circo (its `_circo` filename is misleading — manifest engine=dot). Refreshed `parity.json`/`parity-rules.json`/`PARITY.md`. Both `*-root_*` accepted-divergences entries (scope `rules`, class `R-emit`) now stale → removed from `accepted-divergences.json` + `rules-known-divergences.md`. **Push-forward (logged):** also edited `accepted-divergences.test.ts` (outside the declared write-set) — its hardcoded rules-allowlist test pinned both ids; removing them there was mechanically required to keep the guard green (the T3 spec's "a removed id passes" overlooked this hardcoded list). `accepted-divergences.test.ts` 6 green. Committed `7b160f4`. |
+
+## Mission summary
+
+- **Tasks completed:** 3/3 (T1 diagnosis, T2 fix, T3 verify+baseline). Batches 1–2 complete.
+- **Root cause (one):** dot `maximal_bbox` box walls rounded with JS `Math.round`
+  (half→+∞) vs C `round` (half away from zero); diverges by 1 on negative
+  half-integer walls (negative-x routing frame). Origin
+  `src/layout/dot/edge-route-faithful.ts` `bboxLeftX`/`bboxRightX`.
+- **Result:** `nshare-root_twopi` `diverged` (maxΔ 21) → **conformant** (maxΔ
+  0.0000, all 58 edges). Bonus: `nshare-root_circo`, `graphs-b103` → conformant;
+  `graphs-b100`/`graphs-b104` → structural-match. **0 parity regressions.**
+- **Quality gates:** typecheck 0; full `vitest` 2523 green; `survey:gate` PASS
+  (0 regressions); root_twopi edges within ±0.01 (exact); tracked diff =
+  declared write-set + `accepted-divergences.test.ts` (logged push-forward).
+- **Decisions flagged for review:** (1) reconciled the **root_circo** accepted
+  entry too (same fix made it conformant; sibling of the in-scope case);
+  (2) edited `accepted-divergences.test.ts` (registry guard) outside the write-set
+  to keep the suite green after entry removal. Both reversible.
+- **Known issues / follow-ups:** none from this fix. (`graphs-b100`/`b104`
+  retain a separate pre-existing ~20pt structural residual, unrelated to this
+  mission.) Untracked pre-existing scratch files (`2371_k*.dot`, `pr.tmp.mjs`,
+  `src/.serena/`, `test/corpus/parity-probe.json`) left as-is — not produced by
+  this mission. Branch `fix/root-twopi-splines` ready to merge (merge commit, per
+  brief — preserves per-task commit IDs); branch cleanup is batched by the user.
