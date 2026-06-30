@@ -47,7 +47,8 @@ ordering (`mincross-cluster*.ts` / `mincross*.ts`) → x-coord NS
     `n488->n2` xpenalty 1 vs C's 2 → wrong ReMincross best-order → X cascade).
 - [x] **Batch 1** — Implement fix + ldbxtried oracle test → `batch-1/overview.md`
   - `interclexp` agfstedge-order fix; node X conformant; golden un-skipped; 2512/2512.
-- [ ] **Batch 2** — Survey gate + baseline refresh → `batch-2/overview.md`
+- [x] **Batch 2** — Survey gate + baseline refresh → `batch-2/overview.md`
+  - PASS: 0 regressions; conformant 533→536; all 3 ldbxtried-family graphs conformant.
 
 ## Constraints
 **Stop conditions:**

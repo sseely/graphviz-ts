@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-30T03:07:09.341Z",
+  "generatedAt": "2026-06-30T13:17:31.088Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 533,
+    "conformant": 536,
     "structural-match": 194,
-    "diverged": 51,
+    "diverged": 48,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -622,13 +622,13 @@
       "path": "2470.dot",
       "verdict": "diverged",
       "maxDelta": 6967.87,
-      "firstDiffPath": "svg/g[1]/g[353]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[351]/path[1]/@d"
     },
     {
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 3781,
+      "maxDelta": 3820.5999999999985,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -1855,9 +1855,7 @@
     {
       "id": "graphs-ldbxtried",
       "path": "graphs/ldbxtried.gv",
-      "verdict": "diverged",
-      "maxDelta": 323,
-      "firstDiffPath": "svg/g[1]/g[17]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-longflat",
@@ -3526,9 +3524,7 @@
     {
       "id": "share-ldbxtried",
       "path": "share/ldbxtried.gv",
-      "verdict": "diverged",
-      "maxDelta": 323,
-      "firstDiffPath": "svg/g[1]/g[23]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "share-longflat",
@@ -4112,9 +4108,7 @@
     {
       "id": "windows-ldbxtried",
       "path": "windows/ldbxtried.gv",
-      "verdict": "diverged",
-      "maxDelta": 322,
-      "firstDiffPath": "svg/g[1]/g[19]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "windows-longflat",
