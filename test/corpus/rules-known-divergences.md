@@ -48,8 +48,6 @@ EstimateTextMeasurer vs headless dot):
 | id | node-pos Δ | reason |
 |----|-----------|--------|
 | `graphs-structs` | **0.00** | the **dev-build oracle** (`/tmp/ghl`, `15.1.0~dev.20260610`, 82 commits past `15.0.0`) **loses** the `struct1:f2->struct3:here` edge — a `Pshortestpath` **regression** ("destination point not in any triangle") on the nested record head-port. **Stable graphviz 15.0.0 AND the port both render it** (edge1 is conformant to graphviz.org online). **Oracle-build regression, not a port bug.** childCount diff = the correct edge the dev oracle dropped; node geometry exact |
-| `nshare-root_circo` | **0.00** (1054/1054) | full-SVG childCount + one edge `@d`; geometry exact |
-| `nshare-root_twopi` | **0.00** (1054/1054) | full-SVG childCount + one edge `@d`; geometry exact |
 | `2168_2` | 1.0 (node2 x) | node **widths match headless** (rx 34.64); residual 1pt is node2's x under a `:sw` compass-port edge — a pre-existing x-NS/compass-port gap the LUT's slightly-narrow widths masked, NOT a measurement regression |
 
 The measurement deliverable is correct in every case (widths match headless); the

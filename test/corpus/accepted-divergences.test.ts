@@ -67,7 +67,7 @@ describe('accepted-divergences registry', () => {
   });
 
   it('resolves the migrated rules allowlist under the rules scope only', () => {
-    for (const id of ['graphs-structs', 'nshare-root_circo', 'nshare-root_twopi', '2168_2']) {
+    for (const id of ['graphs-structs', '2168_2']) {
       expect(matchAccepted(id, 'dot', 'rules', entries), `${id} rules`).not.toBeNull();
       // these are rules-only — they must NOT leak into the parity dashboard join
       expect(matchAccepted(id, 'dot', 'parity', entries), `${id} parity`).toBeNull();

@@ -85,8 +85,8 @@ GV_TEXT_MEASURER=estimate npx tsx test/corpus/survey.ts`, etc.).
 
 | Batch | Status | Tasks |
 |---|---|---|
-| [Batch 1 — Diagnosis (gated)](batch-1/overview.md) | [ ] | T1 |
-| [Batch 2 — Fix + verify](batch-2/overview.md) | [ ] | T2, T3 |
+| [Batch 1 — Diagnosis (gated)](batch-1/overview.md) | [x] | T1 |
+| [Batch 2 — Fix + verify](batch-2/overview.md) | [x] | T2, T3 |
 
 ## Index
 
