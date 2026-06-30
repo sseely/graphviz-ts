@@ -99,8 +99,16 @@ export function interclexp(subg: Graph): void {
   const g = dotRoot(subg);
   for (const n of subg.nodes.values()) {
     let prev: Edge | undefined;
-    for (const e of g.edges) {
-      if (e.tail !== n && e.head !== n) continue;
+    // C iterates `agfstedge(g, n)` = agfstout (out-edges sorted by head.id,seq)
+    // then agfstin (in-edges sorted by tail.id,seq, self-loops counted once).
+    // That order keeps parallel intercluster multi-edges adjacent, so the
+    // `prev`-chain merge in interclexpOneEdge accumulates each parallel's
+    // ED_xpenalty into the direct rep edge that rcross reads. Iterating
+    // `g.edges` (insertion order) instead separates the parallels (e.g.
+    // n488->n2 split by n488->n469 in ldbxtried), so their xpenalty is never
+    // merged → rcross under-counts → ReMincross picks a different best
+    // within-rank order → node-X cascade. @see lib/cgraph/edge.c:agfstedge
+    for (const e of [...n.outEdges(g), ...n.inEdges(g)]) {
       if (agContainsEdge(subg, e)) continue;
       prev = interclexpOneEdge(subg, g, e, prev);
     }
