@@ -15,6 +15,7 @@
 import type { Box, Point } from '../../model/geom.js';
 import type { PackInfo } from './types.js';
 import { spiralSearch } from './spiral-search.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
 
 /** Max average polyomino size constant. @see lib/pack/pack.c:C */
 const C = 100;
@@ -220,7 +221,10 @@ export function polyRects(ng: number, bbs: Box[], pinfo: PackInfo): Point[] | nu
     if (bb === undefined) continue;
     infos.push(genBox({ bb, ssize: step, margin: pinfo.margin, idx: i }));
   }
-  const sorted = [...infos].sort(cmpByGPerimeter);
+  // C `pack.c` sorts these via `qsort(cmpf)` (UNSTABLE); cmpf returns 0 on equal
+  // perimeter, so the tie order of equal-perimeter components is decided by libc
+  // qsort, not insertion order. Match it. @see util/bsd-qsort.ts
+  const sorted = gvQsort([...infos], cmpByGPerimeter);
   const ctx: PlaceCtx = { ps: new Set(), step, bbs };
   const places: Point[] = new Array<Point>(ng).fill({ x: 0, y: 0 });
   for (let i = 0; i < sorted.length; i++) {
