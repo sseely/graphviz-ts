@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-29T23:24:31.989Z",
+  "generatedAt": "2026-06-30T00:30:39.096Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "byte-match": 522,
+    "byte-match": 525,
     "structural-match": 183,
-    "diverged": 73,
+    "diverged": 70,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 11
@@ -634,7 +634,7 @@
       "id": "2471",
       "path": "2471.dot",
       "verdict": "diverged",
-      "maxDelta": 5728,
+      "maxDelta": 3781,
       "firstDiffPath": "svg/g[1][childCount]"
     },
     {
@@ -875,9 +875,9 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "diverged",
-      "maxDelta": 377,
+      "maxDelta": 345,
       "firstDiffPath": "svg/g[1][childCount]",
-      "clipOverflow": 400.3
+      "clipOverflow": 390.3
     },
     {
       "id": "2801",
@@ -1167,14 +1167,12 @@
       "path": "graphs/b51.gv",
       "verdict": "diverged",
       "maxDelta": 1096.4000000000005,
-      "firstDiffPath": "svg/g[1]/g[42]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[32]/path[1]/@d"
     },
     {
       "id": "graphs-b53",
       "path": "graphs/b53.gv",
-      "verdict": "diverged",
-      "maxDelta": 138.54999999999995,
-      "firstDiffPath": "svg/g[1]/g[13]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "graphs-b545",
@@ -1417,7 +1415,7 @@
       "id": "graphs-decorate",
       "path": "graphs/decorate.gv",
       "verdict": "diverged",
-      "maxDelta": 729.3399999999999,
+      "maxDelta": 724.47,
       "firstDiffPath": "svg/g[1]/g[5][childCount]"
     },
     {
@@ -3173,9 +3171,7 @@
     {
       "id": "share-b51",
       "path": "share/b51.gv",
-      "verdict": "diverged",
-      "maxDelta": 158.14999999999998,
-      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "share-b545",
@@ -3784,9 +3780,7 @@
     {
       "id": "windows-b51",
       "path": "windows/b51.gv",
-      "verdict": "diverged",
-      "maxDelta": 157.24,
-      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
+      "verdict": "byte-match"
     },
     {
       "id": "windows-b94",
