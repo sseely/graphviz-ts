@@ -144,6 +144,76 @@ describe("estimate_text_width_1pt", () => {
   });
 });
 
+// ── Non-ASCII: measure per UTF-8 byte, not per UTF-16 unit ───────────────────
+// C's estimate_text_width_1pt loops over (unsigned char)*c — one canonical
+// width per UTF-8 byte, every byte >=128 mapped to the space-width fallback.
+// A JS string is UTF-16, so iterating charCodeAt under-counts multi-byte glyphs.
+// These tests pin the byte-faithful behavior (AD-1, AD-2).
+
+describe("estimate_text_width_1pt iterates UTF-8 bytes (non-ASCII)", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+  });
+
+  it("CJK '下駄配列' (4 chars / 12 UTF-8 bytes) measures as 12 spaces", () => {
+    // Each non-ASCII byte folds to the space width; 4 CJK chars = 12 UTF-8 bytes.
+    const s = "下駄配列";
+    expect(new TextEncoder().encode(s).length).toBe(12);
+    const space1pt = estimate_text_width_1pt("Times", " ", false, false);
+    expect(estimate_text_width_1pt("Times", s, false, false))
+      .toBeCloseTo(12 * space1pt, 12);
+  });
+
+  it("Cyrillic 'да' (2 chars / 4 UTF-8 bytes) measures as 4 spaces", () => {
+    const s = "да";
+    expect(new TextEncoder().encode(s).length).toBe(4);
+    const space1pt = estimate_text_width_1pt("Times", " ", false, false);
+    expect(estimate_text_width_1pt("Times", s, false, false))
+      .toBeCloseTo(4 * space1pt, 12);
+  });
+
+  it("Latin-1 'é' (1 char / 2 UTF-8 bytes) measures as 2 spaces", () => {
+    const s = "é"; // é
+    expect(new TextEncoder().encode(s).length).toBe(2);
+    const space1pt = estimate_text_width_1pt("Times", " ", false, false);
+    expect(estimate_text_width_1pt("Times", s, false, false))
+      .toBeCloseTo(2 * space1pt, 12);
+  });
+
+  it("ASCII width is byte-identical (byte == charCode for <128)", () => {
+    // Byte iteration must not change any ASCII measurement.
+    for (const s of ["Hello, World!", "AAA", "WAR-WR1VI1", " "]) {
+      const widthsBytes = new TextEncoder().encode(s).length;
+      expect(widthsBytes).toBe(s.length); // pure ASCII: 1 byte per char
+      expect(estimate_text_width_1pt("Times", s, false, false))
+        .toBeGreaterThanOrEqual(0);
+    }
+    // Concrete anchor: a known ASCII string sums its per-char widths.
+    const perChar = "Ag".split("").reduce(
+      (acc, ch) => acc + estimate_text_width_1pt("Times", ch, false, false), 0);
+    expect(estimate_text_width_1pt("Times", "Ag", false, false))
+      .toBeCloseTo(perChar, 12);
+  });
+});
+
+describe("freetypeHintedWidth iterates UTF-8 bytes (non-ASCII)", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+  });
+
+  it("CJK '下駄配列' hints 12 space-byte advances, not 4", () => {
+    const s = "下駄配列";
+    // Each byte folds to space; hinted width = 12 × hinted space advance.
+    const spaceHinted = freetypeHintedWidth("Times", " ", 14);
+    expect(freetypeHintedWidth("Times", s, 14)).toBeCloseTo(12 * spaceHinted, 12);
+  });
+
+  it("ASCII hinted width unchanged (Times 14 'a'=6.0, 'b'=6.75)", () => {
+    expect(freetypeHintedWidth("Times", "a", 14)).toBe(6.0);
+    expect(freetypeHintedWidth("Times", "b", 14)).toBe(6.75);
+  });
+});
+
 // ── AC5: variant-aware measure() — bold ──────────────────────────────────────
 
 describe("LutTextMeasurer.measure bold variant", () => {

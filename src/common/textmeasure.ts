@@ -79,6 +79,23 @@ function charWidthUnits(widths: readonly number[], charCode: number): number {
   return w < 0 ? 0 : w;
 }
 
+/**
+ * UTF-8 byte encoding of `text`, used to iterate text width per byte.
+ *
+ * C's estimate measures one canonical width per UTF-8 byte (it loops over
+ * `(unsigned char)*c`), mapping every byte ≥128 to the space-width fallback. A
+ * JS string is UTF-16, so iterating `text.charCodeAt(i)` under-counts non-ASCII
+ * glyphs (a 3-byte CJK glyph would measure as 1 space, not 3). Re-encoding to
+ * UTF-8 and iterating the bytes mirrors C exactly. `TextEncoder` is used instead
+ * of Node `Buffer` to remain browser-safe. ASCII is unchanged (byte == charCode
+ * for values <128).
+ * @see lib/common/textspan_lut.c:estimate_text_width_1pt
+ */
+const utf8Encoder = new TextEncoder();
+function utf8Bytes(text: string): Uint8Array {
+  return utf8Encoder.encode(text);
+}
+
 // ── Public API ────────────────────────────────────────────────────────────────
 
 /**
@@ -95,8 +112,9 @@ export function estimate_text_width_1pt(
   const family = getFamilyMetrics(fontName);
   const widths = getVariantWidths(family, bold, italic);
   let total = 0;
-  for (let i = 0; i < text.length; i++) {
-    total += charWidthUnits(widths, text.charCodeAt(i));
+  // Iterate UTF-8 bytes, not UTF-16 units, to mirror C's per-byte loop.
+  for (const byte of utf8Bytes(text)) {
+    total += charWidthUnits(widths, byte);
   }
   return total / family.unitsPerEm;
 }
@@ -135,8 +153,9 @@ export function freetypeHintedWidth(
   const family = getFamilyMetrics(fontName);
   const widths = getVariantWidths(family, bold, italic);
   let total = 0;
-  for (let i = 0; i < text.length; i++) {
-    const units = charWidthUnits(widths, text.charCodeAt(i));
+  // Iterate UTF-8 bytes, not UTF-16 units, to mirror C's per-byte loop (AD-2).
+  for (const byte of utf8Bytes(text)) {
+    const units = charWidthUnits(widths, byte);
     const px = Math.round((units / family.unitsPerEm) * fontsize * FREETYPE_PX_PER_PT);
     total += px * PT_PER_FREETYPE_PX;
   }
