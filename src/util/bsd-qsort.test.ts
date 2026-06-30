@@ -17,7 +17,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { gvQsort } from './bsd-qsort.js';
-import { renderSvg } from '../../index.js';
+import { renderSvg } from '../index.js';
 
 const MIKE = `digraph mike{
   size = "8,8";

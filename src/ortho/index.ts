@@ -19,6 +19,7 @@ import {
   addNodeEdges, addLoop, reset,
 } from "./sgraph.js";
 import { convertSPtoRoute, assignSegs, assignTracks, vtrack, htrack } from "./ortho-route.js";
+import { gvQsort } from "../util/bsd-qsort.js";
 
 export type { OrthoGraph, OrthoEdge, OrthoPoint, ClipAndInstallFn };
 export { SEED } from "./partition.js";
@@ -131,9 +132,11 @@ export function orthoEdges(
   const mp = mkMaze(g);
   const sg = mp.sg;
 
-  // collect and sort edges by length
+  // collect and sort edges by length. C ortho.c sorts via qsort(edgecmp), which
+  // is UNSTABLE and returns 0 on equal length, so equal-length edges' routing
+  // order is qsort's, not insertion order. @see util/bsd-qsort.ts · ortho.c:1231
   const es: EdgePair[] = g.edges.map((e) => ({ e, d: edgeLen(e) }));
-  es.sort(edgeCmp);
+  gvQsort(es, edgeCmp);
   const nEdges = es.length;
 
   const routeList: Route[] = new Array(nEdges).fill(null).map(() => ({ segs: [] }));

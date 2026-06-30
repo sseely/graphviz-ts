@@ -7,7 +7,7 @@ import type { NsCtx } from './ns-core.js';
 import { SEARCHSIZE, NORMAL, nsSlack, isTreeEdge, seq, invalidatePath, exchangeTreeEdges } from './ns-core.js';
 import { dfsRange } from './ns-range.js';
 import { feasibleTree } from './ns-subtree.js';
-import { gvQsort } from './bsd-qsort.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
 
 // ---------------------------------------------------------------------------
 // Node / Edge accessor helpers — eliminate ?? from callers (each ?? is +1 CCN)
