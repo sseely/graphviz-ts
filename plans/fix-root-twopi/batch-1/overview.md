@@ -8,7 +8,14 @@ C for `nshare-root_twopi`, focusing on the two dominant edges (`311E->312E`,
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T1 | Instrument C + port edge routing for `311E->312E` and `280->586E`; pin origin (classification vs box/corridor vs fitter vs routing-order) + classify the ~56 residuals (shared-cause vs irreducible noise); write mechanism artifact | debugger | `plans/fix-root-twopi/decision-journal.md` (+ temporary, reverted instrumentation) | — | [ ] |
+| T1 | Instrument C + port edge routing for `311E->312E` and `280->586E`; pin origin (classification vs box/corridor vs fitter vs routing-order) + classify the ~56 residuals (shared-cause vs irreducible noise); write mechanism artifact | debugger | `plans/fix-root-twopi/decision-journal.md` (+ temporary, reverted instrumentation) | — | [x] |
+
+**T1 DONE.** Origin: `maximal_bbox` walls use `Math.round` (half→+∞) vs C
+`round` (half away from zero); on negative half-integer walls they differ by 1.
+Fix origin = `src/layout/dot/edge-route-faithful.ts` `bboxLeftX`/`bboxRightX`
+(4 `Math.round` sites). Controlled experiment drives all 58 diverging edges to
+maxΔ 0.0000 (residuals share the cause). Full artifact in `decision-journal.md`.
+GATED: STOP before Batch 2.
 
 No parallelism (single task). T1 may add **temporary** tracing to C
 (`~/git/graphviz/lib/dotgen/{dotsplines.c,splines.c}`, rebuild via
