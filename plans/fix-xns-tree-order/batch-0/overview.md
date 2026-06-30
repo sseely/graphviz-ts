@@ -6,7 +6,7 @@ sets Batch 1's write-set.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T0 | Pin first `addTreeEdge` order divergence + the C rule that causes it | (inline/opus) | `.agent-notes/` only | — | [ ] |
+| T0 | Pin first `addTreeEdge` order divergence + the C rule that causes it | (inline/opus) | `.agent-notes/` only | — | [x] |
 
 Depends on nothing. Batch 1 cannot start until T0 names the exact divergent
 subtree-merge decision and the C tie-break to replicate.

@@ -51,3 +51,19 @@ describe('class2 2-cycle back-edge merge (oracle: dot 15.1.0 -Tsvg)', () => {
     expect(c.get('c')).toEqual({ cx: '54', cy: '-18' });
   });
 });
+
+describe('label_vnode lw uses ROOT nodesep, not subgraph (oracle: dot -Tsvg)', () => {
+  it('labeled long edge inside a cluster places the sibling vnode as native', () => {
+    // label_vnode (class2.c) sets ND_lw(v)=GD_nodesep(agroot(v)). The port read
+    // the (cluster) subgraph's nodesep, which is unset → 0, shrinking the label
+    // vnode's left half-width and shifting the x-coord aux-edge minlen. That
+    // perturbs the x-coord network-simplex tree: here n1 lands at cx=80 (wrong)
+    // vs native cx=98. The 158px share-b51 blok_60 divergence is the same bug.
+    // @see lib/dotgen/class2.c:label_vnode
+    const c = nodeCenters(renderSvg(
+      'digraph{subgraph cluster_c{n0->n2[label="Lbl"];n0->n1->n2;}}', 'dot'));
+    expect(c.get('n0')).toEqual({ cx: '70', cy: '-180' });
+    expect(c.get('n1')).toEqual({ cx: '98', cy: '-107' });
+    expect(c.get('n2')).toEqual({ cx: '70', cy: '-34' });
+  });
+});

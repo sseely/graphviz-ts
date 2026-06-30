@@ -31,9 +31,19 @@ Full evidence: `.agent-notes/b51-blok60-is-xcoord-ns-selection.md`. Summary:
   x-center **611.38** (NS rank 463).
 
 ## Batches (sequential — each needs the prior)
-- [ ] **Batch 0** — Diagnose exact add-order divergence → `batch-0/overview.md`
-- [ ] **Batch 1** — Implement order fix + verify blok_60 → `batch-1/overview.md`
-- [ ] **Batch 2** — Survey gate + baseline refresh → `batch-2/overview.md`
+- [x] **Batch 0** — Diagnose exact add-order divergence → `batch-0/overview.md`
+      (Root cause: `labelVnode` lw used subgraph nodesep not root's. NOT a
+      subtree-merge tie-break. Fix locus: `classify.ts` — write-set expanded by user.)
+- [x] **Batch 1** — Fix applied in `classify.ts` (labelVnode lw → root nodesep);
+      blok_60 matches C exactly (Δ0 on its coordinates). → `batch-1/overview.md`
+- [x] **Batch 2** — Survey: 0 regressions; deterministic-tolerance matches
+      (harness verdict `byte-match`, ±0.01) 522→525: share-b51, windows-b51,
+      graphs-b53 move diverged→`byte-match`. Baseline refreshed. → `batch-2/overview.md`
+
+> Terminology: the survey verdict labelled `byte-match` is a numeric agreement
+> within ±0.01 on all coordinates/paths plus exact non-numeric content
+> (`compareSvg(..., 'deterministic')`, tolerance 0.01) — NOT literal byte
+> equality. Reported here as "deterministic-tolerance match".
 
 ## Constraints
 **Stop conditions:**

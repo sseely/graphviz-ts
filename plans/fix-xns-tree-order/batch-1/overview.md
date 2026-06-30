@@ -6,6 +6,6 @@ Needs Batch 0 (T0). Write-set is whichever NS file T0 named as `fixTarget`
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|------------|------|
-| T1 | Match C's subtree-merge add order; verify blok_60 → 611.38 + b51 geom | (inline/opus) | `ns-subtree.ts` (and/or `ns-core.ts`) + a unit test | T0 | [ ] |
+| T1 | Match C's subtree-merge add order; verify blok_60 → 611.38 + b51 geom | (inline/opus) | `ns-subtree.ts` (and/or `ns-core.ts`) + a unit test | T0 | [x] |
 
 Spec: `T1-fix-order.md`.

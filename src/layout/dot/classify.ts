@@ -158,7 +158,13 @@ function labelVnode(g: Graph, orig: Edge): Node {
   const dimen = labelVnodeDimen(orig);
   const v = virtualNode(g);
   v.info.label = orig.info.label;
-  v.info.lw = g.info.nodesep ?? 0;
+  // C uses GD_nodesep(agroot(v)) — the ROOT graph's nodesep — not the
+  // (possibly cluster) subgraph's. For a label vnode created inside a cluster
+  // whose nodesep is unset, reading g.info.nodesep yields 0, shrinking the
+  // node's left half-width and shifting the x-coord aux-edge minlen, which
+  // perturbs the x-coord network-simplex tree (share-b51 blok_60: 158px off).
+  // @see lib/dotgen/class2.c:label_vnode (ND_lw(v) = GD_nodesep(agroot(v)))
+  v.info.lw = dotRoot(g).info.nodesep ?? 0;
   if (!(orig.info as { label_ontop?: number }).label_ontop && dimen) {
     const flip = dotRoot(g).info.flip === true;
     v.info.ht = flip ? dimen.x : dimen.y;
