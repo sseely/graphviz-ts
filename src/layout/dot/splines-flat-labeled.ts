@@ -25,6 +25,7 @@ import { buildDotSinfo } from './self-loop.js';
 import { TOP } from '../../common/splines-constants.js';
 import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE, getMainEdge, swapEndsP, swapSpline } from './splines.js';
 import { shortestPath, routeSpline, polyBarriers, makePolyline } from '../../pathplan/index.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
 
 /** Space between stacked flat labels, in points. @see lib/dotgen/dotsplines.c:937 */
 const LBL_SPACE = 6;
@@ -324,7 +325,10 @@ function routeStackedFlats(earray: Edge[], nLbls: number, st: FlatStack, et: num
  * routed via simpleSplineRoute. @see lib/dotgen/dotsplines.c:makeSimpleFlatLabels
  */
 export function makeSimpleFlatLabels(group: Edge[], et: number): void {
-  const earray = [...group].sort(edgeLblCmp);
+  // C qsort(earray, edgelblcmpfn) — UNSTABLE; edgelblcmpfn returns 0 when two
+  // edges' labels have equal dimensions, so the tie order is qsort's, not
+  // insertion order. @see util/bsd-qsort.ts · dotsplines.c:make_flat_labeled_edge
+  const earray = gvQsort([...group], edgeLblCmp);
   // tn/hn are the group's left/right nodes (C: agtail/aghead of the
   // forward-normalized rep), NOT earray[0]'s own direction — earray[0] (widest
   // label) may run right->left. Every routing point is built tn->hn; the
