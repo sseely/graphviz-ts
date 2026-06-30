@@ -21,9 +21,12 @@ and edge geometry, and emits a rendered diagram — primarily SVG, with `json`,
 
 Its defining property is that it is **pure TypeScript with zero runtime
 dependencies and no browser-hostile APIs** (no `fs`, no native binary, no WASM).
-This lets it run unchanged in a browser or in Node. Bit-for-bit fidelity to the
-C implementation is the explicit correctness goal; the C source is treated as
-the canonical specification.
+This lets it run unchanged in a browser or in Node. The explicit correctness
+goal is **conformance** with the C implementation — the dot engine matches the C
+binary within a tight deterministic tolerance (±0.01 on numeric coordinates,
+exact non-numeric content), not literal byte-for-byte output (see
+[conformance.md](../conformance.md)). The C source is treated as the canonical
+specification.
 
 ## How the repos relate
 
