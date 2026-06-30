@@ -86,7 +86,40 @@ test/corpus/survey.ts`, etc.).
 | Batch | Status | Tasks |
 |---|---|---|
 | [Batch 1 — Diagnosis (gated)](batch-1/overview.md) | [x] | T1 |
-| [Batch 2 — Fix + verify](batch-2/overview.md) | [ ] | T2, T3 |
+| [Batch 2 — Fix + verify](batch-2/overview.md) | [x] | T2, T3 |
+
+## Mission summary (complete — 2026-06-30)
+
+**Outcome:** `1213-1` and `1213-2` both moved `diverged → conformant`; a third
+case, `2470`, improved `diverged → structural-match` as a bonus. Zero parity
+regressions.
+
+**Tasks:** 2 batches / 3 tasks, all complete.
+- T1 (gated diagnosis): pinned the mechanism and corrected the pre-mission
+  framing — the divergence is **not** edge-spline routing but the **placement
+  order of a labeled flat edge's label virtual node** during `flat_edges`
+  (mincross setup). `1213-1` actually has 5 diverging edges, not 3. Single root
+  cause. AD-4 (init_rank) ruled out with evidence.
+- T2 (fix): replaced the crude `flatLimits`/`limitsLeft`/`limitsRight` in
+  `src/layout/dot/flat.ts` with a faithful port of C `flat.c:flat_limits` +
+  `setbounds` + `findlr` (topology-aware). Regression test in `flat.test.ts`.
+- T3 (verify): survey (789) + gate PASS, baseline + dashboard refreshed.
+
+**Decisions / re-scope:** Batch 1 re-scoped T2's write-set from the anticipated
+`edge-route*.ts`/`splines*.ts` to **`src/layout/dot/flat.ts`** (single file, per
+AD-2), approved at the gate. Diagnosis run in the main loop rather than the
+nominated `debugger`/`general-purpose` subagents (sequential root-cause, no
+parallel bottleneck; gate required main-loop certification of the mechanism).
+
+**Quality gates (final):** `npm run typecheck` exit 0 · `npx vitest run
+src/layout/dot` 484/484 · `survey:gate` 0 regressions / 3 improvements ·
+write-set clean (flat.ts + flat.test.ts + 3 corpus baseline files).
+
+**Commits:** `3e44332` docs(T1) · `588f5f1` fix(T2) · `537fd2c` chore(T3).
+
+**Follow-up (out of scope):** the upstream init_rank counter gap in `ns.ts:56`
+(C emits `Error: trouble in init_rank`; port omits the `ctr!=N_nodes` check)
+remains a separate tracked observation — it does not affect geometry.
 
 ## Index
 
