@@ -20,6 +20,7 @@ import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compareSvg, type Diff } from '../golden/compare.js';
+import { normalizeSvg } from '../golden/normalize.js';
 import type { CorpusEntry } from './enumerate.js';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
@@ -290,6 +291,22 @@ function clipOverflow(port: string, oracle: string): number {
   return Math.max(0, svgOverflow(port) - svgOverflow(oracle));
 }
 
+/**
+ * True iff `svg` is well-formed enough for compareSvg to normalize it. Reuses
+ * the SAME parser (`normalizeSvg`) that compareSvg uses, so a `true` result
+ * guarantees compareSvg will not throw on this SVG. Pure, no I/O, never throws.
+ * Used to gate the ORACLE side only (see surveyOne) — a non-well-formed native
+ * render is an oracle-usability fault, not a port divergence (fix-1472 AD-1).
+ */
+export function isWellFormedSvg(svg: string): boolean {
+  try {
+    normalizeSvg(svg);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Classify a rendered pair: conformant / structural-match / diverged. */
 function diffVerdict(port: string, oracle: string): Omit<SurveyResult, 'id' | 'path'> {
   let diffs: Diff[];
@@ -322,6 +339,15 @@ async function surveyOne(
   const meta = { id: entry.id, path: entry.path };
   const oracle = await oracleSvg(absInput, entry.id);
   if (oracle.svg === undefined) return { ...meta, verdict: 'oracle-error', errMsg: oracle.err };
+  // A non-empty but non-well-formed oracle (native dot leaking invalid UTF-8 into
+  // its SVG, e.g. tests/1472.dot) is an oracle-usability fault, not a port
+  // divergence: compareSvg would throw normalizing the ORACLE and diffVerdict
+  // would blanket it as `diverged`, blaming the port. Short-circuit to
+  // oracle-error BEFORE rendering the port. Message stays PII-free — no raw
+  // oracle bytes (they carry the invalid UTF-8). See decisions.md AD-1.
+  if (!isWellFormedSvg(oracle.svg)) {
+    return { ...meta, verdict: 'oracle-error', errMsg: `oracle not well-formed XML: ${oracle.svg.length}B` };
+  }
   // Budget = max(MULT × native, FLOOR): only a non-erroring run past this is a
   // timeout. Native time is the canonical (frozen) value when captured, else the
   // time the oracle run just measured.
