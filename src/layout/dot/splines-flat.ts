@@ -137,9 +137,18 @@ function isPortless(e: Edge): boolean {
   return !e.info.tail_port.defined && !e.info.head_port.defined;
 }
 
-/** Clone one edge into the aux graph, oriented tail→head from the original. */
-function cloneFlatEdge(auxg: Graph, otn: Node, auxt: Node, auxh: Node, orig: Edge): Edge {
-  return orig.tail === otn
+/**
+ * Clone one edge into the aux graph, oriented tail→head from the original.
+ * `tn` is the node auxt was cloned from — C's flip-swapped `tn`
+ * (`aghead(e0)` under flip, else `agtail(e0)`). The orientation test must use
+ * that same node: C does `if (agtail(e) == tn) cloneEdge(auxt,auxh) else
+ * cloneEdge(auxh,auxt)`. Using the un-swapped tail here reverses every clone in
+ * flip (rankdir=LR) graphs, so an asymmetric compass-port pair (e.g. #1949
+ * structParty:N / :S) puts the detour loop on the wrong edge.
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges (SWAP + cloneEdge branch)
+ */
+function cloneFlatEdge(auxg: Graph, tn: Node, auxt: Node, auxh: Node, orig: Edge): Edge {
+  return orig.tail === tn
     ? cloneEdge(auxg, auxt, auxh, orig) : cloneEdge(auxg, auxh, auxt, orig);
 }
 
@@ -151,14 +160,18 @@ function cloneFlatEdge(auxg: Graph, otn: Node, auxt: Node, auxh: Node, orig: Edg
 function buildFlatAux(g: Graph, edges: Edge[], cnt: number): FlatAux {
   const otn = edges[0].tail;
   const flip = g.info.flip ?? false;
+  // C swaps tn/hn under flip, then clones auxt from tn and orients every edge
+  // against that same (swapped) tn. `refTn` is that node — the one auxt is
+  // cloned from — so the orientation test in cloneFlatEdge matches C.
+  const refTn = flip ? edges[0].head : otn;
   const auxg = cloneGraph(g);
-  const auxt = cloneNode(auxg, flip ? edges[0].head : otn);
+  const auxt = cloneNode(auxg, refTn);
   const auxh = cloneNode(auxg, flip ? otn : edges[0].head);
   const alg = new Map<Edge, Edge>();
   let hvye: Edge | null = null;
   for (let i = 0; i < cnt; i++) {
     const orig = toNormalEdge(edges[i]);
-    const auxe = cloneFlatEdge(auxg, otn, auxt, auxh, orig);
+    const auxe = cloneFlatEdge(auxg, refTn, auxt, auxh, orig);
     alg.set(orig, auxe);
     if (hvye === null && isPortless(orig)) hvye = auxe;
   }
