@@ -67,30 +67,84 @@ spring-model engines). The `dot` engine's *layout* is **not** affected by this
 iterative-model determinism; a separate, narrowly-bounded `dot` spline-routing
 floating-point delta is covered in **A3** below.
 
+> **Scope, not an observed corpus divergence.** A1 is a **prospective
+> portability caveat**, not a measured divergence in the parity survey. The
+> survey is **dot-engine only**: the native oracle runs under
+> `GVBINDIR=/tmp/ghl`, which symlinks **only** the `core` + `dot_layout` plugins
+> (`test/corpus/gen-headless-gvbindir.sh` loops over exactly `core dot_layout` —
+> no `neato`/`fdp`/`circo`/`twopi`/`osage`/`sfdp` layout plugin is present), and
+> both oracle and port are invoked with the `dot` engine
+> (`test/corpus/survey.ts`). So the force-directed engines are **implemented**
+> (`src/layout/{neato,fdp,sfdp,circo,twopi,osage}`, registered and unit-tested)
+> **but never exercised by the parity dashboard** — corpus ids like `*_neato` /
+> `*_circo` / `root_twopi` are *filenames* laid out with `dot`, not their native
+> engine. A1 therefore matches **zero** corpus graphs today because those
+> engines are unsurveyed, **not** because they are proven conformant.
+
 **Characterization.** These engines run iterative numerical layouts whose results
 depend on floating-point rounding — specifically fused multiply-add (FMA) and
 `Math.pow`, which can differ across JavaScript engines and CPU architectures. The
 port matches C's operation order where it can (`src/common/fma.ts`,
-`src/common/arm-pow.ts`), but exact, identical-coordinate reproduction of these layouts
-is **not guaranteed cross-platform**. The divergence is in fine node coordinates;
-topology is preserved and positions agree within a small epsilon.
+`src/common/arm-pow.ts`) — e.g. `sfdp` pins to ~6 significant digits against the
+native oracle with a matched PRNG and `fma` — but exact, identical-coordinate
+reproduction is **not guaranteed cross-platform**. Topology is preserved; the
+potential divergence is in fine node coordinates.
 
-**Why accepted.** This is a hard constraint of running in JS, not a design choice.
-There is no way to guarantee bit-identical transcendental/FMA results across all
-target runtimes, so a byte bar would be untestable rather than merely expensive.
+**Why accepted.** This is a hard constraint of running in JS, not a design choice
+— the same family as A3's Apple-`hypot` sensitivity. There is no way to guarantee
+bit-identical transcendental/FMA results across all target runtimes, so a byte bar
+would be untestable rather than merely expensive. **To actually assess A1** (as
+opposed to caveat it) requires a separate force-directed parity track: a
+`GVBINDIR` variant carrying the force-directed plugins, each input surveyed under
+its native engine vs the port. The honest ceiling on that work is to **narrow**
+A1 to "no active divergence on the reference platform," never to eliminate the
+cross-platform caveat.
 
 ### A2. Text measurement (font metrics) → label-driven layout
 
-**Affected:** Graphs with **wide text labels** whose measured width happens to
-tip an integer-rounding boundary inside layout. Most labels are unaffected;
-short labels and many long ones still match exactly. Observed example:
-`proc3d` (a label-heavy graph that stays at *structural-match*); `NaN`
-(`graphs-NaN` / `share-NaN` / `windows-NaN`, see below — the one case where the
-shift tips a verdict to *diverged*).
+> **Status update (2026-06-30): A2 has largely collapsed.** Successive
+> text-measurement fixes (the `EstimateTextMeasurer` cutover, font-aware vertical
+> metrics, the non-ASCII UTF-8-byte fix) closed most of this class. **`proc3d` —
+> the former canonical A2 example — is now fully `conformant`** on all three
+> corpus dirs (`graphs-`/`share-`/`windows-proc3d`): matching bbox, zero
+> path-data diffs, zero label-anchor diffs. The only A2 case still tracked is the
+> **`NaN` family** (`graphs-`/`share-`/`windows-NaN`, `structural-match`,
+> maxΔ~18). Two framing points below are historical and are being reconciled:
+> (1) the "native C" width numbers in the measurement table are **FreeType**
+> values, but the parity survey runs **both** sides through
+> `estimate_textspan_size` (the headless `/tmp/ghl` oracle has no text-layout
+> plugin), so that table no longer reflects how parity is measured — both engines
+> agree on `estimate`, which is *why* `proc3d` matches; (2) the proc3d overlay
+> figures further down depict a **non-corpus** `proc3d` (`graphs/directed/proc3d.gv`,
+> ~2620pt) that is not in the parity survey and no longer represents an active
+> divergence. The injectable-`TextMeasurer` seam explanation remains accurate and
+> valuable. The `NaN` mechanism is **under re-diagnosis** (see below): its node
+> centers now match C exactly, so the historical "node-width → node-x shift" story
+> no longer holds.
 
-**`NaN` under `ratio=compress` — same cause, amplified to `diverged`.** The
+**Affected:** Graphs with **wide text labels** whose measured width happens to
+tip an integer-rounding boundary inside layout — where the port's
+`estimate_textspan_size` port and the native oracle's own `estimate_textspan_size`
+disagree by a fraction of a point. Most labels are unaffected; short labels and
+many long ones match exactly. The remaining tracked case is the `NaN` family
+(`graphs-NaN` / `share-NaN` / `windows-NaN`, see below).
+
+> **⚠ Superseded — under re-diagnosis (2026-06-30).** The analysis in this
+> paragraph reflects an earlier state and no longer matches measurement. Current
+> facts: the `NaN` family is **`structural-match` (maxΔ~18)**, not `diverged`; and
+> **all 76 node reference points now match C exactly** (0 shifted >0.5pt) — so the
+> "9 half-widths mismeasured → −3..−5pt node-x shift" story below is stale (the
+> font-metric fixes closed the node-position gap). The residual is **8 straight
+> edges** (`Target↔TThread`, `Interp↔InterpF`, `Event↔Target`,
+> `AtomProperties↔NRAtom`) whose **endpoints** shift 6–14pt while piece counts
+> match — i.e. an edge-attachment/routing residual, not a node-position one. The
+> true mechanism is not yet pinned (candidate causes: boundary clip-point drift
+> from spline approach angle, a residual port metric, or a compress x-simplex tie).
+> The historical analysis is retained below for the record.
+
+**`NaN` under `ratio=compress` (historical).** The
 `NaN.gv` family (`orientation=landscape; ratio=compress; size="16,10"`) is an A2
-case whose verdict lands at *diverged* rather than *structural-match*. The
+case whose verdict [historically] landed at *diverged* rather than *structural-match*. The
 compress x-network-simplex path is faithful — every constraint input matches C
 (width-constraint value, `containNodes` minlens, aux-edge counts 471/wt 1612,
 `lrBalance`, and rank orders all identical) *except* the half-widths of 9 nodes,

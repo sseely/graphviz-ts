@@ -43,6 +43,17 @@ export function cloneNode(g: Graph, orign: Node): Node {
   n.info.height = orign.info.height;
   // Copy string attrs
   for (const [k, v] of orign.attrs) n.attrs.set(k, v);
+  // Carry the origin's node-default snapshot so inherited attributes (e.g. a
+  // graph-level `node[fontsize=8]` the origin never set explicitly) still
+  // resolve in the aux graph, which has no node defaults of its own. C's
+  // cloneNode does `agcopyattr`, which materialises the origin's inherited attr
+  // values; without this the aux re-sizes an HTML-label node at the built-in
+  // fontsize=14 instead of the inherited 8, ballooning the node (#1949: the
+  // flat-adj aux nodes grew ~2x, adding 33px of graph height).
+  // @see lib/dotgen/dotsplines.c:cloneNode (agcopyattr)
+  if (orign.nodeDefaultsSnapshot !== undefined) {
+    n.nodeDefaultsSnapshot = new Map(orign.nodeDefaultsSnapshot);
+  }
   g.nodes.set(n.name, n);
   return n;
 }

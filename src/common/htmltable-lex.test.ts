@@ -127,3 +127,31 @@ describe('attribute scanning', () => {
     expect(toks[0]?.type === 'open' && toks[0].attrs).toEqual({ port: 'p1' });
   });
 });
+
+describe('tokenize — entity decoding in text runs', () => {
+  // C's HTML lexer resolves entities via expat during tokenization, so both
+  // sizing and emit see decoded UTF-8. Skipping this measured the raw entity
+  // string (e.g. "&#91;el...") instead of "[el...", inflating edge-label
+  // vnodes and shifting layout (corpus 1949 was +18.7px wide).
+  // @see lib/common/htmllex.c
+  it('decodes a numeric entity (&#91; -> [) in a text run', () => {
+    const toks = tokenize('&#91;el...');
+    expect(toks).toEqual([{ type: 'text', value: '[el...' }]);
+  });
+
+  it('decodes named XML entities and round-trips through emit escaping', () => {
+    const toks = tokenize('a &amp;&lt;&gt; b');
+    expect(toks).toEqual([{ type: 'text', value: 'a &<> b' }]);
+  });
+
+  it('leaves an unknown entity name literal', () => {
+    const toks = tokenize('&notareal; x');
+    expect(toks).toEqual([{ type: 'text', value: '&notareal; x' }]);
+  });
+
+  it('decodes text between tags without affecting tags', () => {
+    const toks = tokenize('<B>&#65;&#66;</B>');
+    expect(toks[0]).toEqual({ type: 'open', tag: 'B', attrs: {} });
+    expect(toks[1]).toEqual({ type: 'text', value: 'AB' });
+  });
+});

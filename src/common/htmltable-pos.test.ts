@@ -15,7 +15,9 @@ import {
   buildLineRuns,
   placeRunItems,
   posHtmlLabel,
+  makeHtmlLabel,
 } from './htmltable-pos.js';
+import type { PlacedHtml } from './htmltable-pos.js';
 import { parseHtmlLabel, sizeHtmlLabel } from './htmltable.js';
 import { portToTbl } from './htmltable-port.js';
 import {
@@ -239,5 +241,32 @@ describe('portToTbl resolves named ports in the placed tree', () => {
     const placed = place('<TABLE><TR><TD PORT="MyPort">x</TD></TR></TABLE>');
     expect(portToTbl(placed, 'myport')).not.toBeNull();
     expect(portToTbl(placed, 'nope')).toBeNull();
+  });
+});
+
+describe('makeHtmlLabel — pen-color inheritance (D2)', () => {
+  // C defaults a table's pencolor to getPenColor(obj) then copies
+  // parent->child, so a cell BORDER with no COLOR inherits the node color.
+  // @see lib/common/htmltable.c:1911 (top table), :1406 (cell), :1556 (nested)
+  const meas: TextMeasurer = { measure: vi.fn().mockReturnValue({ w: 8, h: 12 }) };
+  const font = { fontname: 'Arial', fontsize: 8, fontcolor: 'black' };
+  const cells = (content: string, pencolor?: string) => {
+    const lbl = makeHtmlLabel(content, { ...font, pencolor }, meas);
+    return (lbl.u as { kind: 'html'; html: PlacedHtml }).html.cells;
+  };
+
+  it('a cell with no COLOR inherits the object pen color', () => {
+    const c = cells('<TABLE BORDER="0"><TR><TD BORDER="1">x</TD></TR></TABLE>', 'red');
+    expect(c[0]!.color).toBe('red');
+  });
+
+  it('an explicit cell COLOR wins over the inherited pen color', () => {
+    const c = cells('<TABLE><TR><TD BORDER="1" COLOR="blue">x</TD></TR></TABLE>', 'red');
+    expect(c[0]!.color).toBe('blue');
+  });
+
+  it('no pen color leaves the cell color unset (emit defaults to black)', () => {
+    const c = cells('<TABLE><TR><TD BORDER="1">x</TD></TR></TABLE>', undefined);
+    expect(c[0]!.color).toBeUndefined();
   });
 });

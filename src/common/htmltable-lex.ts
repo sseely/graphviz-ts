@@ -13,6 +13,7 @@
 
 import { HtmlParseError } from './htmltable-types.js';
 import type { Token } from './htmltable-types.js';
+import { htmlEntityUTF8 } from './html-entities.js';
 
 export type { Token } from './htmltable-types.js';
 
@@ -84,7 +85,13 @@ function cleanText(raw: string) {
 function scanText(src: string, start: number, tokens: Token[]) {
   let j = start;
   while (j < src.length && src[j] !== '<') j++;
-  const clean = cleanText(src.slice(start, j));
+  // Decode XML/HTML entities in the text run. C's HTML lexer resolves entities
+  // via expat during tokenization (htmllex.c), so both sizing and emit see the
+  // decoded UTF-8 text. Skipping this measured the raw "&#91;el..." (9-10 chars)
+  // instead of "[el..." (6 chars), inflating edge-label vnodes and shifting
+  // layout (corpus 1949: +18.7px). Plain-string labels already decode via the
+  // make_label path, so only HTML-delimited labels diverged.
+  const clean = htmlEntityUTF8(cleanText(src.slice(start, j)));
   if (clean.length > 0) tokens.push({ type: 'text', value: clean });
   return j;
 }

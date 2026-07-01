@@ -14,48 +14,29 @@ import type { TextMeasurer, TextSize } from './textmeasure.js';
 import type { TextSpan } from './emit-types.js';
 import { makeHtmlLabel } from './htmltable-pos.js';
 import { substObj, type GraphObj } from './subst.js';
-import { HTML_ENTITIES } from './html-entities.js';
+import { htmlEntityUTF8 } from './html-entities.js';
 
 export const DEFAULT_FONTSIZE = 14.0;
 export const DEFAULT_FONTNAME = 'Times,serif';
 export const DEFAULT_COLOR = 'black';
 
-/** The five basic XML/HTML entities → code point. */
-const BASIC_ENTITIES: Readonly<Record<string, number>> = {
-  amp: 0x26, lt: 0x3c, gt: 0x3e, quot: 0x22, apos: 0x27,
-};
-
-/** Decode a numeric entity body (`#123`, `#x1F`) to its code point, or null. */
-function numericEntityValue(body: string): number | null {
-  const hex = body[1] === 'x' || body[1] === 'X';
-  const v = hex ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
-  return Number.isFinite(v) && v > 0 && v <= 0x10ffff ? v : null;
-}
+// htmlEntityUTF8 moved to html-entities.ts (a leaf module) so the HTML lexer
+// can decode entities in text runs without an import cycle. Re-exported here
+// for existing callers. @see lib/common/utils.c:htmlEntityUTF8 / htmlEntity
+export { htmlEntityUTF8 };
 
 /**
- * Decode one entity body (`amp`, `alpha`, `#123`, `#x1F`) to its code point, or
- * null for an unknown name. Named entities cover the five basic XML entities
- * plus the full HTML 4 table (Symbol etc.). @see lib/common/utils.c:htmlEntity
+ * The object's pen color: `pencolor` attr, else `color` attr, else undefined
+ * (no default). An HTML table/cell border with no explicit COLOR inherits it.
+ * @see lib/common/htmltable.c:getPenColor
  */
-function entityValue(body: string): number | null {
-  if (body[0] === '#') return numericEntityValue(body);
-  return BASIC_ENTITIES[body] ?? HTML_ENTITIES[body] ?? null;
-}
-
-/**
- * Decode XML/numeric (&#NNN; / &#xHH;) and HTML 4 named (`&alpha;`) entities to
- * their characters, leaving unknown names literal — C's make_label UTF-8 branch.
- * Latin-1 inputs are decoded at the byte->string boundary by the caller (the
- * survey's render-one), so this UTF-8 branch covers them too.
- * @see lib/common/utils.c:htmlEntityUTF8 / htmlEntity
- * @see lib/common/labels.c:make_label (CHAR_LATIN1 vs default)
- */
-export function htmlEntityUTF8(s: string): string {
-  if (s.indexOf('&') < 0) return s;
-  return s.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|[A-Za-z]+);/g, (m, body: string) => {
-    const v = entityValue(body);
-    return v === null ? m : String.fromCodePoint(v);
-  });
+function getPenColor(obj?: GraphObj): string | undefined {
+  if (obj === undefined) return undefined;
+  const pc = obj.attrs.get('pencolor');
+  if (pc !== undefined && pc !== '') return pc;
+  const c = obj.attrs.get('color');
+  if (c !== undefined && c !== '') return c;
+  return undefined;
 }
 
 /** Font attributes bundle — mirrors C fontinfo_t fields used in label init. */
@@ -196,8 +177,10 @@ export function makeAnyLabel(
   // labels.c:119 — is_html &= !streq(str, "");
   if (isHtml && content !== '') {
     // labels.c:145-161; htmltable.c:1856 — on parse failure falls back to
-    // plain text (html=false) per htmltable.c:1892.
-    return makeHtmlLabel(content, font, measurer);
+    // plain text (html=false) per htmltable.c:1892. Thread the owning object's
+    // pen color so an HTML table/cell border with no explicit COLOR inherits
+    // it (htmltable.c:1911 getPenColor). @see getPenColor
+    return makeHtmlLabel(content, { ...font, pencolor: getPenColor(obj) }, measurer);
   }
   // Plain path: resolve \G \N \E \T \H \L against the owning object
   // BEFORE measuring, as C does (labels.c:169, escBackslash=0; the
