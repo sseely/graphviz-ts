@@ -305,6 +305,34 @@ export function collectNodeEdges(n: Node, edges: Edge[]): void {
   collectOtherEdges(n, edges);
 }
 
+/**
+ * Collect routing edges by iterating the rank array (`minrank..maxrank`,
+ * `v[0..n-1]`), null-guarding empty `.v` slots exactly as C does. This visits
+ * VIRTUAL `splineMerge` nodes in addition to NORMAL nodes, so the merged
+ * secondary chains that a `concentrate` DOWN-sweep rewires onto a virtual merge
+ * node's out-list are gathered and routed (they are absent from `g.nodes`).
+ * `nodeNeedsRouting` still gates each node to NORMAL || splineMerge.
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (281-320)
+ */
+export function collectRankEdges(g: Graph, edges: Edge[]): void {
+  const ranks = g.info.rank;
+  // No rank table (never happens for a laid-out dot graph): fall back to the
+  // node map so a degenerate graph still collects its NORMAL out-edges.
+  if (ranks === undefined || g.info.minrank === undefined || g.info.maxrank === undefined) {
+    for (const n of g.nodes.values()) collectNodeEdges(n, edges);
+    return;
+  }
+  for (let i = g.info.minrank; i <= g.info.maxrank; i++) {
+    const rk = ranks[i];
+    if (rk === undefined) continue;
+    for (let j = 0; j < rk.n; j++) {
+      const n = rk.v[j];
+      if (n == null) continue; // C guards GD_rank(g)[i].v[j] slots
+      collectNodeEdges(n, edges);
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // dot_splines_ / dot_splines — main entry points
 // @see lib/dotgen/dotsplines.c:dot_splines_, dot_splines
@@ -520,7 +548,7 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   if (et === EDGETYPE_CURVED) curvedTop(g);
   markLowclusters(g);
   const edges: Edge[] = [];
-  for (const n of g.nodes.values()) collectNodeEdges(n, edges);
+  collectRankEdges(g, edges);
   edges.sort(edgecmp);
   // C places line-edge labels BEFORE the routing loop (dotsplines.c:334-340) so
   // the line router reads final label positions; lone edges now route in-loop.
