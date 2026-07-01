@@ -11,9 +11,9 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 - **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
 - **Surveyed (applicable):** 789
-- **conformant\*:** 574 (72.8%) · structural-match: 170 → 744/789 structurally equal (94.3%)
-- **Accepted deltas (documented, won't-fix):** 4 · **Tracked gaps (unaccepted, will-fix):** 200 → of 204 non-conformant graphs
-- **errored:** 0 · **timeout:** 0 · **oracle-error:** 11 (excluded from scoring)
+- **conformant\*:** 574 (72.8%) · structural-match: 171 → 745/789 structurally equal (94.4%)
+- **Accepted deltas (documented, won't-fix):** 4 · **Tracked gaps (unaccepted, will-fix):** 199 → of 203 non-conformant graphs
+- **errored:** 0 · **timeout:** 0 · **oracle-error:** 12 (excluded from scoring)
 - **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3, perf 1
 
 \* **conformant** is a *deterministic-tolerance* verdict, not literal byte equality: numeric coordinates/paths agree within ±0.01 and all non-numeric content (tags, colors, text) is exactly equal (`compareSvg(…, 'deterministic')`). Full definition: [docs/conformance.md](../../docs/conformance.md).
@@ -41,17 +41,17 @@ the diverged table and the backlog below.
 | `windows-NaN` | structural-match | 18.00 | A2 | maxΔ~18pt; fine x only | known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout |
 | `2368` | structural-match | 10.22 | A3 | maxΔ~10pt on one flat-edge arc (376->76); bbox/nodes/labels conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
 
-## Tracked structural-match (166)
+## Tracked structural-match (167)
 
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). Near-misses — sub-pixel-to-modest position drift — that we
 intend to close (accepted structural-match deltas are listed above instead).
 
-## Tracked diverged (34) — worst-first
+## Tracked diverged (32) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
-| `2471` | 5379.20 | `svg/g[1][childCount]` |
+| `2471` | 5383.00 | `svg/g[1][childCount]` |
 | `2239` | 5286.67 | `svg/g[1]/g[2][childCount]` |
 | `1718` | 3725.90 | `svg/g[1]/g[47]/path[1]/@d` |
 | `2620` | 3207.00 | `svg/g[1]/g[63]/path[1]/@d` |
@@ -60,7 +60,7 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `windows-b124` | 1988.63 | `svg/g[1]/g[157]/path[1]/@d` |
 | `graphs-b51` | 1096.40 | `svg/g[1]/g[32]/path[1]/@d` |
 | `1367` | 1083.21 | `svg/g[1]/g[1][childCount]` |
-| `1879` | 942.07 | `svg/g[1]/g[99]/g[1]/a[1]/text[3]/text()[1]` |
+| `1879` | 875.68 | `svg/g[1]/g[191]/path[1]/@d` |
 | `graphs-decorate` | 724.47 | `svg/g[1]/g[5][childCount]` |
 | `graphs-big` | 661.70 | `svg/g[1]/g[5]/path[1]/@d` |
 | `1436` | 564.90 | `svg/g[1]/g[25]/path[1]/@d` |
@@ -77,11 +77,9 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `2521` | 144.00 | `svg/g[1]/g[10]/path[1]/@d` |
 | `2646` | 114.00 | `svg/g[1]/g[3]/path[1]/@d` |
 | `graphs-biglabel` | 111.03 | `svg/g[1]/g[5]/path[1]/@d` |
-| `1949` | 90.68 | `svg/g[1]/g[8]/polyline[1]/@stroke` |
 | `2475_2` | 85.00 | `svg/g[1]/g[4074]/path[1]/@d` |
 | `2796` | 62.57 | `svg/g[1][childCount]` |
 | `1332` | 0.00 | `svg/g[1][childCount]` |
-| `1472` | 0.00 | `<compare-threw>` |
 | `graphs-b15` | 0.00 | `svg/g[1][childCount]` |
 | `graphs-structs` | 0.00 | `svg/g[1][childCount]` |
 | `graphs-user_shapes` | 0.00 | `svg/g[1]/g[1]/ellipse[1]` |
@@ -96,7 +94,7 @@ intend to close (accepted structural-match deltas are listed above instead).
 | id | path | message |
 |---|---|---|
 
-## oracle-error (11) — excluded from port scoring
+## oracle-error (12) — excluded from port scoring
 
 The native oracle did not emit a complete SVG (usually a hard syntax error
 it rejects entirely); there is no reference to compare against.
@@ -104,6 +102,7 @@ it rejects entirely); there is no reference to compare against.
 | id | path | message |
 |---|---|---|
 | `1411` | `1411.dot` | Error: /Users/scottseely/git/graphviz/tests/1411.dot: syntax error in line 17 near '\' |
+| `1472` | `1472.dot` | oracle not well-formed XML: 102068B |
 | `1652` | `1652.dot` | oracle exit null |
 | `1783` | `1783.dot` | Error: overflow when calculating virtual weight of edge |
 | `1864` | `1864.dot` | Warning: Warning: no hard-coded metrics for 'monospace'.  Falling back to 'Times' metrics |
@@ -125,10 +124,7 @@ a candidate oracle-pinned fix mission.
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
 | `element-count` | 15 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
-| `path-structure` | 14 | `1436`, `1447`, `1718` | edge path has a different command sequence or point count — spline routing structure |
+| `path-structure` | 15 | `1436`, `1447`, `1718` | edge path has a different command sequence or point count — spline routing structure |
 | `attr-or-tag` | 2 | `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
-| `compare-threw` | 1 | `1472` | compareSvg threw on the port SVG — malformed or partial output |
-| `text-content` | 1 | `1879` | rendered text string differs — label content, escaping, or character encoding |
-| `color-stroke` | 1 | `1949` | fill/stroke value differs — color resolution or default styling |
 
 

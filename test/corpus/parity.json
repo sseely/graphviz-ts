@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-01T14:06:04.377Z",
+  "generatedAt": "2026-07-01T17:17:17.558Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
@@ -7,10 +7,10 @@
   "counts": {
     "conformant": 574,
     "structural-match": 171,
-    "diverged": 33,
+    "diverged": 32,
     "errored": 0,
     "timeout": 0,
-    "oracle-error": 11
+    "oracle-error": 12
   },
   "results": [
     {
@@ -154,9 +154,8 @@
     {
       "id": "1472",
       "path": "1472.dot",
-      "verdict": "diverged",
-      "firstDiffPath": "<compare-threw>",
-      "errMsg": "Opening and ending tag mismatch: \"svg\" != \"g\""
+      "verdict": "oracle-error",
+      "errMsg": "oracle not well-formed XML: 102068B"
     },
     {
       "id": "1514",
