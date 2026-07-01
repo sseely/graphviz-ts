@@ -79,3 +79,26 @@ describe('DOT-12 + DOT-10 — port-bearing labeled flat emits its label', () => 
     expect(dist(lp!, [72, -32.91])).toBeLessThanOrEqual(TOL);
   });
 });
+
+// #1949: make_flat_adj_edges clones the flat endpoints into a rotated aux graph
+// and re-sizes them there. A node that INHERITS an attr (here `node[fontsize=24]`
+// — the node never sets fontsize itself) must keep resolving it in the aux, which
+// has no node defaults of its own. C's cloneNode does agcopyattr (materialises
+// inherited values); the port carries the origin's nodeDefaultsSnapshot. Without
+// that, the cloned node re-measures its label at the built-in fontsize=14, the
+// aux node shrinks, and the routed spline (and thus graph height) is wrong: this
+// graph rendered 129pt pre-fix vs 143pt with the inherited fontsize=24 (native
+// dot 15.0.0 estimate: 148pt). @see lib/dotgen/dotsplines.c:cloneNode (agcopyattr)
+const INHERIT_FONT_SRC =
+  'digraph{rankdir=LR; node[fontsize=24]; {rank=same; a b} a:s->b:n; b:s->a:n;}';
+
+function graphHeight(svg: string): number {
+  const m = svg.match(new RegExp('height=' + Q + '([0-9.]+)pt' + Q));
+  return m ? Number(m[1]) : NaN;
+}
+
+describe('#1949 — aux clone inherits the graph fontsize default', () => {
+  it('sizes the flat-adj aux node at the inherited fontsize (not the built-in 14)', () => {
+    expect(graphHeight(renderSvg(INHERIT_FONT_SRC, 'dot'))).toBe(143);
+  });
+});

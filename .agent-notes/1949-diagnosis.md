@@ -56,6 +56,95 @@
   adjustRanks / borderTop-bottom for flip). Separate mission.
 - **Confidence**: High.
 
+## Observation: fix-1949-flat-aux Batch-1 diagnosis — cause is NOT rank=source; it is OUT of splines-flat.ts scope (STOP)
+- **Context** (2026-07-01): Post orientation-fix (480b34a) the current 1949
+  state is native **651×282** vs port **651×315** (+33 height; the 2.97 note
+  above is STALE — 480b34a moved height 279→315). Symptom = README's:
+  structParty:S↔structDefaultAuto flat compass-port pair routes wrong.
+  Instrumented C `make_flat_adj_edges` (DBG1949 fprintf, clean plugin rebuild)
+  and the port `makeFlatAdjEdges` (DBG1949 console.error), diffed field-by-field.
+- **Mechanism (first divergence = `cnt` / edge grouping)**: C calls
+  `make_flat_adj_edges` **twice, cnt=1 each** (one aux graph per edge). The
+  port calls it **once, cnt=2** (both edges in one aux → 2 real edges + a
+  synthetic hvye between the same node pair → wider nodesep: auxt.y 155.19 vs
+  C 113.11; sameports merges the two ports; the co-routed splines reverse).
+  The port's `:S` spline comes out **reversed** — starts at structDefaultAuto
+  (x≈158.3) and loops the wrong way to (213.5,−110.5) instead of starting at
+  structParty:S (176.5,−102.4) and ending at structDefaultAuto (158.3,−8.0).
+  That mis-routed loop grows GD_bb, shifting the whole flat region down 32.3px
+  = the +33 height.
+- **Origin**: The grouping lives in the **caller**, not the flat router.
+  Port: `src/layout/dot/edge-route.ts:311` `collectAdjacentFlatGroup` groups by
+  node-pair (either direction). C: `lib/dotgen/dotsplines.c:356-378` groups only
+  while `getmainedge(e0)==getmainedge(e1)` (line 357) — two DISTINCT user edges
+  have distinct main edges → separate cnt=1 groups. `ED_adjacent` (line 359)
+  only bypasses the *port* comparisons, never the main-edge break. The port's
+  comment at edge-route.ts:302-309 ("C groups every adjacent flat between a node
+  pair into one call") is the wrong reading of C.
+- **Secondary divergences (also outside splines-flat.ts)**: (a) even forced to
+  cnt=1, the port picks the wrong `auxt` for the `:N` edge (structParty vs C
+  structDefaultAuto) because C normalizes the lead edge with
+  `makefwdedge`/BWDEDGE (dotsplines.c:351-354) before cloning — the port's group
+  ordering does not. (b) The structParty `:N`/`:S` named-port cells resolve at
+  p.y ±35.20 (port) vs ±24.40 (C) — an upstream HTML-table cell-position / port
+  resolution difference (NOT set by the flat router; cloneEdge copies it in).
+- **Ruled out**:
+  - **rank=source (the mission's PRIME SUSPECT) is INERT** — the port's aux
+    already ranks `auxt` at rank 0 (POSTPOS rank=0 in every dump, both cnt=1 and
+    cnt=2). Adding an `agsubg rank=source` pin cannot change a 2-node aux where
+    auxt is already the source. AD-2 is moot.
+  - **HTML-table node sizing** — structParty is identical height (135.6) in both
+    renders; structDefaultAuto identical (r=18). Not a node-size bug.
+- **Scope verdict → STOP (AD-3)**: the fix locus is `edge-route.ts`
+  (`collectAdjacentFlatGroup` grouping + lead-edge makefwdedge normalization) and
+  likely the port-resolution path (sameport/htmltable for the ±24.40 cell y).
+  NONE of these is `splines-flat.ts`. Two explicit README STOP conditions fire:
+  "rank=source inert → re-diagnose, don't force" and "fix would touch a file
+  other than splines-flat.ts". Batch 2 / T3 not entered; re-scope needed.
+- **Confidence**: High (evidence: paired C/port DBG1949 dumps + cnt=1 experiment
+  in decision-journal.md).
+
+## Observation: TRUE root = inherited fontsize lost in cloneNode (aux node balloon)
+- **Context** (2026-07-01, after user authorized bigger/aux-algo changes): the
+  grouping, orientation (flatFwdEdge), and port-position hypotheses were all
+  proven NO-OPS (byte-identical renders). Instrumented the aux NODE DIMENSIONS
+  and found they diverge from C: port auxh(structParty) ht=122.19 vs C 64.80;
+  port auxt(structDefaultAuto) ht=36 vs C 66.63.
+- **Mechanism**: C's `cloneNode` does `agcopyattr` (materialises the origin's
+  INHERITED attr values) then re-sizes via `dot_init_node`→`gv_nodesize`. The
+  port's `cloneNode` copied only EXPLICIT attrs. structParty never sets
+  `fontsize` — it inherits the graph-level `node[fontsize=8]` default via its
+  `nodeDefaultsSnapshot`. The clone dropped that snapshot, and the bare aux graph
+  has no node defaults, so the cloned structParty re-measured its HTML label at
+  the built-in `fontsize=14` (label.dimen 54.68×78.40 vs the correct 40.67×56.80
+  at 8pt) → the aux node ballooned ~2x → wider aux separation → oversized detour
+  loop → +33px graph height. structDefaultAuto sets `fontsize=8` explicitly, so
+  it was unaffected (and its fixedsize kept it 36) — which is why only structParty
+  inflated and the earlier flat-router hypotheses looked like no-ops.
+- **Origin**: `src/layout/dot/splines-clone.ts:cloneNode` — did not copy
+  `orign.nodeDefaultsSnapshot`. Proven via DBG dump: main `nodeAttrResolved=8`,
+  aux `nodeAttrResolved=undefined` → fontsize 14.
+- **Fix (applied)**: `cloneNode` now copies `nodeDefaultsSnapshot`
+  (`new Map(orign.nodeDefaultsSnapshot)`), mirroring agcopyattr. Result: aux
+  structParty now byte-exact vs C (ht=64.80, lw/rw=28.34); 1949 height 315→304.
+- **Ruled out**: rank=source (inert), grouping cnt (no-op), lead-edge orientation
+  (no-op), port position ±35.2 (no-op) — all byte-identical experiments.
+- **Confidence**: High — root proven by dump + the fix moving structParty to an
+  exact match.
+
+## Observation: residual 22px = structDefaultAuto fixedsize/HTML aux size (OPEN)
+- After the fontsize fix, 1949 is 304 vs native 282 — a UNIFORM 21.54px shift
+  (every node/element same size, shifted; separations unchanged). structParty aux
+  size is now exact; the remaining aux divergence is structDefaultAuto: C grows
+  it to 66.63 in the aux (circle enclosing its 31×30 HTML label × SQRT2 +
+  margins, fixedsize NOT applied), the port keeps fixedsize=36. Dropping the
+  `fixedsize` attr on clone did NOT move the height (port's small label doesn't
+  grow the circle past 36), so the driver is likely the HTML PORT-CELL sizing
+  (port measures the 3×3 empty-port table 31×30; C's is larger) and/or the still-
+  reversed `:S` spline (starts at structDefaultAuto x=158.3, should be
+  structParty:S x=176.5). Needs a follow-up pass. The fontsize fix is independent
+  and lands on its own merits (pending 0-regression survey).
+
 ## Observation: D2 — HTML cell border color not inheriting node pen color
 - **Context**: structParty node `color="red"`, HTML-table label with
   `<TD BORDER="1" SIDES="B">Party</TD>`.
