@@ -6,8 +6,8 @@ instead. Sequential: T4 needs the fix live.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T3 | Apply the faithful fix at the T2-pinned origin (+ colocated test if logic-bearing); verify the edge spline matches | inline / typescript-pro | T2-pinned `src/` file (+ its `.test.ts`) | T2 | [ ] |
-| T4 | Regenerate parity baseline; verify graphs-biglabel improved and no other id regressed | inline | `test/corpus/parity.json`, `parity-rules.json`, `PARITY.md`, goldens | T3 | [ ] |
+| T3 | Apply the faithful fix at the T2-pinned origin (+ colocated test if logic-bearing); verify the edge spline matches | inline / typescript-pro | T2-pinned `src/` file (+ its `.test.ts`) | T2 | [x] |
+| T4 | Regenerate parity baseline; verify graphs-biglabel improved and no other id regressed | inline | `test/corpus/parity.json`, `parity-rules.json`, `PARITY.md`, goldens | T3 | [x] |
 
 ## Write-set conflict check
 

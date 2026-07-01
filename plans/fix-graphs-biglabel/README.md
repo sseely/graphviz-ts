@@ -76,8 +76,44 @@ AD-1 note).
 
 | Batch | Status | Doc |
 |---|---|---|
-| 1 — diagnose (instrument oracle + port, isolate origin) | [ ] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — fix at origin + regression baseline | [ ] | [batch-2/overview.md](batch-2/overview.md) |
+| 1 — diagnose (instrument oracle + port, isolate origin) | [x] | [batch-1/overview.md](batch-1/overview.md) |
+| 2 — fix at origin + regression baseline | [x] | [batch-2/overview.md](batch-2/overview.md) |
+
+## Session summary (complete)
+
+**Status: DONE.** Both batches complete; all quality gates PASS.
+
+**Root cause** — C's record shape `pboxfn` (`record_path`, shapes.c:3793) was
+unported (`RECORD_FNS.pboxfn = null`), and `beginPath`/`endPath` took `pboxfn`
+as a param every caller set to `null`. For a REGULAREDGE into a record node via
+an interior port (`side==0`, e.g. `struct3:here`), C's `endpath` calls
+`record_path` to build the routing box as the top-level field's full-height
+vertical strip containing the port; the port fell back to the maximal bbox,
+cutting the spline straight across (1 cubic) instead of hugging the port column
+(2 cubics) — head endpoint ~111pt off.
+
+**Fix (T3, `d77efa1`)** — ported `record_path` → `recordPath` (honoring GD_flip);
+`RECORD_FNS.pboxfn = recordPath`; fixed `invokePboxfn` to write boxes into
+`endp` in place (was discarding them); `beginPath`/`endPath` now source pboxfn
+from `ND_shape(n).fns` internally (C splines.c:389/586), dropping the dead param.
+Bounded blast radius: `record_path` only fires for edges with an explicit
+`defined` record-field port (Center port is `defined=false`), so plain record
+edges are untouched.
+
+**Results**
+- `graphs-biglabel` edge `struct1:f2→struct3:here` byte-matches the oracle
+  (2 cubics); verdict `diverged → conformant`.
+- `survey:gate` PASS — **0 regressions**. 5 graphs improved, 0 regressed:
+  graphs-biglabel + graphs-big + share-structs + windows-structs → conformant;
+  2646 → structural-match.
+- Counts: conformant 574→578, structural-match 171→170, diverged 32→29.
+- `tsc --noEmit` exit 0; `record-port.test.ts` 18/18 (incl. 3 new recordPath
+  cases); 118 related test files (1431 tests) green.
+
+**Not an AD-5 escape** — genuine algorithmic port defect, fixed at origin (AD-2).
+Shared-primitive change (AD-4) guarded by the 0-regression gate.
+
+**Merge:** merge commit (mission branch) to preserve T1/T2/T3/T4 commit IDs.
 
 ## Index
 
