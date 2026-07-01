@@ -23,7 +23,7 @@ import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
 import { routeRegularByType } from './splines-route-type.js';
-import { edgeType, EDGETYPE_LINE, getMainEdge, swapEndsP, swapSpline } from './splines.js';
+import { edgeType, EDGETYPE_LINE, resolveOrigEdge, swapEndsP, swapSpline } from './splines.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
@@ -257,58 +257,52 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
   return routeChainSegmented(g, e, segs);
 }
 
-/** One merge-bounded run: segments ending at an interior spline_merge node. */
-interface ChainRun { segs: GraphEdge[]; tail: Node; head: Node; }
-
-/** Split a chain into runs at interior spline_merge boundaries — one bezier per
- *  run. @see lib/dotgen/dotsplines.c:dot_splines_ (NORMAL || spline_merge gather) */
-function splitChainRuns(segs: GraphEdge[], eHead: Node): ChainRun[] {
-  const runs: ChainRun[] = [];
-  let cur: GraphEdge[] = [];
-  for (const s of segs) {
-    cur.push(s);
-    if (splineMerge(s.head) && s.head !== eHead) { runs.push({ segs: cur, tail: cur[0].tail, head: s.head }); cur = []; }
+/**
+ * The merge-bounded run owned by one collected entry: the entry followed by
+ * `out.list[0]` successors while the head is a plain (non-merge) virtual node —
+ * C make_regular_edge's chain walk. Returns null when the entry is NOT a
+ * partial run (neither end at a splineMerge node): plain single-chain entries
+ * belong to the caller's whole-chain routers.
+ * @see lib/dotgen/dotsplines.c:make_regular_edge (while !splineMerge(hn) walk)
+ */
+function entryRunSegments(e: GraphEdge): GraphEdge[] | null {
+  const segs: GraphEdge[] = [e];
+  let hn = e.head;
+  while ((hn.info.node_type ?? NORMAL) === VIRTUAL && !splineMerge(hn)) {
+    const nxt = hn.info.out?.list[0];
+    if (nxt === undefined) return null; // broken chain — leave to the caller
+    segs.push(nxt);
+    hn = nxt.head;
   }
-  if (cur.length > 0) runs.push({ segs: cur, tail: cur[0].tail, head: cur[cur.length - 1].head });
-  return runs;
-}
-
-/** Synthetic forward edge for one run; `to_orig`=orig installs on the rep. */
-function runEdge(orig: GraphEdge, run: ChainRun): GraphEdge {
-  const tailPort = run.tail === orig.tail ? orig.info.tail_port : makePort();
-  const headPort = run.head === orig.head ? orig.info.head_port : makePort();
-  return { ...orig, tail: run.tail, head: run.head,
-    info: { ...orig.info, tail_port: tailPort, head_port: headPort, to_orig: orig, edge_type: VIRTUAL } } as GraphEdge;
-}
-
-/** Merge-bounded runs of e's forward chain, or null when none is interior. */
-function mergedChainRuns(g: Graph, e: GraphEdge): ChainRun[] | null {
-  const r = e.tail.info.rank, rh = e.head.info.rank;
-  if (g.info.rank === undefined || r === undefined || rh === undefined || rh <= r) return null;
-  const segs = chainSegments(e);
-  if (segs.length === 0 || segs[segs.length - 1].head !== e.head) return null;
-  const runs = splitChainRuns(segs, e.head);
-  return runs.length > 1 ? runs : null;
+  if (!splineMerge(e.tail) && !splineMerge(hn)) return null;
+  return segs;
 }
 
 /**
- * Route a concentrate-merged forward chain as one bezier per merge-bounded run,
- * on the representative — C's per-segment gather + clip_and_install accumulation.
- * A trunk run (starting at a merge node) is routed only by its owner (getMainEdge
- * of its first segment), so a non-rep member draws only its lead-in. False ⇒
- * plain chain; route as a single spline. @see dotsplines.c:make_regular_edge
+ * Route ONE collected entry's merge-bounded run — C's model where every
+ * fast-graph entry of a concentrate-merged chain (lead-in from the real node,
+ * trunk continuation out of a merge node, or a secondary's branch) is its own
+ * cnt=1 group (the group loop's MAINGRAPH break) and make_regular_edge walks
+ * from the entry to the first NORMAL or splineMerge node; clip_and_install
+ * then APPENDS the clipped bezier on the entry's original edge. The entry's
+ * own ports drive begin/endpath (the last segment carries the run's head
+ * port), and the install passes the ENTRY (its to_orig chain resolves the
+ * orig) with the walk's final head node, exactly as C.
+ *
+ * Returns the resolved original edge when the entry was a partial run
+ * (consumed — even if routing declined, so the caller never re-routes the
+ * whole chain), or null when the entry is a plain full chain.
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (group loop), make_regular_edge
  */
-export function routeMergedChain(g: Graph, e: GraphEdge): boolean {
-  const runs = mergedChainRuns(g, e);
-  if (runs === null) return false;
-  const sinfo = buildDotSinfo();
-  for (const run of runs) {
-    if (getMainEdge(run.segs[0]) !== e) continue; // trunk owned by another representative
-    const fe = runEdge(e, run);
-    const pts = routeChainSegmented(g, fe, run.segs);
-    if (pts !== null) clipAndInstall(fe, run.head, pts, pts.length, sinfo);
-  }
-  return e.info.spl !== undefined;
+export function routeEntryRun(g: Graph, entry: GraphEdge): GraphEdge | null {
+  const segs = entryRunSegments(entry);
+  if (segs === null) return null;
+  const last = segs[segs.length - 1];
+  const portEdge = { ...entry, head: last.head,
+    info: { ...entry.info, head_port: last.info.head_port } } as GraphEdge;
+  const pts = routeChainSegmented(g, portEdge, segs);
+  if (pts !== null) clipAndInstall(entry, last.head, pts, pts.length, buildDotSinfo());
+  return resolveOrigEdge(entry);
 }
 
 /**
