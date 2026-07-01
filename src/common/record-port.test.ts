@@ -10,11 +10,12 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderSvg } from '../index.js';
-import { recordPort, mapRecPort } from './record-port.js';
+import { recordPort, recordPath, mapRecPort } from './record-port.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
+import { makePort } from '../model/edgeInfo.js';
 import { TOP } from './splines-constants.js';
 import type { FieldT } from './types.js';
-import type { Box } from '../model/geom.js';
+import type { Box, Port } from '../model/geom.js';
 
 function field(id: string | null, b: Box, fld: FieldT[] | null = null): FieldT {
   return { size: { x: 0, y: 0 }, b, n_flds: fld ? fld.length : 0,
@@ -65,6 +66,41 @@ describe('recordPort', () => {
 
   it('empty portname → default Center port', () => {
     expect(recordPort(recordNode(), '', '').defined).toBe(false);
+  });
+});
+
+// recordPath (pboxfn): the box path from a port to the border is the top-level
+// field's full-node-height vertical strip containing the port x. Origin of the
+// graphs-biglabel fix — begin/endPath call this for record nodes so interior
+// (side==0) ports route to the port column, not the whole node's maximal bbox.
+// @see lib/common/shapes.c:record_path (line 3793)
+describe('recordPath', () => {
+  const portAt = (x: number): Port => ({ ...makePort(), p: { x, y: 0 }, defined: true });
+
+  it('port in the center field → that field strip, full node height, kptr=1', () => {
+    const rv: Box[] = [];
+    const kptr = [0];
+    const mask = recordPath(recordNode(), portAt(0), TOP, rv, kptr);
+    // f1 x-range [-16,16]; node coord (0,0), ht 36 → y in [-18,18].
+    expect(rv[0]).toEqual({ ll: { x: -16, y: -18 }, ur: { x: 16, y: 18 } });
+    expect(kptr[0]).toBe(1);
+    expect(mask).toBe(TOP);
+  });
+
+  it('port in the left field → the left field strip', () => {
+    const rv: Box[] = [];
+    const kptr = [0];
+    recordPath(recordNode(), portAt(-33), TOP, rv, kptr);
+    expect(rv[0]).toEqual({ ll: { x: -50, y: -18 }, ur: { x: -16, y: 18 } });
+  });
+
+  it('undefined port → returns 0, writes nothing', () => {
+    const rv: Box[] = [];
+    const kptr = [0];
+    const mask = recordPath(recordNode(), makePort(), TOP, rv, kptr);
+    expect(mask).toBe(0);
+    expect(kptr[0]).toBe(0);
+    expect(rv.length).toBe(0);
   });
 });
 

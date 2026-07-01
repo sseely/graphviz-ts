@@ -25,7 +25,6 @@ export interface EndPathArgs {
   endp: PathendT;
   merge: boolean;
   ranksep: number;
-  pboxfn: ShapeDesc['fns'];
 }
 
 /** Bundled endpath context to stay within MAX_PARAMS=5. */
@@ -188,12 +187,12 @@ class EndFlatSide {
 // Default path
 // ---------------------------------------------------------------------------
 
-function endDefaultPath(
-  ctx: EndCtx, et: number, pboxfn: ShapeDesc['fns'],
-): void {
+function endDefaultPath(ctx: EndCtx, et: number): void {
   const { P, e, n, endp } = ctx;
   const side = et === REGULAREDGE ? TOP : endp.sidemask;
-  const mask = invokePboxfn(pboxfn, n, e.info.head_port, side);
+  // C endpath sources pboxfn from ND_shape(n)->fns->pboxfn (splines.c:586).
+  const fns = (n.info.shape as ShapeDesc | undefined)?.fns ?? null;
+  const mask = invokePboxfn(fns, n, e.info.head_port, side, endp);
   if (mask) { endp.sidemask = mask; return; }
   endp.boxes[0] = endp.nb;
   endp.boxn = 1;
@@ -209,7 +208,7 @@ function endDefaultPath(
  * @see lib/common/splines.c:endpath
  */
 export function endPath(args: EndPathArgs): void {
-  const { P, e, et, endp, merge, ranksep, pboxfn } = args;
+  const { P, e, et, endp, merge, ranksep } = args;
   const n = e.head;
   if (e.info.head_port.dyna) {
     e.info.head_port = resolvePort(n, e.tail, e.info.head_port);
@@ -228,5 +227,5 @@ export function endPath(args: EndPathArgs): void {
   if (et === FLATEDGE && side) {
     EndFlatSide.dispatch(ctx, side); return;
   }
-  endDefaultPath(ctx, et, pboxfn);
+  endDefaultPath(ctx, et);
 }

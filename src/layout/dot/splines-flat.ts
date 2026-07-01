@@ -378,7 +378,7 @@ export function makeFlatEndBox(parts: FlatEndParts): PathendT {
   endp.sidemask = side;
   const args = {
     P, e, et: FLATEDGE, endp, merge: false,
-    ranksep, pboxfn: null,
+    ranksep,
   };
   if (isBegin) beginPath(args); else endPath(args);
   const ranks = ctx.g.info.rank!;

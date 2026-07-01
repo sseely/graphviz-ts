@@ -78,7 +78,7 @@ function chainSegments(e: GraphEdge): GraphEdge[] {
 
 /** beginPath/endPath args for a single non-merged REGULAREDGE chain segment. */
 function chainPathArgs(P: Path, e: GraphEdge, endp: PathendT, merge: boolean, ranksep: number) {
-  return { P, e, et: REGULAREDGE, endp, merge, ranksep, pboxfn: null };
+  return { P, e, et: REGULAREDGE, endp, merge, ranksep };
 }
 
 /** True when n is a non-merged virtual chain node (the C while-loop guard). */

@@ -28,7 +28,7 @@ import { polyGencode } from './poly-gencode.js';
 import { recordGencode } from './record.js';
 import { polyInside, recordInside } from './poly-inside.js';
 import { polyPort } from './compass-port.js';
-import { recordPort } from './record-port.js';
+import { recordPort, recordPath } from './record-port.js';
 
 // ---------------------------------------------------------------------------
 // Shape function tables
@@ -53,7 +53,7 @@ const RECORD_FNS: ShapeFunctions = {
   freefn: null,
   portfn: recordPort as ShapeFunctions['portfn'],
   insidefn: recordInside as ShapeFunctions['insidefn'],
-  pboxfn: null,
+  pboxfn: recordPath as ShapeFunctions['pboxfn'],
   codefn: recordGencode,
 };
 

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-01T17:17:17.558Z",
+  "generatedAt": "2026-07-01T19:32:07.043Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 574,
-    "structural-match": 171,
-    "diverged": 32,
+    "conformant": 578,
+    "structural-match": 170,
+    "diverged": 29,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 12
@@ -799,9 +799,8 @@
     {
       "id": "2646",
       "path": "2646.dot",
-      "verdict": "diverged",
-      "maxDelta": 114,
-      "firstDiffPath": "svg/g[1]/g[3]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 75
     },
     {
       "id": "2669",
@@ -1270,16 +1269,12 @@
     {
       "id": "graphs-big",
       "path": "graphs/big.gv",
-      "verdict": "diverged",
-      "maxDelta": 661.6999999999998,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-biglabel",
       "path": "graphs/biglabel.gv",
-      "verdict": "diverged",
-      "maxDelta": 111.03000000000009,
-      "firstDiffPath": "svg/g[1]/g[5]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-cairo",
@@ -1964,7 +1959,7 @@
       "id": "graphs-ports",
       "path": "graphs/ports.gv",
       "verdict": "structural-match",
-      "maxDelta": 24.370000000000005
+      "maxDelta": 10.599999999999994
     },
     {
       "id": "graphs-proc3d",
@@ -2438,7 +2433,7 @@
       "id": "linux.x86-ports_dot",
       "path": "linux.x86/ports_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 24.700000000000045
+      "maxDelta": 10.599999999999994
     },
     {
       "id": "linux.x86-radius_dot",
@@ -2650,7 +2645,7 @@
       "id": "nshare-ports_dot",
       "path": "nshare/ports_dot.gv",
       "verdict": "structural-match",
-      "maxDelta": 24.370000000000005
+      "maxDelta": 10.599999999999994
     },
     {
       "id": "nshare-radius_dot",
@@ -3565,8 +3560,7 @@
     {
       "id": "share-structs",
       "path": "share/structs.gv",
-      "verdict": "structural-match",
-      "maxDelta": 16.91000000000001
+      "verdict": "conformant"
     },
     {
       "id": "share-train11",
@@ -4149,8 +4143,7 @@
     {
       "id": "windows-structs",
       "path": "windows/structs.gv",
-      "verdict": "structural-match",
-      "maxDelta": 17.35000000000001
+      "verdict": "conformant"
     },
     {
       "id": "windows-train11",
