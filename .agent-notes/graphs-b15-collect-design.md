@@ -81,3 +81,39 @@ routing for splineMerge-sourced back-edge chains. Blast radius = `splines.ts`
 dispatch + `edge-route-chain.ts` chain routing. The 789-corpus `survey:gate`
 (0 regressions, maxDelta guard) is the guard (AD-4). Not an AD-5 escape — genuine
 port defect with a now-clear, de-risked fix path.
+
+## T2 attempt-1 + deeper dive (2026-07-01) — fix locus sharpened
+
+**Reproduced maxDelta 432** with collect(rank-array) + secondary router folded
+into the lone dispatch. NOT the 6 targets — 8 LONG edges doubled (3 paths vs 2:
+Stand:Normal→JumpVertical, Stand:Target→JumpVertical, Walk→Strafe, Walk→Fall,
+WalkStepUp→Fall, Strafe→Fall, Fall→LandRunning, HoverRest→Fall).
+
+**Group-structure probe** (`__G__`): each doubling orig fragments into MULTIPLE
+cnt=1 groups sharing one getMainEdge, e.g. Stand:JumpVertical → 4 groups:
+`Stand->v`[NORMAL tail, real tail port, EMPTY head port] and
+`left->JV`[splineMerge, empty ports → portGateEdge=main edge, head port
+JumpVertical:In], ×2 origs (Normal/Target samehead-merged).
+
+**Mechanism:** `groupSize` (`splines.ts:339`) splits consecutive same-getMainEdge
+CHAIN SEGMENTS via the cross-rank `portEq` check. Asymmetry: for `Stand->v`,
+`portGateEdge`=e0 (has tail port) carries the SEGMENT's empty head_port; for
+`left->JV`, `portGateEdge`=main edge carries JumpVertical:In → `portEq(head)`
+mismatches → split. C's group loop (`dotsplines.c:344-383`) breaks only on
+getmainedge (+ ED_adjacent/label/`-C` MAINGRAPH), and `make_regular_edge` routes
+the whole getmainedge group once, handling multi-orig + multi-segment internally.
+
+**Scope (larger than one fn):** the port's concentrate merge (`conc.ts`) yields
+TWO separate normal-tail chains from `Stand` (one per samehead orig), vs C's
+merged topology. So a faithful fix spans: (1) `conc.ts` merge topology,
+(2) collect (rank array — done, correct), (3) `groupSize` (stop fragmenting
+same-getmainedge segments; mirror C's ea/eb + portcmp exactly), (4) the group
+router = port C's `make_regular_edge` group handling (route each getmainedge
+group's distinct origs ONCE using ALL their segments) replacing the
+dedupByOrig/routeMergedChain/routeLoneEdge/secondary decomposition.
+
+**Status:** genuine multi-component rework of the core routing dispatch.
+Not a bounded change; needs a dedicated focused effort with the C oracle. Two
+independent sessions now converge here. Branch `fix/graphs-b15-edgecmp` holds
+docs only (src clean); b15 stays a documented edge-count divergence until the
+rework lands.
