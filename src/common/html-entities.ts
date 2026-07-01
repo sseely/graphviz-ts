@@ -259,3 +259,41 @@ export const HTML_ENTITIES: Readonly<Record<string, number>> = {
   "zwj": 8205,
   "zwnj": 8204,
 };
+
+/** The five basic XML/HTML entities → code point. */
+const BASIC_ENTITIES: Readonly<Record<string, number>> = {
+  amp: 0x26, lt: 0x3c, gt: 0x3e, quot: 0x22, apos: 0x27,
+};
+
+/** Decode a numeric entity body (`#123`, `#x1F`) to its code point, or null. */
+function numericEntityValue(body: string): number | null {
+  const hex = body[1] === 'x' || body[1] === 'X';
+  const v = hex ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
+  return Number.isFinite(v) && v > 0 && v <= 0x10ffff ? v : null;
+}
+
+/**
+ * Decode one entity body (`amp`, `alpha`, `#123`, `#x1F`) to its code point, or
+ * null for an unknown name. Named entities cover the five basic XML entities
+ * plus the full HTML 4 table (Symbol etc.). @see lib/common/utils.c:htmlEntity
+ */
+function entityValue(body: string): number | null {
+  if (body[0] === '#') return numericEntityValue(body);
+  return BASIC_ENTITIES[body] ?? HTML_ENTITIES[body] ?? null;
+}
+
+/**
+ * Decode XML/numeric (&#NNN; / &#xHH;) and HTML 4 named (`&alpha;`) entities to
+ * their characters, leaving unknown names literal — C's make_label UTF-8 branch.
+ * Latin-1 inputs are decoded at the byte->string boundary by the caller (the
+ * survey's render-one), so this UTF-8 branch covers them too.
+ * @see lib/common/utils.c:htmlEntityUTF8 / htmlEntity
+ * @see lib/common/labels.c:make_label (CHAR_LATIN1 vs default)
+ */
+export function htmlEntityUTF8(s: string): string {
+  if (s.indexOf('&') < 0) return s;
+  return s.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|[A-Za-z]+);/g, (m, body: string) => {
+    const v = entityValue(body);
+    return v === null ? m : String.fromCodePoint(v);
+  });
+}

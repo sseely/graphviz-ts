@@ -454,12 +454,33 @@ export function posHtmlLabel(
  *
  * @see lib/common/htmltable.c:make_html_label
  */
+/**
+ * Propagate pen (border) color down the table tree. A table with no explicit
+ * COLOR inherits `parentColor`; each cell inherits the (possibly inherited)
+ * table color; each nested table inherits its enclosing cell's color. Mirrors
+ * C, which defaults the top table's pencolor to getPenColor(obj) then copies
+ * parent->child during processTbl.
+ * @see lib/common/htmltable.c:1911 (top table), :1406-1407 (cell), :1556-1557
+ */
+function inheritTablePenColor(tbl: HtmlTable, parentColor: string | undefined): void {
+  if (tbl.color === undefined) tbl.color = parentColor;
+  const tblColor = tbl.color;
+  for (const row of tbl.rows) {
+    for (const cell of row.cells) {
+      if (cell.color === undefined) cell.color = tblColor;
+      for (const item of cell.content) {
+        if (item.kind === 'table') inheritTablePenColor(item, cell.color);
+      }
+    }
+  }
+}
+
 export function makeHtmlLabel(
   content: string,
-  finfo: HtmlFontInfo & { imageSizer?: ImageSizer },
+  finfo: HtmlFontInfo & { imageSizer?: ImageSizer; pencolor?: string },
   measurer: TextMeasurer,
 ): TextlabelT {
-  const { fontname, fontsize, fontcolor, imageSizer } = finfo;
+  const { fontname, fontsize, fontcolor, imageSizer, pencolor } = finfo;
   let lbl: HtmlLabel;
   try {
     lbl = parseHtmlLabel(content);
@@ -469,6 +490,10 @@ export function makeHtmlLabel(
     // @see lib/common/htmlparse.y (cleanup + YYABORT), htmllex.c htmlerror
     return makeLabel('', fontname, fontsize, fontcolor, measurer);
   }
+  // A top-level table with no explicit COLOR inherits the object's pen color,
+  // which then flows table->cell->nested-table.
+  // @see lib/common/htmltable.c:1911 (getPenColor), :1406/:1556 (inheritance)
+  if (lbl.kind === 'table') inheritTablePenColor(lbl.table, pencolor);
   sizeHtmlLabel(lbl, measurer, {
     fontsize, fontname, imageSizer,
   });
