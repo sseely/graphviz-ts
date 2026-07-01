@@ -145,6 +145,65 @@
   structParty:S x=176.5). Needs a follow-up pass. The fontsize fix is independent
   and lands on its own merits (pending 0-regression survey).
 
+## Observation: two more fixes take 1949 to height=282 (exact) — RESOLVED to ULP+comments
+- Instrumenting the aux node dims + splines with the fontsize fix in place showed
+  node sizing is NOT the height driver: forcing the aux nodes to match C exactly
+  still left height 304. The residual is entirely the aux SPLINE routing. Two
+  fixes together take 1949 to height=282 (byte-diff 210->66 lines, residual =
+  HTML comments the port never emits + a ~5px "Entry:" HTML-cell text x-offset):
+  - **Fix A — aux ignores fixedsize (`cloneNode`)**: C re-sizes the cloned node
+    in the aux via dot_init_node->gv_nodesize where `fixedsize` is not honored;
+    a fixedsize circle with an HTML label grows to enclose the label
+    (structDefaultAuto aux ht 66.63 vs the original's clamped 36). `cloneNode`
+    now skips copying `fixedsize`. Alone this is a no-op for 1949's OUTPUT (node
+    size doesn't drive the height) but makes the aux nodes byte-exact vs C.
+  - **Fix B — skip the compensating swap in the aux (`routeFaithfulAdjacentBack`)**:
+    the aux `:S` clone (structParty rank1 -> structDefaultAuto rank0, a back edge
+    in the aux) is routed via makeFwdEdge + clipAndInstall. Instrumentation
+    (`sflagBefore=1`) showed the port's clipAndInstall already installs the spline
+    in the edge's tail->head orientation, so the subsequent `swapSpline`
+    DOUBLE-reverses it -> the `:S` spline came out mirrored (started at
+    structDefaultAuto, looped the wrong way). C's aux make_regular_edge produces
+    forward-geometry that its swap then corrects; the port pre-orients, so the
+    swap is skipped when `g` is the flat-adj aux (`g.name === 'auxg'`). This is a
+    RESULT-matching scope, not a faithful clipAndInstall correction — the deeper
+    faithful fix is to make clipAndInstall install forward-geometry consistently
+    in the aux, but that is shared, higher-risk code. Documented as a bounded
+    compromise; survey is the guardrail.
+- **Remaining residual after A+B**: the "Entry:"/"lic..." HTML-cell text is ~3-6px
+  off in x (left-justified cell text alignment) — a separate minor HTML-table
+  text-placement issue, keeps 1949 at structural-match rather than conformant.
+- **Confidence**: High — height=282 exact, `:S` starts at structParty (175.48 vs
+  native 176.53), proven by paired render + the byte-diff collapse to comments.
+
+## Observation: Fix B (aux swap-skip) REVERTED — breaks 241_0, no local discriminator
+- Applied Fix A (cloneNode skip fixedsize) + Fix B (skip the compensating swap in
+  the aux, gated on `g.name==='auxg'`) and ran the full survey. Result: 1949
+  height 282 / maxDelta 100.89->38.59, BUT **241_0 regressed conformant ->
+  structural-match** (gate "0 regressions" did not flag conformant->structural, but
+  it IS a byte-match loss). 241_0 (`3:sw->2:se`) is another flat-adj aux back edge
+  that RELIES on the swap ([[flat-edge-241-is-y-only]], "clip forward then
+  swapSpline").
+- Instrumented both aux back edges pre-swap. They are IDENTICAL:
+  `swapEndsP=true, sflagBefore=1, eflagBefore=0`. 1949 needs NO swap (skip ->
+  correct); 241_0 needs the swap (skip -> wrong). Same local state, opposite
+  required outcome -> **no clean per-edge gate exists**. The only structural
+  difference: 1949 `:S` has one port (tail only), 241_0 has BOTH ports defined.
+- **Root of the blocker**: the port's `routeRegularEdgeFaithful(fwd)` +
+  `clipAndInstall` produce the SAME pre-swap orientation (sflag=1) for both fwd
+  views, whereas C's aux `make_regular_edge` produces DIFFERENT pre-swap sflags
+  (so its single swap lands both correct). I.e. the port assigns sflag/eflag to
+  the wrong end for the 1949 fwd view (head-port fwd edge should carry the flag on
+  `ep`, not `sp`). The faithful fix is in the port's fwd-edge routing / clip flag
+  assignment (`edge-route-faithful.ts` / `splines-clip.ts`) — shared, higher-risk
+  code, NOT a flat-adj-scoped change.
+- **Decision**: reverted Fix A + Fix B; kept only the committed nodeDefaultsSnapshot
+  fix (1949 diverged->structural-match, 0 regressions). Full byte-match of 1949 is
+  blocked on the shared fwd-routing flag-assignment fix + the minor "Entry:" HTML-
+  cell text x-offset. Recommend a dedicated follow-up mission with the full survey
+  as the guardrail (the 241_0 conflict makes any aux-swap change require corpus-
+  wide validation).
+
 ## Observation: D2 — HTML cell border color not inheriting node pen color
 - **Context**: structParty node `color="red"`, HTML-table label with
   `<TD BORDER="1" SIDES="B">Party</TD>`.
