@@ -1,25 +1,29 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
-# Component map — concentrate edge path
+# Component map — the collect + group dispatch
 
-The concentrate path the 6 dropped edges flow through. Batch 1 instruments each
-hop to find where the port first diverges from C.
+The fix is in `dotSplines_`'s collect. Everything else (sort, group, route)
+already exists and is correct.
 
 ```mermaid
 graph TD
-  IN["b15.gv: concentrate=true<br/>record ports, 2 clusters"] --> CLASS["classify.ts (class2.c)<br/>concentrateOrMerge / handleMultiEdge<br/>marks IGNORED only same tail+head+ports"]
-  CLASS --> POS["position.ts:168<br/>calls dotConcentrate(g)"]
-  POS --> CONC["conc.ts (conc.c)<br/>dotConcentrate → mergevirtual<br/>rebuild_vlists (degenerate-rank truncate)"]
-  CONC --> ROUTE["edge-route.ts:445-460<br/>IGNORED-edge handling"]
-  ROUTE --> SPL["splines.ts:390-410<br/>concentrate-merged chain routing"]
-  SPL --> SVG["SVG emit: edge <g> blocks<br/>oracle 153 / port 147 (−6)"]
+  CONC["conc.ts dotConcentrate (DOWN sweep)<br/>merges 6 chains into virtual splineMerge node 'left'<br/>left.out.size = 6, to_virt wired"] --> COLLECT
+
+  COLLECT["splines.ts:521 COLLECT (THE BUG)<br/>iterates g.nodes.values() = NORMAL only<br/>→ virtual 'left' skipped → 6 edges never collected"]:::suspect
+  COLLECT --> SORT["splines.ts:218 edges.sort(edgecmp)<br/>(already correct)"]
+  SORT --> GROUP["splines.ts:341 groupSize<br/>contiguous same getMainEdge → one group<br/>(already correct)"]
+  GROUP --> ROUTE["routeEdgeGroup / dispatchEdgeGroup<br/>routes each group ONCE (already correct)"]
+  ROUTE --> SVG["SVG emit: edge g blocks<br/>oracle 153 / port 147 (−6)"]
+
+  FIX["FIX: collect from rank array / nlist<br/>incl. VIRTUAL where splineMerge(n)<br/>= dotsplines.c:281-299"]:::fix
+  FIX -.replaces.-> COLLECT
 
   classDef suspect fill:#fde,stroke:#a33;
-  class CONC,ROUTE,SPL suspect
-
-  note["6 dropped edges: different tails,<br/>5 → HoverRest:In, 1 → Stand:In.<br/>NOT parallel multi-edges → CLASS ruled out as primary."]
-  note -.-> CLASS
+  classDef fix fill:#dfe,stroke:#3a3;
 ```
 
-C invariant (the spec): `dot_concentrate` merges only VIRTUAL nodes that share
-tail/head AND pass `portcmp`; it never deletes original edges, so `dotsplines`
-emits all 153. The port drops 6 — the defect is in a suspect node (pink) above.
+C spec: `dot_splines_` collects from `GD_rank`/`GD_nlist` including virtual nodes
+when `spline_merge(n)` (`dotsplines.c:281-299`), sorts by `edgecmp`, groups by
+`getmainedge`, routes each group once (`:328-383`). The port matches every hop
+EXCEPT the collect. The prior attempt bypassed the group loop with a side router
+→ doubled beziers; the fix routes the new edges through the existing loop so each
+`getMainEdge` group routes once.

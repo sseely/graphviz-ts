@@ -1,90 +1,115 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
-# Mission: root-cause and fix graphs-b15 (concentrate drops 6 edges)
+# Mission: fix graphs-b15 — port C's collect + edgecmp/getmainedge grouping
 
 ## Objective
 
-`graphs-b15` is `diverged` with **maxDelta 0** — every drawn element matches the
-oracle geometrically; the divergence is purely structural (`svg/g[1][childCount]`).
-Under `concentrate=true`, the port emits **147 edges vs the oracle's 153 — it
-drops 6 edges**. Find the mechanism (instrument C vs port), apply a **faithful**
-fix to the concentrate path, and restore `graphs-b15` to **conformant** with
-**zero net parity regressions**.
+`graphs-b15` (`concentrate=true`) is `diverged`, **maxDelta 0**,
+`svg/g[1][childCount]`: the port emits **147 edges vs the oracle's 153 — it
+drops 6**. Diagnosis is **already complete** (prior attempt, see below). The
+remaining work is the **faithful fix a prior session deferred**: port C's
+`dot_splines_` edge **collect** (rank-array iteration incl. virtual
+`splineMerge` nodes) so the merged secondary chains are routed, and route them
+through the port's **existing** `edgecmp`-sort + `getMainEdge`-group +
+`routeEdgeGroup` dispatch so **each original routes exactly once** — restoring
+the 6 edges **without** the doubled-bezier regression the naive fix caused.
 
-## Confirmed symptom (pre-mission)
+## Inherited diagnosis (do NOT redo)
 
-- Input `~/git/graphviz/tests/graphs/b15.gv`: `concentrate=true`, `shape=record`
-  nodes, 2 clusters, 180 edges.
-- Oracle 153 edge `<g>` blocks; port 147. Same 36 nodes, 5 clusters. maxDelta 0.
-- The 6 dropped edges (oracle-present, port-absent), all with record ports:
-  - `FallFaceBack:Normal->HoverRest:In`
-  - `HoverFaceBack:Normal->HoverRest:In`
-  - `HoverForwardToStop:Normal->HoverRest:In`
-  - `HoverStrafeToStop:Target->HoverRest:In`
-  - `MidJumpFaceBack:Normal->HoverRest:In`
-  - `LandVertical:Target->Stand:In`
-- They have **different tails** → not parallel multi-edges → the
-  `classify.ts:concentrateOrMerge` IGNORED path (gated on same tail+head+ports)
-  is **not** the cause. C's `dot_concentrate` (conc.c) merges only VIRTUAL nodes
-  (portcmp-gated) and never deletes originals, so C emits all 153. Root cause is
-  in the port's `conc.ts` virtual-node merge / `rebuild_vlists` truncation or the
-  concentrated-chain emission path — Batch 1 pins which.
+Root cause (prior T1, preserved at
+`git show fix/graphs-b15:.agent-notes/graphs-b15-concentrate-drop.md`):
+`dotSplines_` (`src/layout/dot/splines.ts:521`) collects via
+`g.nodes.values()` = NORMAL nodes only. `dotConcentrate`'s DOWN sweep merges the
+6 back-edge chains into a **virtual** `splineMerge` node `left` that owns the 5
+secondary chains' out-edges; being virtual, `left` is never visited → those
+edges get no `ED_spl` → no `<g>`. C iterates the **rank array** including virtual
+nodes when `splineMerge(n)` (`dotsplines.c:281-299`).
 
-## Blast radius
+Why the prior fix was reverted (commit `a124fed`): iterating `nlist` emitted all
+153 edges but **doubled ~40 beziers** (maxDelta 0→432) because it added a
+*bespoke* `routeConcentrateSecondaryChain` running alongside the dispatch. Two
+boolean guards failed. Conclusion: route the secondary edges **through the
+existing group dispatch** (each `getMainEdge` group routed once), not a side
+router.
 
-Concentrate edge handling only. Non-concentrate graphs are unaffected (the
-concentrate branch is gated on `concentrate=true`). Survey gate is the guard.
+## Confirmed present in the port (grounding)
+
+`getMainEdge` (`splines.ts:102`), `edgecmp` (`splines.ts:218`), `groupSize`
+(groups contiguous same-`getMainEdge` edges, `splines.ts:341`), and
+`routeEdgeGroup`/`dispatchEdgeGroup` already exist. The dispatch skeleton is
+correct — the gap is the **collect** step plus ensuring `getMainEdge`/`to_virt`
+coalesces the concentrate secondary edges into their mains' group.
 
 ## Branch
 
-`fix/graphs-b15` (merge commit on completion — preserves per-task commit IDs).
+`fix/graphs-b15-edgecmp` (branch from `main`). The prior `fix/graphs-b15`
+branch holds the diagnosis + reverted attempt — preserved, not reused.
 
 ## Constraints
 
-**Faithful port.** C (`lib/dotgen/conc.c`, `class2.c`, `dotsplines.c`) is the
-spec. Mirror its virtual-node-merge + portcmp model exactly. Do **not** "fix" the
-count with a dedup-key patch that diverges from C's algorithm.
+**Stop conditions**
+- The doubled-bezier regression reappears (any maxDelta rise vs HEAD) and cannot
+  be resolved *at the grouping level* within 3 attempts on the same site.
+- Any other corpus id regresses in `survey:gate` (vs committed HEAD).
+- The fix needs a file outside the declared write-set.
+- The root cause of a residual traces to irreducible FP/libm — STOP with a
+  controlled experiment.
+- Two consecutive gate failures on the same check.
 
-### Stop conditions
-- `rules-gate` shows ANY regression vs the COMMITTED HEAD baseline — STOP, do not
-  refresh the baseline to mask it.
-- The fix needs editing a file outside the declared write-set.
-- The root cause traces to an irreducible FP/libm tie-break — STOP with a
-  controlled experiment; do not silently accept.
-- 2 consecutive quality-gate failures on the same check; or the same line changed
-  3× without resolving the same failure.
+**Push-forward (decide and log)**
+- Probe/instrumentation wording; journal phrasing; which concentrate graphs to
+  spot-check beyond the gate.
+- Whether a `getMainEdge`/`to_virt` adjustment is needed vs collect-only.
+- Unit-test shape; comment/commit wording.
 
-### Push-forward conditions
-- Probe naming, instrumentation wording, journal phrasing, which extra concentrate
-  graphs to spot-check. Stylistic choices with no behavioral effect.
+## Architecture decisions (AD-1…AD-5)
+
+See [decisions.md](decisions.md). Headlines: **faithful collect port, route
+through the existing group dispatch — NO bespoke secondary router, NO boolean
+guard** (both failed before); **done = b15 conformant AND maxDelta ≤ HEAD** (the
+432 doubled-bezier trap — count alone is not the bar); **gate vs committed HEAD**,
+0 regressions.
 
 ## Quality gates
 
-| command | pass | on_fail |
-|---|---|---|
-| `npm run typecheck` | exit 0 | fix_and_rerun |
-| `npx vitest run src/layout/dot/conc src/layout/dot/classify src/layout/dot/splines` | exit 0 | fix_and_rerun |
-| `graphs-b15` re-rendered | 153 edge blocks; the 6 named edges present | stop |
-| `npm run survey && npm run survey:gate` (vs HEAD baseline) | exit 0 (0 regressions) | stop |
-| `git diff --name-only` | matches declared write-set only | stop |
+```
+- command: npx tsc --noEmit
+  pass: exit 0
+  on_fail: fix_and_rerun
+- command: npx vitest run src/layout/dot/splines src/layout/dot/conc src/layout/dot/classify
+  pass: exit 0
+  on_fail: fix_and_rerun
+- command: b15 re-render
+  pass: 153 edge blocks, all 6 named edges present, AND compareSvg maxDelta ~0
+  on_fail: stop
+- command: npm run survey && npm run survey:gate   # vs committed HEAD baseline
+  pass: exit 0; graphs-b15 conformant; NO id regressed (maxDelta guard)
+  on_fail: stop
+- command: git diff --name-only
+  pass: only src/layout/dot/splines.ts (+ its .test.ts) [+ conc.ts/classify.ts
+        if the mechanism implicates them], test/corpus/parity*.json, PARITY.md,
+        plans/**, .agent-notes/**
+  on_fail: stop
+```
 
-Baseline-refresh recipe + the **contaminated-baseline gotcha** (gate against
-committed HEAD, not the on-disk parity.json): see [batch-2/T3](batch-2/T3-regression-survey-gate.md).
+Note: survey npm scripts invoke a bare `tsx`; if `node_modules/.bin/tsx` is
+absent, run via the npx-cached tsx with `TSX_BIN` set (decisions.md AD-1 note).
 
 ## Batches
 
-| Batch | Status | Tasks |
+| Batch | Status | Doc |
 |---|---|---|
-| [Batch 1 — Instrument](batch-1/overview.md) | [ ] | T1 |
-| [Batch 2 — Fix + verify](batch-2/overview.md) | [ ] | T2, T3 |
+| 1 — design the collect + grouping port | [ ] | [batch-1/overview.md](batch-1/overview.md) |
+| 2 — implement + regression baseline | [ ] | [batch-2/overview.md](batch-2/overview.md) |
 
 ## Index
 
-- [decisions.md](decisions.md) — architecture decisions
-- [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-instrument-concentrate-drop.md)
-- [batch-2/overview.md](batch-2/overview.md) · [T2](batch-2/T2-apply-faithful-fix.md) · [T3](batch-2/T3-regression-survey-gate.md)
-- [diagrams/component-map.md](diagrams/component-map.md)
+- [decisions.md](decisions.md) — AD-1…AD-5
+- [batch-1/overview.md](batch-1/overview.md) · [T1](batch-1/T1-design-collect-grouping.md)
+- [batch-2/overview.md](batch-2/overview.md) · [T2](batch-2/T2-port-collect-grouping.md) · [T3](batch-2/T3-regression-survey-gate.md)
+- [diagrams/data-flow.md](diagrams/data-flow.md) · [diagrams/component-map.md](diagrams/component-map.md)
 - [decision-journal.md](decision-journal.md)
-- Precedent: `plans/fix-1213-splines/`, `plans/fix-graphs-shells/` (instrument→fix→gate
-  shape). Memories: `concentrate-trunk-2559-done`, `concentrate-arrowhead-done`,
-  `2361-ortho-concentrate-dedup-done`, `b69-concentrate-undermerge` (note: the
-  b15 x-coord claim there is STALE — current diff is the structural edge drop).
+- Prior diagnosis: `git show fix/graphs-b15:.agent-notes/graphs-b15-concentrate-drop.md`;
+  prior attempt commits `ff0a6d6..a124fed` on `fix/graphs-b15`.
+- Memory: `concentrate-trunk-2559-done`, `b69-concentrate-undermerge`,
+  `2361-ortho-concentrate-dedup-done`, `map-vs-nlist-iteration-hazard`,
+  `byte-match-is-the-bar`, `recover-slack-and-c-harness`.
