@@ -187,12 +187,12 @@ class BeginFlatSide {
 // Default path
 // ---------------------------------------------------------------------------
 
-function beginDefaultPath(
-  ctx: BeginCtx, et: number, pboxfn: ShapeDesc['fns'],
-): void {
+function beginDefaultPath(ctx: BeginCtx, et: number): void {
   const { P, e, n, endp } = ctx;
   const side = et === REGULAREDGE ? BOTTOM : endp.sidemask;
-  const mask = invokePboxfn(pboxfn, n, e.info.tail_port, side);
+  // C beginpath sources pboxfn from ND_shape(n)->fns->pboxfn (splines.c:389).
+  const fns = (n.info.shape as ShapeDesc | undefined)?.fns ?? null;
+  const mask = invokePboxfn(fns, n, e.info.tail_port, side, endp);
   if (mask) { endp.sidemask = mask; return; }
   endp.boxes[0] = endp.nb;
   endp.boxn = 1;
@@ -211,7 +211,6 @@ export interface BeginPathArgs {
   endp: PathendT;
   merge: boolean;
   ranksep: number;
-  pboxfn: ShapeDesc['fns'];
 }
 
 /**
@@ -219,7 +218,7 @@ export interface BeginPathArgs {
  * @see lib/common/splines.c:beginpath
  */
 export function beginPath(args: BeginPathArgs): void {
-  const { P, e, et, endp, merge, ranksep, pboxfn } = args;
+  const { P, e, et, endp, merge, ranksep } = args;
   const n = e.tail;
   if (e.info.tail_port.dyna) {
     e.info.tail_port = resolvePort(n, e.head, e.info.tail_port);
@@ -240,5 +239,5 @@ export function beginPath(args: BeginPathArgs): void {
   if (et === FLATEDGE && side) {
     BeginFlatSide.dispatch(ctx, side); return;
   }
-  beginDefaultPath(ctx, et, pboxfn);
+  beginDefaultPath(ctx, et);
 }

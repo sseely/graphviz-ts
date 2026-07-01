@@ -203,18 +203,23 @@ export function applyEndDefaultBoxes(P: Path, et: number, endp: PathendT): void 
 // ---------------------------------------------------------------------------
 
 /**
- * Calls pboxfn if available; returns the mask (0 if not available/failed).
+ * Call the node shape's pboxfn if defined, writing its boxes directly into
+ * `endp.boxes`/`endp.boxn` (C passes `&endp->boxes[0], &endp->boxn`). Returns
+ * the side mask (0 if no pboxfn or it declined). @see lib/common/splines.c
+ * beginpath (line 544) / endpath (line 742).
  */
 export function invokePboxfn(
-  pboxfn: ShapeDesc['fns'],
+  fns: ShapeDesc['fns'],
   n: Node,
   port: Edge['info']['tail_port'],
   side: number,
+  endp: PathendT,
 ): number {
-  if (!pboxfn?.pboxfn) return 0;
-  const rv: Box[] = [];
-  const kptr: number[] = [0];
-  return pboxfn.pboxfn(n, port, side, rv, kptr);
+  if (!fns?.pboxfn) return 0;
+  const kptr: number[] = [endp.boxn];
+  const mask = fns.pboxfn(n, port, side, endp.boxes, kptr);
+  endp.boxn = kptr[0];
+  return mask;
 }
 
 // ---------------------------------------------------------------------------

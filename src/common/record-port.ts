@@ -10,7 +10,7 @@
  */
 
 import type { Node } from '../model/node.js';
-import type { Port } from '../model/geom.js';
+import type { Box, Port } from '../model/geom.js';
 import type { FieldT } from './types.js';
 import { makePort } from '../model/edgeInfo.js';
 import { compassPort } from './compass-port.js';
@@ -52,4 +52,38 @@ export function recordPort(n: Node, portname: string, compass: string): Port {
     compassPort(n, { bp: f.b, compass: portname, sides: ALL_SIDES }, rv);
   }
   return rv;
+}
+
+/**
+ * pboxfn for record shapes: "generate box path from port to border". Emit ONE
+ * box — the full-node-height vertical strip of the TOP-LEVEL field whose axis
+ * range brackets the port point `prt.p.x` — into `rv[0]`, set `kptr[0]=1`, and
+ * return `side`. Returns 0 when the port is undefined. Without this, a record
+ * head/tail port with no explicit side (interior cell, side==0) falls back to
+ * the node's maximal bbox and the spline cuts straight across instead of
+ * hugging the port column. @see lib/common/shapes.c:record_path (line 3793)
+ */
+export function recordPath(n: Node, prt: Port, side: number, rv: Box[], kptr: number[]): number {
+  if (!prt.defined) return 0;
+  const info = n.info.shape_info as FieldT | undefined;
+  if (info === undefined || info.fld === null) return side;
+  const flip = n.root.info.flip === true; // GD_flip
+  const cx = n.info.coord.x;
+  const cy = n.info.coord.y;
+  const ht2 = n.info.ht / 2;
+  for (let i = 0; i < info.n_flds; i++) {
+    const fb = info.fld[i]!.b;
+    // C: axis is x for TB/BT, y for LR/RL (GD_flip).
+    const ls = flip ? fb.ll.y : fb.ll.x;
+    const rs = flip ? fb.ur.y : fb.ur.x;
+    if (ls <= prt.p.x && prt.p.x <= rs) {
+      // C sets LL.x/LL.y/UR.x in-branch, then UR.y = coord.y + ht/2 for both.
+      rv[0] = flip
+        ? { ll: { x: fb.ll.y + cx, y: fb.ll.x + cy }, ur: { x: fb.ur.y + cx, y: cy + ht2 } }
+        : { ll: { x: cx + ls, y: cy - ht2 }, ur: { x: cx + rs, y: cy + ht2 } };
+      kptr[0] = 1;
+      break;
+    }
+  }
+  return side;
 }
