@@ -108,6 +108,7 @@ absent, run via the npx-cached tsx with `TSX_BIN` set (decisions.md AD-1 note).
 - [batch-2/overview.md](batch-2/overview.md) · [T2](batch-2/T2-port-collect-grouping.md) · [T3](batch-2/T3-regression-survey-gate.md)
 - [diagrams/data-flow.md](diagrams/data-flow.md) · [diagrams/component-map.md](diagrams/component-map.md)
 - [decision-journal.md](decision-journal.md)
+- [resume.md](resume.md) — paste-ready prompt for the fresh make_regular_edge rewrite session
 - Prior diagnosis: `git show fix/graphs-b15:.agent-notes/graphs-b15-concentrate-drop.md`;
   prior attempt commits `ff0a6d6..a124fed` on `fix/graphs-b15`.
 - Memory: `concentrate-trunk-2559-done`, `b69-concentrate-undermerge`,
