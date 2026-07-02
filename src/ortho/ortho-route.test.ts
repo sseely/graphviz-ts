@@ -130,3 +130,55 @@ describe("ortho routing — oracle-pinned vs native C", () => {
     });
   }
 });
+
+
+// ─── convertSPtoRoute bend-at-end regression (mission fix-2183) ──────────────
+//
+// C advances cp/prevbp/bp1 BEFORE emitting the extra segment when the path
+// bends right at its end (ortho.c:182-203); calling buildLastSeg with the
+// stale values put that final segment in the pre-bend CHANNEL, so its track
+// coordinate landed ~60pt from the head node (corpus 2183 edge m->e dangled).
+// Property locked here: every ortho edge path terminates on/inside its head
+// node's bounding box (small tolerance for the arrowhead gap).
+
+import { renderSvg } from '../index.js';
+
+const G2183ISH = `strict digraph {
+  concentrate=true
+  splines=ortho
+  node [shape=rectangle]
+  subgraph cluster_A {
+    label="A"
+    a -> b -> c -> d
+    e -> f -> g
+    h
+  }
+  subgraph cluster_B { label="B"; i -> j -> k -> l }
+  c -> m -> e [style=dotted]
+  l -> e [style=dashed]
+}`;
+
+describe('ortho spline endpoints attach to their head node (2183 m->e class)', () => {
+  it('no edge path ends away from its head box', () => {
+    const svg = renderSvg(G2183ISH, 'dot');
+    const boxes = new Map<string, { x0: number; x1: number; y0: number; y1: number }>();
+    for (const nm of svg.matchAll(/class="node[^"]*">\s*<title>([^<]*)<\/title>(.*?)<\/g>/gs)) {
+      const nums = [...nm[2].matchAll(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g)].map((m) => [+m[1], +m[2]]);
+      if (nums.length === 0) continue;
+      const xs = nums.map((p) => p[0]);
+      const ys = nums.map((p) => p[1]);
+      boxes.set(nm[1], { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) });
+    }
+    const TOL = 14; // arrowhead length + clip slack
+    for (const em of svg.matchAll(/class="edge[^"]*">\s*<title>([^<]*)<\/title>\s*<path[^>]*d="([^"]*)"/gs)) {
+      const head = em[1].replace(/&#45;&gt;/, ' ').split(' ')[1];
+      const box = boxes.get(head);
+      if (!box) continue;
+      const pts = [...em[2].matchAll(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g)].map((m) => [+m[1], +m[2]]);
+      const [ex, ey] = pts[pts.length - 1];
+      const dx = Math.max(box.x0 - ex, ex - box.x1, 0);
+      const dy = Math.max(box.y0 - ey, ey - box.y1, 0);
+      expect(dx + dy, `edge end (` + ex + `,` + ey + `) vs head ` + head + ` box`).toBeLessThanOrEqual(TOL);
+    }
+  });
+});
