@@ -19,6 +19,15 @@
       "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
     },
     {
+      "match": { "id": "2796" },
+      "class": "A4",
+      "scope": "parity",
+      "verdict": "diverged",
+      "bound": "whole-layout; oracle broken (overlapping clusters, lost edge)",
+      "reason": "oracle lays out from an acknowledged-broken init_rank recovery state (aux-graph cycle; upstream xfail #2796, draft MR !4849, cf. #2471); ranking inputs verified line-identical, x-aux wall edges differ at makeLrvn/keepoutOthernodes making the port's aux graph acyclic — the port meets the issue's expectations (0 overlapping clusters, 213/213 edges). Do not replicate; re-measure when upstream fixes #2796.",
+      "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-trouble-in-init_rank-2796"
+    },
+    {
       "match": { "id": "graphs-structs" },
       "class": "R-oracle",
       "scope": "rules",

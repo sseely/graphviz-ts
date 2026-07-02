@@ -370,6 +370,79 @@ translation-equivariance. So we keep the consistent (equivariant) router. This i
 a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 `.agent-notes/2368-residual-flat-label-ranksep.md`.
 
+### A4. Oracle in an acknowledged-broken state (`trouble in init_rank`, `2796`)
+
+**Affected:** `2796` (`rankdir=LR`, 43 clusters, 58 nodes; auto-generated
+graph from the upstream report). Verdict stays **`diverged`** — but on this
+input it is the **C oracle** that is broken, by graphviz's own account, not
+the port.
+
+**What C does.** Native dot builds the x-coordinate *auxiliary graph* — the
+network-simplex problem whose solution assigns x positions — with a set of
+cluster left/right-wall constraint edges that, on this input, **close a
+directed cycle**. Its
+[`init_rank`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/common/ns.c#L146)
+topological pass then cannot scan 91 of 1362 nodes, prints
+`Error: trouble in init_rank`, and the layout proceeds from that broken
+recovery state: **5 pairs of overlapping clusters** (worst pair overlaps by
+315×91 pt), a downstream `Pshortestpath` triangulation failure, and a lost
+edge (`lost 3 16 edge`; the reporter's 14.0.5 run lost a *different* edge —
+the debris is version-unstable). Exit code 1. Upstream marks this a bug:
+[`test_2796` is `xfail(strict=True)`](https://gitlab.com/graphviz/graphviz/-/issues/2796)
+("Graphviz should be able to triangulate the points in this graph"), the
+reporter links it to
+[#2471](https://gitlab.com/graphviz/graphviz/-/issues/2471), and the only
+fix attempt —
+[draft MR !4849](https://gitlab.com/graphviz/graphviz/-/merge_requests/4849),
+which adds cycle detection to exactly this aux-edge construction — is
+unmerged and performance-contested (2026-03).
+
+**What the port does differently.** The divergence was pinned by dumping the
+constraint graph both sides feed network simplex, line-by-line
+(`.agent-notes/2796-ns-inputs-verification.md`):
+
+- **Ranking is NOT the divergence.** All 44 ranking calls — each of the 43
+  clusters plus the collapsed root — feed network simplex **line-identical**
+  constraint graphs (2,923 edges). The port's ranks are right for the right
+  reason.
+- The x-aux graphs differ in ~10 of 2,904 aux edges, all `weight=0`
+  cluster-wall spacers from two builders:
+  [`makeLrvn`](https://github.com/sseely/graphviz-ts/blob/main/src/layout/dot/position-cluster.ts#L61)
+  (two wall edges: C lengths 26 & 24.8, port 18 & 18; C ref
+  [`make_lrvn`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/dotgen/position.c#L1052))
+  and
+  [`keepoutOthernodes`](https://github.com/sseely/graphviz-ts/blob/main/src/layout/dot/position-cluster.ts#L184)
+  (one wall edge: C 26, port 24.8, emitted one position earlier; C ref
+  [`keepout_othernodes`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/dotgen/position.c#L392)).
+  With the port's variants the aux graph is **acyclic** (1362/1362 nodes
+  scan); with C's it is cyclic. The port's
+  [`initRank`](https://github.com/sseely/graphviz-ts/blob/main/src/layout/dot/ns.ts#L56)
+  is the same algorithm as C's — fed a feasible problem, it simply solves it.
+- Net effect: the port produces the layout the upstream issue *asks for* —
+  **0 overlapping cluster pairs, all 213 edges routed, no errors** — while
+  the oracle produces 212 edges with overlapping clusters, so the whole
+  drawing diverges (all 58 nodes; deltas to ~724 pt).
+
+**Why accepted rather than fixed.** Making those three wall-edge lengths
+C-exact would reproduce C's cycle and therefore its acknowledged-broken
+recovery layout — deliberately replicating a bug upstream intends to fix,
+and unwinding whenever any form of !4849 lands. Project policy (set
+2026-07-02): *never replicate C bugs the graphviz team has acknowledged but
+not solved; verify our inputs, then accept with evidence.* The residual
+open question — which side computes the faithful wall-edge lengths, and
+whether the port's variant mislays any graph whose oracle is *clean* — is
+tracked in the follow-up mission
+[`plans/verify-oracle-bug-family/`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/README.md)
+together with the other diverged ids in this family (`2471`, `1939`,
+`1435`, `graphs-structs` — see
+[related-diverged-items](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-2796-cluster-ranking/related-diverged-items.md)).
+
+**Evidence.** Side-by-side renders, delta table, and the issue-expectations
+scorecard:
+[comparison page](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-2796-cluster-ranking/comparisons/2796-cluster-ranking.md).
+Revisit when upstream resolves #2796 (the oracle output will change; this
+entry should then be re-measured rather than trusted).
+
 ---
 
 ## Tracked long tail (`dot` attribute & edge-case)
