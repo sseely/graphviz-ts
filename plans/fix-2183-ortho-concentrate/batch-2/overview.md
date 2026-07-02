@@ -3,8 +3,8 @@
 
 | ID | Description | Agent | Writes (provisional) | Depends On | Done |
 |---|---|---|---|---|---|
-| T4 | Fix lost edges faithfully + regression test | main loop | src/layout/dot/ortho-adapter.ts + colocated test | T1 | [ ] |
-| T5 | Fix cluster labels faithfully + regression test | main loop | src/gvc/device-cluster.ts OR dot label placement + test | T2 | [ ] |
+| T4 | Fix lost edges faithfully + regression test | main loop | src/layout/dot/ortho-adapter.ts + colocated test | T1 | [x] |
+| T5 | Fix cluster labels faithfully + regression test | main loop | src/gvc/device-cluster.ts OR dot label placement + test | T2 | [x] |
 
 If a pinned origin lands outside these files: ask (write-set expansion),
 never halt. One commit per task. TDD: failing test first where feasible.

@@ -270,9 +270,24 @@ export function fillRankVlist(g: Graph, r: number, root: Graph): number {
 
 /** Infuse every node (and its out-edge chains) in g into rankleader. */
 export function infuseAllNodes(g: Graph): void {
+  // C walks each node's ORIGINAL out-edges in the cluster subgraph
+  // (agfstout(g, n)), then resolves each through ED_to_virt inside the chain
+  // walk. The fast list (n.info.out) holds virtual SEGMENTS instead: to_virt
+  // is unset on them and their head is the first chain vnode, so the walk's
+  // target rank collapses to tail rank+1 and intermediate vnodes are never
+  // infused — a cluster rank populated only by chain vnodes then has no
+  // rankleader and rebuild_vlists fails (corpus 2183 cluster_A rank 9).
+  // @see lib/dotgen/conc.c:146-155
+  const outsByTail = new Map<Node, Edge[]>();
+  for (const e of g.edges) {
+    const arr = outsByTail.get(e.tail);
+    if (arr) arr.push(e);
+    else outsByTail.set(e.tail, [e]);
+  }
   for (const n of g.nodes.values()) {
     infuse(g, n);
-    for (let k = 0; k < (n.info.out?.size ?? 0); k++) infuseEdgeChain(g, n.info.out!.list[k]);
+    const oes = outsByTail.get(n);
+    if (oes) for (const e of oes) infuseEdgeChain(g, e);
   }
 }
 

@@ -102,10 +102,17 @@ export function convertSPtoRoute(
       const seg = buildSeg(ptr, next, cp, ncp, bp1, prevbp, segs.length === 0, lst);
       segs.push(seg);
 
+      // C advances cp/prevbp/bp1 BEFORE the bend-at-end extra segment
+      // (ortho.c:182-184), so that segment's channel is the bend cell
+      // (cp == ncp) and its direction bendpoints are the shifted pair.
+      // Calling with the stale values put the final segment in the
+      // pre-bend channel — corpus 2183 m->e rendered a dangling end 63pt
+      // from its head. @see lib/ortho/ortho.c:180-203
+      cp = ncp; prevbp = bp1; bp1 = bp2;
       if (ptr.isVert !== next.isVert && next.nDad === lst) {
         segs.push(buildLastSeg(next, cp, ncp, bp1, prevbp));
       }
-      cp = ncp; prevbp = bp1; bp1 = bp2; ptr = next;
+      ptr = next;
     }
     prev = next;
     next = next.nDad as SNode;
