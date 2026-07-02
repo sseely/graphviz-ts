@@ -108,7 +108,7 @@ function labelTextOf(lp: unknown): string | null {
  * @see lib/common/emit.c:emit_begin_node:1654
  */
 function emitNodeBody(n: Node, renderer: RendererPlugin, job: RenderJob): void {
-  setHtmlAnchorObj(svgNodeId(n, job), labelTextOf(n.info.label));
+  setHtmlAnchorObj(svgNodeId(n, job), labelTextOf(n.info.label), job.obj ?? undefined);
   setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
@@ -173,7 +173,7 @@ export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): v
   setEdgePen(e, job);
   try {
     // @see lib/common/emit.c:emit_begin_edge / getObjId
-    setHtmlAnchorObj(svgEdgeId(e, job), labelTextOf(e.info.label));
+    setHtmlAnchorObj(svgEdgeId(e, job), labelTextOf(e.info.label), job.obj ?? undefined);
     // Resolve edge url/tooltip/target/id into obj for the whole-edge anchor
     // (svg endEdge) and the per-label sub-anchors (renderEdgeLabels).
     resolveEdgeAnchor(e, svgEdgeId(e, job), obj);
@@ -262,7 +262,7 @@ export function renderNodeXLabel(n: Node, renderer: RendererPlugin, job: RenderJ
  */
 export function renderGraphLabel(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
   // @see lib/common/emit.c:emit_begin_graph / getObjId (root graph → graph0)
-  setHtmlAnchorObj(svgGraphId(g, job), labelTextOf(g.info.label));
+  setHtmlAnchorObj(svgGraphId(g, job), labelTextOf(g.info.label), job.obj ?? undefined);
   renderOneLabel(g.info.label as TextlabelT | undefined, renderer, job);
 }
 
@@ -312,7 +312,7 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     renderer.beginCluster?.(sg, job);
     if (job.obj !== null) job.obj.id = svgClusterId(sg, job);
     // @see lib/common/emit.c:emit_begin_cluster / getObjId
-    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label));
+    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label), job.obj ?? undefined);
     // Resolve and open the cluster anchor around the box + label (closed before
     // the cluster's child nodes — sibling of them). @see emit.c:3803.
     if (job.obj !== null) {
