@@ -1,16 +1,16 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: verify-oracle-bug-family — 2471, 1939, 1435, graphs-structs
 
-**Status: IN PROGRESS (started 2026-07-02, branch
-`chore/verify-oracle-bug-family`).**
+**Status: COMPLETE (2026-07-02, branch `chore/verify-oracle-bug-family`).**
 
 ## Batches
 
 - [x] Batch 1 — upstream review → disposition matrix (T1)
-- [ ] Batch 2 — per-id inputs verification (T2 2471, T3 1939, T4 1435,
-      T5 graphs-structs, T6 faithful wall-edge question)
-- [ ] Batch 3 — conditional fixes (populated from B2)
-- [ ] Batch 4 — dispositions + comparison pages + survey + merge
+- [x] Batch 2 — per-id inputs verification (T2 2471, T3 1939, T4 1435,
+      T5 graphs-structs, T6 faithful wall-edge question — answered in T2)
+- [x] Batch 3 — fixes F1 rec_reset_vlists, F2 group-penalty + CL_CROSS,
+      F3 pathplan warn-and-continue
+- [x] Batch 4 — dispositions + comparison pages + survey + merge
       (T7–T10)
 
 ## Objective
@@ -64,3 +64,32 @@ position code changes); comparison page per disposed id.
 - B3: fixes for genuine input defects only (asks as needed).
 - B4: dispositions (accepted entries + doc sections + comparison pages),
   survey, merge.
+
+
+## Mission summary (2026-07-02)
+
+- **Tasks:** all planned tasks complete. B2's inputs verification found
+  the T6 answer early (C computes the faithful wall-edge values) and
+  turned B3 from "conditional" into four faithful fixes.
+- **Fixes landed:** F1 `rec_reset_vlists` in flatEdges (flat.c:333 —
+  stale cluster windows; the 2796 "deliberate variant" was this defect);
+  F2 same-`group` penalty endpoint compare + CL_CROSS 100→1000 (the
+  `_WIN32` value had been ported); F3 Pshortestpath warn-and-continue on
+  ear-clip dead ends (silent edge loss on 1435).
+- **Dispositions:** 1939 → CONFORMANT (no entry). 2471, 2796, 1435 →
+  structural-match, accepted A4. graphs-structs → diverged (maxΔ 0,
+  oracle loses the edge), accepted A4 (parity) + existing R-oracle
+  (rules). Comparison page per id in `comparisons/`; A4 section of
+  docs/known-divergences.md rewritten for the family.
+- **Quality gates:** tsc 0 errors; vitest 2552/2552; survey ×2 (≤2 cap)
+  — rules-gate PASS both runs, 0 regressions, movers = family only;
+  canary 2475_2 = 18s (cap 180s); C tree reverted and oracle stdout
+  byte-verified on all family ids.
+- **Decisions flagged for review:** the port now follows C's
+  acknowledged-broken init_rank recovery on 2796/2471/1939 (from
+  verified line-identical inputs) instead of the pre-fix
+  coincidentally-clean layouts — the earlier 2796 D1 framing ("benign
+  variant, don't fix") was overturned by evidence (the variant mislaid
+  2471: 9 lost edges vs C's 6). Re-measure the family when upstream
+  fixes #2796/#2471/#1939/#1435 (expect these ids to flip at that
+  oracle upgrade — by design).
