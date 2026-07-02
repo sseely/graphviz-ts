@@ -19,3 +19,4 @@ Appended during execution.
 | 2026-07-02 | B2/T4 CORRECTION | Earlier T4 row said "neither loses edges" — WRONG: pre-F3 the port silently lost 1435's 8->10 (oracle 11 edges, port 10). Root cause = fatal-triangulation misport (fixed, F3). Post-F3: 11/11 both sides, 1435 structural-match. |
 | 2026-07-02 | B4/T9 | Survey run 2 of 2: gate PASS, 0 regressions, movers = family only (1939 conformant; 1435/2471/2796 structural-match). parity.json/PARITY.md refreshed; corpus guards 11/11; full vitest 2552/2552. |
 | 2026-07-02 | B4/T10 | Dispositions committed (4fd83d9). README mission summary written; memory 2796-oracle-bug-a4-accepted rewritten (family CLOSED, policy nuance); 2471-blocker memory marked superseded. Merging to main with merge commit; branch kept per convention. |
+| 2026-07-02 | post-merge | USER RATIFIED the D1 reversal: faithful fixes stand, merge 753acbd kept. Family follows C's acknowledged-broken outputs until upstream fixes land; re-measure then. |
