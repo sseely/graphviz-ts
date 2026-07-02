@@ -61,6 +61,12 @@ describe('accepted-divergences registry', () => {
 
   it('resolves the documented A-class deltas under the parity scope', () => {
     expect(matchAccepted('2368', 'dot', 'parity', entries)?.class).toBe('A3');
+    // A4 oracle-bug family (verify-oracle-bug-family, 2026-07-02). 1939 is
+    // deliberately ABSENT: it went conformant, so acceptance would be stale.
+    for (const id of ['2796', '2471', '1435', 'graphs-structs']) {
+      expect(matchAccepted(id, 'dot', 'parity', entries)?.class, `${id} parity`).toBe('A4');
+    }
+    expect(matchAccepted('1939', 'dot', 'parity', entries)).toBeNull();
     // A2 closed 2026-07-01 (fix/nan-a2-retire): the NaN family is conformant
     // and must NOT resolve to an accepted entry any more.
     expect(matchAccepted('graphs-NaN', 'dot', 'parity', entries)).toBeNull();
@@ -69,11 +75,12 @@ describe('accepted-divergences registry', () => {
   });
 
   it('resolves the migrated rules allowlist under the rules scope only', () => {
+    // graphs-structs additionally carries an A4 parity entry since the
+    // verify-oracle-bug-family mission (2026-07-02); 2168_2 stays rules-only.
     for (const id of ['graphs-structs', '2168_2']) {
       expect(matchAccepted(id, 'dot', 'rules', entries), `${id} rules`).not.toBeNull();
-      // these are rules-only — they must NOT leak into the parity dashboard join
-      expect(matchAccepted(id, 'dot', 'parity', entries), `${id} parity`).toBeNull();
     }
+    expect(matchAccepted('2168_2', 'dot', 'parity', entries), '2168_2 parity').toBeNull();
   });
 
   it('A1 engine pattern matches force-directed engines, not dot', () => {

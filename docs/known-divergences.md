@@ -370,78 +370,84 @@ translation-equivariance. So we keep the consistent (equivariant) router. This i
 a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 `.agent-notes/2368-residual-flat-label-ranksep.md`.
 
-### A4. Oracle in an acknowledged-broken state (`trouble in init_rank`, `2796`)
+### A4. Oracle in an acknowledged-broken state (the init_rank / pathplan family)
 
-**Affected:** `2796` (`rankdir=LR`, 43 clusters, 58 nodes; auto-generated
-graph from the upstream report). Verdict stays **`diverged`** — but on this
-input it is the **C oracle** that is broken, by graphviz's own account, not
-the port.
+**Affected:** `2796` (structural-match, maxΔ 49), `2471` (structural-match,
+maxΔ ~9063), `1435` (diverged, maxΔ 503), `graphs-structs` (diverged,
+maxΔ 0). Family member `1939` is **conformant** and carries no entry. On
+every one of these inputs it is the **C oracle** that is broken, by
+graphviz's own account: `2471`, `1939` and `1435` are
+[`xfail(strict=True)`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/tests/test_regression.py)
+upstream (issues
+[#2471](https://gitlab.com/graphviz/graphviz/-/issues/2471),
+[#1939](https://gitlab.com/graphviz/graphviz/-/issues/1939),
+[#1435](https://gitlab.com/graphviz/graphviz/-/issues/1435), cf.
+[#2796](https://gitlab.com/graphviz/graphviz/-/issues/2796)); the only fix
+attempt, [draft MR !4849](https://gitlab.com/graphviz/graphviz/-/merge_requests/4849),
+remains an unmerged draft (last edited 2026-03-20). `graphs-structs` is the
+ancient record-routing loss class (#102/#242/#274/#1323) that stable
+graphviz 15.0.0 renders correctly — a dev-build oracle regression.
 
-**What C does.** Native dot builds the x-coordinate *auxiliary graph* — the
-network-simplex problem whose solution assigns x positions — with a set of
-cluster left/right-wall constraint edges that, on this input, **close a
-directed cycle**. Its
+**What C does.** On the `init_rank` members (`2796`, `2471`, `1939`),
+native dot's x-coordinate auxiliary graph closes a directed cycle through
+cluster wall-constraint edges; its
 [`init_rank`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/common/ns.c#L146)
-topological pass then cannot scan 91 of 1362 nodes, prints
-`Error: trouble in init_rank`, and the layout proceeds from that broken
-recovery state: **5 pairs of overlapping clusters** (worst pair overlaps by
-315×91 pt), a downstream `Pshortestpath` triangulation failure, and a lost
-edge (`lost 3 16 edge`; the reporter's 14.0.5 run lost a *different* edge —
-the debris is version-unstable). Exit code 1. Upstream marks this a bug:
-[`test_2796` is `xfail(strict=True)`](https://gitlab.com/graphviz/graphviz/-/issues/2796)
-("Graphviz should be able to triangulate the points in this graph"), the
-reporter links it to
-[#2471](https://gitlab.com/graphviz/graphviz/-/issues/2471), and the only
-fix attempt —
-[draft MR !4849](https://gitlab.com/graphviz/graphviz/-/merge_requests/4849),
-which adds cycle detection to exactly this aux-edge construction — is
-unmerged and performance-contested (2026-03).
+cannot scan every node, prints `Error: trouble in init_rank`, and the
+layout proceeds from that recovery state — on `2471`/`2796` ending in
+`Pshortestpath` triangulation debris and lost edges. On `1435` and
+`graphs-structs` the broken stage is pathplan itself (ear-clip
+triangulation dead ends; a lost record-port edge).
 
-**What the port does differently.** The divergence was pinned by dumping the
-constraint graph both sides feed network simplex, line-by-line
-(`.agent-notes/2796-ns-inputs-verification.md`):
+**Inputs verified, then made faithful (this is the load-bearing part).**
+The `verify-oracle-bug-family` mission
+([brief](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/README.md))
+dumped the constraint graph both sides feed network simplex, line-by-line,
+for every family member — and found the port's earlier "clean" behavior on
+this family came from **four genuine port defects**, all fixed:
 
-- **Ranking is NOT the divergence.** All 44 ranking calls — each of the 43
-  clusters plus the collapsed root — feed network simplex **line-identical**
-  constraint graphs (2,923 edges). The port's ranks are right for the right
-  reason.
-- The x-aux graphs differ in ~10 of 2,904 aux edges, all `weight=0`
-  cluster-wall spacers from two builders:
-  [`makeLrvn`](https://github.com/sseely/graphviz-ts/blob/main/src/layout/dot/position-cluster.ts#L61)
-  (two wall edges: C lengths 26 & 24.8, port 18 & 18; C ref
-  [`make_lrvn`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/dotgen/position.c#L1052))
-  and
-  [`keepoutOthernodes`](https://github.com/sseely/graphviz-ts/blob/main/src/layout/dot/position-cluster.ts#L184)
-  (one wall edge: C 26, port 24.8, emitted one position earlier; C ref
-  [`keepout_othernodes`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/dotgen/position.c#L392)).
-  With the port's variants the aux graph is **acyclic** (1362/1362 nodes
-  scan); with C's it is cyclic. The port's
-  [`initRank`](https://github.com/sseely/graphviz-ts/blob/main/src/layout/dot/ns.ts#L56)
-  is the same algorithm as C's — fed a feasible problem, it simply solves it.
-- Net effect: the port produces the layout the upstream issue *asks for* —
-  **0 overlapping cluster pairs, all 213 edges routed, no errors** — while
-  the oracle produces 212 edges with overlapping clusters, so the whole
-  drawing diverges (all 58 nodes; deltas to ~724 pt).
+1. `flatEdges` skipped C's
+   [`rec_reset_vlists`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/dotgen/flat.c#L333)
+   call, leaving cluster rank windows stale after flat-label vnode
+   insertion (this alone made the port lose **9** edges on `2471` where C
+   loses 6).
+2. The same-`group` edge penalty fired on self-loops instead of
+   same-non-empty-group endpoints
+   ([`dot_init_edge`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/dotgen/dotinit.c#L66)).
+3. `CL_CROSS` used C's `_WIN32` value 100; the oracle platform uses 1000
+   ([`const.h`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/common/const.h#L141)).
+4. A triangulation dead end aborted `Pshortestpath` instead of C's
+   warn-and-continue + straight-line fallback
+   ([`shortest.c:333`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/lib/pathplan/shortest.c#L333)).
 
-**Why accepted rather than fixed.** Making those three wall-edge lengths
-C-exact would reproduce C's cycle and therefore its acknowledged-broken
-recovery layout — deliberately replicating a bug upstream intends to fix,
-and unwinding whenever any form of !4849 lands. Project policy (set
-2026-07-02): *never replicate C bugs the graphviz team has acknowledged but
-not solved; verify our inputs, then accept with evidence.* The residual
-open question — which side computes the faithful wall-edge lengths, and
-whether the port's variant mislays any graph whose oracle is *clean* — is
-tracked in the follow-up mission
-[`plans/verify-oracle-bug-family/`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/README.md)
-together with the other diverged ids in this family (`2471`, `1939`,
-`1435`, `graphs-structs` — see
-[related-diverged-items](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-2796-cluster-ranking/related-diverged-items.md)).
+Post-fix, the family's NS constraint dumps are **line-identical** to C
+(253 rank2 calls on `2471`; all calls on `1939`/`1435`/`graphs-structs`),
+and the port follows C through the acknowledged-broken recovery: same
+lost edges (`3->16` on 2796; the identical 6 on 2471), same element trees.
+`1939` became fully conformant. The residual numeric deltas (and 1435's
+differing pathplan debris) are behavior *inside* the recovery state, which
+project policy deliberately does not chase.
 
-**Evidence.** Side-by-side renders, delta table, and the issue-expectations
-scorecard:
-[comparison page](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-2796-cluster-ranking/comparisons/2796-cluster-ranking.md).
-Revisit when upstream resolves #2796 (the oracle output will change; this
-entry should then be re-measured rather than trusted).
+**Policy note.** The earlier A4 stance ("the port meets the issue's
+expectations; do not replicate") was based on the belief that the port's
+acyclic aux graph came from a benign local variant. It did not — it came
+from defect (1), which demonstrably mislaid `2471`. Faithfulness to the C
+source won: the port now reproduces C's acknowledged-broken outcomes from
+verified-identical inputs, and every entry here should be **re-measured
+when upstream fixes the corresponding issue** (the oracle output will
+change; expect these ids to light up as regressions at that upgrade — that
+is by design, not rot).
+
+**Evidence.** Per-id comparison pages (side-by-side renders + evidence
+records):
+[`2471`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/comparisons/2471.md),
+[`1939`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/comparisons/1939.md),
+[`1435`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/comparisons/1435.md),
+[`graphs-structs`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/comparisons/graphs-structs.md),
+[`2796 post-fix addendum`](https://github.com/sseely/graphviz-ts/blob/main/plans/verify-oracle-bug-family/comparisons/2796-post.md)
+(pre-fix baseline preserved at
+[`2796-cluster-ranking.md`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-2796-cluster-ranking/comparisons/2796-cluster-ranking.md)).
+Diagnosis artifacts: `.agent-notes/2471-stale-cluster-windows-missing-reset.md`,
+`.agent-notes/1939-group-penalty-clcross-misports.md`.
 
 ---
 
