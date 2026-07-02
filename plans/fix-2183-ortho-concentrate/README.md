@@ -66,7 +66,7 @@ test/corpus/parity.json` → `npx tsx test/corpus/dashboard.ts`.
 
 ## Batches
 
-- [ ] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 lost edges,
+- [x] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 lost edges,
       T2 cluster labels, T3 delta attribution
 - [ ] [Batch 2 — faithful fixes](batch-2/overview.md): T4 edges, T5 labels
       (write-sets provisional until the gate)
