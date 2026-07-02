@@ -89,7 +89,7 @@ the exit code, and byte-verify against that output.
 |---|---|---|
 | 1 — diagnosis (5 edges, C-first dumps) | [x] | [batch-1/overview.md](batch-1/overview.md) |
 | 2 — faithful fix + lost-edge semantics + watch gate | [x] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 — survey, disposition, merge | [ ] | [batch-3/overview.md](batch-3/overview.md) |
+| 3 — survey, disposition, merge | [x] | [batch-3/overview.md](batch-3/overview.md) |
 
 ## Index
 
@@ -110,3 +110,32 @@ the exit code, and byte-verify against that output.
   lesson), `.agent-notes/b15-per-entry-run-routing.md` (compareSvg childCount
   blindness), memories `cl-bound-cluster-corridor-done`,
   `recover-slack-and-c-harness`, `instrument-c-before-quarantine`.
+
+## Mission summary (2026-07-02)
+
+**Outcome: D1 rungs 1+2 — three port defects fixed faithfully + C's
+lost-edge failure path ported; `1332` diverged → CONFORMANT.**
+
+- Tasks: 5/5 (T1 diagnosis · T2 three faithful fixes · T3 lost-edge
+  semantics · T4 watch gate · T5 survey/merge).
+- Mechanisms (T1, all dump-confirmed): M1 chain dyna-ports resolved toward
+  the orig far endpoint vs C's segment vnode (edge-route-chain.ts); M2
+  checkPath wrote the compacted box count back where C routes over the stale
+  count + stale slots — C's load-bearing quirk that loses c4251->c4253 to
+  its own triangulation failure (splines-routespl.ts, incl. a JS
+  reference-aliasing vs C struct-copy hazard); M3 recordInside missing C's
+  rankdir rotation (poly-inside.ts).
+- T3: routesplines failure now loses the edge exactly as C (warning + no
+  spline + emit skip; 'lost' sentinel distinct from fallback-eligible
+  declines); 1332 emits 116 edges == oracle with C's two warnings.
+- Collateral improvements: records ×3 + b145 → conformant; 2646 maxΔ 75→42,
+  b57 54→21 (all record/rankdir/port graphs — mechanism-consistent).
+- Gates: tsc 0; vitest 2552/2552 (+6 new tests, fix-sensitive where a
+  reproducer exists); watch set 12/12 byte-identical; survey 789 ids,
+  rules-gate PASS 0 regressions; C tree reverted + oracle byte-verified
+  after each instrumentation round; disposition = nothing to accept.
+- Decisions journaled: 18 rows; 1 write-set expansion (approved); M1 has no
+  small fix-sensitive repro (3 minimization attempts; guarded by corpus
+  gates).
+- Follow-ups: none opened; the +8 internal y-frame offset vs C is benign
+  (emit-normalized) but documented in the T1 artifact if it ever matters.
