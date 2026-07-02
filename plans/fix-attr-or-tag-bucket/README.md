@@ -47,7 +47,7 @@ branch.
 
 ### Push-forward
 Instrumentation, test phrasing, escape-table constants once read from C,
-bounded-判定 for b15 at 1-2 files.
+the bounded-vs-deep call for b15 at 1-2 files.
 
 ## Quality gates
 
