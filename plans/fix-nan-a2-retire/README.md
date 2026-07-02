@@ -74,7 +74,7 @@ survey**.
 | Batch | Status | Doc |
 |---|---|---|
 | 1 — Stage-1 truth pass ∥ diagnosis | [x] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — faithful fix + watch gate (skip if T2 ⇒ irreducible) | [ ] | [batch-2/overview.md](batch-2/overview.md) |
+| 2 — faithful fix + watch gate (skip if T2 ⇒ irreducible) | [x] | [batch-2/overview.md](batch-2/overview.md) |
 | 3 — survey, Stage-2 retire, merge | [ ] | [batch-3/overview.md](batch-3/overview.md) |
 
 ## Index
