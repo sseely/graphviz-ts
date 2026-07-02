@@ -216,6 +216,10 @@ function portRouteOf(e: GraphEdge): PortRoute | undefined {
 function routeFaithfulRegularPlain(e: GraphEdge, g: Graph): boolean {
   const pts = routeRegularEdgeFaithful(g, e);
   if (pts === null) return false;
+  // routesplines failed after a full corridor attempt: C installs no spline
+  // and the edge is LOST (postproc warns, emit skips) — never straight-line
+  // synthesized. @see lib/dotgen/dotsplines.c:make_regular_edge (pn == 0)
+  if (pts === 'lost') { e.info.lost = true; return true; }
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
 }
@@ -238,6 +242,7 @@ function routeFaithfulAdjacentBack(e: GraphEdge, g: Graph): boolean {
   const fwd = makeFwdEdge(e);
   const pts = routeRegularEdgeFaithful(g, fwd);
   if (pts === null) return false;
+  if (pts === 'lost') { e.info.lost = true; return true; } // C: edge lost, no spline
   clipAndInstall(fwd, fwd.head, pts, pts.length, buildDotSinfo());
   if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
   return true;
@@ -351,6 +356,7 @@ function routeFaithfulSidePort(e: GraphEdge, g: Graph): boolean {
   }
   const pts = routeRegularEdgeFaithful(g, e);
   if (pts === null) return false;
+  if (pts === 'lost') { e.info.lost = true; return true; } // C: edge lost, no spline
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
   return true;
 }
@@ -447,7 +453,9 @@ function orderedDotEdges(g: Graph): GraphEdge[] {
  * @see lib/dotgen/dotsplines.c:dot_splines_ (per-edge dispatch + 295 skip)
  */
 export function routeLoneEdge(e: GraphEdge, g: Graph): void {
-  if (e.info.spl !== undefined) return;
+  // A lost edge (routesplines failure, C semantics) is consumed: C routes each
+  // edge exactly once, so the backstop sweep must not re-attempt it.
+  if (e.info.spl !== undefined || e.info.lost === true) return;
   // C dot_splines_ skips FLATORDER/IGNORED edges when building the route list;
   // an IGNORED edge (e.g. a concentrate-merged parallel duplicate) must get no
   // spline so emit draws only the representative. @see dotsplines.c:295

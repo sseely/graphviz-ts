@@ -370,12 +370,16 @@ function pathArgs(P: Path, e: Edge, endp: PathendT, merge: boolean, ranksep: num
 /**
  * Route a regular adjacent-rank edge through the faithful box-channel
  * pipeline. Returns spline control points in graphviz-internal (y-up)
- * coordinates, or null when the edge is not an adjacent-rank regular edge or
- * the path cannot be assembled. Does NOT clip or install — that is SR3.
+ * coordinates; null when the edge is not an adjacent-rank regular edge or
+ * the path cannot be assembled (decline — the caller may fall back); or
+ * 'lost' when the full corridor was attempted and routesplines itself
+ * failed — C installs no spline and the edge is LOST (map_edge warns, emit
+ * skips), never straight-line synthesized. Does NOT clip or install.
  *
  * @see lib/dotgen/dotsplines.c:make_regular_edge (adjacent-rank, no virtual chain)
+ * @see lib/common/routespl.c:routesplines (failure -> NULL, edge lost)
  */
-export function routeRegularEdgeFaithful(g: Graph, e: Edge): Point[] | null {
+export function routeRegularEdgeFaithful(g: Graph, e: Edge): Point[] | null | 'lost' {
   const ranks = g.info.rank;
   const r = e.tail.info.rank;
   if (ranks === undefined || r === undefined || e.head.info.rank !== r + 1) return null;
@@ -403,5 +407,7 @@ export function routeRegularEdgeFaithful(g: Graph, e: Edge): Point[] | null {
   appendRegularEnd(hend.nb, hend, TOP, hn.info.coord.y + rankHt(ranks[r + 1].ht2, hn.info.ht));
 
   if (!completeRegularPath({ P, first: e, last: e, tend, hend, boxes })) return null;
-  return routeRegularByType(P, edgeType(g));
+  const pts = routeRegularByType(P, edgeType(g));
+  if (pts === null) return 'lost';
+  return pts;
 }

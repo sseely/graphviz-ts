@@ -171,6 +171,14 @@ export interface EdgeInfo {
    */
   to_virt?: Edge;
 
+  /**
+   * Routing attempted and routesplines failed: the edge is LOST exactly as in
+   * C (no spline installed, map_edge warns, emit skips). Port-only bookkeeping
+   * so the routeDotEdges backstop does not re-attempt an edge C routes once.
+   * @see lib/common/routespl.c:routesplines (NULL), lib/common/postproc.c:map_edge
+   */
+  lost?: boolean;
+
   // -------------------------------------------------------------------------
   // Engine scratch
   // -------------------------------------------------------------------------

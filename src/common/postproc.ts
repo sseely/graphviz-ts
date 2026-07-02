@@ -27,6 +27,9 @@ import {
 } from '../layout/dot/init.js';
 import { addXLabels } from './xlabels-place.js';
 
+/** Concentrated multi-edge duplicate — never drawn. @see lib/common/const.h:IGNORED */
+const IGNORED_EDGE = 6;
+
 // ---------------------------------------------------------------------------
 // Module-level state (mirrors the C file-scope statics Rankdir, Flip, Offset)
 // These are set once per gvPostprocess call and read by the helpers.
@@ -221,7 +224,17 @@ function translateDrawing(g: Graph): void {
     mapNode(v);
     // State == GVSPLINES is always true post-spline-routing in the dot pipeline
     for (const e of g.edges) {
-      if (e.tail === v) mapEdge(e);
+      if (e.tail !== v) continue;
+      // C map_edge: a spline-less (non-concentrate, non-IGNORED) edge was
+      // LOST during routing — warn and skip, exactly as native dot.
+      // @see lib/common/postproc.c:map_edge ("lost %s %s edge")
+      if (e.info.spl === undefined) {
+        if (!(g.info.concentrate ?? false) && (e.info.edge_type ?? 0) !== IGNORED_EDGE) {
+          console.warn(`lost ${e.tail.name} ${e.head.name} edge`);
+        }
+        continue;
+      }
+      mapEdge(e);
     }
   }
   translateBb(g, g.info.rankdir & 0x3);

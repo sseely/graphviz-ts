@@ -383,7 +383,12 @@ function routeSplinesInternal(pp: Path, polyline: boolean): Point[] | null {
     { x: pp.end.p.x, y: pp.end.p.y },
   ];
   const pl = shortestPath(poly, eps);
-  if (pl === null) return null;
+  if (pl === null) {
+    // C: agerrorf("in routesplines, Pshortestpath failed") — the caller then
+    // loses the edge. @see lib/common/routespl.c (Pshortestpath < 0 branch)
+    console.warn('in routesplines, Pshortestpath failed');
+    return null;
+  }
 
   let ps: Point[];
   if (polyline) {

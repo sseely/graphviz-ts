@@ -44,7 +44,8 @@ function layoutToPosition(src: string): Graph {
 function routeFirstEdge(src: string): Point[] | null {
   const g = layoutToPosition(src);
   const e: Edge = g.edges[0]!;
-  return routeRegularEdgeFaithful(g, e);
+  const pts = routeRegularEdgeFaithful(g, e);
+  return pts === 'lost' ? null : pts;
 }
 
 const MAX_Y = (pts: Point[]): number => Math.max(...pts.map(p => p.y));
