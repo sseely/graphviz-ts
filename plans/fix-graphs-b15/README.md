@@ -98,8 +98,8 @@ absent, run via the npx-cached tsx with `TSX_BIN` set (decisions.md AD-1 note).
 
 | Batch | Status | Doc |
 |---|---|---|
-| 1 — design the collect + grouping port | [ ] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — implement + regression baseline | [ ] | [batch-2/overview.md](batch-2/overview.md) |
+| 1 — design the collect + grouping port | [x] | [batch-1/overview.md](batch-1/overview.md) |
+| 2 — implement + regression baseline | [x] | [batch-2/overview.md](batch-2/overview.md) |
 
 ## Index
 
@@ -114,3 +114,18 @@ absent, run via the npx-cached tsx with `TSX_BIN` set (decisions.md AD-1 note).
 - Memory: `concentrate-trunk-2559-done`, `b69-concentrate-undermerge`,
   `2361-ortho-concentrate-dedup-done`, `map-vs-nlist-iteration-hazard`,
   `byte-match-is-the-bar`, `recover-slack-and-c-harness`.
+
+## Session summary (2026-07-01, make_regular_edge rewrite session)
+
+- **Done**: collect (rank array), C-faithful edgecmp/groupSize, per-entry run
+  routing (routeEntryRun; routeMergedChain deleted), complexity extraction.
+  b15 147→153 edges (all 6 restored), 13 more edges fixed, 0 regressions;
+  survey 789 rules-gate PASS; parity/PARITY.md refreshed.
+- **Model correction**: instrumented C shows every merge-bounded run is its own
+  cnt=1 group (MAINGRAPH break) with per-orig clip_and_install appends — not a
+  single per-group multi-segment route. See decision-journal 2026-07-01 rows.
+- **AD-4 caveat**: b15 verdict remains `diverged` (maxDelta 1033, honest) —
+  HEAD's maxDelta 0 was a compare artifact (no descent past the childCount
+  mismatch); 28 residual edges diverged at HEAD too (pre-existing class).
+- **Follow-up**: the 28-edge b15 geometry residual (shares family with b69
+  x-coord residuals); compareSvg childCount descent blindness.
