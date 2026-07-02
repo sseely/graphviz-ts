@@ -88,7 +88,7 @@ the exit code, and byte-verify against that output.
 | Batch | Status | Doc |
 |---|---|---|
 | 1 — diagnosis (5 edges, C-first dumps) | [x] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — faithful fix + lost-edge semantics + watch gate | [ ] | [batch-2/overview.md](batch-2/overview.md) |
+| 2 — faithful fix + lost-edge semantics + watch gate | [x] | [batch-2/overview.md](batch-2/overview.md) |
 | 3 — survey, disposition, merge | [ ] | [batch-3/overview.md](batch-3/overview.md) |
 
 ## Index
