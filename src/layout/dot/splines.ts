@@ -283,6 +283,25 @@ export function swapSpline(s: Spline): void {
 }
 
 /**
+ * Swap an edge's spline AND its precomputed arrow-op slots. C regenerates
+ * arrows at emit time from each bezier's sp/ep + s/eflag, so swap_bezier's
+ * flag swap is complete there; the port precomputes arrow ops per edge END
+ * (tail/head slots) at clip time, so a spline swap must swap the slots too or
+ * the flag↔ops pairing breaks — on a multi-bezier reversed edge the per-bezier
+ * arrow interleave then finds no matching ops and the arrow falls to the
+ * group end ([path, path, arrow] vs C's [path, arrow, path]; b15
+ * LandVertical/Fall/HoverStrafeToStop groups).
+ * @see lib/dotgen/dotsplines.c:swap_bezier (sflag/eflag swap)
+ */
+export function swapEdgeSpline(e: Edge): void {
+  if (e.info.spl === undefined) return;
+  swapSpline(e.info.spl);
+  const t = e.info.tailArrowOps;
+  e.info.tailArrowOps = e.info.headArrowOps;
+  e.info.headArrowOps = t;
+}
+
+/**
  * Normalize splines so they always go from tail to head.
  * @see lib/dotgen/dotsplines.c:edge_normalize
  */
@@ -290,7 +309,7 @@ export function edgeNormalize(g: Graph): void {
   for (const n of g.nodes.values()) {
     for (let k = 0; k < (n.info.out?.size ?? 0); k++) {
       const e = n.info.out!.list[k];
-      if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
+      if (swapEndsP(e)) swapEdgeSpline(e);
     }
   }
 }
@@ -479,7 +498,7 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
  */
 function normalizeRunOrigs(runOrigs: Set<Edge>): void {
   for (const o of runOrigs) {
-    if (swapEndsP(o) && o.info.spl !== undefined) swapSpline(o.info.spl);
+    if (swapEndsP(o)) swapEdgeSpline(o);
   }
 }
 

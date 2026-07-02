@@ -34,7 +34,7 @@ import {
   collectNonAdjacentFlatGroup, routeFlatEdgeGroupFaithful,
 } from './splines-flat-multi.js';
 import { makeFlatLabeledEdge, makeAdjFlatNoPortEdge } from './splines-flat-labeled.js';
-import { EDGETYPE_SPLINE, swapEndsP, swapSpline } from './splines.js';
+import { EDGETYPE_SPLINE, swapEndsP, swapEdgeSpline } from './splines.js';
 import { FLATORDER } from './fastgr.js';
 import { IGNORED } from './rank.js';
 import { buildDotSinfo } from './self-loop.js';
@@ -244,7 +244,7 @@ function routeFaithfulAdjacentBack(e: GraphEdge, g: Graph): boolean {
   if (pts === null) return false;
   if (pts === 'lost') { e.info.lost = true; return true; } // C: edge lost, no spline
   clipAndInstall(fwd, fwd.head, pts, pts.length, buildDotSinfo());
-  if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
+  if (swapEndsP(e)) swapEdgeSpline(e);
   return true;
 }
 

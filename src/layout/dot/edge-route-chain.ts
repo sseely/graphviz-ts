@@ -23,7 +23,7 @@ import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
 import { routeRegularByType } from './splines-route-type.js';
-import { edgeType, EDGETYPE_LINE, resolveOrigEdge, swapEndsP, swapSpline } from './splines.js';
+import { edgeType, EDGETYPE_LINE, resolveOrigEdge, swapEndsP, swapEdgeSpline } from './splines.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
@@ -405,8 +405,17 @@ export function routeBackEdge(e: GraphEdge, _tailBox: NodeBox, _headBox: NodeBox
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return;
   const fwdEdge = makeFwdEdge(e);
-  const fwd = routeChainSegmented(g, fwdEdge, fwdEdge, segs);
+  // C's make_regular_edge routes the collected FAST SEGMENT view: beginpath's
+  // edge head is the adjacent chain vnode, so a dyna record port resolves
+  // toward that vnode (closestSide), not the far real endpoint. Passing the
+  // whole-edge fwd view here resolved b15's reversed record-port edges toward
+  // the wrong compass side (In: 's' at field-bottom instead of C's 'w' at
+  // field-left). The segments carry the correctly-oriented copied ports
+  // (fastgr new_virtual_edge copy rules); fwdEdge remains the clip target so
+  // bezier_clip keeps the load-bearing forward direction (1644).
+  // @see lib/dotgen/dotsplines.c:make_regular_edge (segfirst/tn/hn walk)
+  const fwd = routeChainSegmented(g, segs[0], segs[segs.length - 1], segs);
   if (fwd === null) return;
   clipAndInstall(fwdEdge, fwdEdge.head, fwd, fwd.length, buildDotSinfo());
-  if (swapEndsP(e) && e.info.spl !== undefined) swapSpline(e.info.spl);
+  if (swapEndsP(e)) swapEdgeSpline(e);
 }

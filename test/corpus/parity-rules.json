@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-02T18:53:03.969Z",
+  "generatedAt": "2026-07-02T19:42:58.237Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 598,
+    "conformant": 599,
     "structural-match": 162,
-    "diverged": 17,
+    "diverged": 16,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 12
@@ -1070,9 +1070,7 @@
     {
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
-      "verdict": "diverged",
-      "maxDelta": 67.90000000000009,
-      "firstDiffPath": "svg/g[1]/g[92]/path[2]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b155",
@@ -1357,7 +1355,7 @@
       "id": "graphs-decorate",
       "path": "graphs/decorate.gv",
       "verdict": "diverged",
-      "maxDelta": 10.800000000000182,
+      "maxDelta": 0,
       "firstDiffPath": "svg/g[1]/g[5][childCount]"
     },
     {

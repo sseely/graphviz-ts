@@ -23,7 +23,7 @@ import { routeSplines, routePolylines } from '../../common/splines-routespl.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { TOP } from '../../common/splines-constants.js';
-import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE, getMainEdge, swapEndsP, swapSpline } from './splines.js';
+import { edgeType, EDGETYPE_LINE, EDGETYPE_SPLINE, EDGETYPE_PLINE, getMainEdge, swapEndsP, swapEdgeSpline } from './splines.js';
 import { shortestPath, routeSpline, polyBarriers, makePolyline } from '../../pathplan/index.js';
 import { gvQsort } from '../../util/bsd-qsort.js';
 
@@ -303,7 +303,7 @@ function installFlatLeg(e: Edge, pts: Point[], _tn: Node): void {
   // exactly the regular back-edge pattern (edge-route-chain.ts:412).
   // @see lib/dotgen/dotsplines.c:makeSimpleFlat, lib/common/splines.c:clip_and_install
   clipAndInstall(e, e.head, pts, pts.length, buildDotSinfo());
-  if (swapEndsP(e) && e.info.spl !== undefined) swapSpline(e.info.spl);
+  if (swapEndsP(e)) swapEdgeSpline(e);
 }
 
 /** Route the stacked (i>=1) edges of the group through simpleSplineRoute. */
