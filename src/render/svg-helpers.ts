@@ -429,10 +429,60 @@ export function svgEdgePath(e: Edge, job: RenderJob): void {
   if (spl === undefined || spl.size === 0) return;
   const obj = job.obj;
   const stroke = obj !== null ? paintStr(obj, false) : 'black';
+  const st = { tailDone: false, headDone: false };
   for (let si = 0; si < spl.size; si++) {
     const bz = spl.list[si] as Bezier | undefined;
     if (bz === undefined || bz.size < 4) continue;
     emitOneBezierPath(bz, stroke, job);
+    // C draws each bezier's arrowheads immediately after its curve, inside
+    // the per-bezier loop (bz.sflag → tail arrow, bz.eflag → head arrow) —
+    // for a multi-bezier concentrate spline the arrow interleaves BETWEEN
+    // the paths (b69 g[84]: [path, arrow-polygon, path]).
+    // @see lib/common/emit.c:2668-2676 (arrow_gen after gvrender_beziercurve)
+    emitBezierArrows(e, bz, job, st);
+  }
+  emitRemainingArrows(e, job, st);
+}
+
+/** Per-bezier arrow emission (C's in-loop arrow_gen calls). */
+function emitBezierArrows(
+  e: Edge, bz: Bezier, job: RenderJob,
+  st: { tailDone: boolean; headDone: boolean },
+): void {
+  const obj = job.obj;
+  const penColor = obj !== null ? paintStr(obj, false) : 'black';
+  const opacity = obj !== null ? colorOpacity(obj.penColor) : null;
+  const pw = obj !== null ? obj.penWidth : 1.0;
+  if (bz.sflag !== 0 && !st.tailDone && e.info.tailArrowOps?.length) {
+    emitArrowOps(e.info.tailArrowOps, penColor, job, pw, opacity);
+    st.tailDone = true;
+  }
+  if (bz.eflag !== 0 && !st.headDone && e.info.headArrowOps?.length) {
+    emitArrowOps(e.info.headArrowOps, penColor, job, pw, opacity);
+    st.headDone = true;
+  }
+}
+
+/**
+ * Arrow ops whose bezier carried no s/eflag (a port-model seam: ops are stored
+ * per edge end, flags per bezier). C cannot reach this state — an arrow is only
+ * generated where a flag is set — so this emits at the old position (group
+ * end) purely to keep behavior identical if a router ever stashes ops without
+ * setting the flag.
+ */
+function emitRemainingArrows(
+  e: Edge, job: RenderJob,
+  st: { tailDone: boolean; headDone: boolean },
+): void {
+  const obj = job.obj;
+  const penColor = obj !== null ? paintStr(obj, false) : 'black';
+  const opacity = obj !== null ? colorOpacity(obj.penColor) : null;
+  const pw = obj !== null ? obj.penWidth : 1.0;
+  if (!st.tailDone && e.info.tailArrowOps?.length) {
+    emitArrowOps(e.info.tailArrowOps, penColor, job, pw, opacity);
+  }
+  if (!st.headDone && e.info.headArrowOps?.length) {
+    emitArrowOps(e.info.headArrowOps, penColor, job, pw, opacity);
   }
 }
 
