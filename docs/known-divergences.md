@@ -37,9 +37,9 @@ below) is
 [`test/corpus/accepted-divergences.json`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/accepted-divergences.json).
 The tooling joins it at report time: `PARITY.md` splits **accepted deltas** from
 the **tracked** backlog, and the rules gate sources its allowlist from it. The
-prose sections below (A1/A2/A3) explain each entry; a CI test
-(`accepted-divergences.test.ts`) enforces that every accepted graph still
-diverges, so this list cannot silently rot.
+prose sections below explain each entry (A1 and A3 are live; A2 is closed and
+kept as history); a CI test (`accepted-divergences.test.ts`) enforces that
+every accepted graph still diverges, so this list cannot silently rot.
 
 ---
 
@@ -100,33 +100,43 @@ its native engine vs the port. The honest ceiling on that work is to **narrow**
 A1 to "no active divergence on the reference platform," never to eliminate the
 cross-platform caveat.
 
-### A2. Text measurement (font metrics) → label-driven layout
+### A2. Text measurement (font metrics) → label-driven layout — CLOSED
 
-**Status (2026-06-30).** This class has mostly closed. Successive
-text-measurement fixes (the `EstimateTextMeasurer` cutover, font-aware
-vertical metrics, the non-ASCII UTF-8-byte fix) resolved nearly every
-label-driven layout divergence that used to live here. **`proc3d`** — the
-former canonical A2 example — is now fully **`conformant`** on all three
+**Status (2026-07-01): closed.** No corpus id is accepted under this class
+any more; the section is retained as historical documentation of the
+mechanism and of the injectable-`TextMeasurer` seam that neutralized it.
+Successive text-measurement fixes (the `EstimateTextMeasurer` cutover,
+font-aware vertical metrics, the non-ASCII UTF-8-byte fix) resolved nearly
+every label-driven layout divergence that used to live here. **`proc3d`** —
+the former canonical A2 example — is fully **`conformant`** on all three
 corpus dirs (`graphs-`/`share-`/`windows-proc3d`): matching bbox, zero
-path-data diffs, zero label-anchor diffs. It no longer belongs to this
-accepted-delta class; it is kept below only as a historical illustration of
-the mechanism.
+path-data diffs, zero label-anchor diffs.
 
-**Affected (current).** The only case still tracked under A2 is the **`NaN`
-family** (`graphs-NaN` / `share-NaN` / `windows-NaN`). Measured state:
+**The last members retired (2026-07-01).** The **`NaN` family**
+(`graphs-NaN` / `share-NaN` / `windows-NaN`) was carried here long after its
+node geometry already matched C exactly (76/76 reference points). Its real
+residual — 8 straight-edge endpoints on four opposing 2-cycle pairs
+(`Target↔TThread`, `Interp↔InterpF`, `Event↔Target`,
+`AtomProperties↔NRAtom`) shifted 6–14 pt — was re-diagnosed and turned out
+to be **no font-metric effect at all**, but two port defects in dot's
+multi-edge routing (mission `plans/fix-nan-a2-retire/`,
+`.agent-notes/nan-edge-endpoint-diagnosis.md`):
 
-- Verdict: `structural-match`, maxΔ ≈ 18 pt.
-- **All 76 node reference points match C exactly** (0 shifted > 0.5 pt). The
-  historical "font-metric width error → node-x shift" mechanism described in
-  the appendix below no longer applies — the font-metric fixes that closed
-  `proc3d` closed the node-position gap here too.
-- The residual is **8 straight-edge endpoints**, four head/tail pairs —
-  `Target↔TThread`, `Interp↔InterpF`, `Event↔Target`, `AtomProperties↔NRAtom`
-  — each shifted **6–14 pt**, with piece counts matching C on every edge (an
-  endpoint/attachment delta, not an extra bezier segment).
-- **Mechanism: under re-diagnosis.** Candidate causes not yet distinguished:
-  boundary clip-point drift from spline approach angle, a residual port-side
-  metric, or a compress x-network-simplex tie. None confirmed.
+1. **Opposing-pair lane order.** The port re-sorted each parallel-edge
+   group by original creation seq before assigning Multisep lane offsets; C
+   assigns lanes in the edgecmp collected order (MAINGRAPH forward rep
+   first, AUXGRAPH reversed member second — `dotsplines.c:419`,
+   `make_regular_edge:1885-1907`). A 2-cycle whose reversed member was
+   declared first drew each edge on the other's 18 pt corridor.
+2. **Spurious flat-adjacency on cross-rank merged edges.** `markAdjacent`
+   marked `ND_other` entries without C's same-rank guard
+   (`flat.c:272-276`), letting `groupSize`'s flat-adjacent short-circuit
+   swallow portcmp group breaks.
+
+With both fixed faithfully, the family is **`conformant`** on all three
+dirs (per-element: nodes 0, edges 0 differing), and the same mechanism
+closed `42`, `clust2`, `ngk10_4` (structural-match → conformant) and moved
+`b124` from diverged to structural-match — all on 2-cycle/parallel pairs.
 
 **Both survey sides run the same estimator — measurement is neutralized.**
 The native `dot` oracle runs under a headless `GVBINDIR`
@@ -155,15 +165,10 @@ The seam also lets a residual be *proven* measurement-only: feed the port the
 exact widths C measured (captured from the oracle) and check whether layout
 then reproduces C exactly. That experiment is what originally licensed the
 A2 verdict for `proc3d` (see the historical appendix below) — the technique
-remains valid; it is simply not yet what closes the `NaN` edge residual,
-which is an edge-routing/endpoint delta, not a node-width one.
-
-**Why still accepted (for `NaN`).** The residual is bounded (6–14 pt on 8
-endpoints of a ~2600 pt drawing), the graph remains `structural-match`, and
-the mechanism is not yet pinned — treating this as "fixed" before the root
-cause is known would be premature. It stays open for a dedicated
-re-diagnosis rather than being force-fit to the stale font-metric story in
-the appendix below.
+remains valid. Its inverse retired the class: because measurement was
+provably neutralized on both survey sides, the `NaN` edge residual could not
+be a font-metric effect, which forced the re-diagnosis that found the two
+routing defects above.
 
 ::: details Historical analysis (superseded 2026-06-30) — retained for the record
 The material below describes an earlier state of this class, before the
@@ -389,9 +394,9 @@ certainly on the deterministic-tolerance match path. If a layout looks wrong, ch
 that input class — it is likely a tracked item with an oracle-pinned fix mission,
 not an unknown.
 
-> **Note on label-driven cases.** Some `dot` graphs diverge *only* because of the
-> text-measurement delta (A2) — their layout logic is correct and they sit at
-> structural-match. Those are accepted deltas, not long-tail bugs.
+> **Note on label-driven cases.** The text-measurement class (A2) is closed —
+> no `dot` graph is accepted under it any more. A graph that sits at
+> structural-match today is a tracked gap, not a font-metric delta.
 
 ### `concentrate=true` opposing-edge arrowheads
 

@@ -75,7 +75,7 @@ survey**.
 |---|---|---|
 | 1 — Stage-1 truth pass ∥ diagnosis | [x] | [batch-1/overview.md](batch-1/overview.md) |
 | 2 — faithful fix + watch gate (skip if T2 ⇒ irreducible) | [x] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 — survey, Stage-2 retire, merge | [ ] | [batch-3/overview.md](batch-3/overview.md) |
+| 3 — survey, Stage-2 retire, merge | [x] | [batch-3/overview.md](batch-3/overview.md) |
 
 ## Index
 
@@ -90,3 +90,30 @@ survey**.
   analysis), `plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.md`,
   `.agent-notes/b15-per-entry-run-routing.md` (B15DUMP recipe + compareSvg
   childCount blindness), memory `a2-collapsed-proc3d-conformant`.
+
+## Mission summary (2026-07-01)
+
+**Outcome: D1 ladder rung 1 — port defect(s), fixed faithfully; NaN family
+conformant on all 3 dirs; A2 retired.**
+
+- Tasks: 5/5 planned completed (T1 doc truth pass · T2 diagnosis · T3 faithful
+  fix · T4 watch gate · T5 survey/retire/merge). Batch 2 ran (port-defect path).
+- Mechanism (T2): not font metrics and none of the doc's three candidates —
+  opposing 2-cycle lane assignment. The port re-sorted parallel groups by orig
+  seq; C assigns Multisep lanes in edgecmp collected order. Confirmed by
+  forced-order experiment (0/0 per-element ×3) before any src edit.
+- Fixes (T3, two write-set expansions user-approved): splines-groups.ts lane
+  order; flat.ts markAdjacent same-rank guard (second defect exposed by the
+  first fix, C flat.c:272-276). Fix-sensitive regression test added.
+- Collateral improvements: 42, clust2, ngk10_4 → conformant; b124 diverged →
+  structural-match (all 2-cycle/parallel-pair graphs).
+- Gates: tsc 0; vitest 2546/2546; NaN per-element 0/0 ×3; watch set
+  byte-identical pre/post except NaN; survey 789 ids, rules-gate PASS,
+  0 regressions; C tree reverted + oracle byte-verified after each
+  instrumentation round.
+- Decisions journaled: 15 rows; 2 write-set expansions (both approved);
+  2 push-forward guard-test syncs.
+- Follow-ups: routeCurvedGroup's origSeq sort (splines=curved path) carries the
+  same suspect pattern — no observed defect, assess against routespl.c in a
+  future mission (noted in .agent-notes/nan-edge-endpoint-diagnosis.md).
+  #1949's Δ144 detour-side flat residual is pre-existing and out of scope.
