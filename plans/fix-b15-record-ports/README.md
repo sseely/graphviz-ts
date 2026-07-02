@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: b15 record-port resolution — root cause and fix
 
-**Status: NOT STARTED (authored 2026-07-02).**
+**Status: COMPLETE (2026-07-02). b15 diverged → CONFORMANT (byte-identical); 0 regressions.**
 
 ## Objective
 
@@ -75,11 +75,11 @@ repeatedly misdirected renders (see attr-or-tag journal).
 
 ## Batches
 
-- [ ] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 provenance
+- [x] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 provenance
       trace, T2 FlightToHover late divergence
-- [ ] [Batch 2 — fixes](batch-2/overview.md): T3 pinned-origin fix,
+- [x] [Batch 2 — fixes](batch-2/overview.md): T3 pinned-origin fix,
       T4 FlightToHover fix-or-disposition
-- [ ] [Batch 3 — verify + close](batch-3/overview.md): T5
+- [x] [Batch 3 — verify + close](batch-3/overview.md): T5
 
 ## Index
 
@@ -92,3 +92,27 @@ repeatedly misdirected renders (see attr-or-tag journal).
 SLIs/on-call N/A — survey+gate is the observability. Rollback:
 **Reversible**. Target: b15 → conformant/structural-match with residual
 explained.
+
+
+## Mission summary (2026-07-02)
+
+- **T1 (gate):** H3 won — H1 (sameport) and H2 (reference sharing)
+  disproven by the object-identity trace. TWO mechanisms:
+  1. `routeBackEdge` routed the whole-edge fwd view → dyna record ports
+     resolved toward the far endpoint instead of C's adjacent chain
+     vnode (both C branches target the first vnode).
+  2. `swapSpline` swapped bezier flags but not the port-model's per-END
+     arrow-op slots → arrows fell to group end on multi-bezier reversed
+     edges.
+- **Baseline correction:** the seed's "4 groups" was a stale snapshot;
+  true pre-fix baseline was 8 groups. A mid-mission false regression
+  alarm traced to a ZERO-BYTE verification render (cwd-misdirect) +
+  zip() truncation — lesson recorded (assert group counts + non-empty
+  output before positional compares).
+- **Fixes:** T3 (923fc05) segments into routeChainSegmented;
+  T4 (95a0acd) swapEdgeSpline at all 7 swap sites + unit test.
+  Distilled repro did not discriminate → not shipped (2183 rule);
+  corpus red/green 8→0.
+- **Gates:** survey 1 run + gate PASS (mover = b15 only); canary 17s;
+  oracle byte-verified; tsc 0; vitest 2558/2558.
+  Corpus: **599 conformant / 162 structural-match / 16 diverged**.
