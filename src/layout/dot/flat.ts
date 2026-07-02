@@ -312,7 +312,16 @@ export function markEdgeList(edges: EdgeList | undefined): void {
 export function markAdjacent(g: Graph): void {
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
     markEdgeList(n.info.flat_out);
-    markEdgeList(n.info.other);
+    // ND_other entries are marked only when actually flat: a cross-rank merged
+    // 2-cycle member must NOT get adjacent=1 (the chain-walk would set it on
+    // its rep too, and groupSize's flat-adjacent short-circuit would then
+    // swallow portcmp group breaks). @see lib/dotgen/flat.c:272-276
+    if (n.info.other) {
+      for (let i = 0; i < n.info.other.size; i++) {
+        const e = n.info.other.list[i];
+        if (nodeRank(e.tail) === nodeRank(e.head)) checkFlatAdjacent(e);
+      }
+    }
   }
 }
 

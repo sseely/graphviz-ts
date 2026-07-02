@@ -72,6 +72,17 @@ const DOT_OPPOSING: Pt[][] = [
   [{ x: 32.86, y: -35.79 }, { x: 33.66, y: -43.25 }, { x: 33.92, y: -52.24 }, { x: 33.64, y: -60.69 }],
 ];
 
+/** dot 15.x control points for `digraph{x->b; a->b; b->a}` — a 2-cycle whose
+ * REVERSED member (`a->b`, smaller seq: x->b's path into b makes the DFS
+ * traverse b->a first) must still take the RIGHT lane: C assigns Multisep
+ * lanes in edgecmp collected order (MAINGRAPH forward rep first, AUXGRAPH
+ * reversed member second), never by original creation seq.
+ * @see lib/dotgen/dotsplines.c:419, make_regular_edge (cnt>1) — NaN residual */
+const DOT_OPPOSING_REVERSED_FIRST: Record<string, Pt[]> = {
+  'b->a': [{ x: 21.12, y: -72.05 }, { x: 20.33, y: -64.57 }, { x: 20.08, y: -55.58 }, { x: 20.37, y: -47.14 }],
+  'a->b': [{ x: 32.86, y: -35.79 }, { x: 33.66, y: -43.25 }, { x: 33.92, y: -52.24 }, { x: 33.64, y: -60.69 }],
+};
+
 /** dot 15.x control points for the labeled edge "1" (bends around its label). */
 const DOT_LABELED_EDGE1: Pt[] = [
   { x: 20.13, y: -88.69 }, { x: 18.14, y: -83.01 }, { x: 16.24, y: -76.57 },
@@ -91,6 +102,24 @@ describe('regular multi-edge routing (G1, dot oracle)', () => {
     const paths = edgePaths(renderSvg('digraph{a->b; b->a}', 'dot'));
     expect(paths.length).toBe(2);
     for (let i = 0; i < 2; i++) expect(maxDelta(paths[i], DOT_OPPOSING[i])).toBeLessThanOrEqual(TOL);
+  });
+
+  it('2-cycle lanes follow collected order, not creation seq (matches dot)', () => {
+    // `a->b` is declared before `b->a` but is the REVERSED member (x->b pulls
+    // the DFS through b first); it must take the right lane while forward
+    // `b->a` takes lane 0. Guards the NaN edge-endpoint mechanism.
+    const svg = renderSvg('digraph{x->b; a->b; b->a}', 'dot');
+    for (const [title, want] of Object.entries(DOT_OPPOSING_REVERSED_FIRST)) {
+      const [t, h] = title.split('->');
+      const re = new RegExp(
+        '<title>' + t + '&#45;&gt;' + h + '</title>\\s*<path[^>]*\\sd=' + Q + '([^' + Q + ']+)' + Q);
+      const m = re.exec(svg);
+      expect(m, `edge ${title} missing`).not.toBeNull();
+      const nums = (m![1].match(RE_NUM) ?? []).map(Number);
+      const pts: Pt[] = [];
+      for (let i = 0; i + 1 < nums.length; i += 2) pts.push({ x: nums[i], y: nums[i + 1] });
+      expect(maxDelta(pts, want)).toBeLessThanOrEqual(TOL);
+    }
   });
 
   it('labeled-parallel edge "1" routes around its label vnode (matches dot)', () => {

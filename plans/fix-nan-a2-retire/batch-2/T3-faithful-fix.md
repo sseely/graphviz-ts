@@ -24,6 +24,9 @@ rule).
 - `src/layout/dot/edge-route*.ts`, `src/layout/dot/splines-route*.ts`,
   `src/common/splines-clip.ts`
 - matching `.test.ts` files
+- **EXPANDED 2026-07-01 (user-approved, see decision-journal):**
+  `src/layout/dot/splines-groups.ts`, `src/layout/dot/splines-groups.test.ts`
+  (new) / `src/layout/dot/multi-edge.test.ts`
 
 ## Read-set
 - `.agent-notes/nan-edge-endpoint-diagnosis.md` (the spec for this task)

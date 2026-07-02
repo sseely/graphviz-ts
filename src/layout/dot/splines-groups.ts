@@ -116,9 +116,11 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], ctx: GroupRouteCtx): void {
     routeLoneEdge(lone, g);
     return;
   }
-  // Sort by original seq so the first original gets the leftmost offset, matching
-  // C's allocation order (e1<e2<e3). @see dotsplines.c:make_regular_edge:1885-1907
-  uniq.sort((a, b) => origSeq(a) - origSeq(b));
+  // Lane offsets follow the edgecmp collected order — C passes the sorted list
+  // slice straight into make_regular_edge with NO re-sort, so the MAINGRAPH
+  // forward rep gets lane 0 (interior x -dx) and AUXGRAPH ND_other entries
+  // (including an opposing 2-cycle's reversed member) follow, regardless of
+  // original creation seq. @see dotsplines.c:419, make_regular_edge:1885-1907
   routeParallelEdgeGroup(g, uniq, ctx.multisep);
 }
 

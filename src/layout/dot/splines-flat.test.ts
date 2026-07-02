@@ -89,6 +89,12 @@ describe('DOT-12 + DOT-10 — port-bearing labeled flat emits its label', () => 
 // aux node shrinks, and the routed spline (and thus graph height) is wrong: this
 // graph rendered 129pt pre-fix vs 143pt with the inherited fontsize=24 (native
 // dot 15.0.0 estimate: 148pt). @see lib/dotgen/dotsplines.c:cloneNode (agcopyattr)
+// 2026-07-01 (fix/nan-a2-retire T3): 143→142 — the aux 2-cycle clones no longer
+// route as an erroneous Multisep fan (markAdjacent same-rank guard + collected
+// lane order, @see flat.c:272-276); under the render-one/oracle environment the
+// frame now matches native exactly (148=148). The 142 pin is this test env's
+// in-process-measurer value; the guarded quantity is still fontsize inheritance
+// (≫129), not routing.
 const INHERIT_FONT_SRC =
   'digraph{rankdir=LR; node[fontsize=24]; {rank=same; a b} a:s->b:n; b:s->a:n;}';
 
@@ -99,6 +105,6 @@ function graphHeight(svg: string): number {
 
 describe('#1949 — aux clone inherits the graph fontsize default', () => {
   it('sizes the flat-adj aux node at the inherited fontsize (not the built-in 14)', () => {
-    expect(graphHeight(renderSvg(INHERIT_FONT_SRC, 'dot'))).toBe(143);
+    expect(graphHeight(renderSvg(INHERIT_FONT_SRC, 'dot'))).toBe(142);
   });
 });
