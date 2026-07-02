@@ -15,7 +15,7 @@
       "scope": "parity",
       "verdict": "structural-match",
       "bound": "maxΔ~18pt; fine x only",
-      "reason": "wide-label font-metric delta (no bundled rasterizer) tips an integer x-network-simplex constraint; ranks/order/topology identical.",
+      "reason": "nodes exact (76/76 pts match); residual is 8 straight-edge endpoints shifting 6-14pt (4 pairs incl. Target<->TThread) with matching piece counts; mechanism under re-diagnosis, see docs/known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout.",
       "ref": "known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout"
     },
     {
@@ -24,7 +24,7 @@
       "scope": "parity",
       "verdict": "structural-match",
       "bound": "maxΔ~18pt; fine x only",
-      "reason": "wide-label font-metric delta (no bundled rasterizer) tips an integer x-network-simplex constraint; ranks/order/topology identical.",
+      "reason": "nodes exact (76/76 pts match); residual is 8 straight-edge endpoints shifting 6-14pt (4 pairs incl. Target<->TThread) with matching piece counts; mechanism under re-diagnosis, see docs/known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout.",
       "ref": "known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout"
     },
     {
@@ -33,7 +33,7 @@
       "scope": "parity",
       "verdict": "structural-match",
       "bound": "maxΔ~18pt; fine x only",
-      "reason": "wide-label font-metric delta (no bundled rasterizer) tips an integer x-network-simplex constraint; ranks/order/topology identical.",
+      "reason": "nodes exact (76/76 pts match); residual is 8 straight-edge endpoints shifting 6-14pt (4 pairs incl. Target<->TThread) with matching piece counts; mechanism under re-diagnosis, see docs/known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout.",
       "ref": "known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout"
     },
     {
