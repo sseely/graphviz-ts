@@ -207,10 +207,12 @@ function finishChain(
  * edges drive the box geometry.
  * @see lib/dotgen/dotsplines.c:make_regular_edge (1771-1873 smode loop)
  */
-function routeChainSegmented(g: Graph, e: GraphEdge, segs: GraphEdge[]): Point[] | null {
+function routeChainSegmented(
+  g: Graph, beginEdge: GraphEdge, endEdge: GraphEdge, segs: GraphEdge[],
+): Point[] | null {
   const w = newChainWalk(g, segs);
   const thr = smodeThreshold(g);
-  beginSeg(w, e, segs[0], undefined, false);
+  beginSeg(w, beginEdge, segs[0], undefined, false);
   let ei = 0, segFirst = 0, smode = false, si = false, sl = 0;
   while (isChainVirtual(segs[ei].head)) {
     w.boxes.push(rankBox(w.ctx, segs[ei].tail.info.rank!));
@@ -225,7 +227,7 @@ function routeChainSegmented(g: Graph, e: GraphEdge, segs: GraphEdge[]): Point[]
     w.boxes.push(maximalBbox(w.ctx, segs[ei].head, segs[ei], segs[ei + 1]));
     ei++;
   }
-  return finishChain(w, e, segs[ei], segFirst, segs) ? w.pts : null;
+  return finishChain(w, endEdge, segs[ei], segFirst, segs) ? w.pts : null;
 }
 
 /**
@@ -254,7 +256,12 @@ export function routeMultiRankEdgeFaithful(g: Graph, e: GraphEdge): Point[] | nu
   // a chain ending at a virtual node is broken — bail, don't crash the loop.
   // @see dotsplines.c:make_regular_edge
   if (segs.length === 0 || segs[segs.length - 1].head !== e.head) return null;
-  return routeChainSegmented(g, e, segs);
+  // C's make_regular_edge drives beginpath with the FIRST chain fast edge and
+  // endpath with the LAST (each carries the orig's copied port, so a dyna
+  // record port resolves toward the adjacent-rank vnode, not the far real
+  // endpoint). @see lib/dotgen/dotsplines.c:make_regular_edge (tn/hn walk),
+  // lib/dotgen/fastgr.c:new_virtual_edge (port copies)
+  return routeChainSegmented(g, segs[0], segs[segs.length - 1], segs);
 }
 
 /**
@@ -298,9 +305,7 @@ export function routeEntryRun(g: Graph, entry: GraphEdge): GraphEdge | null {
   const segs = entryRunSegments(entry);
   if (segs === null) return null;
   const last = segs[segs.length - 1];
-  const portEdge = { ...entry, head: last.head,
-    info: { ...entry.info, head_port: last.info.head_port } } as GraphEdge;
-  const pts = routeChainSegmented(g, portEdge, segs);
+  const pts = routeChainSegmented(g, segs[0], last, segs);
   if (pts !== null) clipAndInstall(entry, last.head, pts, pts.length, buildDotSinfo());
   return resolveOrigEdge(entry);
 }
@@ -400,7 +405,7 @@ export function routeBackEdge(e: GraphEdge, _tailBox: NodeBox, _headBox: NodeBox
   const segs = backChainSegments(e);
   if (segs.length < 2 || segs[segs.length - 1].head !== e.tail) return;
   const fwdEdge = makeFwdEdge(e);
-  const fwd = routeChainSegmented(g, fwdEdge, segs);
+  const fwd = routeChainSegmented(g, fwdEdge, fwdEdge, segs);
   if (fwd === null) return;
   clipAndInstall(fwdEdge, fwdEdge.head, fwd, fwd.length, buildDotSinfo());
   if (swapEndsP(e) && e.info.spl !== undefined) swapSpline(e.info.spl);

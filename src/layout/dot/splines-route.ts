@@ -299,7 +299,11 @@ function isInterior(i: number, len: number): boolean {
 function baseSplineForGroup(g: Graph, e0: Edge): Point[] | null {
   const orig = resolveOrigEdge(e0);
   const fe = isBackEdgeMember(orig) ? makeFwdEdge(orig) : orig;
-  return routeRegularEdgeFaithful(g, fe) ?? routeMultiRankEdgeFaithful(g, fe);
+  const pts = routeRegularEdgeFaithful(g, fe);
+  // routesplines failure on the group base: C's make_regular_edge returns
+  // before any clip_and_install — every member of the group is lost.
+  if (pts === 'lost') return null;
+  return pts ?? routeMultiRankEdgeFaithful(g, fe);
 }
 
 /**

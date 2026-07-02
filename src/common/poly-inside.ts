@@ -148,6 +148,10 @@ export function polyInside(ctx: InsideContext, p: Point): boolean {
 export function recordInside(ctx: InsideContext, p: Point): boolean {
   const n = ctx.node as Node | undefined;
   if (n === undefined) return false;
+  // C converts the query point to the record's own (label) frame first:
+  // ccwrotatepf(p, 90 * GD_rankdir). @see lib/common/shapes.c:record_inside
+  const rankdir = (n.root.info.rankdir ?? 0) & 0x3;
+  const P = rankdir === 0 ? p : ccwrotatepf(p, rankdir * 90);
   let bb: { ll: Point; ur: Point };
   if (ctx.bp) {
     bb = ctx.bp;
@@ -157,6 +161,6 @@ export function recordInside(ctx: InsideContext, p: Point): boolean {
     bb = fld.b;
   }
   const pw = 0.5; // DEFAULT_NODEPENWIDTH / 2
-  return p.x >= bb.ll.x - pw && p.x <= bb.ur.x + pw
-    && p.y >= bb.ll.y - pw && p.y <= bb.ur.y + pw;
+  return P.x >= bb.ll.x - pw && P.x <= bb.ur.x + pw
+    && P.y >= bb.ll.y - pw && P.y <= bb.ur.y + pw;
 }

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-02T01:58:40.702Z",
+  "generatedAt": "2026-07-02T12:37:49.227Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 588,
-    "structural-match": 163,
-    "diverged": 26,
+    "conformant": 593,
+    "structural-match": 159,
+    "diverged": 25,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 12
@@ -64,9 +64,7 @@
     {
       "id": "1332",
       "path": "1332.dot",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "verdict": "conformant"
     },
     {
       "id": "1367",
@@ -800,7 +798,7 @@
       "id": "2646",
       "path": "2646.dot",
       "verdict": "structural-match",
-      "maxDelta": 75
+      "maxDelta": 42.08999999999992
     },
     {
       "id": "2669",
@@ -1072,8 +1070,7 @@
     {
       "id": "graphs-b145",
       "path": "graphs/b145.gv",
-      "verdict": "structural-match",
-      "maxDelta": 7.660000000000025
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b146",
@@ -1154,7 +1151,7 @@
       "id": "graphs-b57",
       "path": "graphs/b57.gv",
       "verdict": "structural-match",
-      "maxDelta": 54.309999999999945
+      "maxDelta": 21
     },
     {
       "id": "graphs-b58",
@@ -2004,8 +2001,7 @@
     {
       "id": "graphs-records",
       "path": "graphs/records.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.269999999999996
+      "verdict": "conformant"
     },
     {
       "id": "graphs-root",
@@ -3530,8 +3526,7 @@
     {
       "id": "share-records",
       "path": "share/records.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.27000000000001
+      "verdict": "conformant"
     },
     {
       "id": "share-rowe",
@@ -4109,8 +4104,7 @@
     {
       "id": "windows-records",
       "path": "windows/records.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.27000000000001
+      "verdict": "conformant"
     },
     {
       "id": "windows-rowe",

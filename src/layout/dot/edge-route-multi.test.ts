@@ -136,3 +136,24 @@ describe('regular multi-edge routing (G1, dot oracle)', () => {
     expect(svg).toContain('>2</text>');
   });
 });
+
+describe('lost-edge failure semantics (1332 T3)', () => {
+  it('healthy graphs emit every edge and no lost-edge warnings', () => {
+    // The routesplines-failure path (C: warning + no spline + edge skipped)
+    // must never trigger on routable graphs. Guards against the lost-edge
+    // marking leaking into the decline/fallback path.
+    const warnings: string[] = [];
+    const orig = console.warn;
+    console.warn = (msg?: unknown) => { warnings.push(String(msg)); };
+    try {
+      const svg = renderSvg(
+        'digraph{a->b; b->a; a->c; c->d[label="x"]; b->d; {rank=same; b c} b->c;}',
+        'dot');
+      const edgeGroups = svg.match(new RegExp('class=' + Q + 'edge' + Q, 'g')) ?? [];
+      expect(edgeGroups.length).toBe(6);
+    } finally {
+      console.warn = orig;
+    }
+    expect(warnings.filter(w => w.includes('lost') || w.includes('Pshortestpath'))).toEqual([]);
+  });
+});
