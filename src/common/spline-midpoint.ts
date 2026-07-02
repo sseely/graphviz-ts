@@ -10,7 +10,7 @@
 
 import type { Point } from '../model/geom.js';
 
-type BezLike = { list: Point[]; sflag: number; eflag: number; sp: Point; ep: Point };
+type BezLike = { list: Point[]; sflag: number; eflag: number; sp: Point; ep: Point; size?: number };
 export type SplLike = { list: BezLike[] };
 
 export function dist2(p: Point, q: Point): number {
@@ -34,13 +34,19 @@ export function dotneatoClosest(spl: SplLike, pt: Point): Point {
   let besti = 0; let bestj = -1; let bestd2 = Number.MAX_VALUE;
   for (let i = 0; i < spl.list.length; i++) {
     const bz = spl.list[i];
-    for (let j = 0; j < bz.list.length; j++) {
+    // C scans bz.size points — Bezier.list is over-allocated (calloc) and the
+    // zeroed tail beyond size must not win the closest-point scan (points at
+    // the origin skew the chosen segment; corpus decorate/1367 attachments).
+    // @see lib/common/utils.c:dotneato_closest
+    const n = bz.size ?? bz.list.length;
+    for (let j = 0; j < n; j++) {
       const d2 = dist2(bz.list[j], pt);
       if (bestj === -1 || d2 < bestd2) { besti = i; bestj = j; bestd2 = d2; }
     }
   }
   const bz = spl.list[besti];
-  let j = bestj === bz.list.length - 1 ? bestj - 1 : bestj;
+  const bzn = bz.size ?? bz.list.length;
+  let j = bestj === bzn - 1 ? bestj - 1 : bestj;
   j = 3 * Math.floor(j / 3);
   const c = [bz.list[j], bz.list[j + 1], bz.list[j + 2], bz.list[j + 3]];
   let lo = 0.0; let hi = 1.0;

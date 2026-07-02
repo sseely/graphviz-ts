@@ -79,6 +79,9 @@ export interface RendererPlugin {
   polygon(pts: Point[], filled: boolean, job: RenderJob): void;
   bezier(pts: Point[], filled: boolean, job: RenderJob): void;
   polyline(pts: Point[], job: RenderJob): void;
+  /** Edge-label attachment line (decorate=true): default line style, pen =
+   *  label fontcolor — NOT the edge's style. @see lib/common/emit.c:emit_attachment */
+  attachmentPolyline?(pts: Point[], pencolor: string, job: RenderJob): void;
   comment?(text: string, job: RenderJob): void;
   beginAnchor?(href: string, tooltip: string, target: string, id: string, job: RenderJob): void;
   endAnchor?(job: RenderJob): void;

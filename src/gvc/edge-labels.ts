@@ -13,7 +13,10 @@ import type { TextlabelT } from '../common/types.js';
 import type { RendererPlugin } from './context.js';
 import type { RenderJob } from './job.js';
 import { openAnchorWith } from './anchor.js';
-import { renderOneLabel } from './device.js';
+import { renderOneLabel, transformPoint } from './device.js';
+import { dotneatoClosest } from '../common/spline-midpoint.js';
+import { mapbool } from '../layout/dot/rank.js';
+import type { Spline } from '../model/geom.js';
 
 /**
  * Emit all four edge label slots in C order: label, xlabel, head, tail. Must
@@ -22,9 +25,15 @@ import { renderOneLabel } from './device.js';
  */
 export function renderEdgeLabels(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
   const obj = job.obj;
+  // C passes ED_spl to the label/xlabel emits when decorate=true, and
+  // emit_attachment then draws the label-to-spline polyline.
+  // @see lib/common/emit.c:3013-3017
+  const spl = mapbool(e.attrs.get('decorate') ?? 'false') ? e.info.spl : undefined;
   if (obj === null) {
     renderOneLabel(e.info.label as TextlabelT | undefined, renderer, job);
+    if (spl) emitAttachment(e.info.label as TextlabelT | undefined, spl, renderer, job);
     renderOneLabel(e.info.xlabel as TextlabelT | undefined, renderer, job);
+    if (spl) emitAttachment(e.info.xlabel as TextlabelT | undefined, spl, renderer, job);
     renderOneLabel(e.info.head_label, renderer, job);
     renderOneLabel(e.info.tail_label, renderer, job);
     return;
@@ -33,8 +42,8 @@ export function renderEdgeLabels(e: Edge, renderer: RendererPlugin, job: RenderJ
   const labelHs: LabelHotspot =
     { url: obj.labelUrl, tooltip: obj.labelTooltip, target: obj.labelTarget, explicit: obj.explicitLabelTooltip };
   // @see lib/common/emit.c:emit_edge (3010-3025) — per-label hot spots.
-  emitEdgeLabel(e.info.label as TextlabelT | undefined, `${id}-label`, labelHs, renderer, job);
-  emitEdgeLabel(e.info.xlabel as TextlabelT | undefined, `${id}-label`, labelHs, renderer, job);
+  emitEdgeLabel(e.info.label as TextlabelT | undefined, `${id}-label`, labelHs, renderer, job, spl);
+  emitEdgeLabel(e.info.xlabel as TextlabelT | undefined, `${id}-label`, labelHs, renderer, job, spl);
   emitEdgeLabel(e.info.head_label as TextlabelT | undefined, `${id}-headlabel`,
     { url: obj.headUrl, tooltip: obj.headTooltip, target: obj.headTarget, explicit: obj.explicitHeadTooltip },
     renderer, job);
@@ -63,10 +72,35 @@ function emitEdgeLabel(
   hs: LabelHotspot,
   renderer: RendererPlugin,
   job: RenderJob,
+  spl?: Spline,
 ): void {
   if (!lp?.set) return; // emit_edge_label: lbl == NULL || !lbl->set
   const open = hs.url !== null || hs.explicit;
   if (open) openAnchorWith(renderer, job, hs.url, hs.tooltip, hs.target, id);
   renderOneLabel(lp, renderer, job);
+  if (spl) emitAttachment(lp, spl, renderer, job); // emit.c:2918
   if (open) renderer.endAnchor?.(job);
+}
+
+/**
+ * Label-to-spline attachment polyline (decorate=true): from the label's
+ * bottom-right corner, along the bottom edge to bottom-left, then to the
+ * closest point on the spline. Skipped for all-whitespace label text. Drawn
+ * with the DEFAULT line style and the label's fontcolor, not the edge style.
+ * @see lib/common/emit.c:emit_attachment (1870-1894)
+ */
+function emitAttachment(
+  lp: TextlabelT | undefined,
+  spl: Spline,
+  renderer: RendererPlugin,
+  job: RenderJob,
+): void {
+  if (!lp?.set) return;
+  if (!/\S/.test(lp.text ?? '')) return; // C: skip all-whitespace text
+  const sz = lp.dimen;
+  const a0 = { x: lp.pos.x + sz.x / 2, y: lp.pos.y - sz.y / 2 };
+  const a1 = { x: a0.x - sz.x, y: a0.y };
+  const a2 = dotneatoClosest(spl, lp.pos);
+  const pts = [a0, a1, a2].map((pt) => transformPoint(pt, job));
+  renderer.attachmentPolyline?.(pts, lp.fontcolor || 'black', job);
 }
