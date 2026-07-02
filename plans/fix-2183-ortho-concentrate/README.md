@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: root-cause and fix `2183` (ortho + concentrate + cluster labels)
 
-**Status: NOT STARTED (authored 2026-07-02).**
+**Status: COMPLETE (2026-07-02). Outcome: 2183 diverged → CONFORMANT; 0 regressions.**
 
 ## Objective
 
@@ -68,9 +68,9 @@ test/corpus/parity.json` → `npx tsx test/corpus/dashboard.ts`.
 
 - [x] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 lost edges,
       T2 cluster labels, T3 delta attribution
-- [ ] [Batch 2 — faithful fixes](batch-2/overview.md): T4 edges, T5 labels
+- [x] [Batch 2 — faithful fixes](batch-2/overview.md): T4 edges, T5 labels
       (write-sets provisional until the gate)
-- [ ] [Batch 3 — verify + close](batch-3/overview.md): T6 survey, baseline,
+- [x] [Batch 3 — verify + close](batch-3/overview.md): T6 survey, baseline,
       comparison page (if any acceptance), summary, merge
 
 ## Index
@@ -87,3 +87,23 @@ Library port: SLIs/dashboards/on-call **N/A** — the parity survey + rules
 gate is the observability. Rollback: **Reversible** (branch merge revert).
 Scalability: N/A. Backwards compat: none (output moves toward the C
 reference; only corpus baselines change).
+
+
+## Mission summary (2026-07-02)
+
+Two faithful fixes, one commit each; 2183 moved **diverged → conformant**.
+
+- **T1–T3 (gate):** single root for all three symptom classes —
+  `infuseAllNodes` fed fast-graph segments to the chain walk, leaving
+  vnode-only cluster ranks leaderless → `dotConcentrate` -1 →
+  `dotPosition` early-return (no x-solve, no cluster geometry). Write-set
+  re-scoped to conc.ts at the gate.
+- **T4a (df0fa57):** iterate original cluster out-edges (conc.c:146).
+  Covered T5's label symptom too.
+- **T4b (e38aa17):** post-T4a residual failed the D3 equal-cost test
+  (m->e dangled) → second mechanism: bend-at-end segment built from
+  stale cp/prevbp/bp1 (C advances them first, ortho.c:182-203).
+- **T6:** canary 18s; survey+gate PASS (1 mover: 2183→conformant, 0
+  regressions, clip-watch −1); baseline/PARITY.md refreshed; oracle
+  byte-verified after C revert; tsc 0; vitest 2556/2556 (2 new
+  regression tests, both red/green-verified).
