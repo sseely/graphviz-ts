@@ -13,7 +13,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Box, Point } from '../../model/geom.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
-import { nodeRankOf, nodeOrderOf, nodeCoordX, splineMerge, resolveOrigEdge, swapSpline } from './splines.js';
+import { nodeRankOf, nodeOrderOf, nodeCoordX, splineMerge, resolveOrigEdge, swapEdgeSpline } from './splines.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { routeRegularEdgeFaithful } from './edge-route-faithful.js';
@@ -355,7 +355,7 @@ function installShiftedEdge(e: Edge, shifted: Point[]): void {
   // routed here, so this never double-reverses. @see dotsplines.c:edge_normalize
   if (back) {
     const orig = resolveOrigEdge(e);
-    if (orig.info.spl) swapSpline(orig.info.spl);
+    swapEdgeSpline(orig);
   }
 }
 

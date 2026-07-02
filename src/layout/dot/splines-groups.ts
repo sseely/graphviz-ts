@@ -11,7 +11,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Edge } from '../../model/edge.js';
 import {
   getMainEdge, resolveOrigEdge, portcmp, gatePorts, edgeTreeIndex, nodeRankOf,
-  swapEndsP, swapSpline, EDGETYPE_CURVED, EDGETYPEMASK, FLATEDGE, MAINGRAPH,
+  swapEndsP, swapEdgeSpline, EDGETYPE_CURVED, EDGETYPEMASK, FLATEDGE, MAINGRAPH,
 } from './splines.js';
 import { routeLoneEdge } from './edge-route.js';
 import { routeEntryRun } from './edge-route-chain.js';
@@ -139,7 +139,7 @@ function routeCurvedGroup(g: Graph, group: Edge[]): void {
   makeStraightEdges(g, uniq, uniq.length, EDGETYPE_CURVED, buildDotSinfo());
   // Reversed back edges live in ND_other (edgeNormalize skips them); swap here.
   for (const e of uniq) {
-    if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
+    if (swapEndsP(e)) swapEdgeSpline(e);
   }
 }
 
