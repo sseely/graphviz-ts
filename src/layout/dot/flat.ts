@@ -21,7 +21,7 @@ import type { Edge } from '../../model/edge.js';
 import type { RankEntry } from '../../model/rankEntry.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
 import { FLATORDER, NORMAL, VIRTUAL, virtualNode, virtualEdge } from './fastgr.js';
-import { recSaveVlists } from './mincross.js';
+import { recSaveVlists, recResetVlists, dotRoot } from './mincross.js';
 import { checkLabelOrder } from './label-order.js';
 import {
   nodeOrder, nodeRank, graphMaxrank, graphMinrank, getOrd,
@@ -430,9 +430,13 @@ export function flatEdges(g: Graph): boolean {
   if (needsAbomination(g)) abomination(g);
   recSaveVlists(g);
   const reset = processNodes(g);
-  // C also calls rec_reset_vlists(g) here (flat.c:333); it is cluster-only
-  // (GD_rankleader) and needs a MincrossContext not threaded to this position-
-  // phase call, so it is deferred (DOT-5 AD-4). The reorder itself is wired.
-  if (reset) checkLabelOrder(g);
+  if (reset) {
+    checkLabelOrder(g);
+    // Cluster rank windows (rankleader/vStart/n) are stale once flat_node
+    // inserted label vnodes and shifted ND_order; C re-derives them here.
+    // Only Root is consulted by the reset chain, so a bare {root} suffices
+    // in place of the mincross-pass context. @see lib/dotgen/flat.c:333
+    recResetVlists({ root: dotRoot(g) }, g);
+  }
   return reset;
 }
