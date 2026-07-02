@@ -9,7 +9,7 @@ not a guess. No `src/` change (temporary probes reverted).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T1 | Map C's `dot_splines_` collect + group loop vs the port's; verify `getMainEdge`/`to_virt` coalesces the 6 secondary edges; write the design note (exact collect change + coalescence proof + any getMainEdge fix) | inline | `.agent-notes/graphs-b15-collect-design.md`, `decision-journal.md` | — | [ ] |
+| T1 | Map C's `dot_splines_` collect + group loop vs the port's; verify `getMainEdge`/`to_virt` coalesces the 6 secondary edges; write the design note (exact collect change + coalescence proof + any getMainEdge fix) | inline | `.agent-notes/graphs-b15-collect-design.md`, `decision-journal.md` | — | [x] |
 
 Single task; notes only → no conflict with Batch 2. Output read by T2.
 

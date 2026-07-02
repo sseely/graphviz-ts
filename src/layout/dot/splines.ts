@@ -18,13 +18,11 @@ import type { Bezier, Spline, Port } from '../../model/geom.js';
 import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
 import { IGNORED, EDGE_LABEL } from './rank.js';
 import { markLowclusters } from './cluster.js';
-import { routeDotEdges, routeLoneEdge } from './edge-route.js';
-import { routeMergedChain } from './edge-route-chain.js';
-import { collectOtherEdges, routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
+import { routeDotEdges } from './edge-route.js';
+import { collectOtherEdges } from './self-loop.js';
 import { dispatchOrthoEdges } from './ortho-adapter.js';
-import { routeParallelEdgeGroup } from './splines-route.js';
+import { routeEdgeGroups } from './splines-groups.js';
 import { placePortLabels, placeRegularEdgeLabels, setEdgeLabelPos } from './splines-label.js';
-import { makeStraightEdges } from './straight-edges.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -214,6 +212,32 @@ export function cmpXDiff(le0: Edge, le1: Edge): number {
   return numCmp(v0, v1);
 }
 
+/**
+ * portcmp: undefined sorts before defined; defined ports order by (x, y).
+ * @see lib/dotgen/dotsplines.c:portcmp
+ */
+export function portcmp(p0: Port, p1: Port): number {
+  if (!p1.defined) return p0.defined ? 1 : 0;
+  if (!p0.defined) return -1;
+  if (p0.p.x < p1.p.x) return -1;
+  if (p0.p.x > p1.p.x) return 1;
+  if (p0.p.y < p1.p.y) return -1;
+  if (p0.p.y > p1.p.y) return 1;
+  return 0;
+}
+
+/**
+ * Gate-edge ports in forward orientation: C picks ea = e when e carries a
+ * defined port, else its main edge, then views a BWDEDGE through makefwdedge
+ * (which swaps tail/head ports). Only the ports matter for comparison.
+ * @see lib/dotgen/dotsplines.c:edgecmp, dot_splines_ (ea/eb selection)
+ */
+export function gatePorts(e: Edge, le: Edge): [Port, Port] {
+  const ea = e.info.tail_port.defined || e.info.head_port.defined ? e : le;
+  if (edgeTreeIndex(ea) & BWDEDGE) return [ea.info.head_port, ea.info.tail_port];
+  return [ea.info.tail_port, ea.info.head_port];
+}
+
 /** @see lib/dotgen/dotsplines.c:edgecmp */
 export function edgecmp(e0: Edge, e1: Edge): number {
   const r = numCmp(edgeTreeIndex(e1) & EDGETYPEMASK, edgeTreeIndex(e0) & EDGETYPEMASK);
@@ -226,6 +250,16 @@ export function edgecmp(e0: Edge, e1: Edge): number {
   if (xd !== 0) return xd;
   const sq = numCmp(le0.seq, le1.seq);
   if (sq !== 0) return sq;
+  const [eaT, eaH] = gatePorts(e0, le0);
+  const [ebT, ebH] = gatePorts(e1, le1);
+  const pt = portcmp(eaT, ebT);
+  if (pt !== 0) return pt;
+  const ph = portcmp(eaH, ebH);
+  if (ph !== 0) return ph;
+  const gt = numCmp(edgeTreeIndex(e0) & GRAPHTYPEMASK, edgeTreeIndex(e1) & GRAPHTYPEMASK);
+  if (gt !== 0) return gt;
+  // C also orders same-key FLAT edges by ED_label pointer; label identity has
+  // no stable order in TS, and flat groups still break on label in groupSize.
   return numCmp(e0.seq, e1.seq);
 }
 
@@ -305,141 +339,38 @@ export function collectNodeEdges(n: Node, edges: Edge[]): void {
   collectOtherEdges(n, edges);
 }
 
+/**
+ * Collect routing edges by iterating the rank array (`minrank..maxrank`,
+ * `v[0..n-1]`), null-guarding empty `.v` slots exactly as C does. This visits
+ * VIRTUAL `splineMerge` nodes in addition to NORMAL nodes, so the merged
+ * secondary chains that a `concentrate` DOWN-sweep rewires onto a virtual merge
+ * node's out-list are gathered and routed (they are absent from `g.nodes`).
+ * `nodeNeedsRouting` still gates each node to NORMAL || splineMerge.
+ * @see lib/dotgen/dotsplines.c:dot_splines_ (281-320)
+ */
+export function collectRankEdges(g: Graph, edges: Edge[]): void {
+  const ranks = g.info.rank;
+  // No rank table (never happens for a laid-out dot graph): fall back to the
+  // node map so a degenerate graph still collects its NORMAL out-edges.
+  if (ranks === undefined || g.info.minrank === undefined || g.info.maxrank === undefined) {
+    for (const n of g.nodes.values()) collectNodeEdges(n, edges);
+    return;
+  }
+  for (let i = g.info.minrank; i <= g.info.maxrank; i++) {
+    const rk = ranks[i];
+    if (rk === undefined) continue;
+    for (let j = 0; j < rk.n; j++) {
+      const n = rk.v[j];
+      if (n == null) continue; // C guards GD_rank(g)[i].v[j] slots
+      collectNodeEdges(n, edges);
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // dot_splines_ / dot_splines — main entry points
 // @see lib/dotgen/dotsplines.c:dot_splines_, dot_splines
 // ---------------------------------------------------------------------------
-
-/**
- * portcmp == 0: both undefined, or both defined with an equal aiming point.
- * @see lib/dotgen/dotsplines.c:portcmp
- */
-function portEq(a: Port, b: Port): boolean {
-  if (!a.defined && !b.defined) return true;
-  if (!a.defined || !b.defined) return false;
-  return a.p.x === b.p.x && a.p.y === b.p.y;
-}
-
-/** C's group-gating edge: e itself when it carries a defined port, else its
- *  main edge. @see lib/dotgen/dotsplines.c:dot_splines (ea/eb selection) */
-function portGateEdge(e: Edge): Edge {
-  return e.info.tail_port.defined || e.info.head_port.defined ? e : getMainEdge(e);
-}
-
-/**
- * Count how many consecutive entries in `edges` starting at `ind` share the
- * same main edge (i.e. belong to the same parallel group). Cross-rank members
- * whose tail/head ports differ are split into separate groups, as C does via
- * portcmp — so two parallels carrying distinct samehead/sametail ports each get
- * their own base spline. (C's ED_adjacent flat edges skip this and group as one;
- * here flat same-rank edges are routed by a separate sweep, so the split is
- * scoped to cross-rank edges.)
- * @see lib/dotgen/dotsplines.c:dot_splines (355-376)
- */
-function groupSize(edges: Edge[], ind: number): number {
-  const e0 = edges[ind];
-  const le0 = getMainEdge(e0);
-  const crossRank = nodeRankOf(e0.tail) !== nodeRankOf(e0.head);
-  const ea = portGateEdge(e0);
-  let cnt = 1;
-  while (ind + cnt < edges.length) {
-    const e1 = edges[ind + cnt];
-    if (getMainEdge(e1) !== le0) break;
-    if (crossRank) {
-      const eb = portGateEdge(e1);
-      if (!portEq(ea.info.tail_port, eb.info.tail_port)) break;
-      if (!portEq(ea.info.head_port, eb.info.head_port)) break;
-    }
-    cnt++;
-  }
-  return cnt;
-}
-
-/** Original-edge creation seq (resolve virtuals) — restores C's edgecmp order. */
-function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
-
-/**
- * Collapse a main-edge group to one representative per distinct original edge.
- * The opposing `a->b`/`b->a` case collects three entries but two distinct
- * originals; dedup by `resolveOrigEdge` yields one per original (parallels
- * untouched). @see dotsplines.c:make_regular_edge (one clip_and_install per orig)
- */
-function dedupByOrig(group: Edge[]): Edge[] {
-  const seen = new Set<Edge>();
-  const out: Edge[] = [];
-  for (const e of group) {
-    const o = resolveOrigEdge(e);
-    if (seen.has(o)) continue;
-    seen.add(o);
-    out.push(e);
-  }
-  return out;
-}
-
-/**
- * Dispatch one edgecmp group: self-loop → routeSelfEdgeGroup; cross-rank cnt>1 →
- * routeParallelEdgeGroup (Multisep offsets); cross-rank cnt==1 → routeLoneEdge
- * in-place (C order); same-rank flat → left for the routeDotEdges sweep.
- * @see lib/dotgen/dotsplines.c:367-419
- */
-function dispatchEdgeGroup(g: Graph, group: Edge[], multisep: number): void {
-  const e0 = group[0];
-  if (e0.tail === e0.head) {
-    routeSelfEdgeGroup(g, group, group.length, multisep, buildDotSinfo());
-    return;
-  }
-  if (nodeRankOf(e0.tail) === nodeRankOf(e0.head)) return;
-  const uniq = dedupByOrig(group);
-  // Lone edge: route HERE at its edgecmp position (interleaved with groups), as C
-  // does, so it reads recover_slack-moved vnodes correctly. @see root-cause.md
-  if (uniq.length <= 1) {
-    const lone = resolveOrigEdge(uniq[0]);
-    // A concentrate-merged chain routes as lead-in + shared trunk beziers on the
-    // representative; routeMergedChain declines (false) for plain chains, which
-    // route as a single spline. @see dotsplines.c:make_regular_edge (spline_merge)
-    if (!routeMergedChain(g, lone)) routeLoneEdge(lone, g);
-    return;
-  }
-  // Sort by original seq so the first original gets the leftmost offset, matching
-  // C's allocation order (e1<e2<e3). @see dotsplines.c:make_regular_edge:1885-1907
-  uniq.sort((a, b) => origSeq(a) - origSeq(b));
-  routeParallelEdgeGroup(g, uniq, multisep);
-}
-
-/**
- * Route one curved group via makeStraightEdges. C routes the whole same-endpoint
- * group at once — parallels AND opposing edges (`a->b`/`b->a`) together (a 2-cycle
- * is one cnt=2 group, ports (0,0); the visible separation is perp-spread clipped
- * to the node). Dedup the TS virtual duplicates to distinct originals; sort by
- * creation seq so index→perp-offset matches C (first → +perp); makeStraightEdges
- * reverses the opposing edge's control points via its head==group-head check.
- * @see lib/dotgen/dotsplines.c:381-387, lib/common/routespl.c:1000-1041
- */
-function routeCurvedGroup(g: Graph, group: Edge[]): void {
-  const uniq = dedupByOrig(group);
-  uniq.sort((a, b) => origSeq(a) - origSeq(b));
-  makeStraightEdges(g, uniq, uniq.length, EDGETYPE_CURVED, buildDotSinfo());
-  // Reversed back edges live in ND_other (edgeNormalize skips them); swap here.
-  for (const e of uniq) {
-    if (swapEndsP(e) && e.info.spl) swapSpline(e.info.spl);
-  }
-}
-
-/**
- * Route one parallel-edge group from the sorted edge list.
- * Returns the number of edges consumed (cnt). For `splines=curved` the group is
- * routed via `makeStraightEdges` instead of the normal per-group router.
- * @see lib/dotgen/dotsplines.c:343-419
- */
-function routeEdgeGroup(g: Graph, edges: Edge[], ind: number, multisep: number, et: number): number {
-  const cnt = groupSize(edges, ind);
-  if (et === EDGETYPE_CURVED) {
-    routeCurvedGroup(g, edges.slice(ind, ind + cnt));
-    return cnt;
-  }
-  dispatchEdgeGroup(g, edges.slice(ind, ind + cnt), multisep);
-  return cnt;
-}
 
 /**
  * Main spline routing entry point (internal, with normalize flag).
@@ -520,15 +451,28 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   if (et === EDGETYPE_CURVED) curvedTop(g);
   markLowclusters(g);
   const edges: Edge[] = [];
-  for (const n of g.nodes.values()) collectNodeEdges(n, edges);
+  collectRankEdges(g, edges);
   edges.sort(edgecmp);
   // C places line-edge labels BEFORE the routing loop (dotsplines.c:334-340) so
   // the line router reads final label positions; lone edges now route in-loop.
   if (et === EDGETYPE_LINE) placeRegularEdgeLabels(g);
-  const multisep = g.info.nodesep ?? 18;
-  for (let l = 0; l < edges.length;) l += routeEdgeGroup(g, edges, l, multisep, et);
+  const runOrigs = routeEdgeGroups(g, edges, g.info.nodesep ?? 18, et);
+  if (normalize) normalizeRunOrigs(runOrigs);
   finalizeSplines(g, et, normalize);
   return 0;
+}
+
+/**
+ * Normalize the per-run assembled splines tail→head, once per orig — C's
+ * edge_normalize covers these via the cgraph edge lists; the port's
+ * edgeNormalize walks the fast graph only, and back-edge origs whose chain
+ * was routed per-run live in ND_other, so swap them here.
+ * @see lib/dotgen/dotsplines.c:edge_normalize
+ */
+function normalizeRunOrigs(runOrigs: Set<Edge>): void {
+  for (const o of runOrigs) {
+    if (swapEndsP(o) && o.info.spl !== undefined) swapSpline(o.info.spl);
+  }
 }
 
 /**

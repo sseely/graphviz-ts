@@ -60,24 +60,24 @@ intend to close (accepted structural-match deltas are listed above instead).
 | `windows-b124` | 1988.63 | `svg/g[1]/g[157]/path[1]/@d` |
 | `graphs-b51` | 1096.40 | `svg/g[1]/g[32]/path[1]/@d` |
 | `1367` | 1083.21 | `svg/g[1]/g[1][childCount]` |
+| `graphs-b15` | 1033.00 | `svg/g[1]/g[15]/path[2]` |
 | `1879` | 875.68 | `svg/g[1]/g[191]/path[1]/@d` |
 | `graphs-decorate` | 724.47 | `svg/g[1]/g[5][childCount]` |
-| `1436` | 564.90 | `svg/g[1]/g[25]/path[1]/@d` |
 | `1435` | 503.00 | `svg/g[1][childCount]` |
+| `2825` | 472.00 | `svg/g[1][childCount]` |
 | `graphs-b69` | 466.64 | `svg/g[1]/g[84]/path[2]` |
 | `1581` | 465.00 | `svg/g[1][childCount]` |
-| `2825` | 460.49 | `svg/g[1][childCount]` |
 | `2619_1` | 421.00 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
 | `2619_2` | 421.00 | `svg/g[1]/g[1]/g[1]/a[1][childCount]` |
 | `1939` | 348.00 | `svg/g[1]/g[8]/path[1]/@d` |
 | `2183` | 248.00 | `svg/g[1][childCount]` |
+| `1436` | 204.29 | `svg/g[1]/g[25]/path[1]/@d` |
 | `1447` | 192.39 | `svg/g[1]/g[13]/path[1]/@d` |
 | `1880` | 151.37 | `svg/g[1]/g[2][childCount]` |
 | `2521` | 144.00 | `svg/g[1]/g[10]/path[1]/@d` |
 | `2475_2` | 85.00 | `svg/g[1]/g[4074]/path[1]/@d` |
 | `2796` | 62.57 | `svg/g[1][childCount]` |
 | `1332` | 0.00 | `svg/g[1][childCount]` |
-| `graphs-b15` | 0.00 | `svg/g[1][childCount]` |
 | `graphs-structs` | 0.00 | `svg/g[1][childCount]` |
 | `graphs-user_shapes` | 0.00 | `svg/g[1]/g[1]/ellipse[1]` |
 
@@ -120,8 +120,8 @@ a candidate oracle-pinned fix mission.
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `element-count` | 15 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
+| `element-count` | 14 | `1332`, `1367`, `1435` | missing/extra SVG elements — node, edge, cluster box, or arrowhead count differs |
 | `path-structure` | 12 | `1436`, `1447`, `1718` | edge path has a different command sequence or point count — spline routing structure |
-| `attr-or-tag` | 2 | `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
+| `attr-or-tag` | 3 | `graphs-b15`, `graphs-b69`, `graphs-user_shapes` | element tag or a non-coordinate attribute differs |
 
 
