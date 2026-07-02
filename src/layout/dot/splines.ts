@@ -16,6 +16,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Bezier, Spline, Port } from '../../model/geom.js';
 import { VIRTUAL, NORMAL, FLATORDER } from './fastgr.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
 import { IGNORED, EDGE_LABEL } from './rank.js';
 import { markLowclusters } from './cluster.js';
 import { routeDotEdges } from './edge-route.js';
@@ -452,7 +453,14 @@ export function dotSplines_(g: Graph, normalize: boolean): number {
   markLowclusters(g);
   const edges: Edge[] = [];
   collectRankEdges(g, edges);
-  edges.sort(edgecmp);
+  // C sorts with libc qsort (LIST_SORT → gv_list_sort_ → qsort), which is
+  // UNSTABLE: the two MAINGRAPH entries of one concentrate-merged original
+  // compare equal all the way through edgecmp (same main edge, same copied
+  // AGSEQ), and the Bentley-McIlroy permutation decides which run is routed
+  // — and therefore which bezier clip_and_install appends — first (b69).
+  // A stable Array.sort keeps collection order instead; gvQsort reproduces
+  // the oracle's qsort permutation. @see util/bsd-qsort.ts (TB_balance)
+  gvQsort(edges, edgecmp);
   // C places line-edge labels BEFORE the routing loop (dotsplines.c:334-340) so
   // the line router reads final label positions; lone edges now route in-loop.
   if (et === EDGETYPE_LINE) placeRegularEdgeLabels(g);
