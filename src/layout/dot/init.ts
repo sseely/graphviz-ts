@@ -16,6 +16,7 @@ import { POINTS_PER_INCH } from '../../model/geom.js';
 import { makeDrawing } from '../../model/layoutParams.js';
 import type { RatioKind } from '../../model/layoutParams.js';
 import { nonconstraintEdge } from './classify.js';
+import { nodeAttr } from '../../common/poly-init.js';
 import { NORMAL, deleteFastNode, removeFromRank } from './fastgr.js';
 import { mapbool } from './rank.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
@@ -207,11 +208,13 @@ function initSubgraphRankdir(g: Graph): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Crossing penalty for edges within the same group on a self-loop.
- * Uses the 16-bit-safe value.
+ * Crossing penalty for cluster-skeleton / same-group edges.
+ * C uses 1000 except under _WIN32, where 100 avoids a 16-bit overflow.
+ * The oracle platform (and every modern build) takes the 1000 branch;
+ * mincross best-order selection on penalty plateaus depends on it.
  * @see lib/common/const.h:CL_CROSS
  */
-export const CL_CROSS = 100;
+export const CL_CROSS = 1000;
 
 // ---------------------------------------------------------------------------
 // dotInitNode
@@ -243,12 +246,16 @@ export function dotInitNode(n: Node): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Detects self-loops for the purpose of group-penalty logic.
- * A self-loop has the same tail and head node.
+ * True when tail and head carry the same non-empty `group` attribute.
+ * C compares interned refstr pointers (`tailgroup == headgroup`); cgraph's
+ * per-graph string pool makes that exactly content equality, and the
+ * `tailgroup[0]` guard excludes the shared "" default.
  * @see lib/dotgen/dotinit.c:dot_init_edge (tailgroup/headgroup check)
  */
-export function isSelfLoop(e: Edge): boolean {
-  return e.tail === e.head;
+export function sameNonemptyGroup(e: Edge): boolean {
+  const tailgroup = nodeAttr(e.tail, e.tail.root, 'group') ?? '';
+  const headgroup = nodeAttr(e.head, e.head.root, 'group') ?? '';
+  return tailgroup !== '' && tailgroup === headgroup;
 }
 
 /**
@@ -263,11 +270,11 @@ function initEdgeConstraint(e: Edge): void {
 }
 
 /**
- * Applies the self-loop group-penalty to xpenalty and weight.
+ * Applies the same-group penalty to xpenalty and weight.
  * @see lib/dotgen/dotinit.c:dot_init_edge (tailgroup/headgroup block)
  */
 function applyGroupPenalty(e: Edge): void {
-  if (!isSelfLoop(e)) return;
+  if (!sameNonemptyGroup(e)) return;
   e.info.xpenalty = CL_CROSS;
   e.info.weight = (e.info.weight ?? 1) * 100;
 }
