@@ -1,8 +1,17 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: verify-oracle-bug-family — 2471, 1939, 1435, graphs-structs
 
-**Status: NOT STARTED (authored 2026-07-02 by the fix/2796-cluster-ranking
-mission; execute with a fresh session).**
+**Status: IN PROGRESS (started 2026-07-02, branch
+`chore/verify-oracle-bug-family`).**
+
+## Batches
+
+- [x] Batch 1 — upstream review → disposition matrix (T1)
+- [ ] Batch 2 — per-id inputs verification (T2 2471, T3 1939, T4 1435,
+      T5 graphs-structs, T6 faithful wall-edge question)
+- [ ] Batch 3 — conditional fixes (populated from B2)
+- [ ] Batch 4 — dispositions + comparison pages + survey + merge
+      (T7–T10)
 
 ## Objective
 
