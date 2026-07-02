@@ -10,33 +10,6 @@
       "ref": "known-divergences.md#a1-floating-point-determinism-force-directed-engines"
     },
     {
-      "match": { "id": "graphs-NaN" },
-      "class": "A2",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "maxΔ~18pt; fine x only",
-      "reason": "wide-label font-metric delta (no bundled rasterizer) tips an integer x-network-simplex constraint; ranks/order/topology identical.",
-      "ref": "known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout"
-    },
-    {
-      "match": { "id": "share-NaN" },
-      "class": "A2",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "maxΔ~18pt; fine x only",
-      "reason": "wide-label font-metric delta (no bundled rasterizer) tips an integer x-network-simplex constraint; ranks/order/topology identical.",
-      "ref": "known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout"
-    },
-    {
-      "match": { "id": "windows-NaN" },
-      "class": "A2",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "maxΔ~18pt; fine x only",
-      "reason": "wide-label font-metric delta (no bundled rasterizer) tips an integer x-network-simplex constraint; ranks/order/topology identical.",
-      "ref": "known-divergences.md#a2-text-measurement-font-metrics-→-label-driven-layout"
-    },
-    {
       "match": { "id": "2368" },
       "class": "A3",
       "scope": "parity",

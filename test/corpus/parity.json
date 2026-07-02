@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-02T00:02:24.428Z",
+  "generatedAt": "2026-07-02T01:58:40.702Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 578,
-    "structural-match": 170,
-    "diverged": 29,
+    "conformant": 588,
+    "structural-match": 163,
+    "diverged": 26,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 12
@@ -882,8 +882,7 @@
     {
       "id": "42",
       "path": "42.dot",
-      "verdict": "structural-match",
-      "maxDelta": 18.430000000000064
+      "verdict": "conformant"
     },
     {
       "id": "56",
@@ -944,8 +943,7 @@
     {
       "id": "graphs-NaN",
       "path": "graphs/NaN.gv",
-      "verdict": "structural-match",
-      "maxDelta": 18
+      "verdict": "conformant"
     },
     {
       "id": "graphs-NewCenturySchlbk",
@@ -1058,9 +1056,8 @@
     {
       "id": "graphs-b124",
       "path": "graphs/b124.gv",
-      "verdict": "diverged",
-      "maxDelta": 1988.63,
-      "firstDiffPath": "svg/g[1]/g[157]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 1988.63
     },
     {
       "id": "graphs-b135",
@@ -1304,8 +1301,7 @@
     {
       "id": "graphs-clust2",
       "path": "graphs/clust2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.170000000000002
+      "verdict": "conformant"
     },
     {
       "id": "graphs-clust3",
@@ -1867,8 +1863,7 @@
     {
       "id": "graphs-ngk10_4",
       "path": "graphs/ngk10_4.gv",
-      "verdict": "structural-match",
-      "maxDelta": 14.099999999999909
+      "verdict": "conformant"
     },
     {
       "id": "graphs-nhg",
@@ -3032,8 +3027,7 @@
     {
       "id": "share-NaN",
       "path": "share/NaN.gv",
-      "verdict": "structural-match",
-      "maxDelta": 18
+      "verdict": "conformant"
     },
     {
       "id": "share-Petersen",
@@ -3078,9 +3072,8 @@
     {
       "id": "share-b124",
       "path": "share/b124.gv",
-      "verdict": "diverged",
-      "maxDelta": 1989.63,
-      "firstDiffPath": "svg/g[1]/g[157]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 1989.63
     },
     {
       "id": "share-b29",
@@ -3132,8 +3125,7 @@
     {
       "id": "share-clust2",
       "path": "share/clust2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.170000000000002
+      "verdict": "conformant"
     },
     {
       "id": "share-clust3",
@@ -3492,8 +3484,7 @@
     {
       "id": "share-ngk10_4",
       "path": "share/ngk10_4.gv",
-      "verdict": "structural-match",
-      "maxDelta": 14.099999999999909
+      "verdict": "conformant"
     },
     {
       "id": "share-nhg",
@@ -3641,8 +3632,7 @@
     {
       "id": "windows-NaN",
       "path": "windows/NaN.gv",
-      "verdict": "structural-match",
-      "maxDelta": 18
+      "verdict": "conformant"
     },
     {
       "id": "windows-Petersen",
@@ -3672,9 +3662,8 @@
     {
       "id": "windows-b124",
       "path": "windows/b124.gv",
-      "verdict": "diverged",
-      "maxDelta": 1988.63,
-      "firstDiffPath": "svg/g[1]/g[157]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 1988.63
     },
     {
       "id": "windows-b29",
@@ -3715,8 +3704,7 @@
     {
       "id": "windows-clust2",
       "path": "windows/clust2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 9.170000000000002
+      "verdict": "conformant"
     },
     {
       "id": "windows-clust3",
@@ -4070,8 +4058,7 @@
     {
       "id": "windows-ngk10_4",
       "path": "windows/ngk10_4.gv",
-      "verdict": "structural-match",
-      "maxDelta": 14.099999999999909
+      "verdict": "conformant"
     },
     {
       "id": "windows-nhg",

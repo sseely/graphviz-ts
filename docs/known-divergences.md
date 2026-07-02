@@ -37,9 +37,9 @@ below) is
 [`test/corpus/accepted-divergences.json`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/accepted-divergences.json).
 The tooling joins it at report time: `PARITY.md` splits **accepted deltas** from
 the **tracked** backlog, and the rules gate sources its allowlist from it. The
-prose sections below (A1/A2/A3) explain each entry; a CI test
-(`accepted-divergences.test.ts`) enforces that every accepted graph still
-diverges, so this list cannot silently rot.
+prose sections below explain each entry (A1 and A3 are live; A2 is closed and
+kept as history); a CI test (`accepted-divergences.test.ts`) enforces that
+every accepted graph still diverges, so this list cannot silently rot.
 
 ---
 
@@ -100,178 +100,175 @@ its native engine vs the port. The honest ceiling on that work is to **narrow**
 A1 to "no active divergence on the reference platform," never to eliminate the
 cross-platform caveat.
 
-### A2. Text measurement (font metrics) → label-driven layout
+### A2. Text measurement (font metrics) → label-driven layout — CLOSED
 
-> **Status update (2026-06-30): A2 has largely collapsed.** Successive
-> text-measurement fixes (the `EstimateTextMeasurer` cutover, font-aware vertical
-> metrics, the non-ASCII UTF-8-byte fix) closed most of this class. **`proc3d` —
-> the former canonical A2 example — is now fully `conformant`** on all three
-> corpus dirs (`graphs-`/`share-`/`windows-proc3d`): matching bbox, zero
-> path-data diffs, zero label-anchor diffs. The only A2 case still tracked is the
-> **`NaN` family** (`graphs-`/`share-`/`windows-NaN`, `structural-match`,
-> maxΔ~18). Two framing points below are historical and are being reconciled:
-> (1) the "native C" width numbers in the measurement table are **FreeType**
-> values, but the parity survey runs **both** sides through
-> `estimate_textspan_size` (the headless `/tmp/ghl` oracle has no text-layout
-> plugin), so that table no longer reflects how parity is measured — both engines
-> agree on `estimate`, which is *why* `proc3d` matches; (2) the proc3d overlay
-> figures further down depict a **non-corpus** `proc3d` (`graphs/directed/proc3d.gv`,
-> ~2620pt) that is not in the parity survey and no longer represents an active
-> divergence. The injectable-`TextMeasurer` seam explanation remains accurate and
-> valuable. The `NaN` mechanism is **under re-diagnosis** (see below): its node
-> centers now match C exactly, so the historical "node-width → node-x shift" story
-> no longer holds.
+**Status (2026-07-01): closed.** No corpus id is accepted under this class
+any more; the section is retained as historical documentation of the
+mechanism and of the injectable-`TextMeasurer` seam that neutralized it.
+Successive text-measurement fixes (the `EstimateTextMeasurer` cutover,
+font-aware vertical metrics, the non-ASCII UTF-8-byte fix) resolved nearly
+every label-driven layout divergence that used to live here. **`proc3d`** —
+the former canonical A2 example — is fully **`conformant`** on all three
+corpus dirs (`graphs-`/`share-`/`windows-proc3d`): matching bbox, zero
+path-data diffs, zero label-anchor diffs.
 
-**Affected:** Graphs with **wide text labels** whose measured width happens to
-tip an integer-rounding boundary inside layout — where the port's
-`estimate_textspan_size` port and the native oracle's own `estimate_textspan_size`
-disagree by a fraction of a point. Most labels are unaffected; short labels and
-many long ones match exactly. The remaining tracked case is the `NaN` family
-(`graphs-NaN` / `share-NaN` / `windows-NaN`, see below).
+**The last members retired (2026-07-01).** The **`NaN` family**
+(`graphs-NaN` / `share-NaN` / `windows-NaN`) was carried here long after its
+node geometry already matched C exactly (76/76 reference points). Its real
+residual — 8 straight-edge endpoints on four opposing 2-cycle pairs
+(`Target↔TThread`, `Interp↔InterpF`, `Event↔Target`,
+`AtomProperties↔NRAtom`) shifted 6–14 pt — was re-diagnosed and turned out
+to be **no font-metric effect at all**, but two port defects in dot's
+multi-edge routing (mission `plans/fix-nan-a2-retire/`,
+`.agent-notes/nan-edge-endpoint-diagnosis.md`):
 
-> **⚠ Superseded — under re-diagnosis (2026-06-30).** The analysis in this
-> paragraph reflects an earlier state and no longer matches measurement. Current
-> facts: the `NaN` family is **`structural-match` (maxΔ~18)**, not `diverged`; and
-> **all 76 node reference points now match C exactly** (0 shifted >0.5pt) — so the
-> "9 half-widths mismeasured → −3..−5pt node-x shift" story below is stale (the
-> font-metric fixes closed the node-position gap). The residual is **8 straight
-> edges** (`Target↔TThread`, `Interp↔InterpF`, `Event↔Target`,
-> `AtomProperties↔NRAtom`) whose **endpoints** shift 6–14pt while piece counts
-> match — i.e. an edge-attachment/routing residual, not a node-position one. The
-> true mechanism is not yet pinned (candidate causes: boundary clip-point drift
-> from spline approach angle, a residual port metric, or a compress x-simplex tie).
-> The historical analysis is retained below for the record.
+1. **Opposing-pair lane order.** The port re-sorted each parallel-edge
+   group by original creation seq before assigning Multisep lane offsets; C
+   assigns lanes in the edgecmp collected order (MAINGRAPH forward rep
+   first, AUXGRAPH reversed member second — `dotsplines.c:419`,
+   `make_regular_edge:1885-1907`). A 2-cycle whose reversed member was
+   declared first drew each edge on the other's 18 pt corridor.
+2. **Spurious flat-adjacency on cross-rank merged edges.** `markAdjacent`
+   marked `ND_other` entries without C's same-rank guard
+   (`flat.c:272-276`), letting `groupSize`'s flat-adjacent short-circuit
+   swallow portcmp group breaks.
+
+With both fixed faithfully, the family is **`conformant`** on all three
+dirs (per-element: nodes 0, edges 0 differing), and the same mechanism
+closed `42`, `clust2`, `ngk10_4` (structural-match → conformant) and moved
+`b124` from diverged to structural-match — all on 2-cycle/parallel pairs.
+
+**Both survey sides run the same estimator — measurement is neutralized.**
+The native `dot` oracle runs under a headless `GVBINDIR`
+(`test/corpus/gen-headless-gvbindir.sh` → `/tmp/ghl`) that symlinks only the
+`core` and `dot_layout` plugins — no `gd`/`pango`/`quartz` text-layout plugin.
+With that slot empty, graphviz falls back to its built-in
+`estimate_textspan_size`. The TypeScript port's `EstimateTextMeasurer`
+(`src/common/textmeasure.ts`) is a faithful port of the same routine and is
+the Node default, resolved by `createMeasurer()`
+(`src/common/textmeasure-factory.ts`). **Both sides of every parity
+comparison therefore measure text with the identical estimator** — real
+FreeType/pango glyph advances never enter the comparison. This is why a
+verdict regression here points at layout code, not at a font, and it is why
+fixing the estimator's own bugs (UTF-8 byte counting, vertical-metric
+font-awareness) closed most of this class outright rather than merely
+narrowing a font-metric gap.
+
+**The injectable `TextMeasurer` seam.** This neutralization is only possible
+because text measurement is a deliberate seam, not hard-wired into either
+engine. `TextMeasurer` is a one-method interface (`measure(text, font, size,
+flags) → {w, h, …}`) dependency-injected into every label-sizing call site —
+`polyInit`, `recordInit`, `initEdgeLabels`, and `buildNodeLabel` each take the
+measurer as a parameter; nothing measures text through a global. It is
+pinned for tests/CI via `setTextMeasurer(...)` or `GV_TEXT_MEASURER=estimate`.
+The seam also lets a residual be *proven* measurement-only: feed the port the
+exact widths C measured (captured from the oracle) and check whether layout
+then reproduces C exactly. That experiment is what originally licensed the
+A2 verdict for `proc3d` (see the historical appendix below) — the technique
+remains valid. Its inverse retired the class: because measurement was
+provably neutralized on both survey sides, the `NaN` edge residual could not
+be a font-metric effect, which forced the re-diagnosis that found the two
+routing defects above.
+
+::: details Historical analysis (superseded 2026-06-30) — retained for the record
+The material below describes an earlier state of this class, before the
+`EstimateTextMeasurer` cutover, font-aware vertical metrics, and the
+non-ASCII UTF-8-byte fix closed most of it. It no longer describes current
+behavior — kept only so the reasoning that led here is not lost. In
+particular: (1) the "native C" width numbers in the measurement table below
+are **FreeType** values from a real-font rendering path; the parity survey
+never exercises that path — both sides run `estimate_textspan_size` (see
+above) — so the table does not reflect how parity is currently measured; (2)
+the overlay figures and golden/ours renders below depict a **non-corpus**
+`proc3d` (`graphs/directed/proc3d.gv`, ~2620 pt) that is not part of the
+parity survey; the corpus `proc3d` variants are now conformant with zero
+diffs, so there is no overlay to show for them; (3) the `NaN`/`ratio=compress`
+node-x narrative below is superseded — current measurement shows all 76 node
+points match exactly, so the width-error → node-shift chain it describes no
+longer holds for `NaN`.
 
 **`NaN` under `ratio=compress` (historical).** The
-`NaN.gv` family (`orientation=landscape; ratio=compress; size="16,10"`) is an A2
-case whose verdict [historically] landed at *diverged* rather than *structural-match*. The
-compress x-network-simplex path is faithful — every constraint input matches C
-(width-constraint value, `containNodes` minlens, aux-edge counts 471/wt 1612,
-`lrBalance`, and rank orders all identical) *except* the half-widths of 9 nodes,
-which the measurer reports 0.5–1.03 pt wider than C. `ratio=compress`'s
-weight-1000 packing makes the normally-slack left-to-right separation
-constraints **binding**, so that sub-pixel width error — invisible without
-compress — surfaces as a −3..−5 pt interior x-shift. That shift tips the
-`Target<->TThread` straight spline 0.55 pt past a node-box wall, so the router
-bends it into an extra bezier piece (7 pts vs C's 4) — a *structural* delta,
-hence *diverged*. Forcing the 9 widths to C's values reproduces C exactly
-(node-x 53/76→0/76 off; spline 7→4 pts), confirming the residual is 100%
-upstream font metrics, not the compress or spline code. Full evidence (with a
-visual golden-vs-ours side-by-side + the 4-vs-7-point spline delta overlay):
-`plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.html` (prose writeup:
-`…/nan-compress-xcoord.md`).
+`NaN.gv` family (`orientation=landscape; ratio=compress; size="16,10"`) was an
+A2 case whose verdict at the time landed at *diverged* rather than
+*structural-match*. The compress x-network-simplex path was faithful — every
+constraint input matched C (width-constraint value, `containNodes` minlens,
+aux-edge counts 471/wt 1612, `lrBalance`, and rank orders all identical)
+*except* the half-widths of 9 nodes, which the measurer reported 0.5–1.03 pt
+wider than C. `ratio=compress`'s weight-1000 packing made the normally-slack
+left-to-right separation constraints **binding**, so that sub-pixel width
+error — invisible without compress — surfaced as a −3..−5 pt interior
+x-shift. That shift tipped the `Target<->TThread` straight spline 0.55 pt
+past a node-box wall, so the router bent it into an extra bezier piece (7
+pts vs C's 4) — a *structural* delta, hence *diverged*. Forcing the 9 widths
+to C's values reproduced C exactly (node-x 53/76→0/76 off; spline 7→4 pts),
+confirming the residual was 100% upstream font metrics, not the compress or
+spline code, **for that former divergence**. Full evidence (with a visual
+golden-vs-ours side-by-side + the 4-vs-7-point spline delta overlay):
+`plans/fix-compress-xcoord/comparisons/nan-compress-xcoord.html` (prose
+writeup: `…/nan-compress-xcoord.md`).
 
-**Characterization.** Native Graphviz measures text with FreeType/libgd glyph
-advances. The port uses its own font-metric model (it cannot bundle a font
-rasterizer and remain browser-portable). For most strings the two agree exactly;
-for some, they differ by a **fraction of a point**. Measured example —
-Times-Roman 14 pt, the string `"/home/ek/work/src/lefty/lefty.c"` (31 chars):
+**Font-metric measurement example (historical — FreeType vs estimate).**
+Native Graphviz, when run with a real text-layout plugin (not the headless
+oracle used by the parity survey), measures text with FreeType/libgd glyph
+advances. The port's `EstimateTextMeasurer` does not replicate a glyph
+rasterizer. For most strings the two agree exactly; for some, they differ by
+a fraction of a point. Measured example — Times-Roman 14 pt, the string
+`"/home/ek/work/src/lefty/lefty.c"` (31 chars):
 
 | | width |
 |---|---|
-| native C | 176.00 pt |
-| graphviz-ts | 176.75 pt |
+| native C (FreeType) | 176.00 pt |
+| graphviz-ts (estimate) | 176.75 pt |
 | delta | **+0.75 pt (+0.43%)** |
 
-The same node's other label line, `"93736-32246"`, measures **identically**
-(96.00 pt both) — so the error is string-dependent and accumulates per glyph,
-not a uniform scale factor.
+The same node's other label line, `"93736-32246"`, measured **identically**
+(96.00 pt both) — the error is string-dependent and accumulates per glyph,
+not a uniform scale factor. This FreeType-vs-estimate gap is real but is
+**not** what the parity survey measures (both sides run `estimate`); it would
+only matter if graphviz-ts output were compared against a real-font C
+rendering outside this survey.
 
-**Isolating the algorithm from the font backend — the injectable `TextMeasurer`.**
-A2 is only *diagnosable* — and provably distinct from a layout bug — because text
-measurement is a deliberate **seam**, not hard-wired into either engine. Both
-sides are driven through the **same estimation algorithm**, which holds the font
-backend fixed so the parity survey measures the *layout*, not the rasterizer:
+**Downstream effect on the former `proc3d` divergence (historical).** Label
+width feeds node size, which feeds layout:
 
-- **C side (the oracle).** The native `dot` oracle runs under a headless
-  `GVBINDIR` (`test/corpus/gen-headless-gvbindir.sh` → `/tmp/ghl`) that symlinks
-  **only** the `core` and `dot_layout` plugins — no `gd` / `pango` / `quartz`
-  text-layout plugin. With the text-layout slot empty, graphviz falls back to
-  `estimate_textspan_size`, its built-in deterministic estimator: no FreeType
-  rasterization, no font files, no per-platform variance. (Were the oracle left on
-  the FreeType/pango path, every label would carry rasterizer- and
-  platform-specific advances, and we could not separate a layout-algorithm
-  divergence from a font-backend difference — the whole corpus would be noise.)
-- **TS side.** `TextMeasurer` is a one-method interface
-  (`measure(text, font, size, flags) → {w, h, …}`, `src/common/textmeasure.ts`)
-  **dependency-injected** into every label-sizing call site — `polyInit`,
-  `recordInit`, `initEdgeLabels`, and `buildNodeLabel` each take the measurer as a
-  parameter; nothing measures text through a global. The Node default is
-  `EstimateTextMeasurer`, a faithful port of C's `estimate_textspan_size`,
-  resolved by `createMeasurer()` (`src/common/textmeasure-factory.ts`) and pinned
-  for tests/CI via `setTextMeasurer(...)` or `GV_TEXT_MEASURER=estimate`.
+1. A wider label → a slightly wider node box (for an *ellipse* node, width is
+   further scaled by √2, so +0.75 pt of text → +0.53 pt of half-width).
+2. Node half-widths set the left-to-right separation constraints of the
+   x-coordinate network simplex; those constraints are `ROUND()`-ed to
+   integers, so a sub-pixel width change can tip a constraint from *N* to
+   *N+1*.
+3. The network simplex then selects a different — but equally optimal —
+   integer x-assignment, shifting some node x-positions by 1–2 units.
 
-With both engines on the *same estimate*, the only thing left that can diverge is
-the estimator's own per-glyph rounding (the +0.75 pt above) — a faithful-port
-residual *inside* the measurement primitive, with the entire ranking / ordering /
-network-simplex / spline pipeline held identical. That is what makes the survey a
-measurement of the **algorithm**: a verdict regression points at layout code, not
-at a font.
-
-**The seam also lets us *prove* a residual is 100% measurement, not algorithm.**
-Because the measurer is swappable, we can take one further step and feed the port
-the **exact widths C measured** (captured from the oracle), bypassing the
-estimator entirely. If the layout then reproduces C **exactly (within the
-deterministic tolerance)**, the
-divergence is provably upstream in measurement with *zero* contribution from the
-code under test. The `NaN` / `ratio=compress` case above is precisely this
-experiment: forcing the 9 mismeasured node half-widths to C's values collapses
-node-x, the network-simplex x-assignment, and the `Target<->TThread` spline all
-onto C (node-x `53/76 → 0/76` off; spline `7 → 4` points). That isolation — not a
-hand-wave — is what licenses the A2 verdict.
-
-**Downstream effect (why a 0.75 pt label delta is visible at all).** Label width
-feeds node size, which feeds the layout. The chain is deterministic:
-
-1. A wider label → a slightly wider node box (for an *ellipse* node, the width is
-   further scaled by √2 to fit the text, so +0.75 pt of text → +0.53 pt of
-   half-width).
-2. Node half-widths set the left-to-right **separation constraints** of the
-   x-coordinate **network simplex**. Those constraints are `ROUND()`-ed to
-   integers; a sub-pixel width change can tip a constraint from *N* to *N+1*.
-3. The network simplex then selects a different — but equally optimal — integer
-   x-assignment, shifting some node x-positions by 1–2 units. Across a wide
-   drawing these shifts accumulate into a few points of overall x-extent.
-
-The **rank assignment, node ordering, edge topology, and y-coordinates are
-identical** to C; only fine x-positions move. For `proc3d` the entire effect is a
-**≤ 3.55 pt** difference in x-extent over a ~2620 pt drawing (**0.13%**).
-
-The delta, overlaid in one frame — **green = native C `dot` (golden), red =
-graphviz-ts (ours)**. At full scale the two blend to brown; the shift is
-sub-perceptual (hence *structural-match*):
+For the non-corpus `proc3d.gv` (`graphs/directed/proc3d.gv`, ~2620 pt, not a
+parity-survey member), that produced a **≤ 3.55 pt** difference in x-extent
+(**0.13%**), overlaid below — **green = native C `dot` (golden), red =
+graphviz-ts (ours)**:
 
 ![proc3d golden-vs-ours overlay: green = C, red = graphviz-ts](/img/proc3d-overlay.svg)
 
-Zoomed in, the green/red fringe appears **almost entirely on the long file-path
-oval labels** — exactly the wide strings the estimator over-measures (e.g.
-`/home/ek/work/src/lefty/lefty.c`). The code/box nodes stay coincident:
+Zoomed in, the fringe appeared almost entirely on the long file-path oval
+labels:
 
 ![proc3d overlay, zoomed on the wide path-label ovals: green = C, red = graphviz-ts](/img/proc3d-overlay-zoom.png)
-
-Everything but those fine x-positions is identical — same bounding box, ranks,
-order, and y. The full renders are visually indistinguishable:
 
 | Golden — native `dot` | Ours — graphviz-ts |
 |---|---|
 | ![proc3d rendered by C Graphviz](/img/proc3d-golden.svg) | ![proc3d rendered by graphviz-ts](/img/proc3d-ours.svg) |
 
-The standalone work-up (root cause, per-metric numbers, reproduce command) is on
-its own rendered page:
-[**proc3d — the canonical A2 font-metric divergence**](/divergences-proc3d-a2).
+The standalone write-up (root cause, per-metric numbers, reproduce command)
+is on its own page:
+[**proc3d — the canonical A2 font-metric divergence (historical)**](/divergences-proc3d-a2).
+That page describes a resolved divergence on a non-corpus input; the current
+corpus `proc3d` variants are conformant.
 
-**Why accepted.** Byte-matching FreeType's per-glyph advances across every font
-and string would require replicating its metric tables, hinting, and rounding —
-large, fragile, and still not guaranteed exact. Critically, the text measurer is
-a **shared primitive**: every label in the corpus flows through it. Adjusting it
-to win one string risks regressing the hundreds of graphs that currently match
-within tolerance, for a sub-perceptual reward. The affected graphs remain
-structural-match, which is the correct bar for them.
-
-> If text-metric fidelity is ever pursued as its own effort, the target is
-> concrete and documented: the port over-measures some Times-Roman strings by
-> ~0.4%; the work is to align per-glyph advances against the C oracle with
-> corpus-wide regression validation.
+**Why this was accepted at the time.** Byte-matching FreeType's per-glyph
+advances across every font and string would have required replicating its
+metric tables, hinting, and rounding — large, fragile, and still not
+guaranteed exact. The text measurer is a shared primitive: every label in
+the corpus flows through it, so a fix aimed at one string risked regressing
+others for a sub-perceptual reward.
+:::
 
 ### A3. `hypot` tie-break in spline routing (`dot`)
 
@@ -397,9 +394,9 @@ certainly on the deterministic-tolerance match path. If a layout looks wrong, ch
 that input class — it is likely a tracked item with an oracle-pinned fix mission,
 not an unknown.
 
-> **Note on label-driven cases.** Some `dot` graphs diverge *only* because of the
-> text-measurement delta (A2) — their layout logic is correct and they sit at
-> structural-match. Those are accepted deltas, not long-tail bugs.
+> **Note on label-driven cases.** The text-measurement class (A2) is closed —
+> no `dot` graph is accepted under it any more. A graph that sits at
+> structural-match today is a tracked gap, not a font-metric delta.
 
 ### `concentrate=true` opposing-edge arrowheads
 

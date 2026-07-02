@@ -32,13 +32,17 @@ const verdictById = new Map(parityRows.map((r) => [r.id, r.verdict]));
 // collapsed). If one of these regresses to non-conformant, the doc's "collapsed"
 // claim is stale — fail so someone reconciles the prose. This is the assertion
 // that would have caught proc3d.
-const DOC_CLAIMS_CONFORMANT = ['graphs-proc3d', 'share-proc3d', 'windows-proc3d'];
+const DOC_CLAIMS_CONFORMANT = [
+  'graphs-proc3d', 'share-proc3d', 'windows-proc3d',
+  // A2 closed 2026-07-01 (fix/nan-a2-retire): NaN family now conformant
+  'graphs-NaN', 'share-NaN', 'windows-NaN',
+];
 
 // Graphs the doc cites as CURRENT accepted divergences (A2/A3 examples). If one
 // becomes conformant, the doc example is stale — fail so someone removes it (and
 // its registry entry). These are also guarded by accepted-divergences.test.ts;
 // duplicated here to bind the PROSE claim, not just the registry.
-const DOC_CLAIMS_DIVERGENT = ['graphs-NaN', 'share-NaN', 'windows-NaN', '2368'];
+const DOC_CLAIMS_DIVERGENT = ['2368'];
 
 describe('known-divergences.md prose ↔ parity verdicts', () => {
   it('every graph the doc calls conformant is actually conformant', () => {

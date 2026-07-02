@@ -61,7 +61,9 @@ describe('accepted-divergences registry', () => {
 
   it('resolves the documented A-class deltas under the parity scope', () => {
     expect(matchAccepted('2368', 'dot', 'parity', entries)?.class).toBe('A3');
-    expect(matchAccepted('graphs-NaN', 'dot', 'parity', entries)?.class).toBe('A2');
+    // A2 closed 2026-07-01 (fix/nan-a2-retire): the NaN family is conformant
+    // and must NOT resolve to an accepted entry any more.
+    expect(matchAccepted('graphs-NaN', 'dot', 'parity', entries)).toBeNull();
     // a known conformant graph is NOT accepted
     expect(matchAccepted('121', 'dot', 'parity', entries)).toBeNull();
   });
