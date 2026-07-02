@@ -239,7 +239,14 @@ class ShortestHelper {
   static run(poly: Poly, eps: [Point, Point]): Point[] | null {
     const pnlps = ShortestHelper.loadPoints(poly);
     const tris: Triangle[] = [];
-    if (!ShortestHelper.triInner(pnlps.slice(), tris)) return null;
+    // C's triangulate() treats an ear-clip dead end as a WARNING and returns
+    // success with the triangles loaded so far; Pshortestpath continues on the
+    // partial triangulation (and typically ends in marktripath's straight-line
+    // fallback below). Treating it as fatal loses edges C keeps (corpus 1435,
+    // edge 8->10). @see lib/pathplan/shortest.c:333
+    if (!ShortestHelper.triInner(pnlps.slice(), tris)) {
+      console.warn('triangulation failed');
+    }
     ShortestHelper.connectAll(tris);
     const ftrii = ShortestHelper.findTri(tris, eps[0]);
     const ltrii = ShortestHelper.findTri(tris, eps[1]);
