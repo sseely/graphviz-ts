@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>2796 cluster-layout divergence — pre-mission baseline</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.55}
+body{margin:2rem auto;max-width:72rem;padding:0 1rem;color:#1a1a1a}
+h1{font-size:1.5rem} h2{font-size:1.15rem;margin-top:2.2rem;border-bottom:1px solid #eee;padding-bottom:.3rem}
+.status{background:#fdecec;border:1px solid #e8a0a0;padding:.6rem 1rem;border-radius:6px}
+.cols{display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;margin:1rem 0}
+.col{text-align:center;flex:1;min-width:320px}
+.col .lbl{font-size:.85rem;color:#555;margin-bottom:.4rem;font-weight:600}
+.col img{height:640px;width:auto;max-width:100%;border:1px dashed #ccc;background:
+  repeating-conic-gradient(#f4f4f4 0% 25%,#fff 0% 50%) 0/16px 16px;padding:4px}
+table{border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{border:1px solid #ddd;padding:.25rem .6rem;text-align:right;font-variant-numeric:tabular-nums}
+th{background:#f7f7f7} td:first-child,th:first-child{text-align:left}
+tr.bad td{background:#fde8e8;font-weight:600}
+p{margin:.7rem 0} code{background:#f0f0f0;padding:.05rem .3rem;border-radius:3px}
+.meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.85rem;margin:.6rem 0}
+.meta b{color:#444}
+pre.src{background:#1e1e1e;color:#d4d4d4;padding:.8rem 1rem;border-radius:6px;
+  font-size:.78rem;line-height:1.4;max-height:18rem;overflow:auto;white-space:pre}
+pre.err{background:#2b1d1d;color:#e8c0c0;padding:.8rem 1rem;border-radius:6px;
+  font-size:.78rem;line-height:1.4;max-height:12rem;overflow:auto;white-space:pre}
+</style></head><body>
+
+<h1>2796 cluster-layout divergence — pre-mission baseline</h1>
+<p class="status"><strong>Total layout divergence, oracle in an error-recovery
+state.</strong> Native dot exits 1 on this graph (<code>trouble in
+init_rank</code> network-simplex infeasibility, then a lost edge) and lays out
+with overlapping clusters — an <a
+href="https://gitlab.com/graphviz/graphviz/-/issues/2796">OPEN upstream bug
+(#2796)</a>, <code>xfail(strict=True)</code> in graphviz's own test suite,
+linked by the reporter to #2471. The port solves the ranking cleanly and
+produces a different (arguably the intended) layout. Mission:
+<code>plans/fix-2796-cluster-ranking/</code>.</p>
+
+<h2>Input</h2>
+<div class="meta">
+  <span><b>Engine:</b> <code>dot</code></span>
+  <span><b>Source:</b> <code>~/git/graphviz/tests/2796.dot</code></span>
+  <span><b>Corpus id:</b> <code>2796</code></span>
+  <span><b>Key attrs:</b> <code>rankdir=LR</code>, 43 empty-label clusters, invis seed edge</span>
+</div>
+<details><summary style="cursor:pointer;font-size:.85rem;color:#555;font-weight:600">DOT source — 405 lines (click to expand)</summary>
+<pre class="src">digraph &quot;troublesome&quot; {
+  rankdir=LR
+  node [shape=&quot;ellipse&quot;,width=&quot;0.5&quot;,height=&quot;0.5&quot;]
+  I [label=&quot;&quot;, style=invis, width=0]
+  I -&gt; 36
+  subgraph cluster_0 {
+  label=&quot;&quot;
+  48
+  }
+  subgraph cluster_1 {
+  label=&quot;&quot;
+  2
+  0
+  }
+  subgraph cluster_2 {
+  label=&quot;&quot;
+  34
+  }
+  subgraph cluster_3 {
+  label=&quot;&quot;
+  18
+  25
+  }
+  subgraph cluster_4 {
+  label=&quot;&quot;
+  50
+  }
+  subgraph cluster_5 {
+  label=&quot;&quot;
+  19
+  20
+  }
+  subgraph cluster_6 {
+  label=&quot;&quot;
+  7
+  }
+  subgraph cluster_7 {
+  label=&quot;&quot;
+  5
+  }
+  subgraph cluster_8 {
+  label=&quot;&quot;
+  57
+  }
+  subgraph cluster_9 {
+  label=&quot;&quot;
+  9
+  12
+  }
+  subgraph cluster_10 {
+  label=&quot;&quot;
+  27
+  }
+  subgraph cluster_11 {
+  label=&quot;&quot;
+  8
+  }
+  subgraph cluster_12 {
+  label=&quot;&quot;
+  6
+  }
+  subgraph cluster_13 {
+  label=&quot;&quot;
+  26
+  31
+  }
+  subgraph cluster_14 {
+  label=&quot;&quot;
+  16
+  }
+  subgraph cluster_15 {
+  label=&quot;&quot;
+  3
+  11
+  }
+  subgraph cluster_16 {
+  label=&quot;&quot;
+  21
+  }
+  subgraph cluster_17 {
+  label=&quot;&quot;
+  17
+  }
+  subgraph cluster_18 {
+  label=&quot;&quot;
+  28
+  29
+  }
+  subgraph cluster_19 {
+  label=&quot;&quot;
+  13
+  }
+  subgraph cluster_20 {
+  label=&quot;&quot;
+  10
+  }
+  subgraph cluster_21 {
+  label=&quot;&quot;
+  14
+  }
+  subgraph cluster_22 {
+  label=&quot;&quot;
+  52
+  55
+  }
+  subgraph cluster_23 {
+  label=&quot;&quot;
+  30
+  }
+  subgraph cluster_24 {
+  label=&quot;&quot;
+  23
+  }
+  subgraph cluster_25 {
+  label=&quot;&quot;
+  35
+  }
+  subgraph cluster_26 {
+  label=&quot;&quot;
+  15
+  }
+  subgraph cluster_27 {
+  label=&quot;&quot;
+  24
+  }
+  subgraph cluster_28 {
+  label=&quot;&quot;
+  32
+  }
+  subgraph cluster_29 {
+  label=&quot;&quot;
+  33
+  }
+  subgraph cluster_30 {
+  label=&quot;&quot;
+  22
+  }
+  subgraph cluster_31 {
+  label=&quot;&quot;
+  43
+  54
+  }
+  subgraph cluster_32 {
+  label=&quot;&quot;
+  44
+  }
+  subgraph cluster_33 {
+  label=&quot;&quot;
+  39
+  }
+  subgraph cluster_34 {
+  label=&quot;&quot;
+  4
+  1
+  }
+  subgraph cluster_35 {
+  label=&quot;&quot;
+  51
+  }
+  subgraph cluster_36 {
+  label=&quot;&quot;
+  56
+  }
+  subgraph cluster_37 {
+  label=&quot;&quot;
+  47
+  }
+  subgraph cluster_38 {
+  label=&quot;&quot;
+  42
+  }
+  subgraph cluster_39 {
+  label=&quot;&quot;
+  45
+  }
+  subgraph cluster_40 {
+  label=&quot;&quot;
+  46
+  }
+  subgraph cluster_41 {
+  label=&quot;&quot;
+  37
+  40
+  41
+  38
+  53
+  49
+  }
+  subgraph cluster_42 {
+  label=&quot;&quot;
+  36
+  }
+  0 -&gt; 0 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  0 -&gt; 2 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  0 -&gt; 48 [label=&quot;!p0 &amp; p1&quot;]
+  1 -&gt; 1 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  1 -&gt; 4 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  1 -&gt; 48 [label=&quot;p1&quot;]
+  2 -&gt; 0 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  2 -&gt; 2 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  2 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  3 -&gt; 3 [label=&quot;!p0 &amp; !p2&quot;]
+  3 -&gt; 11 [label=&quot;p0 &amp; !p2&quot;]
+  3 -&gt; 16 [label=&quot;!p0 &amp; p2&quot;]
+  3 -&gt; 26 [label=&quot;p0 &amp; p2&quot;]
+  4 -&gt; 1 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  4 -&gt; 4 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  4 -&gt; 48 [label=&quot;!p1&quot;]
+  5 -&gt; 7 [label=&quot;p0 &amp; !p2&quot;]
+  5 -&gt; 18 [label=&quot;!p0 &amp; !p2&quot;]
+  5 -&gt; 19 [label=&quot;p0 &amp; p2&quot;]
+  5 -&gt; 34 [label=&quot;!p0 &amp; p2&quot;]
+  6 -&gt; 8 [label=&quot;p0 &amp; p2&quot;]
+  6 -&gt; 9 [label=&quot;p0 &amp; !p2&quot;]
+  6 -&gt; 48 [label=&quot;!p0 &amp; p2&quot;]
+  7 -&gt; 7 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  7 -&gt; 18 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  7 -&gt; 19 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  7 -&gt; 34 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  7 -&gt; 50 [label=&quot;p0 &amp; !p1&quot;]
+  9 -&gt; 9 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  9 -&gt; 12 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  9 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  9 -&gt; 57 [label=&quot;p0 &amp; !p1&quot;]
+  10 -&gt; 13 [label=&quot;p0 &amp; !p2&quot;]
+  10 -&gt; 28 [label=&quot;p0 &amp; p2&quot;]
+  10 -&gt; 48 [label=&quot;!p0&quot;]
+  11 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  11 -&gt; 11 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  11 -&gt; 26 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  11 -&gt; 48 [label=&quot;!p1&quot;]
+  12 -&gt; 9 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  12 -&gt; 12 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  12 -&gt; 48 [label=&quot;!p0 &amp; p1&quot;]
+  12 -&gt; 57 [label=&quot;p0 &amp; p1&quot;]
+  13 -&gt; 13 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  13 -&gt; 28 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  13 -&gt; 48 [label=&quot;!p0 | !p1&quot;]
+  14 -&gt; 9 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  14 -&gt; 14 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  14 -&gt; 48 [label=&quot;(!p0 &amp; p1) | (!p0 &amp; p2)&quot;]
+  14 -&gt; 57 [label=&quot;p0 &amp; p1&quot;]
+  15 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  15 -&gt; 12 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  15 -&gt; 15 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  15 -&gt; 16 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  15 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  15 -&gt; 57 [label=&quot;p0 &amp; !p1&quot;]
+  16 -&gt; 26 [label=&quot;p0 &amp; p2&quot;]
+  16 -&gt; 31 [label=&quot;p0 &amp; !p2&quot;]
+  17 -&gt; 3 [label=&quot;!p0 &amp; !p2&quot;]
+  17 -&gt; 8 [label=&quot;p0 &amp; p2&quot;]
+  17 -&gt; 21 [label=&quot;p0 &amp; !p2&quot;]
+  17 -&gt; 34 [label=&quot;!p0 &amp; p2&quot;]
+  18 -&gt; 2 [label=&quot;p0 &amp; p2&quot;]
+  18 -&gt; 18 [label=&quot;!p0 &amp; !p2&quot;]
+  18 -&gt; 25 [label=&quot;p0 &amp; !p2&quot;]
+  18 -&gt; 34 [label=&quot;!p0 &amp; p2&quot;]
+  19 -&gt; 19 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  19 -&gt; 20 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  19 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  19 -&gt; 50 [label=&quot;p0 &amp; p1&quot;]
+  20 -&gt; 19 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  20 -&gt; 20 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  20 -&gt; 48 [label=&quot;!p0 &amp; p1&quot;]
+  20 -&gt; 50 [label=&quot;p0 &amp; !p1&quot;]
+  21 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  21 -&gt; 12 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  21 -&gt; 16 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  21 -&gt; 21 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  21 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  21 -&gt; 57 [label=&quot;p0 &amp; !p1&quot;]
+  22 -&gt; 30 [label=&quot;p0 &amp; !p2&quot;]
+  22 -&gt; 48 [label=&quot;!p0&quot;]
+  22 -&gt; 52 [label=&quot;p0 &amp; p2&quot;]
+  23 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  23 -&gt; 14 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  23 -&gt; 21 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  23 -&gt; 30 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  23 -&gt; 48 [label=&quot;(!p0 &amp; !p1) | (!p0 &amp; p2)&quot;]
+  23 -&gt; 52 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  24 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  24 -&gt; 14 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  24 -&gt; 15 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  24 -&gt; 30 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  24 -&gt; 34 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  24 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  24 -&gt; 52 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  25 -&gt; 2 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  25 -&gt; 18 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  25 -&gt; 25 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  25 -&gt; 34 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  26 -&gt; 31 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  26 -&gt; 48 [label=&quot;p1&quot;]
+  27 -&gt; 27 [label=&quot;p0 &amp; p2&quot;]
+  27 -&gt; 48 [label=&quot;!p0 &amp; !p2&quot;]
+  27 -&gt; 57 [label=&quot;p0 &amp; !p2&quot;]
+  28 -&gt; 28 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  28 -&gt; 29 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  28 -&gt; 48 [label=&quot;!p0 | p1&quot;]
+  29 -&gt; 28 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  29 -&gt; 29 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  29 -&gt; 48 [label=&quot;!p0 | !p1&quot;]
+  30 -&gt; 30 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  30 -&gt; 48 [label=&quot;!p0&quot;]
+  30 -&gt; 52 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  30 -&gt; 57 [label=&quot;p0 &amp; !p1&quot;]
+  31 -&gt; 26 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  31 -&gt; 31 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  31 -&gt; 48 [label=&quot;!p1&quot;]
+  32 -&gt; 30 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  32 -&gt; 48 [label=&quot;!p0&quot;]
+  32 -&gt; 52 [label=&quot;p0 &amp; p2&quot;]
+  32 -&gt; 55 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  33 -&gt; 48 [label=&quot;!p0&quot;]
+  33 -&gt; 52 [label=&quot;p0 &amp; p2&quot;]
+  33 -&gt; 55 [label=&quot;p0 &amp; !p2&quot;]
+  34 -&gt; 0 [label=&quot;p0 &amp; !p2&quot;]
+  34 -&gt; 2 [label=&quot;p0 &amp; p2&quot;]
+  34 -&gt; 48 [label=&quot;!p0&quot;]
+  35 -&gt; 9 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  35 -&gt; 14 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  35 -&gt; 48 [label=&quot;(!p0 &amp; p1) | (!p0 &amp; p2)&quot;]
+  35 -&gt; 52 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  35 -&gt; 55 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  36 -&gt; 5 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  36 -&gt; 6 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  36 -&gt; 17 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  36 -&gt; 37 [label=&quot;p1 &amp; !p2&quot;]
+  36 -&gt; 38 [label=&quot;p1 &amp; p2&quot;]
+  36 -&gt; 44 [label=&quot;!p0 &amp; !p1 &amp; p2&quot;]
+  37 -&gt; 10 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  37 -&gt; 23 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  37 -&gt; 35 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  37 -&gt; 39 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  37 -&gt; 40 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  37 -&gt; 41 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  37 -&gt; 45 [label=&quot;!p0 &amp; !p1 &amp; p2&quot;]
+  37 -&gt; 53 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  38 -&gt; 5 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  38 -&gt; 24 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  38 -&gt; 35 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  38 -&gt; 37 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  38 -&gt; 39 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  38 -&gt; 44 [label=&quot;!p0 &amp; !p1 &amp; p2&quot;]
+  38 -&gt; 53 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  39 -&gt; 5 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  39 -&gt; 24 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  39 -&gt; 35 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  39 -&gt; 43 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  39 -&gt; 44 [label=&quot;!p0 &amp; !p1 &amp; p2&quot;]
+  39 -&gt; 48 [label=&quot;!p0 &amp; p1&quot;]
+  39 -&gt; 54 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  40 -&gt; 10 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  41 -&gt; 5 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  42 -&gt; 5 [label=&quot;!p0 &amp; !p1 &amp; !p2&quot;]
+  42 -&gt; 44 [label=&quot;!p0 &amp; !p1 &amp; p2&quot;]
+  42 -&gt; 47 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  42 -&gt; 48 [label=&quot;p1&quot;]
+  42 -&gt; 51 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  43 -&gt; 32 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  43 -&gt; 33 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  43 -&gt; 43 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  43 -&gt; 48 [label=&quot;!p0&quot;]
+  43 -&gt; 54 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  44 -&gt; 19 [label=&quot;p0 &amp; p2&quot;]
+  44 -&gt; 20 [label=&quot;p0 &amp; !p2&quot;]
+  44 -&gt; 48 [label=&quot;!p0&quot;]
+  45 -&gt; 28 [label=&quot;p0 &amp; p2&quot;]
+  45 -&gt; 29 [label=&quot;p0 &amp; !p2&quot;]
+  45 -&gt; 48 [label=&quot;!p0&quot;]
+  46 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  46 -&gt; 48 [label=&quot;!p1 | (!p0 &amp; p2)&quot;]
+  46 -&gt; 51 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  46 -&gt; 56 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  47 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  47 -&gt; 34 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  47 -&gt; 48 [label=&quot;!p1&quot;]
+  47 -&gt; 51 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  47 -&gt; 56 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  49 -&gt; 40 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  49 -&gt; 41 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  49 -&gt; 42 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  49 -&gt; 48 [label=&quot;!p1&quot;]
+  50 -&gt; 50 [label=&quot;p0&quot;]
+  51 -&gt; 4 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  51 -&gt; 48 [label=&quot;p1 | (!p0 &amp; p2)&quot;]
+  52 -&gt; 48 [label=&quot;!p0&quot;]
+  52 -&gt; 52 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  52 -&gt; 55 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  52 -&gt; 57 [label=&quot;p0 &amp; p1&quot;]
+  53 -&gt; 22 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  53 -&gt; 33 [label=&quot;p0 &amp; !p1 &amp; p2&quot;]
+  53 -&gt; 39 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  53 -&gt; 40 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+  53 -&gt; 41 [label=&quot;!p0 &amp; p1 &amp; p2&quot;]
+  53 -&gt; 48 [label=&quot;!p0 &amp; !p1&quot;]
+  54 -&gt; 22 [label=&quot;p0 &amp; !p1 &amp; !p2&quot;]
+  54 -&gt; 48 [label=&quot;!p0&quot;]
+  55 -&gt; 48 [label=&quot;!p0&quot;]
+  55 -&gt; 52 [label=&quot;p0 &amp; p1 &amp; p2&quot;]
+  55 -&gt; 55 [label=&quot;p0 &amp; p1 &amp; !p2&quot;]
+  55 -&gt; 57 [label=&quot;p0 &amp; !p1&quot;]
+  56 -&gt; 3 [label=&quot;!p0 &amp; p1 &amp; !p2&quot;]
+}
+</pre>
+</details>
+
+<h2>Golden vs ours</h2>
+<div class="cols">
+  <div class="col"><div class="lbl">native dot 15.1.0~dev (golden) — 212 edges, exit 1, overlapping clusters</div>
+    <img src="2796-golden.svg" alt="native dot output"></div>
+  <div class="col"><div class="lbl">graphviz-ts (ours) — 213 edges, clean NS solve</div>
+    <img src="2796-ours.svg" alt="graphviz-ts output"></div>
+</div>
+
+<h2>Native stderr (its normal state on this input)</h2>
+<pre class="err">Error: trouble in init_rank
+	%0 9
+	%0 2
+	... (~90 unscanned-node/slack lines) ...
+lib/pathplan/shortest.c:333: triangulation failed
+lib/pathplan/shortest.c:182: source point not in any triangle
+Error: in routesplines, Pshortestpath failed
+Error: lost 3 16 edge</pre>
+
+<h2>Measured deltas (per-element, title-keyed)</h2>
+<table>
+<tr><th>metric</th><th>golden</th><th>ours</th><th>delta</th></tr>
+<tr><td>canvas</td><td>1943 × 2950</td><td>1938 × 2888</td><td>−5 × −62</td></tr>
+<tr><td>nodes differing</td><td colspan="2">58 / 58</td><td>median Δ 93.2</td></tr>
+<tr class="bad"><td>worst node block (37–42, 49, 53)</td><td colspan="2">whole cluster block displaced</td><td>Δ ≈ 724</td></tr>
+<tr><td>edges differing</td><td colspan="2">213 / 213</td><td>worst Δ 747 (39→5)</td></tr>
+<tr><td>edge piece-count mismatches</td><td colspan="2">101 edges</td><td>downstream of node displacement</td></tr>
+<tr class="bad"><td>edge count</td><td>212 (loses 3→16)</td><td>213 (routes 3→16)</td><td>the childCount pin</td></tr>
+</table>
+<p>The lost edge is the same <code>Pshortestpath</code> class the 1332 mission
+ported — once (if) corridors match, the port loses <code>3→16</code> through
+the existing machinery automatically.</p>
+
+</body></html>
