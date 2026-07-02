@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 # Mission: attr-or-tag divergence bucket — b15, b69, user_shapes (+ hyphen escaping)
 
-**Status: NOT STARTED (authored 2026-07-02).**
+**Status: COMPLETE (2026-07-02). b69 + user_shapes + bonus 1436 → conformant; b15 D3-disposed (deep, tracked); hyphen escaping landed.**
 
 ## Objective
 
@@ -66,12 +66,12 @@ test/corpus/parity.json` → `npx tsx test/corpus/dashboard.ts`.
 
 ## Batches
 
-- [ ] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 b69 order,
+- [x] [Batch 1 — gated diagnosis](batch-1/overview.md): T1 b69 order,
       T2 b15 coords (D3 classification), T3 user_shapes semantics,
       T4 hyphen escape tables
-- [ ] [Batch 2 — fixes](batch-2/overview.md): T5 user_shapes, T6 b69,
+- [x] [Batch 2 — fixes](batch-2/overview.md): T5 user_shapes, T6 b69,
       T7 hyphen escaping, T8 b15 (conditional per D3)
-- [ ] [Batch 3 — verify + close](batch-3/overview.md): T9
+- [x] [Batch 3 — verify + close](batch-3/overview.md): T9
 
 ## Index
 
@@ -83,3 +83,23 @@ test/corpus/parity.json` → `npx tsx test/corpus/dashboard.ts`.
 Library port: SLIs/on-call N/A (survey+gate is the observability).
 Rollback: **Reversible**. Note: hyphen escaping touches every emitted
 SVG byte stream — corpus baselines regenerate; verdicts must not move.
+
+
+## Mission summary (2026-07-02)
+
+- **T6/T6b (b69):** two mechanisms — the routing list must sort with C's
+  unstable qsort permutation (gvQsort; equal-key concentrate entry runs),
+  and each bezier's arrowheads emit inside the per-bezier loop. b69's
+  SVG groups are 100% byte-identical to the oracle; **1436 (also
+  concentrate) went conformant as a bonus**.
+- **T5 (user_shapes):** shapefile ⇒ C's custom-box fallback + C-format
+  warning. Conformant.
+- **T7 (hyphen):** escapeXmlTitle ({dash,nbsp}) at all title emitters +
+  class values; titles byte-match C; zero verdict movement (as required).
+- **T2/T8 (b15):** classified DEEP per D3 — record-port attachment
+  resolution under concentrate (1332-adjacent); artifact
+  .agent-notes/b15-record-port-resolution-deep.md seeds the follow-up.
+  b15 remains a tracked gap (maxΔ 67.9, was 1033 + fake order noise).
+- **Gates:** survey ×2 (at cap), gate PASS ×2, 0 regressions; canary
+  18s; oracle byte-verified; tsc 0; vitest 2556/2556.
+  Corpus: **598 conformant / 162 structural-match / 17 diverged**.

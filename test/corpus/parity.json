@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-02T17:28:45.719Z",
+  "generatedAt": "2026-07-02T18:53:03.969Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 595,
+    "conformant": 598,
     "structural-match": 162,
-    "diverged": 20,
+    "diverged": 17,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 12
@@ -103,9 +103,7 @@
     {
       "id": "1436",
       "path": "1436.dot",
-      "verdict": "diverged",
-      "maxDelta": 204.28999999999996,
-      "firstDiffPath": "svg/g[1]/g[25]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "1444-2",
@@ -1073,8 +1071,8 @@
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
       "verdict": "diverged",
-      "maxDelta": 1033,
-      "firstDiffPath": "svg/g[1]/g[15]/path[2]"
+      "maxDelta": 67.90000000000009,
+      "firstDiffPath": "svg/g[1]/g[92]/path[2]"
     },
     {
       "id": "graphs-b155",
@@ -1168,9 +1166,7 @@
     {
       "id": "graphs-b69",
       "path": "graphs/b69.gv",
-      "verdict": "diverged",
-      "maxDelta": 466.6399999999999,
-      "firstDiffPath": "svg/g[1]/g[84]/path[2]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b7",
@@ -1361,7 +1357,7 @@
       "id": "graphs-decorate",
       "path": "graphs/decorate.gv",
       "verdict": "diverged",
-      "maxDelta": 724.47,
+      "maxDelta": 10.800000000000182,
       "firstDiffPath": "svg/g[1]/g[5][childCount]"
     },
     {
@@ -2212,9 +2208,7 @@
     {
       "id": "graphs-user_shapes",
       "path": "graphs/user_shapes.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1]/g[1]/ellipse[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-val_inv",
