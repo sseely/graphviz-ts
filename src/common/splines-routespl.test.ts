@@ -84,3 +84,80 @@ describe('routeSplines translation-equivariance (#241_0 5:ne->8:nw)', () => {
     expect(ps![3].x).toBeLessThan(MID_X);
   });
 });
+
+// ---------------------------------------------------------------------------
+// checkPath stale-count semantics (1332 T2, mechanism M2)
+//
+// C's checkpath takes the box count BY VALUE, compacts degenerate (<0.01)
+// boxes in place with STRUCT COPIES, repairs pairs over the reduced local
+// count, and never writes the count back; routesplines_ keeps routing over
+// its pre-call count, reading the compacted array plus the stale trailing
+// slots. That behavior is load-bearing: the resulting degenerate polygon is
+// what makes native dot lose 1332's c4251->c4253 edge to its own
+// triangulation failure. @see lib/common/routespl.c:318, :683-800
+// ---------------------------------------------------------------------------
+
+import { checkPath } from './splines-routespl.js';
+import { shortestPath } from '../pathplan/index.js';
+
+/** The 1332 c4251->c4253 corridor (port frame): tail, rank, 0.0068-tall
+ *  makeregularend sliver, endpath port box — as assembled pre-checkPath. */
+function lostEdgeBoxes(): Box[] {
+  return [
+    { ll: { x: 712.0, y: 1791.904296875 }, ur: { x: 1879.7, y: 1837.669921875 } },
+    { ll: { x: -432.0, y: 1755.904296875 }, ur: { x: 1879.7, y: 1791.904296875 } },
+    { ll: { x: 620.0, y: 1755.897460938 }, ur: { x: 688.0, y: 1755.904296875 } },
+    { ll: { x: 681.8, y: 1746.147460938 }, ur: { x: 688.0, y: 1755.897460938 } },
+  ];
+}
+
+function lostEdgePath(boxes: Box[]): Path {
+  const start = makePort();
+  start.p = { x: 856.0, y: 1836.67 };
+  const end = makePort();
+  end.p = { x: 682.8, y: 1746.147460938 };
+  end.constrained = true;
+  end.theta = Math.PI / 2;
+  return { start, end, nbox: boxes.length, boxes, data: null };
+}
+
+describe('checkPath keeps C\'s stale box count (1332 lost-edge corridor)', () => {
+  it('does not write the compacted count back to pp.nbox', () => {
+    const boxes = lostEdgeBoxes();
+    const pp = lostEdgePath(boxes);
+    expect(checkPath(pp.nbox, boxes, pp)).toBe(false);
+    // The 0.0068-tall sliver is compacted out (local count 3), but the path
+    // keeps routing over the original 4 slots, exactly as C.
+    expect(pp.nbox).toBe(4);
+  });
+
+  it('compacts by struct copy so the stale trailing slot stays independent', () => {
+    const boxes = lostEdgeBoxes();
+    const pp = lostEdgePath(boxes);
+    checkPath(pp.nbox, boxes, pp);
+    // Slot 2 now holds the shifted-down port box, pair-repaired against the
+    // rank box (its ur.y swaps up to the rank bottom, .904); slot 3 is the
+    // STALE copy keeping the original .897 top. Aliasing the two slots would
+    // repair both and lose C's near-duplicate pair.
+    expect(boxes[2]).not.toBe(boxes[3]);
+    expect(boxes[2].ur.y).toBeCloseTo(1755.904296875, 9);
+    expect(boxes[3].ur.y).toBeCloseTo(1755.897460938, 9);
+    expect(boxes[2].ll.y).toBeCloseTo(boxes[3].ll.y, 9);
+  });
+
+  it('shortestPath fails on the resulting degenerate polygon, matching native dot', () => {
+    // C's exact 16-point polygon for the lost edge (from the DUMP1332
+    // instrumentation run); its faithful triangulation must fail exactly as
+    // shortest.c:333 does — the edge is then LOST, not straight-line drawn.
+    const ps = [
+      [1879.700, 1829.670], [1879.700, 1783.904], [1879.700, 1783.904], [1879.700, 1747.904],
+      [688.000, 1747.904], [688.000, 1738.147], [688.000, 1747.897], [688.000, 1738.147],
+      [681.800, 1738.147], [681.800, 1747.897], [681.800, 1738.147], [681.800, 1747.904],
+      [-432.000, 1747.904], [-432.000, 1783.904], [712.000, 1783.904], [712.000, 1829.670],
+    ].map(([x, y]) => ({ x, y }));
+    const pl = shortestPath({ ps }, [
+      { x: 856.0, y: 1828.67 }, { x: 682.8, y: 1738.147 },
+    ]);
+    expect(pl).toBeNull();
+  });
+});

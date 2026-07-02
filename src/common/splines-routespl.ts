@@ -38,7 +38,13 @@ function removeDegenerateBoxes(boxes: Box[], boxn: number): number {
   for (let bi = 0; bi < boxn; bi++) {
     if (Math.abs(boxes[bi].ll.y - boxes[bi].ur.y) < 0.01) continue;
     if (Math.abs(boxes[bi].ll.x - boxes[bi].ur.x) < 0.01) continue;
-    boxes[i] = boxes[bi];
+    // C compacts by STRUCT COPY, so a shifted-down box and the stale copy
+    // left in its old slot are independent values: later pair repairs mutate
+    // only the compacted slot while the stale trailing slot keeps the old
+    // bounds (the caller still routes over the pre-compaction count).
+    // A reference assignment would alias the two slots and repair both.
+    // @see lib/common/routespl.c:677-685
+    if (i !== bi) boxes[i] = { ll: { ...boxes[bi].ll }, ur: { ...boxes[bi].ur } };
     i++;
   }
   return i;
@@ -129,7 +135,13 @@ export function checkPath(boxn: number, boxes: Box[], pp: Path): boolean {
 
   clampPoint(pp.start.p, boxes[0]);
   clampPoint(pp.end.p, boxes[bn - 1]);
-  pp.nbox = bn;
+  // C's checkpath reduces the count into a LOCAL and never writes it back;
+  // the caller keeps routing over the pre-compaction count, reading the
+  // compacted array plus the stale trailing slots (shifted-out boxes remain
+  // as near-duplicates). That stale-count behavior is load-bearing: it is
+  // what degenerates the polygon and makes native dot lose edges like
+  // 1332's c4251->c4253. Do NOT update pp.nbox here.
+  // @see lib/common/routespl.c:683-800 (checkpath), :318 (const boxn caller)
   return false;
 }
 

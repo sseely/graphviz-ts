@@ -21,6 +21,9 @@ downstream (diagnosis.md scope-of-change).
 - `src/layout/dot/edge-route-faithful.ts`, `src/layout/dot/splines-route*.ts`,
   `src/layout/dot/edge-route-chain.ts`
 - matching `.test.ts` files
+- **EXPANDED 2026-07-02 (user-approved, see decision-journal):**
+  `src/common/splines-routespl.ts` (M2), `src/common/poly-inside.ts` (M3)
+  + matching `.test.ts`
 
 ## Read-set
 - `.agent-notes/1332-edge-routing-diagnosis.md` (the spec for this task)
