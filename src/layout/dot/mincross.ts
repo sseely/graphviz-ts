@@ -110,7 +110,7 @@ export function recSaveVlists(g: Graph): void {
 }
 
 /** @see lib/dotgen/mincross.c:rec_reset_vlists */
-export function recResetVlists(ctx: MincrossContext, g: Graph): void {
+export function recResetVlists(ctx: Pick<MincrossContext, 'root'>, g: Graph): void {
   const nc = g.info.n_cluster !== undefined ? g.info.n_cluster : 0;
   const clust = g.info.clust;
   if (clust) for (let c = 1; c <= nc; c++) recResetVlists(ctx, clust[c - 1]);
@@ -118,14 +118,14 @@ export function recResetVlists(ctx: MincrossContext, g: Graph): void {
 }
 
 /** @see lib/dotgen/mincross.c:reset_vlists */
-export function resetVlistRanks(ctx: MincrossContext, g: Graph): void {
+export function resetVlistRanks(ctx: Pick<MincrossContext, 'root'>, g: Graph): void {
   const mn = g.info.minrank !== undefined ? g.info.minrank : 0;
   const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
   for (let r = mn; r <= mx; r++) applyVlistReset(ctx, g, r);
 }
 
 /** @see lib/dotgen/mincross.c:reset_vlist */
-export function applyVlistReset(ctx: MincrossContext, g: Graph, r: number): void {
+export function applyVlistReset(ctx: Pick<MincrossContext, 'root'>, g: Graph, r: number): void {
   const rl = g.info.rankleader;
   if (!rl) return;
   const rank = g.info.rank;

@@ -148,8 +148,10 @@ export function insideCluster(g: Graph, v: Node): boolean {
   return isNormalNodeOf(g, v) || isVnodeOfEdgeOf(g, v);
 }
 
-/** @see lib/dotgen/mincross.c:neighbor */
-export function neighborNode(ctx: MincrossContext, v: Node, dir: number): Node | undefined {
+/** @see lib/dotgen/mincross.c:neighbor
+ * Only the Root global is consulted, so callers outside the mincross pass
+ * (flat_edges' vlist reset runs in dot_position) may pass a bare `{root}`. */
+export function neighborNode(ctx: Pick<MincrossContext, 'root'>, v: Node, dir: number): Node | undefined {
   const rk = ctx.root.info.rank?.[v.info.rank ?? 0];
   if (!rk) return undefined;
   const order = v.info.order ?? 0;
@@ -158,7 +160,7 @@ export function neighborNode(ctx: MincrossContext, v: Node, dir: number): Node |
 }
 
 /** @see lib/dotgen/mincross.c:furthestnode */
-export function furthestNode(ctx: MincrossContext, g: Graph, v: Node, dir: number): Node {
+export function furthestNode(ctx: Pick<MincrossContext, 'root'>, g: Graph, v: Node, dir: number): Node {
   let rv = v;
   let u: Node | undefined = v;
   while ((u = neighborNode(ctx, u, dir)) !== undefined) {
