@@ -96,8 +96,8 @@ stdout) — capture stdout regardless and byte-verify against it.
 | Batch | Status | Doc |
 |---|---|---|
 | 1 — verify NS constraint inputs vs C | [x] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — CONDITIONAL: fix input defect + watch gate (skip if inputs match) | [ ] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 — disposition (accepted oracle-bug class), survey, merge | [ ] | [batch-3/overview.md](batch-3/overview.md) |
+| 2 — CONDITIONAL: fix input defect + watch gate (skip if inputs match) | [x] (skipped) | [batch-2/overview.md](batch-2/overview.md) |
+| 3 — disposition (accepted oracle-bug class), survey, merge | [x] | [batch-3/overview.md](batch-3/overview.md) |
 
 ## Index
 
@@ -120,3 +120,26 @@ stdout) — capture stdout regardless and byte-verify against it.
   `plans/cluster-rank-c-parity/`, memories
   `2471-blocker-is-cluster-ranking`, `errored-cluster-rc2-rc3-are-membership`,
   `cluster-ns-perf-2475` (NS hot-path perf), `instrument-c-before-quarantine`.
+
+## Mission summary (2026-07-02)
+
+**Outcome: verified + accepted (D1 outcome 1). No src changes.**
+
+- T1: ranking inputs MATCH (44/44 NS calls line-identical, 2923 edges). The
+  init_rank failure is the X-COORD aux graph: C's cyclic (91 unscanned) vs
+  port acyclic; divergence pinned to makeLrvn + keepoutOthernodes wall-edge
+  lengths (position-cluster.ts:61/:184 vs position.c:1052/:392).
+- Upstream: #2796 xfail(strict=True); only fix attempt = draft !4849
+  (perf-contested). Port output meets every expectation in the issue
+  (0 overlapping cluster pairs vs C's 5; 213/213 edges; silent NS).
+- Disposition: new A4 accepted class (entry + full §A4 doc write-up with
+  line-pinned links both repos) — 2796 moves from tracked gaps to accepted
+  deltas; re-measure when upstream fixes it.
+- Related family documented (related-diverged-items.md): 2471, 1939, 1435
+  all xfail upstream; graphs-structs same signature; 18 other diverged ids
+  have clean oracles. Follow-up mission authored:
+  plans/verify-oracle-bug-family/.
+- Gates: tsc 0; vitest 2552/2552; guards 11/11; comparison page verified
+  current; C tree + TS dumps reverted, oracle stdout byte-verified. No
+  survey needed (no src or verdict-input changes).
+- Batch 2 skipped (inputs match). Journal rows: 10.
