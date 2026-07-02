@@ -193,9 +193,15 @@ export class SvgRenderer implements RendererPlugin {
       // radius/style=rounded) emit polyline segments + corner arcs; all other
       // edges keep the byte-stable bezier <path>. @see lib/common/emit.c:2553
       const orthoRadius = orthoRoundedRadius(e, job);
-      if (orthoRadius !== null) svgEdgePathOrthoRounded(e, orthoRadius, job);
-      else svgEdgePath(e, job);
-      svgArrowPolygons(e, job);
+      // svgEdgePath interleaves each bezier's arrowheads per C's emit loop;
+      // the rounded-ortho variant keeps the trailing arrow pass (its arrows
+      // always sit on the single ortho bezier). @see lib/common/emit.c:2668
+      if (orthoRadius !== null) {
+        svgEdgePathOrthoRounded(e, orthoRadius, job);
+        svgArrowPolygons(e, job);
+      } else {
+        svgEdgePath(e, job);
+      }
     }
     if (anchored) this.endAnchor(job);
     // Edge labels go inside the group, after path + arrows.

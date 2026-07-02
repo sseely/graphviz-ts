@@ -156,9 +156,21 @@ export const DEFAULT_SHAPE_NAME = 'box';
  *
  * @see lib/common/shapes.c:bind_shape
  */
-export function bindShape(name: string): ShapeDesc {
+export function bindShape(name: string, shapefile?: string): ShapeDesc {
+  // C bind_shape: a non-empty shapefile attr (safefile is a pass-through when
+  // no HTTP server / Gvfilepath is configured) switches any non-epsf shape to
+  // "custom" — a user_shape clone of Shapes[0] (box). Headless, the image
+  // never loads (gvusershape_size fails, warning printed at sizing), so the
+  // node renders as a plain box outline at its normal dims — which is exactly
+  // the headless oracle's output for shapefile nodes (graphs/user_shapes).
+  // The port models that endpoint directly: shapefile ⇒ the box descriptor.
+  // @see lib/common/shapes.c:bind_shape (3970), :3975-3978, :2022-2041
+  let effective = name;
+  if (shapefile !== undefined && shapefile !== '' && name !== 'epsf') {
+    effective = 'box';
+  }
   for (const shape of Shapes) {
-    if (shape.name === name) {
+    if (shape.name === effective) {
       return shape;
     }
   }

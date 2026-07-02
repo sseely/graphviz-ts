@@ -224,7 +224,7 @@ function initPointSize(n: Node, g: Graph, shape: ShapeDesc & { polygon: PolygonT
  * @see lib/common/utils.c:common_init_node
  */
 function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
-  const shape = bindShape(nodeAttr(n, g, 'shape') ?? 'ellipse');
+  const shape = bindShape(nodeAttr(n, g, 'shape') ?? 'ellipse', nodeAttr(n, g, 'shapefile'));
   n.info.shape = shape;
   if (shape.kind === ShapeKind.SH_RECORD) {
     recordNodeInit(n, g, measurer); // sets lw/rw/ht from the field tree

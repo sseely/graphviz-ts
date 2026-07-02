@@ -13,7 +13,7 @@ import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { Graph } from '../model/graph.js';
 import type { RenderJob } from '../gvc/job.js';
-import { escapeXml } from './xml-escape.js';
+import { escapeXmlTitle } from './xml-escape.js';
 import { nodeAttr } from '../common/poly-init.js';
 import { clusterAttr } from '../gvc/device-cluster.js';
 
@@ -24,7 +24,7 @@ import { clusterAttr } from '../gvc/device-cluster.js';
  */
 export function svgClass(kind: string, classAttr: string | undefined): string {
   return classAttr !== undefined && classAttr.length > 0
-    ? 'class="' + kind + ' ' + escapeXml(classAttr) + '"'
+    ? 'class="' + kind + ' ' + escapeXmlTitle(classAttr) + '"'
     : 'class="' + kind + '"';
 }
 

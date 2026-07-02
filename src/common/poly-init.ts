@@ -112,7 +112,13 @@ export function buildNodeLabel(n: Node, g: Graph, measurer: TextMeasurer): void 
 
 export function polyInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   const shapeName = nodeAttr(n, g, 'shape') ?? 'ellipse';
-  n.info.shape = bindShape(shapeName);
+  const shapefile = nodeAttr(n, g, 'shapefile');
+  n.info.shape = bindShape(shapeName, shapefile);
+  // C warns when the custom shape's image cannot be sized (headless: always).
+  // @see lib/common/shapes.c:2027-2033
+  if (shapefile !== undefined && shapefile !== '' && shapeName !== 'epsf') {
+    console.error(`Warning: No or improper shapefile="${shapefile}" for node "${n.name}"`);
+  }
   if ((n.info.shape as ShapeDesc).kind === ShapeKind.SH_RECORD) {
     if (n.info.shape_info === undefined) recordNodeInit(n, g, measurer);
     return;

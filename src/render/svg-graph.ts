@@ -16,7 +16,7 @@ import type { Box, Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import { createObjState, ObjType } from '../gvc/job.js';
 import { FillType } from '../gvc/context.js';
-import { escapeXml, SVG_PAD } from './svg-helpers.js';
+import { escapeXml, escapeXmlTitle, SVG_PAD } from './svg-helpers.js';
 import { resolveRenderColor, colorPaint } from './color-resolve.js';
 import { svgGraphId, svgGraphClass } from './svg-id.js';
 import { parseGradientSpec } from '../common/htmltable-emit-fill.js';
@@ -121,7 +121,7 @@ export function emitGraphGroupOpen(
  */
 export function emitGraphTitle(g: Graph, job: RenderJob): void {
   if (g.name.length > 0 && g.name[0] !== '%') {
-    job.write('<title>' + escapeXml(g.name) + '</title>\n');
+    job.write('<title>' + escapeXmlTitle(g.name) + '</title>\n');
   }
 }
 
