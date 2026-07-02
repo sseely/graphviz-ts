@@ -27,6 +27,20 @@ export function escapeXml(s: string): string {
 }
 
 /**
+ * Title/id/class XML escape (gv_xml_escape with flags {dash, nbsp} — C's
+ * gvputs_xml): base escaping plus '-'→&#45; and 2nd+ consecutive
+ * spaces→&#160;, WITHOUT the raw flag (entity-aware '&', no \n/\r
+ * escapes). Used for <title> content and id/class attribute values.
+ * @see lib/gvc/gvdevice.c:gvputs_xml, lib/util/xml.c:xml_core
+ */
+export function escapeXmlTitle(s: string): string {
+  let r = escapeXml(s);
+  r = r.replace(/-/g, '&#45;');
+  r = r.replace(/ {2,}/g, (m) => ' ' + '&#160;'.repeat(m.length - 1));
+  return r;
+}
+
+/**
  * Text/tooltip XML escape (gv_xml_escape with flags {raw, dash, nbsp}):
  * additionally escapes '-'→&#45;, newline/CR→&#10;/&#13;, and 2nd+ consecutive
  * spaces→&#160;. Used for textspans and tooltips.

@@ -7,7 +7,7 @@
 
 import type { Graph } from '../model/graph.js';
 import type { RenderJob } from '../gvc/job.js';
-import { escapeXml } from './svg-helpers.js';
+import { escapeXmlTitle } from './svg-helpers.js';
 import { svgClusterId, svgClusterClass } from './svg-id.js';
 
 export function svgBeginCluster(sg: Graph, job: RenderJob): void {
@@ -16,7 +16,7 @@ export function svgBeginCluster(sg: Graph, job: RenderJob): void {
   // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_print_id_class
   job.write('<g id="' + job.idLayerPrefix() + svgClusterId(sg, job)
     + '" ' + svgClusterClass(sg) + '>\n');
-  job.write('<title>' + escapeXml(sg.name) + '</title>\n');
+  job.write('<title>' + escapeXmlTitle(sg.name) + '</title>\n');
 }
 
 export function svgEndCluster(job: RenderJob): void {

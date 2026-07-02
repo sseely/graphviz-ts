@@ -53,8 +53,8 @@ export const SVG_PAD = 4;
 
 // XML escaping moved to ./xml-escape.ts (gv_xml_escape port); imported for
 // local use and re-exported so existing import sites keep resolving here.
-import { escapeXml, escapeXmlText } from './xml-escape.js';
-export { escapeXml, escapeXmlText };
+import { escapeXml, escapeXmlText, escapeXmlTitle } from './xml-escape.js';
+export { escapeXml, escapeXmlText, escapeXmlTitle };
 import { svgNodeId, svgEdgeId, svgNodeClass, svgEdgeClass } from './svg-id.js';
 import { orthoRoundedPolylines } from './svg-edge-ortho-radius.js';
 
@@ -174,7 +174,7 @@ export function svgBeginNode(n: Node, job: RenderJob): void {
   // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_begin_node
   job.write('<g id="' + job.idLayerPrefix() + svgNodeId(n, job) + job.idLayerSuffix()
     + '" ' + svgNodeClass(n) + '>\n');
-  job.write('<title>' + escapeXml(n.name) + '</title>\n');
+  job.write('<title>' + escapeXmlTitle(n.name) + '</title>\n');
 }
 
 export function svgEndNode(job: RenderJob): void {
@@ -188,10 +188,10 @@ export function svgEndNode(job: RenderJob): void {
  * @see lib/util/xml.c:xml_core (flags.dash)
  */
 function escapeEdgeTitle(s: string): string {
-  let r = s.replace(/&/g, '&amp;');
-  r = r.replace(/</g, '&lt;');
-  r = r.replace(/>/g, '&gt;');
-  return r.replace(/-/g, '&#45;');
+  // C routes edge titles through gvputs_xml ({dash, nbsp}, entity-aware '&');
+  // the previous hand-rolled version escaped '&' unconditionally and skipped
+  // the nbsp rule. @see lib/gvc/gvdevice.c:gvputs_xml
+  return escapeXmlTitle(s);
 }
 
 /**
