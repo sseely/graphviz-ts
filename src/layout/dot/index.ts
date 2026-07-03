@@ -171,6 +171,19 @@ export function dotPhasePost(g: Graph): void {
  * @see lib/dotgen/dotinit.c:dotLayout (static) — `if (rc != 0) return rc;`
  *   after `dot_mincross`, propagated through `doDot`/`dot_layout` to also
  *   skip `dotneato_postprocess`.
+ *
+ * C applies the identical `if (r != 0) return r;` check after `dot_position`
+ * (dotinit.c:322-325), also skipping `dotPhasePost` (removeFill/sameports/
+ * splines/compound) and `gvPostprocess`. `dot_position` fails when
+ * `dot_concentrate` fails (`rebuild_vlists: lead is null for rank N`, e.g.
+ * corpus 2825 — a cross-cluster rank=same plus rankset-conflict deletions
+ * leaves a cluster rank with no rankleader); C's renderer then walks the
+ * still-fully-connected `Agraph_t` but every node fails `node_in_box`
+ * against the never-computed (all-zero) `GD_bb`, so only cluster frames
+ * (also zero-sized, since `set_aspect`/cluster geometry never ran) reach
+ * the page. The port previously discarded `dotPosition`'s return value and
+ * always ran `dotPhasePost`, producing a full (non-degenerate) rendering
+ * where C produces near-empty output.
  */
 export function dotLayoutPipeline(g: Graph): void {
   const maxphase = getAttrInt(g, 'maxphase', -1);
@@ -180,7 +193,8 @@ export function dotLayoutPipeline(g: Graph): void {
   const rc = dotMincross(g);
   if (rc !== 0) return;
   if (maxphase === 2) return;
-  dotPosition(g);
+  const posRc = dotPosition(g);
+  if (posRc !== 0) return;
   if (maxphase === 3) return;
   dotPhasePost(g);
 }
