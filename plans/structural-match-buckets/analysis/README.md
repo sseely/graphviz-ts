@@ -57,7 +57,17 @@ Two independent defects, both `known-mechanism`, corroborated by two agents:
   redeclare `labelloc` fails to inherit the root default and falls back to the
   built-in top. Covers the `labelroot-*b*` share-/windows- variants.
 
-### Mission 2 — self-loop label placement + bbox (18 cases)
+### Mission 2 — self-loop label placement + bbox (18 cases) ★ DONE (+10)
+**Fixed** on `fix/self-loop-label`: two faithful C ports — (2A) `updateBB` per
+labeled self-loop in `splines-groups.ts` (left/top loops had no canvas-growth
+path), and (2B) flip-correct label dimension + inter-loop widen in
+`splines-selfedge.ts`. Moves 10 cases → conformant (all circle self-loops +
+fsm×3), 0 regressions, conformant 683→693. Residual (separate mechanisms
+revealed underneath, tracked as follow-ups): box-shape self-loops sb_box/
+sb_box_dbl/sl_box_dbl/sr_box_dbl (~10–125pt, box compass-port geometry +
+peripheries), `decorate` (~104pt), train11×3 (4pt canvas height). Original
+diagnosis below.
+
 - **bbox updateBB omission (10):** `dispatchEdgeGroup`
   (`src/layout/dot/splines-groups.ts:90-95`) never calls `updateBB` after routing
   a self-loop group; C does (`lib/dotgen/dotsplines.c:401-408`). Left/top loops
