@@ -70,7 +70,7 @@ CWD DISCIPLINE: all npx/tsx from the repo root, absolute input paths.
 - [x] [Batch 1 — per-id diagnosis](batch-1/overview.md): T1 decorate,
       T2 anchors, T3 2239, T4 1367, T5 1581+2825
 - [x] [Batch 2 — fixes/dispositions](batch-2/overview.md): T6–T10
-- [ ] [Batch 3 — verify + close](batch-3/overview.md): T11
+- [x] [Batch 3 — verify + close](batch-3/overview.md): T11
 
 ## Index
 
@@ -82,3 +82,30 @@ CWD DISCIPLINE: all npx/tsx from the repo root, absolute input paths.
 SLIs/on-call N/A (survey+gate). Rollback: **Reversible**. Registry/doc
 writes (accepted-divergences.json, known-divergences.md) only via T10
 dispositions with guard-test syncs per convention.
+
+## Mission summary (2026-07-02)
+
+**Tasks:** 11/11 complete (T1–T5 diagnosis, T6–T10 fixes/dispositions,
+T11 verify). One process slip: T7 committed with 3 failing tests (grep
+chain didn't gate exit code) — caught and synced immediately.
+
+**Outcomes per id:**
+- `graphs-decorate` — diverged → structural-match (decorate port, T6)
+- `1367` — decorate polylines fixed (T6); residual single title byte
+  accepted **A5** (new class: invalid input bytes) (T9)
+- `1880` — diverged → **conformant** (anchor inheritance + graph-attr
+  anchors + id escaping, T7)
+- `2619_1`/`2619_2` — anchors fixed (T7); reduced to one tapered-edge
+  element (taper.c port deferred per D3, 340 lines)
+- `2239` — invis-cluster box+label suppression + cluster label line
+  advance (T8); element counts byte-equal; re-bucketed numeric (x-width)
+- `1581`/`2825` — rankset warning ported with byte parity (T10);
+  accepted **A4** (crash-recovery debris; upstream asserts no-crash only)
+
+**Gates:** full vitest 2565 green; tsc clean; rules-gate PASS
+(0 regressions, improvements 1880 + graphs-decorate); canary 17s.
+Survey runs used: 1 of ≤2. Dashboard: 600/163/14, accepted 8.
+
+**Follow-ups tracked:** 2239 x-width divergence (numeric bucket);
+tapered edges (2619 residual); 2825 clipOverflow 23pt; graphs-decorate
+residual spline deltas (pre-existing class).
