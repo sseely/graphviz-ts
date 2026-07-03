@@ -85,7 +85,7 @@ See `decisions.md#stop-conditions`. Load-bearing ones:
 | [1](batch-1/overview.md) | Capture worst-diff location in the survey | T1 | [x] |
 | [2](batch-2/overview.md) | Dashboard structural-match bucket section | T2 | [x] |
 | [3](batch-3/overview.md) | Re-survey + regenerate baseline/PARITY.md | T3 | [ ] |
-| [4](batch-4/overview.md) | Parallel per-bucket mechanism diagnosis | T4 (fan-out) | [ ] |
+| [4](batch-4/overview.md) | Parallel per-bucket mechanism diagnosis | T4 (fan-out) | [x] |
 | [5](batch-5/overview.md) | Synthesize ranked candidate-mission list | T5 | [ ] |
 
 Batches are sequential (each depends on the prior). Batch 4 fans out one agent
