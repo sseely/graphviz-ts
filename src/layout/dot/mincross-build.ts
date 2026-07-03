@@ -22,6 +22,7 @@ import { transpose, ncross, exchange } from './mincross-cross.js';
 import { CLUSTER, isACluster } from './rank.js';
 import { installCluster, expandCluster, markLowclusters } from './cluster.js';
 import { agnode, agsubg, agsubnode, agGraphAttr } from '../../model/cgraph-ops.js';
+import { nodesInSeq } from './decomp.js';
 
 // betweenclust — @see lib/dotgen/mincross.c:betweenclust
 export function betweenclust(e: Edge): boolean {
@@ -336,7 +337,7 @@ export function doOrderingNode(ctx: MincrossContext, g: Graph, n: Node, outflag:
 }
 
 export function doOrderingForNodes(ctx: MincrossContext, g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const ordering = n.attrs.get('ordering');
     if (ordering === 'out') doOrderingNode(ctx, g, n, true);
     else if (ordering === 'in') doOrderingNode(ctx, g, n, false);
@@ -344,7 +345,7 @@ export function doOrderingForNodes(ctx: MincrossContext, g: Graph): void {
 }
 
 export function doOrdering(ctx: MincrossContext, g: Graph, outflag: boolean): void {
-  for (const n of g.nodes.values()) doOrderingNode(ctx, g, n, outflag);
+  for (const n of nodesInSeq(g)) doOrderingNode(ctx, g, n, outflag);
 }
 
 export function orderedEdges(ctx: MincrossContext, g: Graph): void {

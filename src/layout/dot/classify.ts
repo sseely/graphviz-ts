@@ -22,7 +22,7 @@ import {
   virtualNode, virtualEdge, fastNode, flatEdge,
   findFastEdge, mergeOneway, otherEdge,
 } from './fastgr.js';
-import { ufFind } from './decomp.js';
+import { ufFind, nodesInSeq } from './decomp.js';
 import { dotRoot } from './mincross-utils.js';
 import { SLACKNODE, CLUSTER, CL_BACK, IGNORED } from './rank.js';
 import { CLUSTER_EDGE } from './cluster-path.js';
@@ -140,7 +140,7 @@ function class1Edge(g: Graph, e: Edge): void {
  */
 export function class1(g: Graph): void {
   markClusters(g);
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     for (const e of n.outEdges(g)) class1Edge(g, e);
   }
 }
@@ -441,7 +441,7 @@ function class2ProcessNodes(g: Graph): void {
   // sensitive) but only writes the fast/virtual graph, never g.edges — so a
   // single out-edge index is safe and replaces O(N·E) outEdges calls.
   const outIdx = buildOutEdgeIndex(g);
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     if (n.info.clust === undefined && n === ufFind(n)) fastNode(g, n);
     class2ProcessNodeEdges(g, outIdx.get(n) ?? []);
   }

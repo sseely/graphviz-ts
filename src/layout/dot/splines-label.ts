@@ -15,6 +15,7 @@ import type { TextlabelT } from '../../common/types.js';
 import { VIRTUAL } from './fastgr.js';
 import { HEAD_LABEL, TAIL_LABEL, IGNORED } from './rank.js';
 import { lateDouble } from '../../common/nodeinit.js';
+import { nodesInSeq } from './decomp.js';
 
 // ---------------------------------------------------------------------------
 // TextLabel interface (minimal — full type deferred to Batch 5b)
@@ -365,7 +366,7 @@ export function placePortLabels(g: Graph): void {
  * @see lib/dotgen/dotsplines.c:442-447
  */
 function placeHeadLabels(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     for (const e of g.edges) {
       if (e.head !== n) continue;
       if (e.info.head_label === undefined) continue;
@@ -379,7 +380,7 @@ function placeHeadLabels(g: Graph): void {
  * @see lib/dotgen/dotsplines.c:449-455
  */
 function placeTailLabels(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     for (const e of g.edges) {
       if (e.tail !== n) continue;
       if (e.info.tail_label === undefined) continue;

@@ -10,9 +10,9 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
-import { Node as NodeClass } from '../../model/node.js';
 import { Edge as EdgeClass } from '../../model/edge.js';
 import { makePort } from '../../model/edgeInfo.js';
+import { agnode } from '../../model/cgraph-ops.js';
 
 /**
  * Map a point from the flat-adj auxiliary frame back to the original frame:
@@ -34,7 +34,14 @@ export function transformf(p: Point, del: Point, flip: boolean): Point {
  * @see lib/dotgen/dotsplines.c:cloneNode
  */
 export function cloneNode(g: Graph, orign: Node): Node {
-  const n = new NodeClass(orign.id, orign.name, g);
+  // C: `agnode(g, agnameof(orign), 1)` mints a FRESH AGSEQ for the clone,
+  // scoped to the aux graph's own creation sequence — it does NOT carry
+  // orign's id/AGSEQ across graphs. A prior port carried `orign.id` onto the
+  // clone directly, which corrupted `nodesInSeq(auxg)` (F7): the clone's
+  // "AGSEQ" borrowed the ORIGINAL graph's id ordering instead of reflecting
+  // the aux graph's own auxt/auxh creation order.
+  // @see lib/dotgen/dotsplines.c:cloneNode (agnode(g,...,1))
+  const n = agnode(g, orign.name, true)!;
   n.info.coord = { x: orign.info.coord.x, y: orign.info.coord.y };
   n.info.lw = orign.info.lw;
   n.info.rw = orign.info.rw;
@@ -54,7 +61,6 @@ export function cloneNode(g: Graph, orign: Node): Node {
   if (orign.nodeDefaultsSnapshot !== undefined) {
     n.nodeDefaultsSnapshot = new Map(orign.nodeDefaultsSnapshot);
   }
-  g.nodes.set(n.name, n);
   return n;
 }
 

@@ -16,6 +16,7 @@ import { VIRTUAL, MC_SCALE } from './fastgr.js';
 import { nodeBoxOf } from './edge-route-helpers.js';
 import { bezierClipNode } from './edge-route-clip.js';
 import { nodeInsideFn } from './edge-route-routing.js';
+import { nodesInSeq } from './decomp.js';
 
 // ---------------------------------------------------------------------------
 // ARR_LEN — distance from node boundary for arr_port
@@ -266,7 +267,7 @@ export function dotSameports(g: Graph): void {
   const hasST = graphHasSametail(g);
   if (!hasSH && !hasST) return;
   const ranksep = g.info.ranksep ?? 0;
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     if (hasSH) applyGroupsToNode(n, collectSamehead(n), ranksep);
     if (hasST) applyGroupsToNode(n, collectSametail(n), ranksep);
   }

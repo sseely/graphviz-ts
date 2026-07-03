@@ -6,7 +6,7 @@ import type { Graph } from '../../model/graph.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
 import { doGraphLabel } from './graph-label.js';
 import { ufFind, ufUnion, ufSingleton } from './decomp.js';
-import { decompose } from './decomp.js';
+import { decompose, nodesInSeq } from './decomp.js';
 import { acyclic } from './acyclic.js';
 import { reverseEdge, virtualEdge, zapinlist } from './fastgr.js';
 import { rank } from './ns.js';
@@ -122,7 +122,7 @@ export function cleanup1CompSlot(g: Graph, comp: Node[], ci: number): void {
 }
 
 export function cleanup1VirtA(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const out = n.outEdges(g);
     for (const e of out) {
       const f = e.info.to_virt;
@@ -132,7 +132,7 @@ export function cleanup1VirtA(g: Graph): void {
 }
 
 export function cleanup1VirtB(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const out = n.outEdges(g);
     for (const e of out) {
       const f = e.info.to_virt;
@@ -162,7 +162,7 @@ export function cleanup1(g: Graph): void {
 /** @see lib/dotgen/rank.c:edgelabel_ranks */
 export function edgelabelRanks(g: Graph): void {
   if (!((g.info.has_labels ?? 0) & EDGE_LABEL)) return;
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     for (const e of n.outEdges(g)) {
       e.info.minlen = (e.info.minlen ?? 1) * 2;
     }
@@ -198,12 +198,16 @@ export function collapseRanksetMinMax(g: Graph, kind: number, u: Node): void {
 
 /** @see lib/dotgen/rank.c:collapse_rankset */
 export function collapseRankset(g: Graph, subg: Graph, kind: number): void {
-  const first = subg.nodes.values().next().value as Node | undefined;
+  // C: `u = v = agfstnode(subg)` — `first` becomes the UF representative for
+  // the whole rankset, so it must be C's AGSEQ-first node, not the
+  // subgraph-local first-insertion node.
+  const seq = nodesInSeq(subg);
+  const first = seq[0];
   if (!first) return;
   first.info.ranktype = kind;
   const isMinOrMax = kind === MINRANK || kind === SOURCERANK || kind === MAXRANK || kind === SINKRANK;
   if (isMinOrMax) collapseRanksetMinMax(g, kind, first);
-  for (const v of subg.nodes.values()) {
+  for (const v of seq) {
     if (v === first) continue;
     ufUnion(first, v);
     v.info.ranktype = kind;
@@ -234,7 +238,7 @@ export function makeNewCluster(g: Graph, subg: Graph): void {
  */
 function induceClusterEdges(clust: Graph): void {
   const owned = new Set<Edge>(clust.edges);
-  for (const n of clust.nodes.values()) {
+  for (const n of nodesInSeq(clust)) {
     for (const e of n.outEdges(clust.root)) {
       if (clust.nodes.get(e.head.name) === e.head && !owned.has(e)) {
         clust.edges.push(e);
@@ -247,7 +251,7 @@ function induceClusterEdges(clust: Graph): void {
 /** @see lib/dotgen/rank.c:node_induce */
 export function nodeInduce(par: Graph, clust: Graph): void {
   pruneForeignClusterNodes(par, clust);
-  for (const n of clust.nodes.values()) {
+  for (const n of nodesInSeq(clust)) {
     if (n.info.clust) continue;
     n.info.clust = clust;
     n.info.clustnode = true;
@@ -277,7 +281,7 @@ export function dotScanRanks(g: Graph): void {
   let leaderRank = 0;
   let minrank = Number.MAX_SAFE_INTEGER;
   let maxrank = -1;
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const r = n.info.rank ?? 0;
     if (r > maxrank) maxrank = r;
     if (r < minrank) minrank = r;
@@ -304,7 +308,7 @@ export function clusterLeader(clust: Graph): void {
   const [leader] = clusterLeaderScan(clust);
   if (!leader) return;
   clust.info.leader = leader;
-  for (const n of clust.nodes.values()) {
+  for (const n of nodesInSeq(clust)) {
     ufUnion(n, leader);
     n.info.ranktype = CLUSTER;
   }
@@ -425,7 +429,7 @@ export function mmEdges2CheckMin(g: Graph, n: Node, slen0: number): boolean {
 export function minmaxEdges2(g: Graph, slen: [number, number]): boolean {
   if (!g.info.maxset && !g.info.minset) return false;
   let added = false;
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     if (n !== ufFind(n)) continue;
     if (mmEdges2CheckMax(g, n, slen[1])) added = true;
     if (mmEdges2CheckMin(g, n, slen[0])) added = true;
@@ -479,11 +483,13 @@ export function expandRankPostprocess(g: Graph): void {
 
 /** @see lib/dotgen/rank.c:expand_ranksets */
 export function expandRanksets(g: Graph): void {
+  // Existence-only check (C: `if (!agfstnode(g)) return`) — no node identity
+  // is read from `first`, so raw Map iteration order is immaterial here.
   const first = g.nodes.values().next().value as Node | undefined;
   if (!first) { g.info.minrank = 0; g.info.maxrank = 0; return; }
   g.info.minrank = Number.MAX_SAFE_INTEGER;
   g.info.maxrank = -1;
-  for (const n of g.nodes.values()) expandNode(g, n);
+  for (const n of nodesInSeq(g)) expandNode(g, n);
   // C gates the cluster min/max setup on `g == dot_root(g)`, NOT the cgraph
   // root. A packed component laid out as its own dot-root (info.dotroot = self)
   // has g.root === the TRUE root, so the old `g === g.root` skipped set_minmax

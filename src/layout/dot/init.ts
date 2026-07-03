@@ -23,6 +23,7 @@ import { initEdgeLabels } from '../../common/edge-label-init.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
 import { doGraphLabel } from './graph-label.js';
 import { agsubg, agdelnode, agdelsubg } from '../../model/cgraph-ops.js';
+import { nodesInSeq } from './decomp.js';
 
 // ---------------------------------------------------------------------------
 // RANKDIR constants
@@ -358,7 +359,7 @@ export function dotInitSubg(g: Graph): void {
  * @see lib/dotgen/dotinit.c:dot_init_node (common_init_node + gv_nodesize)
  */
 export function dotInitNodeEdge(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     commonInitNode(n, g);
     dotInitNode(n);
   }
@@ -388,7 +389,7 @@ export function removeFill(g: Graph): void {
   // Snapshot first: agdelnode mutates membership (including sg) during the
   // loop. C's nxt = agnxtnode look-ahead tolerates deleting the current node;
   // the snapshot is its faithful equivalent.
-  const fillNodes = [...sg.nodes.values()];
+  const fillNodes = nodesInSeq(sg);
   for (const n of fillNodes) {
     deleteFastNode(g.root, n);
     removeFromRank(g.root, n);

@@ -5,6 +5,34 @@ import type { Graph } from '../../model/graph.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
 
 // ---------------------------------------------------------------------------
+// AGSEQ-order node iteration (agfstnode/agnxtnode mirror)
+// ---------------------------------------------------------------------------
+
+/**
+ * Return `g`'s member nodes in AGSEQ order (global, root-graph-wide creation
+ * order), mirroring `agfstnode(g)`/`agnxtnode(g,n)` — NOT the subgraph-local
+ * first-insertion order that `g.nodes` (a `Map`) iterates by default.
+ *
+ * C's `agfstnode` walks a dict ordered by `agsubnodeseqcmpf`
+ * (`AGSEQ(node)`, assigned once at node creation and never touched by later
+ * `agsubnode` membership calls), independent of which subgraph a node was
+ * textually declared in. `Node.id` mirrors AGSEQ (assigned once at first
+ * global creation by `NodeRegistry.ensure`/`agnode`'s `freshNodeId`), so a
+ * `.id`-ascending sort reproduces C's order for any (sub)graph.
+ *
+ * Every C function that iterates a subgraph via `agfstnode`/`agnxtnode` must
+ * use this helper instead of `g.nodes.values()` directly — see F7's audit
+ * table in `.agent-notes/path-structure-xns-residuals.md` for the site list.
+ *
+ * @see lib/cgraph/node.c:43 (agfstnode), :50 (agnxtnode)
+ * @see lib/cgraph/node.c:283-290 (agsubnodeseqcmpf, AGSEQ comparator)
+ * @see lib/cgraph/node.c:162 (agnextseq(g,AGNODE), AGSEQ assignment at creation)
+ */
+export function nodesInSeq(g: Graph): Node[] {
+  return [...g.nodes.values()].sort((a, b) => a.id - b.id);
+}
+
+// ---------------------------------------------------------------------------
 // Union-Find exports
 // ---------------------------------------------------------------------------
 
@@ -127,7 +155,7 @@ export function decompose(g: Graph, pass: 0 | 1): void {
   if (++_dc.cmark === 0) _dc.cmark = 1;
   const cmark = _dc.cmark;
   g.info.comp = [];
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const v = resolveNode(n, pass);
     if (v !== undefined && v.info.mark !== cmark) {
       decompSearch(g, v, cmark);

@@ -18,6 +18,7 @@ import {
 } from './fastgr.js';
 import { dotScanRanks } from './rank.js';
 import { dotRoot } from './mincross-utils.js';
+import { nodesInSeq } from './decomp.js';
 import { graphMinrank, graphMaxrank } from './position-aux.js';
 
 const UP = 0;
@@ -284,7 +285,7 @@ export function infuseAllNodes(g: Graph): void {
     if (arr) arr.push(e);
     else outsByTail.set(e.tail, [e]);
   }
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     infuse(g, n);
     const oes = outsByTail.get(n);
     if (oes) for (const e of oes) infuseEdgeChain(g, e);

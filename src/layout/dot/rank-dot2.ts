@@ -11,6 +11,7 @@ import {
   MINRANK, SOURCERANK, MAXRANK, SINKRANK, SAMERANK,
 } from './rank.js';
 import { rank2 } from './ns.js';
+import { nodesInSeq } from './decomp.js';
 
 // ---------------------------------------------------------------------------
 // Constants  @see lib/dotgen/rank.c
@@ -59,15 +60,27 @@ export function d2unionOne(leader: Node, n: Node | undefined): Node {
 
 /** @see lib/dotgen/rank.c:union_all */
 export function d2unionAll(g: Graph): Node | undefined {
-  const first = g.nodes.values().next().value as Node | undefined;
+  const seq = nodesInSeq(g);
+  const first = seq[0];
   if (!first) return undefined;
   const leader = d2find(first);
-  for (const n of g.nodes.values()) d2unionOne(leader, n);
+  for (const n of seq) d2unionOne(leader, n);
   return leader;
 }
 
 // ---------------------------------------------------------------------------
 // Xg graph construction helpers
+//
+// F7 audit note: `Xg.nodes.values()` loops below (breakCycles, dfscc/
+// connectComponents) are NOT converted to `nodesInSeq`, even though their C
+// counterparts iterate `agfstnode(Xg)`. Xg is a flat, single-scope synthetic
+// graph — every Xg node is created exactly once via `makeXnode`, which
+// appends directly to `Xg.nodes` in call order, and Xg has no subgraphs that
+// could later widen a node's membership out of creation order (the exact
+// precondition that makes `g.nodes.values()` diverge from AGSEQ elsewhere).
+// Xg's node-creation order is itself already driven by `nodesInSeq(g)`
+// (compileNodes/compileEdges/compileClusters, converted above), so
+// `Xg.nodes.values()` is provably already AGSEQ-equivalent order.
 // ---------------------------------------------------------------------------
 
 /** @see lib/dotgen/rank.c:makeXnode */
@@ -131,7 +144,7 @@ export function csSetupCluster(g: Graph, parentClust: Graph | undefined): Graph 
 }
 
 export function csProcessClusterNodes(g: Graph): void {
-  for (const n of g.nodes.values()) { if (!n.info.clust) n.info.clust = g; }
+  for (const n of nodesInSeq(g)) { if (!n.info.clust) n.info.clust = g; }
 }
 
 export function csProcessRankset(g: Graph, clust: Graph | undefined): void {
@@ -167,10 +180,11 @@ export function compileSamerank(g: Graph, parentClust: Graph | undefined): void 
 /** @see lib/dotgen/rank.c:compile_nodes */
 export function compileNodes(g: Graph, Xg: Graph, st: XgState): void {
   st.lastNode = undefined;
-  for (const n of g.nodes.values()) {
+  const seq = nodesInSeq(g);
+  for (const n of seq) {
     if (d2find(n) === n) n.info.rep = makeXnode(Xg, n.name, st);
   }
-  for (const n of g.nodes.values()) {
+  for (const n of seq) {
     if (!n.info.rep) n.info.rep = d2find(n).info.rep;
   }
 }
@@ -268,7 +282,7 @@ export function compileEdgeItem(Xg: Graph, e: Edge, Xt: Node, st: XgState): void
 
 /** @see lib/dotgen/rank.c:compile_edges */
 export function compileEdges(g: Graph, Xg: Graph, st: XgState): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const Xt = n.info.rep;
     if (!Xt) continue;
     for (const e of n.outEdges(g)) compileEdgeItem(Xg, e, Xt, st);
@@ -298,7 +312,7 @@ export function ccStrongCluster(
   g: Graph, Xg: Graph, st: XgState, top: Node | undefined, bot: Node | undefined
 ): ClusterBounds {
   const b: ClusterBounds = { top, bot };
-  for (const n of g.nodes.values()) ccProcessNode(g, Xg, st, n, b);
+  for (const n of nodesInSeq(g)) ccProcessNode(g, Xg, st, n, b);
   if (b.top && b.bot) xgMerge(xgAddEdge(Xg, b.top, b.bot), 0, STRONG_CLUSTER_WEIGHT);
   return b;
 }
@@ -419,7 +433,7 @@ export function setMinMax2(g: Graph, doRoot: boolean): void {
   if (!gHasParent(g) && !doRoot) return;
   g.info.minrank = Number.MAX_SAFE_INTEGER; g.info.maxrank = -1;
   const ref: { v: Node | undefined } = { v: undefined };
-  for (const n of g.nodes.values()) setMinMax2ScanNode(g, n, ref);
+  for (const n of nodesInSeq(g)) setMinMax2ScanNode(g, n, ref);
   g.info.leader = ref.v;
 }
 
@@ -436,15 +450,15 @@ export function readoutUpdateMinrk(n: Node, xn: Node, minrk: number[]): void {
 }
 
 export function readoutApplyMinrk(g: Graph, minrk: number[]): void {
-  for (const n of g.nodes.values()) n.info.rank = nRankOrZero(n) - minrk[n.info.hops ?? 0];
+  for (const n of nodesInSeq(g)) n.info.rank = nRankOrZero(n) - minrk[n.info.hops ?? 0];
 }
 
 export function readoutShiftAll(g: Graph, delta: number): void {
-  for (const n of g.nodes.values()) n.info.rank = nRankOrZero(n) - delta;
+  for (const n of nodesInSeq(g)) n.info.rank = nRankOrZero(n) - delta;
 }
 
 export function readoutScanNodes(g: Graph, minrk: number[] | undefined): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     readoutCopyRank(g, n);
     if (minrk) readoutUpdateMinrk(n, d2find(n).info.rep!, minrk);
   }
