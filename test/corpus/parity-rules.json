@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-03T17:39:48.526Z",
+  "generatedAt": "2026-07-03T18:34:19.999Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 683,
-    "structural-match": 83,
+    "conformant": 693,
+    "structural-match": 73,
     "diverged": 11,
     "errored": 0,
     "timeout": 1,
@@ -1386,8 +1386,8 @@
       "id": "graphs-decorate",
       "path": "graphs/decorate.gv",
       "verdict": "structural-match",
-      "maxDelta": 104.56,
-      "maxDeltaPath": "svg/g[1]/g[38]/polyline[1]/@points[0]"
+      "maxDelta": 43.539999999999964,
+      "maxDeltaPath": "svg/g[1]/g[25]/polyline[1]/@points[5]"
     },
     {
       "id": "graphs-dfa",
@@ -1427,9 +1427,7 @@
     {
       "id": "graphs-fsm",
       "path": "graphs/fsm.gv",
-      "verdict": "structural-match",
-      "maxDelta": 3.6499999999999773,
-      "maxDeltaPath": "svg/g[1]/g[17]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grammar",
@@ -2037,29 +2035,25 @@
       "id": "graphs-sb_box",
       "path": "graphs/sb_box.gv",
       "verdict": "structural-match",
-      "maxDelta": 51.47,
-      "maxDeltaPath": "svg/g[1]/polygon[1]/@points[4]"
+      "maxDelta": 10.299999999999997,
+      "maxDeltaPath": "svg/g[1]/g[2]/path[1]/@d[12]"
     },
     {
       "id": "graphs-sb_box_dbl",
       "path": "graphs/sb_box_dbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 51.47,
-      "maxDeltaPath": "svg/g[1]/polygon[1]/@points[4]"
+      "maxDelta": 10.340000000000003,
+      "maxDeltaPath": "svg/g[1]/g[3]/path[1]/@d[12]"
     },
     {
       "id": "graphs-sb_circle",
       "path": "graphs/sb_circle.gv",
-      "verdict": "structural-match",
-      "maxDelta": 51.47,
-      "maxDeltaPath": "svg/g[1]/polygon[1]/@points[4]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sb_circle_dbl",
       "path": "graphs/sb_circle_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 51.47,
-      "maxDeltaPath": "svg/g[1]/polygon[1]/@points[4]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-shapes",
@@ -2085,29 +2079,25 @@
       "id": "graphs-sl_box",
       "path": "graphs/sl_box.gv",
       "verdict": "structural-match",
-      "maxDelta": 143.35,
-      "maxDeltaPath": "svg/g[1]/g[62]/path[1]/@d[12]"
+      "maxDelta": 10.219999999999999,
+      "maxDeltaPath": "svg/g[1]/g[2]/path[1]/@d[0]"
     },
     {
       "id": "graphs-sl_box_dbl",
       "path": "graphs/sl_box_dbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 268.12,
-      "maxDeltaPath": "svg/g[1]/g[18]/polygon[1]/@points[0]"
+      "maxDelta": 10.730000000000018,
+      "maxDeltaPath": "svg/g[1]/g[14]/polygon[1]/@points[4]"
     },
     {
       "id": "graphs-sl_circle",
       "path": "graphs/sl_circle.gv",
-      "verdict": "structural-match",
-      "maxDelta": 143,
-      "maxDeltaPath": "svg/@viewBox[2]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sl_circle_dbl",
       "path": "graphs/sl_circle_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 268,
-      "maxDeltaPath": "svg/@viewBox[2]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sq_rules",
@@ -2125,8 +2115,8 @@
       "id": "graphs-sr_box_dbl",
       "path": "graphs/sr_box_dbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 115.58999999999997,
-      "maxDeltaPath": "svg/g[1]/g[27]/text[1]/@x"
+      "maxDelta": 10.729999999999997,
+      "maxDeltaPath": "svg/g[1]/g[10]/polygon[1]/@points[0]"
     },
     {
       "id": "graphs-sr_circle",
@@ -2136,37 +2126,31 @@
     {
       "id": "graphs-sr_circle_dbl",
       "path": "graphs/sr_circle_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 115.58000000000001,
-      "maxDeltaPath": "svg/g[1]/g[27]/text[1]/@x"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-st_box",
       "path": "graphs/st_box.gv",
       "verdict": "structural-match",
-      "maxDelta": 27.129999999999995,
-      "maxDeltaPath": "svg/g[1]/g[20]/path[1]/@d[2]"
+      "maxDelta": 17.09,
+      "maxDeltaPath": "svg/g[1]/g[20]/path[1]/@d[10]"
     },
     {
       "id": "graphs-st_box_dbl",
       "path": "graphs/st_box_dbl.gv",
       "verdict": "structural-match",
-      "maxDelta": 27.11999999999999,
-      "maxDeltaPath": "svg/g[1]/g[26]/path[1]/@d[2]"
+      "maxDelta": 17.11,
+      "maxDeltaPath": "svg/g[1]/g[46]/path[1]/@d[10]"
     },
     {
       "id": "graphs-st_circle",
       "path": "graphs/st_circle.gv",
-      "verdict": "structural-match",
-      "maxDelta": 17,
-      "maxDeltaPath": "svg/@height"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-st_circle_dbl",
       "path": "graphs/st_circle_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 17,
-      "maxDeltaPath": "svg/@height"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-states",
@@ -2191,8 +2175,8 @@
       "id": "graphs-train11",
       "path": "graphs/train11.gv",
       "verdict": "structural-match",
-      "maxDelta": 4.0400000000000205,
-      "maxDeltaPath": "svg/g[1]/g[11]/text[1]/@y"
+      "maxDelta": 4.039999999999964,
+      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
     },
     {
       "id": "graphs-trapeziumlr",
@@ -3198,9 +3182,7 @@
     {
       "id": "share-fsm",
       "path": "share/fsm.gv",
-      "verdict": "structural-match",
-      "maxDelta": 3.6599999999999966,
-      "maxDeltaPath": "svg/g[1]/g[17]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "share-grammar",
@@ -3559,7 +3541,7 @@
       "path": "share/train11.gv",
       "verdict": "structural-match",
       "maxDelta": 4.0400000000000205,
-      "maxDeltaPath": "svg/g[1]/g[11]/text[1]/@y"
+      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
     },
     {
       "id": "share-trapeziumlr",
@@ -3748,9 +3730,7 @@
     {
       "id": "windows-fsm",
       "path": "windows/fsm.gv",
-      "verdict": "structural-match",
-      "maxDelta": 3.6599999999999966,
-      "maxDeltaPath": "svg/g[1]/g[17]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "windows-grammar",
@@ -4114,7 +4094,7 @@
       "path": "windows/train11.gv",
       "verdict": "structural-match",
       "maxDelta": 4.0400000000000205,
-      "maxDeltaPath": "svg/g[1]/g[11]/text[1]/@y"
+      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
     },
     {
       "id": "windows-trapeziumlr",
