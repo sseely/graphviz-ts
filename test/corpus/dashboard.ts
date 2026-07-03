@@ -88,7 +88,7 @@ function divergedBucket(path: string): { key: string; hypothesis: string } {
 function structuralKind(path: string | undefined): string {
   const p = path ?? '';
   if (/@d(\[\d+\])?$/.test(p)) return 'edge-path';
-  if (/@points$/.test(p)) return 'polygon-points';
+  if (/@points(\[\d+\])?$/.test(p)) return 'polygon-points';
   if (/@(cx|cy|rx|ry|r)$/.test(p)) return 'node-ellipse';
   if (/@(x|y|x1|y1|x2|y2|dx|dy)(\[\d+\])?$/.test(p) || p.includes('transform') || p.includes('text')) {
     return 'text-position';
