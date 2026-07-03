@@ -74,8 +74,10 @@ function effectiveNodeDefaults(scope: Graph): Map<string, string> {
 }
 
 /** Graph-attr keys do_graph_label inherits; seeded into subgraph attrs so the
- *  inherited value survives the layout's cluster rebuilds. */
-const GRAPH_LABEL_INHERIT_KEYS = ['label', 'fontname', 'fontsize', 'fontcolor'] as const;
+ *  inherited value survives the layout's cluster rebuilds (which copy attrs but
+ *  not the snapshot). `labelloc`/`labeljust` drive cluster label position and
+ *  inherit via C `agget` just like label/font — @see input.c:858-877. */
+const GRAPH_LABEL_INHERIT_KEYS = ['label', 'fontname', 'fontsize', 'fontcolor', 'labelloc', 'labeljust'] as const;
 
 /**
  * Collect the graph-attribute defaults in effect at `scope`: walk scope -> root,
