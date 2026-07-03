@@ -8,8 +8,9 @@
     "conformant": 716,
     "structural-match": 50,
     "diverged": 11,
-    "oracle-error": 11,
-    "timeout": 1
+    "errored": 0,
+    "timeout": 1,
+    "oracle-error": 11
   },
   "results": [
     {
