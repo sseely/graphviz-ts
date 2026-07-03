@@ -17,6 +17,7 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
+import { PenType } from './context.js';
 import { gvrenderTextspan } from './textspan-emit.js';
 import { resolveEdgeAnchor, resolveObjAnchor, beginAnchorIf } from './anchor.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
@@ -42,8 +43,11 @@ import {
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
-import { renderClusterLabel, applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
-export { renderClusterLabel } from './device-cluster.js';
+import { applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
+/** Cluster labels go through the single emit_label port. @see labels.c:emit_label */
+export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  renderOneLabel(sg.info.label as TextlabelT | undefined, renderer, job);
+}
 import { svgNodeId, svgEdgeId, svgClusterId, svgGraphId } from '../render/svg-id.js';
 
 // ---------------------------------------------------------------------------
@@ -321,8 +325,10 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     const anchored = beginAnchorIf(renderer, job);
     // C draws the boundary box only when peripheries != 0, or (peripheries == 0
     // and the cluster is filled). peripheries=0 + unfilled emits nothing.
-    // @see lib/common/emit.c:3907-3917
-    if (clusterPeripheries(sg) !== 0 || filled) {
+    // style=invis sets PEN_NONE and gvrender_polygon skips the whole box
+    // (fill included); the group/title still emit.
+    // @see lib/common/emit.c:3907-3917, lib/gvc/gvrender.c:543
+    if ((clusterPeripheries(sg) !== 0 || filled) && job.obj?.pen !== PenType.None) {
       renderClusterBox(sg, filled, renderer, job);
     }
     renderClusterLabel(sg, renderer, job);
