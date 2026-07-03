@@ -1,16 +1,15 @@
 {
-  "generatedAt": "2026-07-03T19:08:38.310Z",
+  "generatedAt": "2026-07-03T20:54:23.656Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 705,
-    "structural-match": 61,
+    "conformant": 706,
+    "structural-match": 60,
     "diverged": 11,
-    "errored": 0,
-    "timeout": 1,
-    "oracle-error": 11
+    "oracle-error": 11,
+    "timeout": 1
   },
   "results": [
     {
@@ -327,9 +326,7 @@
     {
       "id": "1898",
       "path": "1898.dot",
-      "verdict": "structural-match",
-      "maxDelta": 202.56,
-      "maxDeltaPath": "svg/g[1]/text[4]/@x"
+      "verdict": "conformant"
     },
     {
       "id": "1902",
@@ -620,15 +617,15 @@
       "id": "2470",
       "path": "2470.dot",
       "verdict": "structural-match",
-      "maxDelta": 6917.98,
-      "maxDeltaPath": "svg/g[1]/g[549]/text[1]/@x"
+      "maxDelta": 8,
+      "maxDeltaPath": "svg/g[1]/g[484]/text[1]/@y"
     },
     {
       "id": "2471",
       "path": "2471.dot",
       "verdict": "structural-match",
-      "maxDelta": 9063.3,
-      "maxDeltaPath": "svg/g[1]/g[1154]/text[9]/@x"
+      "maxDelta": 6906.5999999999985,
+      "maxDeltaPath": "svg/g[1]/g[1200]/path[1]/@d[0]"
     },
     {
       "id": "2475_1",
@@ -1520,22 +1517,22 @@
       "id": "graphs-inv_inv",
       "path": "graphs/inv_inv.gv",
       "verdict": "structural-match",
-      "maxDelta": 25.83,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-inv_nul",
       "path": "graphs/inv_nul.gv",
       "verdict": "structural-match",
-      "maxDelta": 108.3,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[2]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-inv_val",
       "path": "graphs/inv_val.gv",
       "verdict": "structural-match",
-      "maxDelta": 14.16,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-japanese",
@@ -1873,22 +1870,22 @@
       "id": "graphs-nul_inv",
       "path": "graphs/nul_inv.gv",
       "verdict": "structural-match",
-      "maxDelta": 159.95,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-nul_nul",
       "path": "graphs/nul_nul.gv",
       "verdict": "structural-match",
-      "maxDelta": 25.83,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-nul_val",
       "path": "graphs/nul_val.gv",
       "verdict": "structural-match",
-      "maxDelta": 148.28,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-ordering",
@@ -2212,22 +2209,22 @@
       "id": "graphs-val_inv",
       "path": "graphs/val_inv.gv",
       "verdict": "structural-match",
-      "maxDelta": 37.49,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-val_nul",
       "path": "graphs/val_nul.gv",
       "verdict": "structural-match",
-      "maxDelta": 96.63,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[2]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-val_val",
       "path": "graphs/val_val.gv",
       "verdict": "structural-match",
-      "maxDelta": 25.83,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@x"
+      "maxDelta": 4,
+      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
     },
     {
       "id": "graphs-viewfile",
