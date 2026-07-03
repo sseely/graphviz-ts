@@ -22,9 +22,12 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { partition, SEED } from "./partition.js";
+import {
+  partition, SEED, traverseChildOrderForTest, TR_FROM_UP, TR_FROM_DN,
+} from "./partition.js";
 import { srand48, drand48 } from "../common/random.js";
 import type { Cell, OrthoBox } from "./types.js";
+import type { SegmentT, TrapT } from "./trapezoid.js";
 
 /** Build a partition input Cell from a bounding box (only bb is read). */
 function mkCell(LLx: number, LLy: number, URx: number, URy: number): Cell {
@@ -196,4 +199,143 @@ describe("ortho partition — oracle-pinned vs native C", () => {
       });
     });
   }
+});
+
+// ---------------------------------------------------------------------------
+// traverse_polygon branch-table transcription (F1) — direct unit tests
+//
+// C's traverse_polygon (partition.c:400-621) is a preorder DFS over the
+// trapezoid u0/u1/d0/d1 adjacency whose recursive CALL ORDER varies per
+// branch based on (from, dir) and a handful of `equal_to` geometry checks.
+// The prior port's iterative form used a fixed push order (u0,u1,d0,d1,
+// popped LIFO) and skipped the true DFS entry point (`tr_start` itself),
+// which is provably box-SET-correct (order-normalized, see the oracle-pinned
+// tests above) but not order-faithful to C. `childOrder` is the literal
+// branch-table transcription; these tests pin its output against hand-built
+// TrapT/SegmentT fixtures chosen to hit each branch, citing the C line the
+// branch corresponds to — a regression net for the transcription itself,
+// independent of whether a given real-world maze geometry currently
+// exercises the branch (per F1 investigation: on the corpus tested, box
+// SETS never depend on traversal order, so `partition()`'s output is
+// unchanged by this fix on every fixture tried — see decisions.md).
+// ---------------------------------------------------------------------------
+
+const ORIGIN = { x: 0, y: 0 };
+
+/** Minimal TrapT — only the fields childOrder reads are meaningful. */
+function mkTrap(over: Partial<TrapT>): TrapT {
+  return {
+    lseg: 0, rseg: 0, hi: ORIGIN, lo: ORIGIN,
+    u0: 0, u1: 0, d0: 0, d1: 0,
+    sink: 0, usave: 0, uside: 0, isValid: true,
+    ...over,
+  };
+}
+
+/** seg[] indexed from 1 (index 0 unused, matches C's 1-based segment array). */
+function mkSegArray(entries: Record<number, Partial<SegmentT>>): SegmentT[] {
+  const seg: SegmentT[] = [];
+  const max = Math.max(0, ...Object.keys(entries).map(Number));
+  for (let i = 0; i <= max; i++) {
+    seg.push({
+      v0: ORIGIN, v1: ORIGIN, isInserted: false, root0: 0, root1: 0, next: 0, prev: 0,
+      ...entries[i],
+    });
+  }
+  return seg;
+}
+
+describe("traverse_polygon childOrder — C branch-table transcription", () => {
+  it("no u-neighbours, single d-neighbour: 'just traverse all neighbours' fallback (partition.c:419-426)", () => {
+    const t = mkTrap({ u0: 0, u1: 0, d0: 5, d1: 0, lseg: 1, rseg: 2 });
+    const seg = mkSegArray({});
+    expect(traverseChildOrderForTest(t, seg, 0, TR_FROM_DN))
+      .toEqual([[0, TR_FROM_DN], [0, TR_FROM_DN], [5, TR_FROM_UP], [0, TR_FROM_UP]]);
+  });
+
+  it("downward opening triangle, from === d1 (partition.c:406-411)", () => {
+    const t = mkTrap({ u0: 0, u1: 0, d0: 5, d1: 7, lseg: 1, rseg: 2 });
+    const seg = mkSegArray({});
+    expect(traverseChildOrderForTest(t, seg, 7, TR_FROM_UP))
+      .toEqual([[7, TR_FROM_UP], [5, TR_FROM_UP]]);
+  });
+
+  it("downward opening triangle, from !== d1 (partition.c:412-417)", () => {
+    const t = mkTrap({ u0: 0, u1: 0, d0: 5, d1: 7, lseg: 1, rseg: 2 });
+    const seg = mkSegArray({});
+    expect(traverseChildOrderForTest(t, seg, 99, TR_FROM_UP))
+      .toEqual([[5, TR_FROM_UP], [7, TR_FROM_UP]]);
+  });
+
+  it("upward opening triangle, from === u1 (partition.c:433-437)", () => {
+    const t = mkTrap({ u0: 5, u1: 7, d0: 0, d1: 0, lseg: 1, rseg: 2 });
+    const seg = mkSegArray({});
+    expect(traverseChildOrderForTest(t, seg, 7, TR_FROM_DN))
+      .toEqual([[7, TR_FROM_DN], [5, TR_FROM_DN]]);
+  });
+
+  it("downward+upward cusps, tie-break condition true (partition.c:460-468)", () => {
+    const t = mkTrap({ u0: 5, u1: 7, d0: 9, d1: 11, lseg: 1, rseg: 2 });
+    expect(traverseChildOrderForTest(t, mkSegArray({}), 11, TR_FROM_DN))
+      .toEqual([[7, TR_FROM_DN], [11, TR_FROM_UP], [5, TR_FROM_DN], [9, TR_FROM_UP]]);
+  });
+
+  it("downward+upward cusps, tie-break condition false (partition.c:469-476)", () => {
+    const t = mkTrap({ u0: 5, u1: 7, d0: 9, d1: 11, lseg: 1, rseg: 2 });
+    expect(traverseChildOrderForTest(t, mkSegArray({}), 99, TR_FROM_DN))
+      .toEqual([[5, TR_FROM_DN], [9, TR_FROM_UP], [7, TR_FROM_DN], [11, TR_FROM_UP]]);
+  });
+
+  it("only downward cusp, equal_to(lo, lseg.v1) true, dir=UP && u0===from (partition.c:484-491)", () => {
+    const t = mkTrap({
+      u0: 5, u1: 7, d0: 9, d1: 0, lseg: 1, rseg: 2, lo: { x: 10, y: 20 },
+    });
+    const seg = mkSegArray({ 1: { v1: { x: 10, y: 20 } } });
+    expect(traverseChildOrderForTest(t, seg, 5, TR_FROM_UP))
+      .toEqual([[5, TR_FROM_DN], [9, TR_FROM_UP], [7, TR_FROM_DN], [0, TR_FROM_UP]]);
+  });
+
+  it("only downward cusp, equal_to(lo, lseg.v1) true, else branch (partition.c:492-499)", () => {
+    const t = mkTrap({
+      u0: 5, u1: 7, d0: 9, d1: 0, lseg: 1, rseg: 2, lo: { x: 10, y: 20 },
+    });
+    const seg = mkSegArray({ 1: { v1: { x: 10, y: 20 } } });
+    expect(traverseChildOrderForTest(t, seg, 99, TR_FROM_DN))
+      .toEqual([[7, TR_FROM_DN], [9, TR_FROM_UP], [0, TR_FROM_UP], [5, TR_FROM_DN]]);
+  });
+
+  it("only upward cusp, equal_to(hi, lseg.v0) true, condition true (partition.c:529-536)", () => {
+    const t = mkTrap({
+      u0: 5, u1: 0, d0: 9, d1: 11, lseg: 1, rseg: 2, hi: { x: 30, y: 40 },
+    });
+    const seg = mkSegArray({ 1: { v0: { x: 30, y: 40 } } });
+    expect(traverseChildOrderForTest(t, seg, 99, TR_FROM_UP))
+      .toEqual([[0, TR_FROM_DN], [11, TR_FROM_UP], [5, TR_FROM_DN], [9, TR_FROM_UP]]);
+  });
+
+  it("no cusp, first split-point pair matches, dir=UP (partition.c:571-581)", () => {
+    const t = mkTrap({
+      u0: 5, u1: 0, d0: 9, d1: 0, lseg: 1, rseg: 2,
+      hi: { x: 30, y: 40 }, lo: { x: 0, y: 0 },
+    });
+    const seg = mkSegArray({
+      1: { v0: { x: 30, y: 40 } },
+      2: { v0: { x: 0, y: 0 } },
+    });
+    expect(traverseChildOrderForTest(t, seg, 0, TR_FROM_UP))
+      .toEqual([[5, TR_FROM_DN], [0, TR_FROM_DN], [0, TR_FROM_UP], [9, TR_FROM_UP]]);
+  });
+
+  it("no cusp, no split possible → fallback (partition.c:613-619)", () => {
+    const t = mkTrap({
+      u0: 5, u1: 0, d0: 9, d1: 0, lseg: 1, rseg: 2,
+      hi: { x: 1, y: 1 }, lo: { x: 2, y: 2 },
+    });
+    const seg = mkSegArray({
+      1: { v0: { x: 99, y: 99 }, v1: { x: 66, y: 66 } },
+      2: { v0: { x: 88, y: 88 }, v1: { x: 77, y: 77 } },
+    });
+    expect(traverseChildOrderForTest(t, seg, 0, TR_FROM_UP))
+      .toEqual([[5, TR_FROM_DN], [9, TR_FROM_UP], [0, TR_FROM_DN], [0, TR_FROM_UP]]);
+  });
 });

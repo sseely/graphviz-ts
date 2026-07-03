@@ -15,7 +15,7 @@
 import { srand48, drand48 } from "../common/random.js";
 import type { OrthoBox, OrthoPoint, Cell } from "./types.js";
 import {
-  constructTrapezoids, fpEqual, greaterThan, isValidTrap, C_EPS,
+  constructTrapezoids, fpEqual, greaterThan, isValidTrap, C_EPS, equalTo,
 } from "./trapezoid.js";
 import type { SegmentT, TrapT } from "./trapezoid.js";
 
@@ -25,6 +25,10 @@ const SEED = 173;
 export { SEED };
 
 const NPOINTS = 4;
+
+/** @see lib/ortho/partition.c:#define TR_FROM_UP/TR_FROM_DN */
+const TR_FROM_UP = 1;
+const TR_FROM_DN = 2;
 
 class PartitionHelper {
   /** @see lib/common/geomprocs.h:perp — r.x = -p.y, r.y = p.x */
@@ -133,18 +137,83 @@ class PartitionHelper {
   }
 
   /**
+   * Determines the ordered list of (child trapezoid, direction) pairs that
+   * `traverse_polygon` recurses into for trapezoid `t`, given the `from`/
+   * `dir` it was entered with. This is the C function's full branch table
+   * (partition.c:400-621) minus the monotone-chain bookkeeping
+   * (`make_new_monotone_poly`/`mcur`/`mnew`/`vert`/`mon`), which is provably
+   * dead for box output — `decomp` boxes depend only on trap geometry and
+   * `flip`, never on the chain state — but the CALL ORDER of children is
+   * live: it determines maze-cell construction order downstream (mkMaze →
+   * createSEdges → snode adjEdgeList), which is the tie-break for equal-cost
+   * Dijkstra corridors in ortho edge routing.
+   * @see lib/ortho/partition.c:traverse_polygon
+   */
+  static childOrder(t: TrapT, seg: SegmentT[], from: number, dir: number): [number, number][] {
+    const UP = TR_FROM_UP; const DN = TR_FROM_DN;
+    const { u0, u1, d0, d1 } = t;
+    if (!isValidTrap(u0) && !isValidTrap(u1)) {
+      if (isValidTrap(d0) && isValidTrap(d1)) { // downward opening triangle
+        if (from === d1) return [[d1, UP], [d0, UP]];
+        return [[d0, UP], [d1, UP]];
+      }
+      return [[u0, DN], [u1, DN], [d0, UP], [d1, UP]]; // just traverse all neighbours
+    }
+    if (!isValidTrap(d0) && !isValidTrap(d1)) {
+      if (isValidTrap(u0) && isValidTrap(u1)) { // upward opening triangle
+        if (from === u1) return [[u1, DN], [u0, DN]];
+        return [[u0, DN], [u1, DN]];
+      }
+      return [[u0, DN], [u1, DN], [d0, UP], [d1, UP]]; // just traverse all neighbours
+    }
+    if (isValidTrap(u0) && isValidTrap(u1)) {
+      if (isValidTrap(d0) && isValidTrap(d1)) { // downward + upward cusps
+        if ((dir === DN && d1 === from) || (dir === UP && u1 === from)) {
+          return [[u1, DN], [d1, UP], [u0, DN], [d0, UP]];
+        }
+        return [[u0, DN], [d0, UP], [u1, DN], [d1, UP]];
+      }
+      // only downward cusp
+      if (equalTo(t.lo, seg[t.lseg].v1)) {
+        if (dir === UP && u0 === from) return [[u0, DN], [d0, UP], [u1, DN], [d1, UP]];
+        return [[u1, DN], [d0, UP], [d1, UP], [u0, DN]];
+      }
+      if (dir === UP && u1 === from) return [[u1, DN], [d1, UP], [d0, UP], [u0, DN]];
+      return [[u0, DN], [d0, UP], [d1, UP], [u1, DN]];
+    }
+    // no downward cusp (is_valid_trap(u0) || is_valid_trap(u1), always true here)
+    if (isValidTrap(d0) && isValidTrap(d1)) { // only upward cusp
+      if (equalTo(t.hi, seg[t.lseg].v0)) {
+        if (!(dir === DN && d0 === from)) return [[u1, DN], [d1, UP], [u0, DN], [d0, UP]];
+        return [[d0, UP], [u0, DN], [u1, DN], [d1, UP]];
+      }
+      if (dir === DN && d1 === from) return [[d1, UP], [u1, DN], [u0, DN], [d0, UP]];
+      return [[u0, DN], [d0, UP], [u1, DN], [d1, UP]];
+    }
+    // no cusp
+    if (equalTo(t.hi, seg[t.lseg].v0) && equalTo(t.lo, seg[t.rseg].v0)) {
+      if (dir === UP) return [[u0, DN], [u1, DN], [d1, UP], [d0, UP]];
+      return [[d1, UP], [d0, UP], [u0, DN], [u1, DN]];
+    }
+    if (equalTo(t.hi, seg[t.rseg].v1) && equalTo(t.lo, seg[t.lseg].v1)) {
+      if (dir === UP) return [[u0, DN], [u1, DN], [d1, UP], [d0, UP]];
+      return [[d1, UP], [d0, UP], [u0, DN], [u1, DN]];
+    }
+    return [[u0, DN], [d0, UP], [u1, DN], [d1, UP]]; // no split possible
+  }
+
+  /**
    * Faithful port of monotonate_trapezoids' observable output: collect the
    * rectangle for every trapezoid reachable from the inside-polygon start
-   * via u0/u1/d0/d1 adjacency. Obstacle-interior trapezoids are unreachable
-   * from the free-region start and so are excluded (matching C).
+   * via u0/u1/d0/d1 adjacency, IN C's EXACT traverse_polygon call order.
    *
-   * The C monotone-chain bookkeeping (make_new_monotone_poly / vert / mon)
-   * is provably dead for box output — `decomp` boxes depend only on trap
-   * geometry and `flip`, never on mcur/mnew — and every traverse_polygon
-   * branch recurses into all valid neighbours, so the visited SET equals the
-   * connected component of the start trapezoid. The recursive DFS is realized
-   * iteratively here; emission order is therefore not bit-identical to C
-   * (order-normalized comparison, T1 acceptance).
+   * Realized as an explicit-stack DFS (not real recursion, to stay
+   * stack-safe on large polygons per
+   * .agent-notes/triangulation-recursion-stack-overflow.md) that preserves
+   * C's preorder emission sequence: children are pushed in REVERSE of
+   * `childOrder`'s call order so LIFO pop visits them in forward order,
+   * fully exploring each child's subtree (via its own pushed descendants)
+   * before returning to the next sibling — exactly mirroring recursive DFS.
    *
    * @see lib/ortho/partition.c:monotonate_trapezoids, traverse_polygon
    */
@@ -155,16 +224,18 @@ class PartitionHelper {
       if (PartitionHelper.insidePolygon(tr[j], seg)) { trStart = j; break; }
     }
     if (trStart < 0) return decomp;
-    // C starts the walk at the start trapezoid's u0 (or d0) neighbour.
-    let start: number;
-    if (isValidTrap(tr[trStart].u0)) start = tr[trStart].u0;
-    else if (isValidTrap(tr[trStart].d0)) start = tr[trStart].d0;
+
+    let startFrom: number; let startDir: number;
+    if (isValidTrap(tr[trStart].u0)) { startFrom = tr[trStart].u0; startDir = TR_FROM_UP; }
+    else if (isValidTrap(tr[trStart].d0)) { startFrom = tr[trStart].d0; startDir = TR_FROM_DN; }
     else return decomp;
 
     const visited = new Array<boolean>(tr.length).fill(false);
-    const stack: number[] = [start];
+    // Stack items are [trnum, from, dir] — mirrors the recursive call's
+    // (trnum, from, dir) parameters exactly.
+    const stack: [number, number, number][] = [[trStart, startFrom, startDir]];
     while (stack.length > 0) {
-      const trnum = stack.pop()!;
+      const [trnum, from, dir] = stack.pop()!;
       if (!isValidTrap(trnum) || visited[trnum]) continue;
       visited[trnum] = true;
       const t = tr[trnum];
@@ -175,7 +246,11 @@ class PartitionHelper {
       ) {
         decomp.push(PartitionHelper.mkTrapBox(t, seg, flip));
       }
-      stack.push(t.u0, t.u1, t.d0, t.d1);
+      const children = PartitionHelper.childOrder(t, seg, from, dir);
+      for (let i = children.length - 1; i >= 0; i--) {
+        const [child, childDir] = children[i];
+        stack.push([child, trnum, childDir]);
+      }
     }
     return decomp;
   }
@@ -212,3 +287,17 @@ export function partition(cells: Cell[], bb: OrthoBox): OrthoBox[] {
   }
   return result;
 }
+
+/**
+ * Test-only accessor for `PartitionHelper.childOrder` — exposes the
+ * traverse_polygon branch-table transcription for direct unit testing
+ * without requiring a full trapezoidation pipeline to exercise each branch.
+ * @see PartitionHelper.childOrder
+ */
+export function traverseChildOrderForTest(
+  t: TrapT, seg: SegmentT[], from: number, dir: number,
+): [number, number][] {
+  return PartitionHelper.childOrder(t, seg, from, dir);
+}
+
+export { TR_FROM_UP, TR_FROM_DN };
