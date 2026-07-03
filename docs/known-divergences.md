@@ -374,7 +374,22 @@ a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 
 **Affected:** `2796` (structural-match, maxΔ 49), `2471` (structural-match,
 maxΔ ~9063), `1435` (diverged, maxΔ 503), `graphs-structs` (diverged,
-maxΔ 0). Family member `1939` is **conformant** and carries no entry. On
+maxΔ 0), `1581` (diverged, maxΔ 465), `2825` (diverged, maxΔ 472).
+Family member `1939` is **conformant** and carries no entry.
+
+`1581` and `2825` are crash-recovery cases (fix-element-count-bucket
+mission): fuzzer/degenerate inputs where the upstream tests assert **only**
+that dot does not crash (`test_1581`: no ASan violation; `test_2825`: no
+crash when `rebuild_vlists` returns -1). C hits an internal `Error:`
+(`install_in_rank` / `rebuild_vlists: lead is null`) and its recovery
+discards layout content; the port reaches the **identical rankset-deletion
+decisions** (warning parity verified: the same node/graph names in
+`mark_clusters`' "already in a rankset" warnings, cluster.c:317-320) but
+never reaches the inconsistent state, so it lays out the surviving graph in
+full. The oracle output on these inputs is recovery debris with no
+upstream-defined semantics. Evidence:
+[`1581`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/1581.md),
+[`2825`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/2825.md). On
 every one of these inputs it is the **C oracle** that is broken, by
 graphviz's own account: `2471`, `1939` and `1435` are
 [`xfail(strict=True)`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/tests/test_regression.py)
@@ -448,6 +463,33 @@ records):
 [`2796-cluster-ranking.md`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-2796-cluster-ranking/comparisons/2796-cluster-ranking.md)).
 Diagnosis artifacts: `.agent-notes/2471-stale-cluster-windows-missing-reset.md`,
 `.agent-notes/1939-group-penalty-clcross-misports.md`.
+
+### A5. Invalid input bytes (encoding representation)
+
+**Affected:** `1367` (diverged, maxΔ 0 — exactly one structural diff).
+
+**What differs.** The input file contains a naked UTF-8 trail byte (`0x80`)
+inside a node name. C treats naked trail bytes 0x80–0xBF as "valid
+characters representing themselves" (`lib/common/utils.c:1200-1207`, no
+warning), and node-name `<title>` text bypasses charset conversion entirely
+(`agnameof` bytes flow straight to `gvputs_xml`). The oracle SVG therefore
+contains the raw byte and is **not valid UTF-8** despite its declared
+encoding. The port decodes invalid-UTF-8 input with the latin1 fallback
+(`0x80 → U+0080`) and emits well-formed UTF-8 (`\xc2\x80`).
+
+**Why accepted.** The port's I/O boundary is JS strings (browser library).
+A raw invalid byte cannot round-trip through `renderSvg`'s string return
+value; byte-matching C would mean corrupting the output encoding for every
+consumer. The latin1 fallback mirrors C's own "treated as Latin-1" recovery
+semantics (`utils.c:1249`). This is a constraint below the code — the
+representation layer — not a portable behavior we declined to port.
+Everything else in 1367 is conformant: element counts (23 polyline /
+103 text / 44 polygon / 24 path) and all coordinates match after the
+decorate (T6) fix.
+
+**Evidence.**
+[`1367`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/1367.md)
+comparison page (side-by-side render + evidence record).
 
 ---
 

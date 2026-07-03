@@ -1,95 +1,128 @@
 {
-  "comment": "Single source of truth for ACCEPTED / known divergences from C Graphviz. Joined at report-time into PARITY.md (dashboard.ts) and the rules gate (rules-gate.ts) via accepted.ts — parity.json itself stays pure (verdict only). An accepted delta is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted 'tracked' gap we intend to close. Adding/removing an entry must be paired with the prose in docs/known-divergences.md (the accepted-divergences.test.ts guard enforces that per-id parity entries are still non-conformant, so the list cannot rot silently). match: {id} exact | {idPattern} glob | {engineIn} engine list. scope: parity (dashboard) | rules (rules-gate) | both.",
-  "entries": [
-    {
-      "match": {
-        "engineIn": [
-          "neato",
-          "fdp",
-          "sfdp",
-          "circo",
-          "twopi",
-          "osage"
-        ]
-      },
-      "class": "A1",
-      "scope": "both",
-      "bound": "fine node coordinates; topology + ranks preserved, positions within a small epsilon",
-      "reason": "iterative force-model layouts depend on FMA / Math.pow rounding that is not bit-reproducible across JS engines and CPUs (same boundary as the Arm-pow port). Matches zero graphs in the all-dot corpus today; kept for completeness.",
-      "ref": "known-divergences.md#a1-floating-point-determinism-force-directed-engines"
-    },
-    {
-      "match": {
-        "id": "2368"
-      },
-      "class": "A3",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "maxΔ~10pt on one flat-edge arc (376->76); bbox/nodes/labels conformant",
-      "reason": "symmetric-channel bezier-split tie broken by ~1e-14 noise; Apple macOS libm hypot is position-dependent (mirrors congruent arcs) and matches no portable hypot, so the port keeps a consistent translation-equivariant tie-break.",
-      "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
-    },
-    {
-      "match": {
-        "id": "2796"
-      },
-      "class": "A4",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "maxΔ 49 numeric only; identical element tree (both sides lose edge 3->16)",
-      "reason": "oracle lays out from an acknowledged-broken init_rank recovery state (aux-graph cycle; upstream xfail #2796, draft MR !4849, cf. #2471). The verify-oracle-bug-family mission fixed the port's stale-cluster-window defect (rec_reset_vlists, flat.c:333) making the x-aux inputs line-identical to C; the port now follows C through the recovery (same lost edge 3->16, 212/212). Residual numeric deltas are recovery-state NS behavior, deliberately not chased. Re-measure when upstream fixes #2796.",
-      "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
-    },
-    {
-      "match": {
-        "id": "2471"
-      },
-      "class": "A4",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "whole-layout numeric (maxΔ ~9063); element tree identical incl. the same 6 lost edges",
-      "reason": "oracle in the same acknowledged-broken init_rank recovery family (upstream xfail #2471, worst instance). Ranking + x-aux constraint inputs verified line-identical (253 rank2 calls) after the family fixes; both sides lose the identical 6 edges via C's triangulation debris. Residual numeric deltas are NS behavior from the infeasible/cyclic recovery state — not chased. Re-measure when upstream fixes #2471.",
-      "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
-    },
-    {
-      "match": {
-        "id": "1435"
-      },
-      "class": "A4",
-      "scope": "parity",
-      "verdict": "structural-match",
-      "bound": "maxΔ 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant",
-      "reason": "acknowledged-broken pathplan input (upstream xfail #1435): both sides hit ear-clip triangulation dead ends and recover through warn-and-continue + straight-line fallbacks whose debris differs. All 16 NS constraint dumps line-identical; the port's fatal-triangulation misport was fixed (shortest.c:333 parity) so no edges are lost on either side. Re-measure when upstream fixes #1435.",
-      "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
-    },
-    {
-      "match": {
-        "id": "graphs-structs"
-      },
-      "class": "A4",
-      "scope": "parity",
-      "verdict": "diverged",
-      "bound": "maxΔ 0; element-tree difference only (the oracle's lost struct1->struct3)",
-      "reason": "the dev-build headless oracle loses struct1:f2->struct3:here to a Pshortestpath failure (ancient record-routing loss family #102/#242/#274/#1323); the port routes both edges from line-identical NS inputs and identical node geometry (maxΔ 0). Stable graphviz 15.0.0 also renders it — oracle-side regression, not a port gap.",
-      "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
-    },
-    {
-      "match": {
-        "id": "graphs-structs"
-      },
-      "class": "R-oracle",
-      "scope": "rules",
-      "reason": "node geometry 0.00; the dev-build headless oracle (15.1.0~dev) drops struct1:f2->struct3:here via a Pshortestpath regression. Stable graphviz 15.0.0 AND the port both render it (edge1 conformant to graphviz.org). Oracle-build regression, not a port bug.",
-      "ref": "rules-known-divergences.md"
-    },
-    {
-      "match": {
-        "id": "2168_2"
-      },
-      "class": "R-xns",
-      "scope": "rules",
-      "reason": "node widths match headless exactly (rx 34.64); residual 1pt is node2's x under a :sw compass-port edge — a pre-existing x-NS/compass-port gap the LUT widths masked, not measurement.",
-      "ref": "rules-known-divergences.md"
-    }
-  ]
+ "comment": "Single source of truth for ACCEPTED / known divergences from C Graphviz. Joined at report-time into PARITY.md (dashboard.ts) and the rules gate (rules-gate.ts) via accepted.ts \u2014 parity.json itself stays pure (verdict only). An accepted delta is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted 'tracked' gap we intend to close. Adding/removing an entry must be paired with the prose in docs/known-divergences.md (the accepted-divergences.test.ts guard enforces that per-id parity entries are still non-conformant, so the list cannot rot silently). match: {id} exact | {idPattern} glob | {engineIn} engine list. scope: parity (dashboard) | rules (rules-gate) | both.",
+ "entries": [
+  {
+   "match": {
+    "engineIn": [
+     "neato",
+     "fdp",
+     "sfdp",
+     "circo",
+     "twopi",
+     "osage"
+    ]
+   },
+   "class": "A1",
+   "scope": "both",
+   "bound": "fine node coordinates; topology + ranks preserved, positions within a small epsilon",
+   "reason": "iterative force-model layouts depend on FMA / Math.pow rounding that is not bit-reproducible across JS engines and CPUs (same boundary as the Arm-pow port). Matches zero graphs in the all-dot corpus today; kept for completeness.",
+   "ref": "known-divergences.md#a1-floating-point-determinism-force-directed-engines"
+  },
+  {
+   "match": {
+    "id": "2368"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394~10pt on one flat-edge arc (376->76); bbox/nodes/labels conformant",
+   "reason": "symmetric-channel bezier-split tie broken by ~1e-14 noise; Apple macOS libm hypot is position-dependent (mirrors congruent arcs) and matches no portable hypot, so the port keeps a consistent translation-equivariant tie-break.",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "2796"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 49 numeric only; identical element tree (both sides lose edge 3->16)",
+   "reason": "oracle lays out from an acknowledged-broken init_rank recovery state (aux-graph cycle; upstream xfail #2796, draft MR !4849, cf. #2471). The verify-oracle-bug-family mission fixed the port's stale-cluster-window defect (rec_reset_vlists, flat.c:333) making the x-aux inputs line-identical to C; the port now follows C through the recovery (same lost edge 3->16, 212/212). Residual numeric deltas are recovery-state NS behavior, deliberately not chased. Re-measure when upstream fixes #2796.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "2471"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "whole-layout numeric (max\u0394 ~9063); element tree identical incl. the same 6 lost edges",
+   "reason": "oracle in the same acknowledged-broken init_rank recovery family (upstream xfail #2471, worst instance). Ranking + x-aux constraint inputs verified line-identical (253 rank2 calls) after the family fixes; both sides lose the identical 6 edges via C's triangulation debris. Residual numeric deltas are NS behavior from the infeasible/cyclic recovery state \u2014 not chased. Re-measure when upstream fixes #2471.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "1435"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant",
+   "reason": "acknowledged-broken pathplan input (upstream xfail #1435): both sides hit ear-clip triangulation dead ends and recover through warn-and-continue + straight-line fallbacks whose debris differs. All 16 NS constraint dumps line-identical; the port's fatal-triangulation misport was fixed (shortest.c:333 parity) so no edges are lost on either side. Re-measure when upstream fixes #1435.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "graphs-structs"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "diverged",
+   "bound": "max\u0394 0; element-tree difference only (the oracle's lost struct1->struct3)",
+   "reason": "the dev-build headless oracle loses struct1:f2->struct3:here to a Pshortestpath failure (ancient record-routing loss family #102/#242/#274/#1323); the port routes both edges from line-identical NS inputs and identical node geometry (max\u0394 0). Stable graphviz 15.0.0 also renders it \u2014 oracle-side regression, not a port gap.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "graphs-structs"
+   },
+   "class": "R-oracle",
+   "scope": "rules",
+   "reason": "node geometry 0.00; the dev-build headless oracle (15.1.0~dev) drops struct1:f2->struct3:here via a Pshortestpath regression. Stable graphviz 15.0.0 AND the port both render it (edge1 conformant to graphviz.org). Oracle-build regression, not a port bug.",
+   "ref": "rules-known-divergences.md"
+  },
+  {
+   "match": {
+    "id": "2168_2"
+   },
+   "class": "R-xns",
+   "scope": "rules",
+   "reason": "node widths match headless exactly (rx 34.64); residual 1pt is node2's x under a :sw compass-port edge \u2014 a pre-existing x-NS/compass-port gap the LUT widths masked, not measurement.",
+   "ref": "rules-known-divergences.md"
+  },
+  {
+   "match": {
+    "id": "1367"
+   },
+   "class": "A5",
+   "scope": "parity",
+   "verdict": "diverged",
+   "bound": "maxDelta 0; exactly one structural diff (one <title> byte: raw 0x80 vs UTF-8 U+0080); all element counts and coordinates conformant",
+   "reason": "input contains a naked UTF-8 trail byte in a node name; C passes it through raw (utils.c:1200-1207 'valid characters representing themselves') yielding invalid-UTF-8 SVG output. The port's JS-string I/O cannot represent a raw invalid byte in renderSvg's return value; the latin1 fallback decode (0x80 -> U+0080) matches C's own 'treated as Latin-1' recovery semantics. Irreducible at the representation layer.",
+   "ref": "known-divergences.md#a5-invalid-input-bytes-encoding-representation"
+  },
+  {
+   "match": {
+    "id": "1581"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "diverged",
+   "bound": "maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content)",
+   "reason": "fuzzer input; upstream test_1581 asserts only no memory-safety violation (issue #1581). C hits 'Error: install_in_rank' and its recovery drops ranks; the port reaches the identical rankset deletions (warning parity: Act_23/Act_24 from G) without the internal inconsistency and lays out the surviving graph. Oracle output is crash-recovery debris with no upstream-defined semantics.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "2825"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "diverged",
+   "bound": "maxDelta 472; top-level childCount 22 vs 4 (oracle recovery discards nearly the whole graph)",
+   "reason": "upstream test_2825 asserts only no crash when rebuild_vlists returns -1 (issue #2825). C aborts dot_concentrate ('Error: rebuild_vlists: lead is null for rank 1') and emits 4 elements; the port reaches the identical rankset deletions (warning parity: B/H from cluster_outer) and survives concentrate. Oracle output is recovery debris with no upstream-defined semantics. Port-side clipOverflow 23pt tracked separately.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  }
+ ]
 }

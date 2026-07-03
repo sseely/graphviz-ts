@@ -159,14 +159,23 @@ export function resolveObjAnchor(
   id: string,
   obj: ObjState,
 ): void {
-  const a = g.attrs;
   obj.label = label;
-  const url = attr(a, 'href') ?? attr(a, 'URL');
+  // C resolves cluster/graph anchor attrs with agget (graph-attr dict walk):
+  // a root-level `graph [tooltip=" "]` reaches every cluster (corpus 1880's
+  // tooltip-only cluster anchors). Mirror device-cluster.ts:clusterAttr.
+  const ga = (key: string): string | undefined => {
+    for (let s: Graph | null = g; s !== null; s = s.parent) {
+      const v = attr(s.attrs, key);
+      if (v !== undefined) return v;
+    }
+    return undefined;
+  };
+  const url = ga('href') ?? ga('URL');
   if (url !== undefined) obj.url = subst(url, g);
-  const tt = attr(a, 'tooltip');
+  const tt = ga('tooltip');
   if (tt !== undefined) { obj.tooltip = tip(tt, g); obj.explicitTooltip = true; }
   else if (label !== null) obj.tooltip = label;
-  const tgt = attr(a, 'target');
+  const tgt = ga('target');
   if (tgt !== undefined) obj.target = subst(tgt, g);
   obj.id = subst(id, g);
 }

@@ -17,6 +17,7 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
+import { PenType } from './context.js';
 import { gvrenderTextspan } from './textspan-emit.js';
 import { resolveEdgeAnchor, resolveObjAnchor, beginAnchorIf } from './anchor.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
@@ -42,8 +43,11 @@ import {
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
-import { renderClusterLabel, applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
-export { renderClusterLabel } from './device-cluster.js';
+import { applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
+/** Cluster labels go through the single emit_label port. @see labels.c:emit_label */
+export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  renderOneLabel(sg.info.label as TextlabelT | undefined, renderer, job);
+}
 import { svgNodeId, svgEdgeId, svgClusterId, svgGraphId } from '../render/svg-id.js';
 
 // ---------------------------------------------------------------------------
@@ -108,7 +112,7 @@ function labelTextOf(lp: unknown): string | null {
  * @see lib/common/emit.c:emit_begin_node:1654
  */
 function emitNodeBody(n: Node, renderer: RendererPlugin, job: RenderJob): void {
-  setHtmlAnchorObj(svgNodeId(n, job), labelTextOf(n.info.label));
+  setHtmlAnchorObj(svgNodeId(n, job), labelTextOf(n.info.label), job.obj ?? undefined);
   setHtmlObjImgscale(nodeAttr(n, n.root, 'imagescale'));
   renderer.beginNode(n, job);
   const shape = n.info.shape as ShapeDesc | undefined;
@@ -173,7 +177,7 @@ export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): v
   setEdgePen(e, job);
   try {
     // @see lib/common/emit.c:emit_begin_edge / getObjId
-    setHtmlAnchorObj(svgEdgeId(e, job), labelTextOf(e.info.label));
+    setHtmlAnchorObj(svgEdgeId(e, job), labelTextOf(e.info.label), job.obj ?? undefined);
     // Resolve edge url/tooltip/target/id into obj for the whole-edge anchor
     // (svg endEdge) and the per-label sub-anchors (renderEdgeLabels).
     resolveEdgeAnchor(e, svgEdgeId(e, job), obj);
@@ -262,7 +266,7 @@ export function renderNodeXLabel(n: Node, renderer: RendererPlugin, job: RenderJ
  */
 export function renderGraphLabel(g: Graph, renderer: RendererPlugin, job: RenderJob): void {
   // @see lib/common/emit.c:emit_begin_graph / getObjId (root graph → graph0)
-  setHtmlAnchorObj(svgGraphId(g, job), labelTextOf(g.info.label));
+  setHtmlAnchorObj(svgGraphId(g, job), labelTextOf(g.info.label), job.obj ?? undefined);
   renderOneLabel(g.info.label as TextlabelT | undefined, renderer, job);
 }
 
@@ -312,7 +316,7 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     renderer.beginCluster?.(sg, job);
     if (job.obj !== null) job.obj.id = svgClusterId(sg, job);
     // @see lib/common/emit.c:emit_begin_cluster / getObjId
-    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label));
+    setHtmlAnchorObj(svgClusterId(sg, job), labelTextOf(sg.info.label), job.obj ?? undefined);
     // Resolve and open the cluster anchor around the box + label (closed before
     // the cluster's child nodes — sibling of them). @see emit.c:3803.
     if (job.obj !== null) {
@@ -321,8 +325,10 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
     const anchored = beginAnchorIf(renderer, job);
     // C draws the boundary box only when peripheries != 0, or (peripheries == 0
     // and the cluster is filled). peripheries=0 + unfilled emits nothing.
-    // @see lib/common/emit.c:3907-3917
-    if (clusterPeripheries(sg) !== 0 || filled) {
+    // style=invis sets PEN_NONE and gvrender_polygon skips the whole box
+    // (fill included); the group/title still emit.
+    // @see lib/common/emit.c:3907-3917, lib/gvc/gvrender.c:543
+    if ((clusterPeripheries(sg) !== 0 || filled) && job.obj?.pen !== PenType.None) {
       renderClusterBox(sg, filled, renderer, job);
     }
     renderClusterLabel(sg, renderer, job);

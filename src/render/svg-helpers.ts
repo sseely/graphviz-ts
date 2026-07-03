@@ -253,7 +253,9 @@ export function svgBeginAnchor(
   job: RenderJob,
 ): void {
   if (id.length > 0) {
-    job.write('<g id="a_' + escapeXml(id) + '"><a');
+    // C routes anchor ids through gvputs_xml ({dash,nbsp}) like titles —
+    // an id derived from an edge name emits &#45; for hyphens (corpus 1880).
+    job.write('<g id="a_' + escapeXmlTitle(id) + '"><a');
   } else {
     job.write('<g><a');
   }

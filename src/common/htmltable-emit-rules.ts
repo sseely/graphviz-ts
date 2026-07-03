@@ -154,14 +154,46 @@ export interface AnchorData {
 const anchorEnv: { objId: string; objLabel: string | null; imgscale: string } =
   { objId: '', objLabel: null, imgscale: 'false' };
 
+/**
+ * Effective anchor obj-state, mirroring C's job->obj url/tooltip/target
+ * fields as saved/overlaid by initAnchor + initMapData: a cell that declares
+ * only TARGET (or only TITLE) still anchors, inheriting url/tooltip from the
+ * enclosing table/cell/object scope. Each initHtmlAnchor pushes an overlaid
+ * frame; endHtmlAnchor pops (C's htmlmap_data_t save/RESET).
+ * @see lib/common/htmltable.c:initAnchor/endAnchor, lib/common/emit.c:initMapData
+ */
+interface AnchorFrame {
+  url: string | null;
+  tooltip: string | null;
+  explicitTooltip: boolean;
+  target: string | null;
+  opened: boolean;
+}
+const anchorBase: AnchorFrame = { url: null, tooltip: null, explicitTooltip: false, target: null, opened: false };
+const anchorStack: AnchorFrame[] = [];
+function anchorTop(): AnchorFrame {
+  return anchorStack.length > 0 ? anchorStack[anchorStack.length - 1] : anchorBase;
+}
+
 /** Anchor id counter — C's `static int anchorId` in initAnchor, reset per render job (each dot invocation is one process). */
 let anchorSeq = 0;
 
-/** Set the current object context for anchor id/tooltip resolution. */
-export function setHtmlAnchorObj(objId: string, objLabel: string | null): void {
+/** Set the current object context for anchor id/tooltip resolution.
+ *  base seeds the inherited url/tooltip scope from the object's own
+ *  attributes (C: job->obj populated at emit_begin_node/edge/cluster). */
+export function setHtmlAnchorObj(
+  objId: string, objLabel: string | null,
+  base?: { url: string | null; tooltip: string | null; explicitTooltip?: boolean; target: string | null },
+): void {
   anchorEnv.objId = objId;
   anchorEnv.objLabel = objLabel;
   anchorEnv.imgscale = 'false';
+  anchorStack.length = 0;
+  anchorBase.url = base?.url ?? null;
+  anchorBase.tooltip = base?.tooltip ?? null;
+  anchorBase.explicitTooltip = base?.explicitTooltip ?? false;
+  anchorBase.target = base?.target ?? null;
+  anchorBase.opened = false;
 }
 
 /**
@@ -215,18 +247,33 @@ export function initHtmlAnchor(
   renderer: RendererPlugin,
   job: RenderJob,
 ): boolean {
+  // C's emit_html_cell/tbl gate: the element declares href, target or title
+  // (htmltable.c:630 doAnchor); the anchor's URL and tooltip then come from
+  // the OVERLAID obj state — a TARGET-only cell inherits the enclosing
+  // table's HREF (2619's dat TDs). initMapData overlays only non-empty
+  // fields; the <a> element opens iff effective url || explicit tooltip.
   if (data.href === undefined && data.title === undefined && data.target === undefined) {
     return false;
   }
   const id = data.id !== undefined && data.id !== ''
     ? data.id
     : `${anchorEnv.objId}_${anchorSeq++}`;
-  if (data.href === undefined && data.title === undefined) {
-    return false; // target-only: id consumed, no anchor (C: !url && !explicit_tooltip)
+  const parent = anchorTop();
+  const frame: AnchorFrame = { ...parent, opened: false };
+  if (data.href !== undefined && data.href !== '') frame.url = data.href;
+  if (data.title !== undefined && data.title !== '') {
+    frame.tooltip = data.title;
+    frame.explicitTooltip = true;
+  } else if (frame.tooltip === null && anchorEnv.objLabel !== null) {
+    // C initMapData: tooltip falls back to obj->label (not explicit).
+    frame.tooltip = anchorEnv.objLabel;
   }
-  const tooltip = data.title ?? anchorEnv.objLabel ?? '';
-  const { h, tg } = normaliseAnchor(data);
-  renderer.beginAnchor?.(h, tooltip, tg, id, job);
+  if (data.target !== undefined && data.target !== '') frame.target = data.target;
+  if (frame.url !== null || frame.explicitTooltip) {
+    renderer.beginAnchor?.(frame.url ?? '', frame.tooltip ?? '', frame.target ?? '', id, job);
+    frame.opened = true;
+  }
+  anchorStack.push(frame);
   return true;
 }
 
@@ -236,5 +283,6 @@ export function initHtmlAnchor(
  * @see lib/common/htmltable.c:endAnchor
  */
 export function endHtmlAnchor(renderer: RendererPlugin, job: RenderJob): void {
-  renderer.endAnchor?.(job);
+  const frame = anchorStack.pop();
+  if (frame?.opened) renderer.endAnchor?.(job);
 }

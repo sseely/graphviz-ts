@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: EPL-2.0
+// Anchor ids are dash-escaped per C gvputs_xml (a_edge1&#45;label) since fix-element-count T7.
 import { describe, it, expect } from 'vitest';
 import { renderSvg } from '../index.js';
 
@@ -53,26 +54,26 @@ describe('whole-edge anchor', () => {
 });
 
 describe('edge label sub-anchors', () => {
-  it('wraps the head label in a_edge1-headlabel with headURL', () => {
+  it('wraps the head label in a_edge1&#45;headlabel with headURL', () => {
     const svg = renderSvg(
       'digraph { a -> b [headlabel=H headURL="h.html"] }', 'dot');
-    expect(svg).toContain('<g id="a_edge1-headlabel"><a xlink:href="h.html"');
+    expect(svg).toContain('<g id="a_edge1&#45;headlabel"><a xlink:href="h.html"');
   });
 
-  it('wraps the tail label in a_edge1-taillabel with tailURL', () => {
+  it('wraps the tail label in a_edge1&#45;taillabel with tailURL', () => {
     const svg = renderSvg(
       'digraph { a -> b [taillabel=T tailURL="t.html"] }', 'dot');
-    expect(svg).toContain('<g id="a_edge1-taillabel"><a xlink:href="t.html"');
+    expect(svg).toContain('<g id="a_edge1&#45;taillabel"><a xlink:href="t.html"');
   });
 
-  it('wraps the center label in a_edge1-label with labelURL', () => {
+  it('wraps the center label in a_edge1&#45;label with labelURL', () => {
     const svg = renderSvg(
       'digraph { a -> b [label=L labelURL="l.html"] }', 'dot');
-    expect(svg).toContain('<g id="a_edge1-label"><a xlink:href="l.html"');
+    expect(svg).toContain('<g id="a_edge1&#45;label"><a xlink:href="l.html"');
   });
 
   it('does not wrap a label that has no url or explicit tooltip', () => {
     const svg = renderSvg('digraph { a -> b [label=L] }', 'dot');
-    expect(svg).not.toContain('a_edge1-label');
+    expect(svg).not.toContain('a_edge1&#45;label');
   });
 });

@@ -1,47 +1,19 @@
 // SPDX-License-Identifier: EPL-2.0
 //
-// Cluster label + fill/pen state helpers, split from device.ts (file-size cap).
+// Cluster fill/pen state helpers, split from device.ts (file-size cap).
 // These are leaf helpers with no dependency on the device render loop;
 // renderOneCluster (in device.ts) drives them.
 
 import type { Graph } from '../model/graph.js';
-import type { RendererPlugin } from './context.js';
 import type { ObjState } from './job.js';
 import { RenderJob } from './job.js';
 import { FillType } from './context.js';
-import type { TextlabelT } from '../common/types.js';
-import type { TextSpan } from '../common/emit-types.js';
-import type { PlacedHtml } from '../common/htmltable-pos.js';
-import { emitHtmlLabel } from '../common/htmltable-emit.js';
-import { gvrenderTextspan } from './textspan-emit.js';
 import type { ResolvedFill, ClusterAttrs } from '../common/style-resolve.js';
 import {
   parseStyleFlags, resolvePenColor, resolvePenType, resolvePenWidth,
   resolveClusterFillEx,
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
-
-/**
- * Render a cluster's label (HTML or text spans).
- * @see lib/common/labels.c:emit_label
- */
-export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
-  const lab = sg.info.label as TextlabelT | undefined;
-  if (!lab?.set) return;
-  if (lab.html) {
-    if (lab.u.kind === 'html') {
-      emitHtmlLabel(lab.u.html as PlacedHtml, lab.pos, renderer, job);
-    }
-    return;
-  }
-  if (lab.u.kind !== 'txt' || lab.u.nspans <= 0) return;
-  const py = lab.pos.y + lab.dimen.y / 2.0 - lab.fontsize;
-  for (let i = 0; i < lab.u.nspans; i++) {
-    const span = lab.u.span[i] as TextSpan | undefined;
-    if (!span) break;
-    gvrenderTextspan(renderer, { x: lab.pos.x, y: py }, span, job);
-  }
-}
 
 /**
  * Copy gradient fields from a linear/radial ResolvedFill onto obj.

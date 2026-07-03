@@ -239,6 +239,9 @@ export function parseStyleFlags(style: string | undefined): PolyStyleFlags {
  * @see lib/gvc/gvrender.c:493
  */
 export function resolvePenType(flags: PolyStyleFlags): PenType {
+  // invis → PEN_NONE (gvrender.c:497-498); downstream polygon/textspan emission
+  // is pen-gated. Nodes/edges never reach here with invis (emit shortcircuits).
+  if (flags.invis) return PenType.None;
   if (flags.dashed) return PenType.Dashed;
   if (flags.dotted) return PenType.Dotted;
   return PenType.Solid;

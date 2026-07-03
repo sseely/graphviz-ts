@@ -280,8 +280,14 @@ export function pruneForeignClusterNodes(par: Graph, clust: Graph): void {
  * TS leaves it undefined, so coerce undefined→0 — else untouched NORMAL nodes
  * are wrongly skipped and never receive ND_clust. @see lib/dotgen/cluster.c:mark_clusters
  */
-export function markClusterNode(clust: Graph, n: Node): void {
-  if ((n.info.ranktype ?? 0) !== 0) { agDeleteFromCluster(clust, n); return; }
+export function markClusterNode(clust: Graph, n: Node, g: Graph): void {
+  if ((n.info.ranktype ?? 0) !== 0) {
+    // C warns with the ENCLOSING graph's name, not the cluster's.
+    // @see lib/dotgen/cluster.c:317-320
+    console.error(`Warning: ${n.name} was already in a rankset, deleted from cluster ${g.name}`);
+    agDeleteFromCluster(clust, n);
+    return;
+  }
   ufSetname(n, clust.info.leader!);
   n.info.clust = clust;
   n.info.ranktype = CLUSTER;
@@ -298,7 +304,7 @@ export function markClusters(g: Graph): void {
   for (let c = 1; c <= nClust; c++) {
     const clust = g.info.clust![c - 1];
     // Snapshot: markClusterNode deletes from clust.nodes mid-loop.
-    for (const n of [...clust.nodes.values()]) markClusterNode(clust, n);
+    for (const n of [...clust.nodes.values()]) markClusterNode(clust, n, g);
   }
 }
 

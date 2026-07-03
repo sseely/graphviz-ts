@@ -52,6 +52,7 @@ import {
   svgArrowPolygons,
   emitParallelEdgePaths,
   escapeXml,
+  emitPoints,
 } from './svg-helpers.js';
 import { emitArrowOps } from './svg-arrow-ops.js';
 import { resolveRenderColor, colorOpacity } from './color-resolve.js';
@@ -245,6 +246,14 @@ export class SvgRenderer implements RendererPlugin {
   }
 
   polyline(pts: Point[], job: RenderJob): void { svgPolyline(pts, job); }
+  // C resets to the default line style and the label's fontcolor before the
+  // attachment polyline (emit.c:1886-1893) — the edge's own dash/width must
+  // not leak onto it.
+  attachmentPolyline(pts: Point[], pencolor: string, job: RenderJob): void {
+    job.write('<polyline fill="none" stroke="' + pencolor + '" points="');
+    emitPoints(job, pts);
+    job.write('"/>\n');
+  }
 
   /**
    * Emit an <image> element. C formats numbers with %g here (not the
