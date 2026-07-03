@@ -86,10 +86,17 @@ See `decisions.md#stop-conditions`. Load-bearing ones:
 | [2](batch-2/overview.md) | Dashboard structural-match bucket section | T2 | [x] |
 | [3](batch-3/overview.md) | Re-survey + regenerate baseline/PARITY.md | T3 | [ ] |
 | [4](batch-4/overview.md) | Parallel per-bucket mechanism diagnosis | T4 (fan-out) | [x] |
-| [5](batch-5/overview.md) | Synthesize ranked candidate-mission list | T5 | [ ] |
+| [5](batch-5/overview.md) | Synthesize ranked candidate-mission list | T5 | [x] |
 
 Batches are sequential (each depends on the prior). Batch 4 fans out one agent
 per element-kind bucket, discovered at runtime from the Batch 3 output.
+
+## Result
+
+**[analysis/README.md](analysis/README.md)** — the deliverable: 163/163
+attributed, 76% of tracked cases reduce to 4 known-locus fix missions (label
+justify/anchor 81, self-loop label 18, HTML table 15, compass-port box 7), 7
+accept-as-won't-fix, ~28 deferred. Ranked candidate missions inside.
 
 ## Docs
 
