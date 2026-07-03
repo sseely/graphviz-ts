@@ -15,6 +15,7 @@ import { compassPort } from './compass-port.js';
 import { makePort } from '../model/edgeInfo.js';
 import { makeNodeInfo } from '../model/nodeInfo.js';
 import { BOTTOM, RIGHT, TOP, LEFT } from './splines-constants.js';
+import { P_BOX } from './shapeData.js';
 
 const ALL_SIDES = BOTTOM | RIGHT | TOP | LEFT;
 
@@ -92,6 +93,28 @@ describe('compassPort — diagonals, dyna, default', () => {
     const onBoundary = (pp.p.x * pp.p.x) / (rx * rx) + (pp.p.y * pp.p.y) / (ry * ry);
     expect(onBoundary).toBeGreaterThan(0.85);
     expect(onBoundary).toBeLessThanOrEqual(1.0);
+  });
+
+  // C's poly_port sets ictxt=NULL for IS_BOX shapes (box/rect/rectangle share
+  // the p_box polygon struct), so their compass point is the EXACT bbox corner,
+  // not the bezierClip ray-cast approximation. bezierClip cannot converge onto a
+  // rectangle corner (a singular inside-test point) and lands ~9px short.
+  // @see lib/common/shapes.c:2902-2903 (IS_BOX(n) ⇒ ictxtp = NULL)
+  it('"ne" on a box shape → exact bbox corner (no ray-cast)', () => {
+    const n = originNode();
+    n.info.shape = {
+      polygon: P_BOX,
+      fns: {
+        // A box inside-test: strictly inside |x|<27, |y|<18. Along the (1,1) ray
+        // this boundary is at ≈(18,18) — the ray-cast would land there, not the
+        // corner (27,18) that C uses for a box.
+        insidefn: (_ctx: unknown, p: { x: number; y: number }): boolean =>
+          Math.abs(p.x) < 27 && Math.abs(p.y) < 18,
+      },
+    };
+    const pp = makePort();
+    compassPort(n, { bp: null, compass: 'ne', sides: ALL_SIDES }, pp);
+    expect(pp.p).toEqual({ x: 27, y: 18 });
   });
 
   it('"_" (dyna) → dyna true, defined false', () => {
