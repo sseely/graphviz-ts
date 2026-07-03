@@ -67,9 +67,9 @@ CWD DISCIPLINE: all npx/tsx from the repo root, absolute input paths.
 
 ## Batches
 
-- [ ] [Batch 1 — per-id diagnosis](batch-1/overview.md): T1 decorate,
+- [x] [Batch 1 — per-id diagnosis](batch-1/overview.md): T1 decorate,
       T2 anchors, T3 2239, T4 1367, T5 1581+2825
-- [ ] [Batch 2 — fixes/dispositions](batch-2/overview.md): T6–T10
+- [x] [Batch 2 — fixes/dispositions](batch-2/overview.md): T6–T10
 - [ ] [Batch 3 — verify + close](batch-3/overview.md): T11
 
 ## Index
