@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-03T18:34:19.999Z",
+  "generatedAt": "2026-07-03T19:08:38.310Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 693,
-    "structural-match": 73,
+    "conformant": 705,
+    "structural-match": 61,
     "diverged": 11,
     "errored": 0,
     "timeout": 1,
@@ -862,9 +862,7 @@
     {
       "id": "2734",
       "path": "2734.dot",
-      "verdict": "structural-match",
-      "maxDelta": 1,
-      "maxDeltaPath": "svg/@height"
+      "verdict": "conformant"
     },
     {
       "id": "2743",
@@ -1952,9 +1950,7 @@
     {
       "id": "graphs-ports",
       "path": "graphs/ports.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.599999999999994,
-      "maxDeltaPath": "svg/g[1]/g[15]/path[1]/@d[11]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-proc3d",
@@ -2034,16 +2030,12 @@
     {
       "id": "graphs-sb_box",
       "path": "graphs/sb_box.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.299999999999997,
-      "maxDeltaPath": "svg/g[1]/g[2]/path[1]/@d[12]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sb_box_dbl",
       "path": "graphs/sb_box_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.340000000000003,
-      "maxDeltaPath": "svg/g[1]/g[3]/path[1]/@d[12]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sb_circle",
@@ -2078,16 +2070,12 @@
     {
       "id": "graphs-sl_box",
       "path": "graphs/sl_box.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.219999999999999,
-      "maxDeltaPath": "svg/g[1]/g[2]/path[1]/@d[0]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sl_box_dbl",
       "path": "graphs/sl_box_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.730000000000018,
-      "maxDeltaPath": "svg/g[1]/g[14]/polygon[1]/@points[4]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sl_circle",
@@ -2107,16 +2095,12 @@
     {
       "id": "graphs-sr_box",
       "path": "graphs/sr_box.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.219999999999999,
-      "maxDeltaPath": "svg/g[1]/g[14]/path[1]/@d[0]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sr_box_dbl",
       "path": "graphs/sr_box_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.729999999999997,
-      "maxDeltaPath": "svg/g[1]/g[10]/polygon[1]/@points[0]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-sr_circle",
@@ -2131,16 +2115,12 @@
     {
       "id": "graphs-st_box",
       "path": "graphs/st_box.gv",
-      "verdict": "structural-match",
-      "maxDelta": 17.09,
-      "maxDeltaPath": "svg/g[1]/g[20]/path[1]/@d[10]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-st_box_dbl",
       "path": "graphs/st_box_dbl.gv",
-      "verdict": "structural-match",
-      "maxDelta": 17.11,
-      "maxDeltaPath": "svg/g[1]/g[46]/path[1]/@d[10]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-st_circle",
@@ -2432,9 +2412,7 @@
     {
       "id": "linux.x86-ports_dot",
       "path": "linux.x86/ports_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.599999999999994,
-      "maxDeltaPath": "svg/g[1]/g[5]/path[1]/@d[11]"
+      "verdict": "conformant"
     },
     {
       "id": "linux.x86-radius_dot",
@@ -2646,9 +2624,7 @@
     {
       "id": "nshare-ports_dot",
       "path": "nshare/ports_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.599999999999994,
-      "maxDeltaPath": "svg/g[1]/g[5]/path[1]/@d[11]"
+      "verdict": "conformant"
     },
     {
       "id": "nshare-radius_dot",
