@@ -110,6 +110,66 @@ describe('AC14: unstyled node SVG fill/stroke from default obj-state', () => {
 });
 
 // ---------------------------------------------------------------------------
+// AC17: renderNode — node_in_box gate (2825 part 2)
+// @see lib/common/emit.c:1636-1639 node_in_box; :1808 emit_node gate
+// ---------------------------------------------------------------------------
+
+/** Build a 1-node graph whose node sits at `coord` with a 10x10 shape box. */
+function nodeAt(coord: { x: number; y: number }): Node {
+  const g = new GraphClass('G', 'directed');
+  const n = new Node(0, 'A', g);
+  n.info = makeNodeInfo();
+  n.info.coord = coord;
+  n.info.lw = 5;
+  n.info.rw = 5;
+  n.info.ht = 10;
+  n.info.shape = {
+    name: 'ellipse',
+    fns: { codefn: (job: RenderJob) => { job.renderer!.ellipse(coord, 5, 5, false, job); } },
+  } as unknown as typeof n.info.shape;
+  return n;
+}
+
+describe('AC17: renderNode — node_in_box gate', () => {
+  it('omits a node whose own bbox falls entirely outside job.bb (+ pad)', () => {
+    const n = nodeAt({ x: 1000, y: 1000 }); // far outside the clip below
+    const svgRenderer = createSvgRenderer();
+    const job = new RenderJob('svg', stubMeasurer);
+    job.bb = { ll: { x: 0, y: 0 }, ur: { x: 10, y: 10 } };
+    job.pad = { x: 4, y: 4 };
+    job.renderer = svgRenderer;
+    renderNode(n, svgRenderer, job, new Set<Node>());
+    expect(job.output.join('')).not.toContain('<ellipse');
+  });
+
+  it('draws a node whose own bbox overlaps job.bb (+ pad)', () => {
+    const n = nodeAt({ x: 5, y: 5 }); // inside the clip below
+    const svgRenderer = createSvgRenderer();
+    const job = new RenderJob('svg', stubMeasurer);
+    job.bb = { ll: { x: 0, y: 0 }, ur: { x: 10, y: 10 } };
+    job.pad = { x: 4, y: 4 };
+    job.renderer = svgRenderer;
+    renderNode(n, svgRenderer, job, new Set<Node>());
+    expect(job.output.join('')).toContain('<ellipse');
+  });
+
+  it('draws a node just inside the padded clip (job.bb alone would exclude it)', () => {
+    // Node bbox is [102,108]x[95,105] — outside job.bb=[0,100]^2 but within
+    // pad=4 of it, matching C's job->clip = job->bb ± job->pad (not job->bb
+    // alone). Regression guard for the degenerate-bb / abort-path fix: the
+    // gate must read job.bb padded, not job.bb raw.
+    const n = nodeAt({ x: 103, y: 100 });
+    const svgRenderer = createSvgRenderer();
+    const job = new RenderJob('svg', stubMeasurer);
+    job.bb = { ll: { x: 0, y: 0 }, ur: { x: 100, y: 100 } };
+    job.pad = { x: 4, y: 4 };
+    job.renderer = svgRenderer;
+    renderNode(n, svgRenderer, job, new Set<Node>());
+    expect(job.output.join('')).toContain('<ellipse');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // G3: cluster gradient fill — oracle-verified against dot -Tsvg (15.0.0)
 // ---------------------------------------------------------------------------
 

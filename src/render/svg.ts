@@ -20,6 +20,7 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { Point, Box } from '../model/geom.js';
+import { boxOverlap } from '../model/geom.js';
 import type { TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { RendererPlugin, LabelType } from '../gvc/context.js';
@@ -83,13 +84,6 @@ function emitMulticolorArrows(e: Edge, job: RenderJob, headColor: string, tailCo
 // @see plugin/core/gvrender_core_svg.c:svg_engine
 // ---------------------------------------------------------------------------
 
-/** geom.h OVERLAP(b0,b1): true iff the two boxes intersect (inclusive).
- * @see lib/common/geom.h:OVERLAP */
-function boxfOverlap(b0: Box, b1: Box): boolean {
-  return b0.ur.x >= b1.ll.x && b1.ur.x >= b0.ll.x
-    && b0.ur.y >= b1.ll.y && b1.ur.y >= b0.ll.y;
-}
-
 /** overlap_label: does the label's box (pos ± dimen/2) overlap clip box b?
  * @see lib/common/utils.c:overlap_label */
 function overlapLabel(lp: TextlabelT, b: Box): boolean {
@@ -99,7 +93,7 @@ function overlapLabel(lp: TextlabelT, b: Box): boolean {
     ll: { x: lp.pos.x - sx, y: lp.pos.y - sy },
     ur: { x: lp.pos.x + sx, y: lp.pos.y + sy },
   };
-  return boxfOverlap(b, bb);
+  return boxOverlap(b, bb);
 }
 
 /**

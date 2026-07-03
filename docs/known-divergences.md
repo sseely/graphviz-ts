@@ -374,10 +374,10 @@ a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 
 **Affected:** `2796` (structural-match, maxΔ 49), `2471` (structural-match,
 maxΔ ~9063), `1435` (diverged, maxΔ 503), `graphs-structs` (diverged,
-maxΔ 0), `1581` (diverged, maxΔ 465), `2825` (diverged, maxΔ 492).
-Family member `1939` is **conformant** and carries no entry.
+maxΔ 0), `1581` (diverged, maxΔ 465). Family members `1939` and `2825` are
+**conformant** and carry no entry.
 
-`1581` and `2825` are crash-recovery cases (fix-element-count-bucket
+`1581` and `2825` were crash-recovery cases (fix-element-count-bucket
 mission): fuzzer/degenerate inputs where the upstream tests assert **only**
 that dot does not crash (`test_1581`: no ASan violation; `test_2825`: no
 crash when `rebuild_vlists` returns -1). C hits an internal `Error:`
@@ -386,32 +386,35 @@ discards layout content; the port reaches the **identical rankset-deletion
 decisions** (warning parity verified: the same node/graph names in
 `mark_clusters`' "already in a rankset" warnings, cluster.c:317-320).
 
-For `2825`, the fix-2825-rebuild-vlists mission (post-1581) closed the gap
-one layer further: the port now reaches C's *exact* internal-error state —
-byte-identical stderr including message order (`Error: rebuild_vlists: lead
-is null for rank 1` then the unprefixed `agerr(AGPREV, ...)` continuation
-`concentrate=true may not work correctly.`) — and `dotLayoutPipeline`
-correctly propagates `dot_position`'s failure to skip `dot_splines`/
-`dotneato_postprocess`, matching C's `dotLayout` (`if (r != 0) return r;`
-after `dot_position`, dotinit.c:322-325). What remains diverged is a
-**separate, general render-layer gap**: C's `emit_node` gates every node on
-`node_in_box(n, job->clip)` (emit.c:1806-1809), and on this abort path
-`job->clip` is degenerate because `GD_bb` was only ever going to be set by
-`set_aspect` (inside the now-skipped `dot_position` tail) — so C emits
-*zero* nodes, only the (also degenerate) cluster frames. The port's
-`src/gvc/emit-walk.ts` has no port of `node_in_box`/`job->clip` at all, and
-`src/gvc/device.ts:430-432` recomputes a real bbox from node positions
-instead of using the unset one — so the port still renders 9 real node
-ellipses. See `.agent-notes/2825-rebuild-vlists-abort.md` for the full
-mechanism trace; this residual is left for a follow-up mission since the
-fix touches shared render-pipeline files, not the `dot`-engine files in
-scope for that mission. `1581` never reaches the inconsistent state at all
-(a *different* upstream cluster-window bug, not `rebuild_vlists`), so it
-lays out its surviving graph in full — that gap remains open. The oracle
-output on these inputs is recovery debris with no upstream-defined
-semantics. Evidence:
-[`1581`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/1581.md),
-[`2825`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/2825.md). On
+`2825` is now fully closed. The fix-2825-rebuild-vlists mission (post-1581)
+first closed the gap one layer: the port reaches C's *exact* internal-error
+state — byte-identical stderr including message order
+(`Error: rebuild_vlists: lead is null for rank 1` then the unprefixed
+`agerr(AGPREV, ...)` continuation `concentrate=true may not work
+correctly.`) — with `dotLayoutPipeline` correctly propagating
+`dot_position`'s failure to skip `dot_splines`/`dotneato_postprocess`,
+matching C's `dotLayout` (`if (r != 0) return r;` after `dot_position`,
+dotinit.c:322-325). A follow-up (part 2) then closed the remaining
+render-layer gap: C's `emit_node` gates every node on `node_in_box(n,
+job->clip)` (emit.c:1806-1809), and on this abort path `job->clip` is
+degenerate because `GD_bb` was never set by `set_aspect` (inside the
+skipped `dot_position` tail) — so C emits *zero* nodes, only the (also
+degenerate) cluster frames. The port ported that same `node_in_box` gate
+(`src/gvc/device.ts:renderNode`, using `job.bb`/`job.pad` as the
+single-page-equivalent of `job->clip`) and stopped recomputing a
+plausible bbox from live node positions when `g.info.bb` is unset
+(`src/gvc/device.ts:render`, `job.bb = g.info.bb` verbatim, mirroring
+`init_gvc`'s `gvc->bb = GD_bb(g)`, emit.c:3272) — every layout engine
+already sets `g.info.bb` itself before `render()` runs on every non-abort
+path, so this is byte-identical on healthy graphs and only changes output
+on this abort path. `2825` is now `conformant` (4-element output,
+byte-identical to the oracle). See
+`.agent-notes/2825-rebuild-vlists-abort.md` for the full mechanism trace
+of both parts. `1581` never reaches the inconsistent state at all (a
+*different* upstream cluster-window bug, not `rebuild_vlists`), so it lays
+out its surviving graph in full — that gap remains open. The oracle output
+on `1581` is recovery debris with no upstream-defined semantics. Evidence:
+[`1581`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/1581.md). On
 every one of these inputs it is the **C oracle** that is broken, by
 graphviz's own account: `2471`, `1939` and `1435` are
 [`xfail(strict=True)`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/tests/test_regression.py)
@@ -559,10 +562,12 @@ delta (x-network-simplex / compass-port), not an arrowhead defect:
   that amplifies into an `element-count`/spline `@d` difference. The arrowhead
   emission itself is now correct (b69 gains its missing arrowhead polygons). See
   the `b69-concentrate-undermerge` agent note for the x-coord root cause.
-- **`1453`, `2825`** — still diverge on a top-level `element-count` cause
-  unrelated to the conc_opp_flag arrowhead (for `2825` the port output is
-  identical with and without the arrowhead fix — no opposing-pair merge is
-  triggered there).
+- **`1453`** — still diverges on a top-level `element-count` cause unrelated
+  to the conc_opp_flag arrowhead.
+- **`2825`** — at the time of this arrowhead fix, diverged on a top-level
+  `element-count` cause unrelated to conc_opp_flag (no opposing-pair merge
+  is triggered there); since closed by the fix-2825-rebuild-vlists mission,
+  see A4 above.
 
 These are tracked x-coordinate / structural items, **not** arrowhead bugs.
 

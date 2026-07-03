@@ -11,7 +11,8 @@
  * @see lib/gvc/gvdevice.c
  */
 
-import type { Point } from '../model/geom.js';
+import type { Point, Box } from '../model/geom.js';
+import { boxOverlap } from '../model/geom.js';
 import { parseDrawingSize, initJobViewportZoom, parseLandscape, parseGraphPad, parseGraphMargin } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
@@ -25,7 +26,6 @@ import type { TextSpan } from '../common/emit-types.js';
 import { type LayerInfo, parseLayers } from '../common/layers.js';
 import { RenderJob, GVRENDER_DOES_TRANSFORM, createObjState, ObjType, EmitState } from './job.js';
 import { walkNodesAndEdges } from './emit-walk.js';
-import { computeSubgraphBB } from '../layout/pack/index.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
 import {
@@ -107,6 +107,43 @@ function labelTextOf(lp: unknown): string | null {
 }
 
 /**
+ * A node's own layout bounding box: coord ± (lw/rw, ht/2).
+ * @see lib/common/types.h:ND_bb
+ * @see lib/common/emit.c:4140-4143 init_bb_node
+ */
+function nodeBBox(n: Node): Box {
+  const { coord, lw, rw, ht } = n.info;
+  return {
+    ll: { x: coord.x - lw, y: coord.y - ht / 2 },
+    ur: { x: coord.x + rw, y: coord.y + ht / 2 },
+  };
+}
+
+/**
+ * node_in_box: is the node's own bbox within job's page/view clip?
+ *
+ * C's `job->clip` is derived from `job->bb` (= `GD_bb(g)`) expanded by
+ * `job->pad` on every side (init_job_viewport's `job->bb = gvc->bb ±
+ * job->pad`, feeding `job->view`/`job->focus`, which setup_page's `job->clip`
+ * algebraically reduces back to for the single-page, unpaginated case this
+ * port implements — Z and rotation cancel out of that derivation). This port
+ * has no separate `page=` pagination model, so `job.bb` padded by `job.pad`
+ * IS `job->clip` here.
+ *
+ * @see lib/common/emit.c:1636-1639 node_in_box
+ * @see lib/common/emit.c:1808 emit_node gate
+ * @see lib/common/emit.c:3356 init_job_viewport (job->bb = gvc->bb ± pad)
+ * @see lib/common/emit.c:1553-1564 setup_page (job->clip from focus/view)
+ */
+function nodeInBox(n: Node, job: RenderJob): boolean {
+  const clip: Box = {
+    ll: { x: job.bb.ll.x - job.pad.x, y: job.bb.ll.y - job.pad.y },
+    ur: { x: job.bb.ur.x + job.pad.x, y: job.bb.ur.y + job.pad.y },
+  };
+  return boxOverlap(nodeBBox(n), clip);
+}
+
+/**
  * Inner body of renderNode — runs inside the push/pop try block.
  * Extracted to keep renderNode under the 30-line hook limit.
  * @see lib/common/emit.c:emit_begin_node:1654
@@ -131,6 +168,8 @@ function emitNodeBody(n: Node, renderer: RendererPlugin, job: RenderJob): void {
 export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, done: Set<Node>): void {
   if (done.has(n)) return;
   done.add(n);
+  // "and is in page/view" gate. @see lib/common/emit.c:1808 node_in_box
+  if (!nodeInBox(n, job)) return;
   // Shortcircuit invisible nodes: C omits the whole node before emit_begin_node.
   // @see lib/common/emit.c:emit_node (style "invis" return)
   if (parseStyleFlags(n.attrs.get('style')).invis) return;
@@ -427,9 +466,16 @@ function renderPage(g: Graph, renderer: RendererPlugin, job: RenderJob, info: La
 export function render(ctx: GvcContext, g: Graph, format: string): string {
   const renderer = ctx.bestRenderer(format);
   const job = new RenderJob(format, ctx.textMeasurer);
-  const gbb = g.info.bb;
-  const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
-  job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
+  // gvc->bb = GD_bb(g) verbatim -- no recompute fallback. Every layout engine
+  // sets g.info.bb itself before render() runs (set_aspect for dot,
+  // compute_bb-equivalent computeSubgraphBB calls in neato/circo/sfdp/fdp/
+  // twopi/osage); when a layout phase aborts before that point (2825: dot_
+  // position fails before set_aspect), C leaves GD_bb at its zero default and
+  // the degenerate box propagates into job.bb/job.pad-derived clip below,
+  // excluding every node via node_in_box -- do not paper over that with a
+  // recompute, it is the mechanism that produces C's near-empty output.
+  // @see lib/common/emit.c:3272 init_gvc (gvc->bb = GD_bb(g))
+  job.bb = g.info.bb;
   // init_job_pad: resolve job.pad from the `pad=` graph attribute before the
   // size= fit is computed — C calls init_job_pad before init_job_viewport
   // (emit.c:4289-4291) because the fit uses the padded bb.

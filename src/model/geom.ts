@@ -165,6 +165,26 @@ export function boxContains(b0: Box, b1: Box): boolean {
   );
 }
 
+/**
+ * Returns true if boxes `b0` and `b1` intersect (touching edges count).
+ *
+ * Matches the C `OVERLAP` macro exactly:
+ * ```c
+ * #define OVERLAP(b0,b1) (((b0).UR.x >= (b1).LL.x) && ((b1).UR.x >= (b0).LL.x) \
+ *                       && ((b0).UR.y >= (b1).LL.y) && ((b1).UR.y >= (b0).LL.y))
+ * ```
+ *
+ * @see lib/common/geom.h: OVERLAP macro
+ */
+export function boxOverlap(b0: Box, b1: Box): boolean {
+  return (
+    b0.ur.x >= b1.ll.x &&
+    b1.ur.x >= b0.ll.x &&
+    b0.ur.y >= b1.ll.y &&
+    b1.ur.y >= b0.ll.y
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------

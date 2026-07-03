@@ -112,6 +112,60 @@ multi-page/`-Npages` clipping, separately out of scope here).
 - `npm run test`: 206 files / 2609 tests, all pass.
 - `npx tsc --noEmit`: clean.
 
+## Part 2 (fix/2825-rebuild-vlists, follow-up mission) — render-layer gap closed
+
+The residual gap documented above ("Residual gap — stop condition triggered,
+NOT fixed here") is now closed. `2825` is `conformant` (4-element output,
+byte-identical structurally to the oracle: `<svg>` + background polygon + 2
+degenerate cluster frames).
+
+### Verdict
+
+```json
+{
+  "mechanism": {
+    "cause": "src/gvc/emit-walk.ts / src/gvc/device.ts had no port of C's emit_node node_in_box(n, job->clip) gate (emit.c:1636-1639, 1806-1809); device.ts:render() additionally recomputed a plausible bbox from live node positions (computeSubgraphBB fallback) whenever g.info.bb was unset, masking the degenerate GD_bb C leaves on this abort path (part 1) instead of propagating it faithfully.",
+    "origin": "src/gvc/device.ts:430-432 (pre-fix render(), the computeSubgraphBB fallback) and src/gvc/emit-walk.ts/device.ts:renderNode (missing gate); C ref lib/common/emit.c:1636-1639 node_in_box, :1806-1809 emit_node gate, :3272 init_gvc (gvc->bb = GD_bb(g))",
+    "causalChain": "On 2825's abort path (part 1), dot_position fails before set_aspect ever runs, so g.info.bb stays at its zero default (mirrors C's calloc-zero GD_bb). C's init_gvc reads gvc->bb = GD_bb(g) verbatim (no fallback), and init_job_viewport/setup_page derive job->clip from that degenerate bb (job->clip == GD_bb ± pad for the single-page, no-page= case this port implements -- Z and rotation algebraically cancel out of the derivation, verified by hand from emit.c:3356-3427 + :1532-1583). emit_node's node_in_box(n, job->clip) gate then rejects every real node (their ND_bb is far from the degenerate near-origin clip box), leaving only the unconditionally-drawn cluster frames (emit_clusters has no clip/box gate at all, confirmed by grep -- only clust_in_layer). The port instead recomputed a REAL bbox from actual node positions whenever g.info.bb was unset (device.ts:430-432, dating to the batch-11 golden-harness commit, f1bf494, for engines that at the time never set g.info.bb themselves), so job.bb was never degenerate, and emit-walk.ts had no node_in_box gate to apply even if it had been.",
+    "ruledOut": [
+      "computeSubgraphBB fallback being load-bearing for any live (non-abort) engine path: audited every layout engine -- dot (position-bbox.ts:85, set_aspect), neato (index.ts:169/183/213), circo (index.ts:50), sfdp (index.ts:152/154), fdp (layout.ts:361), osage (index.ts:354/368), twopi (via splineEdgesShifted -> neato/splines.ts:474, which itself ports compute_bb, called from BOTH layoutSingle and layoutMulti) all set g.info.bb themselves before render() runs, on every successful path. Confirmed empirically too: git-stash A/B rendered 6 healthy graphs across dot/twopi-shaped inputs before and after removing the fallback -- byte-identical. Not the load-bearing case the stop condition warned about.",
+      "job->clip needing a stored/paginated field on RenderJob (multi-page pagesArrayElem/pagesArraySize machinery): traced setup_page's clip derivation by hand for the single-page (`page=` unset) case -- job->clip algebraically reduces to job->bb (padded GD_bb) once pagesArraySize={1,1}/pagesArrayElem={0,0}, independent of zoom Z (cancels) and rotation (pagesArrayElem/Size symmetric exch is a no-op for {0,0}/{1,1}). The port has no `page=` pagination model at all (RenderJob has no pagesArraySize field), so this reduction is exact for every case this port implements -- no new state needed, node_in_box computes clip inline from job.bb/job.pad.",
+      "a cluster-level clip/box gate being needed: grepped emit.c's cluster emission path (emit_begin_cluster, emit_clusters) for any boxf_overlap/node_in_box-style test against job->clip -- none exists, only clust_in_layer (a layer gate, already ported). Matches the observed oracle (cluster frames drawn unconditionally even when degenerate) and the port's pre-existing behavior (already correct per part 1's note) -- no new cluster gate added, would have been unfaithful invention.",
+      "edge_in_box needing to switch from job.bb (unpadded) to a padded clip: edges are covered by a separate, already-faithful port (src/render/svg.ts:edgeHasDrawableContent, pre-existing, carefully tuned against corpus regressions per its own comment) that made 2825's edges disappear as a side effect of part 1 (no splines routed on the abort path). Left untouched -- switching its bb source was outside this task's identified mechanism and risked the tuned overlap-suppression behavior documented in its comment (2368/2368_1)."
+    ]
+  },
+  "fixLocus": [
+    "src/model/geom.ts -- added exported boxOverlap (C's OVERLAP macro), replacing a private duplicate in src/render/svg.ts (DRY; both are now the same primitive)",
+    "src/gvc/device.ts -- render(): job.bb = g.info.bb verbatim (no computeSubgraphBB fallback), matching init_gvc's gvc->bb = GD_bb(g); renderNode(): added nodeBBox()+nodeInBox() and an early-return gate before emitNodeBody, computing clip = job.bb ± job.pad inline (no new RenderJob field)"
+  ]
+}
+```
+
+### Verification
+
+- `2825`: `test/diagnostic/flat-geom-diff.mjs` reports 0 elements diverge
+  (structural match); raw SVG diff shows only the pre-accepted generator-
+  comment/attribute-formatting differences. `parity-rules.json` (fresh
+  survey) marks it `"verdict": "conformant"`.
+- Sanity sweep (git-stash A/B, byte-identical before/after on 6 healthy
+  graphs spanning dot with/without clusters/records and `size=`): `1436`,
+  `graphs/unix.gv`, `graphs/clust.gv`, `1332`, `2183`, `graphs/size.gv` --
+  all identical.
+- `npm run test`: 206 files / 2609 tests, all pass, no golden diffs.
+- `npx tsc --noEmit`: clean.
+- Full corpus survey (789 items) + `rules-gate.ts`: `stable=765
+  improvements=1 pre-existing=12 allowlisted=0 regressions=0
+  clip-regressions=0 clip-watch=1`. The one improvement is `2825` itself
+  (diverged -> conformant). `clip-watch: 1314` unchanged (pre-existing,
+  not a regression). `test/corpus/parity-rules.json` reverted after the
+  gate per convention (scratch file, not the committed baseline).
+- `accepted-divergences.json`: removed the stale `2825` A4 entry (guard
+  `npx vitest run test/corpus/accepted-divergences.test.ts` passes: 6/6).
+- `docs/known-divergences.md`: updated the A4 section (2825 moved to the
+  "conformant, no entry" list alongside 1939, with the closure mechanism
+  documented) and the concentrate-arrowhead section's stale "still
+  diverges" note for 2825.
+
 ## Diagnostic method note
 
 Instrumented BOTH sides with temporary env-gated `console.error` calls

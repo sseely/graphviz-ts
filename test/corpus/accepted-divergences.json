@@ -112,17 +112,6 @@
    "bound": "maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content)",
    "reason": "fuzzer input; upstream test_1581 asserts only no memory-safety violation (issue #1581). C hits 'Error: install_in_rank' and its recovery drops ranks; the port reaches the identical rankset deletions (warning parity: Act_23/Act_24 from G) without the internal inconsistency and lays out the surviving graph. Oracle output is crash-recovery debris with no upstream-defined semantics.",
    "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
-  },
-  {
-   "match": {
-    "id": "2825"
-   },
-   "class": "A4",
-   "scope": "parity",
-   "verdict": "diverged",
-   "bound": "maxDelta 492; top-level childCount 13 vs 4 (oracle recovery discards nearly the whole graph)",
-   "reason": "upstream test_2825 asserts only no crash when rebuild_vlists returns -1 (issue #2825). C aborts dot_concentrate ('Error: rebuild_vlists: lead is null for rank 1'), dot_position/dotLayout propagate the failure and skip dot_splines/dotneato_postprocess, and emit_node's node_in_box(n, job->clip) gate rejects every node against the never-computed (zero) GD_bb, leaving only 4 elements (background + 2 degenerate cluster frames + root <g>). The port now reaches the IDENTICAL failure (byte-identical stderr, including message order) and correctly skips splines/postprocess (fixed: dotLayoutPipeline was discarding dot_position's return code, mirroring the F8 dotMincross fix), but its render layer has no port of C's node_in_box/job->clip gate (src/gvc/emit-walk.ts) and recomputes a real bbox from node positions instead of using the degenerate one (src/gvc/device.ts:430-432), so it still emits all 9 real node ellipses. Oracle output is recovery debris with no upstream-defined semantics; the residual node_in_box gap is a separate, general render-layer defect tracked in .agent-notes/2825-rebuild-vlists-abort.md for a follow-up mission.",
-   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
   }
  ]
 }
