@@ -256,16 +256,27 @@ export function computeMaxi(g: Graph, r: number): number {
 export function fillRankVlist(g: Graph, r: number, root: Graph): number {
   const rankArr = g.info.rank!;
   const lead = g.info.rankleader![r];
-  if (lead === undefined || lead === null) return -1;
+  if (lead === undefined || lead === null) {
+    console.error(`Error: rebuild_vlists: lead is null for rank ${r}`);
+    return -1;
+  }
   const rootRank = root.info.rank![r];
-  if (rootRank.v[lead.info.order ?? 0] !== lead) return -2;
+  if (rootRank.v[lead.info.order ?? 0] !== lead) {
+    console.error(
+      `Error: rebuild_vlists: rank lead ${lead.name} not in order ` +
+      `${lead.info.order ?? 0} of rank ${r}`,
+    );
+    return -1;
+  }
   // C sets GD_rank(g)[r].v = GD_rank(root)[r].v + ND_order(lead) (pointer
   // offset). The port bakes that offset into a fresh slice, so the window now
   // starts at index 0 — reset the stale vStart (left over from mincross) or
   // downstream rankGet double-offsets past the slice end. @see rebuild_vlists
   rankArr[r].v = rootRank.v.slice(lead.info.order ?? 0);
   rankArr[r].vStart = 0;
-  rankArr[r].n = computeMaxi(g, r) + 1;
+  const maxi = computeMaxi(g, r);
+  if (maxi === -1) console.error(`Warning: degenerate concentrated rank ${g.name},${r}`);
+  rankArr[r].n = maxi + 1;
   return 0;
 }
 
@@ -301,7 +312,6 @@ export function fillAllRankVlists(g: Graph): number {
   const minR = graphMinrank(g);
   const maxR = graphMaxrank(g);
   for (let r = minR; r <= maxR; r++) {
-    if (g.info.rankleader![r] == null) return -1;
     const rc = fillRankVlist(g, r, root);
     if (rc !== 0) return rc;
   }
@@ -377,11 +387,30 @@ export function runUpPass(g: Graph, startR: number): void {
 
 /**
  * Build edge concentrators for parallel edges with a common endpoint.
+ *
+ * The final cluster loop here is a distinct call site from
+ * `rebuildClusterVlists`'s recursive nested-cluster loop inside
+ * `rebuildVlists` — C's `dot_concentrate` (conc.c:237-243) calls
+ * `rebuild_vlists` directly on each of `g`'s own top-level clusters and, on
+ * ANY failure (including one bubbled up from a doubly-nested cluster),
+ * reports a single `agerr(AGPREV, ...)` continuation line (no "Error:"/
+ * "Warning:" prefix — AGPREV reuses the previous call's level) and
+ * normalizes the return to -1. Do not fold this into `rebuildClusterVlists`:
+ * that helper is also called recursively from inside `rebuildVlists` itself,
+ * where C does NOT emit this message.
  * @see lib/dotgen/conc.c:dot_concentrate
  */
 export function dotConcentrate(g: Graph): number {
   if (graphMaxrank(g) - graphMinrank(g) <= 1) return 0;
   const r = runDownPass(g);
   runUpPass(g, r);
-  return rebuildClusterVlists(g);
+  const nCluster = g.info.n_cluster ?? 0;
+  const clust = g.info.clust ?? [];
+  for (let c = 0; c < nCluster; c++) {
+    if (rebuildVlists(clust[c]) !== 0) {
+      console.error('concentrate=true may not work correctly.');
+      return -1;
+    }
+  }
+  return 0;
 }

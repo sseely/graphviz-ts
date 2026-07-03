@@ -12,7 +12,7 @@
 // the x-solve — collapsing the layout and leaving cluster bbs degenerate
 // (corpus 2183).
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { renderSvg } from '../../index.js';
 
 // Verbatim corpus 2183 (BPMN swimlanes): edge labels double the ranks, so
@@ -102,5 +102,66 @@ describe('concentrate + multi-rank intra-cluster edge (corpus 2183 class)', () =
 
   it('keeps the concentrated intra-cluster edge', () => {
     expect(svg).toContain('<title>a&#45;&gt;b</title>');
+  });
+});
+
+// Corpus 2825: cross-cluster rank=same plus a rankset-conflict deletion
+// leaves cluster_inner rank 1 with no rankleader. C's rebuild_vlists
+// (conc.c:158-161) errors, dot_concentrate (conc.c:239-242) reports a
+// continuation warning and returns -1, and dot_position propagates that
+// failure so dotLayout (dotinit.c:322-325) never reaches dot_splines or
+// dotneato_postprocess. The port must reach and report the identical
+// failure, then skip the identical downstream phases.
+const REPRO_2825 = `digraph CrashPOC {
+  concentrate=true
+
+  subgraph cluster_outer {
+    subgraph cluster_inner {
+      A -> B -> C -> D
+      B -> E
+      I -> H -> C -> F
+      D -> G
+
+      P [shape=point style=invis]
+      {B C D E F} -> P [constraint="false" style=invis]
+    }
+
+    H -> A
+    {rank=same; H; B}
+  }
+}
+`;
+
+describe('rebuild_vlists failure propagation (corpus 2825 class)', () => {
+  it('reports the same error/warning sequence as C, in order', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    renderSvg(REPRO_2825, 'dot');
+    const msgs = spy.mock.calls.map((c) => c[0]).filter((m) => typeof m === 'string');
+    spy.mockRestore();
+    expect(msgs).toContain('Warning: B was already in a rankset, deleted from cluster cluster_outer');
+    expect(msgs).toContain('Warning: H was already in a rankset, deleted from cluster cluster_outer');
+    expect(msgs).toContain('Error: rebuild_vlists: lead is null for rank 1');
+    expect(msgs).toContain('concentrate=true may not work correctly.');
+    // @see lib/dotgen/conc.c:158-161,239-242 for the message ordering.
+    const errIdx = msgs.indexOf('Error: rebuild_vlists: lead is null for rank 1');
+    const warnIdx = msgs.indexOf('concentrate=true may not work correctly.');
+    expect(errIdx).toBeLessThan(warnIdx);
+  });
+
+  it('skips dot_splines/dotneato_postprocess: no edges or point node emitted', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const svg = renderSvg(REPRO_2825, 'dot');
+    spy.mockRestore();
+    expect(svg).not.toMatch(/class="edge"/);
+    expect(svg).not.toContain('<title>P</title>');
+  });
+
+  it('leaves cluster boxes degenerate: set_aspect never ran', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const svg = renderSvg(REPRO_2825, 'dot');
+    spy.mockRestore();
+    const m = /<title>cluster_outer<\/title>\s*<polygon[^>]*points="([^"]*)"/.exec(svg);
+    expect(m, 'cluster_outer polygon present').toBeTruthy();
+    expect(m![1]).toBe('0,0 0,0 0,0 0,0 0,0');
   });
 });
