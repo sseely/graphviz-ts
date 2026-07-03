@@ -101,6 +101,28 @@
    "bound": "maxDelta 0; exactly one structural diff (one <title> byte: raw 0x80 vs UTF-8 U+0080); all element counts and coordinates conformant",
    "reason": "input contains a naked UTF-8 trail byte in a node name; C passes it through raw (utils.c:1200-1207 'valid characters representing themselves') yielding invalid-UTF-8 SVG output. The port's JS-string I/O cannot represent a raw invalid byte in renderSvg's return value; the latin1 fallback decode (0x80 -> U+0080) matches C's own 'treated as Latin-1' recovery semantics. Irreducible at the representation layer.",
    "ref": "known-divergences.md#a5-invalid-input-bytes-encoding-representation"
+  },
+  {
+   "match": {
+    "id": "1581"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "diverged",
+   "bound": "maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content)",
+   "reason": "fuzzer input; upstream test_1581 asserts only no memory-safety violation (issue #1581). C hits 'Error: install_in_rank' and its recovery drops ranks; the port reaches the identical rankset deletions (warning parity: Act_23/Act_24 from G) without the internal inconsistency and lays out the surviving graph. Oracle output is crash-recovery debris with no upstream-defined semantics.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "2825"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "diverged",
+   "bound": "maxDelta 472; top-level childCount 22 vs 4 (oracle recovery discards nearly the whole graph)",
+   "reason": "upstream test_2825 asserts only no crash when rebuild_vlists returns -1 (issue #2825). C aborts dot_concentrate ('Error: rebuild_vlists: lead is null for rank 1') and emits 4 elements; the port reaches the identical rankset deletions (warning parity: B/H from cluster_outer) and survives concentrate. Oracle output is recovery debris with no upstream-defined semantics. Port-side clipOverflow 23pt tracked separately.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
   }
  ]
 }

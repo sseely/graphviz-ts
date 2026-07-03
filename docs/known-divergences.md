@@ -374,7 +374,22 @@ a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 
 **Affected:** `2796` (structural-match, maxΔ 49), `2471` (structural-match,
 maxΔ ~9063), `1435` (diverged, maxΔ 503), `graphs-structs` (diverged,
-maxΔ 0). Family member `1939` is **conformant** and carries no entry. On
+maxΔ 0), `1581` (diverged, maxΔ 465), `2825` (diverged, maxΔ 472).
+Family member `1939` is **conformant** and carries no entry.
+
+`1581` and `2825` are crash-recovery cases (fix-element-count-bucket
+mission): fuzzer/degenerate inputs where the upstream tests assert **only**
+that dot does not crash (`test_1581`: no ASan violation; `test_2825`: no
+crash when `rebuild_vlists` returns -1). C hits an internal `Error:`
+(`install_in_rank` / `rebuild_vlists: lead is null`) and its recovery
+discards layout content; the port reaches the **identical rankset-deletion
+decisions** (warning parity verified: the same node/graph names in
+`mark_clusters`' "already in a rankset" warnings, cluster.c:317-320) but
+never reaches the inconsistent state, so it lays out the surviving graph in
+full. The oracle output on these inputs is recovery debris with no
+upstream-defined semantics. Evidence:
+[`1581`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/1581.md),
+[`2825`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/2825.md). On
 every one of these inputs it is the **C oracle** that is broken, by
 graphviz's own account: `2471`, `1939` and `1435` are
 [`xfail(strict=True)`](https://gitlab.com/graphviz/graphviz/-/blob/9d6e3abfd2c7/tests/test_regression.py)

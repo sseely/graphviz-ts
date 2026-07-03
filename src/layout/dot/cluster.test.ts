@@ -112,7 +112,7 @@ describe('markClusterNode — agdelete also drops incident edges (1332 defect C)
     clust.edges.push(crossing);            // induced into the cluster edge set
     clust.info.leader = inside;
 
-    markClusterNode(clust, foreign);
+    markClusterNode(clust, foreign, clust);
 
     expect(clust.nodes.has('a')).toBe(false);
     expect(clust.edges.includes(crossing)).toBe(false); // edge dropped with node
