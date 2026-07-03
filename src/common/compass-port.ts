@@ -25,11 +25,27 @@ import { bezierClip } from './splines-geom.js';
 import type { InsideContext } from './splines-geom.js';
 import { portToTbl } from './htmltable-port.js';
 import type { PlacedHtml } from './htmltable-pos.js';
+import { P_BOX } from './shapeData.js';
 
 /** Node shape inside-function (poly_inside / record_inside). @see inside_t */
 type ShapeHost = {
-  shape?: { fns?: { insidefn?: ((c: InsideContext, p: Point) => boolean) | null } | null } | null;
+  shape?: {
+    fns?: { insidefn?: ((c: InsideContext, p: Point) => boolean) | null } | null;
+    /** The shape's polygon struct; box/rect/rectangle all share P_BOX. */
+    polygon?: unknown;
+  } | null;
 };
+
+/**
+ * IS_BOX(n): the node's shape is box/rect/rectangle — the three that share the
+ * single `p_box` polygon struct. C skips the compass ray-cast for these and uses
+ * the exact bbox corner (poly_port sets ictxtp = NULL); every other shape,
+ * including `square` (a distinct p_square struct), ray-casts.
+ * @see lib/common/shapes.c:206 IS_BOX / shapes.c:2902-2903 poly_port
+ */
+function isBox(n: Node): boolean {
+  return (n.info as unknown as ShapeHost).shape?.polygon === P_BOX;
+}
 
 // ---------------------------------------------------------------------------
 // RANKDIR helpers
@@ -304,8 +320,11 @@ export function compassPort(n: Node, args: CompassArgs, pp: Port): number {
   const { bp, compass, sides } = args;
   const { b, p, defined: defBp } = compassBbox(n, bp);
   const dir = compassDirection(compass, b, p, sides);
-  // ictxt path: whole-node compass on a shaped node uses the real boundary.
-  if (bp === null) applyIctxt(n, dir, b, p);
+  // ictxt path: whole-node compass on a shaped node uses the real boundary via
+  // ray-cast — EXCEPT box/rect/rectangle, for which C sets ictxt=NULL and keeps
+  // the exact bbox corner (bezierClip can't converge onto a rectangle corner).
+  // @see lib/common/shapes.c:2902-2903 poly_port (IS_BOX(n) ⇒ ictxtp = NULL)
+  if (bp === null && !isBox(n)) applyIctxt(n, dir, b, p);
   const defFinal = dir.rv === 1 ? defBp : (dir.defined || defBp);
   applyDir(pp, bp, dir, gdRankdir(n), defFinal);
   return dir.rv;

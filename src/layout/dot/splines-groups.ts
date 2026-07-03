@@ -9,6 +9,7 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { Edge } from '../../model/edge.js';
+import type { TextlabelT } from '../../common/types.js';
 import {
   getMainEdge, resolveOrigEdge, portcmp, gatePorts, edgeTreeIndex, nodeRankOf,
   swapEndsP, swapEdgeSpline, EDGETYPE_CURVED, EDGETYPEMASK, FLATEDGE, MAINGRAPH,
@@ -16,6 +17,7 @@ import {
 import { routeLoneEdge } from './edge-route.js';
 import { routeEntryRun } from './edge-route-chain.js';
 import { routeSelfEdgeGroup, buildDotSinfo } from './self-loop.js';
+import { updateBB } from './splines-label.js';
 import { routeParallelEdgeGroup } from './splines-route.js';
 import { makeStraightEdges } from './straight-edges.js';
 
@@ -91,6 +93,14 @@ function dispatchEdgeGroup(g: Graph, group: Edge[], ctx: GroupRouteCtx): void {
   const e0 = group[0];
   if (e0.tail === e0.head) {
     routeSelfEdgeGroup(g, group, group.length, ctx.multisep, buildDotSinfo());
+    // Grow the graph bbox to include each labeled self-loop's label. C does this
+    // after makeSelfEdge; it is the ONLY canvas-growth path for left/top loops
+    // (right-going loops also reserve label space at ranking time via
+    // selfRightSpace, so they grow without it). @see dotsplines.c:405-409
+    for (const e of group) {
+      const l = e.info.label as TextlabelT | undefined;
+      if (l) updateBB(g, l);
+    }
     return;
   }
   if (nodeRankOf(e0.tail) === nodeRankOf(e0.head)) return;

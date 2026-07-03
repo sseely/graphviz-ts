@@ -111,6 +111,14 @@ export interface SurveyResult {
   verdict: Verdict;
   maxDelta?: number;
   firstDiffPath?: string;
+  /**
+   * XPath of the worst numeric diff — the location `maxDelta` occurs at. Unlike
+   * `firstDiffPath` (set only for `diverged`, at the first STRUCTURAL diff), this
+   * is set for both `diverged` and `structural-match` and is the bucket key that
+   * lets the dashboard cluster structural-match near-misses. `undefined` only
+   * when there are no numeric diffs. @see dashboard.ts structuralBucket
+   */
+  maxDeltaPath?: string;
   errMsg?: string;
   /**
    * Port-SPECIFIC clipping in points: how much farther drawn geometry falls
@@ -308,7 +316,7 @@ export function isWellFormedSvg(svg: string): boolean {
 }
 
 /** Classify a rendered pair: conformant / structural-match / diverged. */
-function diffVerdict(port: string, oracle: string): Omit<SurveyResult, 'id' | 'path'> {
+export function diffVerdict(port: string, oracle: string): Omit<SurveyResult, 'id' | 'path'> {
   let diffs: Diff[];
   try {
     const cmp = compareSvg(port, oracle, 'deterministic');
@@ -319,11 +327,21 @@ function diffVerdict(port: string, oracle: string): Omit<SurveyResult, 'id' | 'p
   }
   const numeric = diffs.filter((d) => d.delta !== undefined);
   const structural = diffs.find((d) => d.delta === undefined);
-  const maxDelta = numeric.reduce((mx, d) => Math.max(mx, d.delta ?? 0), 0);
-  if (structural) {
-    return { verdict: 'diverged', maxDelta, firstDiffPath: structural.path };
+  // Track the worst numeric diff AND its path in one pass. First-encountered
+  // wins on ties (strict `>`), a stable order-defined tie-break over the
+  // compareSvg walk order — same source array/order as the old maxDelta reduce.
+  let maxDelta = 0;
+  let maxDeltaPath: string | undefined;
+  for (const d of numeric) {
+    if ((d.delta ?? 0) > maxDelta) {
+      maxDelta = d.delta ?? 0;
+      maxDeltaPath = d.path;
+    }
   }
-  return { verdict: 'structural-match', maxDelta };
+  if (structural) {
+    return { verdict: 'diverged', maxDelta, firstDiffPath: structural.path, maxDeltaPath };
+  }
+  return { verdict: 'structural-match', maxDelta, maxDeltaPath };
 }
 
 function errText(e: unknown): string {

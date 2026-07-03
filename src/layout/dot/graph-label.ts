@@ -19,10 +19,30 @@ export const GRAPH_LABEL = 1 << 3;
 /** @see lib/common/const.h:GAP */
 const GAP = 4;
 
-/** LABEL_AT_BOTTOM=0; LABEL_AT_TOP=1. @see lib/common/const.h */
+/** LABEL_AT_BOTTOM=0, LABEL_AT_TOP=1, LABEL_AT_LEFT=2, LABEL_AT_RIGHT=4.
+ *  @see lib/common/const.h */
+const LABEL_AT_TOP = 1;
+const LABEL_AT_LEFT = 2;
+const LABEL_AT_RIGHT = 4;
+
+/**
+ * Cluster label-position flag from `labelloc` (top/bottom) AND `labeljust`
+ * (left/right), mirroring C `do_graph_label`. The cluster default is TOP (the
+ * root default is BOTTOM — see rootLabelPos); the labeljust logic is identical
+ * for both. Both keys inherit from an ancestor's default (C `agget`), so read
+ * them through graphAttrInherited — the same helper `label`/`fontname` use —
+ * not raw `sg.attrs`, else an inherited `labelloc=bottom` is lost.
+ * @see lib/common/input.c:858-877 do_graph_label
+ */
 function readLabelPos(sg: Graph): number {
-  const loc = sg.attrs.get('labelloc');
-  return loc && loc[0] === 'b' ? 0 : 1;
+  const loc = graphAttrInherited(sg, 'labelloc');
+  let pos = loc && loc[0] === 'b' ? 0 : LABEL_AT_TOP;
+  const just = graphAttrInherited(sg, 'labeljust');
+  if (just) {
+    if (just[0] === 'l') pos |= LABEL_AT_LEFT;
+    else if (just[0] === 'r') pos |= LABEL_AT_RIGHT;
+  }
+  return pos;
 }
 
 /**

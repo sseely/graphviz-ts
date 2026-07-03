@@ -152,6 +152,66 @@ describe('doGraphLabel — font inheritance', () => {
 // @see lib/cgraph/attr.c:165 agmakeattrs
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Label position — do_graph_label sets a pos flag from labelloc (top/bottom)
+// AND labeljust (left/right), identically for root and cluster (only the
+// labelloc DEFAULT differs: cluster=TOP, root=BOTTOM). The cluster port
+// previously read only labelloc, so cluster labels always centered in X and
+// could not inherit the root's labelloc. @see lib/common/input.c:858-878
+// ---------------------------------------------------------------------------
+
+describe('doGraphLabel — label position (labelloc + labeljust)', () => {
+  const LABEL_AT_TOP = 1;
+  const LABEL_AT_LEFT = 2;
+  const LABEL_AT_RIGHT = 4;
+
+  it('cluster labeljust=left sets LABEL_AT_LEFT (not RIGHT)', () => {
+    const sg = makeCluster(makeGraph(), { label: 'C', labeljust: 'left' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & LABEL_AT_LEFT).toBeTruthy();
+    expect(sg.info.label_pos! & LABEL_AT_RIGHT).toBeFalsy();
+  });
+
+  it('cluster labeljust=right sets LABEL_AT_RIGHT (not LEFT)', () => {
+    const sg = makeCluster(makeGraph(), { label: 'C', labeljust: 'right' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & LABEL_AT_RIGHT).toBeTruthy();
+    expect(sg.info.label_pos! & LABEL_AT_LEFT).toBeFalsy();
+  });
+
+  it('cluster with no labeljust centers (neither LEFT nor RIGHT bit)', () => {
+    const sg = makeCluster(makeGraph(), { label: 'C' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & (LABEL_AT_LEFT | LABEL_AT_RIGHT)).toBeFalsy();
+  });
+
+  it('cluster defaults to LABEL_AT_TOP when no labelloc', () => {
+    const sg = makeCluster(makeGraph(), { label: 'C' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & LABEL_AT_TOP).toBeTruthy();
+  });
+
+  it('cluster labelloc=b is bottom (TOP bit clear)', () => {
+    const sg = makeCluster(makeGraph(), { label: 'C', labelloc: 'b' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & LABEL_AT_TOP).toBeFalsy();
+  });
+
+  it('cluster inherits root labelloc=b (bottom) when it sets none', () => {
+    const root = makeGraph({ labelloc: 'b' });
+    const sg = makeCluster(root, { label: 'C' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & LABEL_AT_TOP).toBeFalsy();
+  });
+
+  it('cluster own labelloc=t overrides inherited root labelloc=b', () => {
+    const root = makeGraph({ labelloc: 'b' });
+    const sg = makeCluster(root, { label: 'C', labelloc: 't' });
+    doGraphLabel(sg, stubMeasurer);
+    expect(sg.info.label_pos! & LABEL_AT_TOP).toBeTruthy();
+  });
+});
+
 describe('doGraphLabel — label inheritance', () => {
   it('cluster inherits a parent cluster label when it sets none', () => {
     const root = makeGraph();

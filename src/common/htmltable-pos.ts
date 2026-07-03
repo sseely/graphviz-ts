@@ -163,14 +163,31 @@ export interface PlacedHtml {
   spacing: number;
 }
 
-/** Shrink `box` to `dimen`, centered (default align/valign). @see pos_html_cell */
-export function centerContentBox(box: Box, w: number, h: number): Box {
-  const dx = Math.max(0, box.ur.x - box.ll.x - w) / 2;
-  const dy = Math.max(0, box.ur.y - box.ll.y - h) / 2;
-  return {
-    ll: { x: box.ll.x + dx, y: box.ll.y + dy },
-    ur: { x: box.ur.x - dx, y: box.ur.y - dy },
-  };
+/**
+ * Shrink `box` to (w,h) per the cell's HALIGN/VALIGN, mirroring C's text branch
+ * of pos_html_cell: LEFT flushes the box right edge in (`ur.x -= delx`), RIGHT
+ * flushes the left edge in, default splits (center); VALIGN BOTTOM/TOP flush,
+ * default centers on BOTH axes. Parallels the existing `alignImageBox`, but
+ * text default-centers vertically where an image does not.
+ * (`parseAlign` never yields HALIGN_TEXT, so the cell box always shrinks here —
+ * exactly what C does for every non-TEXT cell.)
+ * @see lib/common/htmltable.c:pos_html_cell (text branch, :1487-1526)
+ */
+export function alignContentBox(box: Box, cell: HtmlCell, w: number, h: number): Box {
+  const out: Box = { ll: { ...box.ll }, ur: { ...box.ur } };
+  const delx = out.ur.x - out.ll.x - w;
+  if (delx > 0) {
+    if (cell.align === 'left') out.ur.x -= delx;
+    else if (cell.align === 'right') out.ll.x += delx;
+    else { out.ll.x += delx / 2; out.ur.x -= delx / 2; }
+  }
+  const dely = out.ur.y - out.ll.y - h;
+  if (dely > 0) {
+    if (cell.valign === 'bottom') out.ur.y -= dely;
+    else if (cell.valign === 'top') out.ll.y += dely;
+    else { out.ll.y += dely / 2; out.ur.y -= dely / 2; }
+  }
+  return out;
 }
 
 /** All four boundary sides — the top-level table's placement mask. */
@@ -206,7 +223,7 @@ function placeCellRuns(
   const runs = buildLineRuns(texts, finfo, measurer);
   const w = Math.max(...runs.map(r => r.width), 0);
   const h = runs.reduce((a, r) => a + r.height, 0);
-  return placeTextRuns(runs, centerContentBox(cbox, w, h), finfo, measurer);
+  return placeTextRuns(runs, alignContentBox(cbox, cell, w, h), finfo, measurer);
 }
 
 /**
