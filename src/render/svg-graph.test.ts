@@ -11,6 +11,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { RenderJob } from '../gvc/job.js';
+import { SVG_PAD } from './svg-helpers.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { Box } from '../model/geom.js';
 import {
@@ -23,9 +24,13 @@ import type { Graph } from '../model/graph.js';
 
 const measurer: TextMeasurer = { measure: () => ({ w: 0, h: 0 }) };
 
+// Job constructed directly (bypassing render()'s parseGraphPad call) must set
+// job.pad explicitly, matching what render() resolves for a graph with no
+// `pad=` attribute (SVG plugin default_pad, 4pt both axes).
 function makeJob(): RenderJob {
   const j = new RenderJob('svg', measurer);
   j.bb = { ll: { x: 0, y: 0 }, ur: { x: 100, y: 80 } };
+  j.pad = { x: SVG_PAD, y: SVG_PAD };
   return j;
 }
 
@@ -179,6 +184,7 @@ function b68Job(rotation: number): RenderJob {
   job.translation = { x: 0, y: 0 };
   job.rotation = rotation;
   job.bb = { ll: { x: 0, y: 0 }, ur: { x: 630, y: 204.5 } };
+  job.pad = { x: SVG_PAD, y: SVG_PAD };
   job.renderer = createSvgRenderer();
   return job;
 }
@@ -242,5 +248,45 @@ describe('renderSvg — landscape wiring (parseLandscape -> job.rotation -> emit
     const [lw, lh] = dims(land);
     expect(lw).toBe(ph);
     expect(lh).toBe(pw);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// pad= graph attribute (F2). Oracle-verified against native dot 15.1.0
+// (GVBINDIR=/tmp/ghl dot -Tsvg): `pad=2` on `digraph G { a -> b }` yields
+// width="342pt" height="396pt" translate(144 252); no-pad default is
+// unchanged at width="62pt" height="116pt" translate(4 112).
+// @see lib/common/emit.c:3241-3251 (attr read); :3290-3304 (init_job_pad)
+// ---------------------------------------------------------------------------
+
+describe('pad= graph attribute — F2 regression (native dot 15.1.0 oracle)', () => {
+  it('pad="2" (144pt) expands svg dims, viewBox, and group translate', () => {
+    const svg = renderSvg('digraph G { pad="2"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="342pt" height="396pt"');
+    expect(svg).toContain('viewBox="0.00 0.00 342.00 396.00"');
+    expect(svg).toContain('translate(144 252)');
+    expect(svg).toContain(
+      '<polygon fill="white" stroke="none" points="-144,144 -144,-252 198,-252 198,144 -144,144"/>',
+    );
+  });
+
+  it('no pad= attribute: default 4pt unaffected (byte-stable baseline)', () => {
+    const svg = renderSvg('digraph G { a -> b }', 'dot');
+    expect(svg).toContain('<svg width="62pt" height="116pt"');
+    expect(svg).toContain('translate(4 112)');
+  });
+
+  it('single-value pad="0.5" (36pt) — both axes scale together', () => {
+    const svg = renderSvg('digraph G { pad="0.5"; a -> b }', 'dot');
+    // content bb 54x108 + 2*36 = 126x180, Z=1 (no size=)
+    expect(svg).toContain('<svg width="126pt" height="180pt"');
+    expect(svg).toContain('translate(36 144)');
+  });
+
+  it('two-value pad="0.5,0" — independent x/y axes', () => {
+    const svg = renderSvg('digraph G { pad="0.5,0"; a -> b }', 'dot');
+    // x pad = 36pt, y pad = 0pt: width=54+72=126, height=108+0=108
+    expect(svg).toContain('<svg width="126pt" height="108pt"');
+    expect(svg).toContain('translate(36 108)');
   });
 });

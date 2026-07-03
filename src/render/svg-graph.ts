@@ -16,7 +16,7 @@ import type { Box, Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import { createObjState, ObjType } from '../gvc/job.js';
 import { FillType } from '../gvc/context.js';
-import { escapeXml, escapeXmlTitle, SVG_PAD } from './svg-helpers.js';
+import { escapeXml, escapeXmlTitle } from './svg-helpers.js';
 import { resolveRenderColor, colorPaint } from './color-resolve.js';
 import { svgGraphId, svgGraphClass } from './svg-id.js';
 import { parseGradientSpec } from '../common/htmltable-emit-fill.js';
@@ -67,8 +67,8 @@ export function emitSvgTag(job: RenderJob): void {
   // device.ts render()). For Z=1 this equals round(content)+2*PAD exactly
   // (adding an integer commutes with round), so non-size graphs are
   // byte-unchanged (D5). @see gvrender_core_svg.c:258
-  const szx = bb.ur.x - bb.ll.x + 2 * SVG_PAD;
-  const szy = bb.ur.y - bb.ll.y + 2 * SVG_PAD;
+  const szx = bb.ur.x - bb.ll.x + 2 * job.pad.x;
+  const szy = bb.ur.y - bb.ll.y + 2 * job.pad.y;
   const dw = Math.round(szx * job.scale.x);
   const dh = Math.round(szy * job.scale.y);
   // Landscape rotation swaps the canvas dims to page orientation (C swaps via
@@ -162,10 +162,10 @@ export function resolveGraphBgcolor(bgcolorAttr: string | undefined): string {
  */
 export function emitGraphBackground(bb: Box, resolvedColor: string, job: RenderJob): void {
   if (resolvedColor === BGCOLOR_TRANSPARENT) return;
-  const left   = bb.ll.x - SVG_PAD;
-  const right  = bb.ur.x + SVG_PAD;
-  const top    = -(bb.ur.y + SVG_PAD);
-  const bottom = -(bb.ll.y - SVG_PAD);
+  const left   = bb.ll.x - job.pad.x;
+  const right  = bb.ur.x + job.pad.x;
+  const top    = -(bb.ur.y + job.pad.y);
+  const bottom = -(bb.ll.y - job.pad.y);
   const corners: [number, number][] = [
     [left, bottom], [left, top], [right, top], [right, bottom], [left, bottom],
   ];
@@ -184,11 +184,11 @@ export function emitGraphBackground(bb: Box, resolvedColor: string, job: RenderJ
  * Passed to getGradientPoints inside emitLinearGradient.
  * @see lib/common/emit.c:emit_background:1517 (gvrender_box with clip)
  */
-function bgGradientPts(bb: Box): Point[] {
-  const left   = bb.ll.x - SVG_PAD;
-  const right  = bb.ur.x + SVG_PAD;
-  const bottom = bb.ll.y - SVG_PAD;
-  const top    = bb.ur.y + SVG_PAD;
+function bgGradientPts(bb: Box, pad: Point): Point[] {
+  const left   = bb.ll.x - pad.x;
+  const right  = bb.ur.x + pad.x;
+  const bottom = bb.ll.y - pad.y;
+  const top    = bb.ur.y + pad.y;
   return [
     { x: left,  y: bottom },
     { x: left,  y: top    },
@@ -203,10 +203,10 @@ function bgGradientPts(bb: Box): Point[] {
  * @see plugin/core/gvrender_core_svg.c:svg_polygon:686
  */
 function writeGradientPolygon(bb: Box, id: string, job: RenderJob): void {
-  const left   = bb.ll.x - SVG_PAD;
-  const right  = bb.ur.x + SVG_PAD;
-  const top    = -(bb.ur.y + SVG_PAD);
-  const bottom = -(bb.ll.y - SVG_PAD);
+  const left   = bb.ll.x - job.pad.x;
+  const right  = bb.ur.x + job.pad.x;
+  const top    = -(bb.ur.y + job.pad.y);
+  const bottom = -(bb.ll.y - job.pad.y);
   const corners: [number, number][] = [
     [left, bottom], [left, top], [right, top], [right, bottom], [left, bottom],
   ];
@@ -246,7 +246,7 @@ function emitGradientBackground(bb: Box, spec: BgGradientSpec, job: RenderJob): 
     emitRadialGradient(job, gid);
   } else {
     gid = gradientId('graph0', 'l', job.linearGradId++);
-    emitLinearGradient(job, bgGradientPts(bb), gid);
+    emitLinearGradient(job, bgGradientPts(bb, job.pad), gid);
   }
   job.popObj();
   writeGradientPolygon(bb, gid, job);
@@ -328,8 +328,8 @@ export function svgBeginPage(g: Graph, job: RenderJob): void {
   // bb.ur.y + PAD). pageSize = imageSize/zoom is Z-independent (outer scale
   // carries Z), so the formula holds for any size= fit. Pinned to b68 native
   // translate(-634 208.5). @see emit.c:setup_page; gvrender_core_svg.c:svg_begin_page
-  const tx = job.rotation !== 0 ? -(bb.ur.x + SVG_PAD) : SVG_PAD;
-  const ty = bb.ur.y + SVG_PAD;
+  const tx = job.rotation !== 0 ? -(bb.ur.x + job.pad.x) : job.pad.x;
+  const ty = bb.ur.y + job.pad.y;
   emitGraphGroupOpen(
     job.idLayerPrefix() + svgGraphId(g, job),
     svgGraphClass(g),
