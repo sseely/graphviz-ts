@@ -88,7 +88,15 @@ diagnosis below.
   table's explicit dimensions outright (1622_2); `pos_html_tbl` extra-space
   distribution (`htmltable.c:1600`) is unported (1622_3).
 
-### Mission 4 — compass-port box-shape ray-cast (7 cases)
+### Mission 4 — compass-port box-shape ray-cast (7 cases) ★ DONE (+12)
+**Fixed** on `fix/compass-port-box` with a one-line guard: `applyIctxt`
+(`compass-port.ts`) now skips the ray-cast for `isBox(n)` (shape.polygon===P_BOX),
+using the exact bbox corner like C's `poly_port` (`shapes.c:2902-2903`). Moved 12
+cases → conformant, 0 regressions: the 7 box/ports cases here PLUS the 4 Mission 2
+box self-loop residuals (sb_box/sb_box_dbl/sr_box_dbl/sl_box_dbl) that were
+downstream of the same wrong port point, plus bonus 2734. conformant 693→705.
+Original diagnosis below.
+
 `applyIctxt` (`src/common/compass-port.ts:292-300`) ray-casts box-shaped nodes;
 C's `poly_port` (`lib/common/shapes.c:2902-2903`) bypasses the ray-cast for
 `IS_BOX` shapes and uses an exact corner formula. `bezierClip` bisection can't
