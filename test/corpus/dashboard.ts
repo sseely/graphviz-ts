@@ -80,6 +80,60 @@ function divergedBucket(path: string): { key: string; hypothesis: string } {
   return { key: 'attr-or-tag', hypothesis: 'element tag or a non-coordinate attribute differs' };
 }
 
+/**
+ * Map a structural-match's worst-diff XPath (`maxDeltaPath`, from survey T1) to
+ * an element KIND — the coarse, deterministic bucket axis (decisions.md#ad-1).
+ * Semantic edge/node/cluster attribution is the analysis doc's job, not this.
+ */
+function structuralKind(path: string | undefined): string {
+  const p = path ?? '';
+  if (/@d(\[\d+\])?$/.test(p)) return 'edge-path';
+  if (/@points$/.test(p)) return 'polygon-points';
+  if (/@(cx|cy|rx|ry|r)$/.test(p)) return 'node-ellipse';
+  if (/@(x|y|x1|y1|x2|y2|dx|dy)(\[\d+\])?$/.test(p) || p.includes('transform') || p.includes('text')) {
+    return 'text-position';
+  }
+  if (/@(width|height)$/.test(p) || p.includes('viewBox')) return 'canvas-extent';
+  return 'other-numeric';
+}
+
+/** Coarse magnitude band for a maxDelta (0 sub-pixel cases exist today). */
+function magnitudeBand(d: number): string {
+  if (d < 1) return '<1';
+  if (d < 10) return '1-10';
+  if (d < 100) return '10-100';
+  if (d < 1000) return '100-1000';
+  return '>1000';
+}
+
+/** One-line mechanism hint per element kind (candidate root-cause family). */
+const STRUCTURAL_HINTS: Record<string, string> = {
+  'edge-path': 'spline routing residual — x-coord/NS placement, clip endpoint, or ortho tie-break',
+  'polygon-points': 'polygon geometry — node-shape, cluster box, or arrowhead vertices',
+  'node-ellipse': 'node x-coord placement drift (NS / LR_balance)',
+  'text-position': 'label placement — text x/y or group transform',
+  'canvas-extent': 'overall canvas size — bbox / margin accumulation',
+  'other-numeric': 'uncategorized numeric attribute — inspect the path',
+};
+
+/** Bucket a structural-match by worst-diff element kind × magnitude band. */
+function structuralBucket(r: SurveyResult): { key: string; hypothesis: string } {
+  const kind = structuralKind(r.maxDeltaPath);
+  const band = magnitudeBand(r.maxDelta ?? 0);
+  return { key: `${kind} · Δ${band}`, hypothesis: STRUCTURAL_HINTS[kind] ?? 'numeric diff' };
+}
+
+/** Worst-first structural-match roster (id · maxΔ · kind · path), capped. */
+function structuralRoster(rows: SurveyResult[]): string {
+  const sorted = [...rows].sort((a, b) => (b.maxDelta ?? 0) - (a.maxDelta ?? 0));
+  const shown = sorted.slice(0, DIVERGED_TABLE_CAP);
+  const body = shown.map(
+    (r) => `| \`${r.id}\` | ${(r.maxDelta ?? 0).toFixed(2)} | \`${structuralKind(r.maxDeltaPath)}\` | \`${cell(r.maxDeltaPath)}\` |`,
+  );
+  const more = sorted.length > shown.length ? `\n_… and ${sorted.length - shown.length} more (full set in parity.json)._\n` : '';
+  return ['| id | maxΔ | kind | worst-diff path |', '|---|---:|---|---|', ...body, ''].join('\n') + more;
+}
+
 /** Map an errored result's message to a triage bucket + hypothesis. */
 function erroredBucket(msg: string): { key: string; hypothesis: string } {
   if (msg.startsWith('ParseError') || msg.startsWith('Expected ')) {
@@ -265,6 +319,13 @@ function buildMarkdown(report: ParityReport, manifest: CorpusEntry[]): string {
     'or extra elements). Near-misses — sub-pixel-to-modest position drift — that we',
     'intend to close (accepted structural-match deltas are listed above instead).',
     '',
+    'Buckets below are keyed by the element KIND of each graph\'s worst numeric',
+    'diff (`maxDeltaPath`) crossed with a magnitude band — an equivalence-class map',
+    'for driving groups to conformance. Mechanism-family attribution: see',
+    '[analysis](../../plans/structural-match-buckets/analysis/README.md).',
+    '',
+    bucketTable('tracked structural-match — by worst-diff signature', bucketize(trackedStructural, structuralBucket)),
+    structuralRoster(trackedStructural),
     `## Tracked diverged (${trackedDiverged.length}) — worst-first`,
     '',
     divergedTable(trackedDiverged),
