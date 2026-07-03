@@ -19,7 +19,19 @@ export function ufFind(n: Node): Node {
 }
 
 /**
- * Union two UF sets. Inlines ufRoot (init + find) and union-by-id.
+ * Union two UF sets. Inlines ufRoot (init + find).
+ *
+ * C's tie-break reads `ND_id(u) > ND_id(v)` — but `ND_id` is a distinct,
+ * dotgen-only `Agnodeinfo_t.id` field (lib/common/types.h:432, guarded by
+ * `#ifndef DOT_ONLY`) that is NEVER assigned anywhere in the `dot` layout
+ * engine's source (only neatogen/fdpgen/sfdpgen/sparse — unrelated engines —
+ * write it). It is therefore always 0 for both real and virtual nodes under
+ * `dot`, so `ND_id(u) > ND_id(v)` is always false and C always takes the
+ * `else` branch: the first argument's resolved root unconditionally wins.
+ * This is NOT the same field as AGID (cgraph's unique per-node id, exposed
+ * here as `Node.id`) — using `.id` for this comparison would introduce
+ * spurious branching C never performs, since AGID differs between every
+ * pair of real nodes.
  * @see lib/common/utils.c:UF_union
  */
 export function ufUnion(u: Node, v: Node): Node {
@@ -31,7 +43,6 @@ export function ufUnion(u: Node, v: Node): Node {
   if (u === v) return u;
   const us = u.info.UF_size ?? 0;
   const vs = v.info.UF_size ?? 0;
-  if (u.id > v.id) { u.info.UF_parent = v; v.info.UF_size = vs + us; return v; }
   v.info.UF_parent = u; u.info.UF_size = us + vs; return u;
 }
 
