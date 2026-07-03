@@ -52,4 +52,15 @@ describe('self-loop label bbox growth', () => {
     const wide = extent(loop(WIDE, 'tailport=n, headport=n')).w;
     expect(wide).toBeGreaterThan(narrow);
   });
+
+  // A second labeled self-loop on the same node must reserve space beyond the
+  // first: C widens dx by (label.width - stepx) after each labeled loop so the
+  // next loop clears it (splines.c:1045-1046). Without the widen the second
+  // label overlaps the first and the canvas is too narrow.
+  it('a second labeled self-loop reserves additional width (widen step)', () => {
+    const one = extent('digraph{ a->a [label="LOOPLABELWIDE"]; }').w;
+    const two = extent('digraph{ a->a [label="LOOPLABELWIDE"]; a->a [label="LOOPLABELWIDE"]; }').w;
+    // The second loop's label adds roughly its own width; require a clear jump.
+    expect(two).toBeGreaterThan(one + 100);
+  });
 });

@@ -110,18 +110,30 @@ class SelfEdgeImpl {
     return SIDE_PAIR_A[tailI][headI];
   }
 
-  static setLabelY(e: Edge, a: LabelYArgs): void {
+  /** Place a top/bottom self-loop label; return the label height that governs
+   *  the loop's cross-axis widen. Under flip (LR/RL) the label is rotated, so
+   *  its width (dimen.x) is the vertical extent. @see splines.c:selfTop:965-975 */
+  static setLabelY(e: Edge, a: LabelYArgs): number {
     const lbl = e.info.label as LabelLike | undefined;
-    if (!lbl?.dimen) return;
-    lbl.pos = { x: a.x, y: a.y + a.sign * lbl.dimen.y / 2 };
+    if (!lbl?.dimen) return 0;
+    const flip = e.tail.root.info.flip === true;
+    const height = flip ? lbl.dimen.x : lbl.dimen.y;
+    lbl.pos = { x: a.x, y: a.y + a.sign * height / 2 };
     lbl.set = true;
+    return height;
   }
 
-  static setLabelX(e: Edge, a: LabelXArgs): void {
+  /** Place a left/right self-loop label; return the label width that governs
+   *  the loop's widen. Under flip the label is rotated, so dimen.y is the
+   *  horizontal extent. @see splines.c:selfRight:1036-1046 */
+  static setLabelX(e: Edge, a: LabelXArgs): number {
     const lbl = e.info.label as LabelLike | undefined;
-    if (!lbl?.dimen) return;
-    lbl.pos = { x: a.x + a.sign * lbl.dimen.x / 2, y: a.y };
+    if (!lbl?.dimen) return 0;
+    const flip = e.tail.root.info.flip === true;
+    const width = flip ? lbl.dimen.y : lbl.dimen.x;
+    lbl.pos = { x: a.x + a.sign * width / 2, y: a.y };
     lbl.set = true;
+    return width;
   }
 
   static bottomPts(a: VPtsArgs): Point[] {
@@ -192,7 +204,8 @@ class SelfEdgeImpl {
     for (let i = 0; i < cnt; i++) {
       dy += stepy; ty += stepy; hy += stepy; dx += s.sgn * stepx;
       const pts = SelfEdgeImpl.bottomPts({ ...s, dx, dy, ty, hy });
-      SelfEdgeImpl.setLabelY(edges[i], { y: s.np.y - dy, x: s.np.x, sign: -1 });
+      const h = SelfEdgeImpl.setLabelY(edges[i], { y: s.np.y - dy, x: s.np.x, sign: -1 });
+      if (h > stepy) dy += h - stepy; // widen for the next loop @see splines.c:867-868
       clipAndInstall(edges[i], edges[i].head, pts, pts.length, sinfo);
     }
   }
@@ -203,7 +216,8 @@ class SelfEdgeImpl {
     for (let i = 0; i < cnt; i++) {
       dy += stepy; ty += stepy; hy += stepy; dx += s.sgn * stepx;
       const pts = SelfEdgeImpl.topPts({ ...s, dx, dy, ty, hy });
-      SelfEdgeImpl.setLabelY(edges[i], { y: s.np.y + dy, x: s.np.x, sign: 1 });
+      const h = SelfEdgeImpl.setLabelY(edges[i], { y: s.np.y + dy, x: s.np.x, sign: 1 });
+      if (h > stepy) dy += h - stepy; // widen for the next loop @see splines.c:974-975
       clipAndInstall(edges[i], edges[i].head, pts, pts.length, sinfo);
     }
   }
@@ -214,7 +228,8 @@ class SelfEdgeImpl {
     for (let i = 0; i < cnt; i++) {
       dx += stepx; tx += stepx; hx += stepx; dy += s.sgn * stepy;
       const pts = SelfEdgeImpl.rightPts({ ...s, dx, dy, tx, hx });
-      SelfEdgeImpl.setLabelX(edges[i], { x: s.np.x + dx, y: s.np.y, sign: 1 });
+      const w = SelfEdgeImpl.setLabelX(edges[i], { x: s.np.x + dx, y: s.np.y, sign: 1 });
+      if (w > stepx) dx += w - stepx; // widen for the next loop @see splines.c:1045-1046
       clipAndInstall(edges[i], edges[i].head, pts, pts.length, sinfo);
     }
   }
@@ -225,7 +240,8 @@ class SelfEdgeImpl {
     for (let i = 0; i < cnt; i++) {
       dx += stepx; tx += stepx; hx += stepx; dy += s.sgn * stepy;
       const pts = SelfEdgeImpl.leftPts({ ...s, dx, dy, tx, hx });
-      SelfEdgeImpl.setLabelX(edges[i], { x: s.np.x - dx, y: s.np.y, sign: -1 });
+      const w = SelfEdgeImpl.setLabelX(edges[i], { x: s.np.x - dx, y: s.np.y, sign: -1 });
+      if (w > stepx) dx += w - stepx; // widen for the next loop @see splines.c:1119-1120
       clipAndInstall(edges[i], edges[i].head, pts, pts.length, sinfo);
     }
   }
