@@ -9,8 +9,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseLandscape, parseGraphPad, initJobViewportZoom } from './viewport.js';
-import { SVG_PAD } from '../render/svg-helpers.js';
+import { parseLandscape, parseGraphPad, parseGraphMargin, initJobViewportZoom } from './viewport.js';
+import { SVG_PAD, SVG_MARGIN } from '../render/svg-helpers.js';
 import { Graph as GraphClass } from '../model/graph.js';
 import type { Graph } from '../model/graph.js';
 
@@ -134,5 +134,48 @@ describe('initJobViewportZoom — pad affects the size= fit', () => {
 
   it('no size= (null) → Z stays 1 regardless of pad', () => {
     expect(initJobViewportZoom(bb, null, { x: 144, y: 144 })).toBe(1.0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// parseGraphMargin — F6: `margin=` graph-attribute parse (init_gvc +
+// init_job_margin). Same sscanf shape as pad=, different default (0 vs 4pt).
+// @see lib/common/emit.c:3229-3239 (attr read); :3309-3331 (init_job_margin)
+// ---------------------------------------------------------------------------
+
+describe('parseGraphMargin — sscanf("%lf,%lf") + init_job_margin fallback', () => {
+  it('absent attr -> default (SVG_MARGIN, 0pt both axes)', () => {
+    expect(parseGraphMargin(undefined)).toEqual({ x: SVG_MARGIN, y: SVG_MARGIN });
+  });
+
+  it('single value "0.8" (1879.dot) -> both axes 0.8in = 57.6pt', () => {
+    const m = parseGraphMargin('0.8');
+    expect(m.x).toBeCloseTo(57.6, 6);
+    expect(m.y).toBeCloseTo(57.6, 6);
+  });
+
+  it('two values "1,0.5" -> independent x/y (72pt, 36pt)', () => {
+    expect(parseGraphMargin('1,0.5')).toEqual({ x: 72, y: 36 });
+  });
+
+  it('unparsable garbage -> default fallback (sscanf 0 matches)', () => {
+    expect(parseGraphMargin('nonsense')).toEqual({ x: SVG_MARGIN, y: SVG_MARGIN });
+  });
+
+  it('empty string -> default fallback', () => {
+    expect(parseGraphMargin('')).toEqual({ x: SVG_MARGIN, y: SVG_MARGIN });
+  });
+
+  it('negative value accepted (no positivity check, matching pad=)', () => {
+    expect(parseGraphMargin('-1')).toEqual({ x: -72, y: -72 });
+  });
+
+  it('not rounded (unlike size=, no POINTS() macro)', () => {
+    const m = parseGraphMargin('1.0069444444'); // ~72.5/72
+    expect(m.x).toBeCloseTo(72.5, 4);
+  });
+
+  it('distinct default from parseGraphPad (0 vs 4)', () => {
+    expect(parseGraphMargin(undefined)).not.toEqual(parseGraphPad(undefined));
   });
 });

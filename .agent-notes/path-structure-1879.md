@@ -180,3 +180,78 @@ separate mechanism/attribute/call site — flagged as a new follow-up, not
 folded into this fix (out of F2's declared write-set).
 
 Commit: `fix(render): read graph pad attribute for viewport (F2)`.
+
+## Fix record (F6)
+
+Ported `init_job_margin` (`emit.c:3229-3239` attr read in `init_gvc`;
+`:3309-3331` the `GVRENDER_PLUGIN` fallback branch) — `parseGraphMargin`
+(`src/gvc/viewport.ts`), same `sscanf("%lf,%lf")` shape as `parseGraphPad`
+but a distinct 0pt default (`SVG_MARGIN`, matching SVG's
+`device_features_svg.default_margin={0,0}`, not `DEFAULT_EMBED_MARGIN`
+though both happen to be 0). `device.ts render()` resolves `job.margin`
+right after `job.pad` (C's `init_job_margin` call immediately follows
+`init_job_pad`, `emit.c:4290-4291`) but — unlike pad — margin does NOT
+feed the `size=` zoom fit; it is consumed later by `emitSvgTag`/
+`svgBeginPage` (`svg-graph.ts`), after Z is known.
+
+Traced the actual mechanism through `init_job_pagination` (`emit.c:1191-1300`,
+job->width/height + canvasBox->pageBoundingBox/viewBox) and `setup_page`
+(`emit.c:1532-1583`, translation), since C's pagination/canvasBox machinery
+isn't otherwise ported in this simplified single-page SVG-only port.
+Empirically reverse-engineered (native `dot -Tsvg`, portrait/landscape ×
+symmetric/asymmetric margin × with/without `size=`) and confirmed
+algebraically against the C source:
+- `job.width/height = round(pageComponent + 2*margin.{x,y})` where
+  `pageComponent` is the **already rotation-swapped**, UNROUNDED Z-scaled
+  padded-bb extent (single `Math.round` on the sum — rounding the extent
+  first would double-round and diverge from C at half-integer boundaries).
+- viewBox LL = `round(margin.x)`, `round(margin.y)`; viewBox UR =
+  `round(margin.x + pageComponent.x)`, `round(margin.y + pageComponent.y)`
+  — C's rotation-branch double `exch_xyf`/`exch_xy` swap (canvasBox
+  construction, then the final device-units swap-back) cancels for LL
+  (plain margin, always unswapped) but not for UR, which pairs with the
+  *page-oriented* (rotation-swapped) view extent — the same swap used for
+  width/height.
+- `svgBeginPage`'s translate gets `± margin.{x,y} / Z` added (Z = `job.scale.x`,
+  since this port carries the size= zoom factor in `job.scale` rather than
+  `job.zoom`, D4/ADR-2) — `+` for both axes in portrait, `+` for y and `-`
+  for x in landscape (mirrors C's `setup_page` `canvasBox.LL/job->zoom` term
+  and its Y_GOES_DOWN/rotation branch structure).
+- Confirmed margin does NOT touch the background polygon (`job->clip`, not
+  `canvasBox` — a separate C code path); no change to `emitGraphBackground`
+  et al.
+
+**Verified (native dot 15.1.0 oracle, `GVBINDIR=/tmp/ghl`):**
+- `margin="0.8"` on `digraph G { a -> b }`: byte-matches C exactly —
+  `width="177pt" height="231pt"`, `viewBox="58.00 58.00 120.00 174.00"`,
+  `translate(61.6 169.6)`.
+- `margin="1,0.5"` (asymmetric): `width="206pt" height="188pt"`,
+  `viewBox="72.00 36.00 134.00 152.00"`, `translate(76 148)` — exact match.
+- `margin="1,0.5"` + `rotate=90` (landscape): `width="260pt" height="134pt"`,
+  `viewBox="72.00 36.00 188.00 98.00"`, `translate(-130 148)` — exact match
+  (confirms margin.x/y stay unswapped in the translate term even though
+  width/height's base component does swap).
+- `margin="0.8"` + `size="1,1"` (Z != 1, exercises the `/Z` division):
+  `translate(442.4 982.4)` — exact match.
+- No-margin baseline (`digraph G { a -> b }`) unchanged byte-for-byte
+  (`width="62pt" height="116pt"`, `viewBox="0.00 0.00 62.00 116.00"`,
+  `translate(4 112)`).
+- Background polygon coordinates identical with/without `margin=` (job->clip
+  independent of canvasBox/margin) — confirmed not perturbed.
+- **1879.dot**: the residual 115pt/115pt/58pt-offset delta flagged at the
+  end of F2 is now **fully resolved** — `width="10915pt" height="1563pt"`,
+  `viewBox="58.00 58.00 10858.00 1506.00"`, `translate(278.69 3376.69)` all
+  byte-match C exactly (`flat-geom-diff.mjs`: bbox Δ=0 on width/height/ty).
+  Only the separately-tracked `ltail=`-clip raw-spline residual (36 edges,
+  COORD-COUNT signature, out of scope — see F2's "Secondary tracked-deep
+  finding") remains for this corpus id.
+- Corpus sweep (`grep -lP '^\s*margin\s*=' tests/*.dot` → 9 files): only
+  **1879** (`margin=0.8`, real effect, now byte-match) and **1332**
+  (`margin=0` at root scope, a no-op — confirmed byte-identical
+  width/height/translate before and after) are genuine *root-graph-level*
+  `margin=` users. The other 7 (2470, 2471, 2538, 2592, 2239, 2619_2, 2835)
+  are cluster-level `graph [margin=...]` inside a `subgraph cluster*` block
+  or per-node `margin=` in a node's attribute list — both distinct,
+  already-ported mechanisms, correctly out of scope for this fix.
+
+Commit: `fix(render): read graph margin attribute for viewport (F6)`.

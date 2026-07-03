@@ -283,6 +283,9 @@ export class RenderJob {
 
   bb: Box = { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
   pad: Point = { x: 0, y: 0 };
+  /** Graph-level `margin=` (init_job_margin); page-pagination margin, distinct
+   * from node/cluster label margin. @see lib/common/emit.c:3309-3331 */
+  margin: Point = { x: 0, y: 0 };
   zoom: number = 1.0;
   dpi: Point = { x: 96, y: 96 };
   rotation: number = 0;

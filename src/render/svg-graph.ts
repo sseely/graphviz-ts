@@ -59,26 +59,47 @@ function formatG(n: number): string {
   return String(parseFloat(n.toPrecision(6)));
 }
 
-/** Emit SVG tag. ViewBox starts at (0,0); group translate absorbs bb.ll offset. */
+/**
+ * Emit SVG tag. Group translate absorbs bb.ll + pad + margin/Z offset
+ * (svgBeginPage). ViewBox starts at (round(margin.x), round(margin.y)) --
+ * (0,0) only in the common no-margin case.
+ */
 export function emitSvgTag(job: RenderJob): void {
   const bb = job.bb;
-  // Size-fitted device dims = ROUND(Z * sz), sz = bb extent plus pad in points
-  // (emit.c:1249 job->width/height, dpi=72), Z carried in job.scale (see
-  // device.ts render()). For Z=1 this equals round(content)+2*PAD exactly
-  // (adding an integer commutes with round), so non-size graphs are
-  // byte-unchanged (D5). @see gvrender_core_svg.c:258
+  // Size-fitted, UNROUNDED page-oriented view extent (init_job_pagination's
+  // local `imageSize`/`pageSize`, emit.c:1198-1246): sz = bb extent plus pad,
+  // scaled by Z (job.scale, D4). Kept unrounded here so the later
+  // "+ 2*margin" / "+ margin" sums round ONCE, matching C's single
+  // `ROUND((pageSize + 2*margin) * dpi/72)` -- rounding szx/szy first would
+  // double-round and diverge from C at half-integer boundaries.
   const szx = bb.ur.x - bb.ll.x + 2 * job.pad.x;
   const szy = bb.ur.y - bb.ll.y + 2 * job.pad.y;
-  const dw = Math.round(szx * job.scale.x);
-  const dh = Math.round(szy * job.scale.y);
-  // Landscape rotation swaps the canvas dims to page orientation (C swaps via
-  // init_job_pagination exch_xyf, emit.c:1201); round() commutes with the swap
-  // and Z is uniform, so swapping the final device dims matches native.
-  const w = job.rotation !== 0 ? dh : dw;
-  const h = job.rotation !== 0 ? dw : dh;
+  const viewX = szx * job.scale.x;
+  const viewY = szy * job.scale.y;
+  // Landscape rotation swaps the view into page orientation (init_job_pagination's
+  // early `imageSize = exch_xyf(imageSize)`, emit.c:1201-1202); job.margin is
+  // read UNSWAPPED in both the width/height and viewBox-UR formulas below,
+  // matching C's `job->width = ROUND(pageSize.x + 2*margin.x)` where `margin`
+  // there is the as-entered graph attribute, never exch_xyf'd before this use.
+  const rotated = job.rotation !== 0;
+  const pageX = rotated ? viewY : viewX;
+  const pageY = rotated ? viewX : viewY;
+  // job->width/job->height (emit.c:1249-1250, dpi=72 so *dpi/72 is a no-op).
+  const w = Math.round(pageX + 2 * job.margin.x);
+  const h = Math.round(pageY + 2 * job.margin.y);
   job.write('<svg width="' + String(w) + 'pt" height="' + String(h) + 'pt"\n');
-  // viewBox always starts at (0,0); gvPostprocess normalises bb.ll to (0,0) before render
-  job.write('     viewBox="0.00 0.00 ' + String(w) + '.00 ' + String(h) + '.00"\n');
+  // job->pageBoundingBox (canvasBox.LL = margin+centering, canvasBox.UR = LL +
+  // imageSize, then ROUND -- emit.c:1282-1293). C's rotation-branch double
+  // exch_xy/exch_xyf (canvasBox construction, then the final device-units
+  // swap-back, emit.c:1275-1298) cancels for LL (always plain margin) but NOT
+  // for UR, which ends up paired with the page-oriented (rotation-swapped)
+  // view extent -- i.e. the same `pageX`/`pageY` used for width/height above.
+  const vbLLx = Math.round(job.margin.x);
+  const vbLLy = Math.round(job.margin.y);
+  const vbURx = Math.round(job.margin.x + pageX);
+  const vbURy = Math.round(job.margin.y + pageY);
+  job.write('     viewBox="' + String(vbLLx) + '.00 ' + String(vbLLy) + '.00 ' +
+    String(vbURx) + '.00 ' + String(vbURy) + '.00"\n');
   job.write('     xmlns="http://www.w3.org/2000/svg"');
   job.write(' xmlns:xlink="http://www.w3.org/1999/xlink">\n');
 }
@@ -328,8 +349,22 @@ export function svgBeginPage(g: Graph, job: RenderJob): void {
   // bb.ur.y + PAD). pageSize = imageSize/zoom is Z-independent (outer scale
   // carries Z), so the formula holds for any size= fit. Pinned to b68 native
   // translate(-634 208.5). @see emit.c:setup_page; gvrender_core_svg.c:svg_begin_page
-  const tx = job.rotation !== 0 ? -(bb.ur.x + job.pad.x) : job.pad.x;
-  const ty = bb.ur.y + job.pad.y;
+  //
+  // margin (F6): setup_page adds `canvasBox.LL / job->zoom` on top of the
+  // pad-only formula above -- canvasBox.LL is the FINAL (post swap-cancel)
+  // margin, unswapped regardless of rotation, so both branches use
+  // job.margin.x/y directly. job->zoom is real-C's Z; this port carries Z in
+  // job.scale (job.zoom stays fixed at 1, D4/ADR-2), so divide by job.scale.x
+  // here to reproduce the same "/ job->zoom" C performs. Sign differs by
+  // rotation branch only for x (portrait: +margin.x/Z; landscape: -margin.x/Z);
+  // y is always +margin.y/Z in both branches (C computes translation.y with a
+  // single un-branched formula for GVRENDER_Y_GOES_DOWN renderers).
+  // @see lib/common/emit.c:1566-1582 setup_page (CAUTION comment there)
+  const z = job.scale.x;
+  const tx = job.rotation !== 0
+    ? -(bb.ur.x + job.pad.x) - job.margin.x / z
+    : job.pad.x + job.margin.x / z;
+  const ty = bb.ur.y + job.pad.y + job.margin.y / z;
   emitGraphGroupOpen(
     job.idLayerPrefix() + svgGraphId(g, job),
     svgGraphClass(g),

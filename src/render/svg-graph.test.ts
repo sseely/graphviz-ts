@@ -290,3 +290,56 @@ describe('pad= graph attribute — F2 regression (native dot 15.1.0 oracle)', ()
     expect(svg).toContain('translate(36 108)');
   });
 });
+
+// ---------------------------------------------------------------------------
+// margin= graph attribute (F6). Oracle-verified against native dot 15.1.0
+// (GVBINDIR=/tmp/ghl dot -Tsvg): `margin="0.8"` on `digraph G { a -> b }`
+// yields width="177pt" height="231pt" viewBox="58.00 58.00 120.00 174.00"
+// translate(61.6 169.6); `margin="1,0.5"` yields width="206pt" height="188pt"
+// viewBox="72.00 36.00 134.00 152.00" translate(76 148). No-margin baseline
+// is unchanged (D5 analogue).
+// @see lib/common/emit.c:3229-3239 (attr read); :3309-3331 (init_job_margin)
+// @see lib/common/emit.c:1191-1300 init_job_pagination (width/height/viewBox)
+// @see lib/common/emit.c:1532-1583 setup_page (translation)
+// ---------------------------------------------------------------------------
+
+describe('margin= graph attribute — F6 regression (native dot 15.1.0 oracle)', () => {
+  it('margin="0.8" (57.6pt) expands svg dims, viewBox, and group translate', () => {
+    const svg = renderSvg('digraph G { margin="0.8"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="177pt" height="231pt"');
+    expect(svg).toContain('viewBox="58.00 58.00 120.00 174.00"');
+    expect(svg).toContain('translate(61.6 169.6)');
+  });
+
+  it('two-value margin="1,0.5" — independent x/y axes', () => {
+    const svg = renderSvg('digraph G { margin="1,0.5"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="206pt" height="188pt"');
+    expect(svg).toContain('viewBox="72.00 36.00 134.00 152.00"');
+    expect(svg).toContain('translate(76 148)');
+  });
+
+  it('no margin= attribute: byte-stable baseline (viewBox starts at 0,0)', () => {
+    const svg = renderSvg('digraph G { a -> b }', 'dot');
+    expect(svg).toContain('<svg width="62pt" height="116pt"');
+    expect(svg).toContain('viewBox="0.00 0.00 62.00 116.00"');
+    expect(svg).toContain('translate(4 112)');
+  });
+
+  it('margin= does not perturb the background polygon (job->clip, not canvasBox)', () => {
+    const withMargin = renderSvg('digraph G { margin="0.8"; a -> b }', 'dot');
+    const withoutMargin = renderSvg('digraph G { a -> b }', 'dot');
+    const poly = (svg: string): string | null =>
+      /<polygon fill="white"[^/]*\/>/.exec(svg)?.[0] ?? null;
+    expect(poly(withMargin)).toBe(poly(withoutMargin));
+  });
+
+  it('rotate=90 + margin: width/height swap base but margin.x/y stay unswapped', () => {
+    // Oracle: digraph G { rotate=90; margin="1,0.5"; a -> b } ->
+    // width="260pt" height="134pt" viewBox="72.00 36.00 188.00 98.00"
+    // translate(-130 148).
+    const svg = renderSvg('digraph G { rotate=90; margin="1,0.5"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="260pt" height="134pt"');
+    expect(svg).toContain('viewBox="72.00 36.00 188.00 98.00"');
+    expect(svg).toContain('translate(-130 148)');
+  });
+});

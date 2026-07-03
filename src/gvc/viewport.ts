@@ -10,14 +10,23 @@
 // init_job_viewport does (job->bb = graph bb expanded by job->pad on every
 // side before the size= fit is computed).
 //
+// Also ports the `margin=` graph-attribute parse (init_gvc's attr read +
+// init_job_margin's fallback). Unlike pad, margin does NOT feed the size=
+// fit; it only affects job.width/job.height and the page group translate
+// (device.ts render() / svg-graph.ts emitSvgTag+svgBeginPage), applied AFTER
+// the size= zoom Z (matching C's init_job_margin -> ... -> init_job_pagination
+// call order, emit.c:4290-4294).
+//
 // @see lib/common/input.c:476 getdoubles2ptf
 // @see lib/common/emit.c:3356 init_job_viewport
 // @see lib/common/emit.c:3230-3251 init_gvc (pad attr read)
 // @see lib/common/emit.c:3290-3304 init_job_pad
+// @see lib/common/emit.c:3229-3239 init_gvc (margin attr read)
+// @see lib/common/emit.c:3309-3331 init_job_margin
 
 import type { Box, Point } from '../model/geom.js';
 import { POINTS_PER_INCH } from '../model/geom.js';
-import { SVG_PAD } from '../render/svg-helpers.js';
+import { SVG_PAD, SVG_MARGIN } from '../render/svg-helpers.js';
 import type { Graph } from '../model/graph.js';
 
 /** Parsed `size=` drawing size in points, plus the *filled* flag. */
@@ -94,6 +103,39 @@ export function parseGraphPad(raw: string | undefined): Point {
     }
   }
   return { x: SVG_PAD, y: SVG_PAD };
+}
+
+/**
+ * Port of the `margin=` graph-attribute parse: init_gvc reads it via the same
+ * `sscanf(p, "%lf,%lf", &xf, &yf)` shape as `pad=` (2 values matched → both
+ * axes independently; 1 value → y = x; 0 matched leaves `graph_sets_margin`
+ * false) and init_job_margin falls back to the SVG plugin's
+ * `device_features_svg.default_margin` ({0,0}) when unset — the
+ * `GVRENDER_PLUGIN` branch of init_job_margin's fallback switch (the
+ * PCL/MIF/etc. print-margin and generic embed-margin branches never apply to
+ * this port's only renderer).
+ *
+ * This is a distinct attribute/mechanism from the already-ported per-node and
+ * per-cluster `margin=` (shape internal label margin) — do not conflate.
+ * Unlike `size=`, margin values are NOT rounded (`xf * POINTS_PER_INCH`
+ * directly) and are not required to be positive, matching `pad=`.
+ *
+ * @see lib/common/emit.c:3229-3239 init_gvc (margin attr read)
+ * @see lib/common/emit.c:3309-3331 init_job_margin (fallback)
+ */
+export function parseGraphMargin(raw: string | undefined): Point {
+  if (raw !== undefined) {
+    const xy = PAD_XY_RE.exec(raw);
+    if (xy) {
+      return { x: Number(xy[1]) * POINTS_PER_INCH, y: Number(xy[2]) * POINTS_PER_INCH };
+    }
+    const x = PAD_X_RE.exec(raw);
+    if (x) {
+      const v = Number(x[1]) * POINTS_PER_INCH;
+      return { x: v, y: v };
+    }
+  }
+  return { x: SVG_MARGIN, y: SVG_MARGIN };
 }
 
 /**
