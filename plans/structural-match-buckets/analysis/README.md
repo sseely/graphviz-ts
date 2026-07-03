@@ -38,7 +38,13 @@ Missions 1–4 = **121 cases (76% of tracked)** at known loci.
 
 ## Ranked candidate missions (count × tractability)
 
-### Mission 1 — cluster/root label justify + anchor (81 cases) ★ biggest lever
+### Mission 1 — cluster/root label justify + anchor (81 cases) ★ DONE (+80)
+**Fixed** on `fix/cluster-label-justify` (`8b22ac2`): 80 labelclust/labelroot
+cases → conformant, 0 regressions, full suite green (conformant 603→683). 2592's
+cluster label is fixed too but the case stays structural-match on an independent
+`lhead/ltail` edge-path residual (now its dominant diff — belongs to the
+edge-path/LR_balance work, not here). Original diagnosis below.
+
 Two independent defects, both `known-mechanism`, corroborated by two agents:
 - **label-justify (65):** `readLabelPos()` (`src/layout/dot/graph-label.ts:23-26`)
   computes only the TOP/BOTTOM bit from `labelloc`; it never reads `labeljust`
