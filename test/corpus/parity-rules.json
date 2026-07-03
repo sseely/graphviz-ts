@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-03T20:54:23.656Z",
+  "generatedAt": "2026-07-03T23:15:43.054Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 706,
-    "structural-match": 60,
+    "conformant": 716,
+    "structural-match": 50,
     "diverged": 11,
     "oracle-error": 11,
     "timeout": 1
@@ -369,9 +369,7 @@
     {
       "id": "2082",
       "path": "2082.dot",
-      "verdict": "structural-match",
-      "maxDelta": 60.60000000000002,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "2087",
@@ -1516,23 +1514,17 @@
     {
       "id": "graphs-inv_inv",
       "path": "graphs/inv_inv.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-inv_nul",
       "path": "graphs/inv_nul.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-inv_val",
       "path": "graphs/inv_val.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-japanese",
@@ -1864,28 +1856,22 @@
       "path": "graphs/nojustify.gv",
       "verdict": "structural-match",
       "maxDelta": 56.5,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[2]/@x"
+      "maxDeltaPath": "svg/g[1]/g[2]/text[2]/@x"
     },
     {
       "id": "graphs-nul_inv",
       "path": "graphs/nul_inv.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-nul_nul",
       "path": "graphs/nul_nul.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-nul_val",
       "path": "graphs/nul_val.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-ordering",
@@ -2208,23 +2194,17 @@
     {
       "id": "graphs-val_inv",
       "path": "graphs/val_inv.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-val_nul",
       "path": "graphs/val_nul.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-val_val",
       "path": "graphs/val_val.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-viewfile",
