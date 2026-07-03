@@ -80,7 +80,24 @@ diagnosis below.
   away already does it right. Spans text-label (fsm/train11, 6) + text-other
   (sr_*_dbl, 2).
 
-### Mission 3 — HTML table cell-align + sizing (15 cases)
+### Mission 3 — HTML table cell-align + sizing (15 cases) ◑ PARTIAL (+1)
+**Cell-align mechanism fixed** on `fix/html-cell-align`: `placeCellRuns` now uses
+`alignContentBox` honoring cell HALIGN/VALIGN (C `pos_html_cell` text branch,
+`htmltable.c:1487-1526`), parallel to the existing `alignImageBox`. The
+inv/nul/val matrix HTML tables now place byte-identically and 1898 → conformant,
+0 regressions. BUT the 13 target cases mostly have compound residuals OTHER than
+cell-align, so net conformance is only +1:
+- **9-matrix** blocked by a separate 4pt residual on a `b` node with
+  `image=…`+`labelloc=b` (image+labelloc node label — `needs-C`, akin to 2082),
+  NOT the table (table text is now exact).
+- **html2×3** has a deeper vertical-sizing residual (34pt canvas height, 14pt
+  y-shifts) beyond alignment.
+- **Deferred follow-ups (known mechanism, not yet applied):** per-line `<BR ALIGN>`
+  justify — `placeSimpleRuns`/`placeSimpleRuns` hardcode center, should read
+  `run.brAlign` (C `emit_htextspans`/BALIGN). Left un-done: it conformant-izes 0
+  cases until the html2 vertical residual is also fixed, and it touches the hot
+  per-line path. Original diagnosis below.
+
 - **cell align (13):** `placeCellRuns`/`placeSimpleRuns`
   (`htmltable-pos.ts:194-210`, `htmltable-pos-runs.ts:221-240`) hardcode center,
   never reading `cell.align`/`brAlign`. Covers the `inv/nul/val` matrix + `html2`.
