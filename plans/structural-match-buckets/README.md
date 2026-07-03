@@ -111,3 +111,24 @@ accept-as-won't-fix, ~28 deferred. Ranked candidate missions inside.
 no SLIs, alerting, on-call, or backwards-compat surface. Every change is
 **reversible** by `git revert` + `npx tsx test/corpus/dashboard.ts` regen. The
 only external dependency is the native `dot` oracle (already cached).
+
+## Session summary (complete)
+
+All 5 batches complete; final gates green (typecheck, survey.test, rules-gate
+regressions=0). 13 commits on `feature/structural-match-buckets` (from
+`bd66112`); `main` untouched at `origin/main` — ready for you to merge.
+
+- **Tooling (T1–T3):** survey records `maxDeltaPath`; dashboard buckets
+  structural-match by worst-diff signature; baseline re-surveyed (provably
+  additive: 0 verdict/maxDelta changes) and regenerated.
+- **Analysis (T4–T5):** 163/163 cases attributed → [analysis/README.md](analysis/README.md).
+  76% of tracked near-misses reduce to **4 known-locus fix missions**; 7 accept;
+  ~28 needs-C.
+- **Decisions made:** 6 logged (see decision-journal.md), incl. the `@points[N]`
+  classifier fix and the text-position name-split.
+- **Deviation recovered:** a diagnosis agent merged into `main`; reconciled
+  (cherry-picked bucket commits to feature, reset main to origin) — no work lost.
+
+**Follow-ups (not in scope here):** (1) enter 2470 + 241_1 into
+`accepted-divergences.json`; (2) mission 1 (label justify/anchor, 81 cases) is
+the highest-leverage next fix.
