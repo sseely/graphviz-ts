@@ -214,7 +214,13 @@ function summary(
   accepted: SurveyResult[],
   tracked: SurveyResult[],
 ): string {
-  const c = report.counts;
+  // Normalize: a hand-regenerated parity.json may omit verdict keys whose count
+  // is 0 (survey.ts's tally always writes all keys, but ad-hoc edits may not), so
+  // default every verdict to 0 to avoid emitting "errored: undefined".
+  const c: Record<Verdict, number> = Object.assign(
+    { conformant: 0, 'structural-match': 0, diverged: 0, errored: 0, timeout: 0, 'oracle-error': 0 },
+    report.counts,
+  );
   const q = quarantineTotals(manifest);
   const qLine = Object.entries(q).map(([k, v]) => `${k} ${v}`).join(', ') || 'none';
   const matched = c.conformant + c['structural-match'];

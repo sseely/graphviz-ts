@@ -13,7 +13,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 - **Surveyed (applicable):** 789
 - **conformant\*:** 716 (90.7%) · structural-match: 50 → 766/789 structurally equal (97.1%)
 - **Accepted deltas (documented, won't-fix):** 7 · **Tracked gaps (unaccepted, will-fix):** 54 → of 61 non-conformant graphs
-- **errored:** undefined · **timeout:** 1 · **oracle-error:** 11 (excluded from scoring)
+- **errored:** 0 · **timeout:** 1 · **oracle-error:** 11 (excluded from scoring)
 - **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3, perf 1
 
 \* **conformant** is a *deterministic-tolerance* verdict, not literal byte equality: numeric coordinates/paths agree within ±0.01 and all non-numeric content (tags, colors, text) is exactly equal (`compareSvg(…, 'deterministic')`). Full definition: [docs/conformance.md](../../docs/conformance.md).
