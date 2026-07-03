@@ -192,7 +192,9 @@ function pointWidthInches(n: Node, g: Graph): number {
  * periphery, plus the outline ring at half the penwidth each side.
  * @see lib/common/shapes.c:point_init (periphery/outline blocks)
  */
-function pointSizeResult(sz0: number, peripheries: number, penwidth: number): PolySizeResult {
+function pointSizeResult(
+  sz0: number, peripheries: number, penwidth: number,
+): Omit<PolySizeResult, 'space' | 'valign'> {
   const sz = peripheries > 1 ? sz0 + 2 * GAP * (peripheries - 1) : sz0;
   const szOutline = peripheries >= 1 && penwidth > 0 ? sz + penwidth : sz;
   return {
@@ -243,7 +245,13 @@ function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
   const flip = g.root.info.flip === true;
   const params = polySizeParamsFromNode(n, g, { ...shape, polygon: poly }, label.dimen, flip);
   // Unflipped size first so width/height (inches) match C's ND_width/ND_height.
-  storeNodeSize(n, polySize({ ...params, flip: false }), flip);
+  const sz = polySize({ ...params, flip: false });
+  // Install the label's justification borders + valign, as C's poly_init mutates
+  // ND_label(n)->space / ->valign in place — consumed by emit_label/renderLabel
+  // for labelloc top/bottom and left/right justification.
+  label.space = sz.space;
+  label.valign = sz.valign.charCodeAt(0);
+  storeNodeSize(n, sz, flip);
   // C poly_init installs the ATTR-RESOLVED polygon into ND_shape_info
   // (sides/orientation/skew/distortion/peripheries/regular); edge
   // clipping and rendering read it.
@@ -269,7 +277,9 @@ function effectivePolygon(poly: PolygonT, p: PolySizeParams): PolygonT {
 }
 
 /** Write polySize results onto the node (gv_nodesize flip applied last). */
-function storeNodeSize(n: Node, unflipped: PolySizeResult, flip: boolean): void {
+function storeNodeSize(
+  n: Node, unflipped: Omit<PolySizeResult, 'space' | 'valign'>, flip: boolean,
+): void {
   const widthPts = unflipped.lw + unflipped.rw;
   n.info.width = widthPts / 72;
   n.info.height = unflipped.ht / 72;

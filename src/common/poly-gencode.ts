@@ -173,7 +173,14 @@ export function renderLabel(
   if (label.u.kind !== 'txt' || label.u.nspans < 1) return;
   label.pos = coord;
   label.set = true;
-  let py = coord.y + label.dimen.y / 2.0 - label.fontsize;
+  // First-span baseline per valign (labelloc). @see lib/common/labels.c:240-251
+  const VALIGN_TOP = 't'.charCodeAt(0);
+  const VALIGN_BOTTOM = 'b'.charCodeAt(0);
+  let py = label.valign === VALIGN_TOP
+    ? coord.y + label.space.y / 2.0 - label.fontsize
+    : label.valign === VALIGN_BOTTOM
+      ? coord.y - label.space.y / 2.0 + label.dimen.y - label.fontsize
+      : coord.y + label.dimen.y / 2.0 - label.fontsize;
   for (let i = 0; i < label.u.nspans; i++) {
     const span = label.u.span[i] as TextSpan;
     // @see lib/common/labels.c:emit_label (254-266)

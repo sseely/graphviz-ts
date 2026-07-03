@@ -89,6 +89,15 @@ export interface PolySizeResult extends NodeSize {
    */
   baseW: number;
   baseH: number;
+  /**
+   * Justification borders — the space available for the label within the node
+   * box. `emit_label` reads this (not `dimen`) for `labelloc` top/bottom and
+   * left/right justification; without it a `labelloc=b` label centers.
+   * @see lib/common/shapes.c:poly_init (2132-2152)
+   */
+  space: Point;
+  /** Resolved vertical alignment ('t'/'c'/'b') from labelloc. */
+  valign: string;
 }
 
 /** @see lib/common/utils.c:mapbool */
@@ -449,6 +458,7 @@ export function polySize(p: PolySizeParams): PolySizeResult {
   const { sides, isBox } = effectiveShape(p);
   let bb: Point = { x: dimen.x, y: dimen.y };
   if (!isBox) bb = expandForShape(bb, sides, init.height, labelValign(p));
+  const minBb = bb; // C min_bb (shapes.c:2106): after shape fit, before size constraints
 
   const c = applySizeConstraints(p, bb, init.width, init.height);
   const penwidth = p.penwidth ?? 1; // DEFAULT_NODEPENWIDTH
@@ -457,7 +467,34 @@ export function polySize(p: PolySizeParams): PolySizeResult {
   const grown = sides < 3
     ? ellipsePeripheryBB(c.bb, p.peripheries, penwidth, hasOutline)
     : polygonBB(c.bb, { x: c.width, y: c.height }, { ...p, penwidth, hasOutline }, sides, isBox);
-  return assembleResult(p, dimen, { ...grown, base: c.bb }, c.fixedshape);
+  const result = assembleResult(p, dimen, { ...grown, base: c.bb }, c.fixedshape);
+  return { ...result, ...labelSpace(p, dimen, c.bb, minBb, isBox, c.fixedshape) };
+}
+
+/**
+ * Compute the label's justification borders (ND_label->space) and vertical
+ * alignment — the "space available for label" block of poly_init. `bb` is the
+ * final (constrained) box; `minBb` is the pre-constraint shape-fit box.
+ * Image sizing is unported, so `imagesize` is 0 (which matches C for the
+ * missing-image repro cases); revisit when image loading lands.
+ * @see lib/common/shapes.c:poly_init (2132-2152)
+ */
+function labelSpace(
+  p: PolySizeParams, dimen: Point, bb: Point, minBb: Point, isBox: boolean, fixedshape: boolean,
+): { space: Point; valign: string } {
+  const spacex = dimen.x - p.labelDimen.x; // shapes.c:2011 (padding added to the label)
+  // nojustify is unported; C's !nojustify branch is the effective path.
+  let spaceX: number;
+  if (isBox) {
+    spaceX = Math.max(dimen.x, bb.x) - spacex;
+  } else if (dimen.y < bb.y) {
+    spaceX = Math.max(dimen.x, bb.x * Math.sqrt(1 - (dimen.y * dimen.y) / (bb.y * bb.y))) - spacex;
+  } else {
+    spaceX = dimen.x - spacex;
+  }
+  // space.y: !fixedshape → dimen.y + (bb.y - min_bb.y); fixedshape keeps dimen.y.
+  const spaceY = fixedshape ? dimen.y : dimen.y + (bb.y - minBb.y);
+  return { space: { x: spaceX, y: spaceY }, valign: labelValign(p) };
 }
 
 /** Effective sides (distortion/skew turn ellipses into 120-gons) and box test. */
@@ -482,7 +519,7 @@ function assembleResult(
   dimen: Point,
   grown: { bb: Point; outline: Point; base: Point },
   fixedshape: boolean,
-): PolySizeResult {
+): Omit<PolySizeResult, 'space' | 'valign'> {
   if (fixedshape) {
     return {
       ...gvNodesize(Math.max(dimen.x, grown.bb.x), Math.max(dimen.y, grown.bb.y), p.flip),
