@@ -50,6 +50,97 @@ Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). Near-misses — sub-pixel-to-modest position drift — that we
 intend to close (accepted structural-match deltas are listed above instead).
 
+Buckets below are keyed by the element KIND of each graph's worst numeric
+diff (`maxDeltaPath`) crossed with a magnitude band — an equivalence-class map
+for driving groups to conformance. Mechanism-family attribution: see
+[analysis](../../plans/structural-match-buckets/analysis/README.md).
+
+### tracked structural-match — by worst-diff signature
+
+| bucket | count | examples | hypothesis |
+|---|---:|---|---|
+| `text-position · Δ10-100` | 53 | `144_ortho`, `2082`, `graphs-arrowsize` | label placement — text x/y or group transform |
+| `text-position · Δ1-10` | 38 | `graphs-fsm`, `graphs-labelclust-nbl`, `graphs-labelclust-nbr` | label placement — text x/y or group transform |
+| `text-position · Δ100-1000` | 15 | `1898`, `2592`, `graphs-inv_nul` | label placement — text x/y or group transform |
+| `edge-path · Δ10-100` | 11 | `2371`, `2413_1`, `2646` | spline routing residual — x-coord/NS placement, clip endpoint, or ortho tie-break |
+| `polygon-points · Δ10-100` | 9 | `1622_3`, `1658`, `graphs-sb_box` | polygon geometry — node-shape, cluster box, or arrowhead vertices |
+| `edge-path · Δ>1000` | 8 | `2413_2`, `graphs-b124`, `graphs-b29` | spline routing residual — x-coord/NS placement, clip endpoint, or ortho tie-break |
+| `edge-path · Δ100-1000` | 6 | `1447_1`, `1856`, `1949` | spline routing residual — x-coord/NS placement, clip endpoint, or ortho tie-break |
+| `canvas-extent · Δ100-1000` | 4 | `1622_2`, `2613`, `graphs-sl_circle` | overall canvas size — bbox / margin accumulation |
+| `canvas-extent · Δ10-100` | 4 | `graphs-b57`, `graphs-st_circle`, `graphs-st_circle_dbl` | overall canvas size — bbox / margin accumulation |
+| `polygon-points · Δ100-1000` | 3 | `1453`, `graphs-decorate`, `graphs-sl_box_dbl` | polygon geometry — node-shape, cluster box, or arrowhead vertices |
+| `edge-path · Δ1-10` | 2 | `241_1`, `graphs-honda-tokoro` | spline routing residual — x-coord/NS placement, clip endpoint, or ortho tie-break |
+| `polygon-points · Δ1-10` | 2 | `graphs-polypoly`, `graphs-style` | polygon geometry — node-shape, cluster box, or arrowhead vertices |
+| `canvas-extent · Δ>1000` | 1 | `1314` | overall canvas size — bbox / margin accumulation |
+| `text-position · Δ>1000` | 1 | `2470` | label placement — text x/y or group transform |
+| `node-ellipse · Δ1-10` | 1 | `2521` | node x-coord placement drift (NS / LR_balance) |
+| `canvas-extent · Δ1-10` | 1 | `2734` | overall canvas size — bbox / margin accumulation |
+
+| id | maxΔ | kind | worst-diff path |
+|---|---:|---|---|
+| `1314` | 1683625618000.00 | `canvas-extent` | `svg/@height` |
+| `2470` | 6917.98 | `text-position` | `svg/g[1]/g[549]/text[1]/@x` |
+| `linux.i386-b29` | 2588.37 | `edge-path` | `svg/g[1]/g[83]/path[1]/@d[4]` |
+| `share-b29` | 2588.37 | `edge-path` | `svg/g[1]/g[83]/path[1]/@d[4]` |
+| `graphs-b29` | 2559.37 | `edge-path` | `svg/g[1]/g[83]/path[1]/@d[4]` |
+| `windows-b29` | 2559.37 | `edge-path` | `svg/g[1]/g[83]/path[1]/@d[4]` |
+| `share-b124` | 1989.63 | `edge-path` | `svg/g[1]/g[114]/path[1]/@d[0]` |
+| `graphs-b124` | 1988.63 | `edge-path` | `svg/g[1]/g[114]/path[1]/@d[0]` |
+| `windows-b124` | 1988.63 | `edge-path` | `svg/g[1]/g[114]/path[1]/@d[0]` |
+| `2413_2` | 1922.26 | `edge-path` | `svg/g[1]/g[51]/path[1]/@d[10]` |
+| `56` | 618.00 | `edge-path` | `svg/g[1]/g[19]/path[1]/@d[4]` |
+| `1453` | 465.65 | `polygon-points` | `svg/g[1]/g[38]/polygon[1]/@points[2]` |
+| `2592` | 386.97 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `1447_1` | 284.00 | `edge-path` | `svg/g[1]/g[149]/path[1]/@d[5]` |
+| `graphs-sl_box_dbl` | 268.12 | `polygon-points` | `svg/g[1]/g[18]/polygon[1]/@points[0]` |
+| `graphs-sl_circle_dbl` | 268.00 | `canvas-extent` | `svg/@viewBox[2]` |
+| `1898` | 202.56 | `text-position` | `svg/g[1]/text[4]/@x` |
+| `1622_2` | 174.00 | `canvas-extent` | `svg/@viewBox[2]` |
+| `graphs-nul_inv` | 159.95 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `graphs-nul_val` | 148.28 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `2361` | 144.13 | `edge-path` | `svg/g[1]/g[5]/path[1]/@d[5]` |
+| `graphs-sl_box` | 143.35 | `edge-path` | `svg/g[1]/g[62]/path[1]/@d[12]` |
+| `graphs-sl_circle` | 143.00 | `canvas-extent` | `svg/@viewBox[2]` |
+| `share-labelroot-nbc` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `share-labelroot-nbd` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `share-labelroot-nbl` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `share-labelroot-nbr` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-nbc` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-nbd` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-nbl` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-nbr` | 124.00 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `2613` | 121.00 | `canvas-extent` | `svg/@height` |
+| `graphs-sr_box_dbl` | 115.59 | `text-position` | `svg/g[1]/g[27]/text[1]/@x` |
+| `graphs-sr_circle_dbl` | 115.58 | `text-position` | `svg/g[1]/g[27]/text[1]/@x` |
+| `graphs-inv_nul` | 108.30 | `text-position` | `svg/g[1]/g[1]/text[2]/@x` |
+| `1856` | 108.00 | `edge-path` | `svg/g[1]/g[5]/path[1]/@d[5]` |
+| `graphs-decorate` | 104.56 | `polygon-points` | `svg/g[1]/g[38]/polyline[1]/@points[0]` |
+| `1949` | 100.89 | `edge-path` | `svg/g[1]/g[24]/path[1]/@d[17]` |
+| `graphs-val_nul` | 96.63 | `text-position` | `svg/g[1]/g[1]/text[2]/@x` |
+| `2413_1` | 67.65 | `edge-path` | `svg/g[1]/g[10]/path[1]/@d[6]` |
+| `2082` | 60.60 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `graphs-nojustify` | 56.50 | `text-position` | `svg/g[1]/g[1]/text[2]/@x` |
+| `regression_tests-shapes-reference-plain` | 54.00 | `canvas-extent` | `svg/@viewBox[2]` |
+| `share-labelroot-fbc` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `share-labelroot-fbd` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `share-labelroot-fbl` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `share-labelroot-fbr` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-fbc` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-fbd` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-fbl` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `windows-labelroot-fbr` | 52.20 | `text-position` | `svg/g[1]/g[1]/text[1]/@y` |
+| `graphs-sb_box` | 51.47 | `polygon-points` | `svg/g[1]/polygon[1]/@points[4]` |
+| `graphs-sb_box_dbl` | 51.47 | `polygon-points` | `svg/g[1]/polygon[1]/@points[4]` |
+| `graphs-sb_circle` | 51.47 | `polygon-points` | `svg/g[1]/polygon[1]/@points[4]` |
+| `graphs-sb_circle_dbl` | 51.47 | `polygon-points` | `svg/g[1]/polygon[1]/@points[4]` |
+| `graphs-labelclust-fbl` | 49.84 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `graphs-labelclust-fbr` | 49.84 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `graphs-labelclust-fdl` | 49.84 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `graphs-labelclust-fdr` | 49.84 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+| `graphs-labelclust-ftl` | 49.84 | `text-position` | `svg/g[1]/g[1]/text[1]/@x` |
+
+_… and 99 more (full set in parity.json)._
+
 ## Tracked diverged (8) — worst-first
 
 | id | maxDelta | firstDiffPath |
