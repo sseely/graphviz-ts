@@ -449,6 +449,33 @@ records):
 Diagnosis artifacts: `.agent-notes/2471-stale-cluster-windows-missing-reset.md`,
 `.agent-notes/1939-group-penalty-clcross-misports.md`.
 
+### A5. Invalid input bytes (encoding representation)
+
+**Affected:** `1367` (diverged, maxΔ 0 — exactly one structural diff).
+
+**What differs.** The input file contains a naked UTF-8 trail byte (`0x80`)
+inside a node name. C treats naked trail bytes 0x80–0xBF as "valid
+characters representing themselves" (`lib/common/utils.c:1200-1207`, no
+warning), and node-name `<title>` text bypasses charset conversion entirely
+(`agnameof` bytes flow straight to `gvputs_xml`). The oracle SVG therefore
+contains the raw byte and is **not valid UTF-8** despite its declared
+encoding. The port decodes invalid-UTF-8 input with the latin1 fallback
+(`0x80 → U+0080`) and emits well-formed UTF-8 (`\xc2\x80`).
+
+**Why accepted.** The port's I/O boundary is JS strings (browser library).
+A raw invalid byte cannot round-trip through `renderSvg`'s string return
+value; byte-matching C would mean corrupting the output encoding for every
+consumer. The latin1 fallback mirrors C's own "treated as Latin-1" recovery
+semantics (`utils.c:1249`). This is a constraint below the code — the
+representation layer — not a portable behavior we declined to port.
+Everything else in 1367 is conformant: element counts (23 polyline /
+103 text / 44 polygon / 24 path) and all coordinates match after the
+decorate (T6) fix.
+
+**Evidence.**
+[`1367`](https://github.com/sseely/graphviz-ts/blob/main/plans/fix-element-count-bucket/comparisons/1367.md)
+comparison page (side-by-side render + evidence record).
+
 ---
 
 ## Tracked long tail (`dot` attribute & edge-case)
