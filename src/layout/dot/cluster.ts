@@ -18,7 +18,7 @@ import {
 } from './fastgr.js';
 import { dotRoot, agContainsEdge } from './mincross-utils.js';
 import type { MincrossContext } from './mincross-utils.js';
-import { ufSingleton, ufSetname } from './decomp.js';
+import { ufSingleton, ufSetname, nodesInSeq } from './decomp.js';
 import {
   class2, allocateRanks, buildRanks,
   installInRank, enqueueNeighbors,
@@ -97,7 +97,7 @@ export function interclexpOneEdge(subg: Graph, g: Graph, e: Edge, prev: Edge | u
 /** @see lib/dotgen/cluster.c:interclexp */
 export function interclexp(subg: Graph): void {
   const g = dotRoot(subg);
-  for (const n of subg.nodes.values()) {
+  for (const n of nodesInSeq(subg)) {
     let prev: Edge | undefined;
     // C iterates `agfstedge(g, n)` = agfstout (out-edges sorted by head.id,seq)
     // then agfstin (in-edges sorted by tail.id,seq, self-loops counted once).
@@ -264,7 +264,7 @@ export function agDeleteFromCluster(clust: Graph, n: Node): void {
 export function pruneForeignClusterNodes(par: Graph, clust: Graph): void {
   const sibs = par.info.clust;
   const nc = par.info.n_cluster ?? 0;
-  for (const n of [...clust.nodes.values()]) {
+  for (const n of nodesInSeq(clust)) {
     let foreign = (n.info.ranktype ?? 0) !== 0;
     for (let i = 0; !foreign && sibs && i < nc - 1; i++) {
       if (sibs[i].nodes.get(n.name) === n) foreign = true;
@@ -296,15 +296,16 @@ export function markClusterNode(clust: Graph, n: Node, g: Graph): void {
 
 /** @see lib/dotgen/cluster.c:mark_clusters */
 export function markClusters(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     if (n.info.ranktype === CLUSTER) ufSingleton(n);
     n.info.clust = undefined;
   }
   const nClust = g.info.n_cluster ?? 0;
   for (let c = 1; c <= nClust; c++) {
     const clust = g.info.clust![c - 1];
-    // Snapshot: markClusterNode deletes from clust.nodes mid-loop.
-    for (const n of [...clust.nodes.values()]) markClusterNode(clust, n, g);
+    // nodesInSeq already snapshots (sorts a copied array): markClusterNode
+    // deletes from clust.nodes mid-loop.
+    for (const n of nodesInSeq(clust)) markClusterNode(clust, n, g);
   }
 }
 
@@ -347,7 +348,7 @@ export function buildSkeletonTrimSize(subg: Graph, mn: number, mx: number): void
 
 /** @see lib/dotgen/cluster.c:build_skeleton (edge count accumulation) */
 export function buildSkeletonCounts(_g: Graph, subg: Graph, mn: number, mx: number): void {
-  for (const v of subg.nodes.values()) buildSkeletonCountsNode(subg, v);
+  for (const v of nodesInSeq(subg)) buildSkeletonCountsNode(subg, v);
   buildSkeletonTrimSize(subg, mn, mx);
 }
 
@@ -423,7 +424,7 @@ function outEdgesByTail(edges: Edge[]): Map<Node, Edge[]> {
 /** @see lib/dotgen/cluster.c:mark_lowclusters (clear pass) */
 export function markLowclustersZap(root: Graph): void {
   const outByTail = outEdgesByTail(root.edges);
-  for (const n of root.nodes.values()) {
+  for (const n of nodesInSeq(root)) {
     n.info.clust = undefined;
     const oes = outByTail.get(n);
     if (oes === undefined) continue;
@@ -451,7 +452,7 @@ export function markLowclusterBasic(g: Graph): void {
   const nClust = g.info.n_cluster ?? 0;
   for (let c = 1; c <= nClust; c++) markLowclusterBasic(g.info.clust![c - 1]);
   const outByTail = outEdgesByTail(g.edges);
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     if (n.info.clust === undefined) n.info.clust = g;
     const oes = outByTail.get(n);
     if (oes === undefined) continue;

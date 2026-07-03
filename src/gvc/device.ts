@@ -12,7 +12,7 @@
  */
 
 import type { Point } from '../model/geom.js';
-import { parseDrawingSize, initJobViewportZoom, parseLandscape } from './viewport.js';
+import { parseDrawingSize, initJobViewportZoom, parseLandscape, parseGraphPad, parseGraphMargin } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
@@ -430,6 +430,20 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   const gbb = g.info.bb;
   const hasValidBb = gbb && (gbb.ur.x > gbb.ll.x || gbb.ur.y > gbb.ll.y);
   job.bb = hasValidBb ? gbb : computeSubgraphBB(g, 0);
+  // init_job_pad: resolve job.pad from the `pad=` graph attribute before the
+  // size= fit is computed — C calls init_job_pad before init_job_viewport
+  // (emit.c:4289-4291) because the fit uses the padded bb.
+  // @see lib/common/emit.c:3241-3251 (attr read); :3290-3304 (fallback)
+  job.pad = parseGraphPad(g.attrs.get('pad'));
+  // init_job_margin: resolve job.margin from the `margin=` graph attribute,
+  // immediately after init_job_pad (C's call order, emit.c:4290-4291).
+  // margin does NOT feed the size= zoom fit below (only pad does) -- it is
+  // read here and consumed later, after Z is known, by emitSvgTag/svgBeginPage
+  // (job.width/height and the page group translate), matching C's
+  // init_job_margin -> init_job_dpi -> init_job_viewport -> init_job_pagination
+  // order where margin is resolved before Z but only used after it.
+  // @see lib/common/emit.c:3229-3239 (attr read); :3309-3331 (fallback)
+  job.margin = parseGraphMargin(g.attrs.get('margin'));
   // init_job_viewport: fit the drawing into size= via a zoom Z carried by the
   // SVG group transform (D1: parse here, not graph_init).
   //
@@ -449,7 +463,7 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   // altering the ptf path, carry Z in job.scale instead — which is exactly what
   // C's SVG group emits (svg_begin_page prints job->scale.x/y = zoom*dpi/72 = Z
   // for dpi=72), not job->zoom. job.scale is read only by the SVG group/dims.
-  const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')));
+  const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')), job.pad);
   job.scale = { x: z, y: z };
   // init_job_viewport: job->rotation = gvc->rotation (= 90 for landscape, set in
   // emit_graph from GD_drawing->landscape). Emit-only — drives the SVG group

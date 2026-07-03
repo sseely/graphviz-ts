@@ -30,6 +30,7 @@ import {
 import { polyGraphs } from '../pack/poly-place.js';
 import { arrayRects } from '../pack/array-pack.js';
 import { agsubg } from '../../model/cgraph-ops.js';
+import { nodesInSeq } from './decomp.js';
 import { dotGraphInit } from './init.js';
 import { dotPhaseInit, dotPhasePostNoFinish } from './index.js';
 import { dotRank, isACluster } from './rank.js';
@@ -102,7 +103,7 @@ function collectClusters(g: Graph, out: Graph[]): void {
  */
 function projectOne(sub: Graph, target: Graph, comp: Graph, origOf: Map<Graph, Graph>): Graph | null {
   let proj: Graph | null = null;
-  for (const n of sub.nodes.values()) {
+  for (const n of nodesInSeq(sub)) {
     if (target.nodes.get(n.name) !== n) continue;
     if (proj === null) {
       proj = agsubg(target, sub.name, true)!;
@@ -144,7 +145,7 @@ function projectSubgraphs(origParent: Graph, target: Graph, comp: Graph, origOf:
  */
 export function cccompsWithClusters(root: Graph): { comps: Graph[]; origOf: Map<Graph, Graph> } {
   const parent = new Map<string, string>();
-  for (const n of root.nodes.values()) parent.set(n.name, n.name);
+  for (const n of nodesInSeq(root)) parent.set(n.name, n.name);
   for (const e of root.edges) ufUnionName(parent, e.tail.name, e.head.name);
   const clusters: Graph[] = [];
   collectClusters(root, clusters);
@@ -156,7 +157,7 @@ export function cccompsWithClusters(root: Graph): { comps: Graph[]; origOf: Map<
     }
   }
   const groups = new Map<string, Node[]>();
-  for (const n of root.nodes.values()) {
+  for (const n of nodesInSeq(root)) {
     const r = ufFindName(parent, n.name);
     const g = groups.get(r);
     if (g) g.push(n); else groups.set(r, [n]);

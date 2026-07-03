@@ -158,14 +158,27 @@ export function dotPhasePost(g: Graph): void {
  * The optional `maxphase` attribute (read from g.attrs) controls how many
  * phases run (1=rank only, 2=+mincross, 3=+position, ≥4 or absent=all).
  *
- * @see lib/dotgen/dotinit.c:dotLayout (static)
+ * C's `dotLayout` checks `dot_mincross`'s return code and returns immediately
+ * on failure, skipping `dot_position` (phase 3) and `dotneato_postprocess`
+ * entirely — `dot_position` is never reached with a rank/cluster-window state
+ * that `dot_mincross` has already given up on (e.g. a cluster's rank window
+ * outliving root's rank-array allocation after malformed-input rankset
+ * recovery deletes cluster members but leaves the window unshrunk). The port
+ * previously discarded `dotMincross`'s return value and always ran
+ * `dotPosition` regardless, so `dotPosition` could observe exactly that
+ * unreachable-in-C state and crash (e.g. `position-ycoords.ts:clustHt`
+ * indexing the root rank array one past its allocated length).
+ * @see lib/dotgen/dotinit.c:dotLayout (static) — `if (rc != 0) return rc;`
+ *   after `dot_mincross`, propagated through `doDot`/`dot_layout` to also
+ *   skip `dotneato_postprocess`.
  */
 export function dotLayoutPipeline(g: Graph): void {
   const maxphase = getAttrInt(g, 'maxphase', -1);
   dotPhaseInit(g);
   dotRank(g);
   if (maxphase === 1) return;
-  dotMincross(g);
+  const rc = dotMincross(g);
+  if (rc !== 0) return;
   if (maxphase === 2) return;
   dotPosition(g);
   if (maxphase === 3) return;

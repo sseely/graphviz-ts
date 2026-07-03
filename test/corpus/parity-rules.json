@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-03T04:23:53.449Z",
+  "generatedAt": "2026-07-03T12:57:41.310Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 600,
+    "conformant": 602,
     "structural-match": 163,
-    "diverged": 14,
+    "diverged": 12,
     "errored": 0,
-    "timeout": 0,
-    "oracle-error": 12
+    "timeout": 1,
+    "oracle-error": 11
   },
   "results": [
     {
@@ -36,8 +36,7 @@
     {
       "id": "1308",
       "path": "1308.dot",
-      "verdict": "structural-match",
-      "maxDelta": 72
+      "verdict": "conformant"
     },
     {
       "id": "1314",
@@ -160,8 +159,9 @@
       "id": "1581",
       "path": "1581.dot",
       "verdict": "diverged",
-      "maxDelta": 465,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "maxDelta": 85,
+      "firstDiffPath": "svg/g[1][childCount]",
+      "clipOverflow": 4
     },
     {
       "id": "1585_0",
@@ -218,8 +218,7 @@
     {
       "id": "1652",
       "path": "1652.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "timeout"
     },
     {
       "id": "1658",
@@ -361,7 +360,7 @@
       "id": "2082",
       "path": "2082.dot",
       "verdict": "structural-match",
-      "maxDelta": 280
+      "maxDelta": 60.60000000000002
     },
     {
       "id": "2087",
@@ -448,7 +447,7 @@
       "path": "2239.dot",
       "verdict": "diverged",
       "maxDelta": 5286.67,
-      "firstDiffPath": "svg/g[1]/g[97]/path[1]/@d"
+      "firstDiffPath": "svg/g[1]/g[148]/path[1]/@d"
     },
     {
       "id": "2242",
@@ -654,9 +653,8 @@
     {
       "id": "2521",
       "path": "2521.dot",
-      "verdict": "diverged",
-      "maxDelta": 144,
-      "firstDiffPath": "svg/g[1]/g[10]/path[1]/@d"
+      "verdict": "structural-match",
+      "maxDelta": 7
     },
     {
       "id": "2521_1",
@@ -1114,9 +1112,7 @@
     {
       "id": "graphs-b51",
       "path": "graphs/b51.gv",
-      "verdict": "diverged",
-      "maxDelta": 1096.4000000000005,
-      "firstDiffPath": "svg/g[1]/g[32]/path[1]/@d"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b53",

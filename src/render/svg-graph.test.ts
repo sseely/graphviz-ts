@@ -11,6 +11,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { RenderJob } from '../gvc/job.js';
+import { SVG_PAD } from './svg-helpers.js';
 import type { TextMeasurer } from '../common/textmeasure.js';
 import type { Box } from '../model/geom.js';
 import {
@@ -23,9 +24,13 @@ import type { Graph } from '../model/graph.js';
 
 const measurer: TextMeasurer = { measure: () => ({ w: 0, h: 0 }) };
 
+// Job constructed directly (bypassing render()'s parseGraphPad call) must set
+// job.pad explicitly, matching what render() resolves for a graph with no
+// `pad=` attribute (SVG plugin default_pad, 4pt both axes).
 function makeJob(): RenderJob {
   const j = new RenderJob('svg', measurer);
   j.bb = { ll: { x: 0, y: 0 }, ur: { x: 100, y: 80 } };
+  j.pad = { x: SVG_PAD, y: SVG_PAD };
   return j;
 }
 
@@ -179,6 +184,7 @@ function b68Job(rotation: number): RenderJob {
   job.translation = { x: 0, y: 0 };
   job.rotation = rotation;
   job.bb = { ll: { x: 0, y: 0 }, ur: { x: 630, y: 204.5 } };
+  job.pad = { x: SVG_PAD, y: SVG_PAD };
   job.renderer = createSvgRenderer();
   return job;
 }
@@ -242,5 +248,98 @@ describe('renderSvg — landscape wiring (parseLandscape -> job.rotation -> emit
     const [lw, lh] = dims(land);
     expect(lw).toBe(ph);
     expect(lh).toBe(pw);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// pad= graph attribute (F2). Oracle-verified against native dot 15.1.0
+// (GVBINDIR=/tmp/ghl dot -Tsvg): `pad=2` on `digraph G { a -> b }` yields
+// width="342pt" height="396pt" translate(144 252); no-pad default is
+// unchanged at width="62pt" height="116pt" translate(4 112).
+// @see lib/common/emit.c:3241-3251 (attr read); :3290-3304 (init_job_pad)
+// ---------------------------------------------------------------------------
+
+describe('pad= graph attribute — F2 regression (native dot 15.1.0 oracle)', () => {
+  it('pad="2" (144pt) expands svg dims, viewBox, and group translate', () => {
+    const svg = renderSvg('digraph G { pad="2"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="342pt" height="396pt"');
+    expect(svg).toContain('viewBox="0.00 0.00 342.00 396.00"');
+    expect(svg).toContain('translate(144 252)');
+    expect(svg).toContain(
+      '<polygon fill="white" stroke="none" points="-144,144 -144,-252 198,-252 198,144 -144,144"/>',
+    );
+  });
+
+  it('no pad= attribute: default 4pt unaffected (byte-stable baseline)', () => {
+    const svg = renderSvg('digraph G { a -> b }', 'dot');
+    expect(svg).toContain('<svg width="62pt" height="116pt"');
+    expect(svg).toContain('translate(4 112)');
+  });
+
+  it('single-value pad="0.5" (36pt) — both axes scale together', () => {
+    const svg = renderSvg('digraph G { pad="0.5"; a -> b }', 'dot');
+    // content bb 54x108 + 2*36 = 126x180, Z=1 (no size=)
+    expect(svg).toContain('<svg width="126pt" height="180pt"');
+    expect(svg).toContain('translate(36 144)');
+  });
+
+  it('two-value pad="0.5,0" — independent x/y axes', () => {
+    const svg = renderSvg('digraph G { pad="0.5,0"; a -> b }', 'dot');
+    // x pad = 36pt, y pad = 0pt: width=54+72=126, height=108+0=108
+    expect(svg).toContain('<svg width="126pt" height="108pt"');
+    expect(svg).toContain('translate(36 108)');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// margin= graph attribute (F6). Oracle-verified against native dot 15.1.0
+// (GVBINDIR=/tmp/ghl dot -Tsvg): `margin="0.8"` on `digraph G { a -> b }`
+// yields width="177pt" height="231pt" viewBox="58.00 58.00 120.00 174.00"
+// translate(61.6 169.6); `margin="1,0.5"` yields width="206pt" height="188pt"
+// viewBox="72.00 36.00 134.00 152.00" translate(76 148). No-margin baseline
+// is unchanged (D5 analogue).
+// @see lib/common/emit.c:3229-3239 (attr read); :3309-3331 (init_job_margin)
+// @see lib/common/emit.c:1191-1300 init_job_pagination (width/height/viewBox)
+// @see lib/common/emit.c:1532-1583 setup_page (translation)
+// ---------------------------------------------------------------------------
+
+describe('margin= graph attribute — F6 regression (native dot 15.1.0 oracle)', () => {
+  it('margin="0.8" (57.6pt) expands svg dims, viewBox, and group translate', () => {
+    const svg = renderSvg('digraph G { margin="0.8"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="177pt" height="231pt"');
+    expect(svg).toContain('viewBox="58.00 58.00 120.00 174.00"');
+    expect(svg).toContain('translate(61.6 169.6)');
+  });
+
+  it('two-value margin="1,0.5" — independent x/y axes', () => {
+    const svg = renderSvg('digraph G { margin="1,0.5"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="206pt" height="188pt"');
+    expect(svg).toContain('viewBox="72.00 36.00 134.00 152.00"');
+    expect(svg).toContain('translate(76 148)');
+  });
+
+  it('no margin= attribute: byte-stable baseline (viewBox starts at 0,0)', () => {
+    const svg = renderSvg('digraph G { a -> b }', 'dot');
+    expect(svg).toContain('<svg width="62pt" height="116pt"');
+    expect(svg).toContain('viewBox="0.00 0.00 62.00 116.00"');
+    expect(svg).toContain('translate(4 112)');
+  });
+
+  it('margin= does not perturb the background polygon (job->clip, not canvasBox)', () => {
+    const withMargin = renderSvg('digraph G { margin="0.8"; a -> b }', 'dot');
+    const withoutMargin = renderSvg('digraph G { a -> b }', 'dot');
+    const poly = (svg: string): string | null =>
+      /<polygon fill="white"[^/]*\/>/.exec(svg)?.[0] ?? null;
+    expect(poly(withMargin)).toBe(poly(withoutMargin));
+  });
+
+  it('rotate=90 + margin: width/height swap base but margin.x/y stay unswapped', () => {
+    // Oracle: digraph G { rotate=90; margin="1,0.5"; a -> b } ->
+    // width="260pt" height="134pt" viewBox="72.00 36.00 188.00 98.00"
+    // translate(-130 148).
+    const svg = renderSvg('digraph G { rotate=90; margin="1,0.5"; a -> b }', 'dot');
+    expect(svg).toContain('<svg width="260pt" height="134pt"');
+    expect(svg).toContain('viewBox="72.00 36.00 188.00 98.00"');
+    expect(svg).toContain('translate(-130 148)');
   });
 });

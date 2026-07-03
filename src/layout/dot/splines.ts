@@ -24,6 +24,7 @@ import { collectOtherEdges } from './self-loop.js';
 import { dispatchOrthoEdges } from './ortho-adapter.js';
 import { routeEdgeGroups } from './splines-groups.js';
 import { placePortLabels, placeRegularEdgeLabels, setEdgeLabelPos } from './splines-label.js';
+import { nodesInSeq } from './decomp.js';
 
 // ---------------------------------------------------------------------------
 // Edge-type flag constants
@@ -306,7 +307,7 @@ export function swapEdgeSpline(e: Edge): void {
  * @see lib/dotgen/dotsplines.c:edge_normalize
  */
 export function edgeNormalize(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     for (let k = 0; k < (n.info.out?.size ?? 0); k++) {
       const e = n.info.out!.list[k];
       if (swapEndsP(e)) swapEdgeSpline(e);
@@ -407,7 +408,7 @@ export function collectRankEdges(g: Graph, edges: Edge[]): void {
  * @see lib/dotgen/dotsplines.c:resetRW
  */
 export function resetRW(g: Graph): void {
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     // C: if (ND_other(n).list) — non-NULL list iff non-flat/non-tree edges exist
     if (n.info.other && n.info.other.list.length > 0) {
       const tmp = n.info.rw;

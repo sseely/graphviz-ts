@@ -28,6 +28,7 @@ import { dist } from '../../common/arrows-geometry.js';
 import { midPointf } from './compound-geom.js';
 import { placePortlabel, updateBB } from './splines-label.js';
 import { dotRoot } from './mincross-utils.js';
+import { nodesInSeq } from './decomp.js';
 
 // Edge-type values, mirroring the constants in splines.ts. Defined locally to
 // avoid a straight-edges ↔ splines import cycle (splines.ts imports
@@ -124,7 +125,7 @@ function dfs(g: Graph, search: Node, visited: Node[], end: Node, cycles: Node[][
 /** @see lib/common/routespl.c:864-882 (find_all_cycles) */
 function findAllCycles(g: Graph): Node[][] {
   const cycles: Node[][] = [];
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     dfs(g, n, [], n, cycles);
   }
   return cycles;

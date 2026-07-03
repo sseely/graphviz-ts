@@ -15,6 +15,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import { buildOutEdgeIndex } from '../../model/node.js';
 import { dotRoot } from './mincross-utils.js';
+import { nodesInSeq } from './decomp.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
 import { buildDotSinfo } from './self-loop.js';
 import { orthoEdges } from '../../ortho/index.js';
@@ -88,7 +89,7 @@ function buildEdges(
 
 /** Build an OrthoGraph from the dot Graph (tail≠head edges only). */
 export function buildOrthoGraph(g: Graph): OrthoGraph {
-  const nodeArr = [...g.nodes.values()];
+  const nodeArr = nodesInSeq(g);
   const orthoNodes = buildNodes(nodeArr);
   return { nodes: orthoNodes, edges: buildEdges(g, nodeArr, orthoNodes) };
 }

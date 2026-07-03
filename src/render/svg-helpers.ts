@@ -51,6 +51,15 @@ const PENWIDTH_THRESHOLD = 0.005;
  */
 export const SVG_PAD = 4;
 
+/**
+ * Default graph-level margin (in points) when `margin=` is unset, matching
+ * the SVG plugin's `device_features_svg.default_margin` ({0,0}) — the
+ * `GVRENDER_PLUGIN` branch of `init_job_margin`'s fallback switch.
+ * @see plugin/core/gvrender_core_svg.c (device_features_svg.default_margin)
+ * @see lib/common/emit.c:3309-3331 init_job_margin
+ */
+export const SVG_MARGIN = 0;
+
 // XML escaping moved to ./xml-escape.ts (gv_xml_escape port); imported for
 // local use and re-exported so existing import sites keep resolving here.
 import { escapeXml, escapeXmlText, escapeXmlTitle } from './xml-escape.js';

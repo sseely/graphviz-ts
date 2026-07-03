@@ -5,6 +5,34 @@ import type { Graph } from '../../model/graph.js';
 import type { EdgeList } from '../../model/nodeInfo.js';
 
 // ---------------------------------------------------------------------------
+// AGSEQ-order node iteration (agfstnode/agnxtnode mirror)
+// ---------------------------------------------------------------------------
+
+/**
+ * Return `g`'s member nodes in AGSEQ order (global, root-graph-wide creation
+ * order), mirroring `agfstnode(g)`/`agnxtnode(g,n)` — NOT the subgraph-local
+ * first-insertion order that `g.nodes` (a `Map`) iterates by default.
+ *
+ * C's `agfstnode` walks a dict ordered by `agsubnodeseqcmpf`
+ * (`AGSEQ(node)`, assigned once at node creation and never touched by later
+ * `agsubnode` membership calls), independent of which subgraph a node was
+ * textually declared in. `Node.id` mirrors AGSEQ (assigned once at first
+ * global creation by `NodeRegistry.ensure`/`agnode`'s `freshNodeId`), so a
+ * `.id`-ascending sort reproduces C's order for any (sub)graph.
+ *
+ * Every C function that iterates a subgraph via `agfstnode`/`agnxtnode` must
+ * use this helper instead of `g.nodes.values()` directly — see F7's audit
+ * table in `.agent-notes/path-structure-xns-residuals.md` for the site list.
+ *
+ * @see lib/cgraph/node.c:43 (agfstnode), :50 (agnxtnode)
+ * @see lib/cgraph/node.c:283-290 (agsubnodeseqcmpf, AGSEQ comparator)
+ * @see lib/cgraph/node.c:162 (agnextseq(g,AGNODE), AGSEQ assignment at creation)
+ */
+export function nodesInSeq(g: Graph): Node[] {
+  return [...g.nodes.values()].sort((a, b) => a.id - b.id);
+}
+
+// ---------------------------------------------------------------------------
 // Union-Find exports
 // ---------------------------------------------------------------------------
 
@@ -19,7 +47,19 @@ export function ufFind(n: Node): Node {
 }
 
 /**
- * Union two UF sets. Inlines ufRoot (init + find) and union-by-id.
+ * Union two UF sets. Inlines ufRoot (init + find).
+ *
+ * C's tie-break reads `ND_id(u) > ND_id(v)` — but `ND_id` is a distinct,
+ * dotgen-only `Agnodeinfo_t.id` field (lib/common/types.h:432, guarded by
+ * `#ifndef DOT_ONLY`) that is NEVER assigned anywhere in the `dot` layout
+ * engine's source (only neatogen/fdpgen/sfdpgen/sparse — unrelated engines —
+ * write it). It is therefore always 0 for both real and virtual nodes under
+ * `dot`, so `ND_id(u) > ND_id(v)` is always false and C always takes the
+ * `else` branch: the first argument's resolved root unconditionally wins.
+ * This is NOT the same field as AGID (cgraph's unique per-node id, exposed
+ * here as `Node.id`) — using `.id` for this comparison would introduce
+ * spurious branching C never performs, since AGID differs between every
+ * pair of real nodes.
  * @see lib/common/utils.c:UF_union
  */
 export function ufUnion(u: Node, v: Node): Node {
@@ -31,7 +71,6 @@ export function ufUnion(u: Node, v: Node): Node {
   if (u === v) return u;
   const us = u.info.UF_size ?? 0;
   const vs = v.info.UF_size ?? 0;
-  if (u.id > v.id) { u.info.UF_parent = v; v.info.UF_size = vs + us; return v; }
   v.info.UF_parent = u; u.info.UF_size = us + vs; return u;
 }
 
@@ -116,7 +155,7 @@ export function decompose(g: Graph, pass: 0 | 1): void {
   if (++_dc.cmark === 0) _dc.cmark = 1;
   const cmark = _dc.cmark;
   g.info.comp = [];
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const v = resolveNode(n, pass);
     if (v !== undefined && v.info.mark !== cmark) {
       decompSearch(g, v, cmark);
