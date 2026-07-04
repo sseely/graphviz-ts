@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-04T03:01:04.360Z",
+  "generatedAt": "2026-07-04T22:01:21.273Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 719,
-    "structural-match": 47,
+    "conformant": 733,
+    "structural-match": 34,
     "diverged": 11,
     "errored": 0,
     "timeout": 1,
-    "oracle-error": 11
+    "oracle-error": 10
   },
   "results": [
     {
@@ -196,16 +196,12 @@
     {
       "id": "1622_2",
       "path": "1622_2.dot",
-      "verdict": "structural-match",
-      "maxDelta": 72,
-      "maxDeltaPath": "svg/g[1]/g[1]/text[2]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "1622_3",
       "path": "1622_3.dot",
-      "verdict": "structural-match",
-      "maxDelta": 15,
-      "maxDeltaPath": "svg/g[1]/g[1]/polygon[2]/@points[4]"
+      "verdict": "conformant"
     },
     {
       "id": "1624",
@@ -225,7 +221,7 @@
     {
       "id": "1652",
       "path": "1652.dot",
-      "verdict": "timeout"
+      "verdict": "conformant"
     },
     {
       "id": "1658",
@@ -352,7 +348,7 @@
       "id": "1949",
       "path": "1949.dot",
       "verdict": "structural-match",
-      "maxDelta": 100.89,
+      "maxDelta": 95.46,
       "maxDeltaPath": "svg/g[1]/g[24]/path[1]/@d[17]"
     },
     {
@@ -714,9 +710,7 @@
     {
       "id": "2592",
       "path": "2592.dot",
-      "verdict": "structural-match",
-      "maxDelta": 53.31,
-      "maxDeltaPath": "svg/g[1]/g[9]/path[1]/@d[7]"
+      "verdict": "conformant"
     },
     {
       "id": "2593",
@@ -733,7 +727,7 @@
       "id": "2613",
       "path": "2613.dot",
       "verdict": "structural-match",
-      "maxDelta": 121,
+      "maxDelta": 50,
       "maxDeltaPath": "svg/@height"
     },
     {
@@ -778,8 +772,7 @@
     {
       "id": "2621",
       "path": "2621.dot",
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
+      "verdict": "timeout"
     },
     {
       "id": "2636",
@@ -868,8 +861,8 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "structural-match",
-      "maxDelta": 49,
-      "maxDeltaPath": "svg/@height"
+      "maxDelta": 35.159999999999854,
+      "maxDeltaPath": "svg/g[1]/g[139]/text[1]/@y"
     },
     {
       "id": "2801",
@@ -894,9 +887,7 @@
     {
       "id": "56",
       "path": "56.dot",
-      "verdict": "structural-match",
-      "maxDelta": 618,
-      "maxDeltaPath": "svg/g[1]/g[19]/path[1]/@d[4]"
+      "verdict": "conformant"
     },
     {
       "id": "705",
@@ -1161,9 +1152,7 @@
     {
       "id": "graphs-b57",
       "path": "graphs/b57.gv",
-      "verdict": "structural-match",
-      "maxDelta": 21,
-      "maxDeltaPath": "svg/@height"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b58",
@@ -1502,9 +1491,7 @@
     {
       "id": "graphs-html2",
       "path": "graphs/html2.gv",
-      "verdict": "structural-match",
-      "maxDelta": 34.65999999999997,
-      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-in",
@@ -1854,9 +1841,7 @@
     {
       "id": "graphs-nojustify",
       "path": "graphs/nojustify.gv",
-      "verdict": "structural-match",
-      "maxDelta": 56.5,
-      "maxDeltaPath": "svg/g[1]/g[2]/text[2]/@x"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-nul_inv",
@@ -2130,16 +2115,12 @@
     {
       "id": "graphs-style",
       "path": "graphs/style.gv",
-      "verdict": "structural-match",
-      "maxDelta": 2.700000000000003,
-      "maxDeltaPath": "svg/g[1]/g[11]/polygon[1]/@points[3]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-train11",
       "path": "graphs/train11.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4.039999999999964,
-      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-trapeziumlr",
@@ -2327,9 +2308,7 @@
     {
       "id": "linux.x86-html2_dot",
       "path": "linux.x86/html2_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 34.65999999999997,
-      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
+      "verdict": "conformant"
     },
     {
       "id": "linux.x86-html_dot",
@@ -2539,9 +2518,7 @@
     {
       "id": "nshare-html2_dot",
       "path": "nshare/html2_dot.gv",
-      "verdict": "structural-match",
-      "maxDelta": 34.65999999999997,
-      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
+      "verdict": "conformant"
     },
     {
       "id": "nshare-html_dot",
@@ -3488,9 +3465,7 @@
     {
       "id": "share-train11",
       "path": "share/train11.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4.0400000000000205,
-      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
+      "verdict": "conformant"
     },
     {
       "id": "share-trapeziumlr",
@@ -4041,9 +4016,7 @@
     {
       "id": "windows-train11",
       "path": "windows/train11.gv",
-      "verdict": "structural-match",
-      "maxDelta": 4.0400000000000205,
-      "maxDeltaPath": "svg/g[1]/@transform[2].param[1]"
+      "verdict": "conformant"
     },
     {
       "id": "windows-trapeziumlr",
