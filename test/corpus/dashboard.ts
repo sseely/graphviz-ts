@@ -34,9 +34,19 @@ interface Bucket {
   ids: string[];
 }
 
-/** Escape a markdown table cell (pipes + newlines). */
+/** Escape a markdown table cell (pipes + newlines). Use for BACKTICKED cells;
+ *  markdown-it escapes `<`/`>` inside code spans, so they stay raw here. */
 function cell(s: string | undefined): string {
   return (s ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+}
+
+/** Escape a FREE-TEXT (non-code) cell: pipes, newlines, and raw `<`/`>`.
+ *  PARITY.md is compiled as a Vue SFC by VitePress, which reads a bare `<title`
+ *  (e.g. in an accepted-delta bound or an errored message) as an unclosed tag
+ *  and fails the docs build. Do NOT use this on backticked cells (would
+ *  double-escape). */
+function escText(s: string | undefined): string {
+  return cell(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 /** Quarantine totals per reason (from the T1 manifest). */
@@ -183,7 +193,7 @@ function bucketize(
 function bucketTable(title: string, buckets: Bucket[]): string {
   if (buckets.length === 0) return '';
   const rows = buckets.map(
-    (b) => `| \`${b.key}\` | ${b.ids.length} | ${b.ids.slice(0, 3).map((i) => `\`${i}\``).join(', ')} | ${b.hypothesis} |`,
+    (b) => `| \`${b.key}\` | ${b.ids.length} | ${b.ids.slice(0, 3).map((i) => `\`${i}\``).join(', ')} | ${escText(b.hypothesis)} |`,
   );
   return [`### ${title}`, '', '| bucket | count | examples | hypothesis |', '|---|---:|---|---|', ...rows, ''].join('\n');
 }
@@ -204,7 +214,7 @@ function msgTable(results: SurveyResult[]): string {
   const rows = results
     .slice()
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map((r) => `| \`${r.id}\` | \`${r.path}\` | ${cell(r.errMsg)} |`);
+    .map((r) => `| \`${r.id}\` | \`${r.path}\` | ${escText(r.errMsg)} |`);
   return ['| id | path | message |', '|---|---|---|', ...rows, ''].join('\n');
 }
 
@@ -256,7 +266,7 @@ function acceptedTable(rows: Array<{ r: SurveyResult; e: AcceptedEntry }>): stri
   const sorted = [...rows].sort((a, b) => a.e.class.localeCompare(b.e.class) || a.r.id.localeCompare(b.r.id));
   const body = sorted.map(
     ({ r, e }) =>
-      `| \`${r.id}\` | ${r.verdict} | ${(r.maxDelta ?? 0).toFixed(2)} | ${e.class} | ${cell(e.bound)} | ${cell(e.ref)} |`,
+      `| \`${r.id}\` | ${r.verdict} | ${(r.maxDelta ?? 0).toFixed(2)} | ${e.class} | ${escText(e.bound)} | ${escText(e.ref)} |`,
   );
   return ['| id | verdict | maxΔ | class | bound | ref |', '|---|---|---:|---|---|---|', ...body, ''].join('\n');
 }
