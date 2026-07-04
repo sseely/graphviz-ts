@@ -384,5 +384,30 @@ export function makePort(): Port {
  * @see lib/common/utils.c:common_init_edge
  */
 export function makeEdgeInfo(tailPort: Port, headPort: Port): EdgeInfo {
-  return { tail_port: tailPort, head_port: headPort };
+  // C agbindrec calloc-zeroes the WHOLE Agedgeinfo_t struct, so every ED_*
+  // field exists from creation at a fixed offset. Mirror that (same treatment
+  // as makeNodeInfo): pre-declare EVERY optional field as value-preserving
+  // `undefined` to pin a single V8 hidden class for all EdgeInfo objects.
+  // Without this, fields added lazily during layout (weight/minlen/cutvalue/
+  // tree_index/edge_type/to_virt/...) drove EdgeInfo into dictionary (slow)
+  // mode — the dominant per-op cost of the network-simplex enter-edge scan
+  // (dfsEnterInedge ~52% of 2371's profile), which reads tree_index, cutvalue
+  // and minlen per candidate edge. No code reads edge.info via `in`/
+  // Object.keys/for-in; the `{...e.info}` spreads copy identical key sets, so
+  // adding the keys is behavior-free. Keep in sync with EdgeInfo.
+  return {
+    tail_port: tailPort,
+    head_port: headPort,
+    // --- lazily-assigned fields, pre-declared to lock the hidden class ---
+    spl: undefined, label: undefined, head_label: undefined, tail_label: undefined,
+    xlabel: undefined, headArrowOps: undefined, tailArrowOps: undefined,
+    constraint: undefined, edge_type: undefined, compound: undefined,
+    adjacent: undefined, label_ontop: undefined, gui_state: undefined,
+    to_orig: undefined, to_virt: undefined, lost: undefined, alg: undefined,
+    weight: undefined, minlen: undefined, cutvalue: undefined, tree_index: undefined,
+    xpenalty: undefined, count: undefined, conc_opp_flag: undefined,
+    showboxes: undefined, factor: undefined, dist: undefined, path: undefined,
+    samehead: undefined, sametail: undefined, lhead: undefined, ltail: undefined,
+    reversed: undefined,
+  };
 }

@@ -189,13 +189,14 @@ function rangeDescend(list: EdgeList | undefined, iArr: number[], top: number, s
     const e = list.list[iArr[top]++];
     if (e === par) continue;
     const n = head ? e.head : e.tail;
+    const ni = n.info; // hot loop: read n.info once (same fusion as dfsEnterInScan)
     const lim = frameLim[top];
-    if (n.info.par === e && n.info.low === lim) {
-      frameLim[top] = n.info.lim! + 1;
+    if (ni.par === e && ni.low === lim) {
+      frameLim[top] = ni.lim! + 1;
       continue;
     }
-    n.info.par = e;
-    n.info.low = lim;
+    ni.par = e;
+    ni.low = lim;
     return pushFrame(n, e, lim, sp);
   }
   return sp;

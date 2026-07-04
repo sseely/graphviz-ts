@@ -4,7 +4,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Graph } from '../../model/graph.js';
 import type { NsCtx } from './ns-core.js';
-import { SEARCHSIZE, NORMAL, nsSlack, isTreeEdge, seq, invalidatePath, exchangeTreeEdges } from './ns-core.js';
+import { SEARCHSIZE, NORMAL, nsSlack, seq, invalidatePath, exchangeTreeEdges } from './ns-core.js';
 import { dfsRange } from './ns-range.js';
 import { feasibleTree } from './ns-subtree.js';
 import { gvQsort } from '../../util/bsd-qsort.js';
@@ -114,13 +114,25 @@ export function dfsEnterOutScan(
   if (!out) return;
   // AD-2: lim is set by dfsRangeInit before enterEdge runs — read it directly.
   const nLim = n.info.lim!;
-  for (let i = 0; i < out.size; i++) {
-    const e = out.list[i];
-    if (isTreeEdge(e)) {
-      if (e.head.info.lim! < nLim) todo.push(e.head);
-    } else if (!seq(low, e.head.info.lim!, lim)) {
-      const s = nsSlack(e);
-      if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
+  const list = out.list;
+  const size = out.size;
+  // Hot loop (with its in-edge twin, >60% of large-graph render time in the
+  // 2371/2646 profiles): e.info / endpoint .info are read ONCE per edge and
+  // isTreeEdge/seq/nsSlack are inlined with identical `??` semantics —
+  // value-identical to the helper form, minus the repeated property walks.
+  for (let i = 0; i < size; i++) {
+    const e = list[i];
+    const ei = e.info;
+    const head = e.head;
+    const hInfo = head.info;
+    if ((ei.tree_index ?? -1) >= 0) {
+      if (hInfo.lim! < nLim) todo.push(head);
+    } else {
+      const hLim = hInfo.lim!;
+      if (hLim < low || hLim > lim) {
+        const s = (hInfo.rank ?? 0) - (e.tail.info.rank ?? 0) - (ei.minlen ?? 1);
+        if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
+      }
     }
   }
 }
@@ -162,13 +174,22 @@ export function dfsEnterInScan(
   if (!inp) return;
   // AD-2: lim is set by dfsRangeInit before enterEdge runs — read it directly.
   const nLim = n.info.lim!;
-  for (let i = 0; i < inp.size; i++) {
-    const e = inp.list[i];
-    if (isTreeEdge(e)) {
-      if (e.tail.info.lim! < nLim) todo.push(e.tail);
-    } else if (!seq(low, e.tail.info.lim!, lim)) {
-      const s = nsSlack(e);
-      if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
+  const list = inp.list;
+  const size = inp.size;
+  // Hot loop — see dfsEnterOutScan; same fused, value-identical form.
+  for (let i = 0; i < size; i++) {
+    const e = list[i];
+    const ei = e.info;
+    const tail = e.tail;
+    const tInfo = tail.info;
+    if ((ei.tree_index ?? -1) >= 0) {
+      if (tInfo.lim! < nLim) todo.push(tail);
+    } else {
+      const tLim = tInfo.lim!;
+      if (tLim < low || tLim > lim) {
+        const s = (e.head.info.rank ?? 0) - (tInfo.rank ?? 0) - (ei.minlen ?? 1);
+        if (best.e === undefined || s < best.slack) { best.e = e; best.slack = s; }
+      }
     }
   }
 }
@@ -232,14 +253,15 @@ export function rerank(v: Node, delta: number): void {
   const todo: Node[] = [v];
   while (todo.length > 0) {
     const n = todo.pop()!;
-    n.info.rank = nodeRank(n) - delta;
-    const par = n.info.par;
-    const to = n.info.tree_out;
+    const ni = n.info; // hot loop: read n.info once (same fusion as dfsEnterInScan)
+    ni.rank = (ni.rank ?? 0) - delta;
+    const par = ni.par;
+    const to = ni.tree_out;
     if (to) for (let i = 0; i < to.size; i++) {
       const e = to.list[i];
       if (e !== par) todo.push(e.head);
     }
-    const ti = n.info.tree_in;
+    const ti = ni.tree_in;
     if (ti) for (let i = 0; i < ti.size; i++) {
       const e = ti.list[i];
       if (e !== par) todo.push(e.tail);
