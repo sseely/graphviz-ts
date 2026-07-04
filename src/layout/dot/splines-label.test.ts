@@ -15,7 +15,7 @@ import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
 import type { TextlabelT } from '../../common/types.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
-import { placeRegularEdgeLabels } from './splines-label.js';
+import { placeRegularEdgeLabels, updateBB } from './splines-label.js';
 
 // ---------------------------------------------------------------------------
 // Minimal builders
@@ -92,6 +92,32 @@ function buildSingleVnChain(
 // ---------------------------------------------------------------------------
 // placeRegularEdgeLabels — single virtual node
 // ---------------------------------------------------------------------------
+
+describe('updateBB — flip swaps label dimen axes (C addLabelBB)', () => {
+  // A wide, short label (dimen 40×10) placed at the origin. Under flip
+  // (rankdir=LR/RL) C swaps axes: width=dimen.y (10), height=dimen.x (40).
+  function bbAfter(flip: boolean) {
+    const g = new Graph('g', 'directed');
+    g.info.bb = { ll: { x: -1, y: -1 }, ur: { x: 1, y: 1 } };
+    g.info.flip = flip;
+    const l = makeTextLabel(40, 10);
+    l.pos = { x: 0, y: 0 };
+    updateBB(g, l);
+    return g.info.bb;
+  }
+
+  it('flip=false: grows by dimen.x horizontally, dimen.y vertically', () => {
+    const bb = bbAfter(false);
+    expect(bb.ur.x).toBe(20); // 40/2
+    expect(bb.ur.y).toBe(5);  // 10/2
+  });
+
+  it('flip=true: axes swapped — grows by dimen.y horizontally, dimen.x vertically', () => {
+    const bb = bbAfter(true);
+    expect(bb.ur.x).toBe(5);  // dimen.y/2
+    expect(bb.ur.y).toBe(20); // dimen.x/2
+  });
+});
 
 describe('placeRegularEdgeLabels', () => {
   it('sets pos.x = coord.x + w/2 and pos.y = coord.y', () => {

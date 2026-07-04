@@ -297,8 +297,14 @@ function writePortlabelPos(
 /** Expand g.info.bb to include the label's bounding box. */
 export function updateBB(g: Graph, l: TextlabelT): void {
   const bb = g.info.bb;
-  const hw = l.dimen.x / 2;
-  const hh = l.dimen.y / 2;
+  // C's updateBB -> addLabelBB(bb, lp, GD_flip(g)) swaps the label's dimen axes
+  // under flip (rankdir=LR/RL): the stored dimen is unflipped, so in flipped
+  // coordinate space width=dimen.y and height=dimen.x. Labels are stored
+  // unflipped here too (every other consumer swaps via `flip ? dimen.y : x`),
+  // so updateBB must swap as well. @see lib/common/utils.c:569 addLabelBB
+  const flip = g.info.flip === true;
+  const hw = (flip ? l.dimen.y : l.dimen.x) / 2;
+  const hh = (flip ? l.dimen.x : l.dimen.y) / 2;
   if (l.pos.x - hw < bb.ll.x) bb.ll.x = l.pos.x - hw;
   if (l.pos.y - hh < bb.ll.y) bb.ll.y = l.pos.y - hh;
   if (l.pos.x + hw > bb.ur.x) bb.ur.x = l.pos.x + hw;
