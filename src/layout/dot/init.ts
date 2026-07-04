@@ -234,10 +234,13 @@ export function dotInitNode(n: Node): void {
   if (!n.info.flat_in)  n.info.flat_in  = { list: [], size: 0 };
   if (!n.info.flat_out) n.info.flat_out = { list: [], size: 0 };
   if (!n.info.other)    n.info.other    = { list: [], size: 0 };
-  // Default lw = rw = 0.75in/2 × 72 = 27 pts; ht = 0.5in × 72 = 36 pts
-  if (!n.info.lw) n.info.lw = 27;
-  if (!n.info.rw) n.info.rw = 27;
-  if (!n.info.ht) n.info.ht = 36;
+  // Default lw = rw = 0.75in/2 × 72 = 27 pts; ht = 0.5in × 72 = 36 pts. C's
+  // dot_init_node has no such fallback (gv_nodesize always sets a size); this is
+  // only a guard for a node that reached here UNSIZED. Test `=== undefined`, not
+  // falsiness, so a legitimately-computed 0 (shape=plain) is not clobbered.
+  if (n.info.lw === undefined) n.info.lw = 27;
+  if (n.info.rw === undefined) n.info.rw = 27;
+  if (n.info.ht === undefined) n.info.ht = 36;
   // Mark as a real (NORMAL) node so firstNormalNode() can find it.
   n.info.node_type = NORMAL;
 }
