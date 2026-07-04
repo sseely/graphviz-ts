@@ -61,6 +61,33 @@ describe('special node shapes (round_corners port)', () => {
     expect(svg).toContain('<path');
   });
 
+  // STAR is a port-internal option.shape marker for the star vertex generator,
+  // NOT a round_corners special shape (C's p_star has option.shape=0). A plain
+  // star draws its 10-vertex custom polygon; a rounded/diagonals star must fall
+  // through to rounded_draw/diagonals_draw over those vertices, never the
+  // special-shape switch (which has no case STAR and used to throw).
+  it('a plain star draws its custom 10-vertex polygon, not a plain box', () => {
+    const svg = shapeSvg('star');
+    // graph bg polygon + the star polygon; the star has 10 vertices (11 pts).
+    const star = svg.match(/<polygon fill="none"[^>]*points="([^"]*)"/);
+    expect(star).not.toBeNull();
+    expect(star![1]!.trim().split(/\s+/).length).toBe(11);
+  });
+
+  it('style=rounded on a star renders a bezier <path>, not a throw', () => {
+    const svg = renderSvg(
+      'digraph { a [shape=star, style="filled,rounded", label="x"]; }',
+      'dot',
+    );
+    expect(svg).toContain('<path');
+    expect(svg).not.toContain('<polygon fill="none"'); // rounded → path, no star polygon
+  });
+
+  it('style=diagonals on a star draws corner polylines over the star vertices', () => {
+    const svg = renderSvg('graph G { a [shape=star, style=diagonals, label=""]; }', 'dot');
+    expect(svg).toContain('<polyline');
+  });
+
   // AC5 (rounded-clusters-mrecord): extracting emitRoundedBezier out of
   // roundedDraw must not change box-node output. This control already
   // conformant with the oracle pre-mission; lock its exact <path d>.

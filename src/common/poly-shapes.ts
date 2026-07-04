@@ -18,7 +18,7 @@ import {
   BOX3D, COMPONENT, DOGEAR, CDS, TAB, FOLDER, PROMOTER, TERMINATOR, UTR,
   INSULATOR, RIBOSITE, RNASTAB, PROTEASESITE, PROTEINSTAB,
   PRIMERSITE, RESTRICTIONSITE, FIVEPOVERHANG, THREEPOVERHANG, NOVERHANG,
-  ASSEMBLY, SIGNATURE, RPROMOTER, RARROW, LARROW, LPROMOTER, CYLINDER,
+  ASSEMBLY, SIGNATURE, RPROMOTER, RARROW, LARROW, LPROMOTER, CYLINDER, STAR,
 } from './shapeData.js';
 import * as C from './poly-shapes-cases.js';
 import * as C2 from './poly-shapes-cases2.js';
@@ -106,8 +106,14 @@ export interface RoundCtx extends ShapeCtx {
  * @see lib/common/shapes.c:709 round_corners (:722 diagonals, :725 shape, :727 rounded)
  */
 export function drawRoundCorners(ring: Point[], coord: Point, filled: boolean, ctx: RoundCtx): void {
+  // STAR is a port-internal marker on option.shape selecting the star vertex
+  // generator (poly-vertices.ts); C's p_star has option.shape=0, so it is NOT a
+  // round_corners special shape. Exclude it here so a style=rounded/diagonals
+  // star falls through to rounded_draw/diagonals_draw over its star vertices,
+  // matching C. Mirrors the identical guard in poly-gencode renderPolygonRing.
+  // @see lib/common/shapes.c:p_star (no option.shape) / round_corners
   if (ctx.diagonals) diagonalsDraw(ring, coord, filled, ctx);
-  else if (ctx.shape !== 0) drawSpecialShape(ctx.shape, ring, coord, filled, ctx);
+  else if (ctx.shape !== 0 && ctx.shape !== STAR) drawSpecialShape(ctx.shape, ring, coord, filled, ctx);
   else if (ctx.rounded) roundedDraw(ring, coord, filled, ctx);
 }
 
