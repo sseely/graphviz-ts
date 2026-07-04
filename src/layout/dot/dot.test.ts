@@ -223,18 +223,27 @@ describe('dotGraphInit: ratio → g.info.drawing', () => {
   });
 });
 
-describe('dotInitNode: node geometry and edge list defaults', () => {
-  it('initialises UF_size, edge lists, geometry, and node_type', () => {
+describe('dotInitNode: edge lists, node_type, and non-clobbering geometry', () => {
+  it('initialises UF_size, edge lists, and node_type', () => {
     const g = makeGraph('ninfo');
     const n = addNode(g, 0, 'a');
     dotInitNode(n);
     expect(n.info.UF_size).toBe(1);
     expect(n.info.in).toEqual({ list: [], size: 0 });
     expect(n.info.out).toEqual({ list: [], size: 0 });
-    expect(n.info.lw).toBe(27);
-    expect(n.info.rw).toBe(27);
-    expect(n.info.ht).toBe(36);
     expect(n.info.node_type).toBe(NORMAL);
+  });
+
+  it('does not clobber a legitimately-computed 0 size (shape=plain)', () => {
+    // C's dot_init_node has no size fallback; the port must not bump a
+    // sized-to-0 node (plain) up to the 0.75in default. @see dotinit.c:45-56
+    const g = makeGraph('ninfo0');
+    const n = addNode(g, 0, 'a');
+    n.info.lw = 0; n.info.rw = 0; n.info.ht = 0;
+    dotInitNode(n);
+    expect(n.info.lw).toBe(0);
+    expect(n.info.rw).toBe(0);
+    expect(n.info.ht).toBe(0);
   });
 });
 

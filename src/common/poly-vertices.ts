@@ -9,7 +9,7 @@
 import type { PolygonT } from './types.js';
 import type { Point } from '../model/geom.js';
 import { polygonVertices, polygonRingOffsets, GAP } from './poly-sizing.js';
-import { CYLINDER } from './shapeData.js';
+import { CYLINDER, STAR } from './shapeData.js';
 
 /** Compute vertices for an ellipse/circle (sides <= 2). */
 export function ellipseVertices(w: number, h: number): Point[] {
@@ -45,12 +45,26 @@ export function cylinderVertices(w: number, h: number): Point[] {
  * Order matches C poly_init: top-right → top-left → bottom-left → bottom-right.
  * @see lib/common/shapes.c:poly_init
  */
-export function boxVertices(w: number, h: number): Point[] {
+export function boxVertices(w: number, h: number, orientation = 0): Point[] {
+  // C computes vertices[0] with the orientation rotation, then forces the other
+  // three corners symmetric about it. For a box, orientation is a multiple of 90
+  // (the isBox test), so vertices[0] steps TR->TL->BL->BR as orientation goes
+  // 0->90->180->270 — same rectangle, different starting corner (hence
+  // structural-match, not diverged). orientation=0 is the fixed order below.
+  // @see lib/common/shapes.c:poly_init (2244-2268, isBox symmetry)
+  const corners: Point[] = [
+    { x:  w / 2, y:  h / 2 },  // TR — orientation 0
+    { x: -w / 2, y:  h / 2 },  // TL — orientation 90
+    { x: -w / 2, y: -h / 2 },  // BL — orientation 180
+    { x:  w / 2, y: -h / 2 },  // BR — orientation 270
+  ];
+  const k = ((Math.round(orientation / 90) % 4) + 4) % 4;
+  const p = corners[k]!;
   return [
-    { x:  w / 2, y:  h / 2 },  // top-right
-    { x: -w / 2, y:  h / 2 },  // top-left
-    { x: -w / 2, y: -h / 2 },  // bottom-left
-    { x:  w / 2, y: -h / 2 },  // bottom-right
+    { x:  p.x, y:  p.y },
+    { x: -p.x, y:  p.y },
+    { x: -p.x, y: -p.y },
+    { x:  p.x, y: -p.y },
   ];
 }
 
@@ -100,11 +114,11 @@ function ellipseRings(w: number, h: number, peripheries: number): Point[] {
  * bisector offset is exactly GAP per axis per ring.
  * @see lib/common/shapes.c:poly_init (peripheries bisector loop)
  */
-function boxRings(w: number, h: number, peripheries: number): Point[] {
+function boxRings(w: number, h: number, peripheries: number, orientation: number): Point[] {
   const out: Point[] = [];
   for (let j = 0; j < peripheries; j++) {
     const inset = (peripheries - 1 - j) * GAP;
-    out.push(...boxVertices(w - 2 * inset, h - 2 * inset));
+    out.push(...boxVertices(w - 2 * inset, h - 2 * inset, orientation));
   }
   return out;
 }
@@ -136,6 +150,47 @@ function generalPolyRings(
   return rings.flat();
 }
 
+/**
+ * Star (5-pointed) base vertices: 10 points alternating an outer radius `r` and
+ * inner radius `r0`, shifted down by `offset`. The box is first scaled to the
+ * star aspect ratio (the `a < aspect` branch grows only the unused y extent).
+ * @see lib/common/shapes.c:star_vertices (alpha = PI/10)
+ */
+export function starVertices(w: number, h: number): Point[] {
+  const alpha = Math.PI / 10;
+  const alpha2 = 2 * alpha, alpha3 = 3 * alpha, alpha4 = 2 * alpha2;
+  let szx = w;
+  const aspect = (1 + Math.sin(alpha3)) / (2 * Math.cos(alpha));
+  if (h / szx > aspect) szx = h / aspect;
+  const r = szx / (2 * Math.cos(alpha));
+  const r0 = (r * Math.cos(alpha) * Math.cos(alpha4)) / (Math.sin(alpha4) * Math.cos(alpha2));
+  const offset = (r * (1 - Math.sin(alpha3))) / 2;
+  const v: Point[] = [];
+  let theta = alpha;
+  for (let i = 0; i < 10; i += 2) {
+    v.push({ x: r * Math.cos(theta), y: r * Math.sin(theta) - offset });
+    theta += alpha2;
+    v.push({ x: r0 * Math.cos(theta), y: r0 * Math.sin(theta) - offset });
+    theta += alpha2;
+  }
+  return v;
+}
+
+/** Star periphery rings — like generalPolyRings but over the 10 star vertices. */
+function starRings(
+  box: { w: number; h: number; base?: { w: number; h: number } },
+  peripheries: number,
+): Point[] {
+  if (peripheries <= 1 || box.base === undefined) return starVertices(box.w, box.h);
+  const inner = starVertices(box.base.w, box.base.h);
+  const offs = polygonRingOffsets(inner, 10);
+  const rings: Point[][] = [inner];
+  for (let j = 1; j < peripheries; j++) {
+    rings.push(inner.map((v, i) => ({ x: v.x + j * offs[i]!.x, y: v.y + j * offs[i]!.y })));
+  }
+  return rings.flat();
+}
+
 /** Choose vertex layout strategy based on polygon descriptor and size. */
 export function computeVertices(
   poly: PolygonT,
@@ -149,11 +204,12 @@ export function computeVertices(
   // C generates one ring even for peripheries=0 (outp >= 1); the draw
   // loop is what skips it. @see lib/common/shapes.c:poly_init (outp)
   const peripheries = Math.max(poly.peripheries, 1);
+  if (poly.option.shape === STAR) return starRings({ w, h, base }, peripheries);
   if (sides <= 2) return ellipseRings(w, h, peripheries);
   // C's isBox test: right angles only (diamond = orientation 45).
   if (sides === 4 && Math.abs(poly.orientation % 90) < 0.5
       && poly.distortion === 0 && poly.skew === 0) {
-    return boxRings(w, h, peripheries);
+    return boxRings(w, h, peripheries, poly.orientation);
   }
   return generalPolyRings(poly, { w, h, base }, peripheries);
 }

@@ -524,6 +524,26 @@ comparison page (side-by-side render + evidence record).
 
 ---
 
+### A6. `unsigned int` canvas overflow on degenerate input
+
+**Affected:** `1314` — a fuzzer-derived input (`fontsize="991836031967s8"`)
+whose absurd font size balloons the drawing to ~2.75e11 pt.
+
+**What happens.** C stores `job->width` / `job->height` as **`unsigned int`**
+(`gvcjob.h:327-328`). The `ROUND(...)` of the huge point size (`emit.c:1249-1250`)
+overflows 32 bits and wraps mod 2³², and the SVG backend emits it through a
+**signed** `%d` (`gvrender_core_svg.c:258-259`) — so C prints
+`height="-425618343"`. The port keeps the mathematically-consistent (unwrapped)
+value. Every other value — node ellipse `cx/cy/rx/ry`, the root `translate`, the
+polygon, the text `font-size` — is byte-identical; only the top-level `<svg>`
+width/height differ.
+
+**Why we don't chase it.** Replicating C's 32-bit integer overflow is not a
+layout behavior worth porting, and the input is degenerate. Revisit if upstream
+fixes the overflow (e.g. widens the field or clamps the size).
+
+---
+
 ## Tracked long tail (`dot` attribute & edge-case)
 
 At **defaults**, the `dot` engine matches the C binary to a tight deterministic

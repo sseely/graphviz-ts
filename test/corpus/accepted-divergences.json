@@ -53,6 +53,17 @@
   },
   {
    "match": {
+    "id": "1314"
+   },
+   "class": "A6",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "only the top-level svg width/height differ; every node ellipse/coord, translate, polygon, and font-size is byte-identical",
+   "reason": "fuzzer input (fontsize=\"991836031967s8\") balloons the drawing to ~2.75e11pt. C's job->width/height are unsigned int (gvcjob.h:327-328): the ROUND result (emit.c:1249-1250) wraps mod 2^32 and the SVG emits it via signed %d (gvrender_core_svg.c:258-259), so C prints height=\"-425618343\". The port keeps the mathematically-consistent unwrapped value; replicating C's 32-bit overflow is not a layout behavior worth porting. Degenerate input; revisit if upstream fixes the overflow.",
+   "ref": "known-divergences.md#a6-unsigned-int-canvas-overflow-on-degenerate-input"
+  },
+  {
+   "match": {
     "id": "2796"
    },
    "class": "A4",

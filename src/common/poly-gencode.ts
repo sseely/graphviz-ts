@@ -14,6 +14,7 @@ import { gvrenderTextspan } from '../gvc/textspan-emit.js';
 import type { PolygonT, TextlabelT, GraphvizPolygonStyle, ShapeDesc } from './types.js';
 import { ShapeKind } from './types.js';
 import type { TextSpan } from './emit-types.js';
+import { STAR } from './shapeData.js';
 import type { PlacedHtml } from './htmltable-pos.js';
 import type { ObjState } from '../gvc/job.js';
 import { FillType } from '../gvc/context.js';
@@ -124,7 +125,10 @@ function renderPolyRing(
   // @see lib/common/shapes.c:poly_gencode :3037-3052
   if (ctx.style.striped && j === 0) renderStripedRing(ring, coord, ctx);
   else if (ctx.underline) underlineDraw(ring, coord, filled, ctx);
-  else if (ctx.shape !== 0 || ctx.diagonals || ctx.rounded) {
+  // STAR carries a custom vertex generator but draws as a PLAIN filled polygon
+  // (C's p_star has option.shape=0 — no special-draw style), unlike CYLINDER and
+  // the biological shapes. @see lib/common/shapes.c:p_star / poly_gencode
+  else if ((ctx.shape !== 0 && ctx.shape !== STAR) || ctx.diagonals || ctx.rounded) {
     drawRoundCorners(ring, coord, filled, ctx);
   } else renderPolygon(ring, coord, ctx.renderer, ctx.job, filled);
 }

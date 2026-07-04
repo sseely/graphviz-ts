@@ -66,6 +66,9 @@ export const LARROW = 24;
 export const LPROMOTER = 25;
 /** @see lib/common/const.h:CYLINDER */
 export const CYLINDER = 26;
+/** Star: custom 10-vertex generator (not a regular decagon).
+ *  @see lib/common/shapes.c:star_gen / star_vertices */
+export const STAR = 27;
 
 // ---------------------------------------------------------------------------
 // Default polygon style — all flags false, shape = 0
@@ -355,7 +358,7 @@ export const P_MCIRCLE: PolygonT = {
 export const P_STAR: PolygonT = {
   regular: false, peripheries: 1, sides: 10,
   orientation: 0, distortion: 0, skew: 0,
-  option: ZERO_STYLE, vertices: null,
+  option: withShape(STAR), vertices: null,
 };
 
 /** @see lib/common/shapes.c:p_promoter */
