@@ -153,6 +153,7 @@ export function polySizeParamsFromNode(
     penwidth: lateDouble(nodeAttr(n, g, 'penwidth'), 1.0, 0.0),
     regular: poly.regular || mapbool(nodeAttr(n, g, 'regular')),
     isPlain: shape.name === 'plain',
+    optionShape: poly.option.shape, // size_gen discriminant (STAR/CYLINDER)
     flip,
   };
 }

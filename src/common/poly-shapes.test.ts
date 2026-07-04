@@ -88,6 +88,32 @@ describe('special node shapes (round_corners port)', () => {
     expect(svg).toContain('<polyline');
   });
 
+  // A star needs star_size (shapes.c:4039) to inflate the label box to the
+  // node size that contains its outer points. Without it the node box stays
+  // label-sized and the star's lower points render outside the viewport.
+  // Oracle (headless estimate path): shape=star,label="Amazing Result" = 287x273.
+  it('star node is sized by star_size so the whole star fits the viewport', () => {
+    const svg = renderSvg('digraph { n [shape=star, label="Amazing Result"]; }', 'dot');
+    expect(svg).toMatch(/width="287pt"\s+height="273pt"/);
+    // every star vertex y (in the translated frame) sits within the canvas:
+    // the polygon's lowest point must not exceed the drawing height.
+    const pts = svg.match(/<polygon fill="none"[^>]*points="([^"]*)"/)![1]!;
+    const ys = pts.trim().split(/\s+/).map((p) => parseFloat(p.split(',')[1]!));
+    // bottom points reach y=0 (the baseline), never positive (below canvas).
+    expect(Math.max(...ys)).toBeLessThanOrEqual(0.01);
+  });
+
+  // cylinder_size (shapes.c:4153) scales height by 1.375; the generic ellipse
+  // fit would over-widen. Masked by the min node size for short labels, so use
+  // a wide multi-line label. Oracle: 148x65.
+  it('cylinder node is sized by cylinder_size, not the ellipse fit', () => {
+    const svg = renderSvg(
+      'digraph { n [shape=cylinder, label="A Big Database Label\\nSecond Line Here"]; }',
+      'dot',
+    );
+    expect(svg).toMatch(/width="148pt"\s+height="65pt"/);
+  });
+
   // AC5 (rounded-clusters-mrecord): extracting emitRoundedBezier out of
   // roundedDraw must not change box-node output. This control already
   // conformant with the oracle pre-mission; lock its exact <path d>.

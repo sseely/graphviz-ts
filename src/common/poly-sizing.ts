@@ -5,9 +5,13 @@
  * poly_init. Computes the node bounding box from the label dimensions
  * and node attributes, then converts to lw/rw/ht via gv_nodesize.
  *
+ * poly_desc size_gen hooks (star_size, cylinder_size) ARE ported — see
+ * starSize/cylinderSize and the shapes.c:2073-2085 dispatch in polySize.
+ * The star_vertices aspect-correction feedback into node width (shapes.c:2217,
+ * only observable when an explicit width/height forces a non-star aspect) is
+ * NOT yet replicated — polygonBB sizes the star via a regular decagon.
+ *
  * Not ported (no TS counterpart yet, no suite coverage):
- * - poly_desc size_gen/vertex_gen hooks (cylinder) — C falls back to the
- *   generic ellipse expansion here instead.
  * - usershape/image sizing (gvusershape_size) — needs an image loader.
  *
  * @see lib/common/shapes.c:poly_init
@@ -15,6 +19,7 @@
  */
 
 import type { Point } from '../model/geom.js';
+import { STAR, CYLINDER } from './shapeData.js';
 
 /** Whitespace in points around labels / between peripheries. @see lib/common/const.h:GAP */
 export const GAP = 4;
@@ -66,6 +71,13 @@ export interface PolySizeParams {
   flip: boolean;
   /** penwidth attr (default 1, min 0). @see lib/common/const.h:DEFAULT_NODEPENWIDTH */
   penwidth?: number;
+  /**
+   * polygon->option.shape — the size_gen discriminant. STAR and CYLINDER have a
+   * poly_desc (star_gen/cylinder_gen) whose size_gen inflates the label box;
+   * every other value (0, or an SBOL shape) takes the generic ellipse fit.
+   * @see lib/common/shapes.c:2075 (`else if (polygon->vertices) bb = size_gen(bb)`)
+   */
+  optionShape?: number;
 }
 
 /** Node geometry in points: left/right half-widths and height. */
@@ -170,6 +182,31 @@ function quantize(d: Point, quantumIn: number): Point {
  * the origin contains the label box. Boxes are exempt (exact fit).
  * @see lib/common/shapes.c:poly_init (ellipse/polygon expansion)
  */
+/**
+ * star_gen size_gen: inflate the label box to the node size a 5-pointed star
+ * needs so the label fits inside its inner pentagon. Much larger than the
+ * generic ellipse fit — omitting it leaves the node box too small, so the
+ * star's outer points render outside the node bbox and the graph viewport.
+ * @see lib/common/shapes.c:4039 star_size (alpha = PI/10)
+ */
+export function starSize(bb: Point): Point {
+  const alpha = Math.PI / 10;
+  const alpha2 = 2 * alpha, alpha3 = 3 * alpha, alpha4 = 2 * alpha2;
+  const rx = bb.x / (2 * Math.cos(alpha));
+  const ry = bb.y / (Math.sin(alpha) + Math.sin(alpha3));
+  const r0 = Math.max(rx, ry);
+  const r = (r0 * Math.sin(alpha4) * Math.cos(alpha2)) / (Math.cos(alpha) * Math.cos(alpha4));
+  return { x: 2 * r * Math.cos(alpha), y: r * (1 + Math.sin(alpha3)) };
+}
+
+/**
+ * cylinder_gen size_gen: scale height by 1.375 (x unchanged), leaving room for
+ * the top/bottom ellipse arcs. @see lib/common/shapes.c:4153 cylinder_size
+ */
+export function cylinderSize(bb: Point): Point {
+  return { x: bb.x, y: bb.y * 1.375 };
+}
+
 export function expandForShape(
   bb: Point,
   sides: number,
@@ -457,7 +494,17 @@ export function polySize(p: PolySizeParams): PolySizeResult {
   const dimen = quantize(padLabelDimen(p.labelDimen, p.margin, p.isPlain), p.quantumIn);
   const { sides, isBox } = effectiveShape(p);
   let bb: Point = { x: dimen.x, y: dimen.y };
-  if (!isBox) bb = expandForShape(bb, sides, init.height, labelValign(p));
+  // C shapes.c:2073-2085 dispatch: box → exact fit; poly_desc shapes (star,
+  // cylinder) → their size_gen; everything else → generic ellipse fit.
+  if (isBox) {
+    // exact fit — no expansion
+  } else if (p.optionShape === STAR) {
+    bb = starSize(bb);
+  } else if (p.optionShape === CYLINDER) {
+    bb = cylinderSize(bb);
+  } else {
+    bb = expandForShape(bb, sides, init.height, labelValign(p));
+  }
   const minBb = bb; // C min_bb (shapes.c:2106): after shape fit, before size constraints
 
   const c = applySizeConstraints(p, bb, init.width, init.height);
