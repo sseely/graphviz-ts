@@ -425,9 +425,16 @@ const sizeTableInner = (
   const { wd, ht } = sumTableDims({ widths, heights, ncols, nrows, spacing, border });
   const baseWd = tbl.width !== undefined ? tbl.width : 0;
   const baseHt = tbl.height !== undefined ? tbl.height : 0;
-  const fw = isTblFixed(tbl) ? 0 : Math.max(wd, baseWd);
-  const fh = isTblFixed(tbl) ? 0 : Math.max(ht, baseHt);
-  tbl.dimen = { w: fw, h: fh };
+  // C zeroes only the CONTENT-derived term for a FIXEDSIZE table that has BOTH
+  // width and height, so the box becomes fmax(0, width)=width / fmax(0,height)=
+  // height (the explicit size). A fixed table missing a dimension warns and
+  // keeps the content size. The port previously set dimen to 0 outright,
+  // discarding the explicit size. @see lib/common/htmltable.c:1678-1693
+  const zeroContent = isTblFixed(tbl) && baseWd !== 0 && baseHt !== 0;
+  tbl.dimen = {
+    w: Math.max(zeroContent ? 0 : wd, baseWd),
+    h: Math.max(zeroContent ? 0 : ht, baseHt),
+  };
 };
 
 /**

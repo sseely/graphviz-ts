@@ -41,3 +41,22 @@ describe('HTML table cell HALIGN', () => {
     expect(narrowCenter).toBeGreaterThan(wide);
   });
 });
+
+// C zeroes only the content-derived term for a FIXEDSIZE table with both WIDTH
+// and HEIGHT, so the box takes the explicit dims (fmax(0, width)). The port
+// previously set the table dimen to 0, collapsing it to content size.
+// @see lib/common/htmltable.c:1678-1693
+describe('HTML table FIXEDSIZE', () => {
+  const canvasW = (dot: string): number => {
+    const svg = renderSvg(dot, 'dot');
+    return Number(/viewBox="[\d.-]+ [\d.-]+ ([\d.]+) /.exec(svg)![1]);
+  };
+  const tbl = (extra: string) =>
+    `digraph{ n[shape=plaintext, label=<<TABLE BORDER="0" ${extra}><TR><TD>x</TD></TR></TABLE>>]; }`;
+
+  it('a FIXEDSIZE table honors its explicit WIDTH/HEIGHT (not content size)', () => {
+    const fixed = canvasW(tbl('FIXEDSIZE="TRUE" WIDTH="200" HEIGHT="100"'));
+    const content = canvasW(tbl(''));
+    expect(fixed).toBeGreaterThan(content + 100); // ~224 vs ~62
+  });
+});
