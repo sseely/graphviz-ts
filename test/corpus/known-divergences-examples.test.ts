@@ -42,7 +42,15 @@ const DOC_CLAIMS_CONFORMANT = [
 // becomes conformant, the doc example is stale — fail so someone removes it (and
 // its registry entry). These are also guarded by accepted-divergences.test.ts;
 // duplicated here to bind the PROSE claim, not just the registry.
-const DOC_CLAIMS_DIVERGENT = ['2368'];
+const DOC_CLAIMS_DIVERGENT = [
+  '2368',
+  // A3 hypot-tie sibling of the oracle-pinned 241_0 (retired 2026-07-04)
+  '241_1',
+  // A4 init_rank/pathplan recovery family, sibling of 2471 (retired 2026-07-04)
+  '2470',
+  // A7 round()/box-wall rounding boundary in maximal_bbox (retired 2026-07-04)
+  'graphs-honda-tokoro',
+];
 
 describe('known-divergences.md prose ↔ parity verdicts', () => {
   it('every graph the doc calls conformant is actually conformant', () => {

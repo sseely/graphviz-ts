@@ -281,7 +281,9 @@ high-fan-in hub when the corridor is exactly mirror-symmetric: `graphs-b100` /
 single knot of `Node23730->Node23729` — every node position and all upstream
 box/polygon/taut-path structure is byte-identical to C; only `findMaxDev`'s
 ~1-ULP choice of which mirror-symmetric interior point becomes the bezier knot
-differs. Most routed edges are unaffected.
+differs. The short flat-edge form also surfaces as `241_1` (structural-match,
+maxΔ ≈ 2.4 pt) — the divergent sibling of the oracle-pinned `241_0`, which C's
+noise instead keeps-first. Most routed edges are unaffected.
 
 ::: details Graph definition (`2368.dot`)
 ```dot
@@ -379,9 +381,10 @@ a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 ### A4. Oracle in an acknowledged-broken state (the init_rank / pathplan family)
 
 **Affected:** `2796` (structural-match, maxΔ 49), `2471` (structural-match,
-maxΔ ~9063), `1435` (diverged, maxΔ 503), `graphs-structs` (diverged,
-maxΔ 0), `1581` (diverged, maxΔ 465). Family members `1939` and `2825` are
-**conformant** and carry no entry.
+maxΔ ~9063), `2470` (structural-match, maxΔ 8), `1435` (diverged, maxΔ 503),
+`graphs-structs` (diverged, maxΔ 0), `1581` (diverged, maxΔ 465). Family members
+`1939` and `2825` are **conformant** and carry no entry. `2470` is the sibling of
+`2471` (same triangulation-debris recovery); the port loses the identical edges.
 
 `1581` and `2825` were crash-recovery cases (fix-element-count-bucket
 mission): fuzzer/degenerate inputs where the upstream tests assert **only**
@@ -541,6 +544,28 @@ width/height differ.
 **Why we don't chase it.** Replicating C's 32-bit integer overflow is not a
 layout behavior worth porting, and the input is degenerate. Revisit if upstream
 fixes the overflow (e.g. widens the field or clamps the size).
+
+---
+
+### A7. `round()` box-wall rounding boundary (`dot`)
+
+**Affected:** `graphs-honda-tokoro` (structural-match, maxΔ ≈ 1 pt on the single
+edge `n012->n011`).
+
+**What differs.** `maximal_bbox`'s head-corridor box wall lands at internal
+x=90 in C versus x=89 in the port for the shared `samehead` port of the two
+`n012->n011` parallels. The shared-port construction (`buildSharedPort`) and the
+parallel grouping are both byte-conformant to C; the 1 px gap is purely a
+`round()` rounding-boundary artifact — ~1e-14 of upstream floating-point noise
+tips a value sitting exactly on a `.5` boundary to the neighbouring integer. The
+port's `maximal_bbox` formula already mirrors C's exactly.
+
+**Why we don't chase it.** `round()` is a primitive every routed edge in the
+corpus flows through; nudging its boundary behaviour to match this one case is a
+corpus-wide regression risk for 1 px on 2 edges — the same shared-primitive
+constraint as the control-hull rounding noted in
+`bbox-class-control-hull-vs-curve`. Full diagnosis:
+`.agent-notes/honda-samehead-shared-port.md`.
 
 ---
 

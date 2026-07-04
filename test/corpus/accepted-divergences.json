@@ -145,6 +145,39 @@
    "bound": "maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content)",
    "reason": "fuzzer input; upstream test_1581 asserts only no memory-safety violation (issue #1581). C hits 'Error: install_in_rank' and its recovery drops ranks; the port reaches the identical rankset deletions (warning parity: Act_23/Act_24 from G) without the internal inconsistency and lays out the surviving graph. Oracle output is crash-recovery debris with no upstream-defined semantics.",
    "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "241_1"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 ~2.4pt on one flat-edge arc; bbox/nodes/labels conformant",
+   "reason": "same symmetric-channel bezier-split hypot tie as 2368/241_0: findMaxDev picks between mirror-symmetric interior knots differing by ~1 ULP; Apple libm hypot is position-dependent, so the port keeps its translation-equivariant tie-break. Adopting C's strict tie-break regresses the 241_0/cnt=3 oracle cases (net wash). Same primitive as 2368.",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "2470"
+   },
+   "class": "A4",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 ~8pt; element tree identical, same init_rank/pathplan recovery family as 2471",
+   "reason": "oracle in the same acknowledged-broken init_rank recovery family as 2471/1435/2796 (upstream xfail). The port reaches the identical rankset-deletion/recovery decisions; residual numeric deltas are NS behavior from the infeasible recovery state, not chased. Re-measure when upstream fixes the family.",
+   "ref": "known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family"
+  },
+  {
+   "match": {
+    "id": "graphs-honda-tokoro"
+   },
+   "class": "A7",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 ~1pt on one edge (n012->n011); every node/label/bbox conformant",
+   "reason": "maximal_bbox head-corridor box wall lands at internal x=90 in C vs x=89 in the port \u2014 a round()/box-wall rounding-boundary artifact of ~1e-14 upstream float noise tipping a .5 boundary. The port's maximal_bbox formula mirrors C exactly; round() is a shared primitive every routed edge flows through, so changing it is corpus-wide regression risk for 1px on 2 edges. Full diagnosis: .agent-notes/honda-samehead-shared-port.md.",
+   "ref": "known-divergences.md#a7-round-box-wall-rounding-boundary-dot"
   }
  ]
 }
