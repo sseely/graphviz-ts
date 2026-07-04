@@ -18,10 +18,12 @@ const REPORTS = [
   {
     src: '../test/corpus/PARITY.md',
     dst: 'parity.md',
-    // ../../docs/{known-divergences,conformance}.md (from test/corpus) -> site pages
+    // ../../docs/{known-divergences,conformance}.md (from test/corpus) -> site pages;
+    // ../../plans/... (repo-only, not published) -> the GitHub blob so it resolves.
     rewrites: [
       [/\]\(\.\.\/\.\.\/docs\/known-divergences\.md\)/g, '](/divergences)'],
       [/\]\(\.\.\/\.\.\/docs\/conformance\.md\)/g, '](/conformance)'],
+      [/\]\(\.\.\/\.\.\/plans\/([^)]+)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/plans/$1)'],
     ],
   },
   {
