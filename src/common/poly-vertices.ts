@@ -9,7 +9,7 @@
 import type { PolygonT } from './types.js';
 import type { Point } from '../model/geom.js';
 import { polygonVertices, polygonRingOffsets, GAP } from './poly-sizing.js';
-import { CYLINDER } from './shapeData.js';
+import { CYLINDER, STAR } from './shapeData.js';
 
 /** Compute vertices for an ellipse/circle (sides <= 2). */
 export function ellipseVertices(w: number, h: number): Point[] {
@@ -136,6 +136,47 @@ function generalPolyRings(
   return rings.flat();
 }
 
+/**
+ * Star (5-pointed) base vertices: 10 points alternating an outer radius `r` and
+ * inner radius `r0`, shifted down by `offset`. The box is first scaled to the
+ * star aspect ratio (the `a < aspect` branch grows only the unused y extent).
+ * @see lib/common/shapes.c:star_vertices (alpha = PI/10)
+ */
+export function starVertices(w: number, h: number): Point[] {
+  const alpha = Math.PI / 10;
+  const alpha2 = 2 * alpha, alpha3 = 3 * alpha, alpha4 = 2 * alpha2;
+  let szx = w;
+  const aspect = (1 + Math.sin(alpha3)) / (2 * Math.cos(alpha));
+  if (h / szx > aspect) szx = h / aspect;
+  const r = szx / (2 * Math.cos(alpha));
+  const r0 = (r * Math.cos(alpha) * Math.cos(alpha4)) / (Math.sin(alpha4) * Math.cos(alpha2));
+  const offset = (r * (1 - Math.sin(alpha3))) / 2;
+  const v: Point[] = [];
+  let theta = alpha;
+  for (let i = 0; i < 10; i += 2) {
+    v.push({ x: r * Math.cos(theta), y: r * Math.sin(theta) - offset });
+    theta += alpha2;
+    v.push({ x: r0 * Math.cos(theta), y: r0 * Math.sin(theta) - offset });
+    theta += alpha2;
+  }
+  return v;
+}
+
+/** Star periphery rings — like generalPolyRings but over the 10 star vertices. */
+function starRings(
+  box: { w: number; h: number; base?: { w: number; h: number } },
+  peripheries: number,
+): Point[] {
+  if (peripheries <= 1 || box.base === undefined) return starVertices(box.w, box.h);
+  const inner = starVertices(box.base.w, box.base.h);
+  const offs = polygonRingOffsets(inner, 10);
+  const rings: Point[][] = [inner];
+  for (let j = 1; j < peripheries; j++) {
+    rings.push(inner.map((v, i) => ({ x: v.x + j * offs[i]!.x, y: v.y + j * offs[i]!.y })));
+  }
+  return rings.flat();
+}
+
 /** Choose vertex layout strategy based on polygon descriptor and size. */
 export function computeVertices(
   poly: PolygonT,
@@ -149,6 +190,7 @@ export function computeVertices(
   // C generates one ring even for peripheries=0 (outp >= 1); the draw
   // loop is what skips it. @see lib/common/shapes.c:poly_init (outp)
   const peripheries = Math.max(poly.peripheries, 1);
+  if (poly.option.shape === STAR) return starRings({ w, h, base }, peripheries);
   if (sides <= 2) return ellipseRings(w, h, peripheries);
   // C's isBox test: right angles only (diamond = orientation 45).
   if (sides === 4 && Math.abs(poly.orientation % 90) < 0.5
