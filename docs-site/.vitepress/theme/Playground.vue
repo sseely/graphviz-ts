@@ -4,6 +4,15 @@ import { ref, onMounted, watch } from 'vue';
 // Aliased in .vitepress/config.ts to the real engine source (src/index.ts),
 // so the playground always runs the library exactly as shipped.
 import { renderSvg } from 'graphviz-ts';
+// Client-side DOT syntax highlighting, reusing the SAME grammar the docs code
+// blocks use (single source of truth). Shiki runs in the browser here over a
+// transparent-textarea overlay; the plain textarea still works if it fails to
+// load (progressive enhancement).
+import { createHighlighterCore, type HighlighterCore } from 'shiki/core';
+import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
+import githubLight from '@shikijs/themes/github-light';
+import githubDark from '@shikijs/themes/github-dark';
+import { dotLang } from '../dot.tmLanguage';
 
 const ENGINES = [
   'dot', 'neato', 'fdp', 'sfdp', 'circo', 'twopi', 'osage', 'patchwork',
@@ -26,6 +35,32 @@ const engine = ref(props.engine ?? 'dot');
 const svg = ref('');
 const error = ref('');
 
+// --- syntax-highlight overlay ---
+const highlighted = ref('');
+const overlaid = ref(false); // true once the highlighter has painted a layer
+const highlightEl = ref<HTMLElement | null>(null);
+let highlighter: HighlighterCore | undefined;
+
+function paintHighlight(): void {
+  if (!highlighter) return;
+  // Trailing newline keeps the highlight layer's height in step with the
+  // textarea while the last line is being typed.
+  highlighted.value = highlighter.codeToHtml(`${source.value}\n`, {
+    lang: 'dot',
+    themes: { light: 'github-light', dark: 'github-dark' },
+    defaultColor: false,
+  });
+  overlaid.value = true;
+}
+
+function syncScroll(e: Event): void {
+  const ta = e.target as HTMLTextAreaElement;
+  if (highlightEl.value) {
+    highlightEl.value.scrollTop = ta.scrollTop;
+    highlightEl.value.scrollLeft = ta.scrollLeft;
+  }
+}
+
 let timer: ReturnType<typeof setTimeout> | undefined;
 
 function renderNow(): void {
@@ -44,8 +79,22 @@ function scheduleRender(): void {
   timer = setTimeout(renderNow, 250);
 }
 
-onMounted(renderNow);
-watch([source, engine], scheduleRender);
+onMounted(async () => {
+  renderNow();
+  try {
+    highlighter = await createHighlighterCore({
+      themes: [githubLight, githubDark],
+      langs: [dotLang],
+      engine: createOnigurumaEngine(import('shiki/wasm')),
+    });
+    paintHighlight();
+  } catch {
+    // Highlighter unavailable — the plain (visible) textarea keeps working.
+  }
+});
+
+watch(source, () => { paintHighlight(); scheduleRender(); });
+watch(engine, scheduleRender);
 </script>
 
 <template>
@@ -59,12 +108,24 @@ watch([source, engine], scheduleRender);
       </label>
     </div>
     <div class="gv-panes" :style="{ height: props.height ?? '420px' }">
-      <textarea
-        v-model="source"
-        class="gv-input"
-        spellcheck="false"
-        aria-label="DOT source"
-      ></textarea>
+      <div class="gv-editor">
+        <div
+          ref="highlightEl"
+          class="gv-highlight"
+          aria-hidden="true"
+          v-html="highlighted"
+        ></div>
+        <textarea
+          v-model="source"
+          class="gv-input"
+          :class="{ overlaid }"
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="off"
+          aria-label="DOT source"
+          @scroll="syncScroll"
+        ></textarea>
+      </div>
       <div class="gv-output" aria-label="Rendered SVG">
         <pre v-if="error" class="gv-error">{{ error }}</pre>
         <div v-else class="gv-svg" v-html="svg"></div>
@@ -99,16 +160,65 @@ watch([source, engine], scheduleRender);
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-.gv-input {
-  border: none;
+
+/* Editor: a highlighted layer behind a transparent textarea. Both must share
+   identical text metrics so the caret lines up with the painted glyphs. */
+.gv-editor {
+  position: relative;
   border-right: 1px solid var(--vp-c-divider);
+  overflow: hidden;
+  background: var(--vp-c-bg);
+}
+.gv-highlight,
+.gv-input {
+  margin: 0;
   padding: 0.75rem;
   font-family: var(--vp-font-family-mono);
   font-size: 0.85rem;
+  line-height: 1.5;
+  tab-size: 4;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  border: none;
+}
+.gv-highlight {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  pointer-events: none;
+}
+.gv-highlight :deep(pre.shiki) {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  font: inherit;
+}
+/* defaultColor:false emits token colors as --shiki-light/--shiki-dark CSS
+   variables, not a `color`. Map them to the actual color, switching on
+   VitePress's html.dark so the editor tracks the site's light/dark theme. */
+.gv-highlight :deep(.shiki),
+.gv-highlight :deep(.shiki span) {
+  color: var(--shiki-light);
+}
+:global(html.dark) .gv-highlight :deep(.shiki),
+:global(html.dark) .gv-highlight :deep(.shiki span) {
+  color: var(--shiki-dark);
+}
+.gv-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   resize: none;
   outline: none;
-  background: var(--vp-c-bg);
-  color: var(--vp-c-text-1);
+  background: transparent;
+  color: var(--vp-c-text-1); /* visible until the highlight layer paints */
+  caret-color: var(--vp-c-text-1);
+  overflow: auto;
+}
+.gv-input.overlaid {
+  color: transparent; /* text is shown by the layer behind; keep the caret */
 }
 .gv-output {
   overflow: auto;
