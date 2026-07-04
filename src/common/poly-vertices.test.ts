@@ -9,7 +9,27 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { starVertices } from './poly-vertices.js';
+import { starVertices, boxVertices } from './poly-vertices.js';
+
+describe('boxVertices orientation', () => {
+  it('orientation=0 starts at the top-right corner (unchanged legacy order)', () => {
+    expect(boxVertices(10, 6, 0)).toEqual([
+      { x: 5, y: 3 }, { x: -5, y: 3 }, { x: -5, y: -3 }, { x: 5, y: -3 },
+    ]);
+  });
+
+  it('orientation steps the first corner TR->TL->BL->BR', () => {
+    expect(boxVertices(10, 6, 90)[0]).toEqual({ x: -5, y: 3 }); // TL
+    expect(boxVertices(10, 6, 180)[0]).toEqual({ x: -5, y: -3 }); // BL
+    expect(boxVertices(10, 6, 270)[0]).toEqual({ x: 5, y: -3 }); // BR
+  });
+
+  it('always yields the same rectangle regardless of orientation', () => {
+    const set = (o: number): string =>
+      boxVertices(10, 6, o).map((p) => `${p.x},${p.y}`).sort().join(' ');
+    expect(set(270)).toBe(set(0));
+  });
+});
 
 describe('starVertices', () => {
   it('produces 10 vertices', () => {

@@ -45,12 +45,26 @@ export function cylinderVertices(w: number, h: number): Point[] {
  * Order matches C poly_init: top-right → top-left → bottom-left → bottom-right.
  * @see lib/common/shapes.c:poly_init
  */
-export function boxVertices(w: number, h: number): Point[] {
+export function boxVertices(w: number, h: number, orientation = 0): Point[] {
+  // C computes vertices[0] with the orientation rotation, then forces the other
+  // three corners symmetric about it. For a box, orientation is a multiple of 90
+  // (the isBox test), so vertices[0] steps TR->TL->BL->BR as orientation goes
+  // 0->90->180->270 — same rectangle, different starting corner (hence
+  // structural-match, not diverged). orientation=0 is the fixed order below.
+  // @see lib/common/shapes.c:poly_init (2244-2268, isBox symmetry)
+  const corners: Point[] = [
+    { x:  w / 2, y:  h / 2 },  // TR — orientation 0
+    { x: -w / 2, y:  h / 2 },  // TL — orientation 90
+    { x: -w / 2, y: -h / 2 },  // BL — orientation 180
+    { x:  w / 2, y: -h / 2 },  // BR — orientation 270
+  ];
+  const k = ((Math.round(orientation / 90) % 4) + 4) % 4;
+  const p = corners[k]!;
   return [
-    { x:  w / 2, y:  h / 2 },  // top-right
-    { x: -w / 2, y:  h / 2 },  // top-left
-    { x: -w / 2, y: -h / 2 },  // bottom-left
-    { x:  w / 2, y: -h / 2 },  // bottom-right
+    { x:  p.x, y:  p.y },
+    { x: -p.x, y:  p.y },
+    { x: -p.x, y: -p.y },
+    { x:  p.x, y: -p.y },
   ];
 }
 
@@ -100,11 +114,11 @@ function ellipseRings(w: number, h: number, peripheries: number): Point[] {
  * bisector offset is exactly GAP per axis per ring.
  * @see lib/common/shapes.c:poly_init (peripheries bisector loop)
  */
-function boxRings(w: number, h: number, peripheries: number): Point[] {
+function boxRings(w: number, h: number, peripheries: number, orientation: number): Point[] {
   const out: Point[] = [];
   for (let j = 0; j < peripheries; j++) {
     const inset = (peripheries - 1 - j) * GAP;
-    out.push(...boxVertices(w - 2 * inset, h - 2 * inset));
+    out.push(...boxVertices(w - 2 * inset, h - 2 * inset, orientation));
   }
   return out;
 }
@@ -195,7 +209,7 @@ export function computeVertices(
   // C's isBox test: right angles only (diamond = orientation 45).
   if (sides === 4 && Math.abs(poly.orientation % 90) < 0.5
       && poly.distortion === 0 && poly.skew === 0) {
-    return boxRings(w, h, peripheries);
+    return boxRings(w, h, peripheries, poly.orientation);
   }
   return generalPolyRings(poly, { w, h, base }, peripheries);
 }
