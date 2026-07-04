@@ -15,6 +15,32 @@ import { Edge } from '../model/edge.js';
 import { makePort } from '../model/edgeInfo.js';
 import { clipAndInstall } from './splines-clip.js';
 import { SINFO } from '../layout/neato/splines.js';
+import { renderSvg } from '../index.js';
+
+// renderPenwidth must resolve setlinewidth(N) like the stroke does, so the
+// arrowhead's penwidth-dependent miter (arrow_type_normal0) matches the drawn
+// width. Regression guard for graphs-style: style="setlinewidth(3)" used to
+// fall through to penwidth 1.0, drawing the arrow ~penwidth off along the edge.
+describe('arrowhead penwidth resolves setlinewidth (graphs-style)', () => {
+  const arrowPts = (svg: string): string | undefined =>
+    /<polygon fill="black"[^>]*points="([^"]*)"/.exec(svg)?.[1];
+
+  it('setlinewidth(3) edge draws a different arrowhead than a default edge', () => {
+    const thick = renderSvg('digraph { a -> b [style="setlinewidth(3)"]; }', 'dot');
+    const thin = renderSvg('digraph { a -> b; }', 'dot');
+    // same layout, so the arrow base is identical; only the penwidth miter
+    // differs — if setlinewidth were ignored the two would be byte-identical.
+    expect(arrowPts(thick)).toBeDefined();
+    expect(arrowPts(thin)).toBeDefined();
+    expect(arrowPts(thick)).not.toBe(arrowPts(thin));
+  });
+
+  it('setlinewidth(1) matches a default (penwidth 1) edge arrowhead', () => {
+    const one = renderSvg('digraph { a -> b [style="setlinewidth(1)"]; }', 'dot');
+    const def = renderSvg('digraph { a -> b; }', 'dot');
+    expect(arrowPts(one)).toBe(arrowPts(def));
+  });
+});
 
 // ---------------------------------------------------------------------------
 // Test helpers

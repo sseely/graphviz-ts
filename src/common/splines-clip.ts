@@ -20,6 +20,7 @@ import { arrowClipLength } from '../layout/dot/edge-route-clip.js';
 import {
   arrowDrawOpsForEnd, edgeArrowName, edgeArrowsize,
 } from '../layout/dot/edge-route-arrow.js';
+import { resolvePenWidth, parseStyleFlags } from './style-resolve.js';
 
 /** Normal (filled triangle) arrowhead. @see lib/common/const.h:ARR_TYPE_NORM */
 export const ARR_NORM = 1;
@@ -181,14 +182,15 @@ class SplineClipHelper {
   }
 
   /**
-   * Rendered edge penwidth (style-aware): `style=bold` maps to 2.0 even with no
-   * `penwidth` attr. Drives the arrow POLYGON geometry (the longitudinal delta),
-   * matching the fitter's split where arrow length uses the attr penwidth but the
-   * polygon uses the rendered width. @see edge-route-helpers.ts:edgeRenderPenwidth
+   * Rendered edge penwidth (style-aware). Drives the arrow POLYGON geometry (the
+   * penwidth-dependent miter delta in arrow_type_normal0), so it must match the
+   * drawn stroke width: penwidth attr → setlinewidth(N) style → bold(2.0) → 1.0.
+   * The prior version recognised only `style === "bold"`, so `setlinewidth(3)`
+   * fell through to 1.0 and the arrow polygon sat ~penwidth off (graphs-style).
+   * @see resolvePenWidth (style-resolve.ts) / lib/common/arrows.c:257
    */
   static renderPenwidth(e: Edge): number {
-    if ((e.attrs.get('style') ?? '') === 'bold') return 2.0;
-    return SplineClipHelper.edgePenwidth(e);
+    return resolvePenWidth(parseStyleFlags(e.attrs.get('style')), e.attrs.get('penwidth'));
   }
 
   /**

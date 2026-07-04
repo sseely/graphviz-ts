@@ -21,6 +21,7 @@ import type { Edge as BarrierEdge } from '../../pathplan/types.js';
 import { linearBezier } from './edge-route-poly.js';
 import { updateBbBz } from '../../common/splines-geom.js';
 import { DEFAULT_NODEPENWIDTH } from './edge-route-clip.js';
+import { resolvePenWidth, parseStyleFlags } from '../../common/style-resolve.js';
 import type { NodeBox } from './edge-route-geom.js';
 import { routeWithRank, routeSimple } from './edge-route-routing.js';
 import type { RankEdgeInfo, EdgeSplineResult, PortRoute } from './edge-route-routing.js';
@@ -82,12 +83,17 @@ export function nodeBoxOf(n: Node, g: Graph): NodeBox {
 // Penwidth helpers
 // ---------------------------------------------------------------------------
 
-/** Effective stroke width for arrowhead polygon sizing. */
+/**
+ * Effective pen width for arrowhead geometry. Must mirror the stroke resolver
+ * so the arrow's penwidth-dependent miter (delta_tip/delta_base in
+ * arrow_type_normal0) matches the drawn line width: penwidth attr →
+ * setlinewidth(N) style → bold(2.0) → 1.0. The prior version only recognised
+ * `style === "bold"`, so `style="setlinewidth(3)"` fell through to 1.0 and the
+ * arrow was drawn ~penwidth off along the edge (graphs-style a->e).
+ * @see resolvePenWidth (style-resolve.ts) / lib/common/arrows.c:257
+ */
 export function edgeRenderPenwidth(e: GraphEdge): number {
-  const style = e.attrs.get('style') ?? '';
-  if (style === 'bold') return 2.0;
-  const pw = parseFloat(e.attrs.get('penwidth') ?? '');
-  return isNaN(pw) ? 1.0 : pw;
+  return resolvePenWidth(parseStyleFlags(e.attrs.get('style')), e.attrs.get('penwidth'));
 }
 
 /** Penwidth for arrow-length (elen) computation (attribute only). */
