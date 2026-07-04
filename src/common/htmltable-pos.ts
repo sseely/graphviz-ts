@@ -315,6 +315,20 @@ export function placeCell(ctx: CellPlaceCtx): PlacedCell {
   };
 }
 
+/**
+ * Distribute extra box space evenly across the column/row sizes, mirroring
+ * C's literal arithmetic: `extra = del / count` (fractional) plus a ROUND()ed
+ * remainder handed out 1pt to the first `plus` slots (≈0 under double
+ * division; kept for bit-fidelity). @see lib/common/htmltable.c:1602-1617
+ */
+function distributeExtra(sizes: number[], del: number, count: number): number[] {
+  if (del <= 0 || count <= 0) return sizes;
+  const extra = del / count;
+  const r = del - extra * count;
+  const plus = r >= 0 ? Math.floor(r + 0.5) : Math.ceil(r - 0.5); // C ROUND
+  return sizes.map((w, i) => w + extra + (i < plus ? 1 : 0));
+}
+
 /** Compute column X-offsets from layout widths. */
 function buildColX(pos: Box, border: number, spacing: number, widths: number[]): number[] {
   const colX: number[] = [];
@@ -419,17 +433,39 @@ export function posHtmlTable(
   sides: number = HTML_ALL_SIDES,
 ): PlacedHtml {
   const dim = tbl.dimen ?? { w: 0, h: 0 };
-  const box: Box = pos ?? {
-    ll: { x: -dim.w / 2, y: -dim.h / 2 },
-    ur: { x: dim.w / 2, y: dim.h / 2 },
-  };
+  const box: Box = pos !== undefined
+    ? { ll: { ...pos.ll }, ur: { ...pos.ur } } // clone: the align step below mutates
+    : {
+        ll: { x: -dim.w / 2, y: -dim.h / 2 },
+        ur: { x: dim.w / 2, y: dim.h / 2 },
+      };
   const { entries, widths, heights, spacing, border } = layoutHtmlTable(tbl, measurer, {
     fontsize: finfo.fontsize, fontname: finfo.fontname,
   });
   const ncols = widths.length > 0 ? Math.max(...entries.map(e => e.col + e.colspan)) : 0;
   const nrows = heights.length > 0 ? Math.max(...entries.map(e => e.row + e.rowspan)) : 0;
-  const colX = buildColX(box, border, spacing, widths);
-  const rowY = buildRowY(box, border, spacing, heights);
+  // C pos_html_tbl:1557-1618 — when the assigned box is larger than the
+  // table's own size: a FIXEDSIZE table first aligns ITSELF within the box
+  // per its HALIGN/VALIGN (consuming delx/dely); any remaining extra space
+  // is then distributed evenly across the columns/rows.
+  let delx = Math.max(box.ur.x - box.ll.x - dim.w, 0);
+  let dely = Math.max(box.ur.y - box.ll.y - dim.h, 0);
+  if (tbl.fixedsize === true) {
+    if (delx > 0) {
+      if (tbl.align === 'left') box.ur.x = box.ll.x + dim.w;
+      else if (tbl.align === 'right') { box.ur.x += delx; box.ll.x += delx; }
+      else { box.ll.x += delx / 2; box.ur.x -= delx / 2; }
+      delx = 0;
+    }
+    if (dely > 0) {
+      if (tbl.valign === 'bottom') box.ur.y = box.ll.y + dim.h;
+      else if (tbl.valign === 'top') { box.ll.y += dely; box.ur.y = box.ll.y + dim.h; }
+      else { box.ll.y += dely / 2; box.ur.y -= dely / 2; }
+      dely = 0;
+    }
+  }
+  const colX = buildColX(box, border, spacing, distributeExtra(widths, delx, ncols));
+  const rowY = buildRowY(box, border, spacing, distributeExtra(heights, dely, nrows));
   const cells = placeCells({ tbl, entries, colX, rowY, spacing, ncols, nrows, sides, finfo, measurer });
   return { box, border, cells, spacing, columnCount: ncols, rowCount: nrows, port: tbl.port, boundarySides: sides, ...tblDecoration(tbl) };
 }
