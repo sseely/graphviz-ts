@@ -133,8 +133,11 @@ export function dotPhasePostNoFinish(g: Graph): void {
   dotSameports(g);
   dotSplines(g);
   // C: if (mapbool(agget(g, "compound"))) dot_compoundEdges(g);
+  // agget on a pack-branch component subgraph (_cc_N) falls back to the
+  // attribute default declared by the root's `compound=true`, so C's gate
+  // passes per component; mirror that with a root fallback (local wins).
   // @see lib/dotgen/dotinit.c:338
-  if (mapbool(g.attrs.get('compound'))) dotCompoundEdges(g);
+  if (mapbool(g.attrs.get('compound') ?? g.root.attrs.get('compound'))) dotCompoundEdges(g);
 }
 
 /**
