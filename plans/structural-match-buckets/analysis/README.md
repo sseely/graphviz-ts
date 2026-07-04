@@ -152,8 +152,14 @@ each) so they leave the tracked set.
 ## Needs-C-instrumentation (28 cases, deferred)
 
 Mechanism not yet pinned to a C locus within Batch-4 scope. Largest:
-`hub-fanin long-edge chain` (9: b29 ×4 / b124 ×3 / b100 / b104 — tied to the
-existing `plans/fix-graphs-b15/` groupSize work); `splines=ortho corridor
+`hub-fanin long-edge chain` — **partly resolved**: `b100`/`b104` (Δ20) were
+C-instrumented and proven to be the accepted A3 hypot-ULP tie-break class (NOT
+the b15 groupSize mechanism, which was refuted for b100 — box/poly/taut-path all
+byte-identical to C up to `findMaxDev`'s knot pick); now accepted-portability
+(`.agent-notes/hub-fanin-longedge-diagnosis.md`). `b29 ×4 / b124 ×3` (Δ up to
+2559 — orders of magnitude larger than one rank-row) remain OPEN as a distinct,
+larger mechanism, possibly the real `plans/fix-graphs-b15/` groupSize work.
+`splines=ortho corridor
 tie-break` (3: 56/1856/2361); `polypoly` rotated-4-gon ellipse-fit float
 sensitivity (3); labeled 2-cycle vspace (2: 2413_1/2413_2); edge-port-label-clip
 (2: arrowsize/144_ortho); singletons 1453, graphs-style, 2646, 2082, b57, 2613,
