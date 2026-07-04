@@ -109,7 +109,16 @@ const measureItem = (
   return measurer.measure(item.text ?? '', face, fs, flags);
 };
 
-/** Split items into measured lines at <BR/>. @see size_html_txt */
+/**
+ * Split items into measured lines at <BR/>, mirroring C's parser exactly
+ * (htmlparse.y appendFLineList/mkText): a BR with no accumulated items yields
+ * a line with one empty-string item in the current font (consecutive BRs = a
+ * real blank line with height); at end of text a line is added ONLY if items
+ * remain — a trailing BR does NOT create a phantom empty line. Must stay in
+ * lockstep with buildLineRuns (htmltable-pos-runs.ts), the placement twin.
+ * @see lib/common/htmlparse.y:appendFLineList / mkText
+ * @see lib/common/htmltable.c:size_html_txt
+ */
 const splitSizedLines = (
   texts: HtmlText[],
   measurer: TextMeasurer,
@@ -117,21 +126,29 @@ const splitSizedLines = (
 ): SizedLine[] => {
   const lines: SizedLine[] = [];
   let cur: SizedLine = { items: [], width: 0, mxysize: 0, mxfsize: 0 };
-  const flush = (): void => {
+  const accumulate = (item: HtmlTextItem): void => {
+    const sz = measureItem(item, measurer, env);
+    cur.items.push(item);
+    cur.width += sz.w;
+    cur.mxysize = Math.max(cur.mxysize, sz.h);
+    cur.mxfsize = Math.max(cur.mxfsize, itemFont(item, env).fs);
+  };
+  const flush = (br?: HtmlTextItem): void => {
+    if (cur.items.length === 0 && br !== undefined) {
+      // C: empty fitemList on a BR → one ""-item span in the current font.
+      const { br: _b, brAlign: _a, ...fontProps } = br;
+      accumulate({ text: '', ...fontProps });
+    }
     lines.push(cur);
     cur = { items: [], width: 0, mxysize: 0, mxfsize: 0 };
   };
   for (const txt of texts) {
     for (const item of txt.items) {
-      if (item.br) { flush(); continue; }
+      if (item.br) { flush(item); continue; }
       if (item.text === undefined) continue;
-      const sz = measureItem(item, measurer, env);
-      cur.items.push(item);
-      cur.width += sz.w;
-      cur.mxysize = Math.max(cur.mxysize, sz.h);
-      cur.mxfsize = Math.max(cur.mxfsize, itemFont(item, env).fs);
+      accumulate(item);
     }
-    flush();
+    if (cur.items.length > 0) flush(); // C mkText: only when items remain
   }
   return lines;
 };

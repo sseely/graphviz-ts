@@ -17,7 +17,7 @@
 
 import type { Box } from '../model/geom.js';
 import type { TextMeasurer } from './textmeasure.js';
-import type { HtmlText, HtmlTextItem } from './htmltable-types.js';
+import type { HtmlAlign, HtmlText, HtmlTextItem } from './htmltable-types.js';
 import { freetypeAscent } from './textmeasure.js';
 import { HTML_BF, HTML_IF, HTML_UL, HTML_SUP, HTML_SUB, HTML_S, HTML_OL } from './emit-types.js';
 
@@ -59,6 +59,11 @@ interface LineRun {
   maxOffset: number;
   /** Max yoffset_layout (ascent) over items; 0 → fall back to freetype ascent. */
   maxLayout: number;
+  /**
+   * Justification from the <BR ALIGN=…/> that TERMINATES this line; undefined
+   * = C's UNSET_ALIGN (center). @see htmlparse.y:appendFLineList (span.just)
+   */
+  just?: HtmlAlign;
 }
 
 /**
@@ -105,6 +110,18 @@ function newRun(): LineRun {
 }
 
 /**
+ * Left edge of a run per its terminating-BR justification: 'left' → text-box
+ * left edge, 'right' → right edge minus the run width, else centered — C's
+ * spans[i].just switch with left_x/right_x = center ± halfwidth of tp->box.
+ * @see lib/common/htmltable.c:emit_htextspans (lines 137-150)
+ */
+function runLeftX(run: LineRun, box: Box, centerX: number): number {
+  if (run.just === 'left') return box.ll.x;
+  if (run.just === 'right') return box.ur.x - run.width;
+  return centerX - run.width / 2;
+}
+
+/**
  * Fold one measured item into the current run.
  * C maxoffset = MAX item yoffset_centerline; the binary metric = 0.05×fs.
  */
@@ -117,7 +134,16 @@ function accumulateItem(cur: LineRun, item: HtmlTextItem, m: ItemMetric): void {
   cur.maxLayout = Math.max(cur.maxLayout, m.yoffsetLayout ?? 0);
 }
 
-/** Split text content into lines at <BR/> items. @see size_html_txt */
+/**
+ * Split text content into lines at <BR/> items, mirroring C's parser exactly
+ * (htmlparse.y appendFLineList/mkText):
+ * - a BR CLOSES the current line and carries its ALIGN as the line's just;
+ * - a BR with no accumulated items yields a line with one empty-string item
+ *   in the current font (consecutive BRs = a real blank line with height);
+ * - at end of text a line is added ONLY if items remain — a trailing BR does
+ *   NOT create a phantom empty line (this over-sized e.g. html2's node c).
+ * @see lib/common/htmlparse.y:appendFLineList / mkText
+ */
 export function buildLineRuns(
   texts: HtmlText[],
   finfo: HtmlFontInfo,
@@ -125,16 +151,27 @@ export function buildLineRuns(
 ): LineRun[] {
   const runs: LineRun[] = [];
   let cur: LineRun = newRun();
-  const flush = (): void => { runs.push(cur); cur = newRun(); };
+  const flush = (br?: HtmlTextItem): void => {
+    if (cur.items.length === 0 && br !== undefined) {
+      // C: empty fitemList on a BR → one ""-item span in the current font.
+      const { br: _b, brAlign: _a, ...fontProps } = br;
+      const empty: HtmlTextItem = { text: '', ...fontProps };
+      const m = measureItem(empty, finfo, measurer);
+      if (m !== null) accumulateItem(cur, empty, m);
+    }
+    cur.just = br?.brAlign;
+    runs.push(cur);
+    cur = newRun();
+  };
   for (const txt of texts) {
     for (const item of txt.items) {
-      if (item.br) { flush(); continue; }
+      if (item.br) { flush(item); continue; }
       const m = measureItem(item, finfo, measurer);
       if (m !== null) accumulateItem(cur, item, m);
     }
-    flush();
+    if (cur.items.length > 0) flush(); // C mkText: only when items remain
   }
-  return runs.filter(r => r.items.length > 0);
+  return runs;
 }
 
 /**
@@ -234,7 +271,7 @@ function placeSimpleRuns(
     // else the freetype ascent (pango/canvas path).
     const ascent = run.maxLayout > 0 ? run.maxLayout : freetypeAscent(run.fontSize, finfo.fontname);
     baseline -= i === 0 ? ascent : run.height;
-    lines.push(...placeRunItems(run, centerX - run.width / 2, baseline, finfo, measurer));
+    lines.push(...placeRunItems(run, runLeftX(run, box, centerX), baseline, finfo, measurer));
   }
   return lines;
 }
@@ -267,7 +304,7 @@ function placeComplexRuns(
     curbline += lfsize;
     ysize += run.fontSize;
     const baseline = box.ur.y - curbline;
-    for (const pl of placeRunItems(run, centerX - run.width / 2, baseline, finfo, measurer)) {
+    for (const pl of placeRunItems(run, runLeftX(run, box, centerX), baseline, finfo, measurer)) {
       pl.yoffsetCenterline = 1;
       lines.push(pl);
     }
