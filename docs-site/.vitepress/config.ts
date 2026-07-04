@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: EPL-2.0
 import { defineConfig } from 'vitepress';
 import { fileURLToPath, URL } from 'node:url';
+import { dotLang } from './dot.tmLanguage';
 
 // Deployed at https://sseely.github.io/graphviz-ts/ — base must match the repo.
 export default defineConfig({
@@ -11,6 +12,8 @@ export default defineConfig({
     'no native binary, no WASM. Runs in the browser.',
   lang: 'en-US',
   cleanUrls: true,
+  // Register the DOT grammar so ```dot fences highlight (Shiki bundles none).
+  markdown: { languages: [dotLang] },
   themeConfig: {
     // Built-in offline search (MiniSearch); no external service.
     search: { provider: 'local' },
