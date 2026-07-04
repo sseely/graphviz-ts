@@ -31,6 +31,28 @@
   },
   {
    "match": {
+    "id": "graphs-b100"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 20 (one rank-row) on one hub in-edge knot (Node23730->Node23729); every node + all upstream box/poly/taut-path byte-identical to C",
+   "reason": "same symmetric-channel bezier-split tie as 2368: findMaxDev picks between two exactly mirror-symmetric interior knots whose deviations differ by ~1 ULP; Apple libm hypot is position-dependent, so the port keeps its translation-equivariant tolerant tie-break. Reverting to C's strict tie-break is a survey net-wash and regresses oracle-pinned #241_0/cnt=3 tests. See .agent-notes/hub-fanin-longedge-diagnosis.md.",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "graphs-b104"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 20 (one rank-row) on one hub in-edge knot; identical source to graphs-b100, same symmetric-channel tie-break",
+   "reason": "identical dot source to graphs-b100 (diff = 0), same findMaxDev ~1-ULP hypot tie on a mirror-symmetric channel; irreducible portability constraint, same as 2368.",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
     "id": "2796"
    },
    "class": "A4",

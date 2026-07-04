@@ -275,7 +275,13 @@ others for a sub-perceptual reward.
 **Affected:** `dot` graphs with a **geometrically symmetric** edge-routing
 channel — typically a short, symmetric flat-edge arc. Observed example: `2368`,
 which stays at *structural-match* (maxΔ ≈ 10.2 pt on **one** edge, `376->76`).
-Most routed edges are unaffected.
+The same tie-break also surfaces on a **long** (multi-rank) edge into a
+high-fan-in hub when the corridor is exactly mirror-symmetric: `graphs-b100` /
+`graphs-b104` (identical source) diverge by maxΔ 20 (exactly one rank-row) on the
+single knot of `Node23730->Node23729` — every node position and all upstream
+box/polygon/taut-path structure is byte-identical to C; only `findMaxDev`'s
+~1-ULP choice of which mirror-symmetric interior point becomes the bezier knot
+differs. Most routed edges are unaffected.
 
 ::: details Graph definition (`2368.dot`)
 ```dot
