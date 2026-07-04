@@ -154,6 +154,7 @@ export function polySizeParamsFromNode(
     regular: poly.regular || mapbool(nodeAttr(n, g, 'regular')),
     isPlain: shape.name === 'plain',
     optionShape: poly.option.shape, // size_gen discriminant (STAR/CYLINDER)
+    nojustify: mapbool(nodeAttr(n, g, 'nojustify')), // shapes.c:2133
     flip,
   };
 }

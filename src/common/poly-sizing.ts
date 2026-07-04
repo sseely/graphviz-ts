@@ -78,6 +78,13 @@ export interface PolySizeParams {
    * @see lib/common/shapes.c:2075 (`else if (polygon->vertices) bb = size_gen(bb)`)
    */
   optionShape?: number;
+  /**
+   * nojustify attr. When true, the label's justification borders shrink to the
+   * label's own width instead of the node width, so a `\l`/`\r` line aligns to
+   * the centered label block rather than the node edge.
+   * @see lib/common/shapes.c:2132-2145
+   */
+  nojustify?: boolean;
 }
 
 /** Node geometry in points: left/right half-widths and height. */
@@ -530,9 +537,12 @@ function labelSpace(
   p: PolySizeParams, dimen: Point, bb: Point, minBb: Point, isBox: boolean, fixedshape: boolean,
 ): { space: Point; valign: string } {
   const spacex = dimen.x - p.labelDimen.x; // shapes.c:2011 (padding added to the label)
-  // nojustify is unported; C's !nojustify branch is the effective path.
+  // shapes.c:2132-2145: justified borders span the node (bb.x); nojustify shrinks
+  // them to the label's own width (dimen.x) so a \l/\r line aligns to the block.
   let spaceX: number;
-  if (isBox) {
+  if (p.nojustify) {
+    spaceX = dimen.x - spacex;
+  } else if (isBox) {
     spaceX = Math.max(dimen.x, bb.x) - spacex;
   } else if (dimen.y < bb.y) {
     spaceX = Math.max(dimen.x, bb.x * Math.sqrt(1 - (dimen.y * dimen.y) / (bb.y * bb.y))) - spacex;

@@ -41,6 +41,25 @@ const CENTER = { x: 33, y: 16.5 };
 // Label "A" at Times 14pt: 9.75 x 16.5 pts.
 const A = { x: 9.75, y: 16.5 };
 
+describe('polySize — nojustify label space (shapes.c:2132-2145)', () => {
+  // A box far wider than its label: justified \l/\r borders span the node
+  // (bb.x), nojustify borders shrink to the label's own width (dimen.x).
+  const wide = { labelDimen: { x: 100, y: 33 }, sides: 4, widthIn: 3 };
+
+  it('justified box spreads the label space across the node width', () => {
+    const r = polySize(params(wide));
+    // isBox → space.x = max(dimen.x, bb.x) - spacex; node (216pt) dominates.
+    expect(r.space.x).toBeGreaterThan(150);
+  });
+
+  it('nojustify shrinks the label space to the label width', () => {
+    const r = polySize(params({ ...wide, nojustify: true }));
+    // space.x = dimen.x - spacex = labelDimen.x (the added padding cancels).
+    expect(r.space.x).toBeCloseTo(100, 1);
+    expect(r.space.x).toBeLessThan(polySize(params(wide)).space.x);
+  });
+});
+
 describe('polySize — ellipse (sides < 3)', () => {
   it('sizes "center" @14pt Times to lw=rw=33.44 (twopi-star ref)', () => {
     const r = polySize(params({ labelDimen: CENTER }));

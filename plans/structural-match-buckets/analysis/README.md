@@ -120,12 +120,20 @@ C's `poly_port` (`lib/common/shapes.c:2902-2903`) bypasses the ray-cast for
 land exactly on a rectangle corner (a singular inside-test point), missing by up
 to ~150px. Covers `sl_box`/`st_box`/`st_box_dbl`/`sr_box` + `ports` (×3).
 
-### Mission 5 — shape-geometry singletons (4 cases)
-Independent `known-mechanism` one-offs: box vertex order ignores `orientation`
-(`poly-vertices.ts:48-55`, 1658); `star` shape unported → generic decagon
-(`shapeData.ts:353`, ref-star); `shape=plain` legitimate 0-size clobbered by a
-falsy guard (`init.ts:238-240`, ref-plain); `nojustify` label space frozen at
-creation (`make-label.ts:131`, nojustify). Bundle or fix opportunistically.
+### Mission 5 — shape-geometry singletons (4 cases) ★ DONE (all 4 conformant)
+Independent `known-mechanism` one-offs, resolved individually:
+- **1658** box vertex order ignores `orientation` — conformant (fixed by prior
+  `fix/node-shape-geometry` work).
+- **ref-star** `star` shape → conformant via the star vertex + `star_size`
+  node-sizing port (`fix/star-cylinder-size-gen`); the old "generic decagon"
+  note is stale.
+- **ref-plain** `shape=plain` 0-size — conformant.
+- **nojustify** label-justification space — fixed on `fix/nojustify-label-space`
+  (`0e87163`): `labelSpace` (`poly-sizing.ts`) hardcoded the `!nojustify` path;
+  added the `nojustify` branch (`space.x = dimen.x`, shapes.c:2132-2145) so a
+  `\l` line in a node wider than its label aligns to the label block. The actual
+  locus was `poly-sizing.ts labelSpace`, not the `make-label.ts:131` guess.
+  graphs-nojustify → conformant, 0 regressions.
 
 ### Mission 6 — x-coord NS degenerate-optimum (3 cases, deep)
 `1447_1`, `2371`, `2521` — equal-cost network-simplex vertex selection diverges
