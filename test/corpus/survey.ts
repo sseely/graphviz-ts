@@ -445,7 +445,18 @@ async function main(): Promise<void> {
       (MAX_PORT_MS > 0 ? `fast mode: excluded ${skippedSlow} graphs with port time > ${MAX_PORT_MS}ms\n` : '') +
       `oracle ${DOT_BIN} (cap ${ORACLE_TIMEOUT_MS}ms)\ncache ${CACHE}\nport via ${tsx.cmd}\n`,
   );
-  const results = await runPool(applicable, tsx, CONCURRENCY);
+  // LPT dispatch (longest expected job first): start the slowest renders at
+  // t=0 so they overlap the fast bulk of the corpus instead of bunching into a
+  // mutually-contending tail — 8 concurrent monsters at the end stretched 1652
+  // (~735s standalone) past even its 5x-native budget. Expected cost = warm
+  // port time when recorded, else canonical native time. Results are restored
+  // to manifest order below, so parity.json ordering is unchanged.
+  const manifestIdx = new Map(applicable.map((e, i) => [e.id, i]));
+  const cost = (e: CorpusEntry): number => PORT_TIMES[e.id] ?? CANON_NATIVE[e.id] ?? 0;
+  const dispatch = [...applicable].sort((a, b) => cost(b) - cost(a));
+  const pooled = await runPool(dispatch, tsx, CONCURRENCY);
+  const results: SurveyResult[] = new Array(applicable.length);
+  for (let i = 0; i < dispatch.length; i++) results[manifestIdx.get(dispatch[i].id)!] = pooled[i];
   const counts = tally(results);
   const report = {
     generatedAt: new Date().toISOString(),

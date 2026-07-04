@@ -205,13 +205,13 @@ function rangeDescend(list: EdgeList | undefined, iArr: number[], top: number, s
 /** One settle step of the dfsRange stack: descend, or finalize+pop the top. */
 function rangeFrameStep(sp: number): number {
   const top = sp - 1;
-  const sv = frameV[top]!;
-  let nsp = rangeDescend(sv.info.tree_out, frameToI, top, sp, true);
+  const svi = frameV[top]!.info; // hot loop: read .info once (87% of 1652's render)
+  let nsp = rangeDescend(svi.tree_out, frameToI, top, sp, true);
   if (nsp !== sp) return nsp;
-  nsp = rangeDescend(sv.info.tree_in, frameTiI, top, sp, false);
+  nsp = rangeDescend(svi.tree_in, frameTiI, top, sp, false);
   if (nsp !== sp) return nsp;
-  sv.info.lim = frameLim[top];
   const lim = frameLim[top];
+  svi.lim = lim;
   sp = popFrame(sp);
   if (sp > 0) frameLim[sp - 1] = lim + 1;
   return sp;

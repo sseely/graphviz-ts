@@ -1,10 +1,10 @@
 {
-  "capturedAt": "2026-06-24T01:51:44.907Z",
+  "capturedAt": "2026-07-04T19:16:18.801Z",
   "host": "Scotts-Laptop",
   "cores": 12,
   "dotVersion": "15.1.0",
   "note": "Canonical native dot render times (ms), this machine. Frozen — only the TS port is re-timed. Regenerate on hardware change.",
-  "count": 785,
+  "count": 786,
   "timings": {
     "42": 80,
     "56": 73,
@@ -39,6 +39,7 @@
     "1581": 54,
     "1624": 58,
     "1644": 53,
+    "1652": 270306,
     "1658": 57,
     "1676": 70,
     "1702": 63,
