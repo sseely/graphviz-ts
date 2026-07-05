@@ -41,6 +41,11 @@ function buildNodes(nodeArr: Node[]): OrthoNodeArr {
       LL: { x: n.info.coord.x - n.info.lw, y: n.info.coord.y - n.info.ht / 2 },
       UR: { x: n.info.coord.x + n.info.rw, y: n.info.coord.y + n.info.ht / 2 },
     },
+    // C mkMaze reads ND_coord / ND_xsize (= lw+rw) / ND_ysize (= ht) directly;
+    // passing them avoids the bb round-trip ULP loss (see OrthoNode).
+    coord: { x: n.info.coord.x, y: n.info.coord.y },
+    xsize: n.info.lw + n.info.rw,
+    ysize: n.info.ht,
   }));
 }
 

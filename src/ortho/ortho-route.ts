@@ -17,6 +17,7 @@ import { chanSearch } from "./maze-channels.js";
 import { makeGraph } from "./rawgraph.js";
 import { insertEdge, edgeExists, removeRedge, topSort } from "./rawgraph.js";
 import { updateWts } from "./maze.js";
+import { addPEdgesAll } from "./ortho-parallel.js";
 
 // ─── weight constants ─────────────────────────────────────────────────────────
 
@@ -337,7 +338,8 @@ export function assignTracks(mp: Maze): number {
   createGraphs(mp.vchans);
   if (addNpEdges(mp.hchans) !== 0) return -1;
   if (addNpEdges(mp.vchans) !== 0) return -1;
-  // parallel-segment edges omitted (addPEdges) — complex, not needed for basic routing
+  if (addPEdgesAll(mp.hchans, mp) !== 0) return -1;
+  if (addPEdgesAll(mp.vchans, mp) !== 0) return -1;
   assignTrackNo(mp.hchans);
   assignTrackNo(mp.vchans);
   return 0;

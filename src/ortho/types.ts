@@ -202,6 +202,17 @@ export interface Channel {
 export interface OrthoNode {
   /** Node bounding box in graph coordinates */
   bb: OrthoBox;
+  /**
+   * ND_coord / ND_xsize (= lw+rw) / ND_ysize (= ht) exactly as C's mkMaze
+   * reads them (maze.c:452: gcell = coord ± fmax(1, size/2)). Deriving these
+   * from `bb` re-rounds — (coord+rw)-(coord-lw) loses the size's low bits when
+   * |coord| >> size — and that ULP shift can cross an integer boundary in the
+   * int-truncated Dijkstra (sgraph.c:165). Optional: callers that only model a
+   * bb fall back to bb-derived values.
+   */
+  coord?: OrthoPoint;
+  xsize?: number;
+  ysize?: number;
 }
 
 export interface OrthoEdge {

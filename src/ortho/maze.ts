@@ -32,9 +32,14 @@ const mu = 500;
 /** @see lib/ortho/maze.c:#define BIG 16384 */
 export const BIG = 16384;
 
-/** @see lib/ortho/maze.c:#define CHANSZ(w) */
+/**
+ * `w` and the macro result are `double` in C (both call sites declare `hsz`/
+ * `vsz` as `double`) — the expansion is real division, not integer
+ * truncation. Do not add `Math.floor`/`Math.trunc` here.
+ * @see lib/ortho/maze.c:142 #define CHANSZ(w) (((w)-3)/2)
+ */
 export function chanSz(w: number): number {
-  return Math.floor((w - 3) / 2);
+  return (w - 3) / 2;
 }
 
 function isSmall(v: number): boolean { return chanSz(v) < 2; }
@@ -254,10 +259,13 @@ function mkMazeGraph(mp: Maze, bb: OrthoBox): SGraph {
 // ─── mkMaze ──────────────────────────────────────────────────────────────────
 
 function nodeBb(n: OrthoNode): OrthoBox {
-  const w2 = Math.max(1, (n.bb.UR.x - n.bb.LL.x) / 2);
-  const h2 = Math.max(1, (n.bb.UR.y - n.bb.LL.y) / 2);
-  const cx = (n.bb.LL.x + n.bb.UR.x) / 2;
-  const cy = (n.bb.LL.y + n.bb.UR.y) / 2;
+  // C: w2 = fmax(1, ND_xsize(n)/2.0); bb = ND_coord ± (w2,h2) (maze.c:466-471).
+  // Use the caller-supplied coord/xsize/ysize when present — reconstructing
+  // them from bb re-rounds and shifts cell boundaries by ULPs (see OrthoNode).
+  const w2 = Math.max(1, (n.xsize ?? (n.bb.UR.x - n.bb.LL.x)) / 2);
+  const h2 = Math.max(1, (n.ysize ?? (n.bb.UR.y - n.bb.LL.y)) / 2);
+  const cx = n.coord ? n.coord.x : (n.bb.LL.x + n.bb.UR.x) / 2;
+  const cy = n.coord ? n.coord.y : (n.bb.LL.y + n.bb.UR.y) / 2;
   return { LL: { x: cx - w2, y: cy - h2 }, UR: { x: cx + w2, y: cy + h2 } };
 }
 

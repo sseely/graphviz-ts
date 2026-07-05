@@ -16,7 +16,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { gvQsort } from './bsd-qsort.js';
+import { gvQsort, heapSort } from './bsd-qsort.js';
 import { renderSvg } from '../index.js';
 
 const MIKE = `digraph mike{
@@ -53,6 +53,79 @@ describe('gvQsort — reproduces libc qsort tie ordering', () => {
     });
     stable.sort((a, b) => a.rank - b.rank); // stable: keeps insertion order
     expect(stable.map((x) => `${x.name}@${x.rank}`).join(',')).not.toBe(C_POST);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// heapSort — the introsort depth-limit fallback (never triggered on this
+// corpus, but ported per CLAUDE.md "port every branch"). Pinned against the
+// system libc `heapsort(3)` (BSD-derived, same lineage as Apple's), invoked
+// via a throwaway C driver — not against the graphviz oracle.
+// ---------------------------------------------------------------------------
+
+interface Tagged { d: number; tag: number; }
+
+/** Sort by `d` only, tie on `tag` — exercises the permutation of tied keys. */
+const byD = (a: Tagged, b: Tagged) => a.d - b.d;
+
+function tagged(pairs: Array<[number, number]>): Tagged[] {
+  return pairs.map(([d, tag]) => ({ d, tag }));
+}
+
+describe('heapSort — matches libc heapsort(3) (BSD/Apple lineage)', () => {
+  // Fixtures and expected permutations captured from a throwaway C driver
+  // calling the system heapsort(3) directly (macOS libc; same BSD lineage
+  // as Apple's qsort.c fallback). See analysis: R9 residual-cleanup task.
+  const cases: Array<{ name: string; input: Array<[number, number]>; expected: Array<[number, number]> }> = [
+    {
+      name: 'all-tied, n=8 (power-of-two heap shape)',
+      input: Array.from({ length: 8 }, (_, i) => [5, i] as [number, number]),
+      expected: [[5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 0]],
+    },
+    {
+      name: 'all-tied, n=13 (non-power-of-two)',
+      input: Array.from({ length: 13 }, (_, i) => [42, i] as [number, number]),
+      expected: Array.from({ length: 13 }, (_, i) => [42, (i + 1) % 13] as [number, number]),
+    },
+    {
+      name: 'descending distinct with a tied run in the middle',
+      input: [9, 8, 7, 7, 7, 6, 5, 4, 3, 2, 1, 0].map((d, tag) => [d, tag] as [number, number]),
+      expected: [
+        [0, 11], [1, 10], [2, 9], [3, 8], [4, 7], [5, 6], [6, 5],
+        [7, 2], [7, 4], [7, 3], [8, 1], [9, 0],
+      ],
+    },
+    {
+      name: 'reverse-sorted distinct, n=20',
+      input: Array.from({ length: 20 }, (_, i) => [20 - i, i] as [number, number]),
+      expected: Array.from({ length: 20 }, (_, i) => [i + 1, 19 - i] as [number, number]),
+    },
+    {
+      name: 'two interleaved tied groups, n=16',
+      input: Array.from({ length: 16 }, (_, i) => [i % 2, i] as [number, number]),
+      expected: [
+        [0, 12], [0, 4], [0, 14], [0, 6], [0, 2], [0, 10], [0, 0], [0, 8],
+        [1, 13], [1, 11], [1, 5], [1, 9], [1, 15], [1, 7], [1, 3], [1, 1],
+      ],
+    },
+    { name: 'single element', input: [[7, 0]], expected: [[7, 0]] },
+    { name: 'two tied elements', input: [[3, 0], [3, 1]], expected: [[3, 1], [3, 0]] },
+  ];
+
+  for (const { name, input, expected } of cases) {
+    it(`${name}`, () => {
+      const items = tagged(input);
+      heapSort(items, 0, items.length, byD);
+      expect(items.map((x) => [x.d, x.tag])).toEqual(expected);
+    });
+  }
+
+  it('sorts a sub-range in place, leaving the rest of the array untouched', () => {
+    const items = tagged([[9, 0], [3, 1], [3, 2], [1, 3], [8, 4]]);
+    heapSort(items, 1, 3, byD); // sort only indices [1,4)
+    expect(items.map((x) => [x.d, x.tag])).toEqual([
+      [9, 0], [1, 3], [3, 2], [3, 1], [8, 4],
+    ]);
   });
 });
 
