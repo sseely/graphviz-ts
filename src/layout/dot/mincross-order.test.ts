@@ -12,7 +12,7 @@ import { fastEdge } from './fastgr.js';
 import {
   flatMvalIn, flatMvalOut, flatMval,
   computeMedian,
-  mediansCollectDir, mediansProcessNode,
+  mediansCollectDir, mediansProcessNode, medians,
   saveBest, restoreRank, restoreBest,
   reorderFindLp, reorderFindRp, reorderInner,
   mincrossStepBounds,
@@ -234,9 +234,9 @@ describe('mediansCollectDir: skips zero-penalty', () => {
 
 describe('mediansProcessNode', () => {
   // Regression (mincross.c:1646): medians computes a median for EVERY node, no
-  // cluster skip. A clustered node with a non-flat edge must get a real mval
-  // (returns false), else reorderFindLp drops it (undefined->-1) and the cluster
-  // skeleton never reorders. Returned true (mval undefined) before the fix.
+  // cluster skip. A clustered node with a non-flat edge must get a real mval,
+  // else reorderFindLp drops it (undefined->-1) and the cluster skeleton
+  // never reorders. mval stayed undefined (never set) before the fix.
   it('computes a median for a clustered node with edges (no cluster skip)', () => {
     const g = new Graph('g', 'directed');
     const n = makeNode(g, 0, 'n');
@@ -249,15 +249,69 @@ describe('mediansProcessNode', () => {
     e.info.xpenalty = 1;
     e.info.head_port = { p: { x: 0, y: 0 }, theta: 0, bp: null, defined: false, constrained: false, clip: false, dyna: false, order: 0, side: 0, name: '' };
     n.info.out = { list: [e], size: 1 }; // d=1 > rank(n)=0 -> out-edge head val
-    expect(mediansProcessNode(n, 1)).toBe(false);
+    mediansProcessNode(n, 1);
     expect(n.info.mval).toBe(0);
   });
 
-  it('calls flatMval and returns its result for an edgeless node', () => {
+  // mediansProcessNode is loop 1 only (mincross.c:1627-1667): it always resets
+  // mval from the directional fast-edge list, even for a totally edgeless
+  // node — the empty list computes median -1. flat_mval is loop 2's job (see
+  // `medians` below), never mediansProcessNode's.
+  it('resets mval to -1 for an edgeless node (no flat_mval call)', () => {
     const g = new Graph('g', 'directed');
     const n = makeNode(g, 0, 'n');
-    n.info.clust = g; // cluster membership no longer forces fixed; edgelessness does
-    expect(mediansProcessNode(n, 0)).toBe(true);
+    n.info.mval = 5; // stale value from a previous pass direction
+    mediansProcessNode(n, 0);
+    expect(n.info.mval).toBe(-1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// medians (two-loop restructure) — @see mincross.c:1621-1673
+// ---------------------------------------------------------------------------
+
+describe('medians', () => {
+  // Regression (1453-medians-reset.md): a fused single-loop version processes
+  // nodes in rank order and early-returns edge-less nodes straight into
+  // flat_mval. If node `a` (index 0, edge-less) precedes its flat neighbor
+  // `b` (index 1, has real fast edges) in that order, the fused code reads
+  // b's STALE mval (from a previous pass) when evaluating a's flat_mval,
+  // because b hasn't been (re)computed yet this pass. C's true two-loop
+  // shape computes mval for EVERY node in loop 1 first, so by the time loop
+  // 2's flat_mval(a) runs, b already holds its fresh, freshly-computed mval
+  // — regardless of iteration order. Assert both halves of that mechanism:
+  // (1) a's own mval is unconditionally reset by loop 1, (2) flat_mval reads
+  // b's POST-loop-1 fresh value, not whatever stale value b started with.
+  it('lets flat_mval read a later neighbor\'s fresh (post-loop-1) mval, not its stale value', () => {
+    const g = new Graph('g', 'directed');
+    const a = makeNode(g, 0, 'a');
+    a.info.rank = 0;
+    a.info.mval = 5; // stale value from a previous pass direction
+    const b = makeNode(g, 1, 'b');
+    b.info.rank = 0;
+    b.info.order = 1;
+    b.info.mval = 0; // stale value; if read un-refreshed, flat_mval(a) declines
+    const c = makeNode(g, 2, 'c');
+    c.info.rank = 1;
+    c.info.order = 1;
+    const bOut = new Edge(b, c, '');
+    b.info.out = { list: [bOut], size: 1 }; // b's real fast edge -> loop 1 computes b.mval = 256
+    // `a`'s only connection is a flat_out constraint to `b` (built directly,
+    // not via makeEdge/fastEdge, so `a` stays edge-less per medians' loop-2
+    // criterion: ND_out==0 && ND_in==0, mincross.c:1669).
+    const flatEdge = new Edge(a, b, '');
+    a.info.flat_out = { list: [flatEdge], size: 1 };
+    const rk = makeRankEntry([a, b]);
+    const g2 = new Graph('g', 'directed');
+    g2.info.rank = [rk];
+    const ctx = makeCtx(g2);
+    const hasfixed = medians(ctx, g2, 0, 1); // d=1 > rank(a,b)=0 -> loop 1 reads out-edges
+    // b's fresh mval: single out-edge to c(order=1) -> val = 256*1+0 = 256.
+    expect(b.info.mval).toBe(256);
+    // flat_mval(a) must see that fresh 256 (not the stale 0) and accept:
+    // a.mval = nnMval - 1 = 255, returns false (not fixed).
+    expect(a.info.mval).toBe(255);
+    expect(hasfixed).toBe(false);
   });
 });
 

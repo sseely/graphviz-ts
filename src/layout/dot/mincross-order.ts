@@ -111,22 +111,38 @@ export function computeMedian(list: number[]): number {
   return (list[m - 1]! * rspan + list[m]! * lspan) / (lspan + rspan);
 }
 
-export function mediansProcessNode(v: Node, d: number): boolean {
-  const inSize = v.info.in !== undefined ? v.info.in.size : 0;
-  const outSize = v.info.out !== undefined ? v.info.out.size : 0;
-  if (inSize === 0 && outSize === 0) return flatMval(v);
+/**
+ * Loop 1 body of C `medians` (mincross.c:1627-1667) — computes a fresh mval
+ * for a SINGLE node from its directional fast-edge list. An empty list
+ * (including nodes with no fast edges in this direction at all — case 0 at
+ * mincross.c:1643) resets mval to -1 via computeMedian. This must run for
+ * EVERY node in the rank, unconditionally, before flat_mval (loop 2 in
+ * `medians` below) reads any node's mval.
+ * @see lib/dotgen/mincross.c:1621-1667
+ */
+export function mediansProcessNode(v: Node, d: number): void {
   const list: number[] = [];
   mediansCollectDir(v, d, list);
   v.info.mval = computeMedian(list);
-  return false;
 }
 
-/** @see lib/dotgen/mincross.c:medians */
+/**
+ * @see lib/dotgen/mincross.c:1621
+ *
+ * Mirrors C's exact two-loop shape. Loop 1 resets/sets mval for EVERY node
+ * in the rank (mincross.c:1627-1667). Loop 2 runs flat_mval only for nodes
+ * with NO fast edges in either direction (mincross.c:1669-1673), strictly
+ * after loop 1 has completed for the whole rank — so flat_mval always
+ * observes a freshly-reset mval, never a stale value left over from the
+ * opposite pass direction. A fused single-loop version that early-returns
+ * into flat_mval for edge-less nodes skips the loop-1 reset for exactly
+ * those nodes, leaking stale cross-pass mval into the reorder comparator.
+ * @see plans/residual-cleanup/analysis/1453-medians-reset.md
+ */
 export function medians(_ctx: MincrossContext, g: Graph, r: number, d: number): boolean {
   const gRank = g.info.rank;
   if (!gRank) return false;
   const rk = gRank[r];
-  let hasfixed = false;
   for (let i = 0; i < rk.n; i++) {
     // Faithful to C GD_rank(g)[r].v — the already-offset window pointer.
     // TS keeps rk.v as the full root array + a separate vStart, so we must
@@ -134,7 +150,17 @@ export function medians(_ctx: MincrossContext, g: Graph, r: number, d: number): 
     // medians/reorder were ported without it. @see mincross.c:medians
     const v = rankGet(rk, i);
     if (!v) continue;
-    if (mediansProcessNode(v, d)) hasfixed = true;
+    mediansProcessNode(v, d);
+  }
+  let hasfixed = false;
+  for (let i = 0; i < rk.n; i++) {
+    const v = rankGet(rk, i);
+    if (!v) continue;
+    const inSize = v.info.in !== undefined ? v.info.in.size : 0;
+    const outSize = v.info.out !== undefined ? v.info.out.size : 0;
+    if (inSize === 0 && outSize === 0) {
+      if (flatMval(v)) hasfixed = true;
+    }
   }
   return hasfixed;
 }
