@@ -258,6 +258,23 @@ export interface EdgeInfo {
    */
   showboxes?: number;
 
+  /**
+   * True for edges created inside the flat-adjacent auxiliary clone graph
+   * (make_flat_adj_edges). Models C's setState window: cloneGraph re-declares
+   * the aux attribute dictionary via agnxtattr (NAME-sorted), so aux ids are
+   * alphabetical ranks while the global symbols E_arrowsz/E_penwidth — which
+   * setState does NOT remap — keep main-graph declaration-order ids. Inside
+   * the aux, arrow_length's agxget(e, E_arrowsz) therefore mis-indexes into
+   * an unrelated attribute (e.g. #1949: id 1 = `color` → "black"/"blue"),
+   * strtod fails, and late_double falls back to 1.0 for both arrowsize and
+   * penwidth. The arrow POLYGON is unaffected (C regenerates it at emit time
+   * from the original edge). Load-bearing C quirk; consumed by the arrow
+   * clip-length computation only.
+   * @see lib/dotgen/dotsplines.c:setState (E_arrowsz/E_penwidth not remapped)
+   * @see lib/common/arrows.c:arrow_length (late_double(e, E_arrowsz, 1.0, 0.0))
+   */
+  stale_arrow_attrs?: boolean;
+
   // -------------------------------------------------------------------------
   // neato/fdp-specific fields (#ifndef DOT_ONLY in C)
   // -------------------------------------------------------------------------
@@ -406,7 +423,8 @@ export function makeEdgeInfo(tailPort: Port, headPort: Port): EdgeInfo {
     to_orig: undefined, to_virt: undefined, lost: undefined, alg: undefined,
     weight: undefined, minlen: undefined, cutvalue: undefined, tree_index: undefined,
     xpenalty: undefined, count: undefined, conc_opp_flag: undefined,
-    showboxes: undefined, factor: undefined, dist: undefined, path: undefined,
+    showboxes: undefined, stale_arrow_attrs: undefined,
+    factor: undefined, dist: undefined, path: undefined,
     samehead: undefined, sametail: undefined, lhead: undefined, ltail: undefined,
     reversed: undefined,
   };

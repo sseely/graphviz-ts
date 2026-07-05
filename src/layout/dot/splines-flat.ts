@@ -153,20 +153,39 @@ function cloneFlatEdge(auxg: Graph, tn: Node, auxt: Node, auxh: Node, orig: Edge
 }
 
 /**
+ * Forward-normalized lead-edge endpoints (C make_flat_edge's makefwdedge of
+ * `*edges`). setflags marks a FLATEDGE as BWDEDGE exactly when
+ * ND_order(tail) > ND_order(head), and make_flat_edge forward-normalizes a
+ * BWDEDGE lead via makefwdedge (swapping ends) BEFORE passing it to
+ * make_flat_adj_edges as e0. Net C invariant: the e0 whose tail/head feed
+ * tn/hn always runs left→right — tail = the lower-ND_order endpoint. A group
+ * whose lead runs high→low order (e.g. #1949's
+ * `structDefaultAuto->structParty:N` under rankdir=LR, a lone BWDEDGE group
+ * after the getmainedge split) must swap here; otherwise auxt/auxh, the
+ * reposition frame, and del all mirror, and the aux clone flips fwd↔back.
+ * @see lib/dotgen/dotsplines.c:setflags (FLATEDGE order predicate)
+ * @see lib/dotgen/dotsplines.c:make_flat_edge (makefwdedge of *edges)
+ */
+function flatLeadPair(edges: Edge[]): { tn: Node; hn: Node } {
+  const t = edges[0].tail, h = edges[0].head;
+  return (t.info.order ?? 0) < (h.info.order ?? 0) ? { tn: t, hn: h } : { tn: h, hn: t };
+}
+
+/**
  * Build the rotated auxiliary graph: clone tail/head + each edge, then add a
  * heavy ordering edge so the pair lands on adjacent ranks.
  * @see lib/dotgen/dotsplines.c:make_flat_adj_edges (clone + hvye)
  */
 function buildFlatAux(g: Graph, edges: Edge[], cnt: number): FlatAux {
-  const otn = edges[0].tail;
+  const { tn: ltn, hn: lhn } = flatLeadPair(edges);
   const flip = g.info.flip ?? false;
   // C swaps tn/hn under flip, then clones auxt from tn and orients every edge
   // against that same (swapped) tn. `refTn` is that node — the one auxt is
   // cloned from — so the orientation test in cloneFlatEdge matches C.
-  const refTn = flip ? edges[0].head : otn;
+  const refTn = flip ? lhn : ltn;
   const auxg = cloneGraph(g);
   const auxt = cloneNode(auxg, refTn);
-  const auxh = cloneNode(auxg, flip ? otn : edges[0].head);
+  const auxh = cloneNode(auxg, flip ? ltn : lhn);
   const alg = new Map<Edge, Edge>();
   let hvye: Edge | null = null;
   for (let i = 0; i < cnt; i++) {
@@ -195,13 +214,16 @@ function noBlockerBetween(v: ReadonlyArray<Node | null>, lo: number, hi: number)
   return true;
 }
 
-/** Reposition aux nodes into a frame aligned with the original graph. */
+/** Reposition aux nodes into a frame aligned with the original graph.
+ * tn/hn are the forward-normalized lead endpoints (flatLeadPair): C computes
+ * rightx/leftx from the makefwdedge-normalized e0 BEFORE the flip swap, and
+ * midx from tn/hn AFTER it. @see lib/dotgen/dotsplines.c:make_flat_adj_edges */
 function repositionFlatAux(g: Graph, edges: Edge[], aux: FlatAux): void {
-  const otn = edges[0].tail, ohn = edges[0].head;
+  const { tn: ltn, hn: lhn } = flatLeadPair(edges);
   const flip = g.info.flip ?? false;
-  const rightx = ohn.info.coord.x, leftx = otn.info.coord.x;
-  const stn = flip ? ohn : otn;
-  const shn = flip ? otn : ohn;
+  const rightx = lhn.info.coord.x, leftx = ltn.info.coord.x;
+  const stn = flip ? lhn : ltn;
+  const shn = flip ? ltn : lhn;
   const midx = (stn.info.coord.x - stn.info.rw + shn.info.coord.x + shn.info.lw) / 2;
   const midy = (aux.auxt.info.coord.x + aux.auxh.info.coord.x) / 2;
   // Iterate the full node list (C's GD_nlist), not just the named-node Map:
@@ -276,11 +298,14 @@ function copyOneFlatSpline(orig: Edge, auxe: Edge, del: Point, flip: boolean, g:
   copyFlatLabel(orig, auxe, del, flip, g);
 }
 
-/** Copy every routed aux spline back to its original edge. */
+/** Copy every routed aux spline back to its original edge. `del` anchors on
+ * the flip-swapped, forward-normalized lead tail — the node auxt was cloned
+ * from (C's tn at the del computation).
+ * @see lib/dotgen/dotsplines.c:make_flat_adj_edges (copy splines, del) */
 function copyFlatSplines(g: Graph, edges: Edge[], aux: FlatAux): void {
-  const otn = edges[0].tail;
+  const { tn: ltn, hn: lhn } = flatLeadPair(edges);
   const flip = g.info.flip ?? false;
-  const stn = flip ? edges[0].head : otn;
+  const stn = flip ? lhn : ltn;
   const at = aux.auxt.info.coord;
   const del = flip
     ? { x: stn.info.coord.x - at.y, y: stn.info.coord.y + at.x }

@@ -301,3 +301,55 @@ describe('T10b — flat-adj spline direction follows C top-level edge_normalize'
     expect(Number(m![1])).toBe(282);
   });
 });
+
+/**
+ * F1 (followup-residuals) — the two #1949 discriminators that took the flat
+ * pair from structural-match to conformant. Native oracle: dot 15.1.0.
+ *
+ * 1. makefwdedge lead normalization: `structDefaultAuto->structParty:N` is a
+ *    lone all-backward flat group (ND_order(structDefaultAuto)=1 >
+ *    ND_order(structParty)=0). C's make_flat_edge forward-normalizes edges[0]
+ *    via makefwdedge before make_flat_adj_edges, so tn is ALWAYS the
+ *    lower-order endpoint; without it the port mirrored auxt/auxh and the :N
+ *    clone became an aux BACK edge that fell off the faithful path entirely.
+ *    @see lib/dotgen/dotsplines.c:make_flat_edge, setflags (FLATEDGE order)
+ *
+ * 2. Stale aux arrow attrs: inside the cloned aux dictionary C's arrow_length
+ *    resolves E_arrowsz/E_penwidth through un-remapped main-graph symbol ids
+ *    (setState skips them) — for 1949 the misindexed slot holds `color`
+ *    ("black"/"blue"), strtod fails, and the backoff is computed with
+ *    arrowsize=1.0 instead of the edge's 0.7 (11.48 vs 8.48; delta ≈ 3). The
+ *    final curve therefore stops 3pt SHORT of the 0.7-scaled arrow base.
+ *    @see lib/dotgen/dotsplines.c:setState; lib/common/arrows.c:arrow_length
+ */
+describe('F1 — #1949 makefwdedge lead normalization + stale aux arrow attrs', () => {
+  it(':N edge routes through the aux as a forward clone (native geometry)', () => {
+    // Native: M158.3,-74.25 C158.3,-86.4 158.3,-98.91 158.3,-109.84 — a
+    // vertical faithful-aux spline. Pre-fix the mirrored aux produced no
+    // spline and the edge fell back to the fitter (start ≈ -36, curved).
+    const edges = edgePaths(renderSvg(DOT_1949, 'dot'));
+    const n = edges.find(e => e.title.startsWith('structDefaultAuto')
+      && e.title.endsWith('structParty:N'));
+    expect(n).toBeDefined();
+    const pts = n!.pts;
+    expect(pts.length).toBe(4);
+    for (const p of pts) expect(p.x).toBeCloseTo(158.3, 1);
+    expect(pts[pts.length - 1].y).toBeCloseTo(-109.84, 1);
+    // Stale-attr backoff: the curve starts at -74.25 (arrowsize-1.0 backoff),
+    // 3pt short of the 0.7-scaled arrow base at ≈-71.28. A port that resolves
+    // the aux edge's real arrowsize=0.7 starts at -71.25 instead.
+    expect(pts[0].y).toBeCloseTo(-74.25, 1);
+  });
+
+  it(':S edge leaves structParty:S at the native point (176.53,-102.39)', () => {
+    // The :S group shares the aux frame with the :N group only through the
+    // postprocess translation; the stale-attr backoff also shapes its loop
+    // (pre-fix: M175.48,-105.11 — delta 2.72 from the 0.7-scaled backoff).
+    const edges = edgePaths(renderSvg(DOT_1949, 'dot'));
+    const s = edges.find(e => e.title.startsWith('structParty:S')
+      && e.title.endsWith('structDefaultAuto'));
+    expect(s).toBeDefined();
+    expect(s!.pts[0].x).toBeCloseTo(176.53, 1);
+    expect(s!.pts[0].y).toBeCloseTo(-102.39, 1);
+  });
+});

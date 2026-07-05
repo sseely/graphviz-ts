@@ -124,6 +124,24 @@ class SplineClipHelper {
   }
 
   /**
+   * arrowsize for the clip-length computation. Inside the flat-adj aux clone,
+   * C's arrow_length reads arrowsize/penwidth through the stale global
+   * symbols E_arrowsz/E_penwidth (setState never remaps them), mis-indexes
+   * the alphabetically re-declared aux dictionary, and falls back to the
+   * late_double default 1.0 — regardless of the edge's real arrowsize. The
+   * arrow POLYGON is unaffected (regenerated at emit from the original edge).
+   * @see lib/dotgen/dotsplines.c:setState; lib/common/arrows.c:arrow_length
+   */
+  static clipArrowsize(e: Edge): number {
+    return e.info.stale_arrow_attrs ? 1.0 : edgeArrowsize(e);
+  }
+
+  /** penwidth for the clip-length computation (same stale-symbol quirk). */
+  static clipPenwidth(e: Edge): number {
+    return e.info.stale_arrow_attrs ? 1.0 : SplineClipHelper.edgePenwidth(e);
+  }
+
+  /**
    * Clip the spline end to the head arrowhead base; records the tip in
    * spl.ep. @see lib/common/arrows.c:arrowEndClip
    */
@@ -131,7 +149,8 @@ class SplineClipHelper {
     e: Edge, ps: Point[], startp: number, endpIn: number, spl: Bezier, eflag: number,
   ): number {
     let endp = endpIn;
-    const elen = arrowClipLength(edgeArrowName(e, 'head'), edgeArrowsize(e), SplineClipHelper.edgePenwidth(e));
+    const elen = arrowClipLength(edgeArrowName(e, 'head'),
+      SplineClipHelper.clipArrowsize(e), SplineClipHelper.clipPenwidth(e));
     spl.eflag = eflag;
     spl.ep = ps[endp + 3]!;
     if (endp > startp && SplineClipHelper.dist(ps[endp]!, ps[endp + 3]!) < elen) {
@@ -157,7 +176,8 @@ class SplineClipHelper {
     e: Edge, ps: Point[], startpIn: number, endp: number, spl: Bezier, sflag: number,
   ): number {
     let startp = startpIn;
-    const slen = arrowClipLength(edgeArrowName(e, 'tail'), edgeArrowsize(e), SplineClipHelper.edgePenwidth(e));
+    const slen = arrowClipLength(edgeArrowName(e, 'tail'),
+      SplineClipHelper.clipArrowsize(e), SplineClipHelper.clipPenwidth(e));
     spl.sflag = sflag;
     spl.sp = ps[startp]!;
     if (endp > startp && SplineClipHelper.dist(ps[startp]!, ps[startp + 3]!) < slen) {
@@ -243,8 +263,8 @@ class SplineClipHelper {
     e: Edge, ps: Point[], startp: number, endp: number, spl: Bezier,
     sflag: number, eflag: number,
   ): void {
-    const pwAttr = SplineClipHelper.edgePenwidth(e);
-    const size = edgeArrowsize(e);
+    const pwAttr = SplineClipHelper.clipPenwidth(e);
+    const size = SplineClipHelper.clipArrowsize(e);
     const hlen0 = arrowClipLength(edgeArrowName(e, 'head'), size, pwAttr);
     const tlen0 = arrowClipLength(edgeArrowName(e, 'tail'), size, pwAttr);
     if (sflag && eflag && endp === startp) {

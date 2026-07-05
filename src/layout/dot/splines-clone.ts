@@ -94,6 +94,11 @@ export function cloneEdge(g: Graph, tn: Node, hn: Node, orig: Edge): Edge {
   e.info.minlen = orig.info.minlen;
   // Copy string attrs
   for (const [k, v] of orig.attrs) e.attrs.set(k, v);
+  // Edges living under the aux clone's attribute dictionary resolve
+  // arrowsize/penwidth through C's stale (un-remapped) global symbols during
+  // arrow clipping — see EdgeInfo.stale_arrow_attrs for the mechanism.
+  // @see lib/dotgen/dotsplines.c:setState (E_arrowsz/E_penwidth not remapped)
+  e.info.stale_arrow_attrs = true;
   g.edges.push(e);
   return e;
 }
