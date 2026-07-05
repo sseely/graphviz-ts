@@ -58,8 +58,8 @@ test/corpus/parity.json && npx tsx test/corpus/dashboard.ts, commit snapshot.
 | 1 — diagnoses ×7 (parallel, worktree, docs-only) | [x] | [batch-1/overview.md](batch-1/overview.md) |
 | 2 — known-locus fixes (decorate, portlabel, 1949) | [x] | [batch-2/overview.md](batch-2/overview.md) |
 | 3 — fixes from Batch-1 verdicts | [x] | [batch-3/overview.md](batch-3/overview.md) |
-| 4 — polypoly outcome + NS diagnosis | [ ] | [batch-4/overview.md](batch-4/overview.md) |
-| 5 — NS outcome + closeout | [ ] | [batch-5/overview.md](batch-5/overview.md) |
+| 4 — polypoly outcome + NS diagnosis | [x] (T14 pulled to b3; T18 done) | [batch-4/overview.md](batch-4/overview.md) |
+| 5 — NS outcome + closeout | [x] (T19 a522206; T20 this commit) | [batch-5/overview.md](batch-5/overview.md) |
 
 Links: [decisions.md](decisions.md) · [decision-journal.md](decision-journal.md) ·
 [diagrams/component-map.md](diagrams/component-map.md) ·
@@ -68,3 +68,30 @@ Links: [decisions.md](decisions.md) · [decision-journal.md](decision-journal.md
 Model routing: per-task `model:` line in each task file (fable = C-instrumentation
 /long-horizon; opus = multi-path decisions; sonnet = mechanical). Diagnosis agents
 that touch the port tree MUST run with isolation:worktree.
+
+## Mission summary (2026-07-05, T20)
+
+Input: 24 tracked structural-match ids (snapshot 56ad33d, conformant 733).
+Outcome: **conformant 733 → 749 (+16)**; tracked non-accepted ids 24 → 5.
+
+- FIXED (18 ids): b29 x4 + b124 x3 (swapBezier size-bounded reverse, T11);
+  2361 + 1856 (ortho int-trunc relax + compass-port endpoints, T13);
+  polypoly x3 (base-box plumb, T14); 2613 (xlabel flip swap, T15);
+  144_ortho + graphs-arrowsize (bezier-size read + ortho placePortLabels, T9);
+  2521 (mincross save_best window-relative scratch, T19); 1949 canvas class
+  (flat-adj normalize predicate, T10b — residuals remain, see below).
+- ACCEPTED with C-instrumented evidence (3 ids -> A3 registry): 2413_1,
+  2413_2, graphs-decorate (findMaxDev hypot symmetric-ties <= 5.7e-13).
+- STILL OPEN, re-attributed with fresh evidence (5 ids): 1949 (labeled-flat
+  text-y family Δ5.43 + aux HTML sizing), 1453 (TREE_GROUP placement Δ457),
+  2646 (unknown; T7's corridor-bounds theory landed as a faithful fix but its
+  causal link was refuted), 2371 (2-edge spline-shape residual Δ16.8 — NOT
+  NS; stale memory corrected), 1447_1 (ortho maze-corridor 2620-family Δ~151,
+  improved from 781 by T3/T13).
+- Retired hypotheses: ortho equal-cost tie-break (both real bugs), polypoly
+  float noise (plumbing bug), xcoord-NS solution selection (class EMPTY — NS
+  byte-identical; the one member was a mincross scratch bug).
+- Harness fixes shipped en route: oracle cap scales with slowest native;
+  LPT dispatch; canonical native timing for 1652.
+- Every fix C-faithful, TDD'd, zero corpus regressions across five gates
+  (1652/2646 maxΔ=0.0 load-flips standalone-verified per protocol).

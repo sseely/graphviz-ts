@@ -179,3 +179,12 @@ sensitivity (3); labeled 2-cycle vspace (2: 2413_1/2413_2); edge-port-label-clip
 "Tracked structural-match — by worst-diff signature" table in
 [PARITY.md](../../../test/corpus/PARITY.md). This analysis (mechanism families)
 is the point-in-time human/agent layer over that regenerable element-kind map.
+
+## 2026-07-05 — structural-match-endgame mission outcome
+
+Missions 5/6 and the needs-C tail are resolved: see
+[structural-match-endgame](../../structural-match-endgame/README.md) summary.
+Mission 6 (x-coord NS) is RETIRED — the class was empty (NS byte-identical to
+C; 2521 was a mincross save_best scratch bug, fixed). Remaining tracked ids
+after the mission: 1949-residuals, 1453-TREE_GROUP, 2646-unknown,
+2371-spline-shape, 1447_1-ortho-family.
