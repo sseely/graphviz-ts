@@ -56,6 +56,10 @@ const DOC_CLAIMS_DIVERGENT = [
   '2413_2',
   // A3 hypot-tie family extension: intra-cluster labeled edge (retired 2026-07-05)
   'graphs-decorate',
+  // A3 hypot-tie family extension: control-point mirror across 2 edges (retired 2026-07-05)
+  '2371',
+  // A8 new class: fp-contract/FMA knife-edge tangency in Proutespline (retired 2026-07-05)
+  '2646',
 ];
 
 describe('known-divergences.md prose ↔ parity verdicts', () => {

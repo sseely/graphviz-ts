@@ -290,7 +290,18 @@ the file's reported maxΔ 1922.26 is dominated by an unrelated, separately-
 tracked defect), and a single intra-cluster labeled edge in `graphs-decorate`
 (maxΔ 43.54); in each case the two candidate split corners tie to within
 5.7e-13 (2413 family) / 3e-14 (decorate) of each other before the
-position-dependent Apple `hypot` noise picks a winner. Most routed edges are
+position-dependent Apple `hypot` noise picks a winner. `2371`
+(structural-match, maxΔ 16.8) shows the same fingerprint on two unrelated
+edges (`g[9263]` `r6837mid--r9687mid`, `g[23859]` `r38mid--r8699mid`): the
+port emits the exact control-point-sequence mirror of the oracle on both,
+knot y flipped by an identical Δ16.8 (top/bottom split fractions swapped).
+Its origin is qualified **MEDIUM** confidence rather than the CONFIRMED
+confidence of the other members: `2371` packs ~199 components, which
+decouples pathplan-local coordinates from page coordinates, so the tie could
+not be correlated live to `route.ts:209` across three instrumentation
+attempts; a straight-mode-segmentation or post-clip `recover_slack` origin is
+not fully excluded. Full diagnosis:
+`plans/residual-cleanup/analysis/2371-mirror.md`. Most routed edges are
 unaffected.
 
 ::: details Graph definition (`2368.dot`)
@@ -574,6 +585,50 @@ corpus-wide regression risk for 1 px on 2 edges — the same shared-primitive
 constraint as the control-hull rounding noted in
 `bbox-class-control-hull-vs-curve`. Full diagnosis:
 `.agent-notes/honda-samehead-shared-port.md`.
+
+---
+
+### A8. `fp-contract`/FMA knife-edge tangency in `Proutespline` (`dot`)
+
+**Affected:** `2646` (structural-match, maxΔ 42.09 on 3 of 21,216 edges:
+`edge2575` `g[4639]`, `edge3905` `g[7777]`, `edge15467` `g[30201]` — all
+record-port `:c->:nb_part` smode long-edge routes). Sibling of **A3**: both
+classes are irreducible floating-point-portability ties inside
+`Proutespline`, but the mechanism is distinct — a compiler `fp-contract`
+artifact, not libm `hypot`.
+
+**What differs.** On all three edges, only the final `routesplines` call (a
+straight leg into the head port) diverges. Its endpoint lies bit-exactly on
+the barrier polygon's bottom wall with its tangent parallel to that wall
+(`evs[1]=(1,-1.22e-16)`), so every `splinefits` candidate is tangent to the
+barrier at `t=1` — a near-double root of the intersection cubic.
+`points2coeff` computes that cubic through catastrophic cancellation (terms
+around ~7446 collapsing to ~0.099). The oracle (clang/arm64,
+`-ffp-contract=on`) contracts `v3 + 3*v1 - (v0 + 3*v2)` into fused
+multiply-adds, while V8 performs strict IEEE rounding — the two disagree by
+~9.1e-13 on **bit-identical inputs**, and that noise flips the sign of the
+`solve3` discriminant: C finds 1 root (866.7, inside the segment); the port
+finds 3 roots with a spurious partner root at `t=0.9999975 < 1-EPSILON2`. The
+spurious root triggers one extra `a`-halving iteration, which flips the
+final piece's tangent magnitude by a factor of 2 (in either direction across
+the 3 edges), producing the maxΔ 42.09 post-clip (26 SVG diffs).
+
+**Why accepted (irreducibility proven by a controlled experiment).** All six
+`routesplines` calls were dumped on both sides — box, polygon, `PL`, start,
+end, and `evs` are byte-identical, as is the earlier (non-final) call's
+output spline; the only divergence is inside the final call's `solve3`. A
+standalone pristine-C harness isolated the single variable: compiling with
+`-ffp-contract=off` reproduces the **port** bit-exactly on all 3 edges; the
+default (`on`) contraction reproduces the **oracle** bit-exactly on all 3
+edges. The port therefore already agrees with strict-IEEE-754 C; the
+divergence is entirely the oracle compiler's FMA contraction choice, below
+C source-code semantics — there is no source-level infidelity to fix. A
+targeted fix (hand-emulating the contraction in `points2coeff`) was tried and
+refuted: it corrects 2 of the 3 edges but not the third, whose flip
+originates inside `solve3`'s own internal contraction. A complete fix would
+require software-FMA emulation across the whole spline fitter — a hot-loop
+cost with corpus-wide rounding blast radius for a sub-pixel, 3-edge reward.
+Full diagnosis: `plans/residual-cleanup/analysis/2646-fp-contract.md`.
 
 ---
 

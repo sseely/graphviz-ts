@@ -211,6 +211,28 @@
    "bound": "max\u0394 43.54 on a single intra-cluster labeled edge (Se3ffa656...->Se3ffa61c...); all 23 diffs live in that one <g>",
    "reason": "same findMaxDev symmetric-tie family as 2368/241_1/2413_1/2413_2: interior deviations tie at 77.56953556793451 vs ...54 (~3e-14 abs, ~4e-16 rel) \u2014 exact double-noise tie. C's raw `>` comparison via Apple libm hypot keeps-second; the port's tolerant tie-break keeps-first; the mirrored split cascades to the arrowhead and decorate connector (closest-point-on-spline). Ruled out (each against live C-instrumented rebuilds): box construction/maximal_bbox/rank_box, adjust/complete regular path widening, beginPath/endPath dispatch, buildPolyPoints/flip, shortestPath funnel, evs tangents, routeSplinesInternal inputs (all byte-identical).",
    "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "2371"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 16.8 on two edges (g[9263] r6837mid--r9687mid, g[23859] r38mid--r8699mid); the port emits the exact control-point-sequence mirror of the oracle on both; all ~36,900 other elements byte-identical",
+   "reason": "joins the existing findMaxDev/hypot symmetric-tie family (A3, cf. 2368): both divergent edges emit the exact reversal of the oracle's control-point sequence \u2014 shared knot x identical, knot y flipped by an identical \u0394 16.8 on both unrelated edges (top/bottom split fractions swapped) \u2014 the same irreducible hypot-ULP tie-break as 2368. Origin confidence is qualified MEDIUM: 2371 packs ~199 components, decoupling pathplan-local coordinates from page coordinates, so the tie could not be correlated live to route.ts:209 across three instrumentation strategies; not fully excluded that the tie resolves in straight-mode segmentation or post-clip recover_slack instead of literally at that site. Full diagnosis: plans/residual-cleanup/analysis/2371-mirror.md.",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "2646"
+   },
+   "class": "A8",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 42.09 on 3 of 21,216 edges (edge2575 g[4639], edge3905 g[7777], edge15467 g[30201]; all record-port :c->:nb_part smode long-edge routes)",
+   "reason": "final smode leg tangent to the barrier wall (endpoint on wall, tangent parallel); splinefits a-halving exit flips on solve3 disc sign, decided by clang/arm64 -ffp-contract FMA rounding (~9e-13) in points2coeff/solve3 under catastrophic cancellation; port == strict-IEEE C (verified bit-exact via -ffp-contract=off harness, all 3 edges); flips both directions; max\u0394 42.09 on 3 of 21,216 edges. Full diagnosis: plans/residual-cleanup/analysis/2646-fp-contract.md.",
+   "ref": "known-divergences.md#a8-fp-contractfma-knife-edge-tangency-in-proutespline-dot"
   }
  ]
 }
