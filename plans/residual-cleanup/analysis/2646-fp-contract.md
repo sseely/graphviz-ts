@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
-# R5 — 2646 (diagnosed 2026-07-05) — ACCEPT: new fp-contract/FMA family (A6)
+# R5 — 2646 (diagnosed 2026-07-05) — ACCEPT: new fp-contract/FMA family (registered as A8 — A6/A7 already taken)
 
 mechanism: 3 divergent edges (edge2575 g[4639], edge3905 g[7777], edge15467
 g[30201]; all record-port :c->:nb_part) are smode long-edge routes; only the
@@ -33,7 +33,7 @@ NOT 3905 (its flip sits in solve3-internal contraction). Complete fix =
 compiler/arch-specific software-fma emulation across the fitter — hot-loop
 cost + corpus-wide rounding blast radius. Not recommended.
 
-verdict: ACCEPT — NEW registry class (A6 "fp-contract/FMA knife-edge
+verdict: ACCEPT — NEW registry class (A8 "fp-contract/FMA knife-edge
 tangency in Proutespline", sibling of A3, distinct mechanism). Irreducibility
 proven by single-variable controlled experiment (-ffp-contract flips the C
 reference between both observed behaviors; strict-IEEE C agrees with the
