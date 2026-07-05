@@ -56,7 +56,7 @@ test/corpus/parity.json && npx tsx test/corpus/dashboard.ts, commit snapshot.
 | Batch | Status | Doc |
 |---|---|---|
 | 1 — diagnoses ×7 (parallel, worktree, docs-only) | [x] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — known-locus fixes (decorate, portlabel, 1949) | [ ] | [batch-2/overview.md](batch-2/overview.md) |
+| 2 — known-locus fixes (decorate, portlabel, 1949) | [x] | [batch-2/overview.md](batch-2/overview.md) |
 | 3 — fixes from Batch-1 verdicts | [ ] | [batch-3/overview.md](batch-3/overview.md) |
 | 4 — polypoly outcome + NS diagnosis | [ ] | [batch-4/overview.md](batch-4/overview.md) |
 | 5 — NS outcome + closeout | [ ] | [batch-5/overview.md](batch-5/overview.md) |
