@@ -342,10 +342,18 @@ export function removeFromRank(g: Graph, n: Node): void {
 /**
  * Allocate a virtual (VIRTUAL node_type) node, add it to `g`'s fast graph
  * with pre-allocated in/out edge lists of capacity 4.
+ *
+ * `n.root` is bound to `g.root` (agroot(g)), NOT `g` itself, mirroring the
+ * cgraph invariant every node's root points to the absolute top graph, never
+ * an enclosing cluster subgraph — even when `g` here is a cluster. C:
+ * `n->root = agroot(g);` (fastgr.c:204). Binding root to the cluster instead
+ * left cluster-owned virtual (label) nodes without a populated info.flip
+ * (clusters never run initSubgraphRankdir), corrupting flip-dependent reads
+ * such as placeVnlabel's labelXPos (splines-label.ts).
  * @see lib/dotgen/fastgr.c:virtual_node
  */
 export function virtualNode(g: Graph): Node {
-  const n = new NodeClass(0, '', g);
+  const n = new NodeClass(0, '', g.root);
   n.info.node_type = VIRTUAL;
   // C: ND_lw(n) = ND_rw(n) = 1; ND_ht(n) = 1; ND_UF_size(n) = 1
   // @see lib/dotgen/fastgr.c:virtual_node

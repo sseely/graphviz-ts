@@ -34,7 +34,7 @@ import {
   collectNonAdjacentFlatGroup, routeFlatEdgeGroupFaithful,
 } from './splines-flat-multi.js';
 import { makeFlatLabeledEdge, makeAdjFlatNoPortEdge } from './splines-flat-labeled.js';
-import { EDGETYPE_SPLINE, swapEndsP, swapEdgeSpline } from './splines.js';
+import { EDGETYPE_SPLINE, swapEndsP, swapEdgeSpline, getMainEdge } from './splines.js';
 import { FLATORDER } from './fastgr.js';
 import { IGNORED } from './rank.js';
 import { buildDotSinfo } from './self-loop.js';
@@ -308,19 +308,25 @@ function isGroupableFlat(x: GraphEdge, g: Graph): boolean {
 /**
  * Collect all unrouted adjacent same-rank side-port flat edges between e's two
  * endpoints (either direction), ordered so group[0].tail is the lower-order
- * (left) node. C groups every adjacent flat between a node pair into one
- * make_flat_adj_edges call and normalizes its lead edge forward (makefwdedge) so
- * tn = the left node; the port's buildFlatAux derives otn from edges[0].tail, so
- * the lead edge must be forward for the reversed back edge to clone auxh->auxt
- * and curl (size 7) instead of straight (size 4).
+ * (left) node. C's dispatch loop sorts edges by edgecmp (equivalent edges
+ * contiguous) and groups a run while `getmainedge(e0) === getmainedge(e1)`
+ * (dotsplines.c:343-356); it does NOT re-derive the group from a node-pair
+ * scan. Gate on getMainEdge equality (not just the unordered node pair) so
+ * two independent parallel edges that merely share endpoints, but resolve to
+ * different main edges (e.g. one is itself the main edge of a virtual chain,
+ * the other belongs to a different original edge), are NOT folded into one
+ * shared aux solve. C makes one make_flat_adj_edges call PER getmainedge run.
+ * @see lib/dotgen/dotsplines.c:343-378 (esp. line 356 `if (le0 != le1) break;`)
  * @see lib/dotgen/dotsplines.c:make_flat_edge (makefwdedge of *edges), dot_splines_
  */
 function collectAdjacentFlatGroup(e: GraphEdge, g: Graph): GraphEdge[] {
   const u = e.tail, v = e.head;
   const lo = (u.info.order ?? 0) <= (v.info.order ?? 0) ? u : v;
+  const me = getMainEdge(e);
   const sharesPair = (x: GraphEdge): boolean =>
     (x.tail === u && x.head === v) || (x.tail === v && x.head === u);
-  const group = g.edges.filter(x => sharesPair(x) && isGroupableFlat(x, g));
+  const group = g.edges.filter(x =>
+    sharesPair(x) && isGroupableFlat(x, g) && getMainEdge(x) === me);
   group.sort((a, b) => Number(b.tail === lo) - Number(a.tail === lo) || a.seq - b.seq);
   return group;
 }
