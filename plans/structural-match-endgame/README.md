@@ -95,3 +95,5 @@ Outcome: **conformant 733 → 749 (+16)**; tracked non-accepted ids 24 → 5.
   LPT dispatch; canonical native timing for 1652.
 - Every fix C-faithful, TDD'd, zero corpus regressions across five gates
   (1652/2646 maxΔ=0.0 load-flips standalone-verified per protocol).
+
+> **Post-mission status (2026-07-05):** the 5 residuals this mission left open were all closed by [../residual-cleanup/](../residual-cleanup/README.md) — 1447_1 + 1453 conformant, 2371→A3, 2646→A8 (new fp-contract class), 1949 double-fixed with a documented makefwdedge follow-up. Corpus: conformant 752.
