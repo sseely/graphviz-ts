@@ -41,7 +41,7 @@ import { addBox } from '../../common/splines-path-shared.js';
 import { TOP, BOTTOM, REGULAREDGE } from '../../common/splines-constants.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
 import { neighbor, topBound, botBound, nodeType, splineMerge } from './splines-route.js';
-import { computeLeftBound, computeRightBound, rankHt } from './edge-route-rank.js';
+import { getSplineBounds, rankHt } from './edge-route-rank.js';
 import { graphRanksep } from './position-aux.js';
 
 /** maximal_bbox uses a local `#define FUDGE 4` (wider than splines.c FUDGE=2). */
@@ -388,8 +388,7 @@ export function routeRegularEdgeFaithful(g: Graph, e: Edge): Point[] | null | 'l
   const ctx: BboxCtx = {
     g,
     sp: {
-      leftBound: computeLeftBound(g),
-      rightBound: computeRightBound(g),
+      ...getSplineBounds(g),
       splinesep: Math.trunc((g.info.nodesep ?? 18) / 4),
     },
   };

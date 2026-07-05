@@ -17,7 +17,7 @@ import type { Point, Box } from '../../model/geom.js';
 import type { Node } from '../../model/node.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
 import type { NodeBox } from './edge-route-geom.js';
-import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
+import { getSplineBounds } from './edge-route-rank.js';
 import type { Path, PathendT } from '../../common/types.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
@@ -53,8 +53,7 @@ function chainBboxCtx(g: Graph): BboxCtx {
   return {
     g,
     sp: {
-      leftBound: computeLeftBound(g),
-      rightBound: computeRightBound(g),
+      ...getSplineBounds(g),
       splinesep: Math.trunc((g.info.nodesep ?? 18) / 4),
     },
   };

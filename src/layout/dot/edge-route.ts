@@ -80,7 +80,9 @@ export {
 export type { EdgeSplineResult, RankEdgeInfo } from './edge-route-routing.js';
 export {
   computeLeftBound, computeRightBound, rankHt, rankEdgeInfoOf,
+  getSplineBounds, resetSplineBounds,
 } from './edge-route-rank.js';
+export type { SplineBoundsSnapshot } from './edge-route-rank.js';
 export { ARROW_LENGTH, ARROW_WIDTH_FACTOR, arrowheadPolygon } from './edge-route-arrow.js';
 
 // Re-export helpers so existing callers keep working.

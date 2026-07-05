@@ -31,7 +31,7 @@ import { TOP, BOTTOM, FLATEDGE } from '../../common/splines-constants.js';
 import {
   maximalBbox, appendRegularEnd, freshEndp, type BboxCtx,
 } from './edge-route-faithful.js';
-import { computeLeftBound, computeRightBound } from './edge-route-rank.js';
+import { getSplineBounds } from './edge-route-rank.js';
 import { graphRanksep } from './position-aux.js';
 import { Edge as EdgeClass } from '../../model/edge.js';
 import { cloneNode, cloneEdge, cleanupCloneGraph, transformf } from './splines-clone.js';
@@ -512,8 +512,7 @@ export function flatBboxCtx(g: Graph): BboxCtx {
   return {
     g,
     sp: {
-      leftBound: computeLeftBound(g),
-      rightBound: computeRightBound(g),
+      ...getSplineBounds(g),
       splinesep: Math.trunc((g.info.nodesep ?? 18) / 4),
     },
   };
