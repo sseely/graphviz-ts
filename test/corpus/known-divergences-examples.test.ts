@@ -50,6 +50,12 @@ const DOC_CLAIMS_DIVERGENT = [
   '2470',
   // A7 round()/box-wall rounding boundary in maximal_bbox (retired 2026-07-04)
   'graphs-honda-tokoro',
+  // A3 hypot-tie family extension: label-vnode slit corridor (retired 2026-07-05)
+  '2413_1',
+  // A3 hypot-tie family extension: same corridor, 2 ties (retired 2026-07-05)
+  '2413_2',
+  // A3 hypot-tie family extension: intra-cluster labeled edge (retired 2026-07-05)
+  'graphs-decorate',
 ];
 
 describe('known-divergences.md prose ↔ parity verdicts', () => {

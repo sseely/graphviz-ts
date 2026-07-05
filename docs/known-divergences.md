@@ -283,7 +283,15 @@ box/polygon/taut-path structure is byte-identical to C; only `findMaxDev`'s
 ~1-ULP choice of which mirror-symmetric interior point becomes the bezier knot
 differs. The short flat-edge form also surfaces as `241_1` (structural-match,
 maxΔ ≈ 2.4 pt) — the divergent sibling of the oracle-pinned `241_0`, which C's
-noise instead keeps-first. Most routed edges are unaffected.
+noise instead keeps-first. The same tie-break produces a labeled 2-cycle
+back-edge slit-corridor split in `2413_1` (structural-match, maxΔ 67.65) and
+`2413_2` (maxΔ ≤99.55 once the T11 swapBezier-reverse fix lands — until then
+the file's reported maxΔ 1922.26 is dominated by an unrelated, separately-
+tracked defect), and a single intra-cluster labeled edge in `graphs-decorate`
+(maxΔ 43.54); in each case the two candidate split corners tie to within
+5.7e-13 (2413 family) / 3e-14 (decorate) of each other before the
+position-dependent Apple `hypot` noise picks a winner. Most routed edges are
+unaffected.
 
 ::: details Graph definition (`2368.dot`)
 ```dot

@@ -178,6 +178,39 @@
    "bound": "max\u0394 ~1pt on one edge (n012->n011); every node/label/bbox conformant",
    "reason": "maximal_bbox head-corridor box wall lands at internal x=90 in C vs x=89 in the port \u2014 a round()/box-wall rounding-boundary artifact of ~1e-14 upstream float noise tipping a .5 boundary. The port's maximal_bbox formula mirrors C exactly; round() is a shared primitive every routed edge flows through, so changing it is corpus-wide regression risk for 1px on 2 edges. Full diagnosis: .agent-notes/honda-samehead-shared-port.md.",
    "ref": "known-divergences.md#a7-round-box-wall-rounding-boundary-dot"
+  },
+  {
+   "match": {
+    "id": "2413_1"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 67.65 on the labeled 2-cycle back-edge label-vnode slit corridor; nodes/bbox conformant",
+   "reason": "same findMaxDev symmetric-tie family as 2368/241_1/b100/b104: the two candidate split corners of the label-vnode slit corridor tie to within 5.7e-13 of each other; Apple libm hypot (route.c:139) flips the winner per absolute coordinate (exact translates of the same corridor resolve differently in one process), so the port keeps its translation-equivariant keeps-first tie-break. Ruled out: route/box divergence (byte-identical corridors across 3 exact translates), 2-cycle double-count recurrence (nodes byte-identical), routing order (identical both sides).",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "2413_2"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 \u226499.55 (two findMaxDev ties, same corridor family as 2413_1) once the T11 swapBezier-reverse fix lands; until then parity.json reports max\u0394 1922.26, dominated by that separate, already-diagnosed-and-fixed swapBezier over-allocated-reverse defect (not part of this acceptance)",
+   "reason": "same findMaxDev symmetric-tie family as 2368/241_1/2413_1: two independent label-vnode slit-corridor splits tie to within 5.7e-13; Apple libm hypot flips the winner per absolute coordinate, so the port keeps its translation-equivariant keeps-first tie-break. The much larger current max\u0394 (1922.26) is a distinct, unrelated mechanism \u2014 swapBezier's full-array reverse rotating 3 stale (0,0) slots to the front on a size-shrunk reversed back edge (same bug as T1/hub-fanin) \u2014 tracked as a fix (T11), not accepted; once merged this entry's residual is the A3 tie only.",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
+  },
+  {
+   "match": {
+    "id": "graphs-decorate"
+   },
+   "class": "A3",
+   "scope": "parity",
+   "verdict": "structural-match",
+   "bound": "max\u0394 43.54 on a single intra-cluster labeled edge (Se3ffa656...->Se3ffa61c...); all 23 diffs live in that one <g>",
+   "reason": "same findMaxDev symmetric-tie family as 2368/241_1/2413_1/2413_2: interior deviations tie at 77.56953556793451 vs ...54 (~3e-14 abs, ~4e-16 rel) \u2014 exact double-noise tie. C's raw `>` comparison via Apple libm hypot keeps-second; the port's tolerant tie-break keeps-first; the mirrored split cascades to the arrowhead and decorate connector (closest-point-on-spline). Ruled out (each against live C-instrumented rebuilds): box construction/maximal_bbox/rank_box, adjust/complete regular path widening, beginPath/endPath dispatch, buildPolyPoints/flip, shortestPath funnel, evs tangents, routeSplinesInternal inputs (all byte-identical).",
+   "ref": "known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot"
   }
  ]
 }
