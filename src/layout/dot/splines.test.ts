@@ -312,6 +312,42 @@ describe('swapBezier and swapSpline primitives', () => {
     expect(spl.list[0]).toBe(b1);
     expect(spl.list[1]).toBe(b0);
   });
+
+  // Regression: clip can shrink a bezier's real point count (b.size) below
+  // its over-allocated list.length, leaving zeroed spare slots calloc'd at
+  // the tail (faithful to C's newSpline pre-allocation). C's swap_bezier
+  // (dotsplines.c:144-148) reverses only the bounded window list[0..size),
+  // via an index-swap loop `for (i = 0; i < sz / 2; ++i) SWAP(list[i],
+  // list[sz-1-i])` — it never touches indices >= size. A naive
+  // `list.reverse()` over the WHOLE array instead rotates the zeroed spare
+  // slots to the front, producing junk (0,0) points in the emitted window
+  // and truncating the real curve. See analysis/hub-fanin.md,
+  // analysis/2413-vspace.md (Mechanism B).
+  it('swapBezier bounds the reverse to [0, size) and leaves spare zeroed tail slots in place', () => {
+    const real = [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }];
+    const spare = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+    const bz = {
+      list: [...real, ...spare],
+      size: real.length,
+      sflag: 1,
+      eflag: 2,
+      sp: { x: 10, y: 10 },
+      ep: { x: 20, y: 20 },
+    };
+
+    swapBezier(bz);
+
+    // Emitted window [0, size) must be the reversed REAL points only.
+    expect(bz.list.slice(0, bz.size)).toEqual([...real].reverse());
+    // Spare zeroed slots must stay at the tail, untouched — not rotated
+    // to the front.
+    expect(bz.list.slice(bz.size)).toEqual(spare);
+    expect(bz.list).toHaveLength(6);
+    expect(bz.sflag).toBe(2);
+    expect(bz.eflag).toBe(1);
+    expect(bz.sp).toEqual({ x: 20, y: 20 });
+    expect(bz.ep).toEqual({ x: 10, y: 10 });
+  });
 });
 
 describe('edgeNormalize — spline reversal for back-edges', () => {

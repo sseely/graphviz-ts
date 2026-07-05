@@ -270,9 +270,23 @@ export function edgecmp(e0: Edge, e1: Edge): number {
 // @see lib/dotgen/dotsplines.c:swap_bezier, swap_spline, edge_normalize
 // ---------------------------------------------------------------------------
 
-/** Reverse bezier control points and swap sflag/eflag, sp/ep. */
+/**
+ * Reverse bezier control points and swap sflag/eflag, sp/ep.
+ *
+ * b.list may be over-allocated beyond b.size (newSpline pre-allocates pn
+ * slots; clip can shrink the real point count, leaving zeroed spare slots
+ * calloc'd at the tail). Only the bounded window list[0, size) holds real
+ * points, so the reverse must be an index-swap loop over that window —
+ * NOT a whole-array reverse, which would rotate the zeroed spares to the
+ * front. @see lib/dotgen/dotsplines.c:144-148 (swap_bezier)
+ */
 export function swapBezier(b: Bezier): void {
-  b.list.reverse();
+  const sz = b.size;
+  for (let i = 0; i < Math.floor(sz / 2); i++) {
+    const tmp = b.list[i];
+    b.list[i] = b.list[sz - 1 - i];
+    b.list[sz - 1 - i] = tmp;
+  }
   const sf = b.sflag; b.sflag = b.eflag; b.eflag = sf;
   const sp = b.sp; b.sp = b.ep; b.ep = sp;
 }
