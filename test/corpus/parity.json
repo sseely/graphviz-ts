@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-05T08:32:51.903Z",
+  "generatedAt": "2026-07-05T13:28:06.533Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 748,
-    "structural-match": 17,
-    "diverged": 11,
+    "conformant": 752,
+    "structural-match": 16,
+    "diverged": 10,
     "errored": 0,
-    "timeout": 3,
+    "timeout": 1,
     "oracle-error": 10
   },
   "results": [
@@ -127,9 +127,7 @@
     {
       "id": "1447_1",
       "path": "1447_1.dot",
-      "verdict": "structural-match",
-      "maxDelta": 151,
-      "maxDeltaPath": "svg/g[1]/g[368]/path[1]/@d[5]"
+      "verdict": "conformant"
     },
     {
       "id": "144_no_ortho",
@@ -144,9 +142,7 @@
     {
       "id": "1453",
       "path": "1453.dot",
-      "verdict": "structural-match",
-      "maxDelta": 457,
-      "maxDeltaPath": "svg/g[1]/g[59]/polygon[1]/@points[0]"
+      "verdict": "conformant"
     },
     {
       "id": "1472",
@@ -344,8 +340,8 @@
       "id": "1949",
       "path": "1949.dot",
       "verdict": "structural-match",
-      "maxDelta": 5.430000000000007,
-      "maxDeltaPath": "svg/g[1]/g[17]/text[1]/@y"
+      "maxDelta": 36.67,
+      "maxDeltaPath": "svg/g[1]/g[21]/path[1]/@d[7]"
     },
     {
       "id": "1990",
@@ -624,10 +620,7 @@
     {
       "id": "2475_2",
       "path": "2475_2.dot",
-      "verdict": "diverged",
-      "maxDelta": 85,
-      "firstDiffPath": "svg/g[1]/g[4074]/path[1]/@d",
-      "maxDeltaPath": "svg/g[1]/g[9358]/ellipse[1]/@cx"
+      "verdict": "conformant"
     },
     {
       "id": "2476",
@@ -793,7 +786,7 @@
       "id": "2646",
       "path": "2646.dot",
       "verdict": "structural-match",
-      "maxDelta": 42.09,
+      "maxDelta": 42.08999999999992,
       "maxDeltaPath": "svg/g[1]/g[30201]/path[1]/@d[21]"
     },
     {
@@ -851,8 +844,8 @@
       "id": "2796",
       "path": "2796.dot",
       "verdict": "structural-match",
-      "maxDelta": 35.159999999999854,
-      "maxDeltaPath": "svg/g[1]/g[139]/text[1]/@y"
+      "maxDelta": 11.110000000000014,
+      "maxDeltaPath": "svg/g[1]/g[186]/path[1]/@d[11]"
     },
     {
       "id": "2801",
