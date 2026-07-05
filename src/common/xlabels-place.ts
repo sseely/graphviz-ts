@@ -24,6 +24,7 @@ import type { XLabelT, ObjectT, LabelParamsT } from '../label/xlabels.js';
 import {
   dist2, dotneatoClosest, polylineMidpoint, splEndPoints, type SplLike,
 } from './spline-midpoint.js';
+import { updateBB } from '../layout/dot/splines-label.js';
 
 // ---------------------------------------------------------------------------
 // Constants. @see lib/common/geom.h:INCH2PS
@@ -277,14 +278,18 @@ function haveEdge(et: number, e: { info: { spl?: unknown } }): boolean {
   return et !== EDGETYPE_NONE && e.info.spl !== undefined;
 }
 
-function updateBBForLabel(g: Graph, lp: TextlabelT): void {
-  const bb = g.info.bb;
-  const hw = lp.dimen.x / 2;
-  const hh = lp.dimen.y / 2;
-  if (lp.pos.x - hw < bb.ll.x) bb.ll.x = lp.pos.x - hw;
-  if (lp.pos.y - hh < bb.ll.y) bb.ll.y = lp.pos.y - hh;
-  if (lp.pos.x + hw > bb.ur.x) bb.ur.x = lp.pos.x + hw;
-  if (lp.pos.y + hh > bb.ur.y) bb.ur.y = lp.pos.y + hh;
+/**
+ * Grow the graph bbox to include a placed xlabel/edge-label.
+ *
+ * Delegates to the shared `updateBB` (splines-label.ts) so the GD_flip
+ * axis swap lives in one place. C's addXLabel/addLabelObj callers all
+ * route label growth through the same `updateBB`/`addLabelBB`
+ * (lib/common/utils.c:569-595) — this used to be a second, divergent
+ * copy that never got the flip swap; see analysis/2613-canvas.md.
+ * @see lib/common/utils.c:addLabelBB
+ */
+export function updateBBForLabel(g: Graph, lp: TextlabelT): void {
+  updateBB(g, lp);
 }
 
 // ---------------------------------------------------------------------------

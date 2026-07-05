@@ -10,6 +10,6 @@ write-set disjointness before parallel dispatch. Batch gate: survey+gate.
 | T11 | b29/b124 fix-or-accept | fable | per analysis/hub-fanin.md | T1 | [ ] |
 | T12 | 2413 fix | fable | per analysis/2413-vspace.md | T2 | [ ] |
 | T13 | ortho fix-or-accept (REGISTRY writer) | opus+sonnet | per analysis/ortho-tiebreak.md (+registry trio if accept) | T3 | [ ] |
-| T15 | 2613 fix | sonnet | per analysis/2613-canvas.md | T5 | [ ] |
+| T15 | 2613 fix | sonnet | per analysis/2613-canvas.md | T5 | [x] |
 | T16 | 1453 fix | sonnet | per analysis/1453-curved.md | T6 | [ ] |
 | T17 | 2646 fix | sonnet | per analysis/2646-recordport.md | T7 | [ ] |

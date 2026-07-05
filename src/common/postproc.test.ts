@@ -18,7 +18,7 @@ import { Graph } from '../model/graph.js';
 import { Node } from '../model/node.js';
 import { RANKDIR_TB, RANKDIR_LR, RANKDIR_BT, RANKDIR_RL } from '../layout/dot/init.js';
 import {
-  addXLabel, edgeTailpoint, edgeHeadpoint,
+  addXLabel, edgeTailpoint, edgeHeadpoint, updateBBForLabel,
   type XLabelCtx, type ELike,
 } from './xlabels-place.js';
 import type { XLabelT, ObjectT } from '../label/xlabels.js';
@@ -344,6 +344,42 @@ describe('addXLabel: Flip size swap', () => {
     addXLabel(lp, ctx, false, { x: 0, y: 0 });
     expect(ctx.lbls[0]!.sz.x).toBeCloseTo(10, 6);
     expect(ctx.lbls[0]!.sz.y).toBeCloseTo(30, 6);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// updateBBForLabel — Flip axis swap (delegates to splines-label.ts:updateBB)
+// @see lib/common/utils.c:569-595 addLabelBB
+// @see plans/structural-match-endgame/analysis/2613-canvas.md
+//
+// Regression for the 2613 canvas-extent bug: updateBBForLabel used to grow
+// the graph bbox with lp.dimen.x/y unconditionally, never swapping axes
+// under GD_flip (rankdir=LR/RL) like C's addLabelBB does. Mirrors the
+// updateBB flip tests in splines-label.test.ts.
+// ---------------------------------------------------------------------------
+
+describe('updateBBForLabel: Flip axis swap (delegates to updateBB)', () => {
+  // A wide, short label (dimen 40×10) placed at the origin. Under flip
+  // (rankdir=LR/RL) C swaps axes: width=dimen.y (10), height=dimen.x (40).
+  function bbAfter(flip: boolean): { ll: { x: number; y: number }; ur: { x: number; y: number } } {
+    const g = new Graph('g', 'directed');
+    g.info.bb = { ll: { x: -1, y: -1 }, ur: { x: 1, y: 1 } };
+    g.info.flip = flip;
+    const lp = { dimen: { x: 40, y: 10 }, pos: { x: 0, y: 0 }, set: true } as never;
+    updateBBForLabel(g, lp);
+    return g.info.bb;
+  }
+
+  it('flip=false: grows by dimen.x horizontally, dimen.y vertically', () => {
+    const bb = bbAfter(false);
+    expect(bb.ur.x).toBeCloseTo(20, 6); // dimen.x/2
+    expect(bb.ur.y).toBeCloseTo(5, 6);  // dimen.y/2
+  });
+
+  it('flip=true: axes swapped — grows by dimen.y horizontally, dimen.x vertically', () => {
+    const bb = bbAfter(true);
+    expect(bb.ur.x).toBeCloseTo(5, 6);  // dimen.y/2
+    expect(bb.ur.y).toBeCloseTo(20, 6); // dimen.x/2
   });
 });
 
