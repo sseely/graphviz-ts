@@ -20,7 +20,7 @@ import { Edge } from '../../model/edge.js';
 import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
 import { dotSplines_, EDGETYPE_ORTHO } from './splines.js';
-import { EDGE_LABEL } from './rank.js';
+import { EDGE_LABEL, HEAD_LABEL, TAIL_LABEL } from './rank.js';
 import { VIRTUAL } from './fastgr.js';
 
 interface LabelObj { pos: { x: number; y: number }; dimen: { x: number; y: number }; set: boolean }
@@ -118,5 +118,37 @@ describe('dot splines=ortho edge labels (T2)', () => {
     expect(rc).toBe(0);
     expect(warn).not.toHaveBeenCalled();
     expect(e.info.spl).toBeDefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// splines=ortho port labels — C's `goto finish` lands ON the port-label block
+// (dotsplines.c:436-458), so head/tail labels with labelangle/labeldistance
+// are placed via place_portlabel for ortho too. Regression: 144_ortho.dot —
+// the ortho dispatch returned without placing them, leaving the labels to the
+// xlabels pass (wrong distance and angle, Δ up to 34.6).
+// ---------------------------------------------------------------------------
+
+describe('dot splines=ortho port labels (144_ortho)', () => {
+  it('places head/tail labels via place_portlabel after ortho routing', () => {
+    const { g, e } = buildGraph(false);
+    const headLabel: LabelObj = { pos: { x: 0, y: 0 }, dimen: { x: 20, y: 14 }, set: false };
+    const tailLabel: LabelObj = { pos: { x: 0, y: 0 }, dimen: { x: 20, y: 14 }, set: false };
+    e.info.head_label = headLabel as unknown as typeof e.info.head_label;
+    e.info.tail_label = tailLabel as unknown as typeof e.info.tail_label;
+    e.attrs.set('labeldistance', '2.2');
+    g.info.has_labels = HEAD_LABEL | TAIL_LABEL;
+
+    const rc = dotSplines_(g, true);
+    expect(rc).toBe(0);
+    expect(headLabel.set).toBe(true);
+    expect(tailLabel.set).toBe(true);
+
+    // place_portlabel: pos = pe + 10*labeldistance in direction
+    // atan2(pf-pe) - 25° — assert the exact distance from the spline end.
+    const bez = e.info.spl!.list[e.info.spl!.size - 1]!;
+    const pe = bez.eflag ? bez.ep : bez.list[bez.size - 1]!;
+    const d = Math.hypot(headLabel.pos.x - pe.x, headLabel.pos.y - pe.y);
+    expect(d).toBeCloseTo(22, 6);
   });
 });

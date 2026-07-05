@@ -437,6 +437,11 @@ function orthoDispatch(g: Graph): number {
   } else {
     dispatchOrthoEdges(g, false);
   }
+  // C's `goto finish` lands ON the port-label placement block
+  // (dotsplines.c:436-458): head/tail labels with labelangle/labeldistance
+  // are placed via place_portlabel for ortho too. Skipping this left the
+  // labels unset, so the xlabels pass placed them instead (144_ortho).
+  placePortLabels(g);
   g.info.edgeLabelsDone = true;
   return 0;
 }

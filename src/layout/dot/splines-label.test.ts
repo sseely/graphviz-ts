@@ -15,7 +15,7 @@ import { makeNodeInfo } from '../../model/nodeInfo.js';
 import { makeEdgeInfo, makePort } from '../../model/edgeInfo.js';
 import type { TextlabelT } from '../../common/types.js';
 import { VIRTUAL, NORMAL } from './fastgr.js';
-import { placeRegularEdgeLabels, updateBB } from './splines-label.js';
+import { placePortlabel, placeRegularEdgeLabels, updateBB, PORT_LABEL_ANGLE } from './splines-label.js';
 
 // ---------------------------------------------------------------------------
 // Minimal builders
@@ -208,5 +208,55 @@ describe('placeRegularEdgeLabels — multi-node nlist', () => {
     expect(lbl2.set).toBe(true);
     expect(lbl1.pos.y).toBe(100);
     expect(lbl2.pos.y).toBe(200);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// placePortlabel — bezier `size` vs backing-array capacity (graphs-arrowsize)
+// ---------------------------------------------------------------------------
+
+describe('placePortlabel — indexes bezier points by size, not list.length', () => {
+  // C indexes the endpoint neighborhood with bez->size
+  // (lib/common/splines.c:1341-1351). Arrow clipping shrinks `size` while the
+  // backing array keeps stale trailing points, so list.length can exceed the
+  // live point count. Reading list[list.length-1] picked up a stale point and
+  // skewed the head-label tangent (graphs-arrowsize.gv, Δ up to 19.4).
+  function makePortLabelEdge(): { e: Edge; label: TextlabelT } {
+    const g = makeGraph();
+    const a = makeVirtualNode(0, 'a', g, 0, 0);
+    a.info.node_type = NORMAL;
+    const b = makeVirtualNode(1, 'b', g, 100, 0);
+    b.info.node_type = NORMAL;
+    const e = makeEdge(a, b, g);
+    e.attrs.set('labeldistance', '3');
+    const label = makeTextLabel(20, 10);
+    e.info.head_label = label;
+    // One bezier: live size=4 ends at (10,0); stale capacity points beyond
+    // size point straight up and would flip the tangent by 90°.
+    e.info.spl = {
+      list: [{
+        list: [
+          { x: 40, y: 0 }, { x: 30, y: 0 }, { x: 20, y: 0 }, { x: 10, y: 0 },
+          { x: 0, y: 50 }, { x: 0, y: 75 }, { x: 0, y: 100 }, // stale
+        ],
+        size: 4,
+        sflag: 0, eflag: 1,
+        sp: { x: 0, y: 0 }, ep: { x: 0, y: 0 },
+      }],
+      size: 1,
+      bb: { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } },
+    };
+    return { e, label };
+  }
+
+  it('uses list[size-1] as the head tangent point when eflag is set', () => {
+    const { e, label } = makePortLabelEdge();
+    expect(placePortlabel(e, true)).toBe(true);
+    // pe=ep=(0,0), pf=list[size-1]=(10,0) → base angle 0, +default -25°,
+    // dist = 10 * 3 = 30.
+    const angle = (Math.PI / 180) * PORT_LABEL_ANGLE;
+    expect(label.set).toBe(true);
+    expect(label.pos.x).toBeCloseTo(30 * Math.cos(angle), 10);
+    expect(label.pos.y).toBeCloseTo(30 * Math.sin(angle), 10);
   });
 });

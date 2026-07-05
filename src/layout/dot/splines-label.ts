@@ -156,7 +156,7 @@ function cubicBezierAt(pts: readonly { x: number; y: number }[], t: number): { x
 // @see lib/common/splines.c:place_portlabel:1331-1351
 // ---------------------------------------------------------------------------
 
-type BezierSeg = { list: { x: number; y: number }[]; sflag: number; eflag: number; sp: { x: number; y: number }; ep: { x: number; y: number } };
+type BezierSeg = { list: { x: number; y: number }[]; size: number; sflag: number; eflag: number; sp: { x: number; y: number }; ep: { x: number; y: number } };
 
 /**
  * Extract (pe = endpoint, pf = near-endpoint) for the tail end of the spline.
@@ -179,14 +179,18 @@ function tailEndpoints(bez: BezierSeg): { pe: { x: number; y: number }; pf: { x:
  * pe is the exact endpoint; pf is a point 90% along the curve from the tail,
  * used to compute the tangent direction for label placement.
  *
+ * C indexes with `bez->size`, NOT the allocation length: arrow clipping
+ * (`arrow_clip`) shrinks `size` while the backing array keeps stale trailing
+ * points, so `list.length` can exceed the live point count.
+ *
  * @see lib/common/splines.c:place_portlabel:1341-1351
  */
 function headEndpoints(bez: BezierSeg): { pe: { x: number; y: number }; pf: { x: number; y: number } } {
   if (bez.eflag) {
-    return { pe: bez.ep, pf: bez.list[bez.list.length - 1] };
+    return { pe: bez.ep, pf: bez.list[bez.size - 1] };
   }
-  const pe = bez.list[bez.list.length - 1];
-  const last4 = bez.list.slice(bez.list.length - 4);
+  const pe = bez.list[bez.size - 1];
+  const last4 = bez.list.slice(bez.size - 4, bez.size);
   const pf = cubicBezierAt(last4, 0.9);
   return { pe, pf };
 }
@@ -259,8 +263,9 @@ function splineMissing(e: Edge): boolean {
  */
 function applyPortlabelPos(e: Edge, headP: boolean): boolean {
   const spl  = e.info.spl!;
+  // C: &spl->list[spl->size - 1] — index by the live size, not list.length.
   const ends = headP
-    ? headEndpoints(spl.list[spl.list.length - 1])
+    ? headEndpoints(spl.list[spl.size - 1])
     : tailEndpoints(spl.list[0]);
   const l           = headP ? e.info.head_label! : e.info.tail_label!;
   const angleStr    = e.attrs.get('labelangle')    ?? '';
