@@ -68,16 +68,25 @@ function origSeq(e: Edge): number { return resolveOrigEdge(e).seq; }
  * Collapse a main-edge group to one representative per distinct original edge.
  * The opposing `a->b`/`b->a` case collects three entries but two distinct
  * originals; dedup by `resolveOrigEdge` yields one per original (parallels
- * untouched). @see dotsplines.c:make_regular_edge (one clip_and_install per orig)
+ * untouched). Pushes the RESOLVED original `o`, not the raw group member `e`:
+ * a raw member can be a swapped internal proxy (e.g. a same-rank flat edge
+ * whose canonical orientation is tail/head-swapped) whose endpoints don't
+ * match the edge actually rendered — routing against the proxy leaves the
+ * real edge's geometry unset. C's `edges` list carries no such proxy object
+ * (its group members are already the real/virtual edges), so this recovers
+ * C's outcome for the TS-specific proxy representation. Distinct originals
+ * (genuine parallels, or a multi-rank edge's own per-hop virtual segments)
+ * each resolve to their OWN root, so this dedup never merges or renames them.
+ * @see dotsplines.c:make_regular_edge (one clip_and_install per orig)
  */
-function dedupByOrig(group: Edge[]): Edge[] {
+export function dedupByOrig(group: Edge[]): Edge[] {
   const seen = new Set<Edge>();
   const out: Edge[] = [];
   for (const e of group) {
     const o = resolveOrigEdge(e);
     if (seen.has(o)) continue;
     seen.add(o);
-    out.push(e);
+    out.push(o);
   }
   return out;
 }
