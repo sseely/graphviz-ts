@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-04T22:01:21.273Z",
+  "generatedAt": "2026-07-05T07:01:52.103Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "/Users/scottseely/git/graphviz/tests",
   "total": 789,
   "counts": {
-    "conformant": 733,
-    "structural-match": 34,
+    "conformant": 747,
+    "structural-match": 19,
     "diverged": 11,
     "errored": 0,
-    "timeout": 1,
+    "timeout": 2,
     "oracle-error": 10
   },
   "results": [
@@ -128,8 +128,8 @@
       "id": "1447_1",
       "path": "1447_1.dot",
       "verdict": "structural-match",
-      "maxDelta": 284,
-      "maxDeltaPath": "svg/g[1]/g[149]/path[1]/@d[5]"
+      "maxDelta": 151,
+      "maxDeltaPath": "svg/g[1]/g[368]/path[1]/@d[5]"
     },
     {
       "id": "144_no_ortho",
@@ -139,16 +139,14 @@
     {
       "id": "144_ortho",
       "path": "144_ortho.dot",
-      "verdict": "structural-match",
-      "maxDelta": 34.599999999999994,
-      "maxDeltaPath": "svg/g[1]/g[3]/text[2]/@x"
+      "verdict": "conformant"
     },
     {
       "id": "1453",
       "path": "1453.dot",
       "verdict": "structural-match",
-      "maxDelta": 465.65000000000003,
-      "maxDeltaPath": "svg/g[1]/g[38]/polygon[1]/@points[2]"
+      "maxDelta": 457,
+      "maxDeltaPath": "svg/g[1]/g[59]/polygon[1]/@points[0]"
     },
     {
       "id": "1472",
@@ -281,9 +279,7 @@
     {
       "id": "1856",
       "path": "1856.dot",
-      "verdict": "structural-match",
-      "maxDelta": 108,
-      "maxDeltaPath": "svg/g[1]/g[5]/path[1]/@d[5]"
+      "verdict": "conformant"
     },
     {
       "id": "1864",
@@ -348,8 +344,8 @@
       "id": "1949",
       "path": "1949.dot",
       "verdict": "structural-match",
-      "maxDelta": 95.46,
-      "maxDeltaPath": "svg/g[1]/g[24]/path[1]/@d[17]"
+      "maxDelta": 5.430000000000007,
+      "maxDeltaPath": "svg/g[1]/g[17]/text[1]/@y"
     },
     {
       "id": "1990",
@@ -513,9 +509,7 @@
     {
       "id": "2361",
       "path": "2361.dot",
-      "verdict": "structural-match",
-      "maxDelta": 144.13,
-      "maxDeltaPath": "svg/g[1]/g[5]/path[1]/@d[5]"
+      "verdict": "conformant"
     },
     {
       "id": "2368",
@@ -562,8 +556,8 @@
       "id": "2413_2",
       "path": "2413_2.dot",
       "verdict": "structural-match",
-      "maxDelta": 1922.2600000000002,
-      "maxDeltaPath": "svg/g[1]/g[51]/path[1]/@d[10]"
+      "maxDelta": 99.55000000000018,
+      "maxDeltaPath": "svg/g[1]/g[94]/path[1]/@d[6]"
     },
     {
       "id": "241_0",
@@ -726,9 +720,7 @@
     {
       "id": "2613",
       "path": "2613.dot",
-      "verdict": "structural-match",
-      "maxDelta": 50,
-      "maxDeltaPath": "svg/@height"
+      "verdict": "conformant"
     },
     {
       "id": "2614",
@@ -1002,9 +994,7 @@
     {
       "id": "graphs-arrowsize",
       "path": "graphs/arrowsize.gv",
-      "verdict": "structural-match",
-      "maxDelta": 19.37,
-      "maxDeltaPath": "svg/g[1]/g[13]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-awilliams",
@@ -1058,9 +1048,7 @@
     {
       "id": "graphs-b124",
       "path": "graphs/b124.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1988.63,
-      "maxDeltaPath": "svg/g[1]/g[114]/path[1]/@d[0]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b135",
@@ -1100,9 +1088,7 @@
     {
       "id": "graphs-b29",
       "path": "graphs/b29.gv",
-      "verdict": "structural-match",
-      "maxDelta": 2559.37,
-      "maxDeltaPath": "svg/g[1]/g[83]/path[1]/@d[4]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b3",
@@ -1911,9 +1897,7 @@
     {
       "id": "graphs-polypoly",
       "path": "graphs/polypoly.gv",
-      "verdict": "structural-match",
-      "maxDelta": 6.550000000000182,
-      "maxDeltaPath": "svg/g[1]/g[78]/polygon[2]/@points[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-ports",
@@ -2241,9 +2225,7 @@
     {
       "id": "linux.i386-b29",
       "path": "linux.i386/b29.gv",
-      "verdict": "structural-match",
-      "maxDelta": 2588.37,
-      "maxDeltaPath": "svg/g[1]/g[83]/path[1]/@d[4]"
+      "verdict": "conformant"
     },
     {
       "id": "linux.i386-b36",
@@ -3008,16 +2990,12 @@
     {
       "id": "share-b124",
       "path": "share/b124.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1989.63,
-      "maxDeltaPath": "svg/g[1]/g[114]/path[1]/@d[0]"
+      "verdict": "conformant"
     },
     {
       "id": "share-b29",
       "path": "share/b29.gv",
-      "verdict": "structural-match",
-      "maxDelta": 2588.37,
-      "maxDeltaPath": "svg/g[1]/g[83]/path[1]/@d[4]"
+      "verdict": "conformant"
     },
     {
       "id": "share-b36",
@@ -3418,9 +3396,7 @@
     {
       "id": "share-polypoly",
       "path": "share/polypoly.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.360000000000127,
-      "maxDeltaPath": "svg/g[1]/g[77]/polygon[1]/@points[1]"
+      "verdict": "conformant"
     },
     {
       "id": "share-proc3d",
@@ -3570,16 +3546,12 @@
     {
       "id": "windows-b124",
       "path": "windows/b124.gv",
-      "verdict": "structural-match",
-      "maxDelta": 1988.63,
-      "maxDeltaPath": "svg/g[1]/g[114]/path[1]/@d[0]"
+      "verdict": "conformant"
     },
     {
       "id": "windows-b29",
       "path": "windows/b29.gv",
-      "verdict": "structural-match",
-      "maxDelta": 2559.37,
-      "maxDeltaPath": "svg/g[1]/g[83]/path[1]/@d[4]"
+      "verdict": "conformant"
     },
     {
       "id": "windows-b36",
@@ -3964,9 +3936,7 @@
     {
       "id": "windows-polypoly",
       "path": "windows/polypoly.gv",
-      "verdict": "structural-match",
-      "maxDelta": 10.360000000000127,
-      "maxDeltaPath": "svg/g[1]/g[77]/polygon[1]/@points[1]"
+      "verdict": "conformant"
     },
     {
       "id": "windows-proc3d",
