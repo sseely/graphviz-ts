@@ -150,11 +150,18 @@ export function saveBest(g: Graph): void {
   const mn = g.info.minrank !== undefined ? g.info.minrank : 0;
   const mx = g.info.maxrank !== undefined ? g.info.maxrank : 0;
   for (let r = mn; r <= mx; r++) {
+    const vs = rank[r].vStart ?? 0;
     for (let i = 0; i < rank[r].n; i++) {
       // Read the offset window: C save_best reads GD_rank(g)[r].v[i] where the
       // pointer is already advanced by vStart. @see mincross.c:save_best
+      // C's saveorder scratch holds the WINDOW-RELATIVE ND_order (install_in_rank
+      // sets ND_order = i within the window); the port's order is absolute
+      // (vStart + i), so subtract vStart to store C's exact scratch value. The
+      // leftover scratch is load-bearing: a node dropped by merge2's n=an
+      // truncation (allocate_ranks undercount, e.g. 2521's b3) keeps this value
+      // as its final x-coordinate. @see mincross.c:114 saveorder
       const n = rankGet(rank[r], i);
-      n.info.coord.x = n.info.order !== undefined ? n.info.order : 0;
+      n.info.coord.x = (n.info.order !== undefined ? n.info.order : 0) - vs;
     }
   }
 }
@@ -163,7 +170,8 @@ export function restoreRank(rk: RankEntry, rootRk: RankEntry): void {
   // Restore + re-sort the absolute window [vStart, vStart+n) — C restore_best
   // qsorts GD_rank(g)[r].v (the offset pointer) over n. @see mincross.c:restore_best
   const vs = rk.vStart ?? 0;
-  for (let i = 0; i < rk.n; i++) rk.v[vs + i].info.order = rk.v[vs + i].info.coord.x;
+  // coord.x scratch holds the window-relative order (see saveBest); convert back.
+  for (let i = 0; i < rk.n; i++) rk.v[vs + i].info.order = rk.v[vs + i].info.coord.x + vs;
   const sorted = rk.v.slice(vs, vs + rk.n).sort(
     (a, b) => (a.info.order !== undefined ? a.info.order : 0) - (b.info.order !== undefined ? b.info.order : 0),
   );
