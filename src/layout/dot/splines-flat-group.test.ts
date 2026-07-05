@@ -157,6 +157,81 @@ function assertBackCurl(svg: string): void {
   expect(yRange(back!.pts)).toBeGreaterThan(10);
 }
 
+// 1949.dot (from ~/git/graphviz/tests/1949.dot), reduced to ASCII-safe inline
+// form. The T10b target is the flat-adj pair structParty <-> structDefaultAuto
+// under rankdir=LR (the `:S` and `:N` compass-port edges).
+const DOT_1949 = `\
+digraph G {
+rankdir=LR;
+bgcolor=transparent;
+node[fontsize=8 shape=box];
+edge[fontsize=8, arrowsize=0.7];
+compound=true;
+remincross=true;
+nodesep=0.4;
+ranksep=.4;
+structDefaultroot->structC[label=<  > fontname=Arial, style=dotted];
+structHell:W -> structDefaultDunkel[labeldistance = 2.0, taillabel=<evE...>  color=black, fontname=Arial,fontcolor=black lhead=clusterDunkel];//Hell Dunkel
+structDefaultDunkel->structHell:SE[labeldistance=2.0, headlabel=<evE...>  color=black, fontname=Arial,fontcolor=black ltail=clusterDunkel];//Dunkel structHell
+structNichtsErkannt->structEtwasErkannt[label=<evP...>  color=black, fontname=Arial, fontcolor=black]; //NichtsErkannt EtwasErkannt
+structEtwasErkannt->structNichtsErkannt[label=<evP...>  color=black, fontname=Arial, fontcolor=black]; //EtwasErkannt NichtsErkannt
+structDefaultDunkel->structNichtsErkannt[label=<  > fontname=Arial, style=dotted];
+structC -> structDefaultAuto[labeldistance = 2.0, taillabel=<&#91;au...>  color=black, fontname=Arial,fontcolor=black lhead=clusterAuto];//C Auto
+structC->structParty[label=<&#91;el...>  color=black, fontname=Arial, fontcolor=black]; //C Party
+structDefaultAuto->structHell[label=<  > fontname=Arial, style=dotted];
+structDefaultAuto->structParty:N[labeldistance=2.0, headlabel=<evP...>  color=black, fontname=Arial,fontcolor=black ltail=clusterAuto];//Auto structParty
+structParty:S -> structDefaultAuto[labeldistance=2.0, taillabel=<evA...> color=blue, fontname=Arial, fontcolor=blue lhead=clusterAuto];//Party Auto
+structEtwasErkannt->structEtwasErkannt[label=<evE...>  color=black, fontname=Arial, fontcolor=black]; //EtwasErkannt EtwasErkannt
+structParty->structFinale[label=<evE...> color=blue, fontname=Arial, fontcolor=blue]; //Party Finale
+structDefaultAuto->structFinale[labeldistance=2.0, headlabel=<evE...>  color=black, fontname=Arial,fontcolor=black ltail=clusterAuto];//Auto structFinale
+structDefaultroot[shape=circle, fontsize=8, height=0.5, width=0.5, fixedsize=true, fontname=Arial, fontcolor=white,fillcolor=black,  style=filled label=< <TABLE BORDER="0"><TR><TD PORT="NW"></TD> <TD PORT="N"></TD> <TD PORT="NE"></TD></TR><TR><TD PORT="W"> </TD> <TD BORDER="0" ALIGN="CENTER"> <FONT COLOR="white"> </FONT>  </TD> <TD PORT="E"></TD></TR><TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR></TABLE> >];
+structParty[penwidth="1" style=rounded BORDER="1" color="red" fontname=Arial label=< <TABLE STYLE="rounded" BORDER="0" CELLBORDER="0">
+<TR><TD PORT="NW"></TD><TD PORT="N"></TD><TD PORT="NE"></TD></TR>
+<TR><TD PORT="W"></TD> <TD BORDER="1" SIDES="B">Party</TD><TD PORT="E"></TD></TR>
+<TR><TD COLSPAN="3" ALIGN="LEFT">Entry:<br ALIGN="LEFT"/>lic...</TD></TR>
+<TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR>
+</TABLE> >];
+
+subgraph "clusterAuto"{fontname=Arial; fontsize=8
+color=black; style=rounded;
+ label=< <TABLE BORDER="0" ><TR><TD PORT="E"></TD><TD BORDER="1" SIDES="B"> Auto </TD><TD PORT="E"></TD></TR></TABLE> >;
+
+structHell[penwidth="1" style=rounded BORDER="1" color="black" fontname=Arial label=< <TABLE STYLE="rounded" BORDER="0" CELLBORDER="0">
+<TR><TD PORT="NW"></TD><TD PORT="N"></TD><TD PORT="NE"></TD></TR>
+<TR><TD PORT="W"></TD> <TD BORDER="1" SIDES="B">Hell</TD><TD PORT="E"></TD></TR>
+<TR><TD COLSPAN="3" ALIGN="LEFT">Entry:<br ALIGN="LEFT"/>lic...</TD></TR>
+<TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR>
+</TABLE> >];
+
+subgraph "clusterDunkel"{fontname=Arial; fontsize=8
+color=black; style=rounded;
+ label=< <TABLE BORDER="0" ><TR><TD PORT="E"></TD><TD BORDER="1" SIDES="B"> Dunkel </TD><TD PORT="E"></TD></TR></TABLE> >;
+structDefaultDunkel[shape=circle, fontsize=8, height=0.5, width=0.5, fixedsize=true, fontname=Arial, fontcolor=white,fillcolor=black,  style=filled label=< <TABLE BORDER="0"><TR><TD PORT="NW"></TD> <TD PORT="N"></TD> <TD PORT="NE"></TD></TR><TR><TD PORT="W"> </TD> <TD BORDER="0" ALIGN="CENTER"> <FONT COLOR="white"> </FONT>  </TD> <TD PORT="E"></TD></TR><TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR></TABLE> >];
+structNichtsErkannt[penwidth="1" style=rounded BORDER="1" color="black" fontname=Arial label=< <TABLE STYLE="rounded" BORDER="0" CELLBORDER="0">
+<TR><TD PORT="NW"></TD><TD PORT="N"></TD><TD PORT="NE"></TD></TR>
+<TR><TD PORT="W"></TD> <TD BORDER="1" SIDES="B">NichtsErkannt</TD><TD PORT="E"></TD></TR>
+<TR><TD COLSPAN="3" ALIGN="LEFT">Entry:<br ALIGN="LEFT"/>lic...</TD></TR>
+<TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR>
+</TABLE> >];
+
+
+structEtwasErkannt[penwidth="1" style=rounded BORDER="1" color="black" fontname=Arial label=< <TABLE STYLE="rounded" BORDER="0" CELLBORDER="0">
+<TR><TD PORT="NW"></TD><TD PORT="N"></TD><TD PORT="NE"></TD></TR>
+<TR><TD PORT="W"></TD> <TD BORDER="1" SIDES="B">EtwasErkannt</TD><TD PORT="E"></TD></TR>
+<TR><TD COLSPAN="3" ALIGN="LEFT">Entry:<br ALIGN="LEFT"/>lic...</TD></TR>
+<TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR>
+</TABLE> >];
+
+};
+
+structDefaultAuto[shape=circle, fontsize=8, height=0.5, width=0.5, fixedsize=true, fontname=Arial, fontcolor=white,fillcolor=black,  style=filled label=< <TABLE BORDER="0"><TR><TD PORT="NW"></TD> <TD PORT="N"></TD> <TD PORT="NE"></TD></TR><TR><TD PORT="W"> </TD> <TD BORDER="0" ALIGN="CENTER"> <FONT COLOR="white"> </FONT>  </TD> <TD PORT="E"></TD></TR><TR><TD PORT="SW"></TD><TD PORT="S"></TD><TD PORT="SE"></TD></TR></TABLE> >];};
+
+structFinale[label=< >,shape=doublecircle, width=0.4, fontname=Arial, fillcolor=black, fixedsize=true, height=0.2, width=0.2, style=filled];
+structC [label=<  > shape=diamond, fixedsize=true, height=0.2, width=0.2, fontname=Arial color=black];
+
+}
+`;
+
 describe('flat-group #241_0 — adjacent flat edges 2↔3', () => {
   it('GUARD: 2:ne->3:nw forward edge is already a curl (7 pts, Y-range > 5pt)', () => {
     assertFwdCurl(renderSvg(DOT_241_0, 'dot'));
@@ -170,5 +245,59 @@ describe('flat-group #241_0 — adjacent flat edges 2↔3', () => {
   // @see plans/aux-back-edge-curl/findings-curl-mechanism.md
   it('3:sw->2:se back edge is a curl — 7 pts AND Y-range > 10pt', () => {
     assertBackCurl(renderSvg(DOT_241_0, 'dot'));
+  });
+});
+
+// ---------- T10b: flat-adj copied-spline normalization (discriminator) ----------
+
+/**
+ * T10b regression — C's flat-adj splines are copied UN-normalized from the aux
+ * (`dot_splines_(auxg, 0)`) and reversed only by the TOP-LEVEL edge_normalize,
+ * keyed on the MAIN edge's flat ORDER predicate (swap_ends_p: ND_order(head) <
+ * ND_order(tail)). The port's aux router swaps by the aux edge's RANK predicate
+ * (always true for back-edge clones); the two disagree exactly when a back-edge
+ * clone belongs to a low-order→high-order main edge (1949 `structParty:S->
+ * structDefaultAuto` under rankdir=LR). Verified against native dot 15.1.0
+ * (T10b C instrumentation, 2026-07-04).
+ * @see lib/dotgen/dotsplines.c:edge_normalize, swap_ends_p, make_flat_adj_edges
+ * @see src/layout/dot/splines-flat.ts:normalizeCopiedFlatSpline
+ */
+describe('T10b — flat-adj spline direction follows C top-level edge_normalize', () => {
+  it('241_0: 3:sw->2:se stays tail→head (starts at node 3, right of node 2)', () => {
+    // Both predicates true (ND_order(2)=2 < ND_order(3)=3): the aux swap
+    // matches C's normalize — spline must run tail(3, right) → head(2, left).
+    const edges = edgePaths(renderSvg(DOT_241_0, 'dot'));
+    const back = edges.find(e => e.title.includes('3:sw') && e.title.includes('2:se'));
+    expect(back).toBeDefined();
+    const pts = back!.pts;
+    expect(pts[0].x).toBeGreaterThan(pts[pts.length - 1].x);
+  });
+
+  it('1949: structParty:S->structDefaultAuto stays head→tail (C normalize quirk)', () => {
+    // Main predicate FALSE (ND_order(structParty)=0 < ND_order(structDefaultAuto)=1):
+    // C leaves the aux-forward geometry alone, so the final spline runs
+    // head (clusterAuto side, above) → tail (structParty:S, below): first point
+    // is the HIGHEST point of the path (most negative SVG y) and the last point
+    // is the LOWEST. Native oracle: M176.53,-102.39 ... 158.3,-7.97.
+    // Pre-fix the port emitted the reverse (M158.3,-24.09 ... 184.32,-94.33),
+    // which mislaid the evA taillabel and grew the canvas by +16.12.
+    const edges = edgePaths(renderSvg(DOT_1949, 'dot'));
+    const s = edges.find(e => e.title.startsWith('structParty:S')
+      && e.title.endsWith('structDefaultAuto'));
+    expect(s).toBeDefined();
+    const pts = s!.pts;
+    const ys = pts.map(p => p.y);
+    expect(pts[0].y).toBe(Math.min(...ys)); // starts at the top (head side)
+    // ends far below the start, at structParty:S (native: -102.39 → -7.97)
+    expect(pts[pts.length - 1].y).toBeGreaterThan(pts[0].y + 50);
+  });
+
+  it('1949: canvas height matches native (282pt, no +16 bb growth)', () => {
+    // The reversed :S spline made place_portlabel read the taillabel off the
+    // wrong end, and updateBB grew the root bb by 16.12pt. Guard the height.
+    const svg = renderSvg(DOT_1949, 'dot');
+    const m = /height="(\d+)pt"/.exec(svg);
+    expect(m).not.toBeNull();
+    expect(Number(m![1])).toBe(282);
   });
 });

@@ -48,8 +48,21 @@ export function cloneNode(g: Graph, orign: Node): Node {
   n.info.ht = orign.info.ht;
   n.info.width = orign.info.width;
   n.info.height = orign.info.height;
-  // Copy string attrs
-  for (const [k, v] of orign.attrs) n.attrs.set(k, v);
+  // Copy string attrs — EXCEPT `fixedsize`. C's flat-adj aux pipeline never
+  // sees fixedsize: cloneGraph→setState rebinds the global N_fixed sym via
+  // `agfindnodeattr(auxg, "fixed")` (dotsplines.c setState), but the real
+  // attribute is named "fixedsize" (input.c:750 binds N_fixed to
+  // "fixedsize"), so N_fixed is NULL inside the aux and gv_nodesize grows a
+  // fixedsize node to enclose its label (e.g. #1949 structDefaultAuto:
+  // main ht 36 clamped, aux ht 66.63). This name mismatch is a load-bearing
+  // C quirk — the aux node-shape clip lands on the GROWN boundary, which is
+  // where the copied flat-adj spline ends.
+  // @see lib/dotgen/dotsplines.c:setState (N_fixed = "fixed"),
+  //      lib/common/input.c:750 (N_fixed = "fixedsize")
+  for (const [k, v] of orign.attrs) {
+    if (k === 'fixedsize') continue;
+    n.attrs.set(k, v);
+  }
   // Carry the origin's node-default snapshot so inherited attributes (e.g. a
   // graph-level `node[fontsize=8]` the origin never set explicitly) still
   // resolve in the aux graph, which has no node defaults of its own. C's

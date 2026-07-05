@@ -21,7 +21,7 @@ import { dotRank } from './rank.js';
 import { dotMincross } from './mincross.js';
 import { dotPosition } from './position.js';
 import { dotSameports } from './sameport.js';
-import { dotSplines_ } from './splines.js';
+import { dotSplines_, swapEndsP, swapEdgeSpline } from './splines.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
@@ -288,8 +288,47 @@ function copyFlatSplines(g: Graph, edges: Edge[], aux: FlatAux): void {
   for (let i = 0; i < edges.length; i++) {
     const orig = toNormalEdge(edges[i]);
     const auxe = aux.alg.get(orig);
-    if (auxe !== undefined) copyOneFlatSpline(orig, auxe, del, flip, g);
+    if (auxe === undefined) continue;
+    copyOneFlatSpline(orig, auxe, del, flip, g);
+    normalizeCopiedFlatSpline(orig, auxe);
   }
+}
+
+/**
+ * Apply C's top-level `edge_normalize` to a copied flat-adj spline.
+ *
+ * C copies the aux spline UN-normalized — `dot_splines_(auxg, 0)` never runs
+ * `edge_normalize` inside the aux, so a back-edge clone's geometry stays in
+ * its makefwdedge routing direction (rank0→rank1, i.e. auxt→auxh) with the
+ * arrow flags already swapped onto the geometric ends by arrow_clip
+ * (`swapEnds(auxe)` — rank-based, true for every back-edge clone). The
+ * TOP-LEVEL `edge_normalize` then reverses the copied spline iff
+ * `swap_ends_p(orig)` — for a flat MAIN edge that is the ORDER predicate:
+ * ND_order(head) < ND_order(tail) (dotsplines.c:113-124, 443-445).
+ *
+ * The port's aux routers instead normalize IN the aux, keyed on the aux
+ * edge's ranks (`routeFaithfulAdjacentBack` swaps exactly when
+ * `swapEndsP(auxe)` is true), and the top-level `edgeNormalize` never sees
+ * flat edges (it walks the fast graph's ND_out lists, which exclude flats).
+ * Net correction: the copied spline needs one more reversal exactly when the
+ * two predicates disagree.
+ *
+ * This is the T10b discriminator between the two oracle-pinned cases:
+ * 241_0 `3:sw->2:se` points right-to-left (ND_order(2)=2 < ND_order(3)=3),
+ * so BOTH predicates are true — the aux swap already matches C's normalize
+ * and the spline stays tail→head. 1949 `structParty:S->structDefaultAuto`
+ * under rankdir=LR points low-order→high-order (ND_order(structParty)=0 <
+ * ND_order(structDefaultAuto)=1): the aux clone is still a back edge
+ * (aux swap true) but C's normalize predicate is FALSE, so C leaves the
+ * spline head→tail (sflag marks the head arrow at list[0]) and
+ * place_portlabel reads the taillabel off the head end — a load-bearing C
+ * quirk this reproduces byte-for-byte.
+ *
+ * @see lib/dotgen/dotsplines.c:edge_normalize, swap_ends_p
+ */
+function normalizeCopiedFlatSpline(orig: Edge, auxe: Edge): void {
+  if (orig.info.spl === undefined) return;
+  if (swapEndsP(auxe) !== swapEndsP(orig)) swapEdgeSpline(orig);
 }
 
 /**
