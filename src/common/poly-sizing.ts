@@ -434,7 +434,7 @@ function polygonBB(
   p: PolySizeParams & { penwidth: number; hasOutline: boolean },
   sides: number,
   isBox: boolean,
-): { bb: Point; outline: Point } {
+): { bb: Point; outline: Point; base: Point } {
   const geom: PolyGeom = {
     sides, orientation: p.orientation, distortion: p.distortion, skew: p.skew,
   };
@@ -444,14 +444,14 @@ function polygonBB(
   const nbb = { x: Math.max(minSize.x, xmax2), y: Math.max(minSize.y, ymax2) };
   // C gates the bisector walk on outp > 1; peripheries < 1 never enters it.
   const walk = p.peripheries > 1 || (p.peripheries >= 1 && p.penwidth > 0);
-  if (!walk) return { bb: nbb, outline: nbb };
+  if (!walk) return { bb: nbb, outline: nbb, base: nbb };
   const scalex = nbb.x / xmax2;
   const scaley = nbb.y / ymax2;
   for (const v of verts) {
     v.x *= scalex;
     v.y *= scaley;
   }
-  return polygonPeripheryBB(verts, isBox ? 4 : sides, p, nbb);
+  return { ...polygonPeripheryBB(verts, isBox ? 4 : sides, p, nbb), base: nbb };
 }
 
 /** Convert final node width/height (points) to lw/rw/ht. @see lib/common/utils.c:gv_nodesize */
@@ -518,10 +518,14 @@ export function polySize(p: PolySizeParams): PolySizeResult {
   const penwidth = p.penwidth ?? 1; // DEFAULT_NODEPENWIDTH
   // C: outp exceeds peripheries when an outline ring is added.
   const hasOutline = penwidth > 0 || p.peripheries < 1;
+  // C shapes.c:2288-2296: polygonBB folds the distortion-inflated vertex
+  // extent back into nbb (the base periphery ring) and that IS the base box;
+  // the ellipse path (sides < 3) has no such ring, so base stays c.bb (the
+  // pre-inflation box) there — it is unconsumed for ellipses.
   const grown = sides < 3
-    ? ellipsePeripheryBB(c.bb, p.peripheries, penwidth, hasOutline)
+    ? { ...ellipsePeripheryBB(c.bb, p.peripheries, penwidth, hasOutline), base: c.bb }
     : polygonBB(c.bb, { x: c.width, y: c.height }, { ...p, penwidth, hasOutline }, sides, isBox);
-  const result = assembleResult(p, dimen, { ...grown, base: c.bb }, c.fixedshape);
+  const result = assembleResult(p, dimen, grown, c.fixedshape);
   return { ...result, ...labelSpace(p, dimen, c.bb, minBb, isBox, c.fixedshape) };
 }
 

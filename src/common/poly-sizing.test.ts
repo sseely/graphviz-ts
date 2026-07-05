@@ -146,6 +146,29 @@ describe('polySize — general polygons (sides >= 3)', () => {
   });
 });
 
+describe('polySize — baseW/baseH (multi-periphery general polygon)', () => {
+  // Regression for polygonBB discarding the post-inflation base box: polySize
+  // hardcoded `base: c.bb` (the PRE-inflation ellipse-fit box) instead of
+  // using the nbb polygonBB actually computes at shapes.c:2288-2296. Only
+  // observable when distortion/skew != 0 AND peripheries >= 2 (undistorted
+  // regular polygons have nbb === c.bb, masking the bug).
+  // @see plans/structural-match-endgame/analysis/polypoly.md
+  it('reports the post-inflation base box, not the pre-inflation ellipse fit', () => {
+    const r = polySize(
+      params({
+        sides: 4,
+        orientation: 45,
+        distortion: 0.5,
+        regular: true,
+        peripheries: 2,
+        labelDimen: { x: 12.4482421875, y: 16.8 },
+      }),
+    );
+    expect(r.baseW).toBeCloseTo(68.58957430334, 6);
+    expect(r.baseH).toBeCloseTo(68.58957430334, 6);
+  });
+});
+
 describe('polySize — attrs', () => {
   it('fixedsize=true: attr dimensions win regardless of label', () => {
     const r = polySize(
