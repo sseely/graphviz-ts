@@ -7,9 +7,9 @@ write-set disjointness before parallel dispatch. Batch gate: survey+gate.
 
 | ID | Description | Model | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T11 | b29/b124 fix-or-accept | fable | per analysis/hub-fanin.md | T1 | [ ] |
-| T12 | 2413 fix | fable | per analysis/2413-vspace.md | T2 | [ ] |
-| T13 | ortho fix-or-accept (REGISTRY writer) | opus+sonnet | per analysis/ortho-tiebreak.md (+registry trio if accept) | T3 | [ ] |
+| T11 | b29/b124 fix | sonnet | splines.ts | T1 | [x] f7022ca |
+| T12 | A3 registry (2413_1/2/decorate) | sonnet | registry trio | T2,T8 | [x] d8d8c6b |
+| T13 | ortho trunc+ports fix | sonnet | ortho/* + adapter | T3 | [x] ea8e551 |
 | T15 | 2613 fix | sonnet | per analysis/2613-canvas.md | T5 | [x] |
-| T16 | 1453 fix | sonnet | per analysis/1453-curved.md | T6 | [ ] |
-| T17 | 2646 fix | sonnet | per analysis/2646-recordport.md | T7 | [ ] |
+| T16 | 1453 dedupByOrig | sonnet | splines-groups.ts | T6 | [x] b7338ea |
+| T17 | corridor-bounds freeze | sonnet | 5 files + splines.ts | T7 | [x] 9f875d9 — 2646 NOT closed (causal link refuted; still open) |

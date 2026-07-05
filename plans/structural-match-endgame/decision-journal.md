@@ -24,3 +24,5 @@
 | 2026-07-05 01:1x | T15 | DONE (51c59eb) — updateBBForLabel delegates to shared updateBB; 2613 0-diff 317pt exact | parked |
 | 2026-07-05 01:2x | T13 | DONE (2117a18) — ortho int-trunc relax + compass-port endpoints; 2361+1856 0-diff; 1447_1 improved 781->280, 2620 improved; conformant controls stable; 2661 tests | parked |
 | 2026-07-05 01:3x | T16 | DONE (5f368d9) — dedupByOrig pushes resolved orig (global form, C-outcome-equivalent, empirically verified on parallel path); 1453 diagnosed defect gone (residual = separate TREE_GROUP mechanism); concentrate controls stable | parked; NOTE agent saw init_rank stderr on fresh 1213-x oracle renders — batch gate (cached oracles) will adjudicate |
+| 2026-07-05 01:5x | T17/2646 | corridor-bounds fix is C-faithful and landed, but instrumentation REFUTED its causal link to 2646 (divergent edges never consumed drifted values) — 2646 residual Δ42.09 stays OPEN as an undiagnosed separate mechanism (T20/follow-up) |
+| 2026-07-05 01:5x | T14 pulled | polypoly landed in batch 3 per journal amendment |
