@@ -167,7 +167,11 @@ function relaxNeighbors(pq: Pq, g: SGraph, n: SNode): boolean {
     const adjn = adjacentNode(g, e, n);
     // C uses `< 0` exactly (sgraph.c:164): skips finalized nodes (nVal >= 0).
     if (adjn.nVal < 0) {
-      const d = -(n.nVal + e.weight);
+      // C sgraph.h:27 n_val is `int`; sgraph.c:142 `int d` truncates the sum
+      // toward zero on assignment every relax step (not just the final total).
+      // d is always <= 0 here, so Math.trunc matches C's toward-zero int cast
+      // exactly (unlike Math.floor, which rounds negatives away from zero).
+      const d = Math.trunc(-(n.nVal + e.weight));
       if (adjn.nVal === UNSEEN) {
         adjn.nVal = d;
         if (pqInsert(pq, adjn) !== 0) return true;

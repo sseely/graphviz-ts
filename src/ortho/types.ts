@@ -209,6 +209,18 @@ export interface OrthoEdge {
   tail: OrthoNode;
   /** Destination node */
   head: OrthoNode;
+  /**
+   * Tail attach point: ND_coord(tail) + ED_tail_port.p. Undefined (the
+   * default, port-less case) falls back to the tail node's bb centre.
+   * @see lib/ortho/ortho.c:1075 (attachOrthoEdges)
+   */
+  tailPoint?: OrthoPoint;
+  /**
+   * Head attach point: ND_coord(head) + ED_head_port.p. Undefined (the
+   * default, port-less case) falls back to the head node's bb centre.
+   * @see lib/ortho/ortho.c:1076 (attachOrthoEdges)
+   */
+  headPoint?: OrthoPoint;
 }
 
 export interface OrthoGraph {

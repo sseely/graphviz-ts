@@ -90,6 +90,61 @@ describe("sgraph — gsave / reset (C-oracle pinned)", () => {
   });
 });
 
+describe("sgraph — shortPath relax truncates toward zero (2361 fix)", () => {
+  it("finalizes a fractional-weight neighbor to the C int-truncated distance", () => {
+    // C sgraph.c:142 `int d`; :165 `d = -(N_VAL(n)+E_WT(e))` truncates the sum
+    // toward zero every relax step. weight=2.7 from a nVal=0 source: C computes
+    // int d = -(0+2.7) = -2 (truncated toward zero), finalizes to n_val=2. A
+    // double-accumulating port would finalize to 2.7 (or, with Math.floor,
+    // wrongly to 3 — floor rounds away from zero for negatives).
+    const g = createSGraph(2);
+    const n0 = createSNode(g);
+    const n1 = createSNode(g);
+    initSEdges(g, 2);
+    createSEdge(g, n0, n1, 2.7);
+    const pq = pqGen(g.nnodes + 2);
+    const rc = shortPath(pq, g, n0, n1);
+    expect(rc).toBe(0);
+    expect(n1.nVal).toBe(2);
+  });
+
+  it("two DIFFERENT-real-cost corridors truncate to the same integer distance", () => {
+    // Per-step truncation (not a single truncation of the final float sum)
+    // means two corridors with different real costs can still tie in the
+    // integer distance C actually compares — this is the mechanism behind the
+    // AC->IW 700.2/700.2 corridor tie in corpus 2361 (there the real costs
+    // matched; here they deliberately don't, to isolate that truncation
+    // — not equal input weights — is what produces the tie).
+    //   corridor A: src-viaA(200.3) + viaA-dst(260.6), real sum 460.9
+    //   corridor B: src-viaB(300.7) + viaB-dst(160.9), real sum 461.6
+    // finalize(viaA)=200 (trunc(-200.3)), finalize(viaB)=300 (trunc(-300.7));
+    // dst-via-A pending = trunc(-(200+260.6)) = -460;
+    // dst-via-B pending = trunc(-(300+160.9)) = -460 — a true tie despite
+    // differing real costs. viaA finalizes strictly before viaB (200 < 300,
+    // not a queue tie), so viaA reaches dst first and, on the tie, keeps dad
+    // (relax only overwrites on strict `adjn.nVal < d`).
+    const g = createSGraph(4);
+    const src = createSNode(g);
+    const viaA = createSNode(g);
+    const viaB = createSNode(g);
+    const dst = createSNode(g);
+    initSEdges(g, 4);
+    createSEdge(g, src, viaA, 200.3);
+    createSEdge(g, viaA, dst, 260.6);
+    createSEdge(g, src, viaB, 300.7);
+    createSEdge(g, viaB, dst, 160.9);
+    const pq = pqGen(g.nnodes + 2);
+    const rc = shortPath(pq, g, src, dst);
+    expect(rc).toBe(0);
+    expect(viaA.nVal).toBe(200);
+    expect(viaB.nVal).toBe(300);
+    expect(dst.nVal).toBe(460);
+    // first-arrival tie-break: the strictly-earlier-finalized corridor (A)
+    // keeps the dad link; B's equal-after-truncation relax does not overwrite.
+    expect(dst.nDad).toBe(viaA);
+  });
+});
+
 describe("sgraph — createSEdge wiring", () => {
   it("records endpoints by index and appends to both adjacency lists", () => {
     const g = createSGraph(2);

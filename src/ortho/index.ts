@@ -66,14 +66,16 @@ function buildSpline(
   const pts: OrthoPoint[] = [];
   if (rte.segs.length === 0) return pts;
 
-  // C: p1 = ND_coord(tail) + ED_tail_port(e).p (ortho.c:1075-1076). The TS
-  // OrthoNode models no ports, so the faithful value is the node centre
-  // (= ND_coord); ports are 0 for plain ortho edges.
-  const p1 = {
+  // C: p1 = ND_coord(tail) + ED_tail_port(e).p, q1 = ND_coord(head) +
+  // ED_head_port(e).p (ortho.c:1075-1076). Callers that model ports plumb
+  // tailPoint/headPoint through OrthoEdge; a port-less edge (or a caller that
+  // does not model ports) has no offset, so fall back to the node's bb centre
+  // (= ND_coord for a port-less edge, since the port itself defaults to 0).
+  const p1 = e.tailPoint ?? {
     x: (e.tail.bb.LL.x + e.tail.bb.UR.x) / 2,
     y: (e.tail.bb.LL.y + e.tail.bb.UR.y) / 2,
   };
-  const q1 = {
+  const q1 = e.headPoint ?? {
     x: (e.head.bb.LL.x + e.head.bb.UR.x) / 2,
     y: (e.head.bb.LL.y + e.head.bb.UR.y) / 2,
   };

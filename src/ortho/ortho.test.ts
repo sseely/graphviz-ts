@@ -97,6 +97,64 @@ describe("ortho acceptance", () => {
     }
   });
 
+  // ── T13 fix 2: compass-port endpoints (1856) ──────────────────────────────
+  // C attachOrthoEdges anchors at ND_coord(tail) + ED_tail_port.p and
+  // ND_coord(head) + ED_head_port.p (ortho.c:1075-1076), not always the node
+  // centre. tailPoint/headPoint let the adapter plumb that offset through;
+  // when absent, buildSpline must fall back to the bb centre (proven by the
+  // AC3 test above, which sets neither field).
+  it("uses tailPoint/headPoint as the attach points when set (compass port offset)", () => {
+    // C only keeps the p1/q1 component on the axis PARALLEL to the attach
+    // segment's own fixed coordinate; the perpendicular axis comes from
+    // vtrack/htrack (ortho.c:1075-1076, 1080-1081 — ported verbatim above).
+    // makeTwoNodeGraph's two centres share the same y (10), so the maze
+    // routes a single HORIZONTAL segment: p.x = p1.x (preserved), p.y =
+    // htrack(...) (track-assigned, NOT p1.y). Offset the x axis so the
+    // preserved component is directly observable.
+    const g = makeTwoNodeGraph();
+    const [nodeA, nodeB] = g.nodes;
+    const tailPoint: OrthoPoint = { x: 6, y: 10 }; // west of nodeA's centre
+    const headPoint: OrthoPoint = { x: 114, y: 10 }; // east of nodeB's centre
+    g.edges[0] = { ...g.edges[0], tailPoint, headPoint };
+
+    const routedPaths: OrthoPoint[][] = [];
+    const capture: ClipAndInstallFn = (_g, _e, path) => {
+      routedPaths.push(path.map((p) => ({ x: p.x, y: p.y })));
+    };
+    orthoEdges(g, false, capture);
+
+    expect(routedPaths.length).toBe(1);
+    const pts = routedPaths[0];
+    expect(pts[0].x).toBe(tailPoint.x);
+    expect(pts[pts.length - 1].x).toBe(headPoint.x);
+    // and NOT the bb centres' x (proves the offset was actually applied)
+    const centreA = { x: (nodeA.bb.LL.x + nodeA.bb.UR.x) / 2, y: (nodeA.bb.LL.y + nodeA.bb.UR.y) / 2 };
+    const centreB = { x: (nodeB.bb.LL.x + nodeB.bb.UR.x) / 2, y: (nodeB.bb.LL.y + nodeB.bb.UR.y) / 2 };
+    expect(pts[0].x).not.toBe(centreA.x);
+    expect(pts[pts.length - 1].x).not.toBe(centreB.x);
+  });
+
+  it("falls back to the bb centre when tailPoint/headPoint are unset", () => {
+    // Same shape as AC3 but stated explicitly for the fix: the port-less case
+    // must reproduce the pre-fix behaviour bit-for-bit.
+    const g = makeTwoNodeGraph();
+    const [nodeA, nodeB] = g.nodes;
+    expect(g.edges[0].tailPoint).toBeUndefined();
+    expect(g.edges[0].headPoint).toBeUndefined();
+
+    const routedPaths: OrthoPoint[][] = [];
+    const capture: ClipAndInstallFn = (_g, _e, path) => {
+      routedPaths.push(path.map((p) => ({ x: p.x, y: p.y })));
+    };
+    orthoEdges(g, false, capture);
+
+    const centreA = { x: (nodeA.bb.LL.x + nodeA.bb.UR.x) / 2, y: (nodeA.bb.LL.y + nodeA.bb.UR.y) / 2 };
+    const centreB = { x: (nodeB.bb.LL.x + nodeB.bb.UR.x) / 2, y: (nodeB.bb.LL.y + nodeB.bb.UR.y) / 2 };
+    const pts = routedPaths[0];
+    expect(pts[0]).toEqual(centreA);
+    expect(pts[pts.length - 1]).toEqual(centreB);
+  });
+
   // ── AC4: useLbls warning ──────────────────────────────────────────────────
   describe("useLbls=true", () => {
     // vitest spy — typed loosely to avoid MockInstance parameter variance issues

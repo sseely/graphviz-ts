@@ -80,6 +80,17 @@ function buildEdges(
       result.push({
         tail: orthoNodes[nodeIndex.get(e.tail)!],
         head: orthoNodes[nodeIndex.get(e.head)!],
+        // C: p1/q1 = ND_coord ± ED_*_port.p (ortho.c:1075-1076). Port defaults
+        // to {0,0}, so this reproduces the port-less centre exactly when no
+        // compass port is set.
+        tailPoint: {
+          x: e.tail.info.coord.x + e.info.tail_port.p.x,
+          y: e.tail.info.coord.y + e.info.tail_port.p.y,
+        },
+        headPoint: {
+          x: e.head.info.coord.x + e.info.head_port.p.x,
+          y: e.head.info.coord.y + e.info.head_port.p.y,
+        },
         _edge: e,
       } as TaggedOrthoEdge);
     }
