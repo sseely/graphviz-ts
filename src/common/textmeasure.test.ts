@@ -361,3 +361,41 @@ describe("EstimateTextMeasurer", () => {
     expect(bold).toBeCloseTo(14 * estimate_text_width_1pt("Times", "Ag", true, false), 9);
   });
 });
+
+// ── LUT array-length guard ────────────────────────────────────────────────────
+// C's FontFamilyMetrics widths arrays are `short widths_*[128]` (textspan_lut.c).
+// A truncated array (fewer than 128 entries) silently shifts every index >=
+// truncation point out of range; charWidthUnits' `widths[code] ?? -1` then maps
+// those characters to width 0 instead of throwing or warning (see 1447 Courier
+// truncation: indices 123-126 were missing, dropping { | } ~ to width 0).
+// This guard fails loudly the moment any family array regresses in length.
+
+describe("ALL_FONT_METRICS array-length guard (regression: 1447 Courier LUT)", () => {
+  const variantNames = ["regular", "bold", "italic", "boldItalic"] as const;
+
+  for (const family of ALL_FONT_METRICS) {
+    for (const variant of variantNames) {
+      it(`${family.names[0]}.${variant} has exactly 128 entries with widths[127] === -1`, () => {
+        const widths = family[variant];
+        expect(widths.length).toBe(128);
+        expect(widths[127]).toBe(-1);
+      });
+    }
+  }
+});
+
+// ── 1447 Courier regression: '{|}~' must not silently measure as width 0 ─────
+
+describe("Courier width LUT includes { | } ~ (regression: 1447)", () => {
+  it("estimates '{|}~' as 4 * 1229/2048 em at 1pt", () => {
+    const w = estimate_text_width_1pt("Courier", "{|}~", false, false);
+    expect(w).toBeCloseTo((4 * 1229) / 2048, 12);
+  });
+
+  it("each of { | } ~ individually measures 1229/2048 em (not 0)", () => {
+    for (const ch of ["{", "|", "}", "~"]) {
+      const w = estimate_text_width_1pt("Courier", ch, false, false);
+      expect(w).toBeCloseTo(1229 / 2048, 12);
+    }
+  });
+});
