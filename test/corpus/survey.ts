@@ -49,7 +49,7 @@ const TIMEOUT_MULT = Number(process.env.RENDER_TIMEOUT_MULT ?? 3);
 // slowest native render) so it scales with the host instead of a fixed 180s.
 // The oracle gets a generous fixed cap so slow-but-valid native renders finish
 // (they yield the reference SVG *and* the native time the budget is based on).
-const ORACLE_TIMEOUT_MS = Number(process.env.ORACLE_TIMEOUT_MS ?? 300_000);
+// ORACLE_TIMEOUT_MS is defined after MAX_NATIVE_MS below (it scales with it).
 const CONCURRENCY = Number(process.env.SURVEY_CONCURRENCY ?? 8);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
 // Output is parameterizable so a side-by-side survey (e.g. the headless rules
@@ -78,6 +78,13 @@ const CANON_NATIVE: Record<string, number> = (() => {
 const MAX_NATIVE_MS = Math.max(0, ...Object.values(CANON_NATIVE));
 const TIMEOUT_FLOOR_MS = Number(
   process.env.RENDER_TIMEOUT_FLOOR_MS ?? (Math.ceil(5 * MAX_NATIVE_MS) || 180_000),
+);
+/** Oracle render cap: must comfortably exceed the corpus's slowest canonical
+ *  native render even under survey concurrency (1652 = 270s native blew the old
+ *  fixed 300s cap whenever its cache entry needed repopulating, poisoning every
+ *  subsequent run). Scales like the floor: max(300s, 3x slowest native). */
+const ORACLE_TIMEOUT_MS = Number(
+  process.env.ORACLE_TIMEOUT_MS ?? Math.max(300_000, Math.ceil(3 * MAX_NATIVE_MS)),
 );
 /** Recorded warm port render times (id -> ms) from the perf bench, used only to
  *  pre-filter slow graphs out of a fast validation run (SURVEY_MAX_PORT_MS). */
