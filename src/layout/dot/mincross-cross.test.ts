@@ -46,14 +46,35 @@ function inNode(srcOrder: number): Node {
   return { info: { in: { list: [e], size: 1 }, out: undefined } } as unknown as Node;
 }
 
+/** Node carrying a single out-edge whose head sits at `dstOrder`. Mirrors
+ *  `inNode` but for the head-endpoint (out-edge) side of accumCross. */
+function outNode(dstOrder: number): Node {
+  const e = { head: { info: { order: dstOrder } }, info: { head_port: { order: 0, p: { x: 0, y: 0 } } } } as unknown as Edge;
+  return { info: { out: { list: [e], size: 1 }, in: undefined } } as unknown as Node;
+}
+
 describe('transposeCounts', () => {
   it('counts c0 (current) when v sources right of w, c1 (swapped) otherwise', () => {
     // v's in-edge from order 5, w's from order 2: cross in current order (c0=1).
-    expect(transposeCounts(inNode(5), inNode(2))).toEqual([1, 0]);
+    expect(transposeCounts(inNode(5), inNode(2), true, true)).toEqual([1, 0]);
     // reversed sources: cross only if swapped (c1=1).
-    expect(transposeCounts(inNode(2), inNode(5))).toEqual([0, 1]);
+    expect(transposeCounts(inNode(2), inNode(5), true, true)).toEqual([0, 1]);
     // equal source order: no crossing either way.
-    expect(transposeCounts(inNode(4), inNode(4))).toEqual([0, 0]);
+    expect(transposeCounts(inNode(4), inNode(4), true, true)).toEqual([0, 0]);
+  });
+
+  // C transpose_step (mincross.c:646-652) gates: in_cross only added when
+  // r > 0, out_cross only added when the next rank's calloc'd n > 0 (the
+  // over-allocated maxrank+2 slot reads n == 0 past a cluster's bottom
+  // rank). transposeCounts must honor useIn/useOut exactly like those gates.
+  it('ignores out-crossings when useOut=false (cluster bottom-rank gate)', () => {
+    // Would cross (c0=1) if out-crossings were counted; gated off entirely.
+    expect(transposeCounts(outNode(5), outNode(2), true, false)).toEqual([0, 0]);
+  });
+
+  it('ignores in-crossings when useIn=false (r === 0 gate)', () => {
+    // Would cross (c0=1) if in-crossings were counted; gated off entirely.
+    expect(transposeCounts(inNode(5), inNode(2), false, true)).toEqual([0, 0]);
   });
 });
 

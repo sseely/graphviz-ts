@@ -160,12 +160,20 @@ function accumCross(vl: EdgeList | undefined, wl: EdgeList | undefined, head: bo
  * Crossing counts for the pair (v, w): [c0 = crossings with v before w (the
  * current order), c1 = crossings with w before v (swapped)]. Mirrors
  * in_cross(v,w)+out_cross(v,w) and in_cross(w,v)+out_cross(w,v) in one pass.
- * @see lib/dotgen/mincross.c:in_cross, out_cross
+ *
+ * `useIn`/`useOut` mirror C transpose_step's gates (mincross.c:646-652):
+ * in-crossings are added only when r > 0, out-crossings only when the next
+ * rank has n > 0. For clusters, allocate_ranks callocs maxrank+2 rank slots
+ * (mincross.c:1163), so the slot past a cluster's maxrank has n == 0 and C
+ * reads that calloc'd n as a gate — it ignores out-crossings at the
+ * cluster's bottom rank. Callers must reproduce both gates; this function no
+ * longer accumulates unconditionally.
+ * @see lib/dotgen/mincross.c:in_cross, out_cross, transpose_step:646-652
  */
-export function transposeCounts(v: Node, w: Node): [number, number] {
+export function transposeCounts(v: Node, w: Node, useIn: boolean, useOut: boolean): [number, number] {
   const c: [number, number] = [0, 0];
-  accumCross(v.info.in, w.info.in, false, c);
-  accumCross(v.info.out, w.info.out, true, c);
+  if (useIn) accumCross(v.info.in, w.info.in, false, c);
+  if (useOut) accumCross(v.info.out, w.info.out, true, c);
   return c;
 }
 
@@ -230,7 +238,13 @@ export function transposeStep(ctx: MincrossContext, g: Graph, r: number, reverse
     const v = rankGet(rk, i);
     const w = rankGet(rk, i + 1);
     if (!v || !w || left2right(g, v, w) !== 0) continue;
-    const [c0, c1] = transposeCounts(v, w);
+    // Gate per C transpose_step (mincross.c:646-652): in-crossings only
+    // when r > 0; out-crossings only when the next rank's calloc'd n > 0
+    // (the over-allocated maxrank+2 slot for clusters reads n == 0 past
+    // the cluster's bottom rank, so C ignores out-crossings there).
+    const useIn = r > 0;
+    const useOut = (rank[r + 1]?.n ?? 0) > 0;
+    const [c0, c1] = transposeCounts(v, w, useIn, useOut);
     if (shouldSwap(c0, c1, reverse)) {
       exchange(ctx, v, w);
       rv += c0 - c1;
