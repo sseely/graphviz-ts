@@ -9,7 +9,7 @@ summary. Baseline: conformant 752 (b58878c).
 |---|---|---|---|---|
 | F1 | 1949 (maxΔ36.67) | makefwdedge lead-edge forward-normalization in flat-adj aux; find C's discriminator (naive fix regresses 241_0); diag+fix | fable | [ ] |
 | F2 | 2620 (diverged, Δ3207) | diagnose dot POSITION-phase defect (±898pt y on 78/237 node glyphs), upstream of ortho; docs-only | fable | [ ] |
-| F3 | 1447 (719 diffs, Δ192.39) | diagnose fourth ortho mechanism (byte-untouched by qsort/addPEdges/gcell fixes); docs-only | fable | [x] fix (Courier LUT, not ortho) |
+| F3 | 1447 (719 diffs, Δ192.39) | diagnose fourth ortho mechanism (byte-untouched by qsort/addPEdges/gcell fixes); docs-only | fable | [x] fix (Courier LUT, not ortho) → F4 done 3504e0d |
 
 **Decisions.** Inherit residual-cleanup / endgame decisions WHOLESALE
 (D1-D4 + amendments): worktree-isolated agents; diag docs returned as final
