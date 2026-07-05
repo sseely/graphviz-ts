@@ -1,2 +1,10 @@
 | when | task | decision | why |
 |---|---|---|---|
+| 2026-07-05 xx:xx | batch-1 | dispatch R1-R5 as 5 parallel worktree agents (R4/R5 fable, rest sonnet); docs returned as final messages | autonomous plan logging |
+| 2026-07-05 07:0x | R1 | verdict ACCEPT (A3, qualified) — exact control-point reversal, identical Δ16.8 on 2 unrelated edges, zero collateral; origin MEDIUM (pack-offset decoupling defeats in-process capture, documented); C-side deferred to protect R2 live instrumentation | R6 = registry writer |
+| 2026-07-05 07:1x | R2 | verdict FIX x2 — (a) virtualNode root-binding violates agnode invariant (cluster flip unpopulated); (b) side-port flat grouping by node-pair vs C getmainedge gate | R7 implements; broad-first on (a) w/ narrow fallback; 241_0 co-validated on (b) |
+| 2026-07-05 07:0x | R5 | verdict ACCEPT — NEW class A6 fp-contract/FMA knife-edge tangency (points2coeff/solve3 disc flip @9e-13; port == strict-IEEE C, proven by -ffp-contract harness both directions ×3 edges); targeted fma fix refuted (2/3) | R6 writes registry trio w/ new A6 class |
+| 2026-07-05 08:0x | R3 | verdict FIX — medians loop-fusion drops C case-0 mval=-1 reset (stale mval crosses pass direction; TG bubbles 4→1); env-gated 2-loop restructure = 0 diffs PASS, controls stable | R8 implements per proposedWriteSet |
+| 2026-07-05 08:2x | R4 | verdict FIX x3 — apple-qsort permutation + addPEdges unported + gcell ULP/trunc flip; 1447_1 CONFORMANT prototyped (branch fix/ortho-r4-family d60d4d3); tie-break theory re-refuted | R9 refines prototype (CCN split, heapsort, tests) |
+| 2026-07-05 08:2x | R4/2620 | SPLIT — dominant Δ is dot position-phase (±898pt y, 78 nodes), upstream of ortho; not acceptable as ortho-family; propose separate dotgen-position diagnosis (ask user at batch-2 dispatch) | tracked, no registry entry |
+| 2026-07-05 08:2x | R4/1447 | fourth distinct mechanism (Δ192, byte-untouched by R4 fixes) — backlog candidate, out of mission scope |  |
