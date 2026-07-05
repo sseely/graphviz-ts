@@ -13,3 +13,5 @@ next batch and journals that). verdict=already-closed → journal + check off.
 ## Quality bar
 Target ids improved/accepted; family controls 0-diff; vitest+tsc clean; one
 commit. Local validation only — the survey runs at the batch gate.
+
+**SCOPE EXTENSION (2026-07-04):** T8 concluded graphs-decorate is the same A3 findMaxDev/hypot-tie family — include it in the same registry entry set (accepted-divergences.json entries for 2413_1, 2413_2, graphs-decorate; one known-divergences.md A3 prose extension; three DOC_CLAIMS_DIVERGENT guard lines). Evidence: analysis/2413-vspace.md + analysis/decorate.md.

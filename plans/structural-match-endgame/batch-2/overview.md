@@ -6,6 +6,6 @@ T8→T9. Batch gate: full survey+gate (idle box) then snapshot refresh.
 
 | ID | Description | Model | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T8 | decorate cluster-corridor polyline (Δ43.5) | sonnet | splines-groups/cluster corridor sites + tests | — | [ ] |
-| T9 | portlabel upstream splines: 144_ortho + arrowsize | fable | samehead/ortho spline sites + tests | — | [ ] |
+| T8 | decorate cluster-corridor polyline (Δ43.5) | sonnet | splines-groups/cluster corridor sites + tests | — | [x] (ACCEPT → registry via T12) |
+| T9 | portlabel upstream splines: 144_ortho + arrowsize | fable | samehead/ortho spline sites + tests | — | [x] |
 | T10 | 1949 LR cluster-label order-axis (Δ95, uniform y-shift class) | opus | order-axis placement site + tests | — | [ ] |
