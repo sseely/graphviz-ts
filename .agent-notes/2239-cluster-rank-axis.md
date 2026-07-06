@@ -223,3 +223,29 @@ ranks / cluster rank-axis spacing differs — the D6 "LR_balance slack over
 feasible-tree state" tracked-deep finding. Core rank-assignment / cluster-rank
 divergence, not a node-size or margin surface fix. Would need to instrument the
 rank network-simplex feasible tree vs C for this cluster-nested LR graph.
+
+## Re-verification #2 (2026-07-06, C harness) — NARROWED to edge-label rank gap
+Built a C harness (scratchpad/2239/h.c, dumps ND_rank/ND_order/ND_coord/GD_bb;
+see [[c-harness-raw-intermediate-dump]]) + port RANKDBG dump (dotLayoutPipeline
+& dotLayoutComponent, post-dotPosition). Result over all 94 nodes:
+- **Rank assignment is CORRECT**: rankDiff=0 (every node's ND_rank matches C).
+- Node widths match (prior check). So NOT rank-assignment, NOT node sizing.
+- The rank AXIS is x post-flip (C) = y pre-flip (port). Comparing rank-axis
+  gaps: MOST match exactly (87.0, 253.5, 317.6, ...) — but exactly TWO gaps
+  diverge 10×: rank 18→20 and 22→24 are ~2444 in C vs ~253 in the port. That
+  ~2×2191 accounts for the bulk of the 5279 width shortfall (plus smaller
+  0→2/2→4/4→6 diffs ~30-130).
+- Those gaps sit at virtual half-ranks (19, 23). The C SVG renders multi-line
+  edge labels there (Bitstream Vera Sans, e.g. x≈4107/4575 between rank-18 x2289
+  and rank-20 x4733). So C reserves rank-separation space for the edge labels;
+  the port reserves ~253 (near-minimal) — it is NOT accounting for these edge
+  labels in the LR rank separation (10× under-reserve = structural, not a
+  font-metric delta).
+
+MECHANISM (localized, real bug): LR edge-label rank separation — dot inserts a
+label virtual node on a half-rank and sizes the rank gap to fit it; the port
+under-reserves for the multi-line \l labels on these edges. Next: compare the
+port's make_label_edge / edge-label virtual-node insertion + its
+rank-separation contribution (dot_position with GD_has_labels) against C for a
+rank-18→20 labelled edge. Not attempted as a fix yet — focused LR-label
+subsystem work.
