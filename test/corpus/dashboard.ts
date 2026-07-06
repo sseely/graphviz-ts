@@ -18,6 +18,19 @@ import { loadAccepted, matchAccepted, type AcceptedEntry } from './accepted.js';
 const PARITY = new URL('./parity.json', import.meta.url);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
 const OUT = new URL('./PARITY.md', import.meta.url);
+/** Upstream source of the corpus — graphviz's own `tests/` tree. */
+const CORPUS_GITLAB = 'https://gitlab.com/graphviz/graphviz/-/tree/main/tests';
+
+/**
+ * Render the corpus root for the summary. The default corpus is a local clone
+ * of graphviz's `tests/` directory, so link readers to its gitlab source; a
+ * custom CORPUS_ROOT (not ending in graphviz/tests) is shown verbatim.
+ */
+function corpusRootMd(root: string): string {
+  return /graphviz\/tests\/?$/.test(root)
+    ? `[graphviz \`tests/\`](${CORPUS_GITLAB}) (local clone \`${root}\`)`
+    : `\`${root}\``;
+}
 const DIVERGED_TABLE_CAP = 60; // full set is in parity.json + the buckets below.
 
 interface ParityReport {
@@ -237,7 +250,7 @@ function summary(
   return [
     '## Summary',
     '',
-    `- **Oracle:** ${report.oracleVersion} · **corpus root:** \`${report.corpusRoot}\``,
+    `- **Oracle:** ${report.oracleVersion} · **corpus:** ${corpusRootMd(report.corpusRoot)}`,
     `- **Surveyed (applicable):** ${report.total}`,
     `- **conformant\\*:** ${c.conformant} (${pct(c.conformant, report.total)}) · ` +
       `structural-match: ${c['structural-match']} → ${matched}/${report.total} structurally equal ` +

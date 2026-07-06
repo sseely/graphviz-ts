@@ -9,7 +9,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 ## Summary
 
-- **Oracle:** dot 15.1.0 · **corpus root:** `~/git/graphviz/tests`
+- **Oracle:** dot 15.1.0 · **corpus:** [graphviz `tests/`](https://gitlab.com/graphviz/graphviz/-/tree/main/tests) (local clone `~/git/graphviz/tests`)
 - **Surveyed (applicable):** 789
 - **conformant\*:** 758 (96.1%) · structural-match: 16 → 774/789 structurally equal (98.1%)
 - **Accepted deltas (documented, won't-fix):** 19 · **Tracked gaps (unaccepted, will-fix):** 1 → of 20 non-conformant graphs
