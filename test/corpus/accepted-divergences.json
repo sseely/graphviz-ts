@@ -232,7 +232,7 @@
    "verdict": "structural-match",
    "bound": "max\u0394 42.09 on 3 of 21,216 edges (edge2575 g[4639], edge3905 g[7777], edge15467 g[30201]; all record-port :c->:nb_part smode long-edge routes)",
    "reason": "final smode leg tangent to the barrier wall (endpoint on wall, tangent parallel); splinefits a-halving exit flips on solve3 disc sign, decided by clang/arm64 -ffp-contract FMA rounding (~9e-13) in points2coeff/solve3 under catastrophic cancellation; port == strict-IEEE C (verified bit-exact via -ffp-contract=off harness, all 3 edges); flips both directions; max\u0394 42.09 on 3 of 21,216 edges. Full diagnosis: plans/residual-cleanup/analysis/2646-fp-contract.md.",
-   "ref": "known-divergences.md#a8-fp-contractfma-knife-edge-tangency-in-proutespline-dot"
+   "ref": "known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot"
   },
   {
    "match": {
@@ -243,7 +243,7 @@
    "verdict": "structural-match",
    "bound": "423 diffs / max\u0394 585 on 24 edge paths + 22 arrowheads",
    "reason": "423 diffs / max\u0394585 on 24 edge paths + 22 arrowheads. The ortho pipeline is byte-conformant to C given identical inputs (proven by full input injection: 378/378 routes byte-identical). The divergence is 1-2 ULP in node sizes from clang arm64 -ffp-contract=on FMA fusion in poly_init's vertex-extent loop (shapes.c; port is strict-IEEE, cannot emit fma), amplified by ortho's faithful per-relax int-truncation (sgraph.c:165) into an equal-cost corridor tie flip on 4 edges. Proven by a controlled -ffp-contract on/off experiment: on \u2192 310.29250168188713 (=C), off \u2192 310.29250168188707 (=port). Port == strict-IEEE C; irreducible without emulating clang's fma contraction. Full diagnosis: plans/ortho-2620-residual/analysis/2620-ortho-route.md.",
-   "ref": "known-divergences.md#a8-fp-contractfma-knife-edge-tangency-in-proutespline-dot"
+   "ref": "known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot"
   }
  ]
 }
