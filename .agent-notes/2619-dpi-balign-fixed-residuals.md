@@ -38,10 +38,24 @@ Byte-exact vs oracle: minimal `a->b[style=tapered]` 0 DIFFs; 2619_1/2 taper
 polygon 0 DIFFs. Only style=tapered edges in the whole corpus are 2619_1/2, so
 the branch is a no-op everywhere else. TDD: taper.test.ts + svg-tapered-edge.test.ts.
 
-## Residual 2 — HTML text @y off by 1.5pt in oval nodes (F7/F23) — OPEN
+## Residual 2 — HTML cell text @y off by 1.5pt — FIXED (2026-07-06)
 
-`shape=oval` nodes whose HTML label has an empty first line
-(`<FONT POINT-SIZE="10"> <BR /> (F7)</FONT>`). The whole text block sits 1.5pt
-higher in the port (constant Δ1.5 across all spans) — a vertical centering /
-valign residual of an HTML label inside an oval's larger box. This is the ONLY
-remaining diff on 2619_1/2 (3 DIFFs each); fixing it makes both conformant.
+Misattributed at first to the F7/F23 oval nodes; the real locus is the I63/I64
+genealogy CARDS (HTML `<TABLE>` node labels). Their "dat" cell has a 2-line
+block whose 2nd line carries a trailing `  ` that renders at the default 14pt
+(invalid `font_size` attr ignored), making that line multi-item → the block is
+"non-simple". C's size_html_txt (htmltable.c) centers a non-simple block by the
+sum of raw max font sizes (mxfsize), not measured line heights (mxysize):
+`lsize = simple ? mxysize : mxfsize`. The port's placeComplexRuns already
+advanced baselines by fontSize, but placeCellRuns computed the centering height
+from measured `run.height`, so `dely = cellH − blockH` was ~3pt short and the
+VALIGN=middle block sat dely/2 = 1.5pt too high. The node box matched throughout
+because the 40px FIXEDSIZE picture cells dominate SIZING — the text height only
+drives centering. Fix (htmltable-pos.ts placeCellRuns): height =
+`simple ? Σrun.height : Σrun.fontSize`, with a single line always measured
+(C's nspans==1 → mxysize). 2619_1/2 now byte-exact (0 diffs) → conformant.
+TDD: htmltable-align.test.ts non-simple-centering case.
+
+## 2619_1 / 2619_2 — now CONFORMANT (all four residuals closed)
+
+dpi scaling + BALIGN + tapered polygon + non-simple centering. No residuals left.

@@ -69,6 +69,27 @@ describe('HTML table cell BALIGN (per-line justification)', () => {
   });
 });
 
+// A cell whose text block is "non-simple" (a line with >1 item / mixed fonts)
+// is centered using the sum of raw max font sizes (mxfsize), not measured line
+// heights (size_html_txt: lsize = simple ? mxysize : mxfsize). Here line 2
+// ("Sub" 10pt + a trailing default-14pt space) makes the block non-simple, and
+// the tall HEIGHT=60 cell leaves vertical slack, so a wrong block height
+// mis-centers it. Oracle-pinned (native dot 15.1.0): y=-39.2 / -25.4.
+// Regression: 2619 I63/I64 genealogy cards were centered 1.5pt too high.
+describe('HTML cell — non-simple multi-line vertical centering', () => {
+  const nonSimpleTall =
+    'digraph { n [shape=plaintext, label=<<TABLE BORDER="0" CELLBORDER="0">' +
+    '<TR><TD HEIGHT="60" VALIGN="MIDDLE"><FONT POINT-SIZE="12">Name Here</FONT>' +
+    '<BR/><FONT POINT-SIZE="10">Sub</FONT>  </TD></TR></TABLE>>]; }';
+
+  it('centers the block by mxfsize height (native: y=-39.2 / -25.4)', () => {
+    const ys = [...renderSvg(nonSimpleTall, 'dot')
+      .matchAll(/<text[^>]*\by="([-\d.]+)"/g)].map((m) => Number(m[1]));
+    expect(ys[0]).toBeCloseTo(-39.2, 2); // first line
+    expect(ys[1]).toBeCloseTo(-25.4, 2); // second line + trailing 14pt space
+  });
+});
+
 // C zeroes only the content-derived term for a FIXEDSIZE table with both WIDTH
 // and HEIGHT, so the box takes the explicit dims (fmax(0, width)). The port
 // previously set the table dimen to 0, collapsing it to content size.

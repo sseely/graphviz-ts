@@ -232,7 +232,17 @@ function placeCellRuns(
     for (const r of runs) if (r.just === undefined) r.just = cell.balign;
   }
   const w = Math.max(...runs.map(r => r.width), 0);
-  const h = runs.reduce((a, r) => a + r.height, 0);
+  // Block height for vertical centering must equal size_html_txt's box.UR.y:
+  // a single line uses its measured height (mxysize); a multi-line block sums
+  // lsize, which is the measured height for a "simple" block but the raw max
+  // font size (mxfsize) for a non-simple one (any line with >1 item, font
+  // flags, or mixed faces/sizes). placeComplexRuns already advances baselines
+  // by fontSize, so centering must use the same height or the block is
+  // mis-centered — e.g. 2619 I63's card, whose "Male" line carries a trailing
+  // 14pt space, was centered 1.5pt too high.
+  // @see lib/common/htmltable.c:size_html_txt (lsize = simple ? mxysize : mxfsize)
+  const simple = runs.length === 1 || runsAreSimple(runs, finfo);
+  const h = runs.reduce((a, r) => a + (simple ? r.height : r.fontSize), 0);
   return placeTextRuns(runs, alignContentBox(cbox, cell, w, h), finfo, measurer);
 }
 
