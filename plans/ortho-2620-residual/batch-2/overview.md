@@ -7,7 +7,7 @@ surface both mechanisms to the user and re-scope.
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
 | T2a | Implement the localized ortho fix (if verdict=fix) | sonnet (worktree) | T1's src/ortho/*.ts + colocated *.test.ts | T1 | [ ] |
-| T2b | Register the divergence (if verdict=accept) | sonnet (worktree) | accepted-divergences.json + docs/known-divergences.md + known-divergences-examples.test.ts | T1 | [ ] |
+| T2b | Register 2620 under broadened A8 | sonnet (worktree) | registry trio | T1 | [x] done (039b203) |
 
 Specs: [T2a-fix.md](T2a-fix.md) · [T2b-accept.md](T2b-accept.md)
 
