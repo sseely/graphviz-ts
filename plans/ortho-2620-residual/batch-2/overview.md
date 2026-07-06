@@ -6,7 +6,7 @@ surface both mechanisms to the user and re-scope.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T2a | Implement the localized ortho fix (if verdict=fix) | sonnet (worktree) | T1's src/ortho/*.ts + colocated *.test.ts | T1 | [ ] |
+| T2a | edgeLen reads ND_coord (ortho.c:1124) | sonnet (worktree) | src/ortho/index.ts + edge-len.test.ts | T1 | [x] done (29584ad) |
 | T2b | Register 2620 under broadened A8 | sonnet (worktree) | registry trio | T1 | [x] done (039b203) |
 
 Specs: [T2a-fix.md](T2a-fix.md) · [T2b-accept.md](T2b-accept.md)
