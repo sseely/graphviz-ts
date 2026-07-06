@@ -269,8 +269,15 @@ export function adjustRanks(g: Graph, marginTotal: number): void {
   g.info.ht2 = ht2;
   if (!isRoot && g.info.label) adjustRanksLabel(g, root, marginTotal);
   if (!isRoot) {
+    // Read GD_ht1(g)/GD_ht2(g) (g.info.*), NOT the local ht1/ht2 snapshot:
+    // adjustRanksLabel -> adjustSimple (above) grows g.info.ht1/ht2 to include
+    // the cluster label reservation, and C's global-rank update reads those
+    // mutated values. Using the pre-label local snapshot leaves the maxrank
+    // ht1 too small, so maximal_bbox builds a thin tail box and multi-rank
+    // edges crossing the reserved gap route straight instead of bowing over
+    // the label. @see lib/dotgen/position.c:adjustRanks (rank[].ht update)
     const rankArr = root.info.rank!;
-    rankArr[graphMinrank(g)].ht2 = Math.max(rankArr[graphMinrank(g)].ht2, ht2);
-    rankArr[graphMaxrank(g)].ht1 = Math.max(rankArr[graphMaxrank(g)].ht1, ht1);
+    rankArr[graphMinrank(g)].ht2 = Math.max(rankArr[graphMinrank(g)].ht2, graphHt2(g));
+    rankArr[graphMaxrank(g)].ht1 = Math.max(rankArr[graphMaxrank(g)].ht1, graphHt1(g));
   }
 }
