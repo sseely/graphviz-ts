@@ -114,7 +114,14 @@ export function searchVert(pts: Point[], tmin: number, tmax: number, ax: AxisRan
 
 /** Find first t where Bezier crosses x=ax.coord, y in [ax.lo,ax.hi]. @see lib/dotgen/compound.c:findVertical */
 export function findVertical(pts: Point[], tmin: number, tmax: number, ax: AxisRange): number {
-  if (tmax - tmin < 1e-5) return (tmin + tmax) / 2;
+  // C's only base case is `tmin == tmax` (reached at fp underflow, after the
+  // no_cross==0 / no_cross==1 branches have resolved). An earlier `tmax-tmin <
+  // 1e-5` short-circuit is NOT faithful: it returns a valid t ~17 levels deep,
+  // BEFORE the no_cross==1 y-range check can reject an out-of-range crossing —
+  // making the tail clip accept a false positive on the box's opposite edge
+  // (1879 ltail edges clipped to the cluster's right edge at a y below the box
+  // instead of its bottom edge). @see lib/dotgen/compound.c:findVertical
+  if (tmin === tmax) return tmin;
   const nc = countVertCross(pts, ax.coord);
   if (nc === 0) return -1;
   if (nc === 1 && Math.abs(pts[3].x - ax.coord) <= 0.005) return checkVertEndpoint(pts[3], ax, tmax);
@@ -130,7 +137,8 @@ export function searchHorz(pts: Point[], tmin: number, tmax: number, ax: AxisRan
 
 /** Find first t where Bezier crosses y=ax.coord, x in [ax.lo,ax.hi]. @see lib/dotgen/compound.c:findHorizontal */
 export function findHorizontal(pts: Point[], tmin: number, tmax: number, ax: AxisRange): number {
-  if (tmax - tmin < 1e-5) return (tmin + tmax) / 2;
+  // See findVertical: C's only base case is `tmin == tmax`. @see compound.c:findHorizontal
+  if (tmin === tmax) return tmin;
   const nc = countHorzCross(pts, ax.coord);
   if (nc === 0) return -1;
   if (nc === 1 && Math.abs(pts[3].y - ax.coord) <= 0.005) return checkHorzEndpoint(pts[3], ax, tmax);

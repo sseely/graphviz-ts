@@ -241,3 +241,27 @@ now with a precise crossing-point delta. Still blocked on a C-side raw-spline
 dump (standalone C harness linking libpathplan/libcommon, or scoped C
 instrumentation) to isolate shortest-path-waypoint vs node-boundary-clip as the
 departure. Not a surface fix.
+
+## RESOLVED (2026-07-06) — findVertical/findHorizontal base-case bug
+The prior conclusion (raw spline differs) was WRONG. A standalone C harness
+(scratchpad/1879/harness.c — links libgvc/libcgraph/libcdt, sets compound=false
+so ED_spl keeps the raw pre-clip spline, dumps control points) proved the raw
+splines MATCH: for the actual divergent edges (couple_791x792->node_742x743_743
+/ node_7521_7521, ltail=cluster_791x792 — NOT couple_257x255, which the
+positional g[117] XPath had mis-identified), C's raw spline equals the port's
+exactly, offset by a constant 3168 in X (a layout normalization-frame offset;
+Y identical, cluster box + tail node also +3168). So raw spline AND cluster box
+match C.
+
+The bug is in the clip: the port's findVertical/findHorizontal had an extra
+base case `if (tmax - tmin < 1e-5) return (tmin+tmax)/2` that C lacks. C only
+terminates via no_cross==0 (return -1) or no_cross==1 (which applies the
+y/x-range check via checkVertEndpoint). The 1e-5 short-circuit fired ~17 levels
+deep and returned a valid t BEFORE the range check could reject the
+out-of-range crossing, so the tail clip accepted a false positive on the
+cluster's RIGHT edge (x=1871, y=2566.9 — below the box y-range) instead of the
+BOTTOM edge (x=1710, y=2611.2). Fix: base case now `if (tmin === tmax) return
+tmin`, matching compound.c exactly. **1879 byte-exact → CONFORMANT.** TDD:
+compound-clip.test.ts. LESSON: a standalone C harness (compound=false to expose
+the raw spline) is the fastest way to settle "does the port's intermediate
+differ from C" — and beware positional XPath edge identification.
