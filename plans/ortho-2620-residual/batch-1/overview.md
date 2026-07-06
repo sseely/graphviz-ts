@@ -8,7 +8,7 @@ from the returned text.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |---|---|---|---|---|---|
-| T1 | Localize + root-cause 2620 ortho residual; verdict fix/accept/split | fable (worktree) | analysis doc (returned) | — | [ ] |
+| T1 | Localize + root-cause 2620 ortho residual; verdict fix/accept/split | fable (worktree) | analysis doc (returned) | — | [x] SPLIT (accept+fix) |
 
 Gate: the returned doc must satisfy T1's acceptance criteria (see
 [T1-diagnose.md](T1-diagnose.md)) before Batch 2 dispatches. If verdict=split
