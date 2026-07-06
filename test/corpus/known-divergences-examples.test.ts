@@ -60,6 +60,9 @@ const DOC_CLAIMS_DIVERGENT = [
   '2371',
   // A8 new class: fp-contract/FMA knife-edge tangency in Proutespline (retired 2026-07-05)
   '2646',
+  // A8 second instance: poly_init vertex-extent ULP amplified by ortho
+  // corridor tie flip (retired 2026-07-05)
+  '2620',
 ];
 
 describe('known-divergences.md prose ↔ parity verdicts', () => {

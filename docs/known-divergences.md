@@ -588,7 +588,25 @@ constraint as the control-hull rounding noted in
 
 ---
 
-### A8. `fp-contract`/FMA knife-edge tangency in `Proutespline` (`dot`)
+### A8. `fp-contract`/FMA rounding vs. strict IEEE (`dot`)
+
+**Class.** clang arm64 compiles the oracle binary with `-ffp-contract=on`,
+fusing selected multiply-add sequences into single FMA instructions; the
+port runs on V8, which performs strict IEEE-754 rounding and cannot emit
+`fma`. On bit-identical inputs the two disagree by 1-2 ULP at whichever
+expression the compiler chose to contract. The port side is always the
+strict-IEEE-754 result; the oracle side is always the FMA-contracted
+result. This is a compiler/runtime portability constraint below C
+source-code semantics, not a logic defect in the port — irreducible without
+emulating clang's specific contraction choices in software. Two instances
+are known, at two different sites, with two different amplification
+mechanisms:
+
+- **2646** — the ULP arises inside `Proutespline`'s `points2coeff`/`solve3`
+  cubic solve and directly flips a spline-fitter root count.
+- **2620** — the ULP arises in `poly_init`'s polygon vertex-extent loop
+  (node sizing) and is amplified downstream by `ortho`'s faithful per-relax
+  int-truncation into an equal-cost maze-corridor tie flip.
 
 **Affected:** `2646` (structural-match, maxΔ 42.09 on 3 of 21,216 edges:
 `edge2575` `g[4639]`, `edge3905` `g[7777]`, `edge15467` `g[30201]` — all
@@ -629,6 +647,42 @@ originates inside `solve3`'s own internal contraction. A complete fix would
 require software-FMA emulation across the whole spline fitter — a hot-loop
 cost with corpus-wide rounding blast radius for a sub-pixel, 3-edge reward.
 Full diagnosis: `plans/residual-cleanup/analysis/2646-fp-contract.md`.
+
+**Affected:** `2620` (structural-match, maxΔ 585; 423 diffs on 24 edge paths
++ 22 arrowheads).
+
+**What differs.** The `ortho` (`splines=ortho`) pipeline is byte-conformant
+to C given identical inputs — proven by injecting C's exact maze input
+(coordinates, `xsize`/`ysize`) into the port's ortho stage: 378/378 routed
+segments come out byte-identical, so nothing in `src/ortho` is at fault.
+The actual divergence is 1-2 ULP in the maze *input*: node `ysize` (and, by
+within-rank accumulation, `ND_coord.y`) computed in C's `poly_init`
+polygon vertex-extent loop (`shapes.c`), which under
+`-ffp-contract=on` fuses `R.x += sidelength*cosx` into an FMA that is ~1
+ULP larger than the port's strict-IEEE arithmetic (both sides implement the
+arithmetically identical expression). `2620` has 173 fractional-width
+polygon nodes; all show C ≥ port by 1-2 ULP. That ULP is amplified — not
+introduced — by `ortho`'s Dijkstra relax, which faithfully truncates its
+running distance per-step (`sgraph.c:165`, mirrored by the port as
+`Math.trunc`) over weights derived from raw cell extents
+(`maze.c:257`). The ULP-shifted geometry flips an equal-cost corridor tie
+for 4 routed edges (paths + their arrowheads); the remaining diffs are
+±1-track renumbering knock-on from those 4 flips.
+
+**Why accepted (irreducibility proven by a controlled experiment).** A
+standalone C harness varying only `-ffp-contract` reproduced both sides on
+the divergent hexagon vertex: `-ffp-contract=on` → `310.29250168188713`
+(matches the oracle), `-ffp-contract=off` → `310.29250168188707` (matches
+the port), with the divergent operation isolated to vertex `i=3`
+(`R.x=-0.50000000000000011` fused vs. `-0.5` unfused). A second
+input-injection experiment (only variable: ortho input values) confirmed
+the amplifier: feeding the port's own `orthoEdges` C's exact
+`coord`/`xsize`/`ysize` collapses all 4 corridor divergences to 0 — the
+ortho code has no defect, it is just sensitive (as C's own maze-cost
+routing is) to a 1-2 ULP shift in its input. Matching would mean emulating
+clang's specific FMA contraction of one compiled expression tree in
+`poly_init` — chasing a compiled artifact, not porting source semantics.
+Full diagnosis: `plans/ortho-2620-residual/analysis/2620-ortho-route.md`.
 
 ---
 
