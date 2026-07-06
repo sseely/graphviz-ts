@@ -16,9 +16,9 @@ addPEdges, M3 gcell-ULP — all on main; 2620 still diverges).
 
 | Batch | Status | Doc |
 |---|---|---|
-| 1 — T1 bounded diagnosis (fable, worktree) | [ ] | [batch-1/overview.md](batch-1/overview.md) |
-| 2 — T2 outcome (fix OR registry accept) + survey gate | [ ] | [batch-2/overview.md](batch-2/overview.md) |
-| 3 — T3 closeout | [ ] | [batch-3/overview.md](batch-3/overview.md) |
+| 1 — T1 bounded diagnosis (fable, worktree) | [x] | [batch-1/overview.md](batch-1/overview.md) |
+| 2 — T2 outcome (fix OR registry accept) + survey gate | [x] | [batch-2/overview.md](batch-2/overview.md) |
+| 3 — T3 closeout | [x] | [batch-3/overview.md](batch-3/overview.md) |
 
 ## Constraints
 
@@ -55,3 +55,33 @@ analysis/ (diagnosis outputs) · [diagrams/component-map.md](diagrams/component-
 
 Model routing: T1 fable (tricky ortho diagnosis); T2 sonnet (mechanical fix or
 registry write); T3 orchestrator inline. Rollback: everything Reversible.
+
+## Mission summary (closed 2026-07-05)
+
+**Result: 2620 root-caused and closed — SPLIT verdict (accept + fix).**
+conformant count holds at 754; 2620 stays structural-match, now ACCEPTED.
+
+T1's diagnosis overturned the "corridor tie-break" framing: the ortho pipeline
+is **byte-conformant to C given identical inputs** (proven by injecting C's
+exact node coords → 378/378 routes byte-identical). The 423-diff residual is a
+**compiler fp-contraction (FMA) artifact**: C's `poly_init` polygon
+vertex-extent loop, compiled clang-arm64 `-ffp-contract=on`, produces node
+sizes 1–2 ULP larger than strict IEEE; the port (V8, strict IEEE, no fma)
+can't match. Those ULPs are amplified by ortho's *faithful* per-relax
+int-truncation into an equal-cost corridor tie flip on 4 edges (maxΔ585).
+Proven irreducible at the 2646 bar by a controlled `-ffp-contract` on/off
+experiment (`310.29250168188713` = C, `...707` = port).
+
+| Outcome | Detail |
+|---|---|
+| **ACCEPT** | 2620 registered under a **broadened A8** class — from the 2646-only "Proutespline knife-edge tangency" to the general "fp-contract/FMA vs strict-IEEE" class, now with two documented instances (2646 spline solve; 2620 poly_init sizing + ortho amplification). Port == strict-IEEE C. |
+| **FIX** | `edgeLen` now reads `ND_coord` instead of round-tripping through the bbox (`src/ortho/index.ts`, mirrors `ortho.c:1124`). Harmless on 2620 (0 routes changed) but removes a latent M1-class qsort-tie hazard on other graphs. 15/15 renderable ortho corpus cases byte-unchanged. |
+
+**Tasks:** T1 (fable diagnosis) → T2a fix + T2b registry (sonnet, parallel) →
+T3 closeout. **Gate:** survey green, 2620 allowlisted, no regressions beyond
+the recurring 1652 marginal-timeout (standalone-verified PASS 0-diff). vitest
+2735 green, tsc clean. Decision point (split) surfaced to and approved by user.
+
+**No open follow-ups from 2620.** The residual is fully explained and either
+fixed (edgeLen) or accepted (A8). The followup-residuals backlog note for 2620
+is now closed.
