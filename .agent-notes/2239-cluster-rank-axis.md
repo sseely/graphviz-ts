@@ -266,9 +266,16 @@ cluster-label-flip-rank.test.ts (native-pinned 168x218). LESSON: subgraph
 info.flip is NOT propagated — gate flip-dependent cluster logic on the ROOT's
 flip (or don't gate, matching C).
 
-## Residual (OPEN) — one edge's routing + label y (maxΔ 28.57)
-After the width fix, 2239's sole residual is ONE edge (g[150]): its spline
-takes a gentler curve than C's (C detours up to y≈-1173), its arrowhead is
-~5.7pt off, and its edge-label sits at y=-510 vs C's -539 (Δ28.57). A distinct
-edge-routing/label-placement mechanism (possibly the edge routing around the
-now-reserved cluster-label space); 2239 stays diverged until it's resolved.
+## Residual (OPEN) — one long labeled edge's spline routing (survey maxΔ ~175)
+2239's sole residual after the width fix is ONE edge:
+`srtpdec1_..._rtcp_src -> _proxypad10` (label "application/x-rtcp"). C harness
+(scratchpad/2239/he.c, dumps ED_spl + ED_label) shows C routes it as a 10-point
+/ 3-segment spline that DETOURS up to y=1173.6 (within-rank axis) — up and over
+the now-reserved cluster region — then back down to the head, with the label at
+pos=(7139.3, 542.2). The port routes it as a single 4-point cubic (no detour)
+and places the label ~31pt off (y≈510.9 vs 542.2). So the port's long-edge
+box-corridor routing threads fewer boxes / doesn't detour around the obstacle
+C avoids. This is the edge box-corridor / long-edge spline routing subsystem
+(distinct from the rank-separation fix); deep, not a quick fix. 2239 stays
+diverged. Next: compare the port's box corridor (make_regular_edge / the
+routed box list) vs C's for this long cross-cluster labeled edge.
