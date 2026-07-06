@@ -224,3 +224,20 @@ All temporary env-gated dumps (`LTAILDBG`, `LTAILDBG2` in
 before the instrumented plugin reached `/tmp/ghl`; the plugin was rebuilt
 from clean source and the oracle's SVG output verified byte-identical to
 the pre-edit baseline. `npx tsc --noEmit` passes with 0 errors.
+
+## Re-verification (2026-07-06)
+After the pad/margin fixes landed, 1879 dims byte-match (10915x1563, translate
+278.69 3376.69); residual is now ~10 edge-@d diffs, maxΔ ~328 (down from 876).
+The divergent edges are ltail edges into cluster_791x792 (couple_257x255->
+node_260_260, couple_211x210->node_224_224). Fresh instrumentation of the
+port's RAW pre-clip spline (compound.ts makeCompoundEdge) confirms the earlier
+hypothesis with concrete numbers: for node_260_260 the port's raw spline bends
+at internal (10019,1490.4) and crosses the cluster's bottom edge (y=1535.4) at
+x≈10039, whereas C's clipped result sits at internal x≈10096 (SVG 4878,-2611.2).
+So the RAW SPLINE ROUTING differs (~57 internal units at the bottom-edge
+crossing), NOT the clip algorithm — the port routes the box corridor / shortest
+path to a different bend than C. This is the D5 tracked-deep conclusion,
+now with a precise crossing-point delta. Still blocked on a C-side raw-spline
+dump (standalone C harness linking libpathplan/libcommon, or scoped C
+instrumentation) to isolate shortest-path-waypoint vs node-boundary-clip as the
+departure. Not a surface fix.

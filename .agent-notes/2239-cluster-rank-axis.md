@@ -210,3 +210,16 @@ tracked-deep bucket as 2521, and prioritizing a combined ns.c
 pivot-order/spanning-tree-order investigation if this class is worth
 pursuing (it appears to be the dominant remaining unexplained divergence
 across at least 2521, 2239, and plausibly blok_60/2368 per prior notes).
+
+## Re-verification (2026-07-06)
+2239 height byte-matches (1045); WIDTH is ~half — oracle 12078 vs port 6799
+(maxΔ 5279, the whole rank-axis extent since rankdir=LR makes x the rank axis).
+Confirmed the compression is pure rank-x POSITIONING, not node sizing: 94/95
+node box widths byte-match (the one "diff" is the graph outer polygon). Distinct
+rank-x levels differ (oracle 69 vs port 71) and the x-gaps are non-uniformly
+compressed (some match exactly — 114/66/87/187 — others halve: 299->172,
+240->113, 246->199), with port gap=1 near-overlaps. So nodes land in different
+ranks / cluster rank-axis spacing differs — the D6 "LR_balance slack over
+feasible-tree state" tracked-deep finding. Core rank-assignment / cluster-rank
+divergence, not a node-size or margin surface fix. Would need to instrument the
+rank network-simplex feasible tree vs C for this cluster-nested LR graph.
