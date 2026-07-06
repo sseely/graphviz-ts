@@ -277,5 +277,20 @@ and places the label ~31pt off (y≈510.9 vs 542.2). So the port's long-edge
 box-corridor routing threads fewer boxes / doesn't detour around the obstacle
 C avoids. This is the edge box-corridor / long-edge spline routing subsystem
 (distinct from the rank-separation fix); deep, not a quick fix. 2239 stays
-diverged. Next: compare the port's box corridor (make_regular_edge / the
+diverged.  Next: compare the port's box corridor (make_regular_edge / the
 routed box list) vs C's for this long cross-cluster labeled edge.
+
+## Sharpened (2026-07-06, C harness) — corridor around the reserved cluster label
+The edge is NOT long: tail srtpdec1_rtcp_src is rank 22 (in cluster_srtpdec1_src),
+head _proxypad10 is rank 24 — ADJACENT even ranks. But rank 22->24 is the
+2445-wide gap my cluster-label fix reserved for cluster_dtlsdec1's PEM-cert
+label. C harness (hv.c) found NO virtual node at y>800 in the edge's x-span, so
+the y=1173 detour is a pure spline-ROUTING artifact, not a mispositioned chain
+node. Mechanism: the cluster label sits in the reserved 22->24 gap; C's box
+corridor for this edge routes UP and OVER it (detour to y=1173), the port's
+corridor allows the direct path (y~500-650) straight past/under the label. Fix
+locus: maximalBbox (edge-route-faithful.ts) — the corridor must be constrained
+by cluster_dtlsdec1's boundary/label region for an edge crossing the reserved
+gap (c.f. [[cl-bound-cluster-corridor-done]] clamp, which evidently doesn't
+cover the label-reservation region). Deep box-corridor work; the edge is drawn
+correctly, just routed straighter — cosmetic single-edge residual. Not fixed.
