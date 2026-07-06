@@ -3,7 +3,7 @@
 # Repository Inventory
 
 Repos analyzed: the current project (`graphviz-ts`) plus its directly related
-siblings in `/Users/scottseely/git`. All three relatives were already cloned
+siblings in `~/git`. All three relatives were already cloned
 locally; no new clones were required.
 
 | Repo | Language | Runtime | Framework | Database | Key Deps | Entry | Notes |

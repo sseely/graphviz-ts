@@ -25,6 +25,17 @@ import type { CorpusEntry } from './enumerate.js';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const ROOT = process.env.CORPUS_ROOT ?? join(homedir(), 'git/graphviz/tests');
+
+/**
+ * Replace an absolute home-directory prefix with `~` so the committed survey
+ * artifacts (parity.json, PARITY.md) never leak a developer's local path.
+ * Applied to the recorded corpus root and to native oracle error messages,
+ * which embed each input's absolute path.
+ */
+function scrubHome(s: string): string {
+  const home = homedir();
+  return home ? s.split(home).join('~') : s;
+}
 const DOT_BIN = process.env.DOT_BIN ?? join(homedir(), 'git/graphviz/build/cmd/dot/dot');
 const GVBINDIR = process.env.GVBINDIR ?? '/tmp/gvplugins';
 // Oracle-cache identity. The cache stores native `dot` SVGs keyed by input id;
@@ -469,10 +480,12 @@ async function main(): Promise<void> {
     generatedAt: new Date().toISOString(),
     generatedWith: 'test/corpus/survey.ts',
     oracleVersion: await oracleVersion(),
-    corpusRoot: ROOT,
+    corpusRoot: scrubHome(ROOT),
     total: results.length,
     counts,
-    results,
+    results: results.map((r) =>
+      r.errMsg !== undefined ? { ...r, errMsg: scrubHome(r.errMsg) } : r,
+    ),
   };
   writeFileSync(PARITY, JSON.stringify(report, null, 2) + '\n');
   process.stderr.write(`wrote parity.json — ${JSON.stringify(counts)}\n`);

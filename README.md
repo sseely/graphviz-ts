@@ -2,7 +2,7 @@
 
 # graphviz-ts
 
-A faithful TypeScript port of [Graphviz](https://graphviz.org/) — the
+A faithful TypeScript port of [Graphviz](https://gitlab.com/graphviz/graphviz) — the
 graph-visualization toolkit originally written in C at AT&T Research and Lucent
 Bell Labs. It parses the DOT language, runs Graphviz's layout engines, and emits
 SVG.
@@ -233,5 +233,5 @@ from the canonical C Graphviz. New behavior is pinned to the C source — see
 ## License
 
 [Eclipse Public License v2.0](https://www.eclipse.org/legal/epl-2.0/) (EPL-2.0),
-matching upstream Graphviz. Every source file carries an
+matching [upstream Graphviz](https://gitlab.com/graphviz/graphviz). Every source file carries an
 `SPDX-License-Identifier: EPL-2.0` header.

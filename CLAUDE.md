@@ -5,7 +5,7 @@ We want to keep the plans/ contents. This is for archaeology on this particular 
 
 ## Mission
 
-This project is a faithful TypeScript port of [Graphviz](https://graphviz.org/),
+This project is a faithful TypeScript port of [Graphviz](https://gitlab.com/graphviz/graphviz),
 the graph-visualization toolkit originally written in C at AT&T Research and
 Lucent Bell Labs. The C source lives at `~/git/graphviz` and is the **canonical
 specification** for this project. The output of this port will be consumed as a

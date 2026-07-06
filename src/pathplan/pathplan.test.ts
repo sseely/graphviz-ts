@@ -2,7 +2,7 @@
 /**
  * Tests for lib/pathplan TypeScript port.
  * Expected values derived from C source. Never change assertions to match output.
- * @see /Users/scottseely/git/graphviz/lib/pathplan/
+ * @see ~/git/graphviz/lib/pathplan/
  */
 
 import { describe, it, expect } from "vitest";

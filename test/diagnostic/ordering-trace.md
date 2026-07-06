@@ -158,7 +158,7 @@ ordering_dot1 was not performed since b58 is conclusive.
 
 ```sh
 git -C ~/git/graphviz status --short lib/dotgen/mincross.c  # no output (clean)
-git -C /Users/scottseely/git/graphviz-ts status src/ --short
+git -C ~/git/graphviz-ts status src/ --short
 # shows only: ?? src/.agent-notes/  ?? src/.gitignore  ?? src/.mcp.json  ?? src/.serena/
 # No modified source files.
 npx tsc --noEmit  # exits 0
