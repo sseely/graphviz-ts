@@ -31,12 +31,16 @@ grew it). Only 1718 uses shape=star in the whole corpus.
 Result: 1718 dims now byte-match (21192, translate 21188.41); maxΔ 3716 → 47.96.
 Minimal `a->b [shape=star]` SVG height 116 → 147 (oracle). TDD: poly-vertices.test.ts.
 
-## Remaining residual (OPEN) — spline-to-star edge clip
-1718's sole remaining divergence (10 diffs, maxΔ 47.96) is ONE edge's spline +
-arrowhead (g[3]). The edge endpoints where they meet a star node differ by
-5–48pt. Same residual on the minimal `a->b` repro (7 diffs on the edge). Likely
-the edge clips to the node's box/ellipse boundary rather than the star's actual
-concave shape (star_inside), or the clip uses a stale pre-fix node size. This is
-a distinct mechanism from the node-sizing fix; 1718 stays `diverged` until it's
-resolved. Next: compare the port's edge clip-to-star against C's shape_clip /
-star_inside for a node whose ND_ht just changed.
+## Residual 2 — spline-to-star edge clip — FIXED (2026-07-06)
+Root cause: the port registered `shape=star` with the generic `poly_inside`
+(a concave-decagon point-in-polygon walk), so edges clipped to the star's
+inner boundary and stopped ~8pt short of the tip. C gives the star its OWN
+insidefn — `star_inside` (shapes.c:4089) — testing the point against the
+OUTER-tip pentagram: step the outline vertices by 2 (the five tips), connect
+tip i to tip (i+4)%sides, count how many of those edges the point is on the far
+side of from the centre; ≥2 → outside. Fix: ported `starInside`
+(poly-inside.ts) + a STAR_FNS table (insidefn=starInside) registered via
+`mkStar('star', P_STAR)` (shapes.ts). Star vertices are already at final node
+scale (poly_inside scalex/scaley = 1) so P is tested directly. **1718 now
+byte-exact → CONFORMANT** (both this + the node-height fix). star2 repro 0
+diffs. TDD: poly-vertices.test.ts (edge reaches native 27,-64.06).

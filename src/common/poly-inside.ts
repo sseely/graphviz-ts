@@ -140,6 +140,42 @@ export function polyInside(ctx: InsideContext, p: Point): boolean {
 }
 
 /**
+ * Point-in-star test. A star is concave, so the generic poly_inside decagon
+ * walk clips edges to the wrong (inner) boundary; C gives the star its own
+ * insidefn that tests the point against the OUTER-tip pentagram: step the
+ * outline vertices by 2 (the five tips) connecting tip i to tip (i+4)%sides,
+ * and count the pentagram edges the point is on the far side of from the
+ * centre — two or more means outside. The port's star vertices are already at
+ * final node scale (poly_inside's scalex/scaley collapse to 1), so P is tested
+ * directly, matching C. @see lib/common/shapes.c:star_inside (4089)
+ */
+export function starInside(ctx: InsideContext, p: Point): boolean {
+  const n = ctx.node as Node | undefined;
+  if (n === undefined) return false;
+  const rankdir = (n.root.info.rankdir ?? 0) & 0x3;
+  const P = rankdir === 0 ? p : ccwrotatepf(p, rankdir * 90);
+  if (ctx.bp) {
+    const b = ctx.bp;
+    return P.x >= b.ll.x && P.x <= b.ur.x && P.y >= b.ll.y && P.y <= b.ur.y;
+  }
+  const poly = n.info.shape_info as PolygonT | undefined;
+  if (poly === undefined || poly.vertices === null) return false;
+  const sides = poly.sides;
+  const outerStart = (Math.max(poly.peripheries, 1) - 1) * sides;
+  const outer = poly.vertices.slice(outerStart, outerStart + sides);
+  const ring = polygonOutlineRing(outer, sides, poly.penwidth ?? 1);
+  const O = { x: 0, y: 0 };
+  let outcnt = 0;
+  for (let i = 0; i < sides; i += 2) {
+    const Q = ring[i]!;
+    const R = ring[(i + 4) % sides]!;
+    if (!sameSide(P, O, Q, R)) outcnt++;
+    if (outcnt === 2) return false;
+  }
+  return true;
+}
+
+/**
  * Point-in-record test: inside the field tree's bounding box, expanded
  * by half the penwidth (the outline). penwidth attr is read as default
  * 1 (no attr plumbing here; no test sets node penwidth).

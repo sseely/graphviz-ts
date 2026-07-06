@@ -62,4 +62,13 @@ describe('shape=star — node height folds the star vertex extent (native 15.1.0
     expect(m).not.toBeNull();
     expect(Number(m![1])).toBe(147);
   });
+
+  // Edge clipping must use the star's own inside test (the outer-tip pentagram),
+  // not the generic concave-decagon poly_inside — otherwise the edge stops
+  // short of the star point. Oracle: the a->b spline ends at 27,-64.06 (reaching
+  // node b's top tip), not the pre-fix 27,-43.48. @see shapes.c:star_inside
+  it('edge clips to the star tip (spline reaches native 27,-64.06)', () => {
+    const svg = renderSvg('digraph { node[shape=star label="" style=filled]; a -> b }', 'dot');
+    expect(svg).toContain('d="M27,-99.07C27,-89.72 27,-76.58 27,-64.06"');
+  });
 });

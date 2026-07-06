@@ -26,7 +26,7 @@ import {
 } from './shapeData.js';
 import { polyGencode } from './poly-gencode.js';
 import { recordGencode } from './record.js';
-import { polyInside, recordInside } from './poly-inside.js';
+import { polyInside, recordInside, starInside } from './poly-inside.js';
 import { polyPort } from './compass-port.js';
 import { recordPort, recordPath } from './record-port.js';
 
@@ -47,6 +47,13 @@ const POLY_FNS: ShapeFunctions = {
   codefn: polyGencode,
 };
 
+/** Star reuses the polygon fns but with the star-specific inside test (edge
+ * clipping to the concave star boundary). @see lib/common/shapes.c:star_fns */
+const STAR_FNS: ShapeFunctions = {
+  ...POLY_FNS,
+  insidefn: starInside as ShapeFunctions['insidefn'],
+};
+
 /** Function table for record shapes. @see lib/common/shapes.c:record_fns */
 const RECORD_FNS: ShapeFunctions = {
   initfn: null,
@@ -60,6 +67,8 @@ const RECORD_FNS: ShapeFunctions = {
 // Descriptor constructors (one per shape_functions group in shapes.c)
 const mkPoly = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
   ({ name: n, fns: POLY_FNS, polygon: p, kind: ShapeKind.SH_POLY, usershape: false });
+const mkStar = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
+  ({ name: n, fns: STAR_FNS, polygon: p, kind: ShapeKind.SH_POLY, usershape: false });
 const mkPoint = (n: string, p: ShapeDesc['polygon']): ShapeDesc =>
   ({ name: n, fns: POLY_FNS, polygon: p, kind: ShapeKind.SH_POINT, usershape: false });
 const mkRecord = (n: string): ShapeDesc =>
@@ -136,7 +145,7 @@ export const Shapes: readonly ShapeDesc[] = [
   /* [58] */ mkRecord('record'),
   /* [59] */ mkRecord('Mrecord'),
   /* [60] */ mkEpsf('epsf'),
-  /* [61] */ mkPoly('star',             P_STAR),
+  /* [61] */ mkStar('star',             P_STAR),
 ] as const;
 
 /**
