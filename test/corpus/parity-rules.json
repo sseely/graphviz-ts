@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T18:44:04.209Z",
+  "generatedAt": "2026-07-06T19:41:53.934Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
@@ -431,9 +431,9 @@
       "id": "2239",
       "path": "2239.dot",
       "verdict": "diverged",
-      "maxDelta": 5286.67,
-      "firstDiffPath": "svg/g[1]/g[148]/path[1]/@d",
-      "maxDeltaPath": "svg/g[1]/g[12]/path[1]/@d[4]"
+      "maxDelta": 175.47999999999956,
+      "firstDiffPath": "svg/g[1]/g[150]/path[1]/@d",
+      "maxDeltaPath": "svg/g[1]/g[236]/path[1]/@d[6]"
     },
     {
       "id": "2242",

@@ -75,7 +75,7 @@ for driving groups to conformance. Mechanism-family attribution: see
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
-| `2239` | 5286.67 | `svg/g[1]/g[148]/path[1]/@d` |
+| `2239` | 175.48 | `svg/g[1]/g[150]/path[1]/@d` |
 
 ## errored (0)
 

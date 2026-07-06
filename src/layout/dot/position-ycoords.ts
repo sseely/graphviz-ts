@@ -234,7 +234,15 @@ export function adjustSimple(g: Graph, delta: number, marginTotal: number): void
 
 /** @see lib/dotgen/position.c:adjustRanks (label height delta application) */
 export function adjustRanksLabel(g: Graph, root: Graph, marginTotal: number): void {
-  if (!g.info.flip) return;
+  // C's adjustRanks does NOT gate on flip here — it reads GD_border[LEFT/RIGHT]
+  // unconditionally (the outer `lbl && GD_flip` guard in set_ycoords already
+  // ensures a flipped drawing). The border is set to LEFT/RIGHT by
+  // applyLabelBorder using the ROOT's flip; a cluster subgraph's own info.flip
+  // is not propagated (undefined), so gating on it here skipped the cluster
+  // label rank-reservation entirely — 2239's cluster_dtlsdec1 (a PEM-cert label,
+  // border[R].y=4507) reserved 0 room instead of ~2210, halving the LR width.
+  // A non-flip cluster has border[LEFT/RIGHT]=0, so `if (!lht) return` covers it.
+  // @see lib/dotgen/position.c:adjustRanks (label branch)
   const lht = Math.max(g.info.border?.[LEFT_IX].y ?? 0, g.info.border?.[RIGHT_IX].y ?? 0);
   if (!lht) return;
   const rankArr = root.info.rank!;

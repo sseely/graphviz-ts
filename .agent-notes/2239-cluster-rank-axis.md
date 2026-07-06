@@ -249,3 +249,26 @@ port's make_label_edge / edge-label virtual-node insertion + its
 rank-separation contribution (dot_position with GD_has_labels) against C for a
 rank-18→20 labelled edge. Not attempted as a fix yet — focused LR-label
 subsystem work.
+
+## MAJOR FIX (2026-07-06) — LR cluster-label rank reservation
+C harness (scratchpad/2239/hc.c, dumps GD_ht1/ht2/GD_border per cluster)
+pinpointed the source: **cluster_dtlsdec1** (ranks 20-22) has a PEM-certificate
+label → GD_border[RIGHT].y=4507.4, GD_ht1/ht2≈2210. C's set_ycoords reserves
+that rank-axis room via `if (lbl && GD_flip) adjustRanks` → adjustSimple. The
+port computed the SAME border (4507.4) but adjustRanksLabel bailed on
+`if (!g.info.flip) return` — a CLUSTER subgraph's info.flip is never propagated
+(undefined; only the root's is set), and C's adjustRanks does NOT gate on flip
+(the outer `lbl && GD_flip` guard already ensures a flipped drawing; a non-flip
+cluster has border[LEFT/RIGHT]=0 so `if(!lht)return` covers it). Fix: removed
+the `if (!g.info.flip) return` guard (position-ycoords.ts adjustRanksLabel).
+2239 width 6799 → 12078 (byte-match); maxΔ 5279 → 28.57. TDD:
+cluster-label-flip-rank.test.ts (native-pinned 168x218). LESSON: subgraph
+info.flip is NOT propagated — gate flip-dependent cluster logic on the ROOT's
+flip (or don't gate, matching C).
+
+## Residual (OPEN) — one edge's routing + label y (maxΔ 28.57)
+After the width fix, 2239's sole residual is ONE edge (g[150]): its spline
+takes a gentler curve than C's (C detours up to y≈-1173), its arrowhead is
+~5.7pt off, and its edge-label sits at y=-510 vs C's -539 (Δ28.57). A distinct
+edge-routing/label-placement mechanism (possibly the edge routing around the
+now-reserved cluster-label space); 2239 stays diverged until it's resolved.
