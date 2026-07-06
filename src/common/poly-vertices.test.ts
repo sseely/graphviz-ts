@@ -10,6 +10,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { starVertices, boxVertices } from './poly-vertices.js';
+import { renderSvg } from '../index.js';
 
 describe('boxVertices orientation', () => {
   it('orientation=0 starts at the top-right corner (unchanged legacy order)', () => {
@@ -44,5 +45,21 @@ describe('starVertices', () => {
     // A star: the closest outer point is still farther than the farthest inner
     // point (a regular decagon would have all ten equidistant).
     expect(Math.min(...outer)).toBeGreaterThan(Math.max(...inner));
+  });
+});
+
+// A star's outer points reach beyond its label box, so poly_init folds the
+// aspect-adjusted vertex extent into ND_ht (shapes.c:2214-2277 poly_desc
+// branch, star_vertices *bb mutation). Undercounting it (a regular decagon
+// inscribed in the box) leaves the node at the un-inflated 0.5in minimum and
+// shrinks every rank gap. Oracle-pinned (native dot 15.1.0): two default star
+// nodes on a->b render a 147pt-tall SVG (rank pitch 87.35, not 72).
+// Regression: 1718 (16x-row star grid) had a 21% too-short bbox.
+describe('shape=star — node height folds the star vertex extent (native 15.1.0)', () => {
+  it('two stacked default stars yield a 147pt SVG, not 116pt', () => {
+    const svg = renderSvg('digraph { node[shape=star label="" style=filled]; a -> b }', 'dot');
+    const m = /<svg width="\d+pt" height="(\d+)pt"/.exec(svg);
+    expect(m).not.toBeNull();
+    expect(Number(m![1])).toBe(147);
   });
 });

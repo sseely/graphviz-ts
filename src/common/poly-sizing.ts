@@ -20,6 +20,7 @@
 
 import type { Point } from '../model/geom.js';
 import { STAR, CYLINDER } from './shapeData.js';
+import { starVertices } from './poly-vertices.js';
 
 /** Whitespace in points around labels / between peripheries. @see lib/common/const.h:GAP */
 export const GAP = 4;
@@ -428,6 +429,25 @@ export function polygonPeripheryBB(
  * the vertex extents, then grow for peripheries and the outline.
  * @see lib/common/shapes.c:poly_init (apply minimum dimensions)
  */
+/**
+ * Vertex generation + extent for a STAR, mirroring C's star_vertices poly_desc
+ * (shapes.c:4066): it scales the box to the star's aspect ratio and reports the
+ * scaled box as the extent (`*bb = sz`), so xmax/ymax = sz/2. The vertices come
+ * from the port's starVertices (same r as C, computed from the aspect-adjusted
+ * width). @see lib/common/shapes.c:star_vertices
+ */
+function starVertexGen(bb: Point): { verts: Point[]; xmax: number; ymax: number } {
+  const alpha = Math.PI / 10, alpha3 = 3 * alpha;
+  const aspect = (1 + Math.sin(alpha3)) / (2 * Math.cos(alpha));
+  let sz = bb;
+  if (bb.x > 0) {
+    const a = bb.y / bb.x;
+    if (a > aspect) sz = { x: bb.y / aspect, y: bb.y };
+    else if (a < aspect) sz = { x: bb.x, y: bb.x * aspect };
+  }
+  return { verts: starVertices(bb.x, bb.y), xmax: sz.x / 2, ymax: sz.y / 2 };
+}
+
 function polygonBB(
   bb: Point,
   minSize: Point,
@@ -438,7 +458,16 @@ function polygonBB(
   const geom: PolyGeom = {
     sides, orientation: p.orientation, distortion: p.distortion, skew: p.skew,
   };
-  const { verts, xmax, ymax } = polygonVertices(bb, geom, isBox);
+  // C poly_init (shapes.c:2214-2222) dispatches vertex generation to the
+  // shape's poly_desc: a STAR's vertex_gen mutates bb to the aspect-adjusted
+  // extent (its outer points reach beyond the label box) and reports
+  // xmax=bb.x/2, ymax=bb.y/2 from that. The generic n-gon path here would use a
+  // regular 10-gon inscribed in the label box, undercounting the star's real
+  // extent — leaving ND_ht at the un-inflated minimum and shrinking every rank
+  // gap (1718: rank pitch 72 vs native 87.35). @see shapes.c:star_vertices
+  const { verts, xmax, ymax } = p.optionShape === STAR
+    ? starVertexGen(bb)
+    : polygonVertices(bb, geom, isBox);
   const xmax2 = 2 * xmax;
   const ymax2 = 2 * ymax;
   const nbb = { x: Math.max(minSize.x, xmax2), y: Math.max(minSize.y, ymax2) };
