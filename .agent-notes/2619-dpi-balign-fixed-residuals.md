@@ -24,22 +24,24 @@ Real-world genealogy family-tree cards (HTML `<TABLE>` nodes, `rankdir=LR`,
 
 Both TDD'd: `src/render/svg-graph.test.ts` (dpi), `src/common/htmltable-align.test.ts` (BALIGN).
 
-## Remaining residuals (NOT the dpi/BALIGN class)
+## Residual 1 — style="tapered" edge → polygon — FIXED (2026-07-06)
 
-Both cases still `diverged` after the two fixes, on two independent mechanisms:
+Edge `I63->F23` has `style="tapered"`; the oracle draws a tapered wedge as a
+filled `<polygon>` (varying penwidth), the port drew a plain `<path>`. Ported
+the `if (tapered)` branch of emit_edge_graphics (emit.c:2422): new
+`src/common/taper.ts` (faithful port of lib/common/taper.c — pathtolines,
+taper, radfuncs, taperfun; preserves the drawbevel `x`-for-y quirk) +
+`src/render/svg-tapered-edge.ts` (polygon with pencolor transparent /
+fillcolor = edge color, then arrowheads), dispatched in svg.ts endEdge before
+the colon-multicolor branch (matching C's `if (tapered) else if (numc)`).
+Byte-exact vs oracle: minimal `a->b[style=tapered]` 0 DIFFs; 2619_1/2 taper
+polygon 0 DIFFs. Only style=tapered edges in the whole corpus are 2619_1/2, so
+the branch is a no-op everywhere else. TDD: taper.test.ts + svg-tapered-edge.test.ts.
 
-1. **`style="tapered"` edge → `<polygon>`.** Edge `I63->F23` has
-   `style="tapered"`. The oracle draws a tapered wedge as a filled `<polygon>`
-   (varying penwidth); the port draws a plain `<path>`. First diff:
-   `svg/g[1]/g[8]/path[1]: actual=path expected=polygon`. This is a distinct
-   unported edge-rendering feature (taper geometry), not a small tweak.
-   @see lib/common/emit.c / splines drawing for tapered style.
+## Residual 2 — HTML text @y off by 1.5pt in oval nodes (F7/F23) — OPEN
 
-2. **HTML text @y off by 1.5pt in the oval family nodes (F7/F23).** These are
-   `shape=oval` nodes whose HTML label has an empty first line
-   (`<FONT POINT-SIZE="10"> <BR /> (F7)</FONT>`). The whole text block sits
-   1.5pt higher in the port (constant Δ1.5 across all spans) — a vertical
-   centering / valign residual of an HTML label inside an oval's larger box.
-
-To reach conformant, 2619_1/2 need BOTH residuals fixed. The dpi + BALIGN
-fixes are correct and land independently (they also fix 1435's viewBox class).
+`shape=oval` nodes whose HTML label has an empty first line
+(`<FONT POINT-SIZE="10"> <BR /> (F7)</FONT>`). The whole text block sits 1.5pt
+higher in the port (constant Δ1.5 across all spans) — a vertical centering /
+valign residual of an HTML label inside an oval's larger box. This is the ONLY
+remaining diff on 2619_1/2 (3 DIFFs each); fixing it makes both conformant.

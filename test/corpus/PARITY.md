@@ -11,7 +11,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 - **Oracle:** dot 15.1.0 · **corpus root:** `~/git/graphviz/tests`
 - **Surveyed (applicable):** 789
-- **conformant\*:** 754 (95.6%) · structural-match: 16 → 770/789 structurally equal (97.6%)
+- **conformant\*:** 754 (95.6%) · structural-match: 18 → 772/789 structurally equal (97.8%)
 - **Accepted deltas (documented, won't-fix):** 19 · **Tracked gaps (unaccepted, will-fix):** 5 → of 24 non-conformant graphs
 - **errored:** 0 · **timeout:** 1 · **oracle-error:** 10 (excluded from scoring)
 - **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3, perf 1
@@ -56,7 +56,7 @@ the diverged table and the backlog below.
 | `2620` | structural-match | 585.00 | A8 | 423 diffs / maxΔ 585 on 24 edge paths + 22 arrowheads | known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot |
 | `2646` | structural-match | 42.09 | A8 | maxΔ 42.09 on 3 of 21,216 edges (edge2575 g[4639], edge3905 g[7777], edge15467 g[30201]; all record-port :c-&gt;:nb_part smode long-edge routes) | known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot |
 
-## Tracked structural-match (0)
+## Tracked structural-match (2)
 
 Same element tree; only numeric coordinate diffs above tolerance (no missing
 or extra elements). Near-misses — sub-pixel-to-modest position drift — that we
@@ -67,19 +67,24 @@ diff (`maxDeltaPath`) crossed with a magnitude band — an equivalence-class map
 for driving groups to conformance. Mechanism-family attribution: see
 [analysis](../../plans/structural-match-buckets/analysis/README.md).
 
+### tracked structural-match — by worst-diff signature
+
+| bucket | count | examples | hypothesis |
+|---|---:|---|---|
+| `text-position · Δ1-10` | 2 | `2619_1`, `2619_2` | label placement — text x/y or group transform |
 
 | id | maxΔ | kind | worst-diff path |
 |---|---:|---|---|
+| `2619_1` | 1.50 | `text-position` | `svg/g[1]/g[6]/g[1]/a[1]/g[1]/a[1]/text[1]/@y` |
+| `2619_2` | 1.50 | `text-position` | `svg/g[1]/g[6]/g[1]/a[1]/g[1]/a[1]/text[1]/@y` |
 
-## Tracked diverged (5) — worst-first
+## Tracked diverged (3) — worst-first
 
 | id | maxDelta | firstDiffPath |
 |---|---:|---|
 | `2239` | 5286.67 | `svg/g[1]/g[148]/path[1]/@d` |
 | `1718` | 3716.40 | `svg/g[1]/g[47]/path[1]/@d` |
 | `1879` | 875.68 | `svg/g[1]/g[191]/path[1]/@d` |
-| `2619_1` | 1.50 | `svg/g[1]/g[8]/path[1]` |
-| `2619_2` | 1.50 | `svg/g[1]/g[8]/path[1]` |
 
 ## errored (0)
 
@@ -120,6 +125,5 @@ a candidate oracle-pinned fix mission.
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
 | `path-structure` | 3 | `1718`, `1879`, `2239` | edge path has a different command sequence or point count — spline routing structure |
-| `attr-or-tag` | 2 | `2619_1`, `2619_2` | element tag or a non-coordinate attribute differs |
 
 

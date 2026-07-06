@@ -59,6 +59,7 @@ import { emitArrowOps } from './svg-arrow-ops.js';
 import { resolveRenderColor, colorOpacity } from './color-resolve.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 import { emitSplitEdgePaths } from './svg-edge-split.js';
+import { edgeIsTapered, svgTaperedEdge } from './svg-tapered-edge.js';
 
 // ---------------------------------------------------------------------------
 // Multicolor arrow helpers
@@ -178,6 +179,11 @@ export class SvgRenderer implements RendererPlugin {
       // @see lib/common/emit.c:2390 if (numsemi && numc) multicolor()
       const { firstColor, endColor } = emitSplitEdgePaths(e, job, colorAttr);
       emitMulticolorArrows(e, job, endColor, firstColor);
+    } else if (edgeIsTapered(e)) {
+      // Tapered edge: a filled taper polygon + arrows. Takes precedence over
+      // colon-multicolor, matching C's `if (tapered) ... else if (numc)`.
+      // @see lib/common/emit.c:2422
+      svgTaperedEdge(e, job);
     } else if (numc > 0) {
       // Multicolor parallel-bezier branch
       // @see lib/common/emit.c:2443 else if (numc)
