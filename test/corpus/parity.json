@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-06T01:58:56.509Z",
+  "generatedAt": "2026-07-06T12:32:00.117Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
-  "corpusRoot": "/Users/scottseely/git/graphviz/tests",
+  "corpusRoot": "~/git/graphviz/tests",
   "total": 789,
   "counts": {
     "conformant": 754,
@@ -82,7 +82,7 @@
       "id": "1411",
       "path": "1411.dot",
       "verdict": "oracle-error",
-      "errMsg": "Error: /Users/scottseely/git/graphviz/tests/1411.dot: syntax error in line 17 near '\\'"
+      "errMsg": "Error: ~/git/graphviz/tests/1411.dot: syntax error in line 17 near '\\'"
     },
     {
       "id": "1425",
@@ -98,8 +98,8 @@
       "id": "1435",
       "path": "1435.dot",
       "verdict": "structural-match",
-      "maxDelta": 503,
-      "maxDeltaPath": "svg/@viewBox[2]"
+      "maxDelta": 0.38999999999998636,
+      "maxDeltaPath": "svg/g[1]/g[16]/path[1]/@d[2]"
     },
     {
       "id": "1436",
@@ -727,17 +727,17 @@
       "id": "2619_1",
       "path": "2619_1.dot",
       "verdict": "diverged",
-      "maxDelta": 421,
+      "maxDelta": 1.5,
       "firstDiffPath": "svg/g[1]/g[8]/path[1]",
-      "maxDeltaPath": "svg/@viewBox[2]"
+      "maxDeltaPath": "svg/g[1]/g[6]/g[1]/a[1]/g[1]/a[1]/text[1]/@y"
     },
     {
       "id": "2619_2",
       "path": "2619_2.dot",
       "verdict": "diverged",
-      "maxDelta": 421,
+      "maxDelta": 1.5,
       "firstDiffPath": "svg/g[1]/g[8]/path[1]",
-      "maxDeltaPath": "svg/@viewBox[2]"
+      "maxDeltaPath": "svg/g[1]/g[6]/g[1]/a[1]/g[1]/a[1]/text[1]/@y"
     },
     {
       "id": "2620",
@@ -2190,7 +2190,7 @@
       "id": "imagepath_test-base",
       "path": "imagepath_test/base.gv",
       "verdict": "oracle-error",
-      "errMsg": "Error: /Users/scottseely/git/graphviz/tests/imagepath_test/base.gv: syntax error in line 8 near ']'"
+      "errMsg": "Error: ~/git/graphviz/tests/imagepath_test/base.gv: syntax error in line 8 near ']'"
     },
     {
       "id": "linux.i386-ER",
@@ -3001,7 +3001,7 @@
       "id": "share-b545",
       "path": "share/b545.gv",
       "verdict": "oracle-error",
-      "errMsg": "Error: /Users/scottseely/git/graphviz/tests/share/b545.gv: syntax error in line 1 near '3.583'"
+      "errMsg": "Error: ~/git/graphviz/tests/share/b545.gv: syntax error in line 1 near '3.583'"
     },
     {
       "id": "share-b786",

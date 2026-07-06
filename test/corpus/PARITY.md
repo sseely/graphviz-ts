@@ -9,7 +9,7 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 
 ## Summary
 
-- **Oracle:** dot 15.1.0 · **corpus root:** `/Users/scottseely/git/graphviz/tests`
+- **Oracle:** dot 15.1.0 · **corpus root:** `~/git/graphviz/tests`
 - **Surveyed (applicable):** 789
 - **conformant\*:** 754 (95.6%) · structural-match: 16 → 770/789 structurally equal (97.6%)
 - **Accepted deltas (documented, won't-fix):** 19 · **Tracked gaps (unaccepted, will-fix):** 5 → of 24 non-conformant graphs
@@ -44,7 +44,7 @@ the diverged table and the backlog below.
 | `graphs-b100` | structural-match | 20.00 | A3 | maxΔ 20 (one rank-row) on one hub in-edge knot (Node23730-&gt;Node23729); every node + all upstream box/poly/taut-path byte-identical to C | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
 | `graphs-b104` | structural-match | 20.00 | A3 | maxΔ 20 (one rank-row) on one hub in-edge knot; identical source to graphs-b100, same symmetric-channel tie-break | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
 | `graphs-decorate` | structural-match | 43.54 | A3 | maxΔ 43.54 on a single intra-cluster labeled edge (Se3ffa656...-&gt;Se3ffa61c...); all 23 diffs live in that one &lt;g&gt; | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `1435` | structural-match | 503.00 | A4 | maxΔ 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
+| `1435` | structural-match | 0.39 | A4 | maxΔ 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `1581` | diverged | 0.00 | A4 | maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `2470` | structural-match | 8.00 | A4 | maxΔ ~8pt; element tree identical, same init_rank/pathplan recovery family as 2471 | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `2471` | structural-match | 6906.60 | A4 | whole-layout numeric (maxΔ ~9063); element tree identical incl. the same 6 lost edges | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
@@ -78,8 +78,8 @@ for driving groups to conformance. Mechanism-family attribution: see
 | `2239` | 5286.67 | `svg/g[1]/g[148]/path[1]/@d` |
 | `1718` | 3716.40 | `svg/g[1]/g[47]/path[1]/@d` |
 | `1879` | 875.68 | `svg/g[1]/g[191]/path[1]/@d` |
-| `2619_1` | 421.00 | `svg/g[1]/g[8]/path[1]` |
-| `2619_2` | 421.00 | `svg/g[1]/g[8]/path[1]` |
+| `2619_1` | 1.50 | `svg/g[1]/g[8]/path[1]` |
+| `2619_2` | 1.50 | `svg/g[1]/g[8]/path[1]` |
 
 ## errored (0)
 
@@ -99,7 +99,7 @@ it rejects entirely); there is no reference to compare against.
 
 | id | path | message |
 |---|---|---|
-| `1411` | `1411.dot` | Error: /Users/scottseely/git/graphviz/tests/1411.dot: syntax error in line 17 near '\' |
+| `1411` | `1411.dot` | Error: ~/git/graphviz/tests/1411.dot: syntax error in line 17 near '\' |
 | `1472` | `1472.dot` | oracle not well-formed XML: 102068B |
 | `1783` | `1783.dot` | Error: overflow when calculating virtual weight of edge |
 | `1864` | `1864.dot` | Warning: Warning: no hard-coded metrics for 'monospace'.  Falling back to 'Times' metrics |
@@ -107,8 +107,8 @@ it rejects entirely); there is no reference to compare against.
 | `2475_1` | `2475_1.dot` | oracle exit null |
 | `2593` | `2593.dot` | oracle exit null |
 | `2723` | `2723.dot` | oracle exit null |
-| `imagepath_test-base` | `imagepath_test/base.gv` | Error: /Users/scottseely/git/graphviz/tests/imagepath_test/base.gv: syntax error in line 8 near ']' |
-| `share-b545` | `share/b545.gv` | Error: /Users/scottseely/git/graphviz/tests/share/b545.gv: syntax error in line 1 near '3.583' |
+| `imagepath_test-base` | `imagepath_test/base.gv` | Error: ~/git/graphviz/tests/imagepath_test/base.gv: syntax error in line 8 near ']' |
+| `share-b545` | `share/b545.gv` | Error: ~/git/graphviz/tests/share/b545.gv: syntax error in line 1 near '3.583' |
 
 ## Divergence backlog (next missions)
 

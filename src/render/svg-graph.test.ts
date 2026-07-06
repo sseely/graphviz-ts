@@ -252,6 +252,53 @@ describe('renderSvg — landscape wiring (parseLandscape -> job.rotation -> emit
 });
 
 // ---------------------------------------------------------------------------
+// dpi / resolution graph attribute. init_job_dpi (emit.c:3333) reads
+// GD_drawing->dpi (input.c:713, dpi then resolution then 0); when 0 the SVG
+// device's default_dpi=72 (gvrender_core_svg.c:814) applies. init_job_viewport
+// sets job->scale = zoom * dpi/72 (emit.c:3680) and job->width/height scale by
+// the same factor (emit.c:1249). The port carries this in job.scale, so the SVG
+// group transform + dims scale by dpi/72. Regression: 2619_1/2 (dpi=96) emitted
+// scale(1 1) and a 3/4-size viewBox. Oracle-verified: `digraph{a}` at dpi=72 is
+// unchanged; dpi=96 scales the group + dims by exactly 96/72 = 1.33333.
+// ---------------------------------------------------------------------------
+
+describe('dpi / resolution graph attribute — SVG group + dim scaling', () => {
+  const dims = (svg: string): { w: number; h: number } => {
+    const m = /<svg width="(\d+)pt" height="(\d+)pt"/.exec(svg);
+    if (m === null) throw new Error('no <svg> dims');
+    return { w: Number(m[1]), h: Number(m[2]) };
+  };
+
+  it('no dpi attribute: scale(1 1), dims unchanged (72dpi no-op)', () => {
+    const svg = renderSvg('digraph { a -> b }', 'dot');
+    expect(svg).toContain('transform="scale(1 1)');
+  });
+
+  it('dpi=96 scales the group transform by 96/72 = 1.33333', () => {
+    const svg = renderSvg('digraph { dpi=96; a -> b }', 'dot');
+    expect(svg).toContain('transform="scale(1.33333 1.33333)');
+  });
+
+  it('dpi=96 scales <svg> width/height (native dot 15.1.0: 62x116 -> 83x155)', () => {
+    // Oracle-pinned: `digraph{a->b}` is 62x116pt at 72dpi; at dpi=96 the whole
+    // drawing scales to 83x155pt. C rounds unrounded_sz*dpi/72, not the rounded
+    // 72dpi dims, so this is pinned to native output rather than a base*4/3 ratio.
+    expect(dims(renderSvg('digraph { a -> b }', 'dot'))).toEqual({ w: 62, h: 116 });
+    expect(dims(renderSvg('digraph { dpi=96; a -> b }', 'dot'))).toEqual({ w: 83, h: 155 });
+  });
+
+  it('resolution=96 is an alias for dpi (init_job_dpi fallback)', () => {
+    const svg = renderSvg('digraph { resolution=96; a -> b }', 'dot');
+    expect(svg).toContain('transform="scale(1.33333 1.33333)');
+  });
+
+  it('dpi=72 explicitly is a no-op (scale 1 1)', () => {
+    const svg = renderSvg('digraph { dpi=72; a -> b }', 'dot');
+    expect(svg).toContain('transform="scale(1 1)');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // pad= graph attribute (F2). Oracle-verified against native dot 15.1.0
 // (GVBINDIR=/tmp/ghl dot -Tsvg): `pad=2` on `digraph G { a -> b }` yields
 // width="342pt" height="396pt" translate(144 252); no-pad default is

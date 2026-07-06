@@ -221,6 +221,16 @@ function placeCellRuns(
   };
   const texts = cell.content.filter((c): c is HtmlText => c.kind === 'text');
   const runs = buildLineRuns(texts, finfo, measurer);
+  // pos_html_txt (htmltable.c:1541): each line whose justification is still
+  // UNSET_ALIGN inherits the cell's BALIGN default (BALIGN_MASK →
+  // 'l'/'r'/'n'). A BR with an explicit ALIGN already set run.just; only the
+  // unset ones fall through here. BALIGN center/absent is 'n' (leave centered),
+  // so only left/right override — matching balignfn (htmllex.c:350), which
+  // sets the flag for LEFT/RIGHT only. Without this a BALIGN="LEFT" cell's
+  // multi-line text centered each line instead of flushing left (2619_1/2).
+  if (cell.balign === 'left' || cell.balign === 'right') {
+    for (const r of runs) if (r.just === undefined) r.just = cell.balign;
+  }
   const w = Math.max(...runs.map(r => r.width), 0);
   const h = runs.reduce((a, r) => a + r.height, 0);
   return placeTextRuns(runs, alignContentBox(cbox, cell, w, h), finfo, measurer);

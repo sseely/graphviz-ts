@@ -12,7 +12,8 @@
  */
 
 import type { Point, Box } from '../model/geom.js';
-import { boxOverlap } from '../model/geom.js';
+import { boxOverlap, POINTS_PER_INCH } from '../model/geom.js';
+import { lateDouble } from '../common/nodeinit.js';
 import { parseDrawingSize, initJobViewportZoom, parseLandscape, parseGraphPad, parseGraphMargin } from './viewport.js';
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
@@ -507,10 +508,26 @@ export function render(ctx: GvcContext, g: Graph, format: string): string {
   // (the shared raster ptf path — do not touch) applies job.zoom*devscale to
   // every coordinate. To keep SVG coords full-size (D4's intent) WITHOUT
   // altering the ptf path, carry Z in job.scale instead — which is exactly what
-  // C's SVG group emits (svg_begin_page prints job->scale.x/y = zoom*dpi/72 = Z
-  // for dpi=72), not job->zoom. job.scale is read only by the SVG group/dims.
+  // C's SVG group emits (svg_begin_page prints job->scale.x/y = zoom*dpi/72),
+  // not job->zoom. job.scale is read only by the SVG group/dims.
   const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')), job.pad);
-  job.scale = { x: z, y: z };
+  // init_job_dpi (emit.c:3333): GD_drawing->dpi = late_double(dpi, resolution, 0)
+  // (input.c:713). When >0 it becomes job->dpi; otherwise the SVG device's
+  // default_dpi = 72 (gvrender_core_svg.c:814) applies. init_job_viewport then
+  // sets job->scale = zoom * dpi / POINTS_PER_INCH (emit.c:3680), and job->width
+  // = ROUND((pageSize+2*margin) * dpi/72) (emit.c:1249) — both carried here via
+  // job.scale, so a graph with dpi=96 scales the whole SVG group + dims by
+  // 96/72 = 1.333 exactly as native (e.g. 2619_1/2619_2). Absent the attribute
+  // dpi=72 makes this a no-op, leaving every other corpus byte unchanged.
+  const drawingDpi = lateDouble(
+    g.attrs.get('dpi'),
+    lateDouble(g.attrs.get('resolution'), 0, 0),
+    0,
+  );
+  const jobDpi = drawingDpi > 0 ? drawingDpi : POINTS_PER_INCH;
+  job.dpi = { x: jobDpi, y: jobDpi };
+  const dpiScale = jobDpi / POINTS_PER_INCH;
+  job.scale = { x: z * dpiScale, y: z * dpiScale };
   // init_job_viewport: job->rotation = gvc->rotation (= 90 for landscape, set in
   // emit_graph from GD_drawing->landscape). Emit-only — drives the SVG group
   // transform + dim swap (T2), never layout/routing (ADR-1). transformPoint is

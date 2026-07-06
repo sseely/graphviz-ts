@@ -42,6 +42,33 @@ describe('HTML table cell HALIGN', () => {
   });
 });
 
+// BALIGN sets the default per-line justification within a cell's multi-line
+// text block (pos_html_txt, htmltable.c:1541). A BR with no ALIGN leaves its
+// line UNSET, which then inherits the cell's BALIGN. Distinct from HALIGN,
+// which positions the whole block. Regression: 2619_1/2619_2 (BALIGN="LEFT"
+// genealogy cards) centered each line instead of flushing left.
+const balignCell = (balign: string) =>
+  `digraph{ n[shape=none, label=<<TABLE BORDER="0">` +
+  `<TR><TD BALIGN="${balign}">WIDEWIDEWIDE<BR/>x</TD></TR></TABLE>>]; }`;
+
+describe('HTML table cell BALIGN (per-line justification)', () => {
+  it('BALIGN="left": the short second line flushes left, level with line 1', () => {
+    const [wide, narrow] = textXs(balignCell('left'));
+    expect(narrow).toBeCloseTo(wide, 1);
+  });
+
+  it('unset BALIGN: the short second line is centered (x greater than line 1)', () => {
+    const [wide, narrow] = textXs(balignCell('center'));
+    expect(narrow).toBeGreaterThan(wide);
+  });
+
+  it('BALIGN="right": the short second line flushes right (x > centered)', () => {
+    const [, narrowRight] = textXs(balignCell('right'));
+    const [, narrowCenter] = textXs(balignCell('center'));
+    expect(narrowRight).toBeGreaterThan(narrowCenter);
+  });
+});
+
 // C zeroes only the content-derived term for a FIXEDSIZE table with both WIDTH
 // and HEIGHT, so the box takes the explicit dims (fmax(0, width)). The port
 // previously set the table dimen to 0, collapsing it to content size.
