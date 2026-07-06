@@ -8,7 +8,7 @@
  */
 
 import type {
-  OrthoGraph, OrthoEdge, OrthoPoint,
+  OrthoGraph, OrthoEdge, OrthoNode, OrthoPoint,
   Route,
 } from "./types.js";
 import type { ClipAndInstallFn } from "./types.js";
@@ -21,7 +21,7 @@ import {
 import { convertSPtoRoute, assignSegs, assignTracks, vtrack, htrack } from "./ortho-route.js";
 import { gvQsort } from "../util/bsd-qsort.js";
 
-export type { OrthoGraph, OrthoEdge, OrthoPoint, ClipAndInstallFn };
+export type { OrthoGraph, OrthoEdge, OrthoNode, OrthoPoint, ClipAndInstallFn };
 export { SEED } from "./partition.js";
 
 // ─── Edge length / sorting ────────────────────────────────────────────────────
@@ -38,13 +38,19 @@ interface EdgePair {
  * corner length reorders near-equal-length edges, and routing order drives maze
  * channel occupancy (and thus corridor selection). Squared vs sqrt is immaterial
  * to the ordering but kept squared to match C exactly.
+ *
+ * Read `coord` directly when the caller plumbed it (same fallback pattern as
+ * mkMaze's gcell derivation, maze.ts:267-268) rather than re-deriving the
+ * centre from `bb` — the bb round-trip ((c-lw)+(c+rw))/2 loses low bits versus
+ * C's raw ND_coord read and can flip a qsort tie-order on other graphs. Falls
+ * back to the bb centre only for port-less callers that don't model coord.
  * @see lib/ortho/ortho.c:1124 (edgeLen)
  */
-function edgeLen(e: OrthoEdge): number {
-  const tcx = (e.tail.bb.LL.x + e.tail.bb.UR.x) / 2;
-  const tcy = (e.tail.bb.LL.y + e.tail.bb.UR.y) / 2;
-  const hcx = (e.head.bb.LL.x + e.head.bb.UR.x) / 2;
-  const hcy = (e.head.bb.LL.y + e.head.bb.UR.y) / 2;
+export function edgeLen(e: OrthoEdge): number {
+  const tcx = e.tail.coord ? e.tail.coord.x : (e.tail.bb.LL.x + e.tail.bb.UR.x) / 2;
+  const tcy = e.tail.coord ? e.tail.coord.y : (e.tail.bb.LL.y + e.tail.bb.UR.y) / 2;
+  const hcx = e.head.coord ? e.head.coord.x : (e.head.bb.LL.x + e.head.bb.UR.x) / 2;
+  const hcy = e.head.coord ? e.head.coord.y : (e.head.bb.LL.y + e.head.bb.UR.y) / 2;
   const dx = tcx - hcx;
   const dy = tcy - hcy;
   return dx * dx + dy * dy;
