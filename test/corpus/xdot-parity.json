@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-07T21:21:31.477Z",
+  "generatedAt": "2026-07-07T21:48:39.103Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 759,
   "counts": {
-    "conformant": 734,
-    "diverged": 23,
+    "conformant": 744,
+    "diverged": 14,
     "accepted": 0,
     "port-error": 0,
     "oracle-error": 0,
-    "timeout": 2
+    "timeout": 1
   },
   "results": [
     {
@@ -3573,21 +3573,13 @@
       "id": "2592",
       "path": "2592.dot",
       "size": 3001,
-      "verdict": "diverged",
-      "diffCount": 8,
-      "firstDiff": "[graph]/_draw_/op[2].filled_polygon[0]",
-      "maxDelta": 15.05,
-      "maxDeltaPath": "[graph]/_draw_/op[2].filled_polygon[0]"
+      "verdict": "conformant"
     },
     {
       "id": "2082",
       "path": "2082.dot",
       "size": 3033,
-      "verdict": "diverged",
-      "diffCount": 8,
-      "firstDiff": "[graph]/_draw_/op[2].filled_polygon[0]",
-      "maxDelta": 144,
-      "maxDeltaPath": "[graph]/_draw_/op[2].filled_polygon[0]"
+      "verdict": "conformant"
     },
     {
       "id": "share-train11",
@@ -3929,9 +3921,7 @@
       "id": "2619_1",
       "path": "2619_1.dot",
       "size": 6721,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "edge:I63->F23#0/_draw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grdradial_angle",
@@ -4027,9 +4017,7 @@
       "id": "2619_2",
       "path": "2619_2.dot",
       "size": 7596,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "edge:I63->F23#0/_draw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "share-abstract",
@@ -4139,11 +4127,7 @@
       "id": "graphs-b36",
       "path": "graphs/b36.gv",
       "size": 10388,
-      "verdict": "diverged",
-      "diffCount": 15,
-      "firstDiff": "[graph]/_draw_/op[2].filled_polygon[4]",
-      "maxDelta": 0.010000000000218279,
-      "maxDeltaPath": "[graph]/_draw_/op[2].filled_polygon[4]"
+      "verdict": "conformant"
     },
     {
       "id": "share-proc3d",
@@ -4311,11 +4295,7 @@
       "id": "1332",
       "path": "1332.dot",
       "size": 13890,
-      "verdict": "diverged",
-      "diffCount": 32,
-      "firstDiff": "cluster:clusterc5379/_draw_/op[2].filled_polygon[4]",
-      "maxDelta": 0.010000000000218279,
-      "maxDeltaPath": "cluster:clusterc5379/_draw_/op[2].filled_polygon[4]"
+      "verdict": "conformant"
     },
     {
       "id": "share-jsort",
@@ -4387,11 +4367,7 @@
       "id": "1718",
       "path": "1718.dot",
       "size": 22038,
-      "verdict": "diverged",
-      "diffCount": 5,
-      "firstDiff": "edge:r10c5->r11c5#0/_draw_/op[1].unfilled_bezier[0]",
-      "maxDelta": 0.010000000000218279,
-      "maxDeltaPath": "edge:r10c5->r11c5#0/_draw_/op[1].unfilled_bezier[0]"
+      "verdict": "conformant"
     },
     {
       "id": "windows-b124",
@@ -4429,11 +4405,7 @@
       "id": "graphs-badvoro",
       "path": "graphs/badvoro.gv",
       "size": 33949,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "edge:okbril80->okbril60#0/_draw_/op[1].unfilled_bezier[0]",
-      "maxDelta": 0.010000000002037268,
-      "maxDeltaPath": "edge:okbril80->okbril60#0/_draw_/op[1].unfilled_bezier[0]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-viewport",
@@ -4446,10 +4418,8 @@
       "path": "2239.dot",
       "size": 48090,
       "verdict": "diverged",
-      "diffCount": 57,
-      "firstDiff": "cluster:cluster_bin0_0x7f06a005a0c0_sink[missing-object]",
-      "maxDelta": 0.010000000000005116,
-      "maxDeltaPath": "cluster:cluster_clocksync_0_0x7f06e804a870/_ldraw_/op[11].text[2]"
+      "diffCount": 55,
+      "firstDiff": "cluster:cluster_bin0_0x7f06a005a0c0_sink[missing-object]"
     },
     {
       "id": "graphs-b106",
@@ -4461,8 +4431,7 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "timeout",
-      "errMsg": ""
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b143",
@@ -4511,8 +4480,8 @@
       "path": "2095_1.dot",
       "size": 105083,
       "verdict": "diverged",
-      "diffCount": 10,
-      "firstDiff": "edge:1163->1164#0/_draw_/op[1].unfilled_bezier[0]",
+      "diffCount": 2,
+      "firstDiff": "edge:1451->1450#0/pos[2]",
       "maxDelta": 0.1000000000003638,
       "maxDeltaPath": "edge:1451->1450#0/pos[2]"
     },
@@ -4579,11 +4548,7 @@
       "id": "1879",
       "path": "1879.dot",
       "size": 287816,
-      "verdict": "diverged",
-      "diffCount": 8,
-      "firstDiff": "[graph]/_draw_/op[2].filled_polygon[0]",
-      "maxDelta": 144,
-      "maxDeltaPath": "[graph]/_draw_/op[2].filled_polygon[0]"
+      "verdict": "conformant"
     },
     {
       "id": "linux.x86-root_twopi",
