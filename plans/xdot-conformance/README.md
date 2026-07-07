@@ -91,7 +91,7 @@ Anything else → stop.
 | Batch | Description | Status |
 |-------|-------------|--------|
 | [1](batch-1/overview.md) | Build the xdot conformance harness (no renderer changes) | [x] |
-| [2](batch-2/overview.md) | Walk conformant items small→large; fix-loop to conformant | [x] 744/759 (98%); rest layout-rooted (STOP) |
+| [2](batch-2/overview.md) | Walk conformant items small→large; fix-loop to conformant | [x] 749/759 (99%); 4 A8-accepted, 1 layout (2825), 2 emission-TODO (2239/2368_1), pgram parser-limit, 1514 model, 1652 perf |
 
 ## Index
 - [decisions.md](decisions.md) — architecture decisions (AD-1…AD-7)

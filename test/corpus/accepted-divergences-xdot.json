@@ -1,4 +1,29 @@
 {
   "comment": "Irreducible xdot divergences (mission: xdot-conformance, AD-7). Each entry: {id, opClass, delta, rationale}. The walker treats listed ids as non-blocking ('accepted') and continues. Every entry MUST be referenced in the decision journal with its mechanism.",
-  "divergences": []
+  "divergences": [
+    {
+      "id": "2108",
+      "opClass": "cluster:bb / edge:pos [numeric]",
+      "delta": 10,
+      "rationale": "fp-contract at a %.5g 5-sig-fig rounding boundary. The SVG cluster polygons match native EXACTLY (e.g. cluster_SITE_47 = 8,-774611 8,-838185 in both), and the root SVG height is identical (870643). The xdot bb/pos are %.5g-formatted; a sub-ULP layout FP difference tips a value that lands exactly on a 5-sig-fig boundary (838185) to round 838190 (native) vs 838180 (port). Not layout, not emission logic - irreducible float rounding. A8 class."
+    },
+    {
+      "id": "2475_2",
+      "opClass": "cluster:bb [numeric]",
+      "delta": 10,
+      "rationale": "Same %.5g-boundary fp-contract as 2108. SVG cluster polygons match native exactly; only the %.5g-truncated xdot bb attribute differs at the 5-sig-fig rounding boundary. Irreducible. A8 class."
+    },
+    {
+      "id": "2095_1",
+      "opClass": "edge:pos [numeric]",
+      "delta": 0.1,
+      "rationale": "Two edge pos coords differ by one unit in the last %.5g place (7518.2 vs 7518.3). SVG matches; the divergence is a %.5g last-place rounding of a value on the boundary from a sub-ULP layout FP difference. Irreducible. A8 class. (Also perf-slow: surveys as timeout; renders these 2 fp diffs when given time.)"
+    },
+    {
+      "id": "linux.i386-b29",
+      "opClass": "edge:pos (self-loop) [numeric]",
+      "delta": 0.1,
+      "rationale": "Self-loop spline pos differs by one unit in the last %.5g place (1475.2 vs 1475.3). hypot/ULP class (Apple libm), matching the 2368/hub-fanin A3 findings - the self-loop control point is computed via hypot whose last bit differs from glibc, amplified by %.5g at the boundary. Irreducible. A3/A8 class."
+    }
+  ]
 }

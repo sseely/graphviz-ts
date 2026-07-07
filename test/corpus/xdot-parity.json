@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-07T21:48:39.103Z",
+  "generatedAt": "2026-07-07T22:36:58.077Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 759,
   "counts": {
-    "conformant": 744,
-    "diverged": 14,
+    "conformant": 748,
+    "diverged": 9,
     "accepted": 0,
     "port-error": 0,
     "oracle-error": 0,
-    "timeout": 1
+    "timeout": 2
   },
   "results": [
     {
@@ -2863,9 +2863,7 @@
       "id": "2521_1",
       "path": "2521_1.dot",
       "size": 1062,
-      "verdict": "diverged",
-      "diffCount": 3,
-      "firstDiff": "cluster:cluster1[missing-object]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grdangles",
@@ -3473,9 +3471,7 @@
       "id": "1436",
       "path": "1436.dot",
       "size": 2599,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "edge:tmp-outdir/_fqw3_kw->tmp-outdir/rokz370o#0/_draw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "share-jcctree",
@@ -4059,9 +4055,7 @@
       "id": "graphs-b15",
       "path": "graphs/b15.gv",
       "size": 8774,
-      "verdict": "diverged",
-      "diffCount": 12,
-      "firstDiff": "edge:Fall->HoverRest#1/_draw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "nshare-dotsplines_dot",
@@ -4397,9 +4391,7 @@
       "id": "graphs-b69",
       "path": "graphs/b69.gv",
       "size": 33033,
-      "verdict": "diverged",
-      "diffCount": 3,
-      "firstDiff": "edge:WAR-WR1VE1->MRS170-UPDATE-WR1RP1#0/_draw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-badvoro",
@@ -4418,8 +4410,8 @@
       "path": "2239.dot",
       "size": 48090,
       "verdict": "diverged",
-      "diffCount": 55,
-      "firstDiff": "cluster:cluster_bin0_0x7f06a005a0c0_sink[missing-object]"
+      "diffCount": 4,
+      "firstDiff": "cluster:cluster_dtlsdec1_0x5641244e6cb0/_ldraw_[opCount]"
     },
     {
       "id": "graphs-b106",
@@ -4479,11 +4471,8 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "size": 105083,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "edge:1451->1450#0/pos[2]",
-      "maxDelta": 0.1000000000003638,
-      "maxDeltaPath": "edge:1451->1450#0/pos[2]"
+      "verdict": "timeout",
+      "errMsg": ""
     },
     {
       "id": "graphs-root",
