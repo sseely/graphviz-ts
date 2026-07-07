@@ -227,7 +227,7 @@ export function createObjState(type: ObjType = ObjType.Node): ObjState {
  *
  * @see lib/gvc/gvdevice.c:gvprintdouble
  */
-function toFixed2HalfEven(n: number): string {
+export function toFixed2HalfEven(n: number): string {
   // Exact tie at 2 dp ⇔ fractional part is odd/8. n*8 and n*4 are
   // exact (power-of-two scaling only shifts the exponent), so this
   // never misclassifies near-ties like 0.195 (= 0.19500…00624).
