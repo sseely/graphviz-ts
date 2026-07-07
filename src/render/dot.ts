@@ -28,6 +28,7 @@ import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import { parseGraphPad } from '../gvc/viewport.js';
 import { parseSegs } from '../common/multicolor.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
+import { IGNORED } from '../layout/dot/rank.js';
 import type { Bezier } from '../model/geom.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
@@ -380,6 +381,10 @@ export function formatNodeAttrs(n: Node): string {
 export function formatEdgePos(e: Edge): string {
   const spl = e.info.spl;
   if (!spl || spl.list.length === 0) return '';
+  // Native's pos loop skips IGNORED edges (output.c:350) — concentrate merges
+  // an edge into its opposite and marks the absorbed one IGNORED; it is still
+  // drawn (has _draw_) but carries no `pos`. @see lib/common/output.c:349-353
+  if (e.info.edge_type === IGNORED) return '';
   const parts: string[] = [];
   for (const bez of spl.list) {
     if (bez.sflag) parts.push('s,' + gfmt5(bez.sp.x) + ',' + gfmt5(bez.sp.y));
