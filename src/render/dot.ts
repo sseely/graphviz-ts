@@ -523,12 +523,17 @@ export class XdotRenderer implements RendererPlugin {
   private textflags: number[] = new Array(12).fill(0);
   /** Accumulated draw strings keyed by model object (C: agset on the object). */
   private draws = new Map<Node | Edge | Graph, XdotDraws>();
+  /** Clusters in render order — the graphs `endCluster` was actually called for
+   *  (from `renderClusters`/`GD_clust`), which is NOT always reachable via
+   *  `g.subgraphs`, so it is tracked here rather than re-walked. */
+  private clusters: Graph[] = [];
 
   beginGraph(g: Graph, _job: RenderJob): void {
     this.bufs = makeXbufs();
     this.penwidth = new Array(12).fill(1);
     this.textflags = new Array(12).fill(0);
     this.draws = new Map();
+    this.clusters = [];
   }
 
   endGraph(g: Graph, job: RenderJob): void {
@@ -764,6 +769,7 @@ export class XdotRenderer implements RendererPlugin {
       if (draw) set.draw = draw;
       if (ldraw) set.ldraw = escBackslash(ldraw);
     }
+    this.clusters.push(sg);
     this.resetState(EmitState.CDraw, EmitState.CLabel);
   }
 
@@ -958,11 +964,13 @@ export class XdotRenderer implements RendererPlugin {
     return parts.join(' ');
   }
 
-  /** Cluster attribute block: `_draw_`, `_ldraw_`, `bb`. */
+  /** Cluster attribute block. C's xdot_end_cluster ALWAYS agsets `_draw_` when
+   *  the graph has clusters (even empty, e.g. peripheries=0), so emit it
+   *  unconditionally; `_ldraw_` only when the cluster has a label.
+   *  @see plugin/core/gvrender_core_dot.c:284 xdot_end_cluster */
   private clusterAttrs(sg: Graph): string {
     const d = this.draws.get(sg);
-    const parts: string[] = [];
-    if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
+    const parts: string[] = [this.drawAttr('_draw_', d?.draw ?? '')];
     if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     if (sg.info.bb) parts.push('bb="' + this.bbStr(sg) + '"');
     return parts.join(' ');
@@ -1010,17 +1018,10 @@ export class XdotRenderer implements RendererPlugin {
     return out;
   }
 
-  /** Subgraphs (recursively) that accumulated a draw string — the clusters. */
-  private clustersWithDraw(g: Graph): Graph[] {
-    const out: Graph[] = [];
-    const visit = (gr: Graph): void => {
-      for (const sg of gr.subgraphs.values()) {
-        if (this.draws.has(sg)) out.push(sg);
-        visit(sg);
-      }
-    };
-    visit(g);
-    return out;
+  /** The clusters actually rendered (endCluster order) — the ones with a box or
+   *  label to serialize. @see clusters field. */
+  private clustersWithDraw(_g: Graph): Graph[] {
+    return this.clusters;
   }
 }
 

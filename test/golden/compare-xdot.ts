@@ -452,8 +452,10 @@ function compareObject(
       });
       continue;
     }
-    const pOps = parseXDot(pv)?.ops;
-    const oOps = parseXDot(ov)?.ops;
+    // An empty draw string (C emits `_draw_=""` for a boxless cluster) has no
+    // ops; parseXDot returns null for it, so treat empty as `[]` before parsing.
+    const pOps = pv.trim() === '' ? [] : parseXDot(pv)?.ops;
+    const oOps = ov.trim() === '' ? [] : parseXDot(ov)?.ops;
     if (pOps === undefined || pOps === null || oOps === undefined || oOps === null) {
       diffs.push({
         object: objKey,
