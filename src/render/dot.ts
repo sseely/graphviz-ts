@@ -31,7 +31,7 @@ import type { Bezier } from '../model/geom.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
-import { EmitState } from '../gvc/job.js';
+import { EmitState, toFixed2HalfEven } from '../gvc/job.js';
 import { renderEdgeLabels } from '../gvc/edge-labels.js';
 
 // ---------------------------------------------------------------------------
@@ -135,7 +135,10 @@ export function makeXbufs(): string[][] {
  * @see plugin/core/gvrender_core_dot.c:126 xdot_fmt_num
  */
 export function xdotNum(v: number): string {
-  let s = v.toFixed(2);
+  // Round half-to-even like C's printf %.02f (FE_TONEAREST); JS toFixed rounds
+  // half-away-from-zero, which diverges at exact .xx5 ties (2323.125 → native
+  // 2323.12, not 2323.13). @see lib/gvc/gvdevice.c gvprintdouble
+  let s = toFixed2HalfEven(v);
   if (s.indexOf('.') >= 0) {
     let end = s.length;
     while (end > 0 && s[end - 1] === '0') end--;
