@@ -217,14 +217,47 @@ export function linearGradientOp(
   angleDeg: number,
 ): string {
   const { g0, g1 } = getGradientPoints(pts, (angleDeg * Math.PI) / 180, false);
+  const inner =
+    '[' + xdotNum(g0.x) + ' ' + xdotNum(g0.y) + ' ' + xdotNum(g1.x) + ' ' + xdotNum(g1.y) +
+    ' 2 ' + gradientStops(fillColor, stopColor, frac) + ']';
+  return 'C ' + String(utf8Len(inner)) + ' -' + inner + ' ';
+}
+
+/** The `<frac> <colorbody>` stop pairs for a gradient (frac>0 vs the 0/1 form). */
+function gradientStops(fillColor: GVColor, stopColor: GVColor, frac: number): string {
   const fill = gvColorRgba(fillColor);
   const stop = gvColorRgba(stopColor);
   const stops: Array<[number, [number, number, number, number]]> =
     frac > 0 ? [[frac, fill], [frac, stop]] : [[0, fill], [1, stop]];
-  const stopStr = stops.map(([f, c]) => trimFixed3(f) + ' ' + xdotColorBody(c)).join(' ');
+  return stops.map(([f, c]) => trimFixed3(f) + ' ' + xdotColorBody(c)).join(' ');
+}
+
+/**
+ * Build the radial-gradient `C len -(c1x c1y r1 c2x c2y r2 2 <stops>)` fill op.
+ * Reuses getGradientPoints (radial) for the center/radii, un-negating its SVG
+ * y. r1 = outerR/4, r2 = outerR; c2 is the center, c1 the center offset by r1
+ * along the gradient angle (== center when angle 0).
+ * @see plugin/core/gvrender_core_dot.c:562-585 xdot_gradient_fillcolor (radial)
+ */
+export function radialGradientOp(
+  pts: Point[],
+  fillColor: GVColor,
+  stopColor: GVColor,
+  frac: number,
+  angleDeg: number,
+): string {
+  const rad = (angleDeg * Math.PI) / 180;
+  const gp = getGradientPoints(pts, rad, true);
+  const cx = gp.g0.x;
+  const cy = -gp.g0.y; // un-negate the SVG y-down convention
+  const r1 = gp.g1.x;
+  const r2 = gp.g1.y;
+  const c1x = angleDeg === 0 ? cx : cx + r1 * Math.cos(rad);
+  const c1y = angleDeg === 0 ? cy : cy + r1 * Math.sin(rad);
   const inner =
-    '[' + xdotNum(g0.x) + ' ' + xdotNum(g0.y) + ' ' + xdotNum(g1.x) + ' ' + xdotNum(g1.y) +
-    ' 2 ' + stopStr + ']';
+    '(' + xdotNum(c1x) + ' ' + xdotNum(c1y) + ' ' + xdotNum(r1) + ' ' +
+    xdotNum(cx) + ' ' + xdotNum(cy) + ' ' + xdotNum(r2) + ' 2 ' +
+    gradientStops(fillColor, stopColor, frac) + ')';
   return 'C ' + String(utf8Len(inner)) + ' -' + inner + ' ';
 }
 
@@ -491,19 +524,15 @@ export class XdotRenderer implements RendererPlugin {
     // A two-color bgcolor is a gradient (emit_background → findStopColor); a
     // linear one emits the bracketed fill, a radial one is deferred to the base.
     const stop = fillSpec.includes(':') ? findStopColor(fillSpec) : null;
-    if (stop !== null && !parseStyleFlags(g.attrs.get('style')).radial) {
+    if (stop !== null) {
       const angle = Number(g.attrs.get('gradientangle') ?? 0) || 0;
+      const radial = parseStyleFlags(g.attrs.get('style')).radial;
+      const op = radial ? radialGradientOp : linearGradientOp;
       buf.push(
-        linearGradientOp(
-          corners,
-          resolveRenderColor(stop.fillColor),
-          resolveRenderColor(stop.stopColor),
-          stop.frac,
-          angle,
-        ),
+        op(corners, resolveRenderColor(stop.fillColor), resolveRenderColor(stop.stopColor), stop.frac, angle),
       );
     } else {
-      buf.push(xdotFillColor(resolveRenderColor(stop !== null ? stop.fillColor : fillSpec)));
+      buf.push(xdotFillColor(resolveRenderColor(fillSpec)));
     }
     buf.push(xdotPoints('P', corners));
   }
@@ -673,6 +702,9 @@ export class XdotRenderer implements RendererPlugin {
     const obj = job.obj;
     if (obj && obj.fill === FillType.Linear) {
       return linearGradientOp(pts, obj.fillColor, obj.stopColor, obj.gradientFrac, obj.gradientAngle);
+    }
+    if (obj && obj.fill === FillType.Radial) {
+      return radialGradientOp(pts, obj.fillColor, obj.stopColor, obj.gradientFrac, obj.gradientAngle);
     }
     return xdotFillColor(obj?.fillColor ?? { type: 'string', s: 'black' });
   }
