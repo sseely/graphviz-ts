@@ -34,6 +34,12 @@ export function labelEmitState(type: ObjType): EmitState {
   }
 }
 
+/** The label emit-state for the current object, honoring a job-level override
+ *  (set for an edge's head/tail label → EMIT_HLABEL/EMIT_TLABEL). */
+function currentLabelEmitState(job: RenderJob, type: ObjType): EmitState {
+  return job.labelEmitOverride ?? labelEmitState(type);
+}
+
 /**
  * Run `fn` with the object's label emit-state active (restored afterward) —
  * the emit_label window that routes EVERY draw op of a label (HTML-table
@@ -46,7 +52,7 @@ export function withLabelEmitState(job: RenderJob, fn: () => void): void {
   const obj = job.obj;
   if (obj === null) { fn(); return; }
   const saved = obj.emitState;
-  obj.emitState = labelEmitState(obj.type);
+  obj.emitState = currentLabelEmitState(job, obj.type);
   try { fn(); } finally { obj.emitState = saved; }
 }
 
@@ -85,7 +91,7 @@ export function gvrenderTextspan(
     return;
   }
   const saved = obj.emitState;
-  obj.emitState = labelEmitState(obj.type);
+  obj.emitState = currentLabelEmitState(job, obj.type);
   try {
     renderer.textspan(pos, span, job);
   } finally {

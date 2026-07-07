@@ -445,6 +445,8 @@ interface XdotDraws {
   ldraw?: string;
   hdraw?: string;
   tdraw?: string;
+  hldraw?: string;
+  tldraw?: string;
 }
 
 /** Trim a "%.3f" fixed string like C's agxbuf_trim_zeros (trailing 0s + dot). */
@@ -612,15 +614,23 @@ export class XdotRenderer implements RendererPlugin {
     const hdraw = this.flush(EmitState.HDraw);
     const tdraw = this.flush(EmitState.TDraw);
     const ldraw = this.flush(EmitState.ELabel);
-    if (draw || hdraw || tdraw || ldraw) {
+    const hldraw = this.flush(EmitState.HLabel);
+    const tldraw = this.flush(EmitState.TLabel);
+    if (draw || hdraw || tdraw || ldraw || hldraw || tldraw) {
       const set = this.drawsFor(e);
       if (draw) set.draw = draw;
       if (hdraw) set.hdraw = hdraw;
       if (tdraw) set.tdraw = tdraw;
       if (ldraw) set.ldraw = ldraw;
+      if (hldraw) set.hldraw = hldraw;
+      if (tldraw) set.tldraw = tldraw;
     }
     this.resetState(EmitState.EDraw, EmitState.ELabel);
     this.resetState(EmitState.HDraw, EmitState.TDraw);
+    this.penwidth[EmitState.HLabel] = 1;
+    this.penwidth[EmitState.TLabel] = 1;
+    this.textflags[EmitState.HLabel] = 0;
+    this.textflags[EmitState.TLabel] = 0;
   }
 
   beginCluster(_sg: Graph, _job: RenderJob): void { /* no-op */ }
@@ -848,9 +858,11 @@ export class XdotRenderer implements RendererPlugin {
     const d = this.draws.get(e);
     const parts: string[] = [];
     if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
+    if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     if (d?.hdraw) parts.push(this.drawAttr('_hdraw_', d.hdraw));
     if (d?.tdraw) parts.push(this.drawAttr('_tdraw_', d.tdraw));
-    if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
+    if (d?.hldraw) parts.push(this.drawAttr('_hldraw_', d.hldraw));
+    if (d?.tldraw) parts.push(this.drawAttr('_tldraw_', d.tldraw));
     const pos = formatEdgePos(e);
     if (pos) parts.push(pos);
     const attrs = parts.length > 0 ? ' [' + parts.join(' ') + ']' : '';
