@@ -235,6 +235,29 @@ export function xdotId(s: string): string {
   return '"' + s.replace(/"/g, '\\"') + '"';
 }
 
+/**
+ * Format a number as C's `%.5g` — 5 significant figures, trailing zeros and
+ * point trimmed, switching to `e±NN` (min 2 exponent digits) when the exponent
+ * is < -4 or ≥ 5. Native writes the DOT `pos`/`bb`/`width`/`height` attributes
+ * with `%.5g` (output.c:71/294/302), so large coordinates round to 5 sig figs
+ * (`2219962` → `2.2201e+06`); `printNum`'s fixed 3 dp keeps too much precision.
+ * @see lib/common/output.c:71 (agxbprint "%.5g")
+ */
+export function gfmt5(v: number): string {
+  if (!Number.isFinite(v)) return String(v);
+  if (v === 0) return '0';
+  let s = v.toPrecision(5);
+  const e = s.indexOf('e');
+  if (e >= 0) {
+    let mant = s.slice(0, e);
+    if (mant.indexOf('.') >= 0) mant = mant.replace(/0+$/, '').replace(/\.$/, '');
+    const ei = parseInt(s.slice(e + 1), 10);
+    return mant + 'e' + (ei < 0 ? '-' : '+') + String(Math.abs(ei)).padStart(2, '0');
+  }
+  if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+  return s;
+}
+
 // ---------------------------------------------------------------------------
 // DOT attribute helpers
 // ---------------------------------------------------------------------------
@@ -262,10 +285,10 @@ export function formatEdgePos(e: Edge): string {
   const parts: string[] = [];
   for (const bez of spl.list) {
     if (bez.eflag) {
-      parts.push('e,' + printNum(bez.ep.x) + ',' + printNum(bez.ep.y));
+      parts.push('e,' + gfmt5(bez.ep.x) + ',' + gfmt5(bez.ep.y));
     }
     for (const p of bez.list) {
-      parts.push(printNum(p.x) + ',' + printNum(p.y));
+      parts.push(gfmt5(p.x) + ',' + gfmt5(p.y));
     }
   }
   return 'pos="' + parts.join(' ') + '"';
@@ -660,8 +683,8 @@ export class XdotRenderer implements RendererPlugin {
   /** `llx,lly,urx,ury` from a graph's layout bb. */
   private bbStr(g: Graph): string {
     const bb = g.info.bb;
-    return printNum(bb.ll.x) + ',' + printNum(bb.ll.y) + ',' +
-      printNum(bb.ur.x) + ',' + printNum(bb.ur.y);
+    return gfmt5(bb.ll.x) + ',' + gfmt5(bb.ll.y) + ',' +
+      gfmt5(bb.ur.x) + ',' + gfmt5(bb.ur.y);
   }
 
   /** Serialize the whole laid-out graph to xdot DOT text. */
@@ -710,8 +733,8 @@ export class XdotRenderer implements RendererPlugin {
   /** Node attribute block: pos/width/height plus `_draw_`/`_ldraw_`. */
   private nodeAttrs(n: Node): string {
     const info = n.info;
-    let s = 'pos="' + printNum(info.coord.x) + ',' + printNum(info.coord.y) + '"' +
-      ' width=' + printNum(info.width) + ' height=' + printNum(info.height);
+    let s = 'pos="' + gfmt5(info.coord.x) + ',' + gfmt5(info.coord.y) + '"' +
+      ' width=' + gfmt5(info.width) + ' height=' + gfmt5(info.height);
     const d = this.draws.get(n);
     if (d?.draw) s += ' ' + this.drawAttr('_draw_', d.draw);
     if (d?.ldraw) s += ' ' + this.drawAttr('_ldraw_', d.ldraw);
