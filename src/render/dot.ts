@@ -517,7 +517,11 @@ export class XdotRenderer implements RendererPlugin {
    *  @see lib/common/emit.c:1476 emit_background */
   pageBackground(g: Graph, job: RenderJob): void {
     const bg = g.attrs.get('bgcolor');
-    const fillSpec = bg !== undefined && bg !== '' ? bg : 'white';
+    let fillSpec = bg !== undefined && bg !== '' ? bg : 'white';
+    // The xdot device is not GVDEVICE_DOES_TRUECOLOR, so emit_background maps an
+    // explicit `bgcolor=transparent` to white (a filled white canvas), unlike a
+    // truecolor device that paints nothing. @see lib/common/emit.c:1490
+    if (fillSpec === 'transparent') fillSpec = 'white';
     const clip = job.bb;
     const corners: Point[] = [
       { x: clip.ll.x, y: clip.ll.y },
