@@ -20,6 +20,7 @@ import type { GVColor } from '../common/color.js';
 import { colorxlate } from '../common/color.js';
 import { resolveRenderColor } from './color-resolve.js';
 import { getGradientPoints } from './svg-gradient.js';
+import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
@@ -199,6 +200,32 @@ export function xdotColorBody(rgba: [number, number, number, number]): string {
  */
 export function xdotColorOp(prefix: 'c ' | 'C ', rgba: [number, number, number, number]): string {
   return prefix + xdotColorBody(rgba) + ' ';
+}
+
+/**
+ * Build the linear-gradient `C len -[x0 y0 x1 y1 2 <stops>]` fill op. Endpoints
+ * come from getGradientPoints (the same geometry the SVG gradient uses); stops
+ * are (frac,fill)/(frac,stop) when frac>0, else (0,fill)/(1,stop). Shared by
+ * node/cluster gradient fills and the graph-background gradient.
+ * @see plugin/core/gvrender_core_dot.c:544-598 xdot_gradient_fillcolor
+ */
+export function linearGradientOp(
+  pts: Point[],
+  fillColor: GVColor,
+  stopColor: GVColor,
+  frac: number,
+  angleDeg: number,
+): string {
+  const { g0, g1 } = getGradientPoints(pts, (angleDeg * Math.PI) / 180, false);
+  const fill = gvColorRgba(fillColor);
+  const stop = gvColorRgba(stopColor);
+  const stops: Array<[number, [number, number, number, number]]> =
+    frac > 0 ? [[frac, fill], [frac, stop]] : [[0, fill], [1, stop]];
+  const stopStr = stops.map(([f, c]) => trimFixed3(f) + ' ' + xdotColorBody(c)).join(' ');
+  const inner =
+    '[' + xdotNum(g0.x) + ' ' + xdotNum(g0.y) + ' ' + xdotNum(g1.x) + ' ' + xdotNum(g1.y) +
+    ' 2 ' + stopStr + ']';
+  return 'C ' + String(utf8Len(inner)) + ' -' + inner + ' ';
 }
 
 /** Pen ("c ") color op from a resolved GVColor. */
@@ -452,8 +479,6 @@ export class XdotRenderer implements RendererPlugin {
   pageBackground(g: Graph, job: RenderJob): void {
     const bg = g.attrs.get('bgcolor');
     const fillSpec = bg !== undefined && bg !== '' ? bg : 'white';
-    // Gradients are deferred; a plain fill covers the default white canvas.
-    if (fillSpec.includes(':')) return;
     const clip = job.bb;
     const corners: Point[] = [
       { x: clip.ll.x, y: clip.ll.y },
@@ -463,7 +488,23 @@ export class XdotRenderer implements RendererPlugin {
     ];
     const buf = this.bufs[EmitState.GDraw]!;
     buf.push(xdotPenColor(resolveRenderColor('transparent')));
-    buf.push(xdotFillColor(resolveRenderColor(fillSpec)));
+    // A two-color bgcolor is a gradient (emit_background → findStopColor); a
+    // linear one emits the bracketed fill, a radial one is deferred to the base.
+    const stop = fillSpec.includes(':') ? findStopColor(fillSpec) : null;
+    if (stop !== null && !parseStyleFlags(g.attrs.get('style')).radial) {
+      const angle = Number(g.attrs.get('gradientangle') ?? 0) || 0;
+      buf.push(
+        linearGradientOp(
+          corners,
+          resolveRenderColor(stop.fillColor),
+          resolveRenderColor(stop.stopColor),
+          stop.frac,
+          angle,
+        ),
+      );
+    } else {
+      buf.push(xdotFillColor(resolveRenderColor(stop !== null ? stop.fillColor : fillSpec)));
+    }
     buf.push(xdotPoints('P', corners));
   }
 
@@ -630,27 +671,10 @@ export class XdotRenderer implements RendererPlugin {
    */
   private fillOp(job: RenderJob, pts: Point[]): string {
     const obj = job.obj;
-    if (obj && obj.fill === FillType.Linear) return this.linearGradientOp(pts, obj);
+    if (obj && obj.fill === FillType.Linear) {
+      return linearGradientOp(pts, obj.fillColor, obj.stopColor, obj.gradientFrac, obj.gradientAngle);
+    }
     return xdotFillColor(obj?.fillColor ?? { type: 'string', s: 'black' });
-  }
-
-  /**
-   * Build the linear-gradient `C len -[x0 y0 x1 y1 2 <stops>]` op. Endpoints come
-   * from getGradientPoints (the same geometry the SVG gradient uses); stops are
-   * (frac,fillColor)/(frac,stopColor) when gradientFrac>0 else (0,fill)/(1,stop).
-   * @see plugin/core/gvrender_core_dot.c:544-598 xdot_gradient_fillcolor
-   */
-  private linearGradientOp(pts: Point[], obj: ObjState): string {
-    const { g0, g1 } = getGradientPoints(pts, (obj.gradientAngle * Math.PI) / 180, false);
-    const stops: Array<[number, [number, number, number, number]]> =
-      obj.gradientFrac > 0
-        ? [[obj.gradientFrac, gvColorRgba(obj.fillColor)], [obj.gradientFrac, gvColorRgba(obj.stopColor)]]
-        : [[0, gvColorRgba(obj.fillColor)], [1, gvColorRgba(obj.stopColor)]];
-    const stopStr = stops.map(([f, c]) => trimFixed3(f) + ' ' + xdotColorBody(c)).join(' ');
-    const inner =
-      '[' + xdotNum(g0.x) + ' ' + xdotNum(g0.y) + ' ' + xdotNum(g1.x) + ' ' + xdotNum(g1.y) +
-      ' 2 ' + stopStr + ']';
-    return 'C ' + String(utf8Len(inner)) + ' -' + inner + ' ';
   }
 
   /** Style ops (`S`): setlinewidth on a penwidth change, plus dash/dot pen.
