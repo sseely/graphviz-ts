@@ -457,6 +457,17 @@ interface XdotDraws {
   tldraw?: string;
 }
 
+/**
+ * Escape backslashes in a LABEL draw string — C's put_escaping_backslashes,
+ * applied to the `_ldraw_`/`_hldraw_`/`_tldraw_` buffers (not the shape draws)
+ * before agset. A literal `\` in a label's text (e.g. `WXYZ\nabc`) becomes `\\`
+ * so it survives the DOT string round-trip; the T-op byte-length prefix stays on
+ * the UNescaped text. @see plugin/core/gvrender_core_dot.c:218 put_escaping_backslashes
+ */
+function escBackslash(s: string): string {
+  return s.replace(/\\/g, '\\\\');
+}
+
 /** Trim a "%.3f" fixed string like C's agxbuf_trim_zeros (trailing 0s + dot). */
 function trimFixed3(v: number): string {
   let s = v.toFixed(3);
@@ -512,7 +523,7 @@ export class XdotRenderer implements RendererPlugin {
     if (gd || gl) {
       const set = this.drawsFor(g);
       if (gd) set.draw = gd;
-      if (gl) set.ldraw = gl;
+      if (gl) set.ldraw = escBackslash(gl);
     }
     job.write(this.serialize(g));
   }
@@ -559,7 +570,7 @@ export class XdotRenderer implements RendererPlugin {
     if (draw || ldraw) {
       const set = this.drawsFor(n);
       if (draw) set.draw = draw;
-      if (ldraw) set.ldraw = ldraw;
+      if (ldraw) set.ldraw = escBackslash(ldraw);
     }
     this.resetState(EmitState.NDraw, EmitState.NLabel);
   }
@@ -679,9 +690,9 @@ export class XdotRenderer implements RendererPlugin {
       if (draw) set.draw = draw;
       if (hdraw) set.hdraw = hdraw;
       if (tdraw) set.tdraw = tdraw;
-      if (ldraw) set.ldraw = ldraw;
-      if (hldraw) set.hldraw = hldraw;
-      if (tldraw) set.tldraw = tldraw;
+      if (ldraw) set.ldraw = escBackslash(ldraw);
+      if (hldraw) set.hldraw = escBackslash(hldraw);
+      if (tldraw) set.tldraw = escBackslash(tldraw);
     }
     this.resetState(EmitState.EDraw, EmitState.ELabel);
     this.resetState(EmitState.HDraw, EmitState.TDraw);
@@ -699,7 +710,7 @@ export class XdotRenderer implements RendererPlugin {
     if (draw || ldraw) {
       const set = this.drawsFor(sg);
       if (draw) set.draw = draw;
-      if (ldraw) set.ldraw = ldraw;
+      if (ldraw) set.ldraw = escBackslash(ldraw);
     }
     this.resetState(EmitState.CDraw, EmitState.CLabel);
   }
