@@ -159,17 +159,40 @@ function collectGraphs(root: Graph): XdotObject[] {
   return out;
 }
 
-/** Collect every node once (root + subgraph scopes, dedup by name). */
+/** Effective node-attr default for `key` in graph `g` (self → ancestors). */
+function effectiveNodeDefault(g: Graph, key: string): string | undefined {
+  for (let cur: Graph | null = g; cur !== null; cur = cur.parent) {
+    const v = cur.nodeDefaults.get(key);
+    if (v !== undefined && v.length > 0) return v;
+  }
+  return undefined;
+}
+
+/**
+ * Collect every node once (root + subgraph scopes, dedup by name), resolving
+ * `width`/`height` against the effective node defaults. Native's agwrite omits
+ * an attribute equal to the `node [...]` default; the port emits width/height
+ * per-node. Comparing the EFFECTIVE value (own attr, else inherited default)
+ * makes these formatting-only differences invisible, per AD-1.
+ */
 function collectNodes(root: Graph): XdotObject[] {
-  const seen = new Map<string, Node>();
+  const seen = new Map<string, XdotObject>();
   const visit = (g: Graph): void => {
-    for (const [name, node] of g.nodes) if (!seen.has(name)) seen.set(name, node);
+    for (const [name, node] of g.nodes) {
+      if (seen.has(name)) continue;
+      const attrs = new Map(node.attrs);
+      for (const k of ['width', 'height']) {
+        if (!attrs.has(k)) {
+          const d = effectiveNodeDefault(g, k);
+          if (d !== undefined) attrs.set(k, d);
+        }
+      }
+      seen.set(name, { key: `node:${name}`, attrs });
+    }
     for (const sg of g.subgraphs.values()) visit(sg);
   };
   visit(root);
-  const out: XdotObject[] = [];
-  for (const [name, node] of seen) out.push({ key: `node:${name}`, attrs: node.attrs });
-  return out;
+  return [...seen.values()];
 }
 
 /**
