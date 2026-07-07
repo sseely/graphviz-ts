@@ -23,6 +23,7 @@ import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
 import type { RenderJob } from '../gvc/job.js';
 import { EmitState } from '../gvc/job.js';
+import { renderEdgeLabels } from '../gvc/edge-labels.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -524,7 +525,12 @@ export class XdotRenderer implements RendererPlugin {
     }
   }
 
-  endEdge(e: Edge, _job: RenderJob): void {
+  endEdge(e: Edge, job: RenderJob): void {
+    // Emit the edge's labels (center/xlabel/head/tail) — the port draws these
+    // in svg.ts endEdge, not the shared path, so the xdot renderer runs them
+    // itself, mirroring emit_edge's emit_edge_label. gvrenderTextspan routes
+    // each span to the edge's ELABEL buffer → _ldraw_. @see emit.c:3010
+    renderEdgeLabels(e, this, job);
     const draw = this.flush(EmitState.EDraw);
     const hdraw = this.flush(EmitState.HDraw);
     const tdraw = this.flush(EmitState.TDraw);
