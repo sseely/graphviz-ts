@@ -630,6 +630,9 @@ export class XdotRenderer implements RendererPlugin {
       // splines=ortho + radius/style=rounded → straight segments + corner arcs
       // as polylines (L), else the single bezier. @see emit.c:2583 / svg-helpers
       const radius = orthoRoundedRadius(e, job);
+      const obj = job.obj;
+      const origStyle = obj !== null ? [...obj.rawStyle] : [];
+      const multi = spl.list.length > 1;
       for (const bez of spl.list) {
         const pts = bez.list.slice(0, bez.size);
         const polys = radius !== null && bez.size >= 4 ? orthoRoundedPolylines(pts, radius) : [];
@@ -638,7 +641,16 @@ export class XdotRenderer implements RendererPlugin {
         } else {
           edraw.push(this.styleOp(job), this.penOp(job), xdotPoints('B', pts));
         }
+        // arrow_gen (drawn to TDRAW/HDRAW below) resets the job style to
+        // defaultlinestyle ("solid") as a side effect. For a multi-bezier spline
+        // the NEXT segment's xdot_style re-emits the current rawstyle every call,
+        // so a solid edge picks up a bare `S 5 -solid`; C restores the edge's own
+        // styles afterward only when it has explicit ones. @see emit.c:2668-2677
+        if (obj !== null && multi && (bez.sflag || bez.eflag)) {
+          obj.rawStyle = origStyle.length > 0 ? origStyle : ['solid'];
+        }
       }
+      if (obj !== null) obj.rawStyle = origStyle;
     }
     // Arrows: y-up ops already computed for the shared render path. C sets the
     // default line style ("solid") + penwidth before each arrow primitive.
