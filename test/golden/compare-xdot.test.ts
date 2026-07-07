@@ -137,8 +137,13 @@ describe('compareXdot', () => {
     expect(canonColor('#fffffe00')).toBe('#fffffe00');
   });
 
-  test('canonFont: cosmetic normalization only — distinct faces stay distinct', () => {
+  test('canonFont: PS face and its SVG family collapse; distinct faces stay distinct', () => {
+    // AD-1: the resolved PS name (xdot) and the SVG family (port default) are the
+    // same font under two names — must compare equal.
+    expect(canonFont('Times-Roman')).toBe(canonFont('Times,serif'));
     expect(canonFont('Times-Roman')).toBe(canonFont('"Times-Roman"'));
-    expect(canonFont('Times,serif')).not.toBe(canonFont('Times-Roman'));
+    // Genuinely different faces stay distinct.
+    expect(canonFont('Helvetica')).not.toBe(canonFont('Times-Roman'));
+    expect(canonFont('Courier')).not.toBe(canonFont('Times,serif'));
   });
 });

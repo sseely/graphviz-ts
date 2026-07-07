@@ -24,6 +24,7 @@ import { parse } from '../../src/index.js';
 import { parseXDot } from '../../src/xdot/index.js';
 import type { XdotOp } from '../../src/xdot/index.js';
 import { colorxlate, ColorxlateResult, type GVColor } from '../../src/common/color.js';
+import { translatePostscriptFontname } from '../../src/common/ps-fontalias.js';
 import type { Graph } from '../../src/model/graph.js';
 import type { Node } from '../../src/model/node.js';
 import type { Edge } from '../../src/model/edge.js';
@@ -90,19 +91,35 @@ export function canonColor(raw: string): string {
 }
 
 /**
- * Canonicalize a font face for comparison: strip surrounding quotes, collapse
- * internal whitespace, lowercase. This erases purely-cosmetic representation
- * differences but deliberately keeps semantically-distinct faces distinct —
- * `Times,serif` (a CSS family list the port leaks) does NOT equal
- * `Times-Roman` (the PostScript face native emits), so that emission bug still
- * surfaces for the fix-loop (fix-loop.md F4), rather than being hidden.
+ * Canonicalize a font face for comparison (AD-1: "font names canonicalized").
+ *
+ * xdot emits the resolved PostScript face name (`span->font->name`, e.g.
+ * `Times-Roman`); the port's default fontname is the SVG family the renderer
+ * feeds to `-Tsvg` (`Times,serif`) — the SAME font under two names. Native's
+ * SVG output likewise maps `Times-Roman` → `Times,serif` via the postscript
+ * alias table (ps_font_equiv.h). So the canonical key is the SVG family string
+ * the alias yields (`family[,svgFontFamily]`): both `Times-Roman` and
+ * `Times,serif` collapse to `times,serif`, while genuinely different faces
+ * (`Helvetica` → `helvetica,sans-serif`) stay distinct. A name with no alias is
+ * normalized (dequoted, ws-collapsed, lowercased) verbatim.
+ *
+ * @see lib/common/textspan.c:66 translate_postscript_fontname
+ * @see plugin/core/gvrender_core_svg.c svg_textspan (NATIVEFONTS)
  */
 export function canonFont(raw: string): string {
-  return raw
+  const base = raw
     .trim()
     .replace(/^["']|["']$/g, '')
-    .replace(/\s+/g, ' ')
-    .toLowerCase();
+    .replace(/\s+/g, ' ');
+  const alias = translatePostscriptFontname(base);
+  if (alias !== null) {
+    const fam =
+      alias.svgFontFamily !== alias.family
+        ? `${alias.family},${alias.svgFontFamily}`
+        : alias.family;
+    return fam.toLowerCase();
+  }
+  return base.toLowerCase();
 }
 
 // ---------------------------------------------------------------------------
