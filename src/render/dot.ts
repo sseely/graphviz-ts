@@ -19,9 +19,10 @@ import type { ArrowDrawOp } from '../common/arrows-types.js';
 import type { GVColor } from '../common/color.js';
 import { colorxlate } from '../common/color.js';
 import { resolveRenderColor } from './color-resolve.js';
+import { getGradientPoints } from './svg-gradient.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
-import type { RenderJob } from '../gvc/job.js';
+import type { RenderJob, ObjState } from '../gvc/job.js';
 import { EmitState } from '../gvc/job.js';
 import { renderEdgeLabels } from '../gvc/edge-labels.js';
 
@@ -181,17 +182,23 @@ export function gvColorRgba(c: GVColor): [number, number, number, number] {
 }
 
 /**
- * Format an xdot color op ("c "/"C ") from RGBA bytes, mirroring
- * xdot_str_color_xbuf: a CONSTANT length prefix (7 for "#rrggbb", 9 for
- * "#rrggbbaa"), the alpha byte present only when not fully opaque.
+ * Bare xdot color body (no `c `/`C ` prefix): the CONSTANT length prefix
+ * (7 for `#rrggbb`, 9 for `#rrggbbaa`) plus `-#hex`, the alpha byte present only
+ * when not fully opaque. Used both by the color ops and by gradient color stops.
+ * @see plugin/core/gvrender_core_dot.c:99 xdot_str_color_xbuf
+ */
+export function xdotColorBody(rgba: [number, number, number, number]): string {
+  const hx = (n: number): string => n.toString(16).padStart(2, '0');
+  const body = '#' + hx(rgba[0]) + hx(rgba[1]) + hx(rgba[2]);
+  return rgba[3] === 0xff ? '7 -' + body : '9 -' + body + hx(rgba[3]);
+}
+
+/**
+ * Format an xdot color op ("c "/"C ") from RGBA bytes.
  * @see plugin/core/gvrender_core_dot.c:99 xdot_str_color_xbuf
  */
 export function xdotColorOp(prefix: 'c ' | 'C ', rgba: [number, number, number, number]): string {
-  const hx = (n: number): string => n.toString(16).padStart(2, '0');
-  const body = '#' + hx(rgba[0]) + hx(rgba[1]) + hx(rgba[2]);
-  return rgba[3] === 0xff
-    ? prefix + '7 -' + body + ' '
-    : prefix + '9 -' + body + hx(rgba[3]) + ' ';
+  return prefix + xdotColorBody(rgba) + ' ';
 }
 
 /** Pen ("c ") color op from a resolved GVColor. */
@@ -582,21 +589,22 @@ export class XdotRenderer implements RendererPlugin {
   ellipse(center: Point, rx: number, ry: number, filled: boolean, job: RenderJob): void {
     const buf = this.getBuf(job);
     buf.push(this.styleOp(job), this.penOp(job));
-    if (filled) buf.push(this.fillOp(job));
+    // C passes A=[center, corner] to the gradient; corner = center + (rx,ry).
+    if (filled) buf.push(this.fillOp(job, [center, { x: center.x + rx, y: center.y + ry }]));
     buf.push(filled ? 'E ' : 'e ', xdotPoint(center), xdotNum(rx) + ' ' + xdotNum(ry) + ' ');
   }
 
   polygon(pts: Point[], filled: boolean, job: RenderJob): void {
     const buf = this.getBuf(job);
     buf.push(this.styleOp(job), this.penOp(job));
-    if (filled) buf.push(this.fillOp(job));
+    if (filled) buf.push(this.fillOp(job, pts));
     buf.push(xdotPoints(filled ? 'P' : 'p', pts));
   }
 
   bezier(pts: Point[], filled: boolean, job: RenderJob): void {
     const buf = this.getBuf(job);
     buf.push(this.styleOp(job), this.penOp(job));
-    if (filled) buf.push(this.fillOp(job));
+    if (filled) buf.push(this.fillOp(job, pts));
     // NB 'b'/'B' are reversed vs the other ops. @see gvrender_core_dot.c:632
     buf.push(xdotPoints(filled ? 'b' : 'B', pts));
   }
@@ -613,15 +621,36 @@ export class XdotRenderer implements RendererPlugin {
     return xdotPenColor(job.obj?.penColor ?? { type: 'string', s: 'black' });
   }
 
-  /** Fill color op from the resolved graphics state (default black).
-   *  Gradient fills are deferred to a later iteration. */
-  private fillOp(job: RenderJob): string {
+  /**
+   * Fill op from the resolved graphics state. A linear gradient emits the
+   * bracketed `C len -[G0 G1 2 <stops>]` form (xdot_gradient_fillcolor); a plain
+   * fill emits `C len -#hex`. `pts` are the shape points the gradient endpoints
+   * derive from. Radial gradients are deferred (emit the base fill).
+   * @see plugin/core/gvrender_core_dot.c:544 xdot_gradient_fillcolor
+   */
+  private fillOp(job: RenderJob, pts: Point[]): string {
     const obj = job.obj;
-    if (obj && (obj.fill === FillType.Linear || obj.fill === FillType.Radial)) {
-      // Gradient not yet ported; emit the base fill so plain graphs are exact.
-      return xdotFillColor(obj.fillColor);
-    }
+    if (obj && obj.fill === FillType.Linear) return this.linearGradientOp(pts, obj);
     return xdotFillColor(obj?.fillColor ?? { type: 'string', s: 'black' });
+  }
+
+  /**
+   * Build the linear-gradient `C len -[x0 y0 x1 y1 2 <stops>]` op. Endpoints come
+   * from getGradientPoints (the same geometry the SVG gradient uses); stops are
+   * (frac,fillColor)/(frac,stopColor) when gradientFrac>0 else (0,fill)/(1,stop).
+   * @see plugin/core/gvrender_core_dot.c:544-598 xdot_gradient_fillcolor
+   */
+  private linearGradientOp(pts: Point[], obj: ObjState): string {
+    const { g0, g1 } = getGradientPoints(pts, (obj.gradientAngle * Math.PI) / 180, false);
+    const stops: Array<[number, [number, number, number, number]]> =
+      obj.gradientFrac > 0
+        ? [[obj.gradientFrac, gvColorRgba(obj.fillColor)], [obj.gradientFrac, gvColorRgba(obj.stopColor)]]
+        : [[0, gvColorRgba(obj.fillColor)], [1, gvColorRgba(obj.stopColor)]];
+    const stopStr = stops.map(([f, c]) => trimFixed3(f) + ' ' + xdotColorBody(c)).join(' ');
+    const inner =
+      '[' + xdotNum(g0.x) + ' ' + xdotNum(g0.y) + ' ' + xdotNum(g1.x) + ' ' + xdotNum(g1.y) +
+      ' 2 ' + stopStr + ']';
+    return 'C ' + String(utf8Len(inner)) + ' -' + inner + ' ';
   }
 
   /** Style ops (`S`): setlinewidth on a penwidth change, plus dash/dot pen.
