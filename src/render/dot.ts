@@ -21,6 +21,8 @@ import { colorxlate } from '../common/color.js';
 import { resolveRenderColor } from './color-resolve.js';
 import { getGradientPoints } from './svg-gradient.js';
 import { edgeIsTapered } from './svg-tapered-edge.js';
+import { orthoRoundedRadius } from './svg-helpers.js';
+import { orthoRoundedPolylines } from './svg-edge-ortho-radius.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import { parseSegs } from '../common/multicolor.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
@@ -581,9 +583,17 @@ export class XdotRenderer implements RendererPlugin {
     if (numc > 0 && numsemi === 0 && !edgeIsTapered(e)) {
       this.emitParallelSpline(spl.list as (Bezier | undefined)[], colorAttr, numc, edraw, job);
     } else {
+      // splines=ortho + radius/style=rounded → straight segments + corner arcs
+      // as polylines (L), else the single bezier. @see emit.c:2583 / svg-helpers
+      const radius = orthoRoundedRadius(e, job);
       for (const bez of spl.list) {
-        edraw.push(this.styleOp(job), this.penOp(job));
-        edraw.push(xdotPoints('B', bez.list.slice(0, bez.size)));
+        const pts = bez.list.slice(0, bez.size);
+        const polys = radius !== null && bez.size >= 4 ? orthoRoundedPolylines(pts, radius) : [];
+        if (polys.length > 0) {
+          for (const poly of polys) edraw.push(this.styleOp(job), this.penOp(job), xdotPoints('L', poly));
+        } else {
+          edraw.push(this.styleOp(job), this.penOp(job), xdotPoints('B', pts));
+        }
       }
     }
     // Arrows: y-up ops already computed for the shared render path. C sets the
