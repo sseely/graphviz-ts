@@ -48,6 +48,18 @@ const NEAR_ZERO = 0.005;
 /** Indices 8/9 alias 1; 10/11 alias 5. NUM_XBUFS covers 0–7. */
 const NUM_XBUFS = 8;
 
+/**
+ * Style tokens that never become an xdot `S` op: `filled`/`bold`/`setlinewidth`
+ * are filtered by xdot_style itself; the polygon/fill styles are consumed by the
+ * shape/fill code before gvrender_set_style, so they never reach the render
+ * style. Only line styles (solid/dashed/dotted + unknown) emit an `S` op.
+ * @see plugin/core/gvrender_core_dot.c:184 xdot_style · lib/common/shapes.c
+ */
+const NON_LINE_STYLES: ReadonlySet<string> = new Set([
+  'filled', 'bold', 'rounded', 'diagonals', 'striped', 'wedged',
+  'invis', 'invisible', 'radial', 'tapered',
+]);
+
 // ---------------------------------------------------------------------------
 // printNum — @see lib/gvc/gvdevice.c:gvprintnum
 // ---------------------------------------------------------------------------
@@ -611,8 +623,8 @@ export class XdotRenderer implements RendererPlugin {
     }
     // Arrows: y-up ops already computed for the shared render path. C sets the
     // default line style ("solid") + penwidth before each arrow primitive.
-    this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job);
-    this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job);
+    this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job, EmitState.TDraw);
+    this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job, EmitState.HDraw);
   }
 
   /**
@@ -644,11 +656,21 @@ export class XdotRenderer implements RendererPlugin {
     }
   }
 
-  /** Emit one arrow's primitive ops into `buf` (pen/fill from the edge color). */
-  private emitArrows(buf: string[], ops: ArrowDrawOp[] | undefined, job: RenderJob): void {
+  /** Emit one arrow's primitive ops into `buf` (pen/fill from the edge color).
+   *  arrow_gen sets the default line style ("solid") and the edge penwidth
+   *  before each primitive, so a non-default penwidth emits `S setlinewidth(N)`
+   *  once (tracked per HDRAW/TDRAW state). @see arrows.c:arrow_gen */
+  private emitArrows(
+    buf: string[], ops: ArrowDrawOp[] | undefined, job: RenderJob, state: EmitState,
+  ): void {
     if (ops === undefined) return;
     const pen = job.obj?.penColor ?? { type: 'string', s: 'black' };
+    const pw = job.obj?.penWidth ?? 1;
     for (const op of ops) {
+      if (Math.abs(pw - this.penwidth[state]!) >= 0.0005) {
+        this.penwidth[state] = pw;
+        buf.push(xdotStrOp('S ', 'setlinewidth(' + trimFixed3(pw) + ')'));
+      }
       buf.push(xdotStrOp('S ', 'solid'));
       buf.push(xdotPenColor(pen));
       switch (op.kind) {
@@ -800,12 +822,14 @@ export class XdotRenderer implements RendererPlugin {
       s += xdotStrOp('S ', 'setlinewidth(' + trimFixed3(obj.penWidth) + ')');
     }
     // Named styles carried in obj.rawStyle (the parsed style tokens, e.g. an
-    // explicit `style="solid"`/`"dashed"`, or the HTML paint's "solid") are
-    // emitted verbatim, skipping the ones xdot_style filters (filled/bold/
-    // setlinewidth, and setlinewidth(N) forms). @see gvrender_core_dot.c:184
+    // explicit `style="solid"`/`"dashed"`) emit an `S` op — but only the LINE
+    // styles. xdot_style filters filled/bold/setlinewidth; the polygon/fill
+    // styles (rounded/diagonals/striped/wedged/invis/radial/tapered) are
+    // consumed by the shape/fill code before gvrender_set_style, so native
+    // never emits them as `S` ops either. @see gvrender_core_dot.c:184
     if (obj.rawStyle.length > 0) {
       for (const p of obj.rawStyle) {
-        if (p === 'filled' || p === 'bold' || p.startsWith('setlinewidth')) continue;
+        if (NON_LINE_STYLES.has(p) || p.startsWith('setlinewidth')) continue;
         s += xdotStrOp('S ', p);
       }
     } else {
