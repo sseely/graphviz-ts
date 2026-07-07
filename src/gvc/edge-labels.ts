@@ -12,6 +12,7 @@ import type { Edge } from '../model/edge.js';
 import type { TextlabelT } from '../common/types.js';
 import type { RendererPlugin } from './context.js';
 import type { RenderJob } from './job.js';
+import { EmitState } from './job.js';
 import { openAnchorWith } from './anchor.js';
 import { renderOneLabel, transformPoint } from './device.js';
 import { dotneatoClosest } from '../common/spline-midpoint.js';
@@ -46,10 +47,10 @@ export function renderEdgeLabels(e: Edge, renderer: RendererPlugin, job: RenderJ
   emitEdgeLabel(e.info.xlabel as TextlabelT | undefined, `${id}-label`, labelHs, renderer, job, spl);
   emitEdgeLabel(e.info.head_label as TextlabelT | undefined, `${id}-headlabel`,
     { url: obj.headUrl, tooltip: obj.headTooltip, target: obj.headTarget, explicit: obj.explicitHeadTooltip },
-    renderer, job);
+    renderer, job, undefined, EmitState.HLabel);
   emitEdgeLabel(e.info.tail_label as TextlabelT | undefined, `${id}-taillabel`,
     { url: obj.tailUrl, tooltip: obj.tailTooltip, target: obj.tailTarget, explicit: obj.explicitTailTooltip },
-    renderer, job);
+    renderer, job, undefined, EmitState.TLabel);
 }
 
 /** Per-label hot-spot fields, mirroring the emit_edge_label args. */
@@ -73,11 +74,20 @@ function emitEdgeLabel(
   renderer: RendererPlugin,
   job: RenderJob,
   spl?: Spline,
+  emitState?: EmitState,
 ): void {
   if (!lp?.set) return; // emit_edge_label: lbl == NULL || !lbl->set
   const open = hs.url !== null || hs.explicit;
   if (open) openAnchorWith(renderer, job, hs.url, hs.tooltip, hs.target, id);
-  renderOneLabel(lp, renderer, job);
+  // Head/tail labels route to EMIT_HLABEL/EMIT_TLABEL (→ _hldraw_/_tldraw_);
+  // the center label keeps its default EMIT_ELABEL. @see emit.c:emit_edge
+  const savedOverride = job.labelEmitOverride;
+  if (emitState !== undefined) job.labelEmitOverride = emitState;
+  try {
+    renderOneLabel(lp, renderer, job);
+  } finally {
+    job.labelEmitOverride = savedOverride;
+  }
   if (spl) emitAttachment(lp, spl, renderer, job); // emit.c:2918
   if (open) renderer.endAnchor?.(job);
 }

@@ -326,6 +326,15 @@ export class RenderJob {
   /** Active renderer plugin; set by render() before walkNodes. */
   renderer?: RendererPlugin;
 
+  /**
+   * When set, overrides the label emit-state that {@link gvrenderTextspan} and
+   * withLabelEmitState would otherwise derive from the object type. Used to route
+   * an edge's HEAD/TAIL label into EMIT_HLABEL/EMIT_TLABEL (→ `_hldraw_`/
+   * `_tldraw_`) rather than the default EMIT_ELABEL. Null outside that window.
+   * @see lib/common/emit.c:emit_edge (head/tail label emit_state)
+   */
+  labelEmitOverride: EmitState | null = null;
+
   private readonly objStack: ObjState[] = [];
 
   constructor(format: string, measurer: TextMeasurer) {
