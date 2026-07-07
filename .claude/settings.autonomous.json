@@ -1,11 +1,11 @@
 {
+  "fallbackModel": "opus",
   "permissions": {
     "allow": [
       "Bash(npm *:*)",
       "Bash(npx *:*)",
       "Bash(node *:*)",
       "Bash(git *:*)",
-      "Bash(python3 *:*)",
       "Bash(gh *:*)",
       "Bash(shellcheck:*)",
       "Bash(rg:*)",
@@ -22,7 +22,9 @@
       "Bash(head *:*)",
       "Bash(tail *:*)",
       "Bash(diff *:*)",
+      "Bash(openssl *:*)",
       "Bash(command -v:*)",
+      "Bash(curl -s https://raw.githubusercontent.com/**:*)",
       "Bash(~/.claude/hooks/quality-gate.sh:*)",
       "Read(**)",
       "Write(**)",
@@ -39,17 +41,18 @@
       "mcp__serena__insert_before_symbol",
       "mcp__serena__safe_delete_symbol",
       "mcp__serena__rename_symbol",
-      "Bash(perl *:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_evaluate",
+      "Bash(python3 *:*)",
+      "Bash(/Users/scottseely/git/graphviz/build/cmd/dot/dot *:*)",
+      "Bash(sh test/corpus/gen-headless-gvbindir.sh:*)",
+      "Bash(cmp *:*)",
+      "Bash(time *:*)",
       "Bash(sed *:*)",
-      "Bash(timeout *:*)",
-      "Bash(pkill -f *probe*:*)",
-      "Bash(dot *:*)",
-      "Bash(jq *:*)",
-      "Bash(sg *:*)",
-      "mcp__serena__find_referencing_symbols",
-      "Bash(bash test/golden/gates.sh:*)",
-      "Bash(make *:*)",
-      "Bash(cmake *:*)"
+      "Bash(awk *:*)"
     ]
   },
   "hooks": {
