@@ -41,6 +41,7 @@ import {
   resolvePenColor,
   resolvePenType,
   resolvePenWidth,
+  styleTokens,
 } from '../common/style-resolve.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
@@ -204,6 +205,9 @@ function setEdgePen(e: Edge, job: RenderJob): void {
     () => resolveRenderColor(resolvePenColor(e.attrs.get('color'))));
   obj.pen = resolvePenType(flags);
   obj.penWidth = resolvePenWidth(flags, e.attrs.get('penwidth'));
+  // Raw style tokens for xdot's `S` ops (e.g. explicit style="solid"); SVG
+  // reads only obj.pen, so this is xdot-only. @see gvrender_core_dot.c xdot_style
+  obj.rawStyle = styleTokens(e.attrs.get('style'));
 }
 
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {

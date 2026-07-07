@@ -29,6 +29,7 @@ import {
   resolvePenColor,
   resolvePenType,
   resolvePenWidth,
+  styleTokens,
 } from './style-resolve.js';
 import { stripedBox, wedgedEllipse } from '../render/svg-multicolor.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
@@ -332,6 +333,8 @@ function applyPenState(obj: ObjState, styleAttr: string | undefined,
   obj.penColor = resolveRenderColor(resolvePenColor(colorAttr));
   obj.pen = resolvePenType(flags);
   obj.penWidth = resolvePenWidth(flags, penwidthAttr);
+  // Raw style tokens for xdot's `S` ops; SVG reads only obj.pen (xdot-only).
+  obj.rawStyle = styleTokens(styleAttr);
 }
 
 /**
