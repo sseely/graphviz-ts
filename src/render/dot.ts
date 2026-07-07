@@ -21,6 +21,7 @@ import { colorxlate } from '../common/color.js';
 import { resolveRenderColor } from './color-resolve.js';
 import { getGradientPoints } from './svg-gradient.js';
 import { edgeIsTapered } from './svg-tapered-edge.js';
+import { taper, taperfun } from '../common/taper.js';
 import { orthoRoundedRadius } from './svg-helpers.js';
 import { orthoRoundedPolylines } from './svg-edge-ortho-radius.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
@@ -58,7 +59,7 @@ const NUM_XBUFS = 8;
  */
 const NON_LINE_STYLES: ReadonlySet<string> = new Set([
   'filled', 'bold', 'rounded', 'diagonals', 'striped', 'wedged',
-  'invis', 'invisible', 'radial', 'tapered',
+  'invis', 'invisible', 'radial',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -613,9 +614,12 @@ export class XdotRenderer implements RendererPlugin {
     const colorAttr = e.attrs.get('color') ?? '';
     const numc = (colorAttr.match(/:/g) ?? []).length;
     const numsemi = (colorAttr.match(/;/g) ?? []).length;
-    // Plain `:` multicolor (no `;`, not tapered) → N parallel offset beziers,
-    // one per color; else the single-color spline. @see emit.c:2443
-    if (numc > 0 && numsemi === 0 && !edgeIsTapered(e)) {
+    // Tapered edge (style=tapered) → the first bezier as a filled taper polygon
+    // with transparent pen + edge-color fill; else plain `:` multicolor → N
+    // parallel offset beziers; else the single-color spline. @see emit.c:2422/2443
+    if (edgeIsTapered(e)) {
+      this.emitTaperedSpline(e, spl.list[0], edraw, job);
+    } else if (numc > 0 && numsemi === 0) {
       this.emitParallelSpline(spl.list as (Bezier | undefined)[], colorAttr, numc, edraw, job);
     } else {
       // splines=ortho + radius/style=rounded → straight segments + corner arcs
@@ -635,6 +639,22 @@ export class XdotRenderer implements RendererPlugin {
     // default line style ("solid") + penwidth before each arrow primitive.
     this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job, EmitState.TDraw);
     this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job, EmitState.HDraw);
+  }
+
+  /**
+   * Emit a tapered edge's first bezier as a filled taper polygon: `S <n>
+   * -tapered` (the style), a transparent pen, the edge-color fill, then the
+   * polygon vertices from `taper()` (y-up). @see lib/common/emit.c:2422
+   */
+  private emitTaperedSpline(e: Edge, bz: Bezier | undefined, edraw: string[], job: RenderJob): void {
+    if (bz === undefined) return;
+    const radfunc = taperfun(e.attrs.get('dir'), isDirected(e.tail.root));
+    const verts = taper(bz, radfunc, job.obj?.penWidth ?? 1);
+    const edgeColor = job.obj?.penColor ?? { type: 'string', s: 'black' };
+    edraw.push(this.styleOp(job));
+    edraw.push(xdotPenColor(resolveRenderColor('transparent')));
+    edraw.push(xdotFillColor(edgeColor));
+    edraw.push(xdotPoints('P', verts));
   }
 
   /**
