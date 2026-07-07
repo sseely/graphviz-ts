@@ -158,6 +158,14 @@ export function withHtmlPaint(paint: HtmlPaint, job: RenderJob, drawFn: () => vo
   applyHtmlFill(paint);
   paintObj.pen = penTypeOf(paint.penStyle);
   paintObj.penWidth = paint.penWidth !== undefined ? paint.penWidth : 1.0;
+  // C sets the default line style ("solid") before each HTML table/cell draw,
+  // so xdot emits `S 5 -solid` per border/fill. rawStyle carries it (SVG's
+  // style emit treats "solid" as the default → no visible change).
+  paintObj.rawStyle = paintObj.pen === PenType.Solid ? ['solid'] : [];
+  // Inherit the enclosing object's emit-state (the label state during an HTML
+  // label emit) so the fill/border ops route to the same xbuf as the label
+  // (_ldraw_), not the shape draw buffer. SVG ignores emit_state, so unchanged.
+  paintObj.emitState = job.obj?.emitState ?? EmitState.NDraw;
   job.pushObj(paintObj);
   try { drawFn(); } finally { job.popObj(); }
 }

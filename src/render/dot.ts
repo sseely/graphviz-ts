@@ -688,8 +688,15 @@ export class XdotRenderer implements RendererPlugin {
       this.penwidth[st] = obj.penWidth;
       s += xdotStrOp('S ', 'setlinewidth(' + trimFixed3(obj.penWidth) + ')');
     }
-    // C carries the named style in obj->rawstyle; the port resolves it into a
-    // PenType instead, so reconstruct the dash/dot token C would emit.
+    // Named styles carried in obj.rawStyle (e.g. the HTML paint's "solid" that
+    // mirrors C's set_style before each table border) are emitted verbatim,
+    // skipping the ones xdot_style filters (filled/bold/setlinewidth).
+    for (const p of obj.rawStyle) {
+      if (p === 'filled' || p === 'bold' || p === 'setlinewidth') continue;
+      s += xdotStrOp('S ', p);
+    }
+    // The port resolves user edge/node style into a PenType rather than
+    // rawStyle, so reconstruct the dash/dot token C would emit from it.
     if (obj.pen === PenType.Dashed) s += xdotStrOp('S ', 'dashed');
     else if (obj.pen === PenType.Dotted) s += xdotStrOp('S ', 'dotted');
     return s;

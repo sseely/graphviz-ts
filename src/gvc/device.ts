@@ -20,7 +20,7 @@ import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { RendererPlugin, GvcContext } from './context.js';
 import { PenType } from './context.js';
-import { gvrenderTextspan } from './textspan-emit.js';
+import { gvrenderTextspan, withLabelEmitState } from './textspan-emit.js';
 import { resolveEdgeAnchor, resolveObjAnchor, beginAnchorIf } from './anchor.js';
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
@@ -273,7 +273,11 @@ export function renderOneLabel(
   // C routes to emit_html_label(job, lp->u.html, lp) using lp->pos as anchor.
   if (lp.html) {
     if (lp.u.kind === 'html') {
-      emitHtmlLabel(lp.u.html as PlacedHtml, lp.pos, renderer, job);
+      // Route the whole HTML label (table box/fill polygons + text) into the
+      // object's LABEL emit-state so its ops land in _ldraw_, not _draw_.
+      const html = lp.u.html as PlacedHtml;
+      const pos = lp.pos;
+      withLabelEmitState(job, () => emitHtmlLabel(html, pos, renderer, job));
     }
     return;
   }
