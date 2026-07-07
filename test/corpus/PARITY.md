@@ -10,11 +10,11 @@ test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts`.
 ## Summary
 
 - **Oracle:** dot 15.1.0 · **corpus:** [graphviz `tests/`](https://gitlab.com/graphviz/graphviz/-/tree/main/tests) (local clone `~/git/graphviz/tests`)
-- **Surveyed (applicable):** 789
-- **conformant\*:** 759 (96.2%) · structural-match: 16 → 775/789 structurally equal (98.2%)
+- **Surveyed (applicable):** 788
+- **conformant\*:** 759 (96.3%) · structural-match: 16 → 775/788 structurally equal (98.4%)
 - **Accepted deltas (documented, won't-fix):** 19 · **Tracked gaps (unaccepted, will-fix):** 0 → of 19 non-conformant graphs
-- **errored:** 0 · **timeout:** 1 · **oracle-error:** 10 (excluded from scoring)
-- **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3, perf 1
+- **errored:** 0 · **timeout:** 0 · **oracle-error:** 10 (excluded from scoring)
+- **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3, perf 2
 
 \* **conformant** is a *deterministic-tolerance* verdict, not literal byte equality: numeric coordinates/paths agree within ±0.01 and all non-numeric content (tags, colors, text) is exactly equal (`compareSvg(…, 'deterministic')`). Full definition: [docs/conformance.md](../../docs/conformance.md).
 
@@ -81,11 +81,10 @@ for driving groups to conformance. Mechanism-family attribution: see
 | id | path | message |
 |---|---|---|
 
-## timeout (1)
+## timeout (0)
 
 | id | path | message |
 |---|---|---|
-| `2621` | `2621.dot` |  |
 
 ## oracle-error (10) — excluded from port scoring
 

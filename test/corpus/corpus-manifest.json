@@ -909,7 +909,8 @@
     "id": "2621",
     "path": "2621.dot",
     "engine": "dot",
-    "status": "applicable"
+    "status": "quarantined",
+    "reason": "perf"
   },
   {
     "id": "2636",

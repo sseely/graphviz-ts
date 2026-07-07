@@ -3,13 +3,13 @@
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
-  "total": 789,
+  "total": 788,
   "counts": {
     "conformant": 759,
     "structural-match": 16,
     "diverged": 3,
     "errored": 0,
-    "timeout": 1,
+    "timeout": 0,
     "oracle-error": 10
   },
   "results": [
@@ -729,11 +729,6 @@
       "verdict": "structural-match",
       "maxDelta": 585,
       "maxDeltaPath": "svg/g[1]/g[428]/path[1]/@d[4]"
-    },
-    {
-      "id": "2621",
-      "path": "2621.dot",
-      "verdict": "timeout"
     },
     {
       "id": "2636",
