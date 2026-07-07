@@ -102,25 +102,21 @@ export function testXbufsAliasing(): void {
 // ---------------------------------------------------------------------------
 
 export function testXdotPoint(): void {
+  // xdot is y-up: the layout coordinate passes through with no inversion.
   const p = { x: 10, y: 20 };
-  const s = xdotPoint(p, 100);
-  expect(s).toBe('10 80 ');
+  expect(xdotPoint(p)).toBe('10 20 ');
 }
 
 export function testXdotFont(): void {
-  const span = {
-    str: '', fontName: 'Helvetica', fontSize: 12,
-    fontColor: '#000000', fontFlags: 0,
-    just: 'n' as const, size: { x: 0, y: 0 },
-    yoffset_centerline: 0, yoffset_layout: 0,
-  };
-  const s = xdotFont(span);
-  expect(s).toContain('F 12 9 -Helvetica ');
+  // xdotFont(size, name) — the length prefix is the byte length of the name.
+  expect(xdotFont(12, 'Helvetica')).toBe('F 12 9 -Helvetica ');
 }
 
 export function testXdotColors(): void {
-  expect(xdotPenColor('red')).toBe('c 3 -red ');
-  expect(xdotFillColor('blue')).toBe('C 4 -blue ');
+  // Colors come from the resolved graphics state and emit canonical hex with a
+  // constant length prefix (7 for #rrggbb), mirroring xdot_str_color_xbuf.
+  expect(xdotPenColor({ type: 'string', s: 'red' })).toBe('c 7 -#ff0000 ');
+  expect(xdotFillColor({ type: 'string', s: 'blue' })).toBe('C 7 -#0000ff ');
 }
 
 // ---------------------------------------------------------------------------
@@ -214,11 +210,17 @@ export function testXdotRendererFactory(): void {
 }
 
 export function testXdotBeginGraph(): void {
+  // The xdot renderer serializes the whole graph at endGraph (agwrite-at-end),
+  // so the header/xdotversion appear after begin+end, not during beginGraph.
   const r = new XdotRenderer();
   const job = makeJob();
-  r.beginGraph(makeGraph(), job);
+  const g = makeGraph();
+  r.beginGraph(g, job);
+  r.endGraph(g, job);
   const out = job.output.join('');
+  expect(out).toContain('digraph G {');
   expect(out).toContain('xdotversion="1.7"');
+  expect(out).toContain('bb="0,0,200,100"');
 }
 
 // ---------------------------------------------------------------------------
@@ -238,7 +240,7 @@ describe('makeXbufs', () => {
 });
 
 describe('xdot helpers', () => {
-  it('xdotPoint applies y-flip', testXdotPoint);
+  it('xdotPoint is y-up (no inversion)', testXdotPoint);
   it('xdotFont formats font preamble', testXdotFont);
   it('color ops format correctly', testXdotColors);
 });
