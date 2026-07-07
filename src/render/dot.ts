@@ -278,18 +278,21 @@ export function formatNodeAttrs(n: Node): string {
   return parts.join(' ');
 }
 
-/** Format edge spline points for the DOT pos attribute. */
+/**
+ * Format edge spline points for the DOT `pos` attribute. Per bezier: the start
+ * endpoint `s,sp` when `sflag` set, then the end endpoint `e,ep` when `eflag`
+ * set, then `bez.size` control points — all at `%.5g`, exactly as native's
+ * spline serialization. @see lib/common/output.c:357-372
+ */
 export function formatEdgePos(e: Edge): string {
   const spl = e.info.spl;
   if (!spl || spl.list.length === 0) return '';
   const parts: string[] = [];
   for (const bez of spl.list) {
-    if (bez.eflag) {
-      parts.push('e,' + gfmt5(bez.ep.x) + ',' + gfmt5(bez.ep.y));
-    }
-    for (const p of bez.list) {
-      parts.push(gfmt5(p.x) + ',' + gfmt5(p.y));
-    }
+    if (bez.sflag) parts.push('s,' + gfmt5(bez.sp.x) + ',' + gfmt5(bez.sp.y));
+    if (bez.eflag) parts.push('e,' + gfmt5(bez.ep.x) + ',' + gfmt5(bez.ep.y));
+    const pts = bez.list.slice(0, bez.size);
+    for (const p of pts) parts.push(gfmt5(p.x) + ',' + gfmt5(p.y));
   }
   return 'pos="' + parts.join(' ') + '"';
 }
