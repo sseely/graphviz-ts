@@ -15,6 +15,7 @@ import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { Point } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
+import type { ArrowDrawOp } from '../common/arrows-types.js';
 import type { GVColor } from '../common/color.js';
 import { colorxlate } from '../common/color.js';
 import { resolveRenderColor } from './color-resolve.js';
@@ -105,13 +106,31 @@ export function makeXbufs(): string[][] {
 // ---------------------------------------------------------------------------
 
 /**
+ * Format one xdot draw-op number: 2 decimals, trailing zeros and point trimmed
+ * — mirroring xdot_fmt_num ("%.02f" + agxbuf_trim_zeros). Distinct from
+ * `printNum` (used for the DOT `pos`/`bb`/`width`/`height` attributes), which
+ * keeps more precision; xdot's DRAW ops are emitted at 2 dp by the C engine.
+ * @see plugin/core/gvrender_core_dot.c:126 xdot_fmt_num
+ */
+export function xdotNum(v: number): string {
+  let s = v.toFixed(2);
+  if (s.indexOf('.') >= 0) {
+    let end = s.length;
+    while (end > 0 && s[end - 1] === '0') end--;
+    if (s[end - 1] === '.') end--;
+    s = s.slice(0, end);
+  }
+  return s === '-0' ? '0' : s;
+}
+
+/**
  * Format a single xdot point "x y ". xdot is y-up: `Y_invert` defaults false, so
  * `yDir(y, yOff)` returns `y` unchanged for xdot (only `-Ty` plain/dot invert).
  * The layout coordinate passes through with NO inversion — unlike the SVG path.
  * @see lib/common/output.c:36 yDir · plugin/core/gvrender_core_dot.c:132 xdot_point
  */
 export function xdotPoint(p: Point): string {
-  return printNum(p.x) + ' ' + printNum(p.y) + ' ';
+  return xdotNum(p.x) + ' ' + xdotNum(p.y) + ' ';
 }
 
 /** Format N points preceded by opcode and count: "<c> <n> x0 y0 x1 y1 …". */
@@ -172,7 +191,7 @@ export function xdotFillColor(c: GVColor): string {
  * face name. @see plugin/core/gvrender_core_dot.c:498 xdot_textspan
  */
 export function xdotFont(size: number, name: string): string {
-  return 'F ' + printNum(size > 0 ? size : 0) + ' ' + String(name.length) + ' -' + name + ' ';
+  return 'F ' + xdotNum(size > 0 ? size : 0) + ' ' + String(name.length) + ' -' + name + ' ';
 }
 
 /**
@@ -406,7 +425,57 @@ export class XdotRenderer implements RendererPlugin {
     this.resetState(EmitState.NDraw, EmitState.NLabel);
   }
 
-  beginEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
+  /**
+   * Emit the edge spline beziers (EDRAW) and arrowhead ops (TDRAW/HDRAW),
+   * reading the already-routed geometry from `e.info`. Mirrors
+   * emit_edge_graphics: each bezier under the edge pen, then tail/head arrows
+   * under the default solid line style. The port draws SVG edges directly in
+   * svg.ts (not via shared bezier/polygon callbacks), so the xdot edge draw is
+   * self-contained here — the same per-renderer split the port already uses.
+   * @see lib/common/emit.c:emit_edge_graphics
+   */
+  beginEdge(e: Edge, job: RenderJob): void {
+    const spl = e.info.spl;
+    if (spl === undefined) return;
+    const edraw = this.bufs[EmitState.EDraw]!;
+    for (const bez of spl.list) {
+      edraw.push(this.styleOp(job), this.penOp(job));
+      edraw.push(xdotPoints('B', bez.list.slice(0, bez.size)));
+    }
+    // Arrows: y-up ops already computed for the shared render path. C sets the
+    // default line style ("solid") + penwidth before each arrow primitive.
+    this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job);
+    this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job);
+  }
+
+  /** Emit one arrow's primitive ops into `buf` (pen/fill from the edge color). */
+  private emitArrows(buf: string[], ops: ArrowDrawOp[] | undefined, job: RenderJob): void {
+    if (ops === undefined) return;
+    const pen = job.obj?.penColor ?? { type: 'string', s: 'black' };
+    for (const op of ops) {
+      buf.push(xdotStrOp('S ', 'solid'));
+      buf.push(xdotPenColor(pen));
+      switch (op.kind) {
+        case 'polygon':
+          if (op.filled) buf.push(xdotFillColor(pen));
+          buf.push(xdotPoints(op.filled ? 'P' : 'p', op.points));
+          break;
+        case 'ellipse':
+          if (op.filled) buf.push(xdotFillColor(pen));
+          buf.push(
+            (op.filled ? 'E ' : 'e ') + xdotPoint(op.center) +
+              xdotNum(op.rx) + ' ' + xdotNum(op.ry) + ' ',
+          );
+          break;
+        case 'polyline':
+          buf.push(xdotPoints('L', op.points));
+          break;
+        case 'bezier':
+          buf.push(xdotPoints('B', op.points));
+          break;
+      }
+    }
+  }
 
   endEdge(e: Edge, _job: RenderJob): void {
     const draw = this.flush(EmitState.EDraw);
@@ -452,7 +521,7 @@ export class XdotRenderer implements RendererPlugin {
       this.textflags[st] = bits;
     }
     buf.push(
-      'T ' + xdotPoint(p) + String(j) + ' ' + printNum(span.size.x) + ' ' +
+      'T ' + xdotPoint(p) + String(j) + ' ' + xdotNum(span.size.x) + ' ' +
         String(span.str.length) + ' -' + span.str + ' ',
     );
   }
@@ -461,7 +530,7 @@ export class XdotRenderer implements RendererPlugin {
     const buf = this.getBuf(job);
     buf.push(this.styleOp(job), this.penOp(job));
     if (filled) buf.push(this.fillOp(job));
-    buf.push(filled ? 'E ' : 'e ', xdotPoint(center), printNum(rx) + ' ' + printNum(ry) + ' ');
+    buf.push(filled ? 'E ' : 'e ', xdotPoint(center), xdotNum(rx) + ' ' + xdotNum(ry) + ' ');
   }
 
   polygon(pts: Point[], filled: boolean, job: RenderJob): void {
