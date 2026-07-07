@@ -140,6 +140,24 @@ export function xdotPoints(c: string, pts: Point[]): string {
   return s;
 }
 
+/**
+ * UTF-8 byte length of a string — the value C's `xdot_str` writes as the length
+ * prefix (`strlen(s)` over the UTF-8 bytes), NOT the JS UTF-16 code-unit count.
+ * A label like `ÿ` (U+00FF) is 2 UTF-8 bytes, so its `T`/`F` op prefix is 2.
+ * @see plugin/core/gvrender_core_dot.c:83 xdot_str_xbuf (`%zu`, strlen)
+ */
+export function utf8Len(s: string): number {
+  let n = 0;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    if (c < 0x80) n += 1;
+    else if (c < 0x800) n += 2;
+    else if (c >= 0xd800 && c <= 0xdbff) { n += 4; i++; } // surrogate pair → 4 bytes
+    else n += 3;
+  }
+  return n;
+}
+
 /** Clamp a normalized [0,1] float channel to a 0-255 byte (round-to-nearest). */
 function chanByte(v: number): number {
   return Math.round(Math.max(0, Math.min(1, v)) * 255);
@@ -191,7 +209,7 @@ export function xdotFillColor(c: GVColor): string {
  * face name. @see plugin/core/gvrender_core_dot.c:498 xdot_textspan
  */
 export function xdotFont(size: number, name: string): string {
-  return 'F ' + xdotNum(size > 0 ? size : 0) + ' ' + String(name.length) + ' -' + name + ' ';
+  return 'F ' + xdotNum(size > 0 ? size : 0) + ' ' + String(utf8Len(name)) + ' -' + name + ' ';
 }
 
 /**
@@ -199,19 +217,22 @@ export function xdotFont(size: number, name: string): string {
  * @see plugin/core/gvrender_core_dot.c:83 xdot_str_xbuf
  */
 function xdotStrOp(prefix: string, s: string): string {
-  return prefix + String(s.length) + ' -' + s + ' ';
+  return prefix + String(utf8Len(s)) + ' -' + s + ' ';
 }
 
 /**
  * Quote a DOT identifier unless it is a bare id or numeral, mirroring agwrite's
  * agcanonStr so the serialized graph reparses (the comparator reparses both
- * sides). Over-quoting versus native is safe: `"abc"` and bare `abc` parse to
- * the same node name. @see lib/cgraph/write.c agcanonStr
+ * sides). Only `"` is escaped (→ `\"`); a `\` is left as-is — it is already the
+ * start of a stored escape like `\n`/`\l` that agcanonStr keeps verbatim, so
+ * doubling it (`\\n`) would change the name (`a\n(b\n"c")` must stay `a\n…`, not
+ * `a\\n…`). Over-quoting a value native leaves bare is harmless: both parse to
+ * the same name. @see lib/cgraph/write.c:_agstrcanon (escapes '"', keeps '\')
  */
 export function xdotId(s: string): string {
   if (/^[A-Za-z_][A-Za-z_0-9]*$/.test(s)) return s;
   if (/^-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)$/.test(s)) return s;
-  return '"' + s.replace(/(["\\])/g, '\\$1') + '"';
+  return '"' + s.replace(/"/g, '\\"') + '"';
 }
 
 // ---------------------------------------------------------------------------
@@ -522,7 +543,7 @@ export class XdotRenderer implements RendererPlugin {
     }
     buf.push(
       'T ' + xdotPoint(p) + String(j) + ' ' + xdotNum(span.size.x) + ' ' +
-        String(span.str.length) + ' -' + span.str + ' ',
+        String(utf8Len(span.str)) + ' -' + span.str + ' ',
     );
   }
 
@@ -624,6 +645,18 @@ export class XdotRenderer implements RendererPlugin {
 
   // --- serialization (agwrite-at-end) ------------------------------------
 
+  /**
+   * Emit `key="value"`, escaping `"` as `\"` in the value the way agwrite's
+   * agcanonStr does — a draw string carries label text that may contain a bare
+   * `"` (e.g. a `"c")` span), which would otherwise close the attribute early.
+   * The byte-length prefix stays on the UNescaped text (the parser un-escapes
+   * `\"`→`"` before parseXDot re-reads it), matching native exactly.
+   * @see lib/cgraph/write.c:_agstrcanon (escapes '"'; leaves other chars)
+   */
+  private drawAttr(key: string, value: string): string {
+    return key + '="' + value.replace(/"/g, '\\"') + '"';
+  }
+
   /** `llx,lly,urx,ury` from a graph's layout bb. */
   private bbStr(g: Graph): string {
     const bb = g.info.bb;
@@ -657,8 +690,8 @@ export class XdotRenderer implements RendererPlugin {
   private graphAttrs(g: Graph): string {
     const d = this.draws.get(g);
     const parts: string[] = [];
-    if (d?.draw) parts.push('_draw_="' + d.draw + '"');
-    if (d?.ldraw) parts.push('_ldraw_="' + d.ldraw + '"');
+    if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
+    if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     parts.push('bb="' + this.bbStr(g) + '"');
     parts.push('xdotversion="' + XDOT_VERSION + '"');
     return parts.join(' ');
@@ -668,8 +701,8 @@ export class XdotRenderer implements RendererPlugin {
   private clusterAttrs(sg: Graph): string {
     const d = this.draws.get(sg);
     const parts: string[] = [];
-    if (d?.draw) parts.push('_draw_="' + d.draw + '"');
-    if (d?.ldraw) parts.push('_ldraw_="' + d.ldraw + '"');
+    if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
+    if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     if (sg.info.bb) parts.push('bb="' + this.bbStr(sg) + '"');
     return parts.join(' ');
   }
@@ -680,8 +713,8 @@ export class XdotRenderer implements RendererPlugin {
     let s = 'pos="' + printNum(info.coord.x) + ',' + printNum(info.coord.y) + '"' +
       ' width=' + printNum(info.width) + ' height=' + printNum(info.height);
     const d = this.draws.get(n);
-    if (d?.draw) s += ' _draw_="' + d.draw + '"';
-    if (d?.ldraw) s += ' _ldraw_="' + d.ldraw + '"';
+    if (d?.draw) s += ' ' + this.drawAttr('_draw_', d.draw);
+    if (d?.ldraw) s += ' ' + this.drawAttr('_ldraw_', d.ldraw);
     return s;
   }
 
@@ -690,10 +723,10 @@ export class XdotRenderer implements RendererPlugin {
     const conn = edgeConnector(isDirected(g));
     const d = this.draws.get(e);
     const parts: string[] = [];
-    if (d?.draw) parts.push('_draw_="' + d.draw + '"');
-    if (d?.hdraw) parts.push('_hdraw_="' + d.hdraw + '"');
-    if (d?.tdraw) parts.push('_tdraw_="' + d.tdraw + '"');
-    if (d?.ldraw) parts.push('_ldraw_="' + d.ldraw + '"');
+    if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
+    if (d?.hdraw) parts.push(this.drawAttr('_hdraw_', d.hdraw));
+    if (d?.tdraw) parts.push(this.drawAttr('_tdraw_', d.tdraw));
+    if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     const pos = formatEdgePos(e);
     if (pos) parts.push(pos);
     const attrs = parts.length > 0 ? ' [' + parts.join(' ') + ']' : '';
