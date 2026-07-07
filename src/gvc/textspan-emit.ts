@@ -25,13 +25,29 @@ import { EmitState, ObjType } from './job.js';
  * ignores emit_state, while the xdot renderer routes each op into the object's
  * label xbuf by exactly this value. @see lib/common/labels.c:emit_label
  */
-function labelEmitState(type: ObjType): EmitState {
+export function labelEmitState(type: ObjType): EmitState {
   switch (type) {
     case ObjType.RootGraph: return EmitState.GLabel;
     case ObjType.Cluster: return EmitState.CLabel;
     case ObjType.Edge: return EmitState.ELabel;
     default: return EmitState.NLabel;
   }
+}
+
+/**
+ * Run `fn` with the object's label emit-state active (restored afterward) —
+ * the emit_label window that routes EVERY draw op of a label (HTML-table
+ * borders/fills AND text spans) into the object's LABEL xbuf, not its DRAW
+ * xbuf. Needed for HTML labels, whose box/fill polygons reach the renderer via
+ * gvrender_polygon (not gvrenderTextspan). SVG-safe: SVG ignores emit_state.
+ * @see lib/common/labels.c:224/274 emit_label (emit_state save/set/restore)
+ */
+export function withLabelEmitState(job: RenderJob, fn: () => void): void {
+  const obj = job.obj;
+  if (obj === null) { fn(); return; }
+  const saved = obj.emitState;
+  obj.emitState = labelEmitState(obj.type);
+  try { fn(); } finally { obj.emitState = saved; }
 }
 
 /**

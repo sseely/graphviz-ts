@@ -10,7 +10,7 @@ import type { Node } from '../model/node.js';
 import type { Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
-import { gvrenderTextspan } from '../gvc/textspan-emit.js';
+import { gvrenderTextspan, withLabelEmitState } from '../gvc/textspan-emit.js';
 import type { PolygonT, TextlabelT, GraphvizPolygonStyle, ShapeDesc } from './types.js';
 import { ShapeKind } from './types.js';
 import type { TextSpan } from './emit-types.js';
@@ -208,7 +208,10 @@ function renderNodeLabel(
   if (label.html && label.u.kind === 'html') {
     label.pos = coord;
     label.set = true;
-    emitHtmlLabel(label.u.html as PlacedHtml, coord, renderer, job);
+    // Route the HTML label's box/fill/text ops into the node LABEL emit-state
+    // (→ _ldraw_ for xdot), not the node DRAW state. SVG ignores emit_state.
+    const html = label.u.html as PlacedHtml;
+    withLabelEmitState(job, () => emitHtmlLabel(html, coord, renderer, job));
   } else {
     renderLabel(label, coord, renderer, job);
   }
