@@ -20,7 +20,11 @@ import type { GVColor } from '../common/color.js';
 import { colorxlate } from '../common/color.js';
 import { resolveRenderColor } from './color-resolve.js';
 import { getGradientPoints } from './svg-gradient.js';
+import { edgeIsTapered } from './svg-tapered-edge.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
+import { parseSegs } from '../common/multicolor.js';
+import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
+import type { Bezier } from '../model/geom.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
@@ -565,14 +569,52 @@ export class XdotRenderer implements RendererPlugin {
     const spl = e.info.spl;
     if (spl === undefined) return;
     const edraw = this.bufs[EmitState.EDraw]!;
-    for (const bez of spl.list) {
-      edraw.push(this.styleOp(job), this.penOp(job));
-      edraw.push(xdotPoints('B', bez.list.slice(0, bez.size)));
+    const colorAttr = e.attrs.get('color') ?? '';
+    const numc = (colorAttr.match(/:/g) ?? []).length;
+    const numsemi = (colorAttr.match(/;/g) ?? []).length;
+    // Plain `:` multicolor (no `;`, not tapered) → N parallel offset beziers,
+    // one per color; else the single-color spline. @see emit.c:2443
+    if (numc > 0 && numsemi === 0 && !edgeIsTapered(e)) {
+      this.emitParallelSpline(spl.list as (Bezier | undefined)[], colorAttr, numc, edraw, job);
+    } else {
+      for (const bez of spl.list) {
+        edraw.push(this.styleOp(job), this.penOp(job));
+        edraw.push(xdotPoints('B', bez.list.slice(0, bez.size)));
+      }
     }
     // Arrows: y-up ops already computed for the shared render path. C sets the
     // default line style ("solid") + penwidth before each arrow primitive.
     this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job);
     this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job);
+  }
+
+  /**
+   * Emit the parallel-multicolor edge spline: one offset Bézier per color,
+   * offset SEP=2.0 perpendicular per pass — reusing the same offset geometry
+   * (buildOffsetLists/advanceTmpList) as the SVG parallel-edge path.
+   * @see lib/common/emit.c:2443 (parallel multicolor) / svg-parallel-edge.ts
+   */
+  private emitParallelSpline(
+    bzList: (Bezier | undefined)[],
+    colorAttr: string,
+    numc: number,
+    edraw: string[],
+    job: RenderJob,
+  ): void {
+    const segData = bzList.map((bz) =>
+      bz !== undefined && bz.size >= 4
+        ? buildOffsetLists(bz.list, (2 + numc) / 2)
+        : { offlist: [] as Point[], tmplist: [] as Point[] },
+    );
+    const colors = parseSegs(colorAttr).segs.map((s) => s.color ?? 'black');
+    for (const color of colors) {
+      const pen = xdotPenColor(resolveRenderColor(color));
+      for (const sd of segData) {
+        if (sd.offlist.length === 0) continue;
+        advanceTmpList(sd.tmplist, sd.offlist);
+        edraw.push(this.styleOp(job), pen, xdotPoints('B', sd.tmplist));
+      }
+    }
   }
 
   /** Emit one arrow's primitive ops into `buf` (pen/fill from the edge color). */
