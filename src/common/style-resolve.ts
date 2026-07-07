@@ -160,6 +160,27 @@ function zeroFlags(): PolyStyleFlags {
 const FUNLIMIT = 64;
 
 /**
+ * The raw style tokens C's parse_style produces (comma-separated, trimmed,
+ * non-empty), truncated to empty past FUNLIMIT. These are what xdot's
+ * `xdot_style` re-emits as `S` ops (it skips filled/bold/setlinewidth). The
+ * port resolves style into a PenType for SVG; xdot needs the original tokens.
+ * @see lib/common/emit.c:4010 parse_style · gvrender_core_dot.c:161 xdot_style
+ */
+export function styleTokens(style: string | undefined): string[] {
+  if (!style) return [];
+  const out: string[] = [];
+  let fun = 0;
+  for (const raw of style.split(',')) {
+    const token = raw.trim();
+    if (token.length === 0) continue;
+    if (fun === FUNLIMIT - 1) return [];
+    fun++;
+    out.push(token);
+  }
+  return out;
+}
+
+/**
  * Extract the numeric argument of a `setlinewidth(N)` token, or null if the
  * token is not a setlinewidth form. Mirrors gvrender_set_style reading
  * `atof` of the parenthesized argument (atof → 0.0 on a non-numeric arg).

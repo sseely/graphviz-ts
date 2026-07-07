@@ -180,7 +180,9 @@ function chanByte(v: number): number {
  */
 export function gvColorRgba(c: GVColor): [number, number, number, number] {
   if (c.type === 'rgba') return [chanByte(c.r), chanByte(c.g), chanByte(c.b), chanByte(c.a)];
-  if (c.type === 'none') return [0, 0, 0, 0];
+  // A `none`/transparent paint emits graphviz's "transparent" bytes (ff ff fe 00),
+  // matching native's `#fffffe00` — not fully-zero black. @see colxlate.c transparent
+  if (c.type === 'none') return [0xff, 0xff, 0xfe, 0x00];
   const out: GVColor = { type: 'rgba', r: 0, g: 0, b: 0, a: 0 };
   colorxlate(c.type === 'string' ? c.s : '', out, 'rgba');
   return out.type === 'rgba'
@@ -786,17 +788,21 @@ export class XdotRenderer implements RendererPlugin {
       this.penwidth[st] = obj.penWidth;
       s += xdotStrOp('S ', 'setlinewidth(' + trimFixed3(obj.penWidth) + ')');
     }
-    // Named styles carried in obj.rawStyle (e.g. the HTML paint's "solid" that
-    // mirrors C's set_style before each table border) are emitted verbatim,
-    // skipping the ones xdot_style filters (filled/bold/setlinewidth).
-    for (const p of obj.rawStyle) {
-      if (p === 'filled' || p === 'bold' || p === 'setlinewidth') continue;
-      s += xdotStrOp('S ', p);
+    // Named styles carried in obj.rawStyle (the parsed style tokens, e.g. an
+    // explicit `style="solid"`/`"dashed"`, or the HTML paint's "solid") are
+    // emitted verbatim, skipping the ones xdot_style filters (filled/bold/
+    // setlinewidth, and setlinewidth(N) forms). @see gvrender_core_dot.c:184
+    if (obj.rawStyle.length > 0) {
+      for (const p of obj.rawStyle) {
+        if (p === 'filled' || p === 'bold' || p.startsWith('setlinewidth')) continue;
+        s += xdotStrOp('S ', p);
+      }
+    } else {
+      // Fallback for paths that set only a PenType (no rawStyle): reconstruct
+      // the dash/dot token C would emit from the pen.
+      if (obj.pen === PenType.Dashed) s += xdotStrOp('S ', 'dashed');
+      else if (obj.pen === PenType.Dotted) s += xdotStrOp('S ', 'dotted');
     }
-    // The port resolves user edge/node style into a PenType rather than
-    // rawStyle, so reconstruct the dash/dot token C would emit from it.
-    if (obj.pen === PenType.Dashed) s += xdotStrOp('S ', 'dashed');
-    else if (obj.pen === PenType.Dotted) s += xdotStrOp('S ', 'dotted');
     return s;
   }
 
