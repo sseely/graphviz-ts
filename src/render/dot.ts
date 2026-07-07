@@ -24,6 +24,7 @@ import { edgeIsTapered } from './svg-tapered-edge.js';
 import { orthoRoundedRadius } from './svg-helpers.js';
 import { orthoRoundedPolylines } from './svg-edge-ortho-radius.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
+import { parseGraphPad } from '../gvc/viewport.js';
 import { parseSegs } from '../common/multicolor.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
 import type { Bezier } from '../model/geom.js';
@@ -549,12 +550,18 @@ export class XdotRenderer implements RendererPlugin {
     // explicit `bgcolor=transparent` to white (a filled white canvas), unlike a
     // truecolor device that paints nothing. @see lib/common/emit.c:1490
     if (fillSpec === 'transparent') fillSpec = 'white';
-    const clip = job.bb;
+    // The canvas fill covers job->clip = gvc->bb ± job->pad. The dot/xdot device
+    // default pad is 0 (SVG's is 4), so only an explicit `pad` attr expands the
+    // background box (e.g. pad=2.0 → ±144). @see gvrender_core_dot.c:739
+    // (render_features_dot default_pad 0) · emit.c:3367 (job->bb = bb ± pad)
+    const padAttr = g.attrs.get('pad');
+    const pad = padAttr !== undefined && padAttr !== '' ? parseGraphPad(padAttr) : { x: 0, y: 0 };
+    const bb = job.bb;
     const corners: Point[] = [
-      { x: clip.ll.x, y: clip.ll.y },
-      { x: clip.ll.x, y: clip.ur.y },
-      { x: clip.ur.x, y: clip.ur.y },
-      { x: clip.ur.x, y: clip.ll.y },
+      { x: bb.ll.x - pad.x, y: bb.ll.y - pad.y },
+      { x: bb.ll.x - pad.x, y: bb.ur.y + pad.y },
+      { x: bb.ur.x + pad.x, y: bb.ur.y + pad.y },
+      { x: bb.ur.x + pad.x, y: bb.ll.y - pad.y },
     ];
     const buf = this.bufs[EmitState.GDraw]!;
     buf.push(xdotPenColor(resolveRenderColor('transparent')));
