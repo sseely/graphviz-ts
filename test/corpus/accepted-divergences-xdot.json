@@ -1,0 +1,4 @@
+{
+  "comment": "Irreducible xdot divergences (mission: xdot-conformance, AD-7). Each entry: {id, opClass, delta, rationale}. The walker treats listed ids as non-blocking ('accepted') and continues. Every entry MUST be referenced in the decision journal with its mechanism.",
+  "divergences": []
+}
