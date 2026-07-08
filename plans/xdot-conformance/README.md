@@ -91,7 +91,7 @@ Anything else → stop.
 | Batch | Description | Status |
 |-------|-------------|--------|
 | [1](batch-1/overview.md) | Build the xdot conformance harness (no renderer changes) | [x] |
-| [2](batch-2/overview.md) | Walk conformant items small→large; fix-loop to conformant | [x] 749/759 (99%); 4 A8-accepted, 1 layout (2825), 2 emission-TODO (2239/2368_1), pgram parser-limit, 1514 model, 1652 perf |
+| [2](batch-2/overview.md) | Walk conformant items small→large; fix-loop to conformant | [x] **751 conformant + 4 accepted / 759**; only 3 diverged, all NON-emission: 2825 (layout), 1514 (model), pgram (parser-limit); 1652 perf-timeout. Every emission bug fixed. |
 
 ## Index
 - [decisions.md](decisions.md) — architecture decisions (AD-1…AD-7)
