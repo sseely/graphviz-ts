@@ -1,7 +1,35 @@
 # 1514 — port's xdot serializer is a flattened agwrite (no per-subgraph edge re-declaration)
 
-**Status:** ROOT-CAUSED · **Kind:** xdot serialization fidelity (model +
-serializer) · **Filed:** 2026-07-07
+**Status:** Part A DONE (faithful serializer, corpus-clean); Part B (layout
+membership) OPEN · **Kind:** xdot serialization fidelity (model + serializer +
+layout) · **Filed:** 2026-07-07
+
+## Update 2026-07-08 — Part A landed, Part B is the residual
+
+**Part A (recursive agwrite serializer) is done** and corpus-clean: the flat
+serializer was replaced with a faithful `write.c` port (subgdfs / write_subgs /
+write_body / write_node_test / write_edge_test / attrs_written). Full survey
+**752 conformant, 0 regressions**. The port's xdot now emits the full subgraph
+tree with scoped nodes/edges and bare re-declarations. 1514 dropped from a
+structural mismatch to a **single residual diff**.
+
+**Part B (the residual) is a post-layout subgraph-MEMBERSHIP mismatch, not a
+serialization bug.** For 1514, native's post-layout membership is: both flat
+`Act_21->Act_22` edges (and `Act_22->Act_23`) hoisted into the enclosing anon
+subgraph `%3` (drawn there); `%7` (rank=same inside cluster_inner) and
+cluster_inner **emptied**; line-9 retains `%15` membership → agwrite re-declares
+it bare there (the 3rd statement). The port's post-layout membership instead
+keeps line-5 in `%7` and never adds line-9 to `%3`, so a faithful agwrite emits
+2 drawn (line-5 in `%7`, line-9 in `%15`) and no bare re-declaration.
+
+This membership is a specific **cluster + rank=same interaction** in dotgen that
+does not map cleanly to a single function (`node_induce` runs only for clusters
+via `set_parent`; `flat_edge` does not change membership). Replicating it needs
+C instrumentation of the layout passes to see exactly when line-9 enters `%3`
+and line-5 leaves `%7`, and the change touches the cluster/rank layout path with
+real regression risk to the 752 conformant graphs — for a single **invisible**
+diff (a bare `Act_21 -> Act_22;` re-declaration with no draw ops, no geometry).
+Deferred pending that investment.
 
 ## Symptom
 
