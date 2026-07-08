@@ -91,7 +91,7 @@ Anything else → stop.
 | Batch | Description | Status |
 |-------|-------------|--------|
 | [1](batch-1/overview.md) | Build the xdot conformance harness (no renderer changes) | [x] |
-| [2](batch-2/overview.md) | Walk conformant items small→large; fix-loop to conformant | [x] **752 conformant + 4 accepted / 759**; only 2 diverged, both out-of-scope: 1514 (cgraph model), pgram (parser-limit); 1652 perf-timeout. Every emission bug fixed; 2825 layout bug root-caused + fixed (plans/layout-bugs/). |
+| [2](batch-2/overview.md) | Walk conformant items small→large; fix-loop to conformant | [x] **753 conformant + 4 accepted / 759**; only **1** diverged: pgram (port DOT-parser limitation; its emission is correct). 1514 fixed via faithful recursive agwrite serializer + cluster induce-up + irrelevant_subgraph. 2825 layout bug fixed. Perf-timeouts (1652/2343/2095_1) render conformant given time. |
 
 ## Index
 - [decisions.md](decisions.md) — architecture decisions (AD-1…AD-7)
