@@ -51,6 +51,59 @@ describe('Stripper.strip — in-string operators do not leak', () => {
   });
 });
 
+/**
+ * pgram/xdot regression: a comment character (`#`, `//`, `/*`) INSIDE a quoted
+ * string must not be treated as a comment. cgraph's scan.l only recognizes
+ * comments in the initial start-condition; inside `qstring` state the `#`/`//`
+ * rules never fire. The bug: `Stripper.strip` stripped `#` shell-comments
+ * BEFORE strings, so a `#` in a `_draw_="...-#000000..."` color spec blanked the
+ * rest of the physical line — including the string's closing `"` — which
+ * re-paired the orphaned opening quote with a later string's quote and exposed
+ * interior text (e.g. a `-----` node name) as a bare `--` to
+ * validateEdgeOperators. xdot output (dense with `-#rrggbb` colors) triggered it.
+ *
+ * @see lib/cgraph/scan.l:122-123 (`^"#".*` ppDirective, `"#".*` shell comment —
+ *   both only in the initial start-condition, not inside qstring)
+ */
+const XDOT_COLOR_THEN_DASH_NODE =
+  'digraph {\n' +
+  '  a [_draw_="c 7 -#000000 p 4 1 2 3 4 "];\n' +
+  '  "x ----- y";\n' +
+  '}\n';
+
+describe('Stripper.strip — comment chars inside strings are not comments', () => {
+  it('does not let `#` inside a quoted string eat the closing quote', () => {
+    const stripped = Stripper.strip(XDOT_COLOR_THEN_DASH_NODE);
+    // The `-----` node name is inside a quoted string, so no bare `--` survives.
+    expect(stripped.includes('--')).toBe(false);
+  });
+
+  it('parses an xdot-style `#color` draw string followed by a `-----` node name', () => {
+    expect(() => parse(XDOT_COLOR_THEN_DASH_NODE)).not.toThrow();
+  });
+
+  it('does not let `//` inside a quoted string eat the closing quote', () => {
+    const src = 'digraph {\n  a [label="http://ex"];\n  "p ----- q";\n}\n';
+    expect(Stripper.strip(src).includes('--')).toBe(false);
+    expect(() => parse(src)).not.toThrow();
+  });
+
+  it('does not let `/*` inside a quoted string eat the closing quote', () => {
+    const src = 'digraph {\n  a [label="/* not a comment"];\n  "p ----- q";\n}\n';
+    expect(Stripper.strip(src).includes('--')).toBe(false);
+    expect(() => parse(src)).not.toThrow();
+  });
+
+  it('still strips a real `#` shell comment outside a string', () => {
+    // A `--` hidden in a real comment must NOT reach validateEdgeOperators.
+    expect(() => parse('digraph {\n  # a -- b is a comment\n  a -> b\n}')).not.toThrow();
+  });
+
+  it('still strips real `//` and block comments outside strings', () => {
+    expect(() => parse('digraph {\n  // a -- b\n  /* c -- d */\n  a -> b\n}')).not.toThrow();
+  });
+});
+
 describe('validateEdgeOperators — real top-level operators still rejected', () => {
   it('rejects a real top-level `--` in a digraph (fix narrows, not removes)', () => {
     let thrown: unknown;

@@ -56,30 +56,99 @@ export class ParseError extends Error implements GvError {
 }
 
 // ── Source stripping ──────────────────────────────────────────────────────────
-// All regex literals that contain \/ or \\ or \xNN use new RegExp(string)
-// to avoid lizard 1.22 misinterpreting those sequences as comment/escape
-// tokens that break subsequent function-boundary detection.
+// Blank comments and the *interiors* of quoted / HTML strings so that
+// validateEdgeOperators can regex for `--`/`->` without false positives from
+// operators that merely appear inside a string or comment. Output is the SAME
+// LENGTH as the input (every char maps to a space or itself) so a match offset
+// in the stripped text maps 1:1 back to a line/column in the original source.
+//
+// This is a single left-to-right pass mirroring scan.l's start-conditions: a
+// comment introducer (`#`, `//`, `/*`) is only recognized in the INITIAL state,
+// never inside a quoted or HTML string; a `"`/`<` only opens a string in the
+// initial state, never inside a comment. A previous regex-cascade stripped
+// comments before strings, so a `#` inside a `_draw_="...-#000000..."` color
+// (or `//` in a URL, `/*` in a label) was mistaken for a comment and blanked
+// the string's closing `"` — corrupting quote parity for the rest of the file.
+//
+// @see lib/cgraph/scan.l — start-conditions: INITIAL, qstring, hstring;
+//   comment rules (:122-123 `#`, block/line comments) fire only in INITIAL;
+//   qstring rules (:137-142) handle `\"`, `\\`, and `\<newline>` continuation.
 
 export class Stripper {
-  static blankFull(m: string): string { return ' '.repeat(m.length); }
-  static blankQ(m: string): string { return '"' + ' '.repeat(m.length - 2) + '"'; }
-  static blankA(m: string): string { return '<' + ' '.repeat(m.length - 2) + '>'; }
-
   static strip(src: string): string {
-    const rBlock = new RegExp('[/][*][\\s\\S]*?[*][/]', 'g');
-    const rLine  = new RegExp('[/][/][^\\n]*', 'g');
-    // `\\[\\s\\S]` (not `\\.`) so a backslash-escaped char — incl. a
-    // `\\<newline>` continuation — never terminates the string and its
-    // interior `--`/`->` cannot leak to validateEdgeOperators.
-    // @see lib/cgraph/scan.l qstring rules (\" , \\ , \<newline> continuation)
-    const rQ     = new RegExp('"(?:[^"\\\\]|\\\\[\\s\\S])*"', 'g');
-    const rH     = new RegExp('<(?:[^<>]|<[^<>]*>)*>', 'g');
-    let s = src.replace(rBlock, Stripper.blankFull);
-    s = s.replace(rLine, Stripper.blankFull);
-    s = s.replace(/#[^\n]*/g, Stripper.blankFull);
-    s = s.replace(rQ, Stripper.blankQ);
-    s = s.replace(rH, Stripper.blankA);
-    return s;
+    const out: string[] = [];
+    const n = src.length;
+    let i = 0;
+    while (i < n) {
+      const c = src[i]!;
+      if (c === '/' && src[i + 1] === '*') i = Stripper.blankBlock(src, i, out);
+      else if ((c === '/' && src[i + 1] === '/') || c === '#') i = Stripper.blankLine(src, i, out);
+      else if (c === '"') i = Stripper.blankQuoted(src, i, out);
+      else if (c === '<') i = Stripper.blankHtml(src, i, out);
+      else { out.push(c); i++; }
+    }
+    return out.join('');
+  }
+
+  /** Blank a C-style block comment (incl. its newlines). @returns next index. */
+  private static blankBlock(src: string, i: number, out: string[]): number {
+    const n = src.length;
+    out.push('  ');
+    i += 2;
+    while (i < n && !(src[i] === '*' && src[i + 1] === '/')) { out.push(' '); i++; }
+    if (i < n) { out.push('  '); i += 2; }
+    return i;
+  }
+
+  /**
+   * Blank a `//` line comment or `#` shell comment to end of line (the newline
+   * is preserved). scan.l recognizes `#` as a comment anywhere in the initial
+   * state — but never inside a string, which is why this only fires from the
+   * top-level dispatch. @returns next index.
+   */
+  private static blankLine(src: string, i: number, out: string[]): number {
+    const n = src.length;
+    const width = src[i] === '#' ? 1 : 2;
+    out.push(' '.repeat(width));
+    i += width;
+    while (i < n && src[i] !== '\n') { out.push(' '); i++; }
+    return i;
+  }
+
+  /**
+   * Blank the interior of a quoted string, keeping both quotes. `\<any>` (incl.
+   * `\"`, `\\`, and a `\<newline>` continuation) never terminates the string.
+   * @see lib/cgraph/scan.l qstring rules (:137-142). @returns next index.
+   */
+  private static blankQuoted(src: string, i: number, out: string[]): number {
+    const n = src.length;
+    out.push('"');
+    i++;
+    while (i < n && src[i] !== '"') {
+      if (src[i] === '\\' && i + 1 < n) { out.push('  '); i += 2; }
+      else { out.push(' '); i++; }
+    }
+    if (i < n) { out.push('"'); i++; }
+    return i;
+  }
+
+  /**
+   * Blank the interior of an HTML string `<...>`, keeping the outer brackets and
+   * tracking nested `<>` like scan.l's html_nest counter. @returns next index.
+   */
+  private static blankHtml(src: string, i: number, out: string[]): number {
+    const n = src.length;
+    out.push('<');
+    i++;
+    let depth = 1;
+    while (i < n && depth > 0) {
+      if (src[i] === '<') depth++;
+      else if (src[i] === '>') { depth--; if (depth === 0) break; }
+      out.push(' ');
+      i++;
+    }
+    if (i < n) { out.push('>'); i++; }
+    return i;
   }
 }
 
