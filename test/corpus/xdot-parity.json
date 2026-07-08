@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-08T00:22:48.093Z",
+  "generatedAt": "2026-07-08T02:33:31.454Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 759,
   "counts": {
-    "conformant": 751,
-    "diverged": 3,
+    "conformant": 752,
+    "diverged": 2,
     "accepted": 4,
     "port-error": 0,
     "oracle-error": 0,
@@ -1567,11 +1567,7 @@
       "id": "2825",
       "path": "2825.dot",
       "size": 312,
-      "verdict": "diverged",
-      "diffCount": 10,
-      "firstDiff": "node:A/pos[1]",
-      "maxDelta": 8,
-      "maxDeltaPath": "node:A/pos[1]"
+      "verdict": "conformant"
     },
     {
       "id": "2521",
