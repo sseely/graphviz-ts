@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-08T10:43:13.709Z",
+  "generatedAt": "2026-07-08T11:54:13.466Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 759,
   "counts": {
     "conformant": 752,
-    "diverged": 2,
-    "accepted": 4,
+    "diverged": 1,
+    "accepted": 3,
     "port-error": 0,
     "oracle-error": 0,
-    "timeout": 1
+    "timeout": 3
   },
   "results": [
     {
@@ -1007,9 +1007,7 @@
       "id": "1514",
       "path": "1514.dot",
       "size": 168,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "edge:Act_21->Act_22#2[missing-object]"
+      "verdict": "conformant"
     },
     {
       "id": "2436",
@@ -4413,7 +4411,8 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "conformant"
+      "verdict": "timeout",
+      "errMsg": ""
     },
     {
       "id": "graphs-b143",
@@ -4461,11 +4460,8 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "size": 105083,
-      "verdict": "accepted",
-      "diffCount": 2,
-      "firstDiff": "edge:1451->1450#0/pos[2]",
-      "maxDelta": 0.1000000000003638,
-      "maxDeltaPath": "edge:1451->1450#0/pos[2]"
+      "verdict": "timeout",
+      "errMsg": ""
     },
     {
       "id": "graphs-root",
