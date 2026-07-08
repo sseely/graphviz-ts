@@ -1,8 +1,34 @@
 # 1514 — port's xdot serializer is a flattened agwrite (no per-subgraph edge re-declaration)
 
-**Status:** Part A DONE (faithful serializer, corpus-clean); Part B (layout
-membership) OPEN · **Kind:** xdot serialization fidelity (model + serializer +
-layout) · **Filed:** 2026-07-07
+**Status:** FIXED (2026-07-08) — CONFORMANT · **Kind:** xdot serialization
+fidelity (serializer + cluster-induce membership) · **Filed:** 2026-07-07
+
+## Update 2026-07-08 (later) — FIXED with two geometry-safe changes
+
+Part B did NOT need the risky layout-ordering refactor. Two faithful changes:
+
+1. **`installEdgeUp` (rank.ts)** — `induceClusterEdges` mirrors C `installedge`'s
+   `while (g) { …; g = agparent(g); }`: an edge induced into a cluster propagates
+   UP to the cluster's ancestors. Line-9 (declared in sibling `%15`, induced into
+   `cluster_inner`) thus enters `%3` and survives there after mark_clusters prunes
+   the cluster's own copy. Fires only for cluster induce → geometry-safe.
+2. **`irrelevant_subgraph` / `hasBb` (dot.ts)** — an anon subgraph is a scope when
+   its graph attrs differ from the parent's; the driver is `bb` (native computes a
+   real bb only for root + clusters, leaving plain subgraphs `""`). The port set
+   `info.bb={0,0,0,0}` on every subgraph, masking this; `hasBb` now returns true
+   only for root + clusters, so `%3` (empty bb under the root's set bb) is emitted
+   as a scope. xdot-serializer-only → SVG-neutral.
+
+With `%3` a scope holding line-9, the serializer emits line-5 (drawn, `%7`), line-9
+(drawn, `%3`), line-9 (bare, `%15`) = 3 statements. **1514 CONFORMANT.** Full
+survey: xdot 752 conformant + 3 accepted, only pgram diverged; npm 2780/2780; SVG
+gate's lone flag is the 1652 timeout flake (no clusters → installEdgeUp never runs,
+maxΔ=0.0). The "empty %7" change (which broke flat-edge geometry) was NOT needed —
+the comparator keys edges by tail->head#idx, so matching draws suffices.
+
+---
+
+_Original root-cause analysis (Parts A/B split) retained below for archaeology._
 
 ## Update 2026-07-08 — Part A landed, Part B is the residual
 
