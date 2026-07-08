@@ -241,10 +241,27 @@ function induceClusterEdges(clust: Graph): void {
   for (const n of nodesInSeq(clust)) {
     for (const e of n.outEdges(clust.root)) {
       if (clust.nodes.get(e.head.name) === e.head && !owned.has(e)) {
-        clust.edges.push(e);
+        installEdgeUp(clust, e);
         owned.add(e);
       }
     }
+  }
+}
+
+/**
+ * Add edge `e` to `clust` and walk up its ancestor chain, adding it to each
+ * parent until one already contains it — mirroring C installedge's `while (g)`
+ * loop. An edge subgraph-installed in a nested cluster thus also becomes a
+ * member of the cluster's enclosing subgraphs, so a flat edge induced into the
+ * cluster survives in the ancestor after the cluster's own copy is later pruned
+ * (mark_clusters). @see lib/cgraph/edge.c:installedge
+ */
+function installEdgeUp(clust: Graph, e: Edge): void {
+  let g: Graph | null = clust;
+  while (g) {
+    if (g.edges.includes(e)) break;
+    g.edges.push(e);
+    g = g.parent;
   }
 }
 

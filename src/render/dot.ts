@@ -1063,13 +1063,25 @@ export class XdotRenderer implements RendererPlugin {
     return g.name.length === 0 || g.name.charCodeAt(0) === 0x25 /* % */;
   }
 
+  /** A graph carries a `bb` attribute when it is the root or has a layout bb
+   *  (clusters, and any subgraph output.c computed a box for). Native seeds `bb`
+   *  on every graph via safe_dcl, so the value differs (set vs empty "") between
+   *  a boxed graph and an unboxed child — the driver that makes an anon subgraph
+   *  under the root or a cluster "relevant". @see lib/common/output.c:safe_dcl */
+  private hasBb(g: Graph): boolean {
+    return g === g.root || this.clusters.includes(g);
+  }
+
   /** Anonymous subgraph with no own node/edge defaults and no graph attrs
-   *  differing from its parent → inlined into the parent. @see write.c:irrelevant_subgraph */
+   *  differing from its parent → inlined into the parent. Native compares every
+   *  graph attr over the root attr dict; the load-bearing ones are `bb` (set on
+   *  the parent, empty on the child) and `rank`. @see write.c:irrelevant_subgraph */
   private irrelevantSubgraph(g: Graph): boolean {
     if (!this.isAnonymous(g)) return false;
     if (this.clusters.includes(g)) return false;
     if (g.nodeDefaults.size > 0 || g.edgeDefaults.size > 0) return false;
     if (g.parent) {
+      if (this.hasBb(g) !== this.hasBb(g.parent)) return false;
       for (const [k, v] of g.attrs) {
         if (g.parent.attrs.get(k) !== v) return false;
       }
