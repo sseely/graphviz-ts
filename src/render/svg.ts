@@ -117,7 +117,7 @@ function overlapLabel(lp: TextlabelT, b: Box): boolean {
  * `set=false`) label on merged back-edges where C has none.
  * @see lib/common/emit.c:edge_in_box, lib/common/utils.c:overlap_label
  */
-function edgeHasDrawableContent(e: Edge, clip: Box): boolean {
+export function edgeHasDrawableContent(e: Edge, clip: Box): boolean {
   const i = e.info;
   return i.spl !== undefined
     || (i.label !== undefined && i.label.set && overlapLabel(i.label, clip))
