@@ -491,6 +491,42 @@ function escBackslash(s: string): string {
   return s.replace(/\\/g, '\\\\');
 }
 
+/** True if s[i..] starts an escape sequence agcanonStr keeps verbatim: a `\`
+ *  followed by one of E G H L N T l n r \ ". @see lib/cgraph/write.c:is_escape */
+function isEscapeSeq(s: string, i: number): boolean {
+  if (s[i] !== '\\') return false;
+  const n = s[i + 1];
+  return n === 'E' || n === 'G' || n === 'H' || n === 'L' || n === 'N' || n === 'T'
+    || n === 'l' || n === 'n' || n === 'r' || n === '\\' || n === '"';
+}
+
+/**
+ * Escape a value for a DOT attribute exactly as agwrite's agcanonStr does: a `"`
+ * becomes `\"` ONLY when it is not already part of an escape sequence, so an
+ * existing `\"` or `\\` in the value is passed through verbatim rather than
+ * double-escaped. For an already-backslash-doubled value (node/edge/graph labels,
+ * post put_escaping_backslashes) this is identical to a naive `"`→`\"` — every
+ * `"` follows a doubled `\\`, so none are ever part_of_escape. For raw cluster
+ * labels (agset, no put_escaping) it preserves the source `\"`/`\\` unchanged.
+ * @see lib/cgraph/write.c:_agstrcanon (135-167)
+ */
+function agcanonEscape(s: string): string {
+  let out = '';
+  let partOfEscape = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]!;
+    if (c === '"' && !partOfEscape) {
+      out += '\\';
+    } else if (!partOfEscape && isEscapeSeq(s, i)) {
+      partOfEscape = true;
+    } else {
+      partOfEscape = false;
+    }
+    out += c;
+  }
+  return out;
+}
+
 /** Trim a "%.3f" fixed string like C's agxbuf_trim_zeros (trailing 0s + dot). */
 function trimFixed3(v: number): string {
   let s = v.toFixed(3);
@@ -804,7 +840,11 @@ export class XdotRenderer implements RendererPlugin {
     if (draw || ldraw) {
       const set = this.drawsFor(sg);
       if (draw) set.draw = draw;
-      if (ldraw) set.ldraw = escBackslash(ldraw);
+      // Cluster labels are stored via plain agxset (xdot_end_cluster:286), NOT
+      // put_escaping_backslashes like node/edge/graph labels — so NO escBackslash.
+      // The source `\"`/`\\` in the label survive as-is through agcanonEscape on
+      // serialize (drawAttr). @see gvrender_core_dot.c:286
+      if (ldraw) set.ldraw = ldraw;
     }
     this.clusters.push(sg);
     this.resetState(EmitState.CDraw, EmitState.CLabel);
@@ -950,15 +990,16 @@ export class XdotRenderer implements RendererPlugin {
   // --- serialization (agwrite-at-end) ------------------------------------
 
   /**
-   * Emit `key="value"`, escaping `"` as `\"` in the value the way agwrite's
-   * agcanonStr does — a draw string carries label text that may contain a bare
-   * `"` (e.g. a `"c")` span), which would otherwise close the attribute early.
-   * The byte-length prefix stays on the UNescaped text (the parser un-escapes
-   * `\"`→`"` before parseXDot re-reads it), matching native exactly.
-   * @see lib/cgraph/write.c:_agstrcanon (escapes '"'; leaves other chars)
+   * Emit `key="value"`, escaping the value the way agwrite's agcanonStr does: a
+   * `"` becomes `\"` unless it is already part of an escape sequence (see
+   * agcanonEscape). A draw string carries label text that may contain a bare `"`
+   * (would close the attribute early) or a source `\"`/`\\` (must not be
+   * double-escaped). The byte-length prefix stays on the UNescaped text (the
+   * parser un-escapes before parseXDot re-reads it), matching native exactly.
+   * @see lib/cgraph/write.c:_agstrcanon (135-167)
    */
   private drawAttr(key: string, value: string): string {
-    return key + '="' + value.replace(/"/g, '\\"') + '"';
+    return key + '="' + agcanonEscape(value) + '"';
   }
 
   /** `llx,lly,urx,ury` from a graph's layout bb. */
