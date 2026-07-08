@@ -480,6 +480,21 @@ interface XdotDraws {
   tldraw?: string;
 }
 
+/** Mutable state threaded through the recursive agwrite serializer. */
+interface SerCtx {
+  out: string[];
+  /** subgraph → preorder number (write.c:subgdfs). */
+  preorder: Map<Graph, number>;
+  /** node → preorder of the subgraph it was last written in (node_last_written). */
+  nodeLW: Map<Node, number>;
+  /** edge → preorder of the subgraph it was last written in (edge_last_written). */
+  edgeLW: Map<Edge, number>;
+  /** objects whose attributes have already been emitted (AGATTRWF/attrs_written). */
+  attrsWritten: Set<Node | Edge>;
+  /** current indentation depth. */
+  level: number;
+}
+
 /**
  * Escape backslashes in a LABEL draw string — C's put_escaping_backslashes,
  * applied to the `_ldraw_`/`_hldraw_`/`_tldraw_` buffers (not the shape draws)
@@ -1009,26 +1024,160 @@ export class XdotRenderer implements RendererPlugin {
       gfmt5(bb.ur.x) + ',' + gfmt5(bb.ur.y);
   }
 
-  /** Serialize the whole laid-out graph to xdot DOT text. */
+  /**
+   * Serialize the whole laid-out graph to xdot DOT text — a faithful port of
+   * cgraph's agwrite (lib/cgraph/write.c). Recurses the subgraph tree
+   * (write_subgs/write_body), scoping each node/edge to the subgraph(s) it
+   * belongs to via preorder numbers (write_node_test/write_edge_test), and
+   * re-emits an object bare (no attrs) on any scope after the first
+   * (attrs_written). This reproduces native's per-subgraph edge re-declarations
+   * — e.g. an edge in a rank=same subgraph is drawn once, then re-declared bare.
+   * @see lib/cgraph/write.c:agwrite
+   */
   private serialize(g: Graph): string {
-    const out: string[] = [];
-    const strict = g.kind === 'strict-directed' || g.kind === 'strict-undirected' ? 'strict ' : '';
-    const kw = isDirected(g) ? 'digraph' : 'graph';
-    const nm = g.name.length > 0 ? xdotId(g.name) + ' ' : '';
-    out.push(strict + kw + ' ' + nm + '{\n');
-    out.push('\tgraph [' + this.graphAttrs(g) + '];\n');
-    out.push('\tnode [label="\\N"];\n');
-    for (const sg of this.clustersWithDraw(g)) {
-      out.push('\tsubgraph ' + xdotId(sg.name) + ' {\n');
-      out.push('\t\tgraph [' + this.clusterAttrs(sg) + '];\n');
-      out.push('\t}\n');
+    const ctx: SerCtx = {
+      out: [],
+      preorder: new Map<Graph, number>(),
+      nodeLW: new Map<Node, number>(),
+      edgeLW: new Map<Edge, number>(),
+      attrsWritten: new Set<Node | Edge>(),
+      level: 0,
+    };
+    this.subgdfs(g, 1, ctx.preorder);
+    this.writeHdr(g, true, ctx);
+    this.writeBody(g, ctx);
+    this.writeTrl(ctx);
+    return ctx.out.join('');
+  }
+
+  /** Preorder-number the subgraph tree. @see write.c:subgdfs */
+  private subgdfs(g: Graph, ix: number, preorder: Map<Graph, number>): number {
+    let ix0 = ix;
+    preorder.set(g, ix0);
+    for (const sub of g.subgraphs.values()) ix0 = this.subgdfs(sub, ix0, preorder);
+    return ix0 + 1;
+  }
+
+  /** A subgraph is anonymous when its name is empty or a `%N` local name. */
+  private isAnonymous(g: Graph): boolean {
+    return g.name.length === 0 || g.name.charCodeAt(0) === 0x25 /* % */;
+  }
+
+  /** Anonymous subgraph with no own node/edge defaults and no graph attrs
+   *  differing from its parent → inlined into the parent. @see write.c:irrelevant_subgraph */
+  private irrelevantSubgraph(g: Graph): boolean {
+    if (!this.isAnonymous(g)) return false;
+    if (this.clusters.includes(g)) return false;
+    if (g.nodeDefaults.size > 0 || g.edgeDefaults.size > 0) return false;
+    if (g.parent) {
+      for (const [k, v] of g.attrs) {
+        if (g.parent.attrs.get(k) !== v) return false;
+      }
+    } else if (g.attrs.size > 0) {
+      return false;
     }
-    for (const n of this.allNodes(g)) {
-      out.push('\t' + xdotId(n.name) + ' [' + this.nodeAttrs(n) + '];\n');
+    return true;
+  }
+
+  /** Non-draw graph attrs a subgraph emits (rank for rank=same; clusters use
+   *  clusterAttrs). Only comparator-relevant fields need be exact. */
+  private subgGraphAttrs(sg: Graph): string {
+    if (this.clusters.includes(sg)) return this.clusterAttrs(sg);
+    const rank = sg.attrs.get('rank');
+    return rank !== undefined ? 'rank=' + xdotId(rank) : '';
+  }
+
+  private indent(ctx: SerCtx): string {
+    return '\t'.repeat(ctx.level);
+  }
+
+  /** @see write.c:write_hdr */
+  private writeHdr(g: Graph, top: boolean, ctx: SerCtx): void {
+    if (top) {
+      const strict = g.kind === 'strict-directed' || g.kind === 'strict-undirected' ? 'strict ' : '';
+      const kw = isDirected(g) ? 'digraph' : 'graph';
+      const nm = g.name.length > 0 && !this.isAnonymous(g) ? xdotId(g.name) + ' ' : '';
+      ctx.out.push(strict + kw + ' ' + nm + '{\n');
+      ctx.level++;
+      ctx.out.push(this.indent(ctx) + 'graph [' + this.graphAttrs(g) + '];\n');
+      ctx.out.push(this.indent(ctx) + 'node [label="\\N"];\n');
+    } else {
+      const nm = this.isAnonymous(g) ? '' : 'subgraph ' + xdotId(g.name) + ' ';
+      ctx.out.push(this.indent(ctx) + nm + '{\n');
+      ctx.level++;
+      const ga = this.subgGraphAttrs(g);
+      if (ga) ctx.out.push(this.indent(ctx) + 'graph [' + ga + '];\n');
     }
-    for (const e of g.edges) out.push('\t' + this.edgeLine(e, g) + '\n');
-    out.push('}\n');
-    return out.join('');
+  }
+
+  /** @see write.c:write_trl */
+  private writeTrl(ctx: SerCtx): void {
+    ctx.level--;
+    ctx.out.push(this.indent(ctx) + '}\n');
+  }
+
+  /** @see write.c:write_subgs */
+  private writeSubgs(g: Graph, ctx: SerCtx): void {
+    for (const sub of g.subgraphs.values()) {
+      if (this.irrelevantSubgraph(sub)) {
+        this.writeSubgs(sub, ctx);
+      } else {
+        this.writeHdr(sub, false, ctx);
+        this.writeBody(sub, ctx);
+        this.writeTrl(ctx);
+      }
+    }
+  }
+
+  /** @see write.c:write_body — subgraphs, then this scope's nodes and edges. */
+  private writeBody(g: Graph, ctx: SerCtx): void {
+    this.writeSubgs(g, ctx);
+    for (const n of g.nodes.values()) {
+      if (this.writeNodeTest(g, n, ctx)) this.writeNode(g, n, ctx);
+      let prev: Node = n;
+      for (const e of n.outEdges(g)) {
+        if (prev !== e.head && this.writeNodeTest(g, e.head, ctx)) {
+          this.writeNode(g, e.head, ctx);
+          prev = e.head;
+        }
+        if (this.writeEdgeTest(g, e, ctx)) this.writeEdge(g, e, ctx);
+      }
+    }
+  }
+
+  /** @see write.c:write_node_test — every xdot node carries pos/size, so it is
+   *  never "default"; write it in the first scope that has not yet emitted it. */
+  private writeNodeTest(g: Graph, n: Node, ctx: SerCtx): boolean {
+    return (ctx.nodeLW.get(n) ?? 0) < ctx.preorder.get(g)!;
+  }
+
+  /** @see write.c:write_edge_test */
+  private writeEdgeTest(g: Graph, e: Edge, ctx: SerCtx): boolean {
+    return (ctx.edgeLW.get(e) ?? 0) < ctx.preorder.get(g)!;
+  }
+
+  /** @see write.c:write_node */
+  private writeNode(g: Graph, n: Node, ctx: SerCtx): void {
+    let s = this.indent(ctx) + xdotId(n.name);
+    if (!ctx.attrsWritten.has(n)) {
+      s += ' [' + this.nodeAttrs(n) + ']';
+      ctx.attrsWritten.add(n);
+    }
+    ctx.out.push(s + ';\n');
+    ctx.nodeLW.set(n, ctx.preorder.get(g)!);
+  }
+
+  /** @see write.c:write_edge — attrs only on first emission, bare thereafter. */
+  private writeEdge(g: Graph, e: Edge, ctx: SerCtx): void {
+    const conn = edgeConnector(isDirected(g));
+    let s = this.indent(ctx) + xdotId(e.tail.name) + ' ' + conn + ' ' + xdotId(e.head.name);
+    if (!ctx.attrsWritten.has(e)) {
+      const attrs = this.edgeAttrStr(e);
+      if (attrs) s += ' [' + attrs + ']';
+      ctx.attrsWritten.add(e);
+    }
+    ctx.out.push(s + ';\n');
+    ctx.edgeLW.set(e, ctx.preorder.get(g)!);
   }
 
   /** Root-graph attribute block: `_draw_`, `_ldraw_`, `bb`, `xdotversion`. */
@@ -1065,9 +1214,8 @@ export class XdotRenderer implements RendererPlugin {
     return s;
   }
 
-  /** One edge statement with its draw attributes and spline `pos`. */
-  private edgeLine(e: Edge, g: Graph): string {
-    const conn = edgeConnector(isDirected(g));
+  /** The `[...]` attribute body for an edge (draw ops + spline `pos`), or ''. */
+  private edgeAttrStr(e: Edge): string {
     const d = this.draws.get(e);
     const parts: string[] = [];
     if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
@@ -1078,28 +1226,7 @@ export class XdotRenderer implements RendererPlugin {
     if (d?.tldraw) parts.push(this.drawAttr('_tldraw_', d.tldraw));
     const pos = formatEdgePos(e);
     if (pos) parts.push(pos);
-    const attrs = parts.length > 0 ? ' [' + parts.join(' ') + ']' : '';
-    return xdotId(e.tail.name) + ' ' + conn + ' ' + xdotId(e.head.name) + attrs + ';';
-  }
-
-  /** Every node once, root scope then sub-scopes, dedup by name. */
-  private allNodes(g: Graph): Node[] {
-    const seen = new Set<string>();
-    const out: Node[] = [];
-    const visit = (gr: Graph): void => {
-      for (const [name, n] of gr.nodes) {
-        if (!seen.has(name)) { seen.add(name); out.push(n); }
-      }
-      for (const sg of gr.subgraphs.values()) visit(sg);
-    };
-    visit(g);
-    return out;
-  }
-
-  /** The clusters actually rendered (endCluster order) — the ones with a box or
-   *  label to serialize. @see clusters field. */
-  private clustersWithDraw(_g: Graph): Graph[] {
-    return this.clusters;
+    return parts.join(' ');
   }
 }
 
