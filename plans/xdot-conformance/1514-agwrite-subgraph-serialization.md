@@ -22,14 +22,47 @@ it bare there (the 3rd statement). The port's post-layout membership instead
 keeps line-5 in `%7` and never adds line-9 to `%3`, so a faithful agwrite emits
 2 drawn (line-5 in `%7`, line-9 in `%15`) and no bare re-declaration.
 
-This membership is a specific **cluster + rank=same interaction** in dotgen that
-does not map cleanly to a single function (`node_induce` runs only for clusters
-via `set_parent`; `flat_edge` does not change membership). Replicating it needs
-C instrumentation of the layout passes to see exactly when line-9 enters `%3`
-and line-5 leaves `%7`, and the change touches the cluster/rank layout path with
-real regression risk to the 752 conformant graphs — for a single **invisible**
-diff (a bare `Act_21 -> Act_22;` re-declaration with no draw ops, no geometry).
-Deferred pending that investment.
+## Update 2026-07-08 — Part B mechanism pinned by C instrumentation; blocked by layout ordering
+
+Instrumented native (traced `agsubedge`/`agdeledge`/`node_induce` + a full
+post-layout membership dump, `DUMP_MEMB`). The exact native mechanism:
+
+1. `node_induce(par, cluster_inner)` runs its second loop and calls
+   `agsubedge(cluster_inner, line-9, 1)` — inducing the flat edge declared in the
+   sibling `%15` into cluster_inner (both endpoints are cluster_inner members at
+   that moment).
+2. `installedge` (edge.c:166-186) walks **up** the ancestor chain adding the edge
+   to each parent until one already has it: cluster_inner → `%3` (add) → root
+   (already has it, stop). **This is how `%3` gains line-9.**
+3. *Later*, the rank=same collapse sets `ranktype`, and Act_21/Act_22 are pruned
+   from cluster_inner; `agdelnode`→`agapply` propagates the deletion **down** to
+   cluster_inner's subgraphs, **emptying `%7`**. `%3` keeps line-9 (an ancestor,
+   unaffected).
+
+Net: `%3` = both flat edges (drawn), `%7` empty, `%15` keeps line-9 (bare
+re-decl). Confirmed the port's post-layout membership differs in exactly two
+places: `%3` lacks line-9; `%7` still has Act_21/Act_22.
+
+**Two faithful port fixes were implemented and tested:**
+- **A** — `induceClusterEdges` propagate up (mirror `installedge`): geometry-safe
+  but a **no-op for 1514**, because the port's `nodeInduce` prunes the rank=same
+  nodes from the cluster *before* inducing, so cluster_inner has no Act_21/Act_22
+  to induce line-9 from. Native induces **before** `ranktype` is set (rank=same
+  collapse comes later); the port sets `ranktype`/prunes first. **This is a
+  layout-ORDERING difference.**
+- **B** — `agDeleteFromCluster` propagate down (mirror `agdelnode`/`agapply`):
+  correctly empties `%7`, but **breaks the flat-edge geometry** (1514 20 diffs,
+  splines shift ~25pt). The port's flat-edge routing reads the rank=same
+  subgraph's node membership; emptying it during layout changes the geometry.
+  Native empties it too, but the port's routing depends on it differently.
+
+**Conclusion: Part B is blocked by a layout-sequence entanglement.** Achieving
+native's membership requires reordering the port's cluster/rank layout to
+induce-before-rankset-collapse AND decoupling flat-edge routing from rank=same
+subgraph membership — a substantial, high-risk layout refactor. Both were
+demonstrated to either no-op or break geometry. Reverted; Part A (the faithful
+serializer) stands as the delivered improvement. The residual is a single
+**invisible** diff (bare `Act_21 -> Act_22;`, no draw ops, no geometry).
 
 ## Symptom
 
