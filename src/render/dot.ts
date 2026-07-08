@@ -29,6 +29,7 @@ import { parseGraphPad } from '../gvc/viewport.js';
 import { parseSegs } from '../common/multicolor.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
 import { IGNORED } from '../layout/dot/rank.js';
+import { edgeHasDrawableContent } from './svg.js';
 import type { Bezier } from '../model/geom.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { PenType, FillType } from '../gvc/context.js';
@@ -532,6 +533,10 @@ export class XdotRenderer implements RendererPlugin {
    *  (from `renderClusters`/`GD_clust`), which is NOT always reachable via
    *  `g.subgraphs`, so it is tracked here rather than re-walked. */
   private clusters: Graph[] = [];
+  /** edge_in_box gate for the current edge: emit_edge draws nothing (spline OR
+   *  label) for an edge whose content is outside job->clip. Mirrors svg.ts's
+   *  edgeGroupOpen. @see lib/common/emit.c:emit_edge (3039) */
+  private edgeDrawable = true;
 
   beginGraph(g: Graph, _job: RenderJob): void {
     this.bufs = makeXbufs();
@@ -618,8 +623,14 @@ export class XdotRenderer implements RendererPlugin {
    * @see lib/common/emit.c:emit_edge_graphics
    */
   beginEdge(e: Edge, job: RenderJob): void {
+    // emit_edge gates ALL edge drawing (spline + labels) on edge_in_box: an edge
+    // whose only content is a label placed outside job->clip draws nothing. The
+    // SVG renderer applies the same gate via edgeGroupOpen; the xdot renderer
+    // must too, else concentrate-merged edges (no spline, stale off-box label
+    // position) emit a spurious _ldraw_. @see lib/common/emit.c:emit_edge (3039)
+    this.edgeDrawable = edgeHasDrawableContent(e, job.bb);
     const spl = e.info.spl;
-    if (spl === undefined) return;
+    if (!this.edgeDrawable || spl === undefined) return;
     const edraw = this.bufs[EmitState.EDraw]!;
     const colorAttr = e.attrs.get('color') ?? '';
     const numc = (colorAttr.match(/:/g) ?? []).length;
@@ -748,6 +759,15 @@ export class XdotRenderer implements RendererPlugin {
   }
 
   endEdge(e: Edge, job: RenderJob): void {
+    // edge_in_box gate (set in beginEdge): a content-less / off-box edge draws
+    // nothing, matching native's emit_edge early return. @see emit.c:emit_edge
+    if (!this.edgeDrawable) {
+      this.resetState(EmitState.EDraw, EmitState.ELabel);
+      this.resetState(EmitState.HDraw, EmitState.TDraw);
+      this.penwidth[EmitState.HLabel] = 1;
+      this.penwidth[EmitState.TLabel] = 1;
+      return;
+    }
     // Emit the edge's labels (center/xlabel/head/tail) — the port draws these
     // in svg.ts endEdge, not the shared path, so the xdot renderer runs them
     // itself, mirroring emit_edge's emit_edge_label. gvrenderTextspan routes
