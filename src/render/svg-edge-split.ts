@@ -99,11 +99,14 @@ function emitCurve(list: Point[], color: string, job: RenderJob): void {
 
 interface ColorSeg { color: string | null; t: number; }
 
+/** One color segment of a split spline: the sub-curve control points + its color. */
+export interface ColoredSubCurve { color: string; points: Point[]; }
+
 /** Running state for one spline's length-split walk. */
 interface SplitState { left: number; first: boolean; bzR: Point[]; done: boolean; endColor: string; }
 
-/** Apply one color segment: split off its length share and emit the sub-curve. */
-function stepSegment(list: Point[], s: ColorSeg, st: SplitState, job: RenderJob): void {
+/** Apply one color segment: split off its length share, append the sub-curve. */
+function stepSegment(list: Point[], s: ColorSeg, st: SplitState, out: ColoredSubCurve[]): void {
   if (Math.abs(s.t) < EPS) return;
   const color = s.color ?? DEFAULT_COLOR;
   st.left -= s.t;
@@ -111,27 +114,43 @@ function stepSegment(list: Point[], s: ColorSeg, st: SplitState, job: RenderJob)
   if (st.first) {
     st.first = false;
     const sp = splitBSpline(list, s.t);
-    emitCurve(sp.left, color, job);
+    out.push({ color, points: sp.left });
     st.bzR = sp.right;
     if (Math.abs(st.left) < EPS) st.done = true;
   } else if (Math.abs(st.left) < EPS) {
-    emitCurve(st.bzR, color, job);
+    out.push({ color, points: st.bzR });
     st.done = true;
   } else {
     const sp = splitBSpline(st.bzR, s.t / (st.left + s.t));
-    emitCurve(sp.left, color, job);
+    out.push({ color, points: sp.left });
     st.bzR = sp.right;
   }
 }
 
-/** Draw one spline split along its length per the color segments; return endcolor. */
-function drawSplitSpline(list: Point[], segs: ColorSeg[], job: RenderJob): string {
+/**
+ * Split one routed spline along its arc length into colored sub-curves per the
+ * color segments (C's multicolor() walk), returning the sub-curves and the end
+ * color. Pure geometry — no emission — so both the SVG and xdot renderers can
+ * share it. @see lib/common/emit.c:1975 multicolor
+ */
+export function splitSplineByColor(
+  list: Point[],
+  segs: ColorSeg[],
+): { curves: ColoredSubCurve[]; endColor: string } {
   const st: SplitState = { left: 1, first: true, bzR: list, done: false, endColor: DEFAULT_COLOR };
+  const curves: ColoredSubCurve[] = [];
   for (const s of segs) {
-    stepSegment(list, s, st, job);
+    stepSegment(list, s, st, curves);
     if (st.done) break;
   }
-  return st.endColor;
+  return { curves, endColor: st.endColor };
+}
+
+/** Draw one spline split along its length per the color segments; return endcolor. */
+function drawSplitSpline(list: Point[], segs: ColorSeg[], job: RenderJob): string {
+  const { curves, endColor } = splitSplineByColor(list, segs);
+  for (const c of curves) emitCurve(c.points, c.color, job);
+  return endColor;
 }
 
 /**

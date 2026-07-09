@@ -27,6 +27,7 @@ import { orthoRoundedPolylines } from './svg-edge-ortho-radius.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
 import { parseGraphPad } from '../gvc/viewport.js';
 import { parseSegs } from '../common/multicolor.js';
+import { splitSplineByColor } from './svg-edge-split.js';
 import { buildOffsetLists, advanceTmpList } from '../common/edge-offset.js';
 import { IGNORED } from '../layout/dot/rank.js';
 import { edgeHasDrawableContent } from './svg.js';
@@ -689,9 +690,22 @@ export class XdotRenderer implements RendererPlugin {
     // Tapered edge (style=tapered) → the first bezier as a filled taper polygon
     // with transparent pen + edge-color fill; else plain `:` multicolor → N
     // parallel offset beziers; else the single-color spline. @see emit.c:2422/2443
-    if (edgeIsTapered(e)) {
+    // Split-multicolor arrow colors: tail = first color, head = end color
+    // (inverse of the parallel branch). Undefined for all other edge kinds.
+    // @see lib/common/emit.c:2400 (multicolor arrow rule)
+    let tailArrowColor: string | undefined;
+    let headArrowColor: string | undefined;
+    if (numsemi > 0 && numc > 0) {
+      // Split-along-length `;` multicolor (e.g. `red;0.5:blue`): one bezier per
+      // color segment, split along the spline's arc length. Takes precedence
+      // over tapered / `:` parallel, matching C's `if (numsemi && numc)` order.
+      // @see lib/common/emit.c:2389 multicolor
+      const c = this.emitSplitSpline(spl.list as (Bezier | undefined)[], colorAttr, edraw, job);
+      tailArrowColor = c.firstColor;
+      headArrowColor = c.endColor;
+    } else if (edgeIsTapered(e)) {
       this.emitTaperedSpline(e, spl.list[0], edraw, job);
-    } else if (numc > 0 && numsemi === 0) {
+    } else if (numc > 0) {
       this.emitParallelSpline(spl.list as (Bezier | undefined)[], colorAttr, numc, edraw, job);
     } else {
       // splines=ortho + radius/style=rounded → straight segments + corner arcs
@@ -721,8 +735,8 @@ export class XdotRenderer implements RendererPlugin {
     }
     // Arrows: y-up ops already computed for the shared render path. C sets the
     // default line style ("solid") + penwidth before each arrow primitive.
-    this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job, EmitState.TDraw);
-    this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job, EmitState.HDraw);
+    this.emitArrows(this.bufs[EmitState.TDraw]!, e.info.tailArrowOps, job, EmitState.TDraw, tailArrowColor);
+    this.emitArrows(this.bufs[EmitState.HDraw]!, e.info.headArrowOps, job, EmitState.HDraw, headArrowColor);
   }
 
   /**
@@ -739,6 +753,32 @@ export class XdotRenderer implements RendererPlugin {
     edraw.push(xdotPenColor(resolveRenderColor('transparent')));
     edraw.push(xdotFillColor(edgeColor));
     edraw.push(xdotPoints('P', verts));
+  }
+
+  /**
+   * Emit a split-along-length `;` multicolor edge spline: split each routed
+   * bezier along its arc length into one sub-curve per color segment, drawn
+   * under that segment's pen. Reuses the same split geometry
+   * (splitSplineByColor) as the SVG path. @see lib/common/emit.c:1975 multicolor
+   */
+  private emitSplitSpline(
+    bzList: (Bezier | undefined)[],
+    colorAttr: string,
+    edraw: string[],
+    job: RenderJob,
+  ): { firstColor: string; endColor: string } {
+    const segs = parseSegs(colorAttr).segs;
+    const firstColor = segs[0]?.color ?? 'black';
+    let endColor = firstColor;
+    for (const bz of bzList) {
+      if (bz === undefined || bz.size < 4) continue;
+      const split = splitSplineByColor(bz.list.slice(0, bz.size), segs);
+      endColor = split.endColor;
+      for (const c of split.curves) {
+        edraw.push(this.styleOp(job), xdotPenColor(resolveRenderColor(c.color)), xdotPoints('B', c.points));
+      }
+    }
+    return { firstColor, endColor };
   }
 
   /**
@@ -776,9 +816,12 @@ export class XdotRenderer implements RendererPlugin {
    *  once (tracked per HDRAW/TDRAW state). @see arrows.c:arrow_gen */
   private emitArrows(
     buf: string[], ops: ArrowDrawOp[] | undefined, job: RenderJob, state: EmitState,
+    penOverride?: string,
   ): void {
     if (ops === undefined) return;
-    const pen = job.obj?.penColor ?? { type: 'string', s: 'black' };
+    const pen = penOverride !== undefined
+      ? resolveRenderColor(penOverride)
+      : job.obj?.penColor ?? { type: 'string', s: 'black' };
     const pw = job.obj?.penWidth ?? 1;
     for (const op of ops) {
       if (Math.abs(pw - this.penwidth[state]!) >= 0.0005) {
