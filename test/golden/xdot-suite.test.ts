@@ -10,10 +10,11 @@
  * curated inputs the SVG suite covers — the SVG suite alone does not exercise
  * xdot emission.
  *
- * Scope: the `dot` engine only. The oracle plugin set (GVBINDIR=/tmp/ghl) that
- * generated the refs registers only the dot layout engine, and iterative engines
- * are non-deterministic at the 0.01 xdot tolerance. Refs are regenerated with
- * `npx tsx test/golden/gen-xdot-refs.ts`.
+ * Scope: the DETERMINISTIC engines (dot/circo/twopi/osage/patchwork). Iterative
+ * engines (neato/fdp/sfdp) are non-deterministic at the 0.01 xdot tolerance and
+ * are excluded. Refs are regenerated with `npx tsx test/golden/gen-xdot-refs.ts`
+ * (the oracle GVBINDIR must register the neato_layout plugin for the non-dot
+ * engines — see gen-xdot-refs.ts).
  *
  * @see test/golden/gen-xdot-refs.ts (ref generation)
  * @see test/golden/compare-xdot.ts  (semantic comparator, AD-1)
@@ -61,23 +62,25 @@ function buildDiffError(id: string, diffs: XdotDiff[]): string {
   );
 }
 
-const dotEntries = manifest.filter((e) => e.engine === 'dot');
+/** Deterministic layout engines — the only ones comparable at 0.01 tolerance. */
+const DETERMINISTIC_ENGINES = new Set(['dot', 'circo', 'twopi', 'osage', 'patchwork']);
+const detEntries = manifest.filter((e) => DETERMINISTIC_ENGINES.has(e.engine));
 
-test('every dot-engine manifest entry has an xdot reference', () => {
-  const missing = dotEntries
+test('every deterministic-engine manifest entry has an xdot reference', () => {
+  const missing = detEntries
     .filter((e) => !existsSync(join(REFS_DIR, `${e.id}.xdot`)))
     .map((e) => e.id);
   expect(missing).toEqual([]);
 });
 
-describe('golden-file xdot comparison (dot engine)', () => {
-  for (const entry of dotEntries) {
+describe('golden-file xdot comparison (deterministic engines)', () => {
+  for (const entry of detEntries) {
     const residual = XDOT_KNOWN_RESIDUALS[entry.id];
     const run = residual ? test.skip : test;
-    run(`dot / ${entry.id}${residual ? ' [xdot residual]' : ''}`, () => {
+    run(`${entry.engine} / ${entry.id}${residual ? ' [xdot residual]' : ''}`, () => {
       const src = readFileSync(join(ROOT, entry.input), 'utf8');
       const ref = readFileSync(join(REFS_DIR, `${entry.id}.xdot`), 'utf8');
-      const opts: RenderOptions = { engine: 'dot' };
+      const opts: RenderOptions = { engine: entry.engine };
       const portXdot = render(parse(src), 'xdot' as OutputFormat, opts) as string;
 
       const result = compareXdot(portXdot, ref);

@@ -8,10 +8,11 @@
 // generated the SVG refs (`~/git/graphviz/build/cmd/dot/dot`, GVBINDIR=/tmp/ghl,
 // estimate text metrics) so xdot geometry matches the port's estimate LUT.
 //
-// Scope: the `dot` engine only. The /tmp/ghl plugin set registers only the dot
-// layout engine; iterative engines (neato/fdp/sfdp) are non-deterministic at the
-// 0.01 xdot tolerance anyway. Other deterministic engines (circo/twopi/osage/
-// patchwork) would need extra oracle plugins — out of scope for now.
+// Scope: the DETERMINISTIC engines (dot/circo/twopi/osage/patchwork). Iterative
+// engines (neato/fdp/sfdp) are non-deterministic at the 0.01 xdot tolerance and
+// are excluded. The oracle GVBINDIR must register the neato_layout plugin (which
+// provides circo/twopi/osage/patchwork) alongside dot_layout — run `dot -c`
+// after symlinking libgvplugin_neato_layout.* into the plugin dir.
 //
 // Usage:  DOT_BIN=~/git/graphviz/build/cmd/dot/dot npx tsx test/golden/gen-xdot-refs.ts
 // Node-only dev/test infra — never imported by src/index.ts.
@@ -35,6 +36,9 @@ interface ManifestEntry {
   input: string;
 }
 
+/** Deterministic layout engines — the only ones comparable at 0.01 tolerance. */
+const DETERMINISTIC_ENGINES = new Set(['dot', 'circo', 'twopi', 'osage', 'patchwork']);
+
 const manifest = JSON.parse(
   readFileSync(join(__dirname, 'manifest.json'), 'utf8'),
 ) as ManifestEntry[];
@@ -45,10 +49,10 @@ let written = 0;
 const skipped: string[] = [];
 
 for (const e of manifest) {
-  if (e.engine !== 'dot') continue;
+  if (!DETERMINISTIC_ENGINES.has(e.engine)) continue;
   const inPath = join(ROOT, e.input);
   try {
-    const xdot = execFileSync(DOT_BIN, ['-Txdot', inPath], {
+    const xdot = execFileSync(DOT_BIN, ['-K', e.engine, '-Txdot', inPath], {
       env,
       encoding: 'utf8',
       timeout: 60_000,

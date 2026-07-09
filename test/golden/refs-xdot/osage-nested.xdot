@@ -1,0 +1,77 @@
+graph G {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 242.4 298 242.4 298 0 ",
+		bb="0,0,298,242.4",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph cluster_outer {
+		graph [_draw_="c 7 -#000000 p 4 0 40 0 242.4 240 242.4 240 40 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 120 225.8 0 31.88 5 -Outer ",
+			bb="0,40,240,242.4",
+			label=Outer,
+			lheight=0.23,
+			lp="120,230",
+			lwidth=0.44
+		];
+		subgraph cluster_mid {
+			graph [_draw_="c 7 -#000000 p 4 2 82 2 215.6 180 215.6 180 82 ",
+				_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 91 199 0 23.34 3 -Mid ",
+				bb="2,82,180,215.6",
+				label=Mid,
+				lheight=0.23,
+				lp="91,203.2",
+				lwidth=0.32
+			];
+			subgraph cluster_inner {
+				graph [_draw_="c 7 -#000000 p 4 4 124 4 188.8 120 188.8 120 124 ",
+					_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 62 172.2 0 29.54 5 -Inner ",
+					bb="4,124,120,188.8",
+					label=Inner,
+					lheight=0.23,
+					lp="62,176.4",
+					lwidth=0.41
+				];
+				A	[_draw_="c 7 -#000000 e 33 144 27 18 ",
+					_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 33 139.8 0 10.11 1 -A ",
+					height=0.5,
+					pos="33,144",
+					width=0.75];
+				B	[_draw_="c 7 -#000000 e 91 144 27 18 ",
+					_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 91 139.8 0 9.34 1 -B ",
+					height=0.5,
+					pos="91,144",
+					width=0.75];
+			}
+			C	[_draw_="c 7 -#000000 e 151 156 27 18 ",
+				_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 151 151.8 0 9.34 1 -C ",
+				height=0.5,
+				pos="151,156",
+				width=0.75];
+			D	[_draw_="c 7 -#000000 e 62 102 27 18 ",
+				_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 62 97.8 0 10.11 1 -D ",
+				height=0.5,
+				pos="62,102",
+				width=0.75];
+		}
+		E	[_draw_="c 7 -#000000 e 211 149 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 211 144.8 0 8.55 1 -E ",
+			height=0.5,
+			pos="211,149",
+			width=0.75];
+		F	[_draw_="c 7 -#000000 e 91 60 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 91 55.8 0 7.79 1 -F ",
+			height=0.5,
+			pos="91,60",
+			width=0.75];
+	}
+	G	[_draw_="c 7 -#000000 e 271 141 27 18 ",
+		_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 271 136.8 0 10.11 1 -G ",
+		height=0.5,
+		pos="271,141",
+		width=0.75];
+	H	[_draw_="c 7 -#000000 e 120 18 27 18 ",
+		_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 120 13.8 0 10.11 1 -H ",
+		height=0.5,
+		pos="120,18",
+		width=0.75];
+}

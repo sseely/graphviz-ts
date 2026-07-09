@@ -1,0 +1,42 @@
+graph G {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 104.8 161.33 104.8 161.33 0 ",
+		bb="0,0,161.33,104.8",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph cluster_0 {
+		graph [_draw_="c 7 -#000000 p 4 0 0 0 104.8 116 104.8 116 0 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 58 88.2 0 22.57 4 -Full ",
+			bb="0,0,116,104.8",
+			label=Full,
+			lheight=0.23,
+			lp="58,92.4",
+			lwidth=0.31
+		];
+		A	[_draw_="c 7 -#000000 e 29 60 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 29 55.8 0 10.11 1 -A ",
+			height=0.5,
+			pos="29,60",
+			width=0.75];
+		B	[_draw_="c 7 -#000000 e 87 60 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 87 55.8 0 9.34 1 -B ",
+			height=0.5,
+			pos="87,60",
+			width=0.75];
+		C	[_draw_="c 7 -#000000 e 29 20 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 29 15.8 0 9.34 1 -C ",
+			height=0.5,
+			pos="29,20",
+			width=0.75];
+	}
+	subgraph cluster_1 {
+		graph [_draw_="c 7 -#000000 p 4 120 30 120 75.6 161.33 75.6 161.33 30 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 140.67 59 0 37.33 5 -Empty ",
+			bb="120,30,161.33,75.6",
+			label=Empty,
+			lheight=0.23,
+			lp="140.67,63.2",
+			lwidth=0.52
+		];
+	}
+}
