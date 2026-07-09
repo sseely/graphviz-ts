@@ -14,6 +14,7 @@ import { layoutSingle, layoutMulti, buildPackInfo } from './pipeline.js';
 import { commonInitNodeEdge, layoutMeasurer } from '../../common/nodeinit.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
+import { doGraphLabel } from '../dot/graph-label.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
 export {
@@ -40,6 +41,11 @@ export function twopiLayout(g: Graph): void {
   if (measurer !== undefined) {
     for (const e of g.edges) initEdgeLabels(e, g, measurer);
   }
+  // C creates the ROOT graph label in the engine-neutral graph_init before any
+  // engine layout; gvPostprocess below then adds its height to the canvas and
+  // places it. Without this the root graph label never exists under twopi.
+  // @see lib/common/input.c:719 graph_init — do_graph_label(g)
+  doGraphLabel(g, measurer);
   twopiInitGraph(g);
   const rootAttr = g.attrs.get('root');
   const setRoot = rootAttr !== undefined;
