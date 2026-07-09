@@ -380,10 +380,35 @@ interface NodeDrawCtx {
   ringCtx: RingCtx;
 }
 
+/**
+ * C poly_gencode scales every vertex by xsize/ysize = (ND_lw+ND_rw) /
+ * INCH2PS(ND_width) etc. (shapes.c:3010-3011) — squashing the polygon back to
+ * the lw/rw/ht extent when an engine leaves ND_width/ND_height divergent
+ * (patchwork's finishNode lets poly_init clobber them while the tile survives
+ * in lw/rw/ht). On the normal path C's factor is EXACTLY 1.0 by construction
+ * (gv_nodesize derives lw/rw from INCH2PS(ND_width)); the port's compressed
+ * dataflow can land at 1±ULP where C is exactly 1, so identity-within-ULP is
+ * treated as C's exact-1 case and left unscaled.
+ */
+function vertexScale(n: Node, poly: PolygonT): PolygonT {
+  const info = n.info;
+  if (poly.vertices == null || info.width === undefined || info.height === undefined) {
+    return poly;
+  }
+  const xsize = (info.lw + info.rw) / (info.width * 72);
+  const ysize = info.ht / (info.height * 72);
+  if (Math.abs(xsize - 1) < 1e-9 && Math.abs(ysize - 1) < 1e-9) return poly;
+  return {
+    ...poly,
+    vertices: poly.vertices.map((v) => ({ x: v.x * xsize, y: v.y * ysize })),
+  };
+}
+
 /** Validate and resolve poly/style context for a node; returns null if skip. */
 function resolveNodeDrawCtx(job: RenderJob, n: Node): NodeDrawCtx | null {
-  const poly = n.info.shape_info as PolygonT | undefined;
-  if (poly === undefined || poly.vertices === undefined) return null;
+  const rawPoly = n.info.shape_info as PolygonT | undefined;
+  if (rawPoly === undefined || rawPoly.vertices === undefined) return null;
+  const poly = vertexScale(n, rawPoly);
   const coord = n.info.coord ?? { x: 0, y: 0 };
   const obj = job.obj;
   const filled = obj !== null && applyNodeStyle(obj, n, job);

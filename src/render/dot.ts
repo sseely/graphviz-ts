@@ -1261,8 +1261,12 @@ export class XdotRenderer implements RendererPlugin {
   /** Node attribute block: pos/width/height plus `_draw_`/`_ldraw_`. */
   private nodeAttrs(n: Node): string {
     const info = n.info;
+    // attach_attrs derives the emitted size from ND_lw+ND_rw / ND_ht, NOT
+    // ND_width/ND_height (output.c:307-308). They coincide except where an
+    // engine leaves them divergent — patchwork's finishNode lets poly_init
+    // clobber ND_width/height while the tile survives in lw/rw/ht.
     let s = 'pos="' + gfmt5(info.coord.x) + ',' + gfmt5(info.coord.y) + '"' +
-      ' width=' + gfmt5(info.width) + ' height=' + gfmt5(info.height);
+      ' width=' + gfmt5((info.lw + info.rw) / 72) + ' height=' + gfmt5(info.ht / 72);
     const d = this.draws.get(n);
     if (d?.draw) s += ' ' + this.drawAttr('_draw_', d.draw);
     if (d?.ldraw) s += ' ' + this.drawAttr('_ldraw_', d.ldraw);
