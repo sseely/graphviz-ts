@@ -398,13 +398,32 @@ class OrthoHelper {
   static buildEdges(
     g: Graph, nodeArr: Node[], orthoNodes: OrthoNodeList,
   ): TaggedOrthoEdge[] {
-    return g.edges
-      .filter((e) => e.tail !== e.head)
-      .map((e) => ({
-        tail: orthoNodes[nodeArr.indexOf(e.tail)],
-        head: orthoNodes[nodeArr.indexOf(e.head)],
-        _edge: e,
-      } as TaggedOrthoEdge));
+    // C orthoEdges collects es[] via agfstnode/agfstout (ortho.c:1220) — the
+    // COLLECTION order matters: edgeLen ties keep qsort's permutation of the
+    // input, which decides seg_list order and therefore parallel-segment
+    // track assignment. Under concentrate, one edge per UNORDERED endpoint
+    // pair is routed (ortho.c:1223-1233). Self-loops are NOT filtered — the
+    // maze routes them via addLoop.
+    const concentrate = g.root.info.concentrate ?? false;
+    const seen = new Set<string>();
+    const edges: TaggedOrthoEdge[] = [];
+    for (const n of nodesInSeq(g)) {
+      for (const e of n.outEdges(g)) {
+        if (concentrate) {
+          const ti = e.tail.id;
+          const hi = e.head.id;
+          const key = ti <= hi ? `${ti}|${hi}` : `${hi}|${ti}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+        }
+        edges.push({
+          tail: orthoNodes[nodeArr.indexOf(e.tail)],
+          head: orthoNodes[nodeArr.indexOf(e.head)],
+          _edge: e,
+        } as TaggedOrthoEdge);
+      }
+    }
+    return edges;
   }
 
   static buildGraph(g: Graph): OrthoGraph {
