@@ -23,6 +23,7 @@ import {
 } from '../pack/index.js';
 import { neatoInitNode } from '../neato/init.js';
 import { commonInitNode, layoutMeasurer, lateInt } from '../../common/nodeinit.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { nodeAttr } from '../../common/poly-init.js';
 import { splineEdges, EDGETYPE_NONE, EDGETYPE_LINE } from '../neato/splines.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
@@ -120,6 +121,12 @@ export function clusterInitGraph(g: Graph): void {
     n.info.lw = wPts / 2;
     n.info.rw = wPts / 2;
     n.info.ht = hPts;
+  }
+  // C cluster_init_graph loops edges calling common_init_edge, which creates the
+  // edge label (ED_label). The unset label is then positioned by addXLabels
+  // (run in gvPostprocess) at the edge midpoint. @see lib/osage/osageinit.c:57-64
+  if (measurer !== undefined) {
+    for (const e of g.edges) initEdgeLabels(e, g, measurer);
   }
 }
 
