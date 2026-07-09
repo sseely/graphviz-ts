@@ -15,7 +15,7 @@
  */
 
 import type { Graph } from '../../model/graph.js';
-import { setEdgeType } from '../dot/index.js';
+import { setEdgeTypeFromAttr } from '../dot/index.js';
 import { EDGETYPE_LINE } from '../neato/splines.js';
 import type { Node } from '../../model/node.js';
 
@@ -57,8 +57,10 @@ export interface CircoNData {
  * @see lib/circogen/circularinit.c:circular_init_node_edge
  */
 export function circoInitGraph(g: Graph): void {
-  // C: setEdgeType(g, EDGETYPE_LINE) — circo routes straight lines.
-  setEdgeType(g, EDGETYPE_LINE);
+  // C: setEdgeType(g, EDGETYPE_LINE) — the C setEdgeType FUNCTION reads the
+  // graph's `splines` attr first; EDGETYPE_LINE is only the fallback default.
+  // @see lib/common/utils.c:1423 setEdgeType
+  setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   g.info.ndim = 2;
   const nlist: Node[] = [];
   for (const n of g.nodes.values()) {

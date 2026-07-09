@@ -18,6 +18,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
 import type { SplineInfo } from '../../common/types.js';
+import { ShapeKind } from '../../common/types.js';
 import type { Poly, VConfig } from '../../pathplan/types.js';
 import {
   obsOpen, obsClose, obsPath,
@@ -80,6 +81,13 @@ export const SINFO: SplineInfo = {
   isOrtho: false,
 };
 
+/** @see lib/ortho/ortho.c:1269 — {swap_ends_p, spline_merge, true, true} */
+const ORTHO_SINFO: SplineInfo = {
+  ...SINFO,
+  ignoreSwap: true,
+  isOrtho: true,
+};
+
 // ---------------------------------------------------------------------------
 // ObstacleHelper — makeObstacle internals
 // Class wrapper resets lizard's brace counter at each class boundary.
@@ -120,6 +128,65 @@ export function makeObstacle(n: Node, sep: Point): Poly {
     n.info.coord.x, n.info.coord.y,
     n.info.lw + sep.x, n.info.rw + sep.x, hh,
   );
+  return { ps };
+}
+
+/** bb of a polygon's vertex array. @see lib/common/utils.c:polyBB */
+function polyVertexBB(vertices: Point[]): { ll: Point; ur: Point } {
+  const bb = { ll: { x: Infinity, y: Infinity }, ur: { x: -Infinity, y: -Infinity } };
+  for (const v of vertices) {
+    bb.ll.x = Math.min(bb.ll.x, v.x);
+    bb.ll.y = Math.min(bb.ll.y, v.y);
+    bb.ur.x = Math.max(bb.ur.x, v.x);
+    bb.ur.y = Math.max(bb.ur.y, v.y);
+  }
+  return bb;
+}
+
+/**
+ * The isOrtho branch of C makeObstacle for SH_POLY/SH_POINT nodes: the
+ * obstacle is the node's OUTLINE box (size + penwidth outline) with NO
+ * margin — margin stays {0,0}, so tightly packed layouts (osage's 4pt
+ * gutters) remain a legal arrangement and the maze routes them; the
+ * margined rectangle makes neighbours touch and forces the straight
+ * fallback. Records fall through to the margined box like C's SH_RECORD
+ * branch (no isOrtho special case there).
+ *
+ * @see lib/neatogen/neatosplines.c:makeObstacle (isOrtho, vs[0..3])
+ */
+export function makeOrthoObstacle(n: Node, sep: Point): Poly {
+  const info = n.info;
+  const shape = info.shape as { kind?: ShapeKind } | undefined;
+  const kind = shape?.kind;
+  if (kind !== undefined && kind !== ShapeKind.SH_POLY && kind !== ShapeKind.SH_POINT) {
+    return makeObstacle(n, sep); // SH_RECORD etc.: C applies pmargin as usual
+  }
+  const poly = info.shape_info as { option?: { fixedshape?: boolean }; vertices?: Point[] | null } | undefined;
+  let lw: number;
+  let rw: number;
+  let hh: number;
+  let cx = info.coord.x;
+  let cy = info.coord.y;
+  if (poly?.option?.fixedshape === true && poly.vertices != null) {
+    // C: b = polyBB(poly) — the actual shape, not the label-padded size.
+    const bb = polyVertexBB(poly.vertices);
+    lw = -bb.ll.x;
+    rw = bb.ur.x;
+    hh = (bb.ur.y - bb.ll.y) / 2;
+    cy += (bb.ur.y + bb.ll.y) / 2;
+    cx += 0;
+  } else {
+    const width = info.lw + info.rw;
+    const outlineW = (info.outline_width ?? 0) > 0 ? info.outline_width * 72 : width;
+    const outlineH = (info.outline_height ?? 0) > 0 ? info.outline_height * 72 : info.ht;
+    // C: outline_lw = ND_lw * outline_width / width, box spans ±outline_lw
+    // (SYMMETRIC — vs[0].x=-outline_lw, vs[1].x=+outline_lw).
+    const outlineLw = width > 0 ? (info.lw * outlineW) / width : outlineW / 2;
+    lw = outlineLw;
+    rw = outlineLw;
+    hh = outlineH / 2;
+  }
+  const ps = ObstacleHelper.vertices(cx, cy, lw, rw, hh);
   return { ps };
 }
 
@@ -349,7 +416,12 @@ class OrthoHelper {
   static installResult(oe: OrthoEdge, pts: OrthoPoint[]): void {
     const origEdge = (oe as TaggedOrthoEdge)._edge;
     if (!origEdge) return;
-    clipAndInstall(origEdge, origEdge.head, pts, pts.length, SINFO);
+    // C attachOrthoEdges installs with ortho.c's OWN sinfo {swap_ends_p,
+    // spline_merge, ignoreSwap=true, isOrtho=true} (ortho.c:1269) — its static
+    // callbacks return false, identical to neato's. isOrtho selects the
+    // segment-truncating ortho clip; the generic bezier clip reparameterizes
+    // the control points and diverges from native.
+    clipAndInstall(origEdge, origEdge.head, pts, pts.length, ORTHO_SINFO);
   }
 }
 
@@ -364,7 +436,11 @@ class RoutingHelper {
     for (const n of g.nodes.values()) {
       if (edgetype >= EDGETYPE_PLINE) {
         n.info.lim = idx++;
-        obstacles.push(makeObstacle(n, sep));
+        // C: makeObstacle(n, pmargin, edgetype == EDGETYPE_ORTHO) —
+        // ortho obstacles are the unmargined outline box.
+        obstacles.push(
+          edgetype === EDGETYPE_ORTHO ? makeOrthoObstacle(n, sep) : makeObstacle(n, sep),
+        );
       } else {
         n.info.lim = POLYID_NONE;
       }
@@ -421,9 +497,25 @@ class RoutingHelper {
     }
   }
 
-  static ortho(g: Graph): void {
+  static ortho(g: Graph, et: number): void {
     const og = OrthoHelper.buildGraph(g);
     orthoEdges(og, false, (_og, oe, pts) => OrthoHelper.installResult(oe, pts));
+    // C spline_edges_ drawing loop: vconfig is NEVER built for ortho
+    // (neatosplines.c:618 gates Pobsopen on edgetype != ORTHO), so an edge the
+    // maze failed to route — attachOrthoEdges skips empty routes — has no
+    // ED_spl, fails the `useEdges && ED_spl(e)` test, and falls through to
+    // makeSelfArcs / makeStraightEdge with neato's NORMAL sinfo (generic
+    // bezier clip). Self-loops are never maze-routed and always land here.
+    const stepx = g.info.nodesep ?? 18;
+    for (const n of nodesInSeq(g)) {
+      for (const e of n.outEdges(g)) {
+        if (e.info.spl != null) continue; // ortho routed it
+        if ((e.info.count ?? 0) === 0) continue; // only do representative
+        if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
+        const chain = RoutingHelper.chainList(e);
+        makeStraightEdges(g, chain, chain.length, et, SINFO);
+      }
+    }
   }
 
   static routed(g: Graph, obstacles: Poly[], edgetype: number): void {
@@ -474,7 +566,7 @@ class LegalHelper {
 export function splineEdgesImpl(g: Graph, sep: Point, edgetype: number): void {
   const obstacles = RoutingHelper.buildObstacles(g, sep, edgetype);
   const legal = LegalHelper.check(obstacles);
-  if (legal && edgetype === EDGETYPE_ORTHO) { RoutingHelper.ortho(g); return; }
+  if (legal && edgetype === EDGETYPE_ORTHO) { RoutingHelper.ortho(g, edgetype); return; }
   if (obstacles.length > 0 && legal) { RoutingHelper.routed(g, obstacles, edgetype); return; }
   RoutingHelper.straight(g, edgetype);
 }
