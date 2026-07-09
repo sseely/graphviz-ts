@@ -36,8 +36,6 @@ interface ManifestEntry {
   id: string;
   engine: string;
   input: string;
-  /** A documented xdot-emission residual not yet fixed; the test is skipped. */
-  xdotKnownResidual?: string;
 }
 
 const manifest = JSON.parse(
