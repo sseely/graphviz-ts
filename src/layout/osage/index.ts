@@ -24,7 +24,8 @@ import {
 import { neatoInitNode } from '../neato/init.js';
 import { commonInitNode, layoutMeasurer, lateInt } from '../../common/nodeinit.js';
 import { nodeAttr } from '../../common/poly-init.js';
-import { splineEdges, EDGETYPE_NONE } from '../neato/splines.js';
+import { splineEdges, EDGETYPE_NONE, EDGETYPE_LINE } from '../neato/splines.js';
+import { setEdgeTypeFromAttr } from '../dot/index.js';
 // Engine-neutral C common functions, currently parked under layout/dot:
 import { doGraphLabel } from '../dot/graph-label.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
@@ -91,6 +92,12 @@ export function isCluster(g: Graph): boolean {
  * @see lib/osage/osageinit.c:cluster_init_graph
  */
 export function clusterInitGraph(g: Graph): void {
+  // C: setEdgeType(g, EDGETYPE_LINE) — osage defaults edges to straight lines,
+  // but honors an explicit `splines` attr (ortho/curved/none). Without this the
+  // edge-type nibble stays EDGETYPE_NONE and osageLayout skips splineEdges
+  // entirely, emitting nodes but no edges. @see lib/osage/osageinit.c:51,
+  // lib/common/utils.c:setEdgeType (reads agget(g,"splines"))
+  setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   g.info.ndim = 2;
   const measurer = layoutMeasurer(g);
   for (const n of g.nodes.values()) {
