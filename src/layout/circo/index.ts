@@ -24,7 +24,6 @@ import { circoLayout } from './circular.js';
 import { commonInitNodeEdge, layoutMeasurer } from '../../common/nodeinit.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { splineEdgesShifted } from '../neato/splines.js';
-import { computeSubgraphBB } from '../pack/index.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { doGraphLabel } from '../dot/graph-label.js';
 import { gvPostprocess } from '../../common/postproc.js';
@@ -59,9 +58,12 @@ export function circoLayoutFull(g: Graph): void {
   // ORDERING: alg freed HERE, before spline routing (matches C source).
   freeNData(g);
   // C: spline_edges(g) shifts pos to the origin, syncs coord (x72), and routes.
+  // splineEdgesShifted seeds a fresh node-extent bb BEFORE routing and
+  // clipAndInstall then EXPANDS it per installed bezier (C compute_bb +
+  // update_bb_bz) — a compass port can poke outside the node box, and the
+  // gvPostprocess translate must see that overhang. Do NOT recompute the bb
+  // from nodes here: it clobbers the spline expansion.
   splineEdgesShifted(g);
-  // Refresh the root bb (packing may have left a stale pre-shift box).
-  g.info.bb = computeSubgraphBB(g, 0);
   // C: dotneato_postprocess(g) — cluster labels, then addXLabels (edge labels),
   // root graph label space + translate. @see circularinit.c:233 circo_layout
   placeGraphLabel(g);

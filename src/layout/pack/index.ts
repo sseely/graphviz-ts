@@ -12,6 +12,8 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Box, Point } from '../../model/geom.js';
+import type { ArrowDrawOp } from '../../common/arrows-types.js';
+import { mapArrowOpPoints } from '../../common/arrows-shapes-util.js';
 import { arrayRects } from './array-pack.js';
 import { polyRects } from './poly-pack.js';
 import { polyGraphs } from './poly-place.js';
@@ -197,6 +199,13 @@ export function shiftEdgePoints(e: Edge, dx: number, dy: number): void {
     if (bz.sflag) bz.sp = { x: bz.sp.x + dx, y: bz.sp.y + dy };
     if (bz.eflag) bz.ep = { x: bz.ep.x + dx, y: bz.ep.y + dy };
   }
+  // The port pre-computes arrowhead draw-ops during routing (C regenerates
+  // them at render time from the shifted ep/sp) — every rigid shift of the
+  // spline must carry them along or arrows lag by the shift delta.
+  const shiftOps = (ops: ArrowDrawOp[] | undefined): ArrowDrawOp[] | undefined =>
+    ops?.map((op) => mapArrowOpPoints(op, (p) => ({ x: p.x + dx, y: p.y + dy })));
+  e.info.headArrowOps = shiftOps(e.info.headArrowOps);
+  e.info.tailArrowOps = shiftOps(e.info.tailArrowOps);
 }
 
 export function shiftOneGraph(g: Graph, dx: number, dy: number): void {

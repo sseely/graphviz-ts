@@ -315,50 +315,6 @@ export function copyClusterInfo(comps: Graph[], root: Graph, origOf: Map<Graph, 
 // Pre-computed-arrowhead shift compensation (port-only)
 // ---------------------------------------------------------------------------
 
-/** First real node's coord in g, or null if g has no positioned node. */
-function witnessCoord(g: Graph): Point | null {
-  for (const n of g.nodes.values()) {
-    if (n.info.coord !== undefined) return n.info.coord;
-  }
-  return null;
-}
-
-/** Translate one edge's pre-computed head/tail arrow draw-ops by (dx, dy). */
-function shiftEdgeArrowOps(ops: ArrowDrawOp[] | undefined, dx: number, dy: number): ArrowDrawOp[] | undefined {
-  if (!ops) return ops;
-  return ops.map((op) => mapArrowOpPoints(op, (p) => ({ x: p.x + dx, y: p.y + dy })));
-}
-
-/**
- * Translate every component's pre-computed arrow draw-ops by the rigid packing
- * delta the pack shift applied to that component.
- *
- * The port pre-computes arrowhead draw-ops during routing (a deviation: C
- * regenerates them at render time from the final spline). The shared pack
- * module's `shiftEdge` shifts the spline points (which C also shifts) but not
- * these port-only ops, so after packing the arrowheads lag the splines by the
- * pack delta and `gvPostprocess` then maps them to the wrong place. twopi is
- * immune because it routes splines AFTER packing; the dot pack branch routes
- * before. Rather than touch the pack module (ADR-3), compensate here: each
- * component is shifted rigidly, so a single witness node gives the delta.
- *
- * @see lib/pack/pack.c:shiftEdge (shifts ED_spl only)
- * @see lib/common/postproc.c:map_edge (C regenerates arrows at render time)
- */
-function shiftComponentArrowOps(comps: Graph[], before: (Point | null)[]): void {
-  comps.forEach((sg, i) => {
-    const b = before[i];
-    const a = witnessCoord(sg);
-    if (!b || !a) return;
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    if (dx === 0 && dy === 0) return;
-    for (const e of sg.edges) {
-      e.info.headArrowOps = shiftEdgeArrowOps(e.info.headArrowOps, dx, dy);
-      e.info.tailArrowOps = shiftEdgeArrowOps(e.info.tailArrowOps, dx, dy);
-    }
-  });
-}
 
 // ---------------------------------------------------------------------------
 // Cluster-inclusive root bbox (so gvPostprocess translates cluster boxes in)
@@ -457,16 +413,13 @@ export function layoutAndPack(
   dotGraphInit(root);
   // C: for each component { initSubg(sg, g); dotLayout(sg); }
   for (const sg of comps) dotLayoutComponent(sg, root);
-  // Snapshot a witness coord per component so the rigid pack delta can be
-  // recovered to fix the port's pre-computed arrow ops (see below).
-  const before = comps.map(witnessCoord);
   // C: attachPos(g) [points: unneeded]; packSubgraphs(ncc, ccs, g, &pinfo);
   //    resetCoord(g) [points: unneeded]. Cluster-inclusive bboxes so packed
   //    clusters get native spacing (the pack module's bbox is node-only).
+  // NOTE: the shared pack shiftEdgePoints now carries the pre-computed arrow
+  // draw-ops along with the spline, so no separate compensation is needed
+  // (shiftComponentArrowOps would double-shift).
   packComponentsClusterAware(root, comps, pinfo);
-  // Port-only: shift pre-computed arrow draw-ops by the same pack delta the
-  // pack module applied to the splines (it does not know about these ops).
-  shiftComponentArrowOps(comps, before);
   // C: copyClusterInfo(ncc, ccs, g) — carry each component's cluster tree back
   // to the root (no-op when cluster-free; root.info.clust drives cluster emit).
   copyClusterInfo(comps, root, origOf);
