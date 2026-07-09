@@ -38,6 +38,7 @@ import { neatoSetAspect } from './init.js';
 import { nodesInSeq } from '../dot/decomp.js';
 import { mapbool } from '../dot/rank.js';
 import { makeStraightEdges } from '../dot/straight-edges.js';
+import { resolvePort } from '../../common/splines-path-shared.js';
 
 // ---------------------------------------------------------------------------
 // Re-export EDGETYPE constants for consumers of this module
@@ -611,6 +612,15 @@ export function splineEdges(g: Graph): void {
   // C graph_init caches Concentrate for every engine (input.c:708-709); the
   // routing gates (spline_edges_, makeSelfArcs, makeStraightEdges) read it.
   g.root.info.concentrate = mapbool(g.root.attrs.get('concentrate'));
+  // C splineEdges wrapper: resolve dynamic ports first (neatosplines.c:748) —
+  // a record/compass port stays .dyna until fixed against the OTHER endpoint;
+  // equivEdge then keys on the resolved port points.
+  for (const n of nodesInSeq(g)) {
+    for (const e of n.outEdges(g)) {
+      if (e.info.tail_port.dyna) e.info.tail_port = resolvePort(e.tail, e.head, e.info.tail_port);
+      if (e.info.head_port.dyna) e.info.head_port = resolvePort(e.head, e.tail, e.info.head_port);
+    }
+  }
   // C splineEdges wrapper: coalesce equivalent edges before routing.
   coalesceEdges(g);
   if (edgetype === EDGETYPE_LINE) { RoutingHelper.straight(g, edgetype); return; }
