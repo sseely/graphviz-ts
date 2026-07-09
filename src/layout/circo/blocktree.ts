@@ -9,6 +9,7 @@
  */
 
 import type { DerivedNode, DerivedEdge, DerivedGraph, SubGraph } from './blocks.js';
+import { spanIncident } from './blockpath.js';
 import {
   type Block,
   type CircState,
@@ -27,6 +28,10 @@ export interface DfsCtx {
   state: CircState;
   allEdges: DerivedEdge[];
   stk: DerivedEdge[];
+  /** Derived-node creation order — agfstedge sort key. */
+  ord: Map<DerivedNode, number>;
+  /** Derived-edge creation order — agfstedge tie key. */
+  seq: Map<DerivedEdge, number>;
 }
 
 // ---------------------------------------------------------------------------
@@ -138,7 +143,11 @@ export function dfsVisit(ctx: DfsCtx, u: DerivedNode, isRoot: boolean): void {
   u.cdata.bc.val = ctx.state.orderCount;
   u.cdata.bc.lowVal = ctx.state.orderCount;
   ctx.state.orderCount++;
-  const uEdges = ctx.allEdges.filter((e) => e.tail === u || e.head === u);
+  // C dfs iterates agfstedge(g, u) — u's incident edges in (other-endpoint,
+  // seq) order, not the flat edge list. The DISCOVERY order decides the
+  // block-tree child order, which assigns each satellite block its angular
+  // slot around the cut vertex. @see lib/circogen/blocktree.c:62
+  const uEdges = spanIncident(u, ctx.allEdges, ctx.ord, ctx.seq);
   for (const e of uEdges) dfsVisitEdge(ctx, u, e, isRoot);
   if (isRoot && u.cdata.block === null) {
     const block = makeBlock(ctx.g.parent, ctx.state);
@@ -156,7 +165,11 @@ export function findBlocks(
   if (state.rootname) root = g.parent.nodes.get(state.rootname) ?? null;
   if (!root && g.nodes.length > 0) root = g.nodes[0]!;
   if (!root) return;
-  dfsVisit({ g, state, allEdges, stk: [] }, root, true);
+  const ord = new Map<DerivedNode, number>();
+  g.nodes.forEach((dn, i) => ord.set(dn, i));
+  const seq = new Map<DerivedEdge, number>();
+  allEdges.forEach((e, i) => seq.set(e, i));
+  dfsVisit({ g, state, allEdges, stk: [], ord, seq }, root, true);
 }
 
 // ---------------------------------------------------------------------------

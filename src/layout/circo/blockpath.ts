@@ -153,7 +153,7 @@ export function reduceEdgeCrossings(
  * order, seq). `ord`/`seq` maps carry the derived root's node and edge
  * creation orders. @see lib/cgraph/edge.c:agfstedge
  */
-function spanIncident(
+export function spanIncident(
   dn: DerivedNode, edges: DerivedEdge[],
   ord: Map<DerivedNode, number>, seq: Map<DerivedEdge, number>,
 ): DerivedEdge[] {
