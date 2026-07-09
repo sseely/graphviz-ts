@@ -29,6 +29,7 @@ import { setEdgeTypeFromAttr } from '../dot/index.js';
 // Engine-neutral C common functions, currently parked under layout/dot:
 import { doGraphLabel } from '../dot/graph-label.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
+import { gvPostprocess } from '../../common/postproc.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -100,6 +101,12 @@ export function clusterInitGraph(g: Graph): void {
   setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   g.info.ndim = 2;
   const measurer = layoutMeasurer(g);
+  // C sets the ROOT graph's label + border in the common graph_init before
+  // osage_layout; the layout() label block then widens rootbb by the label and
+  // adds its height via GD_border[TOP/BOTTOM]. Without this the root graph label
+  // is never created, so the canvas height omits the label. Clusters get their
+  // label via mkClusters/doGraphLabel; the root needs it here. @see osageinit.c:168
+  doGraphLabel(g, measurer);
   for (const n of g.nodes.values()) {
     neatoInitNode(n, 2);
     if (measurer !== undefined) {
@@ -446,8 +453,13 @@ export function osageLayout(g: Graph): void {
   osageReposition(g, 0);
   const et = g.info.flags & 0xf;
   if (et !== EDGETYPE_NONE) splineEdges(g);
-  // C: dotneato_postprocess -> place_graph_label positions cluster labels.
+  // C: dotneato_postprocess(g) == gv_postprocess(g, 1): position cluster labels,
+  // then add space for the root graph label, translate the drawing to origin,
+  // and place the root label. Osage previously ran only the cluster-label half,
+  // dropping the root graph label height (and any xlabels).
+  // @see lib/osage/osageinit.c:336, lib/common/postproc.c:gv_postprocess
   placeGraphLabel(g);
+  gvPostprocess(g);
 }
 
 // ---------------------------------------------------------------------------
