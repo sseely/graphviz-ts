@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-08T11:54:13.466Z",
+  "generatedAt": "2026-07-08T23:57:09.414Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 759,
   "counts": {
-    "conformant": 752,
-    "diverged": 1,
+    "conformant": 753,
+    "diverged": 0,
     "accepted": 3,
     "port-error": 0,
     "oracle-error": 0,
@@ -3479,9 +3479,7 @@
       "id": "graphs-pgram",
       "path": "graphs/pgram.gv",
       "size": 2614,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "[parse]/oracle"
+      "verdict": "conformant"
     },
     {
       "id": "linux.i386-dfa",
