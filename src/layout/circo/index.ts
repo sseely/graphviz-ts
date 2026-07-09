@@ -26,6 +26,7 @@ import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { splineEdgesShifted } from '../neato/splines.js';
 import { computeSubgraphBB } from '../pack/index.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
+import { doGraphLabel } from '../dot/graph-label.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
 // Re-export key functions for consumers that need them individually.
@@ -48,6 +49,11 @@ export function circoLayoutFull(g: Graph): void {
   if (measurer !== undefined) {
     for (const e of g.edges) initEdgeLabels(e, g, measurer);
   }
+  // C creates the ROOT graph label in the engine-neutral graph_init before any
+  // engine layout; gvPostprocess below then adds its height to the canvas and
+  // places it. Without this the root graph label never exists under circo.
+  // @see lib/common/input.c:719 graph_init — do_graph_label(g)
+  doGraphLabel(g, measurer);
   circoInitGraph(g);
   circoLayout(g);
   // ORDERING: alg freed HERE, before spline routing (matches C source).
