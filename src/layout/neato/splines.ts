@@ -34,6 +34,9 @@ import {
 } from '../dot/splines.js';
 import { shiftGraphBBs, computeSubgraphBB } from '../pack/index.js';
 import { neatoSetAspect } from './init.js';
+import { nodesInSeq } from '../dot/decomp.js';
+import { mapbool } from '../dot/rank.js';
+import { makeStraightEdges } from '../dot/straight-edges.js';
 
 // ---------------------------------------------------------------------------
 // Re-export EDGETYPE constants for consumers of this module
@@ -163,17 +166,83 @@ export function makeStraightEdge(e: Edge, sinfo: SplineInfo): void {
 
 /**
  * Route self-loop edges via makeSelfEdge, handling single and chained cases.
+ * Under concentrate only the representative is routed (C: cnt==1||Concentrate).
  *
  * @see lib/neatogen/neatosplines.c:makeSelfArcs
  */
 export function makeSelfArcs(e: Edge, stepx: number): void {
   const cnt = e.info.count ?? 1;
-  if (cnt <= 1) {
+  const concentrate = e.tail.root.info.concentrate ?? false;
+  if (cnt <= 1 || concentrate) {
     makeSelfEdge([e], 1, stepx, stepx, SINFO);
     return;
   }
   const edges = EdgeHelper.selfChain(e, cnt);
   makeSelfEdge(edges, edges.length, stepx, stepx, SINFO);
+}
+
+// ---------------------------------------------------------------------------
+// Equivalent-edge coalescing — the C splineEdges wrapper
+// ---------------------------------------------------------------------------
+
+/**
+ * Equivalence key mirroring equivEdge (neatosplines.c:equivEdge): edges with
+ * the same endpoint pair — UNORDERED, so A->B and B->A coalesce — and the same
+ * resolved port points belong to one class. C orders (n1,n2) by node pointer
+ * (allocation = creation order); node id is the port's stand-in. Self-loops
+ * normalize the two port points by x then y.
+ */
+function equivKey(e: Edge): string {
+  const tp = e.info.tail_port?.p ?? { x: 0, y: 0 };
+  const hp = e.info.head_port?.p ?? { x: 0, y: 0 };
+  const t = e.tail.id;
+  const h = e.head.id;
+  let n1: number, n2: number, p1: Point, p2: Point;
+  if (t < h) {
+    n1 = t; p1 = tp; n2 = h; p2 = hp;
+  } else if (t > h) {
+    n2 = t; p2 = tp; n1 = h; p1 = hp;
+  } else {
+    if (tp.x < hp.x) { p1 = tp; p2 = hp; }
+    else if (tp.x > hp.x) { p1 = hp; p2 = tp; }
+    else if (tp.y < hp.y) { p1 = tp; p2 = hp; }
+    else if (tp.y > hp.y) { p1 = hp; p2 = tp; }
+    else { p1 = p2 = tp; }
+    n1 = n2 = t;
+  }
+  return `${n1}|${p1.x}|${p1.y}|${n2}|${p2.x}|${p2.y}`;
+}
+
+/**
+ * Coalesce equivalent edges, mirroring the C splineEdges wrapper
+ * (neatosplines.c:753-773): the FIRST edge of a class (agfstnode/agfstout
+ * order) becomes the leader with ED_count = 1 (set by newitem on dict
+ * insert); each later member increments the leader's count, gets count 0,
+ * and is prepended to the leader's ED_to_virt chain. The routing loop then
+ * skips count==0 members and routes the leader's whole chain (or only the
+ * representative under concentrate).
+ *
+ * @see lib/neatogen/neatosplines.c:splineEdges (find equivalent edges)
+ * @see lib/neatogen/neatosplines.c:newitem (ED_count(leader) = 1)
+ */
+export function coalesceEdges(g: Graph): void {
+  const map = new Map<string, Edge>();
+  for (const n of nodesInSeq(g)) {
+    for (const e of n.outEdges(g)) {
+      const key = equivKey(e);
+      const leader = map.get(key);
+      if (leader === undefined) {
+        map.set(key, e);
+        e.info.count = 1;
+        e.info.to_virt = undefined;
+      } else {
+        leader.info.count = (leader.info.count ?? 1) + 1;
+        e.info.count = 0;
+        e.info.to_virt = leader.info.to_virt;
+        leader.info.to_virt = e;
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -307,11 +376,15 @@ class RoutingHelper {
     g: Graph, obstacles: Poly[], vconfig: VisConfig, edgetype: number,
   ): void {
     const stepx = g.info.nodesep ?? 18;
-    for (const n of g.nodes.values()) {
+    const concentrate = g.root.info.concentrate ?? false;
+    for (const n of nodesInSeq(g)) {
       for (const e of n.outEdges(g)) {
+        // C spline_edges_: ED_count==0 -> continue (only do representative).
+        if ((e.info.count ?? 0) === 0) continue;
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
         let cur: Edge | undefined = e;
-        const cnt = e.info.count ?? 1;
+        let cnt = e.info.count ?? 1;
+        if (concentrate) cnt = 1; // only do representative
         for (let i = 0; i < cnt && cur !== undefined; i++) {
           makeSplineEdge(cur, obstacles, vconfig, edgetype);
           cur = cur.info.to_virt;
@@ -320,12 +393,30 @@ class RoutingHelper {
     }
   }
 
-  static straight(g: Graph): void {
+  /** Full ED_to_virt chain from a leader (C makeStraightEdge's walk). */
+  static chainList(e: Edge): Edge[] {
+    const list: Edge[] = [e];
+    let e0: Edge = e;
+    while (e0.info.to_virt !== undefined && e0.info.to_virt !== e0) {
+      e0 = e0.info.to_virt;
+      list.push(e0);
+    }
+    return list;
+  }
+
+  static straight(g: Graph, et: number): void {
     const stepx = g.info.nodesep ?? 18;
-    for (const n of g.nodes.values()) {
+    for (const n of nodesInSeq(g)) {
       for (const e of n.outEdges(g)) {
+        // C spline_edges_: ED_count==0 -> continue (only do representative).
+        if ((e.info.count ?? 0) === 0) continue;
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
-        makeStraightEdge(e, SINFO);
+        // C makeStraightEdge routes the WHOLE equivalence chain at once —
+        // makeStraightEdges fans parallels out perpendicular to the segment
+        // and handles the concentrate representative-only case internally.
+        // @see lib/common/routespl.c:956 makeStraightEdge
+        const chain = RoutingHelper.chainList(e);
+        makeStraightEdges(g, chain, chain.length, et, SINFO);
       }
     }
   }
@@ -385,7 +476,7 @@ export function splineEdgesImpl(g: Graph, sep: Point, edgetype: number): void {
   const legal = LegalHelper.check(obstacles);
   if (legal && edgetype === EDGETYPE_ORTHO) { RoutingHelper.ortho(g); return; }
   if (obstacles.length > 0 && legal) { RoutingHelper.routed(g, obstacles, edgetype); return; }
-  RoutingHelper.straight(g);
+  RoutingHelper.straight(g, edgetype);
 }
 
 // ---------------------------------------------------------------------------
@@ -406,7 +497,12 @@ export function splineEdgesImpl(g: Graph, sep: Point, edgetype: number): void {
 export function splineEdges(g: Graph): void {
   const edgetype = g.info.flags & 0xf;
   if (edgetype === EDGETYPE_NONE) return;
-  if (edgetype === EDGETYPE_LINE) { RoutingHelper.straight(g); return; }
+  // C graph_init caches Concentrate for every engine (input.c:708-709); the
+  // routing gates (spline_edges_, makeSelfArcs, makeStraightEdges) read it.
+  g.root.info.concentrate = mapbool(g.root.attrs.get('concentrate'));
+  // C splineEdges wrapper: coalesce equivalent edges before routing.
+  coalesceEdges(g);
+  if (edgetype === EDGETYPE_LINE) { RoutingHelper.straight(g, edgetype); return; }
   splineEdgesImpl(g, { x: 4, y: 4 }, edgetype);
 }
 
