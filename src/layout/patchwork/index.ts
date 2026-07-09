@@ -17,9 +17,15 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { LayoutEngine } from '../../gvc/context.js';
-import { ps2inch, shiftOneGraph } from '../pack/index.js';
+import { ps2inch } from '../pack/index.js';
 import type { Rectangle } from './tree-map.js';
 import { treeMap } from './tree-map.js';
+import { gvQsort } from '../../util/bsd-qsort.js';
+import { layoutMeasurer, commonInitNode } from '../../common/nodeinit.js';
+import { nodeAttr } from '../../common/poly-init.js';
+import { doGraphLabel } from '../dot/graph-label.js';
+import { placeGraphLabel } from '../dot/position-bbox.js';
+import { gvPostprocess } from '../../common/postproc.js';
 
 const DFLT_SZ = 1.0;
 const SCALE = 1000.0;
@@ -188,7 +194,12 @@ export function collectSortedChildren(tree: TreeNode): TreeNode[] {
     nodes.push(cp);
     cp = cp.rightSib;
   }
-  nodes.sort((a, b) => b.area - a.area);
+  // C sorts with LIST_SORT -> libc qsort (list.c:345). The equal-area tie
+  // permutation is load-bearing: with default areas every child ties, and the
+  // qsort permutation decides which node gets which treemap rect. A stable
+  // sort keeps insertion order and assigns different tiles than native.
+  // @see lib/patchwork/patchwork.c:162 LIST_SORT(&nodes, nodecmp)
+  gvQsort(nodes, (a, b) => (a.area < b.area ? 1 : a.area > b.area ? -1 : 0));
   return nodes;
 }
 
@@ -328,27 +339,74 @@ export function patchworkLayout(g: Graph): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Translate the whole drawing (nodes, cluster bbs, labels) so the
- * root bb's lower-left corner is the origin.
- * @see lib/common/postproc.c:translate_drawing
- * @see lib/common/postproc.c:translate_bb
+ * Post-tiling per-node finish, mirroring C's walkTree -> finishNode:
+ * (a) a node whose fontsize attr is DECLARED but resolves empty gets
+ * fontsize = ND_ht*0.7 (%.03f) — the treemap-scaled label size; (b)
+ * common_init_node runs in full: label + xlabel creation and poly_init
+ * sizing. Crucially, poly_init CLOBBERS ND_width/ND_height with the
+ * label-driven size while the tile survives in ND_lw/rw/ht (which
+ * common_init_node never touches — gv_nodesize ran on the tile before).
+ * This clobber is load-bearing: addXLabels' addNodeObj builds xlabel
+ * obstacles from ND_width/ND_height (postproc.c:351), so native places
+ * xlabels against label-sized boxes, not tiles. Drawing and attach_attrs
+ * use lw/rw/ht, so the tile geometry still renders. The port's
+ * commonInitNode folds gv_nodesize in (storeNodeSize), so lw/rw/ht are
+ * saved and restored around it to keep the tile.
+ * @see lib/patchwork/patchwork.c:finishNode
+ * @see lib/common/postproc.c:351 addNodeObj (INCH2PS(ND_width/ND_height))
  */
-export function translateDrawing(g: Graph): void {
-  const bb = g.info.bb;
-  if (bb.ll.x === 0 && bb.ll.y === 0) return;
-  shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
+export function finishNodes(g: Graph): void {
+  // C's quirk gate is N_fontsize != NULL: the attr is declared somewhere.
+  let fontsizeDeclared = g.nodeDefaults.has('fontsize');
+  if (!fontsizeDeclared) {
+    for (const n of g.nodes.values()) {
+      if (n.attrs.has('fontsize') || n.nodeDefaultsSnapshot?.has('fontsize') === true) {
+        fontsizeDeclared = true;
+        break;
+      }
+    }
+  }
+  for (const n of g.nodes.values()) {
+    if (fontsizeDeclared) {
+      const v = nodeAttr(n, g, 'fontsize');
+      if (v === undefined || v === '') {
+        n.attrs.set('fontsize', (n.info.ht * 0.7).toFixed(3));
+      }
+    }
+    const { lw, rw, ht } = n.info;
+    commonInitNode(n, g);
+    n.info.lw = lw;
+    n.info.rw = rw;
+    n.info.ht = ht;
+  }
 }
 
 /** @see lib/patchwork/patchworkinit.c:patchwork_layout */
 export function patchworkEngineLayout(g: Graph): void {
   if (g.nodes.size === 0 && (g.info.n_cluster ?? 0) === 0) return;
+  // C patchwork_init_graph sets the AGNODE "shape" DEFAULT to box
+  // (agattr_text, overwriting e.g. a `node [shape=record]` default), and
+  // patchwork_init_node then agsets EVERY node's shape to box — explicit
+  // per-node shapes (record, point, HTML tables) are deliberately discarded:
+  // patchwork draws uniform tiles. @see patchworkinit.c:74,108
+  g.nodeDefaults.set('shape', 'box');
   for (const n of g.nodes.values()) {
-    if (!n.attrs.has('shape')) n.attrs.set('shape', 'box');
+    n.attrs.set('shape', 'box');
+    if (n.nodeDefaultsSnapshot !== undefined) n.nodeDefaultsSnapshot.set('shape', 'box');
   }
+  // C creates the ROOT graph label in the engine-neutral graph_init before any
+  // engine layout; dotneato_postprocess below then adds its height to the
+  // canvas and places it. @see lib/common/input.c:719 graph_init
+  doGraphLabel(g, layoutMeasurer(g));
   mkClusters(g);
   patchworkLayout(g);
-  // C: dotneato_postprocess translates everything by -bb.LL.
-  translateDrawing(g);
+  // C: walkTree calls finishNode per leaf after tiling (fontsize quirk +
+  // common_init_node xlabel creation). @see patchwork.c:243
+  finishNodes(g);
+  // C: dotneato_postprocess(g) — cluster labels, xlabels, root graph label
+  // space + translate to origin. @see patchworkinit.c:127
+  placeGraphLabel(g);
+  gvPostprocess(g);
 }
 
 /** @see lib/patchwork/patchworkinit.c:patchwork_cleanup */
