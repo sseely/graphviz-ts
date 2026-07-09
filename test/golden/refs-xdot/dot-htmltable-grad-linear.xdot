@@ -1,0 +1,23 @@
+digraph G {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 61.6 64 61.6 64 0 ",
+		bb="0,0,64,61.6",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	a	[_ldraw_="S 5 -solid c 9 -#fffffe00 C 53 -[15.03 49.75 48.97 11.85 2 0 7 -#ffff00 1 7 -#ee82ee] P 4 8 4 8 57.6 56 57.6 56 4 S 5 -solid c 7 \
+-#000000 p 4 11 31.8 11 54.6 31 54.6 31 31.8 F 14 11 -Times-Roman c 7 -#000000 T 14 37.6 -1 14 2 -00 S 5 -solid c 9 -#fffffe00 C \
+45 -[33 43.2 53 43.2 2 0 7 -#00ff00 1 7 -#0000ff] P 4 33 31.8 33 54.6 53 54.6 53 31.8 S 5 -solid c 7 -#000000 p 4 33 31.8 33 54.6 \
+53 54.6 53 31.8 F 14 11 -Times-Roman c 7 -#000000 T 36 37.6 -1 14 2 -01 S 5 -solid c 9 -#fffffe00 C 45 -[11 18.4 31 18.4 2 0 7 -#\
+ffa500 1 7 -#ff0000] P 4 11 7 11 29.8 31 29.8 31 7 S 5 -solid c 7 -#000000 p 4 11 7 11 29.8 31 29.8 31 7 F 14 11 -Times-Roman c \
+7 -#000000 T 14 12.8 -1 14 2 -10 S 5 -solid c 7 -#000000 p 4 33 7 33 29.8 53 29.8 53 7 F 14 11 -Times-Roman c 7 -#000000 T 36 12.8 \
+-1 14 2 -11 S 5 -solid c 7 -#000000 p 4 8 4 8 57.6 56 57.6 56 4 ",
+		height=0.85556,
+		label=<
+    <TABLE BGCOLOR="yellow:violet" gradientangle="315">
+      <TR><TD>00</TD><TD BGCOLOR="green:blue">01</TD></TR>
+      <TR><TD BGCOLOR="orange:red">10</TD><TD>11</TD></TR>
+    </TABLE>>,
+		pos="32,30.8",
+		shape=plaintext,
+		width=0.88889];
+}

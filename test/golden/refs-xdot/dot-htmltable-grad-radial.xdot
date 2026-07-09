@@ -1,0 +1,19 @@
+digraph G {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 36.8 64 36.8 64 0 ",
+		bb="0,0,64,36.8",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	a	[_ldraw_="S 5 -solid c 9 -#fffffe00 C 56 -(21 18.4 3.79 21 18.4 15.16 2 0 7 -#ffff00 1 7 -#ee82ee) P 4 11 7 11 29.8 31 29.8 31 7 S 5 -solid \
+c 7 -#000000 p 4 11 7 11 29.8 31 29.8 31 7 F 14 11 -Times-Roman c 7 -#000000 T 14 12.8 -1 14 2 -00 S 5 -solid c 7 -#000000 p 4 33 \
+7 33 29.8 53 29.8 53 7 F 14 11 -Times-Roman c 7 -#000000 T 36 12.8 -1 14 2 -01 S 5 -solid c 7 -#000000 p 4 8 4 8 32.8 56 32.8 56 \
+4 ",
+		height=0.51111,
+		label=<
+    <TABLE>
+      <TR><TD BGCOLOR="yellow:violet" STYLE="radial">00</TD><TD>01</TD></TR>
+    </TABLE>>,
+		pos="32,18.4",
+		shape=plaintext,
+		width=0.88889];
+}

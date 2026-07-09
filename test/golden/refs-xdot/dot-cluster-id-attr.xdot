@@ -1,0 +1,51 @@
+digraph MODEL {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 84.04 390 84.04 390 0 ",
+		bb="0,0,390,84.043",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph cluster_0_0 {
+		graph [_draw_="c 9 -#fffffe00 p 4 8 8 8 76.04 191 76.04 191 8 ",
+			bb="8,8,191,76.043",
+			color=transparent,
+			id=cluster_0_0
+		];
+		cluster_0_0	[height=0.02,
+			margin=0,
+			penwidth=0,
+			peripheries=0,
+			pos="17,42.022",
+			shape=point,
+			style=invis,
+			width=0.02];
+		50331650	[_draw_="c 7 -#55a3f3 e 109 42.02 73.54 26.02 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 81 36.42 -1 56 8 -50331650 ",
+			color="#55A3F3",
+			height=0.72282,
+			label=<<table BORDER="0" CELLBORDER="0" CELLPADDING="4" CELLSPACING="2"><tr><td></td><td>50331650</td><td WIDTH="1px"></td></tr></table>>,
+			pos="109,42.022",
+			width=2.0428];
+	}
+	subgraph cluster_1_0 {
+		graph [_draw_="c 9 -#fffffe00 p 4 199 8 199 76.04 382 76.04 382 8 ",
+			bb="199,8,382,76.043",
+			color=transparent,
+			id=cluster_1_0
+		];
+		cluster_1_0	[height=0.02,
+			margin=0,
+			penwidth=0,
+			peripheries=0,
+			pos="208,42.022",
+			shape=point,
+			style=invis,
+			width=0.02];
+		67108871	[_draw_="c 7 -#39a9aa e 300 42.02 73.54 26.02 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 272 36.42 -1 56 8 -67108871 ",
+			color="#39A9AA",
+			height=0.72282,
+			label=<<table BORDER="0" CELLBORDER="0" CELLPADDING="4" CELLSPACING="2"><tr><td></td><td>67108871</td><td WIDTH="1px"></td></tr></table>>,
+			pos="300,42.022",
+			width=2.0428];
+	}
+}

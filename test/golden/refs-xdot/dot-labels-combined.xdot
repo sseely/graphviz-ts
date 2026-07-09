@@ -1,0 +1,38 @@
+digraph G {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 166.4 68 166.4 68 0 ",
+		_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 34 8.2 0 10.89 2 -gl ",
+		bb="0,0,68,166.4",
+		label=gl,
+		lheight=0.23,
+		lp="34,12.4",
+		lwidth=0.15,
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	A	[_draw_="c 7 -#000000 e 41 131.6 27 18 ",
+		_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 41 127.4 0 10.11 1 -A F 14 11 -Times-Roman c 7 -#000000 T 7 153.8 0 14 2 -nx ",
+		height=0.5,
+		pos="41,131.6",
+		width=0.75,
+		xlabel=nx,
+		xlp="7,158"];
+	B	[_draw_="c 7 -#000000 e 41 42.8 27 18 ",
+		_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 41 38.6 0 9.34 1 -B ",
+		height=0.5,
+		pos="41,42.8",
+		width=0.75];
+	A -> B	[_draw_="c 7 -#000000 B 4 41 113.45 41 101.76 41 85.99 41 72.42 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 44.5 72.72 41 62.72 37.5 72.72 ",
+		_hldraw_="F 14 11 -Times-Roman c 7 -#000000 T 35.56 65.41 0 10.89 2 -hl ",
+		_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 46.05 83 0 10.1 2 -el F 14 11 -Times-Roman c 7 -#000000 T 34.39 91.81 0 13.21 2 -ex ",
+		_tldraw_="F 14 11 -Times-Roman c 7 -#000000 T 37.11 100.85 0 7.78 2 -tl ",
+		head_lp="35.555,69.61",
+		headlabel=hl,
+		label=el,
+		lp="46.052,87.2",
+		pos="e,41,61.21 41,113.45 41,101.76 41,85.992 41,72.418",
+		tail_lp="37.11,105.05",
+		taillabel=tl,
+		xlabel=ex,
+		xlp="34.393,96.011"];
+}

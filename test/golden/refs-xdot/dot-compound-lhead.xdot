@@ -1,0 +1,43 @@
+digraph {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 177.6 86 177.6 86 0 ",
+		bb="0,0,86,177.6",
+		compound=true,
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph clusterA {
+		graph [_draw_="c 7 -#000000 p 4 8 92.8 8 169.6 78 169.6 78 92.8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 43 153 0 10.11 1 -A ",
+			bb="8,92.8,78,169.6",
+			label=A,
+			lheight=0.23,
+			lp="43,157.2",
+			lwidth=0.14
+		];
+		a	[_draw_="c 7 -#000000 e 43 118.8 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 43 114.6 0 6.21 1 -a ",
+			height=0.5,
+			pos="43,118.8",
+			width=0.75];
+	}
+	subgraph clusterB {
+		graph [_draw_="c 7 -#000000 p 4 8 8 8 84.8 78 84.8 78 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 43 68.2 0 9.34 1 -B ",
+			bb="8,8,78,84.8",
+			label=B,
+			lheight=0.23,
+			lp="43,72.4",
+			lwidth=0.13
+		];
+		b	[_draw_="c 7 -#000000 e 43 34 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 43 29.8 0 7 1 -b ",
+			height=0.5,
+			pos="43,34",
+			width=0.75];
+	}
+	a -> b	[_draw_="c 7 -#000000 B 4 43 92.8 43 90.8 43 88.8 43 86.8 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 46.5 96.31 43 86.31 39.5 96.31 ",
+		lhead=clusterB,
+		ltail=clusterA,
+		pos="e,43,84.799 43,92.8 43,90.8 43,88.8 43,86.799"];
+}
