@@ -21,9 +21,12 @@ import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
 import { circoInitGraph, freeNData } from './init.js';
 import { circoLayout } from './circular.js';
-import { commonInitNodeEdge } from '../../common/nodeinit.js';
+import { commonInitNodeEdge, layoutMeasurer } from '../../common/nodeinit.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { splineEdgesShifted } from '../neato/splines.js';
 import { computeSubgraphBB } from '../pack/index.js';
+import { placeGraphLabel } from '../dot/position-bbox.js';
+import { gvPostprocess } from '../../common/postproc.js';
 
 // Re-export key functions for consumers that need them individually.
 export { circoInitGraph, freeNData } from './init.js';
@@ -39,15 +42,24 @@ export { layoutBlock } from './blockpath.js';
 /** @see lib/circogen/circularinit.c:circo_layout */
 export function circoLayoutFull(g: Graph): void {
   commonInitNodeEdge(g);
+  // C circular_init_edge -> common_init_edge creates the edge label; addXLabels
+  // (in gvPostprocess below) places it at the edge midpoint. @see circularinit.c:27
+  const measurer = layoutMeasurer(g);
+  if (measurer !== undefined) {
+    for (const e of g.edges) initEdgeLabels(e, g, measurer);
+  }
   circoInitGraph(g);
   circoLayout(g);
   // ORDERING: alg freed HERE, before spline routing (matches C source).
   freeNData(g);
-  // C: spline_edges(g) shifts pos to the origin, syncs coord (x72),
-  // and routes; dotneato_postprocess adds nothing further here.
+  // C: spline_edges(g) shifts pos to the origin, syncs coord (x72), and routes.
   splineEdgesShifted(g);
   // Refresh the root bb (packing may have left a stale pre-shift box).
   g.info.bb = computeSubgraphBB(g, 0);
+  // C: dotneato_postprocess(g) — cluster labels, then addXLabels (edge labels),
+  // root graph label space + translate. @see circularinit.c:233 circo_layout
+  placeGraphLabel(g);
+  gvPostprocess(g);
 }
 
 /** @see lib/circogen/circularinit.c:circo_cleanup */
