@@ -17,8 +17,10 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
-import type { SplineInfo } from '../../common/types.js';
+import type { SplineInfo, PolygonT } from '../../common/types.js';
 import { ShapeKind } from '../../common/types.js';
+import type { ExpandT } from './sep-factor.js';
+import { esepFactor } from './sep-factor.js';
 import type { Poly, VConfig } from '../../pathplan/types.js';
 import {
   obsOpen, obsClose, obsPath,
@@ -116,20 +118,140 @@ class ObstacleHelper {
 // makeObstacle
 // ---------------------------------------------------------------------------
 
+/** Slope of the ellipse tangent at p. @see neatosplines.c:ellipse_tangent_slope */
+function ellipseTangentSlope(a: number, b: number, p: Point): number {
+  const signY = p.y >= 0 ? 1 : -1;
+  return (-signY * (b * p.x)) / (a * Math.sqrt(a * a - p.x * p.x));
+}
+
+/** Corner i of an nsides-gon circumscribed about the ellipse (a, b).
+ * @see neatosplines.c:circumscribed_polygon_corner_about_ellipse */
+function circumscribedCorner(a: number, b: number, i: number, nsides: number): Point {
+  const angle0 = (2 * Math.PI * (i - 0.5)) / nsides;
+  const angle1 = (2 * Math.PI * (i + 0.5)) / nsides;
+  const p0 = { x: a * Math.cos(angle0), y: b * Math.sin(angle0) };
+  const p1 = { x: a * Math.cos(angle1), y: b * Math.sin(angle1) };
+  const m0 = ellipseTangentSlope(a, b, p0);
+  const m1 = ellipseTangentSlope(a, b, p1);
+  // line_intersection of the two tangents.
+  const x = (m0 * p0.x - p0.y - m1 * p1.x + p1.y) / (m0 - m1);
+  const y = p0.y + m0 * (x - p0.x);
+  return { x, y };
+}
+
+/** Margin displacement for corner j of a 4-sided polygon (CCW box order:
+ * LL, LR, UR, UL — C's case 0..3). @see makeObstacle (doAdd, sides==4) */
+function boxCornerMargin(j: number, m: Point): Point {
+  if (j === 0) return { x: m.x, y: m.y };
+  if (j === 1) return { x: -m.x, y: m.y };
+  if (j === 2) return { x: -m.x, y: -m.y };
+  return { x: m.x, y: -m.y };
+}
+
+/** The poly-vertices (sides >= 3) branch of C makeObstacle. */
+function polyObstacle(
+  n: Node, poly: PolygonT, pmargin: ExpandT,
+): Poly | null {
+  const sides = poly.sides;
+  const verts = poly.vertices;
+  if (verts == null) return null;
+  const penwidth = poly.penwidth ?? 1;
+  const extraPeripheries = poly.peripheries >= 1 && penwidth > 0 ? 1 : 0;
+  const outlinePeriphery = poly.peripheries + extraPeripheries;
+  const off = outlinePeriphery >= 1 ? (outlinePeriphery - 1) * sides : 0;
+  const ps: Point[] = new Array(sides);
+  for (let j = 0; j < sides; j++) {
+    const v = verts[off + j];
+    if (v === undefined) return null;
+    let polyp: Point;
+    if (pmargin.doAdd) {
+      if (sides === 4) {
+        // C's corner cases assume the CCW box vertex order LL,LR,UR,UL.
+        const m = boxCornerMargin(j, { x: pmargin.x, y: pmargin.y });
+        polyp = { x: v.x + m.x, y: v.y + m.y };
+      } else {
+        const h = Math.hypot(v.x, v.y);
+        polyp = { x: v.x * (1 + pmargin.x / h), y: v.y * (1 + pmargin.y / h) };
+      }
+    } else {
+      polyp = { x: v.x * pmargin.x, y: v.y * pmargin.y };
+    }
+    // CW output: ps[sides - j - 1].
+    ps[sides - j - 1] = { x: polyp.x + n.info.coord.x, y: polyp.y + n.info.coord.y };
+  }
+  return { ps };
+}
+
+/** The ellipse (sides < 3) branch: 8-gon circumscribed about the OUTLINE
+ * ellipse, margin added only when doAdd. */
+function ellipseObstacle(n: Node, pmargin: ExpandT): Poly {
+  const sides = 8;
+  const width = (n.info.outline_width ?? 0) > 0 ? n.info.outline_width * 72 : n.info.lw + n.info.rw;
+  const height = (n.info.outline_height ?? 0) > 0 ? n.info.outline_height * 72 : n.info.ht;
+  const mx = pmargin.doAdd ? pmargin.x : 0;
+  const my = pmargin.doAdd ? pmargin.y : 0;
+  const a = (width + mx) / 2;
+  const b = (height + my) / 2;
+  const ps: Point[] = new Array(sides);
+  for (let j = 0; j < sides; j++) {
+    const polyp = circumscribedCorner(a, b, j, sides);
+    ps[sides - j - 1] = { x: polyp.x + n.info.coord.x, y: polyp.y + n.info.coord.y };
+  }
+  return { ps };
+}
+
+/** Rectangle obstacle around (llx,lly)-(urx,ury) relative to coord, with
+ * additive or multiplicative margins (C's genPt/recPt cases, CW order). */
+function rectObstacle(
+  n: Node, llx: number, lly: number, urx: number, ury: number, pmargin: ExpandT,
+): Poly {
+  const pt = n.info.coord;
+  let x0: number; let y0: number; let x1: number; let y1: number;
+  if (pmargin.doAdd) {
+    x0 = llx - pmargin.x; y0 = lly - pmargin.y;
+    x1 = urx + pmargin.x; y1 = ury + pmargin.y;
+  } else {
+    x0 = llx * pmargin.x; y0 = lly * pmargin.y;
+    x1 = urx * pmargin.x; y1 = ury * pmargin.y;
+  }
+  // C order: LL, UL, UR, LR (CW).
+  return {
+    ps: [
+      { x: x0 + pt.x, y: y0 + pt.y },
+      { x: x0 + pt.x, y: y1 + pt.y },
+      { x: x1 + pt.x, y: y1 + pt.y },
+      { x: x1 + pt.x, y: y0 + pt.y },
+    ],
+  };
+}
+
 /**
- * Build a rectangular CW obstacle polygon from a node's bounding box.
- *
- * Vertices are in CW order: ll, ul, ur, lr.
+ * Obstacle polygon reflecting the node's geometry, vertices in CW order:
+ * the shape's own outline-periphery vertices (+margin) for polygons, an
+ * 8-gon circumscribed about the outline ellipse for ellipses, the field
+ * box for records, the node box for EPSF. Null = unsupported shape (the
+ * node is skipped as an obstacle, C returns NULL).
  *
  * @see lib/neatogen/neatosplines.c:makeObstacle
  */
-export function makeObstacle(n: Node, sep: Point): Poly {
-  const hh = ObstacleHelper.halfHeight(n.info.ht, sep.y);
-  const ps = ObstacleHelper.vertices(
-    n.info.coord.x, n.info.coord.y,
-    n.info.lw + sep.x, n.info.rw + sep.x, hh,
-  );
-  return { ps };
+export function makeObstacle(n: Node, pmargin: ExpandT): Poly | null {
+  const shape = n.info.shape as { kind?: ShapeKind } | undefined;
+  const kind = shape?.kind;
+  if (kind === ShapeKind.SH_POLY || kind === ShapeKind.SH_POINT) {
+    const poly = n.info.shape_info as PolygonT | undefined;
+    if (poly !== undefined && poly.sides >= 3) return polyObstacle(n, poly, pmargin);
+    return ellipseObstacle(n, pmargin);
+  }
+  if (kind === ShapeKind.SH_RECORD) {
+    const fld = n.info.shape_info as { b?: { ll: Point; ur: Point } } | undefined;
+    const b = fld?.b;
+    if (b) return rectObstacle(n, b.ll.x, b.ll.y, b.ur.x, b.ur.y, pmargin);
+    return rectObstacle(n, -n.info.lw, -n.info.ht / 2, n.info.rw, n.info.ht / 2, pmargin);
+  }
+  // SH_EPSF and unbound shapes: the node box (C returns NULL only for
+  // SH_UNSET, which cannot occur post-init; unbound port-side shapes keep
+  // the legacy box so measurer-less runs still route).
+  return rectObstacle(n, -n.info.lw, -n.info.ht / 2, n.info.rw, n.info.ht / 2, pmargin);
 }
 
 /** bb of a polygon's vertex array. @see lib/common/utils.c:polyBB */
@@ -155,7 +277,7 @@ function polyVertexBB(vertices: Point[]): { ll: Point; ur: Point } {
  *
  * @see lib/neatogen/neatosplines.c:makeObstacle (isOrtho, vs[0..3])
  */
-export function makeOrthoObstacle(n: Node, sep: Point): Poly {
+export function makeOrthoObstacle(n: Node, sep: ExpandT): Poly | null {
   const info = n.info;
   const shape = info.shape as { kind?: ShapeKind } | undefined;
   const kind = shape?.kind;
@@ -450,17 +572,23 @@ class OrthoHelper {
 // ---------------------------------------------------------------------------
 
 class RoutingHelper {
-  static buildObstacles(g: Graph, sep: Point, edgetype: number): Poly[] {
+  static buildObstacles(g: Graph, pmargin: ExpandT, edgetype: number): Poly[] {
     const obstacles: Poly[] = [];
     let idx = 0;
     for (const n of g.nodes.values()) {
       if (edgetype >= EDGETYPE_PLINE) {
-        n.info.lim = idx++;
         // C: makeObstacle(n, pmargin, edgetype == EDGETYPE_ORTHO) —
-        // ortho obstacles are the unmargined outline box.
-        obstacles.push(
-          edgetype === EDGETYPE_ORTHO ? makeOrthoObstacle(n, sep) : makeObstacle(n, sep),
-        );
+        // ortho obstacles are the unmargined outline box. A null obstacle
+        // (unsupported shape) leaves the node out (ND_lim = POLYID_NONE).
+        const obp = edgetype === EDGETYPE_ORTHO
+          ? makeOrthoObstacle(n, pmargin)
+          : makeObstacle(n, pmargin);
+        if (obp !== null) {
+          n.info.lim = idx++;
+          obstacles.push(obp);
+        } else {
+          n.info.lim = POLYID_NONE;
+        }
       } else {
         n.info.lim = POLYID_NONE;
       }
@@ -583,7 +711,7 @@ class LegalHelper {
 // ---------------------------------------------------------------------------
 
 /** @see lib/neatogen/neatosplines.c:spline_edges_ */
-export function splineEdgesImpl(g: Graph, sep: Point, edgetype: number): void {
+export function splineEdgesImpl(g: Graph, sep: ExpandT, edgetype: number): void {
   const obstacles = RoutingHelper.buildObstacles(g, sep, edgetype);
   const legal = LegalHelper.check(obstacles);
   if (legal && edgetype === EDGETYPE_ORTHO) { RoutingHelper.ortho(g, edgetype); return; }
@@ -624,7 +752,9 @@ export function splineEdges(g: Graph): void {
   // C splineEdges wrapper: coalesce equivalent edges before routing.
   coalesceEdges(g);
   if (edgetype === EDGETYPE_LINE) { RoutingHelper.straight(g, edgetype); return; }
-  splineEdgesImpl(g, { x: 4, y: 4 }, edgetype);
+  // C: margin = esepFactor(g) — the edge separation, default {3.2, 3.2, add}.
+  // @see lib/neatogen/neatosplines.c:746
+  splineEdgesImpl(g, esepFactor(g), edgetype);
 }
 
 // ---------------------------------------------------------------------------

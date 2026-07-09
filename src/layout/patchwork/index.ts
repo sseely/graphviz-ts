@@ -130,7 +130,11 @@ export function appendClusterChildren(
 export function appendNodeChildren(
   g: Graph, sparent: Map<Node, Graph>, accum: ChildAccum,
 ): void {
-  for (const n of g.nodes.values()) {
+  // C iterates agfstnode(g) — AGSEQ (root creation) order, NOT the order
+  // nodes were referenced inside a cluster block. The child order feeds
+  // layoutTree's equal-area qsort, whose tie permutation assigns tiles.
+  const nodes = [...g.nodes.values()].sort((a, b) => a.id - b.id);
+  for (const n of nodes) {
     if (sparent.has(n)) continue;
     accumAppend(accum, makeNodeTreeNode(n));
     sparent.set(n, g);

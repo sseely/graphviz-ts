@@ -251,7 +251,12 @@ export function buildChildLists(
     addSubcluster(lists, g.info.clust![i - 1], useVals);
   }
   if (g.nodes.size - nvs > 0) {
-    for (const n of g.nodes.values()) {
+    // C iterates agfstnode(g) — AGSEQ (root creation) order (osageinit.c:248).
+    // A cluster's node Map is in block-reference order, which differs when the
+    // cluster re-references nodes declared earlier; the loose-node order feeds
+    // the packing rectangle assignment.
+    const nodes = [...g.nodes.values()].sort((a, b) => a.id - b.id);
+    for (const n of nodes) {
       if (n.info.alg === undefined) addLooseNode(lists, n, g, useVals);
     }
   }

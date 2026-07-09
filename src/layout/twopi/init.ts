@@ -15,6 +15,7 @@ import type { TwopiAlgData } from '../../model/nodeInfo.js';
 import { THETA_UNSET } from '../../model/nodeInfo.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
 import { EDGETYPE_LINE } from '../neato/splines.js';
+import { adjustNodesScale } from '../neato/sc-adjust.js';
 
 /** Points per inch, used to convert pos (inches) → coord (points). */
 const POINTS_PER_INCH = 72;
@@ -139,15 +140,15 @@ export function finaliseCoords(g: Graph): void {
 }
 
 /**
- * Overlap adjustment placeholder: the full adjustNodes from neatogen adjusts
- * node positions to remove size-based overlaps. For this port the pos values
- * written by circleLayout are used directly; overlap removal is deferred.
+ * Overlap adjustment: the scale-family modes (overlap=scale/scalexy/compress
+ * -> scAdjust) are ported; other modes (voronoi, prism, vpsc, ortho*) remain
+ * no-ops, matching AM_NONE when the attr is unset.
  *
  * @see lib/neatogen/adjust.c:adjustNodes
+ * @see lib/neatogen/constraint.c:scAdjust
  */
-export function adjustNodes(_g: Graph): void {
-  // Stub: full VPSC/adjustNodes overlap removal is in neatogen and not yet
-  // wired for twopi. circleLayout positions are used as-is.
+export function adjustNodes(g: Graph): void {
+  adjustNodesScale(g);
 }
 
 /**

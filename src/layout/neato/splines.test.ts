@@ -85,22 +85,22 @@ beforeEach(() => {
 
 describe('makeObstacle', () => {
   it('produces a 4-vertex polygon around the node', () => {
-    const sep = { x: 4, y: 4 };
-    const poly = makeObstacle(n1, sep);
+    const sep = { x: 4, y: 4, doAdd: true };
+    const poly = makeObstacle(n1, sep)!;
     expect(poly.ps).toHaveLength(4);
   });
 
   it('x extents match lw+sep and rw+sep', () => {
-    const sep = { x: 4, y: 4 };
-    const poly = makeObstacle(n1, sep);
+    const sep = { x: 4, y: 4, doAdd: true };
+    const poly = makeObstacle(n1, sep)!;
     const xs = poly.ps.map((p) => p.x);
     expect(Math.min(...xs)).toBeCloseTo(n1.info.coord.x - n1.info.lw - sep.x);
     expect(Math.max(...xs)).toBeCloseTo(n1.info.coord.x + n1.info.rw + sep.x);
   });
 
   it('y extents match ht/2+sep', () => {
-    const sep = { x: 4, y: 4 };
-    const poly = makeObstacle(n1, sep);
+    const sep = { x: 4, y: 4, doAdd: true };
+    const poly = makeObstacle(n1, sep)!;
     const ys = poly.ps.map((p) => p.y);
     expect(Math.min(...ys)).toBeCloseTo(n1.info.coord.y - n1.info.ht / 2 - sep.y);
     expect(Math.max(...ys)).toBeCloseTo(n1.info.coord.y + n1.info.ht / 2 + sep.y);
