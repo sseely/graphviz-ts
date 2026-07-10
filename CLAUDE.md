@@ -1,144 +1,86 @@
 # graphviz-ts — Claude Code Instructions
 
-## Overrides
-We want to keep the plans/ contents. This is for archaeology on this particular effort.
-
 ## Mission
 
-This project is a faithful TypeScript port of [Graphviz](https://gitlab.com/graphviz/graphviz),
-the graph-visualization toolkit originally written in C at AT&T Research and
-Lucent Bell Labs. The C source lives at `~/git/graphviz` and is the **canonical
-specification** for this project. The output of this port will be consumed as a
-library by other projects and must run in a browser (no Node.js-only APIs).
+A faithful TypeScript port of [Graphviz](https://gitlab.com/graphviz/graphviz).
+The C source at `~/git/graphviz` is the **canonical specification**. The port is
+consumed as a library and must run in a browser (no Node.js-only APIs).
+
+Keep the `plans/` contents — they are the archaeology of this effort.
 
 ## The C Source Is Sacred
 
-The C implementation in `~/git/graphviz` is the spec. Every file, every type,
-every function, every algorithm, and every test exists for a reason — often a
-reason that only becomes apparent when a specific edge case is encountered.
-Decades of user-reported bugs and layout quirks are encoded in that code.
+Decades of user-reported bugs and layout quirks are encoded in the C. Rules:
 
-Rules that follow from this:
+- **Do not optimize or simplify algorithms.** If the C looks redundant or odd,
+  preserve it exactly — the oddity is almost certainly load-bearing.
+- **Port every branch.** Special cases exist because someone hit them.
+- **Keep function boundaries.** Split or merge only where TypeScript forces it
+  (e.g., no pointer arithmetic).
+- **Do not reorder logic.** Side-effect order is often intentional; note any
+  deviation explicitly.
+- **Port the tests too.** Every C test encodes a known correct behavior.
 
-- **Do not optimize or simplify algorithms.** If the C code does something that
-  looks redundant, inefficient, or odd, preserve it exactly. The oddity is
-  almost certainly load-bearing.
-- **Do not skip edge-case handling.** Special-case branches in the C code exist
-  because someone hit that case in production. Port every branch.
-- **Do not merge or split functions arbitrarily.** The function boundaries in the
-  C source reflect the original authors' mental model of the algorithm. Maintain
-  those boundaries unless TypeScript forces a structural change (e.g., no pointer
-  arithmetic).
-- **Do not reorder logic.** Side-effect order in C is often intentional. Preserve
-  the order of operations exactly, and note deviations explicitly.
-- **Port the tests too.** Every test in the C source encodes a known correct
-  behavior. All tests must be ported and must pass.
+When in doubt, read the C. Still in doubt: keep the C behavior and document the
+question. On any divergence, instrument the C and dump actual values before
+hypothesizing — the default stance is "my port differs — find where."
 
-When in doubt, read the C. When still in doubt, keep the C behavior and document
-the question.
+## Verification
+
+- Oracle = the **native build binary** `~/git/graphviz/build/cmd/dot/dot` with
+  `GVBINDIR=/tmp/ghl` (never WASM, never homebrew dot — ABI mismatch).
+- Conformance bar = xdot/SVG comparison at 0.01 tolerance (deterministic
+  engines). Byte-exactness is not required; structural match is progress.
+- Gates before any commit: `tsc --noEmit` clean, `npm test` green, golden
+  cross-product monotonic, corpus sweep with **0 regressions**.
+- Sweep discipline: never edit `src/` while a sweep runs (it reads live
+  source). Resume-style sweeps skip once-passing ids and hide regressions —
+  run a fresh (deleted-JSONL) sweep before committing routing changes.
+- Journal every fix in `plans/xdot-conformance/decision-journal.md`.
 
 ## Translation Rules
 
-### Type Mappings
+| C concept                | TypeScript                                     |
+| ------------------------ | ---------------------------------------------- |
+| `int`/`long`, `double`   | `number` (mind precision > 2^53)               |
+| `char *` string / buffer | `string` / `Uint8Array`                        |
+| `struct`                 | `interface` (prefer) or `class`                |
+| `void *`                 | `unknown` or a typed union                     |
+| `FILE *`                 | abstract `Writer` interface                    |
+| Pointer arithmetic       | array + index, or `DataView` for packed binary |
+| `NULL`                   | `null` (prefer over `undefined` for pointers)  |
+| `#define` / function ptr | `const` / typed function type                  |
 
-| C concept                  | TypeScript equivalent                                                 |
-| -------------------------- | --------------------------------------------------------------------- |
-| `int`, `long`              | `number` (note precision limits for values > 2^53)                    |
-| `double`, `float`          | `number`                                                              |
-| `char *` (string)          | `string`                                                              |
-| `char *` (byte buffer)     | `Uint8Array`                                                          |
-| `struct Foo`               | `interface Foo` or `class Foo` (prefer `interface` for plain data)    |
-| `enum`                     | `const enum` or `enum`                                                |
-| `void *` (generic pointer) | `unknown` or a typed union                                            |
-| `FILE *`                   | Abstract `Writer` interface; concrete implementations per environment |
-| Pointer arithmetic         | Array + index, or `DataView` for packed binary data                   |
-| `NULL`                     | `null` or `undefined` (prefer `null` for nullable pointers)           |
-| `#define` constant         | `const` or `const enum`                                               |
-| Function pointer           | Typed function type or interface with a single call signature         |
+Hazards proven in this port: C `calloc` zeroes fields — an optional TS field
+left `undefined` inverts `!= 0` guards (coerce `?? 0`); C `int` assignment
+truncates; `round()` is half-away-from-zero, not `Math.round`.
 
-### No Browser-Hostile APIs
+- **Browser-safe only**: no Node built-ins, no `process.env` in library code,
+  ES modules only. If the C reads a file, take the data as a parameter.
+- **Memory**: mirror the C's mutation contract; avoid GC pressure in hot loops
+  (reuse objects / typed arrays).
+- **Naming**: `snake_case` → `camelCase`, macros → `UPPER_SNAKE_CASE`; keep
+  names recognizable (`agnode` → `agNode`). Every ported symbol carries
+  `/** @see cgraph/graph.c:agopen */`.
+- **YAGNI, strictly**: no new patterns, options, or "improved APIs" the C does
+  not have. Idiomatic wrappers are a separate layer.
 
-This library must run in a browser. Never use:
-- `fs`, `path`, `os`, `child_process`, or any Node.js built-in module
-- `process.env` (use a passed-in config object instead)
-- `require()` (use ES module `import`)
-- Synchronous XHR or blocking I/O
+## C Source Map (`~/git/graphviz/lib/`)
 
-If the C code reads a file (e.g., font metrics, config), expose it as a
-parameter or callback so the caller can provide the data.
-
-### Memory Management
-
-C's manual memory model does not translate directly. Rules:
-- Prefer immutable data structures where the C code builds then reads a
-  structure without mutating it after construction.
-- Where the C code mutates in place (common in layout passes), use mutable
-  objects and document the mutation contract.
-- Do not introduce garbage-collection pressure by creating large numbers of
-  short-lived objects in hot loops — prefer reusing objects or using typed
-  arrays.
-
-### Naming
-
-- Convert `snake_case` C names to `camelCase` TypeScript names.
-- Convert `ALL_CAPS` C macros to `UPPER_SNAKE_CASE` TypeScript constants.
-- Keep names recognizable — `agnode` → `agNode`, `agedge` → `agEdge`.
-  Do not rename to something unrelated; the C name is the spec reference.
-- Every ported symbol should have a JSDoc comment referencing its C origin:
-  `/** @see cgraph/graph.c:agopen */`
-
-### No New Abstractions Without Cause
-
-Apply YAGNI strictly here. This is a translation, not a redesign:
-- Do not introduce new design patterns (observers, decorators, registries)
-  unless the C code already uses an equivalent pattern.
-- Do not add configuration options the C code does not have.
-- Do not build an "improved API" on top — port the existing API first.
-  Idiomatic TypeScript wrappers can be a separate layer, separate package.
-
-## C Source Map
-
-The C source is organized under `~/git/graphviz/lib/`. Key modules:
-
-| Directory   | Purpose                                                         |
-| ----------- | --------------------------------------------------------------- |
-| `cgraph/`   | Core graph data structure (nodes, edges, subgraphs, attributes) |
-| `dotgen/`   | `dot` layout engine — hierarchical, layered digraph layout      |
-| `neatogen/` | `neato` / `fdp` — spring-model layout                           |
-| `circogen/` | `circo` — circular layout                                       |
-| `osage/`    | `osage` — clustered layout                                      |
-| `sfdpgen/`  | `sfdp` — force-directed for large graphs                        |
-| `pathplan/` | Path planning (edge routing)                                    |
-| `common/`   | Shared rendering utilities, label handling, color               |
-| `label/`    | Label layout and text measurement                               |
-| `gvc/`      | Graphviz context — plugin registration, rendering pipeline      |
-| `cdt/`      | Container data types (dictionary, tree, list)                   |
-| `ast/`      | String utilities                                                |
-
-Start porting from the bottom up: `cdt` → `ast` → `cgraph` → `common` →
-layout engines → `gvc`.
+`cgraph` core graph · `dotgen` dot · `neatogen` neato/fdp · `circogen` circo ·
+`osage` osage · `sfdpgen` sfdp · `pathplan` edge routing · `common` shared
+render/labels · `gvc` context/pipeline · `cdt` containers · `ast` strings
 
 ## Quality Bar
 
-- TypeScript strict mode (`"strict": true`) — no `any` except at explicit
-  C-interop boundaries, documented with a comment.
-- 90% line / branch / function coverage per `testing.md`.
-- Every ported test from the C suite must pass before a module is considered
-  complete.
-- `tsc --noEmit` must pass with zero errors before any commit.
-- The library must bundle with esbuild/vite for browser consumption with zero
-  Node.js shims required.
+- TypeScript strict mode; no `any` except documented C-interop boundaries.
+- 90% line/branch/function coverage per `testing.md`; ported C tests must pass.
+- Bundles for the browser (esbuild/vite) with zero Node shims.
+- A mission/batch with any quarantined or excluded case is not complete until
+  its comparison page exists and is referenced in the decision journal.
 
 ## License
 
-This project is licensed under the **Eclipse Public License v2.0** (EPL-2.0),
-the same license as the upstream C graphviz. All source files must carry the
-EPL-2.0 SPDX header:
-
-```
-// SPDX-License-Identifier: EPL-2.0
-```
-
-Do not add dependencies licensed under GPL-3.0-only or any license
-incompatible with EPL-2.0. A mission/batch with any quarantined or excluded case is not 'complete' until its comparison page
-exists and is referenced in the decision journal."
+EPL-2.0 (same as upstream). Every source file carries
+`// SPDX-License-Identifier: EPL-2.0`. No dependencies incompatible with
+EPL-2.0 (e.g., GPL-3.0-only).
