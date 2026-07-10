@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-08T23:57:09.414Z",
+  "generatedAt": "2026-07-10T20:40:40.619Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 759,
   "counts": {
-    "conformant": 753,
+    "conformant": 754,
     "diverged": 0,
-    "accepted": 3,
+    "accepted": 4,
     "port-error": 0,
     "oracle-error": 0,
-    "timeout": 3
+    "timeout": 1
   },
   "results": [
     {
@@ -4409,8 +4409,7 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "timeout",
-      "errMsg": ""
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b143",
@@ -4458,8 +4457,11 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "size": 105083,
-      "verdict": "timeout",
-      "errMsg": ""
+      "verdict": "accepted",
+      "diffCount": 2,
+      "firstDiff": "edge:1451->1450#0/pos[2]",
+      "maxDelta": 0.1000000000003638,
+      "maxDeltaPath": "edge:1451->1450#0/pos[2]"
     },
     {
       "id": "graphs-root",
