@@ -25,7 +25,7 @@ import type { Poly, VConfig } from '../../pathplan/types.js';
 import {
   obsOpen, obsClose, obsPath,
   routeSpline, polyBarriers,
-  POLYID_NONE,
+  POLYID_NONE, inPoly,
 } from '../../pathplan/index.js';
 import { makeSelfEdge } from '../../common/splines.js';
 import { newSpline, clipAndInstall } from '../../common/splines-clip.js';
@@ -475,9 +475,20 @@ class SplineHelper {
     clipAndInstall(e, e.head, pts, pts.length, SINFO);
   }
 
-  static installSpline(
-    e: Edge, obstacles: Poly[], pp: number, qp: number, route: Point[],
-  ): void {
+  static installSpline(e: Edge, obstacles: Poly[], route: Point[]): void {
+    // C makeSpline re-derives the endpoint-containing polys from the PATH
+    // endpoints via in_poly (neatosplines.c:554-562) rather than reusing
+    // ND_lim: a boundary port point (e.g. a compass port) is NOT strictly
+    // inside its node's poly, so that poly stays a BARRIER and Proutespline
+    // subdivides the spline around it.
+    const p = route[0];
+    const q = route[route.length - 1];
+    let pp = POLYID_NONE;
+    let qp = POLYID_NONE;
+    for (let i = 0; i < obstacles.length; i++) {
+      if (pp === POLYID_NONE && inPoly(obstacles[i].ps, p)) pp = i;
+      if (qp === POLYID_NONE && inPoly(obstacles[i].ps, q)) qp = i;
+    }
     const barrierPolys = obstacles.filter((_, i) => i !== pp && i !== qp);
     const splinePts = SplineHelper.tryRouteSpline(polyBarriers(barrierPolys), route);
     if (splinePts === null) { makeStraightEdge(e, SINFO); return; }
@@ -500,7 +511,7 @@ export function makeSplineEdge(
   // C: Pobspath(vconfig, p, pp, q, qp, &line) — poly id comes before end-point
   const route = obsPath(vconfig, p, pp, q, qp);
   if (edgetype === EDGETYPE_PLINE) { SplineHelper.installPline(e, route); return; }
-  SplineHelper.installSpline(e, obstacles, pp, qp, route);
+  SplineHelper.installSpline(e, obstacles, route);
 }
 
 // ---------------------------------------------------------------------------
