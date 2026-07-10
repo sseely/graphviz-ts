@@ -91,7 +91,7 @@ function incircleExact(
  * circumcircle of ccw triangle (a,b,c); the sign flips for cw triangles,
  * so callers pass an orientation factor.
  */
-function incircle(
+export function incircle(
   px: number[], py: number[], a: number, b: number, c: number, d: number,
 ): number {
   const adx = px[a]! - px[d]!; const ady = py[a]! - py[d]!;
@@ -118,7 +118,7 @@ function incircle(
 }
 
 /** Robust orientation: > 0 for ccw (a,b,c). */
-function orient2d(px: number[], py: number[], a: number, b: number, c: number): number {
+export function orient2d(px: number[], py: number[], a: number, b: number, c: number): number {
   const detleft = (px[a]! - px[c]!) * (py[b]! - py[c]!);
   const detright = (py[a]! - py[c]!) * (px[b]! - px[c]!);
   const det = detleft - detright;
@@ -138,19 +138,19 @@ function orient2d(px: number[], py: number[], a: number, b: number, c: number): 
 // Bowyer–Watson
 // ---------------------------------------------------------------------------
 
-interface Tri {
+export interface Tri {
   a: number; b: number; c: number;
   /** +1 ccw / −1 cw — fixed at creation so incircle signs are comparable */
   orient: number;
 }
 
-function makeTri(px: number[], py: number[], a: number, b: number, c: number): Tri {
+export function makeTri(px: number[], py: number[], a: number, b: number, c: number): Tri {
   return { a, b, c, orient: orient2d(px, py, a, b, c) || 1 };
 }
 
 /** Insert point p, retriangulating the cavity of triangles whose
  * circumcircle strictly contains it. */
-function bwInsert(px: number[], py: number[], tris: Tri[], p: number): void {
+export function bwInsert(px: number[], py: number[], tris: Tri[], p: number): void {
   const edgeCount = new Map<number, [number, number, number]>();
   const live: Tri[] = [];
   for (const t of tris) {
@@ -175,7 +175,7 @@ function bwInsert(px: number[], py: number[], tris: Tri[], p: number): void {
 }
 
 /** Bowyer–Watson over deduplicated point ids; null if no proper face. */
-function bowyerWatson(px: number[], py: number[], ids: number[]): Tri[] | null {
+export function bowyerWatson(px: number[], py: number[], ids: number[]): Tri[] | null {
   // Enclosing triangle (GTS uses gts_triangle_enclosing at scale 100).
   let minX = Infinity; let maxX = -Infinity;
   let minY = Infinity; let maxY = -Infinity;

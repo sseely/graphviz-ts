@@ -40,6 +40,8 @@ import { neatoSetAspect } from './init.js';
 import { nodesInSeq } from '../dot/decomp.js';
 import { mapbool } from '../dot/rank.js';
 import { makeStraightEdges, addEdgeLabels } from '../dot/straight-edges.js';
+import { makeMultiSpline, mkRouter } from './multispline.js';
+import type { Router } from './multispline.js';
 import { updateBB } from '../dot/splines-label.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
 
@@ -502,16 +504,24 @@ class SplineHelper {
 // makeSplineEdge — single-edge pathplan routing
 // ---------------------------------------------------------------------------
 
-/** @see lib/neatogen/neatosplines.c:makeSpline */
-export function makeSplineEdge(
-  e: Edge, obstacles: Poly[], vconfig: VisConfig, edgetype: number,
-): void {
+/**
+ * The pathfinding half of C's two passes: ED_path(e) = getPath(e, vconfig).
+ * @see lib/neatogen/neatosplines.c:getPath
+ */
+export function edgePath(e: Edge, vconfig: VisConfig): Point[] {
   const p = EdgeHelper.endpoint(e.tail.info.coord, e.info.tail_port.p);
   const pp = e.tail.info.lim ?? POLYID_NONE;
   const qp = e.head.info.lim ?? POLYID_NONE;
   const q = EdgeHelper.endpoint(e.head.info.coord, e.info.head_port.p);
   // C: Pobspath(vconfig, p, pp, q, qp, &line) — poly id comes before end-point
-  const route = obsPath(vconfig, p, pp, q, qp);
+  return obsPath(vconfig, p, pp, q, qp);
+}
+
+/** @see lib/neatogen/neatosplines.c:makeSpline */
+export function makeSplineEdge(
+  e: Edge, obstacles: Poly[], vconfig: VisConfig, edgetype: number,
+): void {
+  const route = edgePath(e, vconfig);
   if (edgetype === EDGETYPE_PLINE) { SplineHelper.installPline(e, route); return; }
   SplineHelper.installSpline(e, obstacles, route);
 }
@@ -623,11 +633,32 @@ class RoutingHelper {
   ): void {
     const stepx = g.info.nodesep ?? 18;
     const concentrate = g.root.info.concentrate ?? false;
+    let rtr: Router | null = null;
     for (const n of nodesInSeq(g)) {
       for (const e of n.outEdges(g)) {
         // C spline_edges_: ED_count==0 -> continue (only do representative).
         if ((e.info.count ?? 0) === 0) continue;
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
+        // HAVE_GTS branch (neatosplines.c:681): multiplicity or a boundary
+        // port routes through the triangle router; a straight 2-point path
+        // without ports shortcuts to the perpendicular fan. Only on router
+        // FAILURE does the edge fall through to the plain pathplan loop.
+        const boundaryPort =
+          (e.info.tail_port.side | e.info.head_port.side) !== 0;
+        if ((e.info.count ?? 1) > 1 || boundaryPort) {
+          let fail = 0;
+          const route = edgePath(e, vconfig);
+          if (route.length === 2 && !boundaryPort) {
+            // if a straight line can connect the ends
+            const chain = RoutingHelper.chainList(e);
+            makeStraightEdges(g, chain, chain.length, edgetype, SINFO);
+          } else {
+            if (rtr === null) rtr = mkRouter(obstacles);
+            fail = makeMultiSpline(
+              g, e, rtr, route, edgetype === EDGETYPE_PLINE);
+          }
+          if (!fail) continue;
+        }
         let cur: Edge | undefined = e;
         let cnt = e.info.count ?? 1;
         if (concentrate) cnt = 1; // only do representative
@@ -808,6 +839,10 @@ export function computeBBFromPos(g: Graph): { ll: Point; ur: Point } {
     bb.ll.y = Math.min(bb.ll.y, py - sy);
     bb.ur.x = Math.max(bb.ur.x, px + sx);
     bb.ur.y = Math.max(bb.ur.y, py + sy);
+  }
+  // C compute_bb: an empty graph keeps bb = {0,0,0,0}. @see utils.c:641
+  if (!Number.isFinite(bb.ll.x)) {
+    return { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
   }
   return bb;
 }
