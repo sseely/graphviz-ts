@@ -194,17 +194,6 @@ watch(engine, scheduleRender);
   background: transparent !important;
   font: inherit;
 }
-/* defaultColor:false emits token colors as --shiki-light/--shiki-dark CSS
-   variables, not a `color`. Map them to the actual color, switching on
-   VitePress's html.dark so the editor tracks the site's light/dark theme. */
-.gv-highlight :deep(.shiki),
-.gv-highlight :deep(.shiki span) {
-  color: var(--shiki-light);
-}
-:global(html.dark) .gv-highlight :deep(.shiki),
-:global(html.dark) .gv-highlight :deep(.shiki span) {
-  color: var(--shiki-dark);
-}
 .gv-input {
   position: absolute;
   inset: 0;
@@ -241,5 +230,22 @@ watch(engine, scheduleRender);
     grid-template-rows: 1fr 1fr;
     height: auto !important;
   }
+}
+</style>
+
+<style>
+/* UNSCOPED on purpose. defaultColor:false emits token colors as
+   --shiki-light/--shiki-dark CSS variables, not a `color`; these rules map
+   them to the live color, switching on VitePress's html.dark. They cannot
+   live in the scoped block: Vue does not support :global() as an ancestor
+   combinator, so a scoped `html.dark …` rule never matches and dark mode
+   would paint the light palette onto the dark background. */
+.gv-playground .gv-highlight .shiki,
+.gv-playground .gv-highlight .shiki span {
+  color: var(--shiki-light);
+}
+html.dark .gv-playground .gv-highlight .shiki,
+html.dark .gv-playground .gv-highlight .shiki span {
+  color: var(--shiki-dark);
 }
 </style>
