@@ -18,6 +18,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
 import type { SplineInfo, PolygonT, TextlabelT } from '../../common/types.js';
+import { polygonOutlineRing } from '../../common/poly-sizing.js';
 import { ShapeKind } from '../../common/types.js';
 import type { ExpandT } from './sep-factor.js';
 import { esepFactor } from './sep-factor.js';
@@ -35,7 +36,7 @@ import {
   EDGETYPE_NONE, EDGETYPE_LINE, EDGETYPE_ORTHO,
   EDGETYPE_PLINE,
 } from '../dot/splines.js';
-import { shiftGraphBBs, computeSubgraphBB } from '../pack/index.js';
+import { shiftGraphBBs } from '../pack/index.js';
 import { neatoSetAspect } from './init.js';
 import { nodesInSeq } from '../dot/decomp.js';
 import { mapbool } from '../dot/rank.js';
@@ -156,15 +157,27 @@ function polyObstacle(
   n: Node, poly: PolygonT, pmargin: ExpandT,
 ): Poly | null {
   const sides = poly.sides;
-  const verts = poly.vertices;
-  if (verts == null) return null;
+  const stored = poly.vertices;
+  if (stored == null) return null;
   const penwidth = poly.penwidth ?? 1;
   const extraPeripheries = poly.peripheries >= 1 && penwidth > 0 ? 1 : 0;
   const outlinePeriphery = poly.peripheries + extraPeripheries;
-  const off = outlinePeriphery >= 1 ? (outlinePeriphery - 1) * sides : 0;
+  const ringIdx = outlinePeriphery >= 1 ? outlinePeriphery - 1 : 0;
+  // C stores the half-penwidth OUTLINE ring in poly->vertices
+  // (shapes.c:poly_init outp); the port keeps only the periphery rings and
+  // derives the outline on demand, exactly like poly_inside does.
+  const storedRings = Math.max(poly.peripheries, 1);
+  let verts: Point[];
+  if (ringIdx < storedRings) {
+    verts = stored.slice(ringIdx * sides, (ringIdx + 1) * sides);
+  } else {
+    const outer = stored.slice((storedRings - 1) * sides, storedRings * sides);
+    verts = polygonOutlineRing(outer, sides, penwidth);
+  }
+  if (verts.length < sides) return null;
   const ps: Point[] = new Array(sides);
   for (let j = 0; j < sides; j++) {
-    const v = verts[off + j];
+    const v = verts[j];
     if (v === undefined) return null;
     let polyp: Point;
     if (pmargin.doAdd) {
