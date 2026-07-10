@@ -22,7 +22,6 @@ import {
   PK_USER_VALS,
 } from '../pack/index.js';
 import { neatoInitNode, neatoSetAspect } from '../neato/init.js';
-import { computeSubgraphBB } from '../pack/index.js';
 import { parseNeatoDrawing } from '../neato/set-aspect.js';
 import { commonInitNode, layoutMeasurer, lateInt } from '../../common/nodeinit.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
@@ -479,7 +478,9 @@ export function osageLayout(g: Graph): void {
     for (const n of g.nodes.values()) {
       n.info.pos = [n.info.coord.x / 72, n.info.coord.y / 72];
     }
-    g.info.bb = computeSubgraphBB(g, 0);
+    // C keeps osage's GD_bb (cluster boxes + label space included) for the
+    // aspect pass — spline_edges0 never recomputes it. A node-only
+    // computeSubgraphBB here clipped cluster tops out of the canvas (56).
     neatoSetAspect(g);
     splineEdges(g);
   } else {
