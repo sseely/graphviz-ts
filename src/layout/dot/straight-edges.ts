@@ -214,7 +214,7 @@ function portLabelAttrsDeclared(g: Graph): boolean {
  * `labelangle`/`labeldistance` is declared (handled as external labels
  * otherwise). @see lib/common/splines.c:1205-1220,1307-1309
  */
-function addEdgeLabels(e: Edge): void {
+export function addEdgeLabels(e: Edge): void {
   const g = dotRoot(e.tail.root);
   if (!portLabelAttrsDeclared(g)) return;
   if (e.info.head_label && !e.info.head_label.set) {

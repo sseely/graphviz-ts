@@ -1284,7 +1284,15 @@ export class XdotRenderer implements RendererPlugin {
     if (d?.hldraw) parts.push(this.drawAttr('_hldraw_', d.hldraw));
     if (d?.tldraw) parts.push(this.drawAttr('_tldraw_', d.tldraw));
     const pos = formatEdgePos(e);
-    if (pos) parts.push(pos);
+    if (pos) {
+      parts.push(pos);
+    } else {
+      // C's attach_attrs only agsets `pos` when the edge HAS a spline
+      // (output.c:348); an engine that never routes (patchwork) leaves the
+      // INPUT's own pos attribute intact and write.c emits it verbatim.
+      const inPos = e.attrs.get('pos');
+      if (inPos !== undefined) parts.push('pos="' + agcanonEscape(inPos) + '"');
+    }
     return parts.join(' ');
   }
 }

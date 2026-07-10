@@ -267,7 +267,11 @@ export function setPositions(sg: Graph, center: Node): void {
 function parseRanksepParts(
   parts: string[], ranks: number[], maxrank: number,
 ): { delx: number; rk: number; xf: number } {
-  let xf = 0; let delx = DEF_RANKSEP; let rk = 1;
+  // C initializes delx = 0.0; DEF_RANKSEP applies ONLY when the ranksep attr
+  // is ABSENT. A present-but-unparseable value ("equally") leaves delx 0 and
+  // every ring collapses to radius 0 — a load-bearing quirk (graphs/b80).
+  // @see lib/twopigen/circle.c:getRankseps
+  let xf = 0; let delx = 0; let rk = 1;
   for (const part of parts) {
     if (rk > maxrank) break;
     const d = parseFloat(part.trim());

@@ -29,6 +29,7 @@ import { splineEdges, EDGETYPE_NONE, EDGETYPE_LINE } from '../neato/splines.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
 // Engine-neutral C common functions, currently parked under layout/dot:
 import { doGraphLabel } from '../dot/graph-label.js';
+import { BOTTOM_IX, TOP_IX } from '../dot/position-aux.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
@@ -302,12 +303,15 @@ export function applyLabelExpansion(g: Graph, total: number, rbb: RawBB): RawBB 
   return { llx, lly, urx, ury };
 }
 
-/** Add margin and border padding to rbb. */
+/** Add margin and border padding to rbb.
+ * C: rootbb.LL.y -= margin + GD_border(g)[BOTTOM_IX].y (index 0, NOT 3);
+ *    rootbb.UR.y += margin + GD_border(g)[TOP_IX].y.
+ * @see lib/osage/osageinit.c:186-187, lib/common/const.h:111-114 */
 export function addMarginAndBorder(g: Graph, margin: number, rbb: RawBB): RawBB {
   let { llx, lly, urx, ury } = rbb;
   const border = g.info.border;
-  const bottomY = border ? border[3].y : 0;
-  const topY = border ? border[2].y : 0;
+  const bottomY = border ? border[BOTTOM_IX]!.y : 0;
+  const topY = border ? border[TOP_IX]!.y : 0;
   llx -= margin; urx += margin;
   lly -= margin + bottomY; ury += margin + topY;
   return { llx, lly, urx, ury };

@@ -17,7 +17,7 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
-import type { SplineInfo, PolygonT } from '../../common/types.js';
+import type { SplineInfo, PolygonT, TextlabelT } from '../../common/types.js';
 import { ShapeKind } from '../../common/types.js';
 import type { ExpandT } from './sep-factor.js';
 import { esepFactor } from './sep-factor.js';
@@ -39,7 +39,8 @@ import { shiftGraphBBs, computeSubgraphBB } from '../pack/index.js';
 import { neatoSetAspect } from './init.js';
 import { nodesInSeq } from '../dot/decomp.js';
 import { mapbool } from '../dot/rank.js';
-import { makeStraightEdges } from '../dot/straight-edges.js';
+import { makeStraightEdges, addEdgeLabels } from '../dot/straight-edges.js';
+import { updateBB } from '../dot/splines-label.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
 
 // ---------------------------------------------------------------------------
@@ -365,10 +366,18 @@ export function makeSelfArcs(e: Edge, stepx: number): void {
   const concentrate = e.tail.root.info.concentrate ?? false;
   if (cnt <= 1 || concentrate) {
     makeSelfEdge([e], 1, stepx, stepx, SINFO);
+    // C: the self-loop LABEL extends the graph bb (updateBB), and head/tail
+    // port labels are placed here. @see neatosplines.c:227-229
+    if (e.info.label) updateBB(e.tail.root, e.info.label as TextlabelT);
+    addEdgeLabels(e); // makePortLabels
     return;
   }
   const edges = EdgeHelper.selfChain(e, cnt);
   makeSelfEdge(edges, edges.length, stepx, stepx, SINFO);
+  for (const e0 of edges) {
+    if (e0.info.label) updateBB(e0.tail.root, e0.info.label as TextlabelT);
+    addEdgeLabels(e0);
+  }
 }
 
 // ---------------------------------------------------------------------------
