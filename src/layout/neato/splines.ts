@@ -42,6 +42,7 @@ import { nodesInSeq } from '../dot/decomp.js';
 import { mapbool } from '../dot/rank.js';
 import { makeStraightEdges, addEdgeLabels } from '../dot/straight-edges.js';
 import { makeMultiSpline, mkRouter } from './multispline.js';
+import { legalArrangement } from './legal.js';
 import type { Router } from './multispline.js';
 import { updateBB } from '../dot/splines-label.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
@@ -745,46 +746,16 @@ class RoutingHelper {
 }
 
 // ---------------------------------------------------------------------------
-// LegalHelper — obstacle overlap checking
-// ---------------------------------------------------------------------------
-
-class LegalHelper {
-  static xSpan(p: Poly): [number, number] {
-    const xs = p.ps.map((v) => v.x);
-    return [Math.min(...xs), Math.max(...xs)];
-  }
-
-  static ySpan(p: Poly): [number, number] {
-    const ys = p.ps.map((v) => v.y);
-    return [Math.min(...ys), Math.max(...ys)];
-  }
-
-  static overlap(a: Poly, b: Poly): boolean {
-    const [aX0, aX1] = LegalHelper.xSpan(a);
-    const [aY0, aY1] = LegalHelper.ySpan(a);
-    const [bX0, bX1] = LegalHelper.xSpan(b);
-    const [bY0, bY1] = LegalHelper.ySpan(b);
-    return aX1 > bX0 && bX1 > aX0 && aY1 > bY0 && bY1 > aY0;
-  }
-
-  static check(obstacles: Poly[]): boolean {
-    for (let i = 0; i < obstacles.length; i++) {
-      for (let j = i + 1; j < obstacles.length; j++) {
-        if (LegalHelper.overlap(obstacles[i], obstacles[j])) return false;
-      }
-    }
-    return true;
-  }
-}
-
-// ---------------------------------------------------------------------------
 // splineEdgesImpl — inner routing loop
 // ---------------------------------------------------------------------------
 
 /** @see lib/neatogen/neatosplines.c:spline_edges_ */
 export function splineEdgesImpl(g: Graph, sep: ExpandT, edgetype: number): void {
   const obstacles = RoutingHelper.buildObstacles(g, sep, edgetype);
-  const legal = LegalHelper.check(obstacles);
+  // C: legal = Plegal_arrangement(obs, npoly) — sweep-line segment
+  // intersection + nesting, NOT a bbox test: circo octagon obstacles
+  // routinely overlap in bbox while the polygons are disjoint.
+  const legal = legalArrangement(obstacles);
   if (legal && edgetype === EDGETYPE_ORTHO) { RoutingHelper.ortho(g, edgetype); return; }
   if (obstacles.length > 0 && legal) { RoutingHelper.routed(g, obstacles, edgetype); return; }
   RoutingHelper.straight(g, edgetype);
