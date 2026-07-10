@@ -26,6 +26,7 @@ import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { splineEdgesShifted } from '../neato/splines.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { doGraphLabel } from '../dot/graph-label.js';
+import { neutralGraphRankdir } from '../dot/init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
 // Re-export key functions for consumers that need them individually.
@@ -41,6 +42,7 @@ export { layoutBlock } from './blockpath.js';
 
 /** @see lib/circogen/circularinit.c:circo_layout */
 export function circoLayoutFull(g: Graph): void {
+  neutralGraphRankdir(g);
   commonInitNodeEdge(g);
   // C circular_init_edge -> common_init_edge creates the edge label; addXLabels
   // (in gvPostprocess below) places it at the edge midpoint. @see circularinit.c:27

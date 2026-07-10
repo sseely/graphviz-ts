@@ -153,6 +153,22 @@ function parseRatioDrawing(g: Graph): void {
  * @see lib/common/input.c:600-663 graph_init
  * @see lib/common/types.h:GD_rankdir2
  */
+/**
+ * graph_init's rankdir handling for engines WITHOUT LAYOUT_USES_RANKDIR:
+ * SET_RANKDIR(g, rankdir << 2) — the REAL rankdir lands in bits 2-3 (read by
+ * record_init via GD_realflip) while the EFFECTIVE rankdir (bits 0-1) stays
+ * TB so nothing rotates or flips. @see lib/common/input.c:661-663
+ */
+export function neutralGraphRankdir(g: Graph): void {
+  let rankdir = RANKDIR_TB;
+  const p = g.attrs.get('rankdir');
+  if (p === 'LR') rankdir = RANKDIR_LR;
+  else if (p === 'BT') rankdir = RANKDIR_BT;
+  else if (p === 'RL') rankdir = RANKDIR_RL;
+  g.info.rankdir = rankdir << 2;
+  g.info.flip = false;
+}
+
 export function dotGraphInit(g: Graph): void {
   // EdgeLabelsDone reset at layout start (AD2 per-layout semantics)
   // @see lib/common/input.c:711

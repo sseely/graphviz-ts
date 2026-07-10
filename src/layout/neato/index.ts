@@ -45,6 +45,7 @@ import {
 import { CL_OFFSET } from '../twopi/pipeline.js';
 import { isACluster } from '../dot/rank.js';
 import { doGraphLabel } from '../dot/graph-label.js';
+import { neutralGraphRankdir } from '../dot/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { layoutMeasurer } from '../../common/nodeinit.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
@@ -146,6 +147,7 @@ export function maybeRemoveOverlap(g: Graph): void {
  * @see lib/neatogen/neatoinit.c:neato_layout
  */
 export function neatoLayout(g: Graph): void {
+  neutralGraphRankdir(g);
   // C: neato_init_graph sets EDGETYPE_LINE before node/edge init.
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);

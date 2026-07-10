@@ -29,6 +29,7 @@ import { splineEdges, EDGETYPE_NONE, EDGETYPE_LINE } from '../neato/splines.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
 // Engine-neutral C common functions, currently parked under layout/dot:
 import { doGraphLabel } from '../dot/graph-label.js';
+import { neutralGraphRankdir } from '../dot/init.js';
 import { BOTTOM_IX, TOP_IX } from '../dot/position-aux.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
@@ -95,6 +96,7 @@ export function isCluster(g: Graph): boolean {
  * @see lib/osage/osageinit.c:cluster_init_graph
  */
 export function clusterInitGraph(g: Graph): void {
+  neutralGraphRankdir(g);
   // C: setEdgeType(g, EDGETYPE_LINE) — osage defaults edges to straight lines,
   // but honors an explicit `splines` attr (ortho/curved/none). Without this the
   // edge-type nibble stays EDGETYPE_NONE and osageLayout skips splineEdges

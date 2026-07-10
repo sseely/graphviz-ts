@@ -380,8 +380,10 @@ export function recParseOrFallback(
  */
 export function recordInit(n: Node, g: Graph, measurer: TextMeasurer): void {
   const lbl = n.info.label as TextlabelT;
-  // C: flip = !GD_realflip — rankdir TB/BT lays fields out left-to-right.
-  const flip = g.root.info.flip === true ? 0 : 1;
+  // C: flip = !GD_realflip — the REAL rankdir (bits 2-3 of GD_rankdir2),
+  // honored by records under EVERY engine, not just dot (shapes.c:3672
+  // "Always use rankdir to determine how records are laid out").
+  const flip = (((g.root.info.rankdir ?? 0) >> 2) & 1) === 1 ? 0 : 1;
   const info = recParseOrFallback(lbl, measurer, flip, n);
   sizeReclbl(n, g, info);
   const sz = recAttrSize(n, g);

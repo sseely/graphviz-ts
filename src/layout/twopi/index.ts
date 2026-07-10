@@ -15,6 +15,7 @@ import { commonInitNodeEdge, layoutMeasurer } from '../../common/nodeinit.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { doGraphLabel } from '../dot/graph-label.js';
+import { neutralGraphRankdir } from '../dot/init.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
 export {
@@ -34,6 +35,7 @@ export { THETA_UNSET } from '../../model/nodeInfo.js';
  */
 export function twopiLayout(g: Graph): void {
   if (g.nodes.size === 0) return;
+  neutralGraphRankdir(g);
   commonInitNodeEdge(g);
   // C twopi_init_edge -> common_init_edge creates the edge label; addXLabels
   // (in gvPostprocess below) places it at the edge midpoint. @see twopiinit.c:28

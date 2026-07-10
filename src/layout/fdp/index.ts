@@ -20,6 +20,7 @@ import { fdpInitParams } from './tlayout-parms.js';
 import { fdpInitNodeEdge, fdpCleanup } from './init.js';
 import { fdpLayout, mkClusters } from './layout.js';
 import { gdata } from './fdp-model.js';
+import { neutralGraphRankdir } from '../dot/init.js';
 
 export { fdpLayout, mkClusters, evalPositions, setBB } from './layout.js';
 export { fdpTLayout } from './tlayout.js';
@@ -58,6 +59,7 @@ function fdpSplines(g: Graph): void {
  * @see lib/fdpgen/layout.c:fdp_layout
  */
 export function fdpLayoutEngine(g: Graph): void {
+  neutralGraphRankdir(g);
   fdpInitGraph(g);
   if (fdpLayout(g) !== 0) {
     return;

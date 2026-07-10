@@ -22,6 +22,7 @@ import type { Edge } from '../../model/edge.js';
 import type { Point } from '../../model/geom.js';
 import type { SplineInfo } from '../../common/types.js';
 import { clipAndInstall } from '../../common/splines-clip.js';
+import { makePolyline } from '../../pathplan/route.js';
 import { approxEqPt } from '../../common/splines-geom.js';
 import { MILLIPOINT } from '../../common/splines-constants.js';
 import { dist } from '../../common/arrows-geometry.js';
@@ -282,10 +283,12 @@ function orientControlPoints(dumb: Point[], e0: Edge, head: Node): Point[] {
 /** Install one straight/polyline edge spline. @see lib/common/routespl.c:1029-1036 */
 function installStraight(e0: Edge, dumber: Point[], et: number, sinfo: SplineInfo): void {
   if (et === EDGETYPE_PLINE) {
-    // make_polyline is unported; the dot curved dispatch only passes
-    // EDGETYPE_CURVED, so this branch is structurally unreachable here.
-    // @see lib/common/routespl.c:1029-1034
-    throw new Error('makeStraightEdges: EDGETYPE_PLINE branch unported (make_polyline)');
+    // C: make_polyline triples the interior corners so the polyline renders
+    // as degenerate beziers — reached from neato-family PLINE straight
+    // fallbacks (overlapping obstacles). @see lib/common/routespl.c:1029-1034
+    const pts = makePolyline(dumber);
+    clipAndInstall(e0, e0.head, pts, pts.length, sinfo);
+    return;
   }
   clipAndInstall(e0, e0.head, dumber, 4, sinfo);
 }

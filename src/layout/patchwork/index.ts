@@ -24,6 +24,7 @@ import { gvQsort } from '../../util/bsd-qsort.js';
 import { layoutMeasurer, commonInitNode } from '../../common/nodeinit.js';
 import { nodeAttr } from '../../common/poly-init.js';
 import { doGraphLabel } from '../dot/graph-label.js';
+import { neutralGraphRankdir } from '../dot/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
@@ -388,6 +389,7 @@ export function finishNodes(g: Graph): void {
 /** @see lib/patchwork/patchworkinit.c:patchwork_layout */
 export function patchworkEngineLayout(g: Graph): void {
   if (g.nodes.size === 0 && (g.info.n_cluster ?? 0) === 0) return;
+  neutralGraphRankdir(g);
   // C patchwork_init_graph sets the AGNODE "shape" DEFAULT to box
   // (agattr_text, overwriting e.g. a `node [shape=record]` default), and
   // patchwork_init_node then agsets EVERY node's shape to box — explicit

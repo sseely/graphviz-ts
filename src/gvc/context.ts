@@ -215,9 +215,20 @@ export class GvcContext {
    * @see lib/gvc/gvlayout.c:gvLayoutJobs
    */
   layout(g: Graph, engineName: EngineName): void {
-    const engine = this.layouts.get(engineName);
+    // C gvLayoutJobs: the graph's `layout` ATTRIBUTE unconditionally
+    // overrides the selected engine (-K / API choice); an unrecognized
+    // value is an error, not a fallback. @see lib/gvc/gvlayout.c:66-73
+    const attr = g.attrs?.get('layout'); // test doubles may lack attrs
+    let name = engineName;
+    if (attr !== undefined && attr !== '') {
+      if (!this.layouts.has(attr as EngineName)) {
+        throw new Error(`Layout type: "${attr}" not recognized`);
+      }
+      name = attr as EngineName;
+    }
+    const engine = this.layouts.get(name);
     if (engine === undefined) {
-      throw new Error(`no layout engine registered: ${engineName}`);
+      throw new Error(`no layout engine registered: ${name}`);
     }
     if (g.info) g.info.gvc = this as unknown;
     engine.layout(g);
