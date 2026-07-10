@@ -29,6 +29,7 @@ import {
   OPT_EXP_FLAG,
 } from './stress-kernel.js';
 import { lateDouble } from '../../common/nodeinit.js';
+import { parseNeatoDrawing, neatoSetAspectRatio } from './set-aspect.js';
 
 // ---------------------------------------------------------------------------
 // Mode constants — @see lib/neatogen/neatoprocs.h
@@ -451,6 +452,11 @@ export function neatoTranslate(g: Graph): void {
  * @see lib/neatogen/neatoinit.c (position-to-coord conversion)
  */
 export function neatoSetAspect(g: Graph): void {
+  // C neato_set_aspect: reshape per ratio/size FIRST (fill/expand/value),
+  // then copy internal ND_pos (inches) to ND_coord (points).
+  // @see lib/neatogen/neatosplines.c:1105
+  parseNeatoDrawing(g);
+  neatoSetAspectRatio(g);
   for (const [, n] of g.nodes) {
     const pos = n.info.pos;
     if (!pos) continue;

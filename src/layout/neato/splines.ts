@@ -825,7 +825,13 @@ export function splineEdgesShifted(g: Graph): void {
   if (process.env['STRESS_DEBUG']) console.error('shiftBB', JSON.stringify(bb));
   shiftAllPos(g, bb.ll.x / 72, bb.ll.y / 72);
   shiftClusters(g, -bb.ll.x, -bb.ll.y);
-  neatoSetAspect(g); // spline_edges0(g, true): pos -> coord
+  // C spline_edges leaves GD_bb = the shifted node-extent box (LL at origin);
+  // _neato_set_aspect reads it for the fill/expand/value factors.
+  g.info.bb = {
+    ll: { x: 0, y: 0 },
+    ur: { x: bb.ur.x - bb.ll.x, y: bb.ur.y - bb.ll.y },
+  };
+  neatoSetAspect(g); // spline_edges0(g, true): aspect + pos -> coord
   // C: spline_edges calls compute_bb(g) before routing, setting GD_bb to the
   // node-extent bb. clip_and_install then expands GD_bb via update_bb_bz for
   // each installed bezier. Initialise g.info.bb here so the expansion lands

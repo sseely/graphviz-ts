@@ -21,7 +21,9 @@ import {
   putRects,
   PK_USER_VALS,
 } from '../pack/index.js';
-import { neatoInitNode } from '../neato/init.js';
+import { neatoInitNode, neatoSetAspect } from '../neato/init.js';
+import { computeSubgraphBB } from '../pack/index.js';
+import { parseNeatoDrawing } from '../neato/set-aspect.js';
 import { commonInitNode, layoutMeasurer, lateInt } from '../../common/nodeinit.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { nodeAttr } from '../../common/poly-init.js';
@@ -469,8 +471,21 @@ export function osageLayout(g: Graph): void {
   mkClusters(g, null, g);
   osageLayoutRec(g, 0);
   osageReposition(g, 0);
-  const et = g.info.flags & 0xf;
-  if (et !== EDGETYPE_NONE) splineEdges(g);
+  // C: if GD_drawing(g)->ratio_kind, sync ND_pos from coord and run
+  // spline_edges0(g, true) — the aspect reshape + routing; else route
+  // directly. @see lib/osage/osageinit.c:324-335
+  parseNeatoDrawing(g);
+  if ((g.info.drawing?.ratioKind ?? 'none') !== 'none') {
+    for (const n of g.nodes.values()) {
+      n.info.pos = [n.info.coord.x / 72, n.info.coord.y / 72];
+    }
+    g.info.bb = computeSubgraphBB(g, 0);
+    neatoSetAspect(g);
+    splineEdges(g);
+  } else {
+    const et = g.info.flags & 0xf;
+    if (et !== EDGETYPE_NONE) splineEdges(g);
+  }
   // C: dotneato_postprocess(g) == gv_postprocess(g, 1): position cluster labels,
   // then add space for the root graph label, translate the drawing to origin,
   // and place the root label. Osage previously ran only the cluster-label half,
