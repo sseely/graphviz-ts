@@ -21,6 +21,7 @@ import {
   makeCircState, makeCData,
 } from './blocks.js';
 import { createBlocktree, createOneBlock, freeBlocktree } from './blocktree.js';
+import { nodesInSeq } from '../dot/decomp.js';
 import { circPos } from './position.js';
 import { ccomps, getPackInfo, packSubgraphs } from '../pack/index.js';
 import { PackMode } from '../pack/types.js';
@@ -44,10 +45,12 @@ export function makeDerivedNode(orig: Node): DerivedNode {
   return dn;
 }
 
-/** Build strict undirected derived graph from g (drop self-loops). */
+/** Build strict undirected derived graph from g (drop self-loops).
+ * C creates derived nodes walking agfstnode (node-seq order) — the
+ * creation order IS the derived node seq. @see circularinit.c:circomps */
 export function buildDerivedGraph(g: Graph): DerivedGraph {
   const dg: DerivedGraph = { nodes: new Map(), subgraphs: [], components: [] };
-  for (const n of g.nodes.values()) {
+  for (const n of nodesInSeq(g)) {
     const dn = makeDerivedNode(n);
     dg.nodes.set(n.name, dn);
     n.info.alg = dn.cdata; // link for derivedOf()
@@ -55,19 +58,30 @@ export function buildDerivedGraph(g: Graph): DerivedGraph {
   return dg;
 }
 
-/** Build derived edges (strict: no self-loops, no duplicates). */
+/**
+ * Build derived edges (strict: no self-loops, no duplicates).
+ *
+ * C's circomps creates them per TAIL node in seq order via agfstout —
+ * `agedge(dg, dt, dh, NULL, 1)` on the strict derived graph dedups
+ * unordered pairs, keeping the FIRST encounter's orientation and seq.
+ * The derived-edge seq drives the block DFS's agfstedge iteration order
+ * (agedgeseqcmpf), which decides block numbering and tree child order.
+ * @see lib/circogen/circularinit.c:circomps
+ */
 export function buildDerivedEdges(g: Graph, dg: DerivedGraph): DerivedEdge[] {
   const edges: DerivedEdge[] = [];
   const seen = new Set<string>();
-  for (const e of g.edges) {
-    if (e.tail === e.head) continue; // drop self-loops
-    const tail = dg.nodes.get(e.tail.name);
-    const head = dg.nodes.get(e.head.name);
-    if (!tail || !head) continue;
-    const key = [tail.name, head.name].sort().join('\0');
-    if (seen.has(key)) continue;
-    seen.add(key);
-    edges.push({ tail, head, order: 0, origEdge: e });
+  for (const n of nodesInSeq(g)) {
+    for (const e of n.outEdges(g)) {
+      if (e.tail === e.head) continue; // drop self-loops
+      const tail = dg.nodes.get(e.tail.name);
+      const head = dg.nodes.get(e.head.name);
+      if (!tail || !head) continue;
+      const key = [tail.name, head.name].sort().join('\0');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      edges.push({ tail, head, order: 0, origEdge: e });
+    }
   }
   return edges;
 }
