@@ -832,13 +832,10 @@ export function splineEdgesShifted(g: Graph): void {
     ur: { x: bb.ur.x - bb.ll.x, y: bb.ur.y - bb.ll.y },
   };
   neatoSetAspect(g); // spline_edges0(g, true): aspect + pos -> coord
-  // C: spline_edges calls compute_bb(g) before routing, setting GD_bb to the
-  // node-extent bb. clip_and_install then expands GD_bb via update_bb_bz for
-  // each installed bezier. Initialise g.info.bb here so the expansion lands
-  // on the correct base (coord is now valid after neatoSetAspect).
-  // @see lib/neatogen/neatosplines.c:spline_edges
-  // @see lib/common/utils.c:compute_bb
-  g.info.bb = computeSubgraphBB(g, 0);
+  // The bb was seeded above (and scaled by the aspect pass); C never
+  // recomputes it here — clip_and_install only EXPANDS it during routing.
+  // Recomputing from node extents would clobber the ratio=fill scale
+  // (scaleBB sets bb to exactly size; node extents land short of it).
   splineEdges(g);
 }
 
