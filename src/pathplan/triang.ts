@@ -7,10 +7,104 @@ export const ISCCW = 1;
 export const ISCW = 2;
 export const ISON = 3;
 
+// ---------------------------------------------------------------------------
+// FMA-faithful ccw sign
+//
+// The oracle's triang.c:ccw is compiled by clang (arm64, default
+// -ffp-contract=on) into `fnmul d0,(p1.x-p2.x),(p3.y-p2.y)` followed by
+// `fmadd d0,(p1.y-p2.y),(p3.x-p2.x),d0` — i.e. the FIRST product is EXACT
+// (fused) while the second is rounded:
+//
+//   d = exact((p1.y-p2.y)·(p3.x-p2.x)) − fl((p3.y-p2.y)·(p1.x-p2.x))
+//
+// This is not the C source's arithmetic: for a query point bit-equal to a
+// segment endpoint the two products are identical, the source says d == 0
+// (ISON), but the compiled binary returns the (negated) rounding error of
+// the product — flipping ISON to ISCW/ISCCW. shortest.c's pointintri then
+// rejects polygon-vertex endpoints ("destination point not in any
+// triangle"), makeMultiSpline fails, and every circo/twopi 2-cycle falls
+// back to plain routing. Matching the oracle therefore REQUIRES emulating
+// the contraction, not the source. JS has no fma, so: plain double
+// evaluation with a conservative error bound decides the easy cases (where
+// plain and fused signs provably agree), and an exact Dekker-product +
+// dyadic-BigInt path decides the near-zero ones.
+// ---------------------------------------------------------------------------
+
+const SPLIT = 134217729; // 2^27 + 1 (Dekker)
+
+/** Exact residue of a*b given its rounded product P: a*b = P + err. */
+function twoProductErr(a: number, b: number, P: number): number {
+  const ac = SPLIT * a;
+  const ahi = ac - (ac - a);
+  const alo = a - ahi;
+  const bc = SPLIT * b;
+  const bhi = bc - (bc - b);
+  const blo = b - bhi;
+  return ((ahi * bhi - P) + ahi * blo + alo * bhi) + alo * blo;
+}
+
+/** Exact tail of P - D given its rounded difference s: P - D = s + tail. */
+function twoDiffTail(P: number, D: number, s: number): number {
+  const bvirt = P - s;
+  const avirt = s + bvirt;
+  const bround = bvirt - D;
+  const around = P - avirt;
+  return around + bround;
+}
+
+const dyadicView = new DataView(new ArrayBuffer(8));
+
+/** Decompose a finite double into m·2^e with m a (sign-carrying) BigInt. */
+function dyadic(x: number): { m: bigint; e: number } {
+  if (x === 0) return { m: 0n, e: 0 };
+  dyadicView.setFloat64(0, x);
+  const hi = dyadicView.getUint32(0);
+  const lo = dyadicView.getUint32(4);
+  const sign = hi >>> 31 ? -1n : 1n;
+  const biasedExp = (hi >>> 20) & 0x7ff;
+  let mant = (BigInt(hi & 0xfffff) << 32n) | BigInt(lo);
+  let e: number;
+  if (biasedExp === 0) {
+    e = -1074; // subnormal
+  } else {
+    mant |= 1n << 52n;
+    e = biasedExp - 1075;
+  }
+  return { m: sign * mant, e };
+}
+
+/** Exact sign of a + b + c over arbitrary finite doubles. */
+function signOfSum3(a: number, b: number, c: number): number {
+  const da = dyadic(a);
+  const db = dyadic(b);
+  const dc = dyadic(c);
+  const e = Math.min(da.e, db.e, dc.e);
+  const sum = (da.m << BigInt(da.e - e)) + (db.m << BigInt(db.e - e)) +
+    (dc.m << BigInt(dc.e - e));
+  return sum > 0n ? 1 : (sum < 0n ? -1 : 0);
+}
+
 class TriangHelper {
   static ccw(p1: Point, p2: Point, p3: Point): number {
-    const d = (p1.y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p1.x - p2.x);
-    return d > 0 ? ISCW : (d < 0 ? ISCCW : ISON);
+    const a = p1.y - p2.y;
+    const b = p3.x - p2.x;
+    const c = p3.y - p2.y;
+    const e = p1.x - p2.x;
+    const P = a * b;
+    const D = c * e;
+    const d = P - D;
+    // Fast path: when |d| clearly exceeds the worst-case slack between the
+    // plain and fused evaluations (product residue ≤ ulp(P)/2 plus the
+    // subtraction's own rounding), both agree on the sign.
+    const bound = 2.3e-16 * (Math.abs(P) + Math.abs(D));
+    if (d > bound) return ISCW;
+    if (d < -bound) return ISCCW;
+    // Exact: sign of exact(a·b) − D = (P − D) + twoProductErr.
+    const err = twoProductErr(a, b, P);
+    const s = P - D;
+    const tail = twoDiffTail(P, D, s);
+    const sign = signOfSum3(s, tail, err);
+    return sign > 0 ? ISCW : (sign < 0 ? ISCCW : ISON);
   }
 
   /** Is pc on segment [pa, pb]? */

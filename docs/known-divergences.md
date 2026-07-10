@@ -684,6 +684,20 @@ clang's specific FMA contraction of one compiled expression tree in
 `poly_init` — chasing a compiled artifact, not porting source semantics.
 Full diagnosis: `plans/ortho-2620-residual/analysis/2620-ortho-route.md`.
 
+**Emulated exception (not accepted): `triang.c:ccw`.** One contraction
+site IS reproduced bit-for-bit rather than accepted: pathplan's `ccw`
+compiles to `fnmul`+`fmadd` (exact first product − rounded second), so a
+query point bit-equal to a segment endpoint tests ISCW/ISCCW instead of
+ISON. `shortest.c:pointintri` then rejects polygon-vertex endpoints
+("destination point not in any triangle") and `makeMultiSpline` falls back
+to plain routing for every coalesced 2-cycle — a large, discrete,
+corpus-wide behavior the port must match. Unlike the `solve3`/`poly_init`
+sites above (deep inside compiled expression trees, fix refuted), `ccw` is
+a single standalone compiled function with clean semantics, so
+`src/pathplan/triang.ts` emulates it: plain-double fast path with a
+conservative error bound where plain and fused signs provably agree, and
+an exact Dekker-product + dyadic-BigInt path for the near-zero cases.
+
 ---
 
 ### A9. libm trig 1-ULP → CDT cocircular tie flip (`circo`/`twopi` multispline)
@@ -702,8 +716,12 @@ splines differ by ~0.2–0.5pt. Sibling of **A3**/**A8**: an irreducible
 floating-point portability constraint below C source semantics — matching
 would require reproducing Apple libm's exact `sin`/`cos` rounding in JS.
 
-**Affected:** `2168_1` (circo, Δ≈0.5 on one edge), `241_0` (circo Δ≈0.2/
-twopi canvas Δ≈9 via the same corridor flip on edge `5:ne->8:nw`).
+**Affected:** `241_0` (circo Δ≈0.2 / twopi canvas Δ≈9 via the corridor flip
+on edge `5:ne->8:nw`). `2168_1` originally sat in this class but became
+conformant once the port emulated the oracle's fp-contracted `ccw`
+(pathplan `triang.ts`): its corridor failure is governed by the FMA'd
+`pointintri` vertex-endpoint rejection, which the port now reproduces
+bit-for-bit, so the CDT-diagonal ULP tie no longer surfaces there.
 
 **Why accepted (irreducibility proven by a controlled experiment).** The
 CDT itself is exonerated: the port's `mkSurface` is a faithful port of GTS
