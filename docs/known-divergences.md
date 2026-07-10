@@ -686,6 +686,40 @@ Full diagnosis: `plans/ortho-2620-residual/analysis/2620-ortho-route.md`.
 
 ---
 
+### A9. libm trig 1-ULP → CDT cocircular tie flip (`circo`/`twopi` multispline)
+
+**Class.** V8's `Math.sin`/`Math.cos` are not bit-identical to Apple libm's
+`sin`/`cos` (proven: 1-ULP disagreement at `2π·4.5/8`, one of the eight
+ellipse-obstacle corner angles). `makeObstacle`'s circumscribed-8-gon corners
+inherit that ULP, so the triangle router's input coordinates differ from the
+oracle's by ≤6e-14. Symmetric layouts (equal-size nodes on a rank/ring) make
+the router's quads **exactly cocircular** in real arithmetic, so the exact
+incircle predicate sits on a knife edge: the input ULP flips its sign, the
+constrained-Delaunay diagonal flips, and the corridor polygon that fails
+`Pshortestpath` in the oracle ("destination point not in any triangle" →
+plain-spline fallback) succeeds in the port (or vice versa). The resulting
+splines differ by ~0.2–0.5pt. Sibling of **A3**/**A8**: an irreducible
+floating-point portability constraint below C source semantics — matching
+would require reproducing Apple libm's exact `sin`/`cos` rounding in JS.
+
+**Affected:** `2168_1` (circo, Δ≈0.5 on one edge), `241_0` (circo Δ≈0.2/
+twopi canvas Δ≈9 via the same corridor flip on edge `5:ne->8:nw`).
+
+**Why accepted (irreducibility proven by a controlled experiment).** The
+CDT itself is exonerated: the port's `mkSurface` is a faithful port of GTS
+0.7.6's incremental insertion (`cdt.c`: 1→3 split + recursive
+`swap_if_in_circle`, constraint edges pre-created and unswappable,
+`remove_intersected_*` + `triangulate_polygon` constraint enforcement), and
+a standalone C harness linking the **real GTS library** and fed the port's
+bit-exact router inputs reproduces the port's triangulation face-for-face
+(2168_1: 22/22; 241_0: 185/185). Exact-rational evaluation of the incircle
+determinant on the two input sets confirms the sign flip (+1 with the
+port's inputs, −1 with the oracle's). The residual variable — the 1-ULP
+trig difference — was isolated by comparing `Math.sin`/`sin` bit patterns
+directly.
+
+---
+
 ## Tracked long tail (`dot` attribute & edge-case)
 
 At **defaults**, the `dot` engine matches the C binary to a tight deterministic
