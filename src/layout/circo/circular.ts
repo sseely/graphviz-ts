@@ -24,6 +24,7 @@ import { createBlocktree, createOneBlock, freeBlocktree } from './blocktree.js';
 import { circPos } from './position.js';
 import { ccomps, getPackInfo, packSubgraphs } from '../pack/index.js';
 import { PackMode } from '../pack/types.js';
+import { adjustNodesFull } from '../neato/fdp-adjust.js';
 
 // ---------------------------------------------------------------------------
 // Derived-graph construction
@@ -143,11 +144,15 @@ export function copyPositions(_sg: SubGraph): void {
 // @see lib/neatogen/adjust.c:adjustNodes
 // ---------------------------------------------------------------------------
 
-/** Minimal overlap adjustment: no-op stub matching adjustNodes signature. */
+/**
+ * Multi-component overlap adjustment stub. C runs adjustNodes(sg) on each
+ * DERIVED component subgraph before packing (circularinit.c:212); porting
+ * that requires width/pos plumbing on derived nodes and no divergent
+ * corpus case reaches it yet. The single-component path (adjustNodesFull
+ * on the real graph, circularinit.c:203) IS ported — see circoLayout.
+ */
 export function adjustNodes(_sg: SubGraph): void {
-  // Full VPSC overlap removal is in the neato module. Circo uses a simpler
-  // strategy: the radius formula already spaces nodes by minDist, so no
-  // post-layout adjustment is applied here.
+  // deferred: see plans/xdot-conformance/decision-journal.md (PRISM entry)
 }
 
 // ---------------------------------------------------------------------------
@@ -165,7 +170,9 @@ export function circoLayout(g: Graph): void {
   if (comps.length === 1) {
     blockCount = circularLayout(comps[0]!, g, blockCount, allEdges);
     copyPositions(comps[0]!);
-    adjustNodes(comps[0]!);
+    // C: adjustNodes(g) on the REAL graph — overlap=false resolves to
+    // PRISM on the GTS reference build. @see circularinit.c:203
+    adjustNodesFull(g);
   } else {
     layoutMultiComponent(g, dg, comps, allEdges, blockCount);
   }
