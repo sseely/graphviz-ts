@@ -473,6 +473,7 @@ class SplineHelper {
   static installPline(e: Edge, route: Point[]): void {
     const pts = SplineHelper.polylinePoints(route);
     clipAndInstall(e, e.head, pts, pts.length, SINFO);
+    addEdgeLabels(e); // C makePolyline. @see neatosplines.c:526
   }
 
   static installSpline(e: Edge, obstacles: Poly[], route: Point[]): void {
@@ -493,6 +494,7 @@ class SplineHelper {
     const splinePts = SplineHelper.tryRouteSpline(polyBarriers(barrierPolys), route);
     if (splinePts === null) { makeStraightEdge(e, SINFO); return; }
     clipAndInstall(e, e.head, splinePts, splinePts.length, SINFO);
+    addEdgeLabels(e); // C makeSpline. @see neatosplines.c:585
   }
 }
 
@@ -677,7 +679,12 @@ class RoutingHelper {
     const stepx = g.info.nodesep ?? 18;
     for (const n of nodesInSeq(g)) {
       for (const e of n.outEdges(g)) {
-        if (e.info.spl != null) continue; // ortho routed it
+        if (e.info.spl != null) {
+          // C: `useEdges && ED_spl(e)` — maze-routed edges still get their
+          // head/tail port labels. @see neatosplines.c:655
+          addEdgeLabels(e);
+          continue;
+        }
         if ((e.info.count ?? 0) === 0) continue; // only do representative
         if (e.tail === e.head) { makeSelfArcs(e, stepx); continue; }
         const chain = RoutingHelper.chainList(e);
