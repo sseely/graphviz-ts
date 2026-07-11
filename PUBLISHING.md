@@ -76,6 +76,18 @@ policy; fix on npmjs.com (not in this repo):
   `//registry.npmjs.org/:_authToken=${NPM_TOKEN}` to `~/.npmrc`. Never commit
   a token.
 
+## Removing a published version
+
+- Within **72 hours** of publishing: `npm unpublish graphviz-ts@<version>`
+  (or `npm unpublish graphviz-ts --force` for the whole package; the name is
+  then locked for 24h before it can be republished).
+- A deleted version number can **never be reused** — stamp a new one
+  (`npm run version:stamp`).
+- After 72 hours unpublish is restricted (no dependents, <300 weekly
+  downloads, single owner); otherwise retire the version with
+  `npm deprecate graphviz-ts@<version> "<message>"`, which keeps it
+  installable but warns on install.
+
 ## Notes
 
 - `prepublishOnly` runs `typecheck + build` automatically inside `npm publish`,
