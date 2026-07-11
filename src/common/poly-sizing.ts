@@ -21,6 +21,7 @@
 import type { Point } from '../model/geom.js';
 import { STAR, CYLINDER } from './shapeData.js';
 import { starVertices } from './poly-vertices.js';
+import { fma } from './fma.js';
 
 /** Whitespace in points around labels / between peripheries. @see lib/common/const.h:GAP */
 export const GAP = 4;
@@ -269,7 +270,14 @@ export interface PolyGeom {
 function transformUnitVertex(R: Point, g: PolyGeom, c: { skewdist: number; gdistortion: number; gskew: number }, bb: Point): Point {
   const D = { x: R.x * (c.skewdist + R.y * c.gdistortion) + R.y * c.gskew, y: R.y };
   const alpha = (g.orientation * Math.PI) / 180 + Math.atan2(D.y, D.x);
-  const r = Math.hypot(D.x, D.y);
+  // C uses libm hypot(D.x, D.y). V8's Math.hypot is a scaled algorithm that
+  // returns a result 1 ULP off from libm hypot for in-range polygon vertices
+  // (e.g. hypot(0.35355…, 0.35355…): libm = 0.5 exactly, Math.hypot = 0.5+1ULP),
+  // whereas the naive sqrt(x²+y²) reproduces libm's value bit-for-bit here.
+  // That ULP inflated ND_ht by ~7e-15, and pack.c genPoly's GRID(=ceil) rounded
+  // an exactly-on-boundary component height up a cell, reordering polyomino
+  // packing and swapping two circo/osage components. @see shapes.c:poly_init
+  const r = Math.sqrt(D.x * D.x + D.y * D.y);
   return { x: r * Math.cos(alpha) * bb.x, y: r * Math.sin(alpha) * bb.y };
 }
 
@@ -296,8 +304,12 @@ export function polygonVertices(
   const verts: Point[] = [];
   for (let i = 0; i < g.sides; i++) {
     angle += sectorangle;
-    R.x += sidelength * Math.cos(angle);
-    R.y += sidelength * Math.sin(angle);
+    // C's `R.x += sidelength*cosx` is contracted by clang (-ffp-contract) into a
+    // single-rounding fmadd; two-rounding JS `+=` drifts 1 ULP, and for distorted
+    // 5-gons (house/invhouse) that inflated the accumulated vertex y from 0.5 to
+    // 0.5+1ULP -> ND_ht 36+7e-15 -> a swapped pack cell. @see shapes.c:poly_init
+    R.x = fma(sidelength, Math.cos(angle), R.x);
+    R.y = fma(sidelength, Math.sin(angle), R.y);
     const P = transformUnitVertex(R, g, c, bb);
     verts.push(P);
     if (isBox) {
