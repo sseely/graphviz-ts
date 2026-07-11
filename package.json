@@ -1,8 +1,30 @@
 {
   "name": "graphviz-ts",
-  "version": "0.1.0",
-  "type": "module",
+  "version": "0.1.26071121",
+  "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) — browser-safe, no native dependencies, oracle-verified against the C implementation.",
+  "keywords": [
+    "graphviz",
+    "dot",
+    "graph",
+    "layout",
+    "diagram",
+    "svg",
+    "xdot",
+    "visualization",
+    "typescript",
+    "browser"
+  ],
   "license": "EPL-2.0",
+  "author": "Scott Seely",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sseely/graphviz-ts.git"
+  },
+  "homepage": "https://github.com/sseely/graphviz-ts#readme",
+  "bugs": {
+    "url": "https://github.com/sseely/graphviz-ts/issues"
+  },
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -43,7 +65,10 @@
     "docs:copy-reports": "node docs-site/copy-reports.mjs",
     "docs:dev": "npm run docs:copy-reports && vitepress dev docs-site",
     "docs:build": "npm run docs:copy-reports && vitepress build docs-site",
-    "docs:preview": "vitepress preview docs-site"
+    "docs:preview": "vitepress preview docs-site",
+    "version:stamp": "node scripts/version-stamp.mjs",
+    "publish:check": "npm run typecheck && npm run build && npm pack --dry-run",
+    "prepublishOnly": "npm run typecheck && npm run build"
   },
   "peerDependencies": {
     "canvas": ">=2"
