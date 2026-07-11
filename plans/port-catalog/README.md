@@ -111,7 +111,10 @@ the Classification principle).
    wanted, is a separate package (per `CLAUDE.md`).
 
 > **Fidelity caveat within the in-scope surface.** Everything *not* listed
-> above is held to byte-faithfulness against the C binary. The one unavoidable
+> above is held to the **conformance bar** against the C binary — the
+> deterministic tolerance verdict of [docs/conformance.md](../../docs/conformance.md)
+> (±0.01 on numeric coordinates, exact non-numeric content), never literal
+> byte equality. The one unavoidable
 > boundary is **floating-point determinism**: force-directed engines (sfdp/
 > neato/fdp) depend on FMA and `Math.pow` rounding that can differ across JS
 > engines and CPU architectures (see `src/common/{fma,arm-pow}.ts`). The port
