@@ -126,6 +126,19 @@ level via `test/corpus/accepted-divergences-engines.json`, joined into
 `PARITY-twopi.md` by `parity-report.ts` — the same join `accepted.ts` performs
 for the dot-track `PARITY-dot.md`.
 
+`1855` is the radial/star **mirror** variant of the same pre-routing PRISM FP
+mechanism (accepted 2026-07-11): its 31 leaves are exactly cocircular, so the
+star layout is reflection-symmetric and PRISM's overlap removal sits on a
+symmetry-unstable equilibrium; a 1-ULP V8-vs-libm `cos`/`sin` difference at 5
+leaf angles in `circleLayout`'s `setAbsolutePos` selects the opposite mirror
+basin, and the whole radial layout lands as the exact x-axis mirror of the
+oracle's (max node displacement 6.04pt, bb preserved). Injection A/B proved
+both directions: feeding C's exact `circleLayout` positions into the port's
+PRISM reproduces the oracle node-for-node (3e-14), and restoring only the 5
+ULP-divergent leaf positions flips the entire layout back to the port's
+mirror. Full RCA: `.agent-notes/twopi-radial-drift-rca.md` (decision journal
+2026-07-11).
+
 ### A2. Text measurement (font metrics) → label-driven layout — CLOSED
 
 **Status (2026-07-01): closed.** No corpus id is accepted under this class

@@ -1,72 +1,77 @@
 {
- "comment": "Accepted-divergence registry for the per-ENGINE xdot tracks (circo/twopi/osage/patchwork/neato/fdp/sfdp — parity-<engine>.json, written by test/corpus/engine-walk.ts). Mirrors test/corpus/accepted-divergences.json's role for the dot SVG track, but keyed simply as engine -> id -> entry (no glob/engineIn selectors needed yet: every entry here is a specific corpus id already root-caused for that one engine). Joined at report-time by test/corpus/parity-report.ts into PARITY-<engine>.md (accepted deltas pulled out of the Diverged table, counted separately in Summary) and into the cross-engine PARITY.md track row. An accepted entry is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted tracked gap. Adding/removing an entry must be paired with prose in docs/known-divergences.md.",
- "twopi": {
-  "graphs-arrows": {
-   "class": "A1",
-   "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
+  "comment": "Accepted-divergence registry for the per-ENGINE xdot tracks (circo/twopi/osage/patchwork/neato/fdp/sfdp \u2014 parity-<engine>.json, written by test/corpus/engine-walk.ts). Mirrors test/corpus/accepted-divergences.json's role for the dot SVG track, but keyed simply as engine -> id -> entry (no glob/engineIn selectors needed yet: every entry here is a specific corpus id already root-caused for that one engine). Joined at report-time by test/corpus/parity-report.ts into PARITY-<engine>.md (accepted deltas pulled out of the Diverged table, counted separately in Summary) and into the cross-engine PARITY.md track row. An accepted entry is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted tracked gap. Adding/removing an entry must be paired with prose in docs/known-divergences.md.",
+  "twopi": {
+    "graphs-arrows": {
+      "class": "A1",
+      "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "graphs-newarrows": {
+      "class": "A1",
+      "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "graphs-arrowsize": {
+      "class": "A1",
+      "bound": "64 draw-op diffs on edge Z->I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "linux.x86-arrows_dot": {
+      "class": "A1",
+      "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "macosx-arrows_dot": {
+      "class": "A1",
+      "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "nshare-arrows_dot": {
+      "class": "A1",
+      "bound": "25 draw-op diffs on edge i->Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "share-newarrows": {
+      "class": "A1",
+      "bound": "12 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "windows-newarrows": {
+      "class": "A1",
+      "bound": "12 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows)",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "2239": {
+      "class": "A9",
+      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 183.86 vs 173.06",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "2343": {
+      "class": "A9",
+      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 1271.95 vs 1288.75",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "share-b29": {
+      "class": "A9",
+      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "windows-b29": {
+      "class": "A9",
+      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 (identical mechanism to share-b29)",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "1855": {
+      "class": "A1",
+      "bound": "842 xdot draw-op diffs; whole radial layout is the exact x-axis mirror of the oracle's (y->-y, ring relabel k<->34-k), max node displacement 6.04pt. Mechanism: 1-ULP V8-vs-libm cos/sin in circleLayout setAbsolutePos, amplified by the symmetry-unstable PRISM overlap-removal equilibrium on the cocircular star. Injection A/B: feeding C's exact circleLayout pos into the port's PRISM reproduces the oracle node-for-node (3e-14).",
+      "ref": "known-divergences.md#a1-twopi-arrows-family"
+    }
   },
-  "graphs-newarrows": {
-   "class": "A1",
-   "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "graphs-arrowsize": {
-   "class": "A1",
-   "bound": "64 draw-op diffs on edge Z->I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "linux.x86-arrows_dot": {
-   "class": "A1",
-   "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "macosx-arrows_dot": {
-   "class": "A1",
-   "bound": "32 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "nshare-arrows_dot": {
-   "class": "A1",
-   "bound": "25 draw-op diffs on edge i->Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "share-newarrows": {
-   "class": "A1",
-   "bound": "12 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "windows-newarrows": {
-   "class": "A1",
-   "bound": "12 draw-op diffs, all on edge Z->I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows)",
-   "ref": "known-divergences.md#a1-twopi-arrows-family"
-  },
-  "2239": {
-   "class": "A9",
-   "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 183.86 vs 173.06",
-   "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-  },
-  "2343": {
-   "class": "A9",
-   "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 1271.95 vs 1288.75",
-   "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-  },
-  "share-b29": {
-   "class": "A9",
-   "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18",
-   "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-  },
-  "windows-b29": {
-   "class": "A9",
-   "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 (identical mechanism to share-b29)",
-   "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+  "circo": {
+    "241_0": {
+      "class": "A9",
+      "bound": "41 draw-op diffs; Delta~0.2pt on edge 1->2's routed bezier (unfilled_bezier[1]: 221.92 vs 222.12)",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    }
   }
- },
- "circo": {
-  "241_0": {
-   "class": "A9",
-   "bound": "41 draw-op diffs; Delta~0.2pt on edge 1->2's routed bezier (unfilled_bezier[1]: 221.92 vs 222.12)",
-   "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-  }
- }
 }
