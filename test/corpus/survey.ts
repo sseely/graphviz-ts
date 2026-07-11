@@ -28,7 +28,7 @@ const ROOT = process.env.CORPUS_ROOT ?? join(homedir(), 'git/graphviz/tests');
 
 /**
  * Replace an absolute home-directory prefix with `~` so the committed survey
- * artifacts (parity.json, PARITY.md) never leak a developer's local path.
+ * artifacts (parity.json, PARITY-dot.md) never leak a developer's local path.
  * Applied to the recorded corpus root and to native oracle error messages,
  * which embed each input's absolute path.
  */

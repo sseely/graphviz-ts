@@ -68,7 +68,7 @@ comparison code does. To verify it yourself:
 ## The verdicts
 
 The survey assigns each graph exactly one verdict
-([`PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md)
+([`PARITY-dot.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-dot.md)
 tracks the live counts):
 
 | Verdict | Meaning |

@@ -25,6 +25,7 @@ import {
   dist2, dotneatoClosest, polylineMidpoint, splEndPoints, type SplLike,
 } from './spline-midpoint.js';
 import { updateBB } from '../layout/dot/splines-label.js';
+import { nodesInSeq } from '../layout/dot/decomp.js';
 
 // ---------------------------------------------------------------------------
 // Constants. @see lib/common/geom.h:INCH2PS
@@ -350,11 +351,10 @@ function countAllSlots(
   et: number,
 ): { nNlbls: number; nElbls: number; nSetLbls: number } {
   let nNlbls = 0; let nElbls = 0; let nSetLbls = 0;
-  for (const np of gp.nodes.values()) {
+  for (const np of nodesInSeq(gp)) {
     const nxl = np.info.xlabel as TextlabelT | undefined;
     if (nxl) { if (nxl.set) nSetLbls++; else nNlbls++; }
-    for (const ep of gp.edges) {
-      if (ep.tail !== np) continue;
+    for (const ep of np.outEdges(gp)) {
       const c = countEdgeSlots(ep, et);
       nElbls += c.nElbls; nSetLbls += c.nSetLbls;
     }
@@ -387,7 +387,11 @@ function buildArrays(
     },
   };
 
-  for (const np of gp.nodes.values()) {
+  // C addXLabels walks agfstnode/agfstout — node-seq order with out-edges
+  // in (head-seq, edge-seq) order. Placement is SEQUENTIAL (earlier-placed
+  // labels are collision obstacles for later ones), so the object order is
+  // load-bearing. @see lib/common/postproc.c:addXLabels
+  for (const np of nodesInSeq(gp)) {
     ctx.bb = addNodeObj(np, objs[ctx.oi], ctx.bb, flip);
     const nxl = np.info.xlabel as TextlabelT | undefined;
     if (nxl) {
@@ -399,8 +403,7 @@ function buildArrays(
       }
     }
     ctx.oi++;
-    for (const ep of gp.edges) {
-      if (ep.tail !== np) continue;
+    for (const ep of np.outEdges(gp)) {
       fillEdge(gp, ep as ELike, et, ctx);
     }
   }

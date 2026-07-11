@@ -22,12 +22,12 @@ Where the output *does* differ, it falls into exactly one of three classes:
    "fixed" without a specific, separately-scoped reason.
 2. **Tracked long tail** — known gaps that *will* be closed, each with an
    oracle-pinned fix. These live with live counts in
-   [`test/corpus/PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md).
+   [`test/corpus/PARITY-dot.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-dot.md).
 3. **Non-goals** — intentional scope boundaries (formats and mechanics we never
    set out to reproduce).
 
 The authoritative, continuously-updated records are
-[`PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md)
+[`PARITY-dot.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-dot.md)
 (per-input parity dashboard vs. native `dot`) and
 [`plans/port-catalog/README.md`](https://github.com/sseely/graphviz-ts/blob/main/plans/port-catalog/README.md)
 (algorithm-level port-status inventory).
@@ -35,7 +35,7 @@ The authoritative, continuously-updated records are
 The **machine-readable** source of truth for which graphs are *accepted* (class 1
 below) is
 [`test/corpus/accepted-divergences.json`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/accepted-divergences.json).
-The tooling joins it at report time: `PARITY.md` splits **accepted deltas** from
+The tooling joins it at report time: `PARITY-dot.md` splits **accepted deltas** from
 the **tracked** backlog, and the rules gate sources its allowlist from it. The
 prose sections below explain each entry (A1 and A3 are live; A2 is closed and
 kept as history); a CI test (`accepted-divergences.test.ts`) enforces that
@@ -755,7 +755,7 @@ top). The remaining differences are the **long tail of attributes and
 edge cases** — the historically hard part of any Graphviz port. Unlike the
 accepted deltas above, these *will* be closed; they are tracked live, with
 counts, in
-[`PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md):
+[`PARITY-dot.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-dot.md):
 
 | Category | What differs |
 |---|---|
@@ -765,7 +765,7 @@ counts, in
 | **parser-gap** | A small number of DOT inputs the parser does not yet fully accept. |
 
 If your graph uses only common attributes and the `dot` engine, you are almost
-certainly on the deterministic-tolerance match path. If a layout looks wrong, check `PARITY.md` for
+certainly on the deterministic-tolerance match path. If a layout looks wrong, check `PARITY-dot.md` for
 that input class — it is likely a tracked item with an oracle-pinned fix mission,
 not an unknown.
 
@@ -829,6 +829,6 @@ These are deliberate scope boundaries, not bugs. The library targets **SVG**
 ## Reporting a divergence
 
 If you find output that differs from C and is **not** an accepted delta above,
-not in `PARITY.md`, and not a non-goal, that is a bug worth reporting — the C
+not in `PARITY-dot.md`, and not a non-goal, that is a bug worth reporting — the C
 source is the spec, and unlisted divergences are treated as defects, not
 accepted behavior.

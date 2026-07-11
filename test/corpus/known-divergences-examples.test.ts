@@ -9,7 +9,7 @@
 // is exactly how `proc3d` rotted: it was cited in §A2 as the canonical
 // structural-match example, was never added to the registry, and silently became
 // conformant when the text-measurement work landed — the doc kept claiming it
-// diverged for months while PARITY.md correctly showed it matching.
+// diverged for months while PARITY-dot.md correctly showed it matching.
 //
 // This test encodes the doc's CURRENT per-graph claims as assertions against the
 // live parity verdicts, so the prose cannot silently drift from reality.

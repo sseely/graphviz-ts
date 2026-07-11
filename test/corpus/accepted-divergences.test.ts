@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: EPL-2.0
 //
 // Guard for the accepted-divergence registry (test/corpus/accepted-divergences.json).
-// Keeps the accepted list honest so PARITY.md and the rules gate describe reality:
+// Keeps the accepted list honest so PARITY-dot.md and the rules gate describe reality:
 //   - every entry is well-formed (class/scope/reason/ref + exactly one selector),
 //   - every per-id entry names a real corpus graph,
 //   - every parity/both per-id entry is STILL non-conformant (a graph we

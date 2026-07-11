@@ -23,10 +23,10 @@ red, that suite (mission decision AD-1). All survey code is Node-only under
 | T1 enumerate + classify | `enumerate.ts` | `corpus-manifest.json` |
 | T2 **rules survey** (headless oracle vs port `EstimateTextMeasurer`) | `survey.ts` (+ `render-one.ts`) | `parity-rules.json` |
 | T2-gate no-regression check | `rules-gate.ts` | exit 0/1 |
-| T3 dashboard + triage | `dashboard.ts` | `PARITY.md` |
+| T3 dashboard + triage | `dashboard.ts` | `PARITY-dot.md` |
 
 ```
-enumerate.ts ──▶ corpus-manifest.json ──▶ survey.ts ──▶ parity-rules.json ──▶ dashboard.ts ──▶ PARITY.md
+enumerate.ts ──▶ corpus-manifest.json ──▶ survey.ts ──▶ parity-rules.json ──▶ dashboard.ts ──▶ PARITY-dot.md
 ```
 
 The **rules survey** is the canonical layout survey (mission `fix-xcoord-position`,
@@ -51,7 +51,7 @@ npm run survey
 # T2-gate — fail if any graph REGRESSES vs the retired pango baseline
 npm run survey:gate
 
-# T3 — render the parity report into the PARITY.md dashboard
+# T3 — render the parity report into the PARITY-dot.md dashboard
 npm run survey:dashboard
 
 # Legacy pango baseline (port LutTextMeasurer vs native dot + pango); diagnosis only
@@ -104,7 +104,7 @@ timeout. Native time is read from the canonical `native-timings.json` when prese
 
 Oracle reference SVGs are generated on demand by the local native binary into a
 **gitignored** cache and reused across runs. They are **never committed** — only
-the manifest, `parity.json`, `PARITY.md`, and the harness code are (AD-3).
+the manifest, `parity.json`, `PARITY-dot.md`, and the harness code are (AD-3).
 
 ## Classification (T1)
 

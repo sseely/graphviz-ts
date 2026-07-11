@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0
 //
-// Mirror the generated corpus reports (test/corpus/PARITY.md, PERF.md) into the
+// Mirror the generated corpus reports (test/corpus/PARITY-dot.md, PERF.md) into the
 // VitePress site as parity.md / perf.md so they publish on GitHub Pages. Run as
 // the first step of `docs:dev` / `docs:build` (see package.json), so CI's
 // `npm run docs:build` picks them up automatically. The copies are gitignored —
@@ -16,7 +16,7 @@ const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 
 const REPORTS = [
   {
-    src: '../test/corpus/PARITY.md',
+    src: '../test/corpus/PARITY-dot.md',
     dst: 'parity.md',
     // ../../docs/{known-divergences,conformance}.md (from test/corpus) -> site pages;
     // ../../plans/... (repo-only, not published) -> the GitHub blob so it resolves.
