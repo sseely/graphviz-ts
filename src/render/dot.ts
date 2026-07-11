@@ -37,6 +37,7 @@ import { PenType, FillType } from '../gvc/context.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
 import { EmitState, toFixed2HalfEven } from '../gvc/job.js';
 import { renderEdgeLabels } from '../gvc/edge-labels.js';
+import { printfSig } from '../util/printf-round.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -337,12 +338,18 @@ export function xdotId(s: string): string {
  * is < -4 or ≥ 5. Native writes the DOT `pos`/`bb`/`width`/`height` attributes
  * with `%.5g` (output.c:71/294/302), so large coordinates round to 5 sig figs
  * (`2219962` → `2.2201e+06`); `printNum`'s fixed 3 dp keeps too much precision.
+ *
+ * Uses {@link printfSig} rather than `Number.prototype.toPrecision(5)` so
+ * exact-halfway values (e.g. 1399.25) round half-to-even like C's snprintf,
+ * not half-away-from-zero like `toPrecision`. @see docs proven case
+ * graphs-b786 (circo): pos coordinate 1399.25 → native "1399.2", `toPrecision`
+ * gave "1399.3".
  * @see lib/common/output.c:71 (agxbprint "%.5g")
  */
 export function gfmt5(v: number): string {
   if (!Number.isFinite(v)) return String(v);
   if (v === 0) return '0';
-  let s = v.toPrecision(5);
+  let s = printfSig(v, 5);
   const e = s.indexOf('e');
   if (e >= 0) {
     let mant = s.slice(0, e);
