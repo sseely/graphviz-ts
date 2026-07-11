@@ -36,7 +36,7 @@ hypothesizing — the default stance is "my port differs — find where."
 - Sweep discipline: never edit `src/` while a sweep runs (it reads live
   source). Resume-style sweeps skip once-passing ids and hide regressions —
   run a fresh (deleted-JSONL) sweep before committing routing changes.
-- Journal every fix in `plans/xdot-conformance/decision-journal.md`.
+- Journal every fix in `plans/decision-journal.md`.
 
 ## Translation Rules
 

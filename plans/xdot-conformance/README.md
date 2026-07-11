@@ -98,4 +98,4 @@ Anything else → stop.
 - [batch-1/overview.md](batch-1/overview.md) — T1–T4 harness tasks
 - [batch-2/overview.md](batch-2/overview.md) + [batch-2/fix-loop.md](batch-2/fix-loop.md)
 - [diagrams/data-flow.md](diagrams/data-flow.md) · [diagrams/component-map.md](diagrams/component-map.md)
-- [decision-journal.md](decision-journal.md)
+- [decision-journal.md](../decision-journal.md)
