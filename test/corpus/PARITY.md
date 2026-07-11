@@ -19,12 +19,12 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| dot (SVG) | 788 | 759 | 0 | 19 | 10 | 96.3% |
+| dot (SVG) | 788 | 762 | 0 | 16 | 10 | 96.7% |
 | dot (xdot) | 759 | 754 | 0 | 4 | 1 | 99.3% |
-| circo (xdot) | 759 | 734 | 10 | 1 | 14 | 96.7% |
-| twopi (xdot) | 759 | 730 | 9 | 12 | 8 | 96.2% |
-| osage (xdot) | 759 | 731 | 23 | 0 | 5 | 96.3% |
-| patchwork (xdot) | 759 | 748 | 6 | 0 | 5 | 98.6% |
+| circo (xdot) | 762 | 745 | 0 | 3 | 14 | 97.8% |
+| twopi (xdot) | 762 | 740 | 0 | 14 | 8 | 97.1% |
+| osage (xdot) | 759 | 744 | 3 | 7 | 5 | 98.0% |
+| patchwork (xdot) | 762 | 757 | 0 | 0 | 5 | 99.3% |
 
 
 ### Iterative engines (±0.5 characterization)
@@ -39,9 +39,9 @@ bar above.
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| neato (xdot) | 759 | 263 | 489 | 0 | 7 | 34.7% |
-| fdp (xdot) | 759 | 295 | 390 | 0 | 74 | 38.9% |
-| sfdp (xdot) | 759 | 254 | 475 | 0 | 30 | 33.5% |
+| neato (xdot) | 762 | 263 | 492 | 0 | 7 | 34.5% |
+| fdp (xdot) | 762 | 311 | 435 | 0 | 16 | 40.8% |
+| sfdp (xdot) | 762 | 260 | 494 | 0 | 8 | 34.1% |
 
 
 

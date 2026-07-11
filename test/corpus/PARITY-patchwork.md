@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T14:48:32.230Z)
-- **pass:** 748 (98.6%) · **diverged (tracked):** 6 · **accepted (documented, won't-fix):** 0
+- **Surveyed:** 762 (generated 2026-07-11T22:15:07.089Z)
+- **pass:** 757 (99.3%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 5 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -25,16 +25,9 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (6)
+## Diverged (0)
 
-| id | size | #diffs | firstDiff |
-|---|---:|---:|---|
-| `2475_2` | 641284 | 149037 | `cluster:%10023 <object> cluster:%10023[missing-object]: <absent> vs <present>` |
-| `2717` | 325 | 69 | `cluster:cluster_domestic_cats _draw_ cluster:cluster_domestic_cats/_draw_/op[1].unfilled_polygon[0]: 47.43 vs 0` |
-| `graphs-polypoly` | 6617 | 32 | `node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 130 vs 126.49` |
-| `share-polypoly` | 8872 | 32 | `node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 207.42 vs 205.49` |
-| `windows-polypoly` | 8872 | 32 | `node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 207.42 vs 205.49` |
-| `1898` | 5067 | 2 | `node:N19 _draw_ node:N19/_draw_[missing]: <present> vs <absent>` |
+_(none)_
 
 ## Errors and timeouts (5)
 
@@ -46,5 +39,5 @@ _(none in this corpus)_
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
-_Passing ids (748) are omitted for brevity — the full roster is in
+_Passing ids (757) are omitted for brevity — the full roster is in
 `parity-patchwork.json`._

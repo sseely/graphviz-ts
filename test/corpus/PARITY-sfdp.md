@@ -12,9 +12,9 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T16:22:49.355Z)
-- **pass:** 254 (33.5%) · **diverged (tracked):** 475 · **accepted (documented, won't-fix):** 0
-- **oracle-error:** 7 · **port-error:** 23 · **timeout:** 0
+- **Surveyed:** 762 (generated 2026-07-11T22:56:53.925Z)
+- **pass:** 260 (34.1%) · **diverged (tracked):** 494 · **accepted (documented, won't-fix):** 0
+- **oracle-error:** 7 · **port-error:** 1 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
 
@@ -25,7 +25,7 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (475)
+## Diverged (494)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -41,11 +41,13 @@ _(none in this corpus)_
 | `graphs-root` | 128221 | 27869 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 1413.18 vs 1413.83` |
 | `2343` | 59368 | 25404 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1683.84 vs 1716.1` |
 | `1718` | 22038 | 23687 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 780.28 vs 865.44` |
+| `2470` | 734358 | 18761 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9388.23 vs 7898.3` |
 | `graphs-xx` | 102329 | 18028 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1526 vs 1514.02` |
 | `linux.i386-b102` | 161479 | 17937 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1191.6 vs 1182.25` |
 | `windows-b102` | 184125 | 17934 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1199.1 vs 1189.69` |
 | `share-b102` | 161479 | 17932 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1193.13 vs 1183.76` |
 | `graphs-b102` | 102329 | 17930 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1189.94 vs 1180.6` |
+| `2620` | 64908 | 12755 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2879.18 vs 2860.76` |
 | `linux.i386-b29` | 136753 | 10822 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1523.56 vs 1473.78` |
 | `share-b29` | 137802 | 10822 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1525.97 vs 1476.11` |
 | `windows-b29` | 149114 | 10815 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1470.66 vs 1422.63` |
@@ -94,7 +96,10 @@ _(none in this corpus)_
 | `windows-fig6` | 7553 | 1850 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 952.32 vs 948.53` |
 | `graphs-crazy` | 5556 | 1849 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 782.22 vs 1051.14` |
 | `graphs-proc3d` | 6121 | 1735 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1032.08 vs 1039.65` |
+| `nshare-neatosplines_neato1` | 12051 | 1734 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 671.92 vs 669.31` |
 | `graphs-ngk10_4` | 1718 | 1732 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 599.37 vs 604.78` |
+| `nshare-neatosplines_neato` | 11700 | 1732 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 671.92 vs 669.31` |
+| `nshare-overlap_neato` | 10566 | 1732 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 671.92 vs 669.31` |
 | `share-ngk10_4` | 11842 | 1732 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 599.37 vs 604.78` |
 | `windows-ngk10_4` | 12029 | 1732 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 599.37 vs 604.78` |
 | `share-proc3d` | 10429 | 1731 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1066.87 vs 1068.54` |
@@ -146,6 +151,13 @@ _(none in this corpus)_
 | `graphs-grdlinear_angle` | 5758 | 785 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 725.77 vs 750.57` |
 | `graphs-grdradial` | 5370 | 785 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 725.77 vs 750.57` |
 | `graphs-grdradial_angle` | 6918 | 785 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 725.77 vs 750.57` |
+| `graphs-arrowsize` | 2039 | 779 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
+| `graphs-arrows` | 2029 | 774 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
+| `graphs-newarrows` | 2045 | 774 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
+| `linux.x86-arrows_dot` | 7235 | 774 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
+| `macosx-arrows_dot` | 7235 | 774 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
+| `nshare-arrows_dot` | 7235 | 774 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
+| `1855` | 1335 | 725 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 592.32 vs 595.62` |
 | `2476` | 3653 | 684 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1753.09 vs 1749.03` |
 | `graphs-size` | 1706 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
 | `graphs-unix2` | 1719 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
@@ -164,7 +176,9 @@ _(none in this corpus)_
 | `2183` | 1601 | 545 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 678.64 vs 684.85` |
 | `2734` | 3272 | 528 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 365.65 vs 367.02` |
 | `windows-shells` | 5589 | 480 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 561.04 vs 561.76` |
+| `share-newarrows` | 6364 | 478 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
 | `share-shells` | 5493 | 478 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 561.48 vs 562.2` |
+| `windows-newarrows` | 6364 | 478 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24` |
 | `1323` | 2164 | 457 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1008.37 vs 1099.89` |
 | `graphs-b53` | 2287 | 448 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 451 vs 475.8` |
 | `graphs-Symbol` | 924 | 429 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 163.28 vs 183.82` |
@@ -255,12 +269,14 @@ _(none in this corpus)_
 | `macosx-edgeclip_dot` | 599 | 120 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 330.62 vs 327.49` |
 | `nshare-edgeclip_dot` | 599 | 120 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 330.62 vs 327.49` |
 | `925` | 256 | 119 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 187.4 vs 146.6` |
+| `2609` | 238 | 118 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 282.74 vs 284.5` |
 | `graphs-sb_circle` | 244 | 115 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 78.93 vs 138.53` |
 | `share-clust4` | 1709 | 114 | `edge:a1->b3#0 _draw_ edge:a1->b3#0/_draw_/op[1].unfilled_bezier[5]: 130.04 vs 129.41` |
 | `windows-clust4` | 1709 | 114 | `edge:a1->b3#0 _draw_ edge:a1->b3#0/_draw_/op[1].unfilled_bezier[5]: 130.04 vs 129.41` |
 | `graphs-clust4` | 401 | 112 | `edge:a1->b3#0 _draw_ edge:a1->b3#0/_draw_/op[1].unfilled_bezier[5]: 129.91 vs 128.75` |
 | `graphs-clusters` | 402 | 112 | `edge:a1->b3#0 _draw_ edge:a1->b3#0/_draw_/op[1].unfilled_bezier[5]: 129.91 vs 128.75` |
 | `1949` | 5632 | 109 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 660.3 vs 709.75` |
+| `2242` | 2125 | 105 | `edge:NE4->NF4#0 _draw_ edge:NE4->NF4#0/_draw_/op[2].unfilled_bezier[4]: 378.64 vs 377.3` |
 | `2082` | 3033 | 102 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1255.34 vs 1281.34` |
 | `1585_1` | 82 | 97 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 403.93 vs 413.55` |
 | `144_ortho` | 257 | 96 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 36 vs 54.91` |
@@ -282,6 +298,8 @@ _(none in this corpus)_
 | `1644` | 92 | 63 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 287.73 vs 288.25` |
 | `2391_1` | 82 | 63 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 523.65 vs 524.36` |
 | `2391` | 61 | 62 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 523.65 vs 524.36` |
+| `linux.x86-neatosplines_neato` | 11690 | 62 | `edge:Cannon->ggt#0 _draw_ edge:Cannon->ggt#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
+| `linux.x86-neatosplines_neato1` | 12061 | 62 | `edge:Cannon->ggt#0 _draw_ edge:Cannon->ggt#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `2521_1` | 1062 | 60 | `edge:TL 1 event 2->TL 1 event 3#0 _draw_ edge:TL 1 event 2->TL 1 event 3#0/_draw_/op[1].unfilled_bezier[5]: 120.17 vs 120.76` |
 | `2490` | 70 | 52 | `edge:foo->bar#0 _draw_ edge:foo->bar#0/_draw_/op[1].unfilled_bezier[0]: 64.47 vs 37.19` |
 | `graphs-b73a` | 134 | 44 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 37 vs 42.49` |
@@ -416,6 +434,7 @@ _(none in this corpus)_
 | `graphs-biglabel` | 3246 | 34 | `edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 1220.38 vs 1282.81` |
 | `graphs-grdlinear_node` | 523 | 34 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 244.39 vs 269.19` |
 | `graphs-grdradial_node` | 519 | 34 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 244.39 vs 269.19` |
+| `graphs-structs` | 308 | 34 | `edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 282.81 vs 345.18` |
 | `windows-structs` | 728 | 34 | `edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 288.33 vs 350.8` |
 | `graphs-html2` | 1414 | 33 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.28 vs 107.24` |
 | `2437` | 98 | 32 | `edge:AA3->AA4#0 _draw_ edge:AA3->AA4#0/_draw_/op[1].unfilled_bezier[0]: 70.95 vs 56.72` |
@@ -505,7 +524,7 @@ _(none in this corpus)_
 | `windows-b491` | 486 | 1 | `edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>` |
 | `windows-longflat` | 409 | 1 | `edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>` |
 
-## Errors and timeouts (30)
+## Errors and timeouts (8)
 
 | id | status | message |
 |---|---|---|
@@ -516,29 +535,7 @@ _(none in this corpus)_
 | `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
-| `1855` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `2242` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `2258` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `2556` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `2563` | port-error | sfdp overlap="scale": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `2564` | port-error | sfdp overlap="scale": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `2609` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `graphs-arrows` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `graphs-arrowsize` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `graphs-newarrows` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `linux.x86-arrows_dot` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `linux.x86-neatosplines_neato` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `linux.x86-neatosplines_neato1` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `linux.x86-overlap_neato` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `linux.x86-overlap_neato1` | port-error | sfdp overlap="scale": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `macosx-arrows_dot` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `nshare-arrows_dot` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `nshare-neatosplines_neato` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `nshare-neatosplines_neato1` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `nshare-overlap_neato` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `nshare-overlap_neato1` | port-error | sfdp overlap="scale": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `share-newarrows` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
-| `windows-newarrows` | port-error | sfdp overlap="false": only the default prism0 adjust mode is ported; see mission 8 journal |
+| `2556` | port-error | armPow: argument outside the ported normal-finite fast path |
 
-_Passing ids (254) are omitted for brevity — the full roster is in
+_Passing ids (260) are omitted for brevity — the full roster is in
 `parity-sfdp.json`._

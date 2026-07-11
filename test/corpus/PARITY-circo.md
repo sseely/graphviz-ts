@@ -12,11 +12,11 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T14:08:24.769Z)
-- **pass:** 734 (96.7%) · **diverged (tracked):** 10 · **accepted (documented, won't-fix):** 1
+- **Surveyed:** 762 (generated 2026-07-11T21:33:28.100Z)
+- **pass:** 745 (97.8%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3
 - **oracle-error:** 14 · **port-error:** 0 · **timeout:** 0
 
-## Accepted deltas (1) — documented, not chased
+## Accepted deltas (3) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
@@ -26,21 +26,12 @@ table below.
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
 | `241_0` | 41 | A9 | 41 draw-op diffs; Delta~0.2pt on edge 1-&gt;2's routed bezier (unfilled_bezier[1]: 221.92 vs 222.12) | known-divergences.md#a9-engine-track-twopi-circo |
+| `2475_2` | 989 | A9 | 989 draw-op diffs confined to one 28-node 590_ component (18 nodes move, max 296.7pt; 10744/10762 nodes bit-identical). Mechanism: circo getRotation-&gt;closestNode (circpos.c:73-92) cocircular hypot tie — at the bit-identical placement offset the two candidate distances round 2 ULP apart between V8 Math.hypot and Apple libm, flipping the strict &lt; and rotating/reflecting the sub-block ~20deg. Block tree, circle order, and all centerAngles bit-identical; CR-hypot policy previously refuted. Repro: .agent-notes/circo-2475-590-repro.dot; RCA: .agent-notes/circo-b81-2475-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
+| `windows-tree` | 10 | A9 | 10 draw-op diffs on one fan edge (node2-&gt;node8): circo trig places node2.y a single ULP above node8.y around the symmetric value 18.0 (18.0000000000000320 vs 18.0), flipping closestSide's dyna head-port TOP/BOTTOM at the exact tie; node boxes and all other edges bit-identical. | known-divergences.md#a9-engine-track-twopi-circo |
 
-## Diverged (10)
+## Diverged (0)
 
-| id | size | #diffs | firstDiff |
-|---|---:|---:|---|
-| `graphs-b81` | 191024 | 5143 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 155599.83 vs 154814.35` |
-| `2475_2` | 641284 | 989 | `edge:590_174423->590_174412#0 _draw_ edge:590_174423->590_174412#0/_draw_/op[1].unfilled_bezier[0]: 160109.37 vs 160068.09` |
-| `nshare-shapes_dot` | 4692 | 700 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 491.8 vs 478` |
-| `linux.x86-shapes_dot` | 4861 | 666 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 495.73 vs 573.73` |
-| `1855` | 1335 | 469 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 877.62 vs 876.11` |
-| `2082` | 3033 | 80 | `edge:02c4e90c3fc645e4b0e8f0e5bef12694->2fbd65667241455bb04da4ffb465db70#0 _draw_ edge:02c4e90c3fc645e4b0e8f0e5bef12694->2fbd65667241455bb04da4ffb465db70#0/_draw_/op[1].unfilled_bezier[0]: 258.39 vs 208.36` |
-| `1990` | 610 | 44 | `edge:1⋯7 ❰A❱->1⋯2 'a'#0 _draw_ edge:1⋯7 ❰A❱->1⋯2 'a'#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `1856` | 621 | 32 | `edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[1].unfilled_bezier[11]: 36 vs 72` |
-| `windows-tree` | 1825 | 10 | `edge:node2->node8#0 _draw_ edge:node2->node8#0/_draw_/op[1].unfilled_bezier[5]: 20.77 vs 5.03` |
-| `graphs-b786` | 667 | 2 | `edge:n6->n13#0 pos edge:n6->n13#0/pos[2]: 1399.3 vs 1399.2` |
+_(none)_
 
 ## Errors and timeouts (14)
 
@@ -61,5 +52,5 @@ table below.
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 | `graphs-b103` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 
-_Passing ids (734) are omitted for brevity — the full roster is in
+_Passing ids (745) are omitted for brevity — the full roster is in
 `parity-circo.json`._

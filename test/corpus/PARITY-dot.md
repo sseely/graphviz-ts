@@ -13,8 +13,8 @@ PARITY-dot.md; the cross-engine [PARITY.md](./PARITY.md) summary comes from
 
 - **Oracle:** dot 15.1.0 · **corpus:** [graphviz `tests/`](https://gitlab.com/graphviz/graphviz/-/tree/main/tests) (local clone `~/git/graphviz/tests`)
 - **Surveyed (applicable):** 788
-- **conformant\*:** 759 (96.3%) · structural-match: 16 → 775/788 structurally equal (98.4%)
-- **Accepted deltas (documented, won't-fix):** 19 · **Tracked gaps (unaccepted, will-fix):** 0 → of 19 non-conformant graphs
+- **conformant\*:** 762 (96.7%) · structural-match: 14 → 776/788 structurally equal (98.5%)
+- **Accepted deltas (documented, won't-fix):** 16 · **Tracked gaps (unaccepted, will-fix):** 0 → of 16 non-conformant graphs
 - **errored:** 0 · **timeout:** 0 · **oracle-error:** 10 (excluded from scoring)
 - **Quarantined (not surveyed, from corpus-manifest.json):** malformed 6, engine-deferred 6, multi-graph 3, perf 2
 
@@ -22,14 +22,14 @@ PARITY-dot.md; the cross-engine [PARITY.md](./PARITY.md) summary comes from
 
 Accepted deltas are deliberate, root-caused, won't-fix differences (`test/corpus/accepted-divergences.json` → [Known divergences](../../docs/known-divergences.md)). Everything else non-conformant is a tracked gap we intend to close.
 
-## conformant (759)
+## conformant (762)
 
 Port SVG is *conformant* with the oracle: numeric coordinates/paths agree within the `deterministic` tolerance (±0.01) and all non-numeric content is exactly equal — not literal byte equality. See [docs/conformance.md](../../docs/conformance.md).
 
-_Conformant ids (759) are omitted for brevity — the full roster is in
+_Conformant ids (762) are omitted for brevity — the full roster is in
 [parity.json](parity.json)._
 
-## Accepted deltas (19) — documented, not chased
+## Accepted deltas (16) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant (a
 portability constraint, sub-perceptual and bounded). Source of truth:
@@ -49,14 +49,11 @@ the diverged table and the backlog below.
 | `graphs-decorate` | structural-match | 43.54 | A3 | maxΔ 43.54 on a single intra-cluster labeled edge (Se3ffa656...-&gt;Se3ffa61c...); all 23 diffs live in that one &lt;g&gt; | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
 | `1435` | structural-match | 0.39 | A4 | maxΔ 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `1581` | diverged | 0.00 | A4 | maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
-| `2470` | structural-match | 8.00 | A4 | maxΔ ~8pt; element tree identical, same init_rank/pathplan recovery family as 2471 | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `2471` | structural-match | 6906.60 | A4 | whole-layout numeric (maxΔ ~9063); element tree identical incl. the same 6 lost edges | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `2796` | structural-match | 11.11 | A4 | maxΔ 49 numeric only; identical element tree (both sides lose edge 3-&gt;16) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
-| `graphs-structs` | diverged | 0.00 | A4 | maxΔ 0; element-tree difference only (the oracle's lost struct1-&gt;struct3) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
 | `1367` | diverged | 0.00 | A5 | maxDelta 0; exactly one structural diff (one &lt;title&gt; byte: raw 0x80 vs UTF-8 U+0080); all element counts and coordinates conformant | known-divergences.md#a5-invalid-input-bytes-encoding-representation |
 | `1314` | structural-match | 1683625618000.00 | A6 | only the top-level svg width/height differ; every node ellipse/coord, translate, polygon, and font-size is byte-identical | known-divergences.md#a6-unsigned-int-canvas-overflow-on-degenerate-input |
 | `graphs-honda-tokoro` | structural-match | 1.06 | A7 | maxΔ ~1pt on one edge (n012-&gt;n011); every node/label/bbox conformant | known-divergences.md#a7-round-box-wall-rounding-boundary-dot |
-| `2620` | structural-match | 585.00 | A8 | 423 diffs / maxΔ 585 on 24 edge paths + 22 arrowheads | known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot |
 | `2646` | structural-match | 42.09 | A8 | maxΔ 42.09 on 3 of 21,216 edges (edge2575 g[4639], edge3905 g[7777], edge15467 g[30201]; all record-port :c-&gt;:nb_part smode long-edge routes) | known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot |
 
 ## Tracked structural-match (0)

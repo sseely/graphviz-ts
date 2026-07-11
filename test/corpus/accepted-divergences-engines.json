@@ -65,6 +65,11 @@
       "class": "A9",
       "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.1 vs 356.1 (identical mechanism to graphs-b29)",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "2470": {
+      "class": "A9",
+      "bound": "298 draw-op diffs, ALL edge-label _ldraw_ text positions (HTML <td align=left>LOOKBACK labels); every diff = one xlabel candidate step (+label width x, -16.8 line-height y). Splines/nodes/bboxes bit-identical to oracle (0 _draw_/pos/bb diffs even @1e-7). Mechanism: ~140 near-coincident HTML edge-label anchors are placed by the neato-family xlabel placer (postproc.c:addXLabels -> label/xlabels.c). Patient-zero seq=8: node ND_coord.y differs 1.3e-13 (~2 ULP, twopi radial libm sin/cos vs V8 Math) while ND_height/sz.y/2 are bit-identical; floor(coord.y - sz.y/2) straddles exactly 0, flipping objplpmks rect y-low -1<->0 -> Hilbert key -> R-tree insertion order -> node grouping (C root 19 branches vs port 22) -> RTreeSearch pruning -> xlabel candidate flip. xladjust/AGSEQ order/CombineRect(min-min quirk)/PickBranch u64/int32 Hilbert key all faithful. No deterministic rewrite reproduces the libm coordinate. Same class as twopi/1855 and the b29 placeLabels-tie A9 family. Full RCA: .agent-notes/twopi-2470-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   },
   "circo": {

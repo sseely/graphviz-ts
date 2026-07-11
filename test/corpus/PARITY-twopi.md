@@ -12,11 +12,11 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T14:22:39.103Z)
-- **pass:** 730 (96.2%) · **diverged (tracked):** 9 · **accepted (documented, won't-fix):** 12
+- **Surveyed:** 762 (generated 2026-07-11T21:48:55.336Z)
+- **pass:** 740 (97.1%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 14
 - **oracle-error:** 8 · **port-error:** 0 · **timeout:** 0
 
-## Accepted deltas (12) — documented, not chased
+## Accepted deltas (14) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
@@ -25,32 +25,24 @@ table below.
 
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
+| `1855` | 842 | A1 | 842 xdot draw-op diffs; whole radial layout is the exact x-axis mirror of the oracle's (y-&gt;-y, ring relabel k&lt;-&gt;34-k), max node displacement 6.04pt. Mechanism: 1-ULP V8-vs-libm cos/sin in circleLayout setAbsolutePos, amplified by the symmetry-unstable PRISM overlap-removal equilibrium on the cocircular star. Injection A/B: feeding C's exact circleLayout pos into the port's PRISM reproduces the oracle node-for-node (3e-14). | known-divergences.md#a1-twopi-arrows-family |
 | `graphs-arrows` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 | known-divergences.md#a1-twopi-arrows-family |
 | `graphs-arrowsize` | 64 | A1 | 64 draw-op diffs on edge Z-&gt;I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
-| `graphs-newarrows` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
-| `linux.x86-arrows_dot` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `graphs-newarrows` | 25 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `linux.x86-arrows_dot` | 25 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
 | `macosx-arrows_dot` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
-| `nshare-arrows_dot` | 25 | A1 | 25 draw-op diffs on edge i-&gt;Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
+| `nshare-arrows_dot` | 32 | A1 | 25 draw-op diffs on edge i-&gt;Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
 | `share-newarrows` | 12 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
 | `windows-newarrows` | 12 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
 | `2239` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 183.86 vs 173.06 | known-divergences.md#a9-engine-track-twopi-circo |
-| `2343` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 1271.95 vs 1288.75 | known-divergences.md#a9-engine-track-twopi-circo |
-| `share-b29` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 | known-divergences.md#a9-engine-track-twopi-circo |
-| `windows-b29` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 (identical mechanism to share-b29) | known-divergences.md#a9-engine-track-twopi-circo |
+| `241_0` | 6 | A9 | 6 draw-op diffs; edge 1-&gt;6 routed as a 14-pt multispline corridor (port) vs the native plain per-member fallback (8-pt), point deltas &lt;0.07pt. CDT cocircular incircle tie flipped by libm sin/cos 1-ULP — sibling of the accepted circo/241_0 entry. | known-divergences.md#a9-engine-track-twopi-circo |
+| `2470` | 298 | A9 | 298 draw-op diffs, ALL edge-label _ldraw_ text positions (HTML &lt;td align=left&gt;LOOKBACK labels); every diff = one xlabel candidate step (+label width x, -16.8 line-height y). Splines/nodes/bboxes bit-identical to oracle (0 _draw_/pos/bb diffs even @1e-7). Mechanism: ~140 near-coincident HTML edge-label anchors are placed by the neato-family xlabel placer (postproc.c:addXLabels -&gt; label/xlabels.c). Patient-zero seq=8: node ND_coord.y differs 1.3e-13 (~2 ULP, twopi radial libm sin/cos vs V8 Math) while ND_height/sz.y/2 are bit-identical; floor(coord.y - sz.y/2) straddles exactly 0, flipping objplpmks rect y-low -1&lt;-&gt;0 -&gt; Hilbert key -&gt; R-tree insertion order -&gt; node grouping (C root 19 branches vs port 22) -&gt; RTreeSearch pruning -&gt; xlabel candidate flip. xladjust/AGSEQ order/CombineRect(min-min quirk)/PickBranch u64/int32 Hilbert key all faithful. No deterministic rewrite reproduces the libm coordinate. Same class as twopi/1855 and the b29 placeLabels-tie A9 family. Full RCA: .agent-notes/twopi-2470-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
+| `graphs-b29` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 368.1 vs 356.1 (same knife-edge previously accepted for share-b29/windows-b29; variants swapped when polylineMidpoint gained the faithful fmadd contraction - anchor now bit-identical to C, flip is a placeLabels tie on 1-ULP-drifted surrounding objects) | known-divergences.md#a9-engine-track-twopi-circo |
+| `linux.i386-b29` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 368.1 vs 356.1 (identical mechanism to graphs-b29) | known-divergences.md#a9-engine-track-twopi-circo |
 
-## Diverged (9)
+## Diverged (0)
 
-| id | size | #diffs | firstDiff |
-|---|---:|---:|---|
-| `1855` | 1335 | 871 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 945.31 vs 943.68` |
-| `2361` | 1419 | 184 | `edge:AC->CI#0 _draw_ edge:AC->CI#0/_draw_/op[1].unfilled_bezier[0]: 289.16 vs 282.77` |
-| `2183` | 1601 | 79 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 28.31 vs 24.26` |
-| `graphs-states` | 492 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
-| `share-states` | 858 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
-| `windows-states` | 878 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
-| `144_ortho` | 257 | 14 | `edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_/op[2].text[0]: 46.05 vs 52.87` |
-| `144_no_ortho` | 237 | 6 | `edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_/op[2].text[0]: 46.05 vs 52.87` |
-| `241_0` | 578 | 6 | `edge:1->6#0 _draw_ edge:1->6#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
+_(none)_
 
 ## Errors and timeouts (8)
 
@@ -65,5 +57,5 @@ table below.
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K twopi -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K twopi -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
-_Passing ids (730) are omitted for brevity — the full roster is in
+_Passing ids (740) are omitted for brevity — the full roster is in
 `parity-twopi.json`._

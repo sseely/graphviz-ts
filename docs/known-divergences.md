@@ -823,6 +823,46 @@ already refuted for this class (2026-07-10). Standalone repro:
 `.agent-notes/circo-2475-590-repro.dot`; full RCA:
 `.agent-notes/circo-b81-2475-rca.md` (accepted 2026-07-11).
 
+**twopi `2470` — radial-coordinate ULP amplified by the xlabel R-tree.**
+2470 is a 140-edge graph whose HTML `<table>` edge labels cluster on
+near-coincident radial anchors. In the neato family, edge labels are placed
+as external labels by the greedy xlabel placer (`label/xlabels.c`), which
+picks the least-overlapping candidate corner via a Hilbert-ordered R-tree.
+The port's splines and node coordinates match the oracle to emission
+precision (zero spline/node/bbox diffs even at 1e-7), but one node's radial
+`ND_coord.y` differs by ~2 ULP (Apple libm `sin`/`cos` vs V8 `Math`) — far
+below the conformance bar, yet it straddles the `floor(pos.y − sz.y/2)`
+boundary at exactly 0 in `objplpmks`, flipping that object's R-tree rect by
+one unit. The Hilbert-order/tree-grouping change makes `RTreeSearch` prune
+a different branch, so ~140 labels each snap to the neighbouring candidate
+corner (each diff a fixed (+width, −line-height) step). The placer, object
+order, rect rounding, `CombineRect` (which faithfully mirrors C's min-min
+quirk), and the int32 Hilbert key were each verified faithful; the
+divergence is the upstream radial-trig ULP, irreducible for the same reason
+as twopi `1855`. Accepted 2026-07-11; full RCA:
+`.agent-notes/twopi-2470-rca.md` (which also documents that the id's
+morning "pass" was an artifact of a stale oracle binary, not a port
+regression).
+
+**osage `1855` — obstacle-vertex fp-contract smear.** Distinct from the twopi
+`1855` radial-mirror entry above: under osage the node centers are bit-exact
+to the oracle, and the 110 draw-op diffs are three obstacle-routed edges
+placed on the mirror side of a node row (X bit-exact, Y mirrored). The
+octagon obstacle vertices from
+`circumscribed_polygon_corner_about_ellipse` (`neatosplines.c:301`) differ
+from C by 3–4 ULP because clang's `-ffp-contract=on` fuses the `a·b±c`
+chains in `ellipse_tangent_slope`/`line_intersection` into single-rounding
+FMAs while V8 rounds each operation: C's fused rounding collapses a gutter
+column of corner-x values to one bit-identical double (exactly collinear),
+the port's splits it into two values 1 ULP apart. That flips the visibility
+`clear()` tangency test — the gutter is no longer blocked — adding ~20
+visibility edges, and Dijkstra resolves the up/down homotopy tie to the
+mirror side. Controlled experiment: injecting C's exact obstacle
+coordinates into the otherwise-untouched port yields **zero** diverging
+edges, exonerating the legal-arrangement, visibility, Dijkstra, and spline
+chain entirely; injecting C's libm `cos`/`sin` alone is a no-op. Accepted
+2026-07-11; full RCA: `.agent-notes/osage-spline-family-rca.md`.
+
 **b29 family (twopi).** The four b29 variants share one knife-edge: the
 `EqmtTyp` edge label (`Node14732->Node14731`) sits on an exact placeLabels
 side-selection tie whose outcome depends on 1-ULP twopi layout drift in the
@@ -834,6 +874,18 @@ two (`share-b29`, `windows-b29`) now conform — and `2343`'s accepted A9
 label diff cleared entirely. Bound: 1 draw-op, Δ12pt label y. Irreducible
 without eliminating the upstream drift. Full RCA:
 `.agent-notes/twopi-states-rca.md`.
+
+The same placeLabels knife-edge surfaces on the **osage** track (accepted
+2026-07-11, full RCA: `.agent-notes/osage-small-tail-rca.md`):
+`linux.i386-b29` and `share-b29` (2 draw-op diffs each — one edge label's
+x-anchor lands at 878.28 vs 841.06, placed symmetrically about the
+bit-identical spline midpoint 859.67, i.e. ±half the label width; the two
+variants mirror each other) and `1652` (2 draw-op diffs — two edges each
+flip one label anchor about an identical midpoint, one in x and one in y,
+with bit-identical splines and arrowheads; the oracle renders completely,
+so this is not the known native-timeout flake). In every case the edge
+geometry is bit-exact and only the label side-selection tie resolves
+oppositely on 1-ULP-drifted surroundings.
 
 The osage track carries the `polypoly` triple (`graphs-polypoly`,
 `share-polypoly`, `windows-polypoly`; accepted 2026-07-11, full RCA in

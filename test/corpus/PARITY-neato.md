@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T15:43:25.370Z)
-- **pass:** 263 (34.7%) · **diverged (tracked):** 489 · **accepted (documented, won't-fix):** 0
+- **Surveyed:** 762 (generated 2026-07-11T23:16:05.727Z)
+- **pass:** 263 (34.5%) · **diverged (tracked):** 492 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -25,7 +25,7 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (489)
+## Diverged (492)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -161,7 +161,7 @@ _(none in this corpus)_
 | `nshare-record_dot` | 4632 | 777 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 640.31 vs 377.32` |
 | `share-triedds` | 3852 | 771 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 404.76 vs 452.39` |
 | `windows-triedds` | 3948 | 771 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 404.76 vs 424.64` |
-| `1855` | 1335 | 759 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 62.4 vs 0` |
+| `1855` | 1335 | 755 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 62.25 vs 0` |
 | `graphs-root` | 128221 | 710 | `edge:1->189E#0 _ldraw_ edge:1->189E#0/_ldraw_[missing]: <absent> vs <present>` |
 | `2556` | 469 | 690 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 410.99 vs 671.85` |
 | `nshare-ports_dot` | 3493 | 674 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 238.4 vs 270.65` |
@@ -179,6 +179,7 @@ _(none in this corpus)_
 | `1453` | 2446 | 545 | `edge:CMD_BEGIN->CMD_INNER#0 _draw_ edge:CMD_BEGIN->CMD_INNER#0/_draw_/op[1].unfilled_bezier[0]: 492.98 vs 501.23` |
 | `share-jcctree` | 2612 | 540 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 584.99 vs 338.66` |
 | `windows-jcctree` | 2612 | 540 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 584.99 vs 338.68` |
+| `2470` | 734358 | 499 | `edge:n1->n0#0 _ldraw_ edge:n1->n0#0/_ldraw_[missing]: <absent> vs <present>` |
 | `share-b786` | 2198 | 492 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 323.99 vs 398.34` |
 | `graphs-mode` | 14907 | 474 | `edge:ccsfpr2_0_1t_99->359100#0 _draw_ edge:ccsfpr2_0_1t_99->359100#0/_draw_/op[1].unfilled_bezier[0]: 1159.77 vs 1158.97` |
 | `linux.x86-pack_neato2` | 2890 | 470 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 442.85 vs 580.05` |
@@ -460,6 +461,7 @@ _(none in this corpus)_
 | `graphs-grdlinear_node` | 523 | 41 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 244.39 vs 269.19` |
 | `graphs-grdradial_node` | 519 | 41 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 244.39 vs 269.19` |
 | `2643` | 91 | 40 | `edge:l_stop->l_run#0 _draw_ edge:l_stop->l_run#0/_draw_/op[1].unfilled_bezier[0]: 63.89 vs 74.52` |
+| `graphs-structs` | 308 | 40 | `edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 119.13 vs 101.11` |
 | `graphs-b73` | 124 | 39 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 37 vs 45.3` |
 | `graphs-big` | 9231 | 39 | `edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 317.88 vs 299.85` |
 | `graphs-biglabel` | 3246 | 39 | `edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 315.16 vs 297.13` |
@@ -492,6 +494,7 @@ _(none in this corpus)_
 | `graphs-nhg` | 339 | 11 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58` |
 | `2801` | 651 | 9 | `edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_[missing]: <absent> vs <present>` |
 | `graphs-b57` | 8472 | 7 | `edge:node33->node35#0 _ldraw_ edge:node33->node35#0/_ldraw_[missing]: <absent> vs <present>` |
+| `2620` | 64908 | 6 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 800 vs 832` |
 | `graphs-states` | 492 | 5 | `edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>` |
 | `165_2` | 88 | 4 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 125.21 vs 134.12` |
 | `2391_1` | 82 | 4 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 74.55 vs 136.99` |

@@ -12,9 +12,9 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T16:07:18.112Z)
-- **pass:** 295 (38.9%) · **diverged (tracked):** 390 · **accepted (documented, won't-fix):** 0
-- **oracle-error:** 15 · **port-error:** 59 · **timeout:** 0
+- **Surveyed:** 762 (generated 2026-07-11T22:40:36.461Z)
+- **pass:** 311 (40.8%) · **diverged (tracked):** 435 · **accepted (documented, won't-fix):** 0
+- **oracle-error:** 15 · **port-error:** 0 · **timeout:** 1
 
 ## Accepted deltas (0) — documented, not chased
 
@@ -25,20 +25,43 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (390)
+## Diverged (435)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
 | `2475_2` | 641284 | 321527 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432` |
+| `graphs-b103` | 377525 | 69777 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1840.48 vs 2176.86` |
+| `2095_1` | 105083 | 65978 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24` |
 | `linux.x86-root_circo` | 313168 | 35084 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7369748.58 vs 42055799.2` |
 | `nshare-root_circo` | 313126 | 35084 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7463544.31 vs 42601556.38` |
+| `graphs-root` | 128221 | 35078 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3060.94 vs 2747.66` |
+| `linux.x86-root_twopi` | 287907 | 35028 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3305.06 vs 3226.07` |
+| `nshare-root_twopi` | 287916 | 34958 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3220.18 vs 3411.29` |
+| `2343` | 59368 | 25613 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2458.63 vs 2260.56` |
+| `1718` | 22038 | 24051 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -80` |
+| `share-b102` | 161479 | 18263 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 793.05 vs 787.66` |
+| `graphs-xx` | 102329 | 18259 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1559.26 vs 1408.75` |
+| `graphs-b102` | 102329 | 18244 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1165.18 vs 1109.75` |
+| `linux.i386-b102` | 161479 | 18189 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 769.56 vs 735.23` |
+| `windows-b102` | 184125 | 18104 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 733.8 vs 747.34` |
+| `2470` | 734358 | 16471 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 8835.44 vs 7690.38` |
+| `graphs-b29` | 62931 | 11040 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18` |
+| `graphs-b143` | 62055 | 10709 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2` |
+| `graphs-b81` | 191024 | 9343 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -34924.12` |
 | `2095` | 4865 | 8253 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 5425.41 vs 5672.31` |
-| `graphs-b106` | 48933 | 7002 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41` |
+| `2620` | 64908 | 8188 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4628.91 vs 4902.78` |
+| `graphs-b124` | 10284 | 7641 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3188.32 vs 3023.15` |
+| `graphs-viewport` | 37292 | 7531 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 718.41 vs 2563.33` |
+| `graphs-mode` | 14907 | 7525 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 847.58 vs 667.17` |
+| `1447_1` | 14827 | 7199 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2018.94 vs 2257.76` |
+| `graphs-b106` | 48933 | 7001 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41` |
 | `2669` | 3835 | 6034 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1932.38 vs 1855.18` |
+| `graphs-b69` | 33033 | 4191 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2522.84 vs 3390.24` |
 | `graphs-b51` | 19886 | 3836 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4163.86 vs 5135.75` |
 | `graphs-NaN` | 2672 | 3624 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2144.99 vs 2737.29` |
 | `share-NaN` | 16328 | 3459 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 38807.63 vs 38795.75` |
 | `graphs-b15` | 8774 | 3449 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1185.75` |
+| `graphs-awilliams` | 7305 | 3373 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2237.02 vs 1895.7` |
 | `graphs-pgram` | 2614 | 3136 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1727.26 vs 1848.55` |
 | `graphs-b36` | 10388 | 2535 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2723.85 vs 2773.06` |
 | `graphs-jsort` | 6189 | 2402 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1772.95 vs 1585.99` |
@@ -51,6 +74,8 @@ _(none in this corpus)_
 | `graphs-sr_circle_dbl` | 3780 | 2133 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.02` |
 | `graphs-b71` | 2748 | 2091 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3271.05 vs 2569.17` |
 | `graphs-st_circle_dbl` | 3643 | 2051 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89` |
+| `windows-ldbxtried` | 11805 | 2000 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 27901.04 vs 27924.32` |
+| `share-ldbxtried` | 11505 | 1986 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 28454.81 vs 28442.53` |
 | `graphs-fig6` | 835 | 1950 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1086.34 vs 1229.13` |
 | `graphs-world` | 980 | 1943 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1039.8 vs 1088.38` |
 | `2193` | 6399 | 1941 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4941.45 vs 3747.01` |
@@ -58,8 +83,8 @@ _(none in this corpus)_
 | `graphs-dpd` | 1357 | 1932 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 899.18 vs 888.47` |
 | `graphs-overlap` | 1357 | 1932 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 899.18 vs 888.47` |
 | `graphs-proc3d` | 6121 | 1926 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1606.18 vs 1598.32` |
-| `graphs-cairo` | 5866 | 1925 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 546.01 vs 786.76` |
 | `graphs-crazy` | 5556 | 1920 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4` |
+| `graphs-cairo` | 5866 | 1919 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.47 vs 786.76` |
 | `graphs-abstract` | 770 | 1904 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 846.91 vs 912.37` |
 | `graphs-ngk10_4` | 1718 | 1903 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1048.35 vs 1239.42` |
 | `graphs-b57` | 8472 | 1846 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3326.16 vs 2520.51` |
@@ -78,16 +103,23 @@ _(none in this corpus)_
 | `graphs-sl_circle` | 2159 | 1378 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -146.93` |
 | `graphs-sr_circle` | 2152 | 1369 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.23` |
 | `graphs-st_circle` | 2071 | 1316 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89` |
+| `1453` | 2446 | 1279 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1628.38 vs 938.5` |
 | `1447` | 6707 | 1263 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 882.22 vs 912.15` |
 | `graphs-mike` | 381 | 1130 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 762.09 vs 660.21` |
 | `graphs-shells` | 1102 | 1092 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 745 vs 1005.96` |
 | `1898` | 5067 | 1085 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 750.04 vs 850.62` |
 | `graphs-viewfile` | 1767 | 989 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 490.14 vs 526.08` |
 | `2183` | 1601 | 815 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 484.91 vs 451.3` |
+| `graphs-arrowsize` | 2039 | 794 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93` |
+| `graphs-arrows` | 2029 | 762 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93` |
+| `graphs-newarrows` | 2045 | 762 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93` |
+| `2242` | 2125 | 757 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 555.68 vs 625.45` |
 | `graphs-alf` | 958 | 743 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 543.18 vs 755.78` |
 | `graphs-record` | 958 | 743 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 543.18 vs 755.78` |
 | `graphs-triedds` | 1610 | 720 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 789.03 vs 794.83` |
 | `graphs-style` | 983 | 719 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 433.91 vs 413.51` |
+| `1855` | 1335 | 686 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 651.49 vs 631.4` |
+| `2556` | 469 | 674 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 737.31 vs 571.88` |
 | `graphs-ports` | 677 | 659 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 459.77 vs 445.02` |
 | `graphs-jcctree` | 778 | 521 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 338.8 vs 346.84` |
 | `graphs-Helvetica` | 2966 | 508 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 734.81 vs 861.55` |
@@ -108,11 +140,15 @@ _(none in this corpus)_
 | `windows-triedds` | 3948 | 314 | `edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 14848.4 vs 14851.62` |
 | `share-triedds` | 3852 | 312 | `edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 26265.97 vs 26275.01` |
 | `1880` | 3451 | 307 | `edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[2].unfilled_bezier[0]: 759.42 vs 760.31` |
+| `linux.x86-arrows_dot` | 7235 | 295 | `edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
+| `macosx-arrows_dot` | 7235 | 295 | `edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
+| `nshare-arrows_dot` | 7235 | 295 | `edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `graphs-ER` | 650 | 286 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104` |
 | `241_0` | 578 | 272 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 359.85 vs 353.14` |
 | `2361` | 1419 | 265 | `edge:AC->CI#0 _draw_ edge:AC->CI#0/_draw_/op[1].unfilled_bezier[1]: 151.19 vs 149` |
 | `1323` | 2164 | 253 | `edge:namespace1->vfsmount1#0 _draw_ edge:namespace1->vfsmount1#0/_draw_/op[1].unfilled_bezier[0]: 108.47 vs 138.32` |
 | `graphs-clust1` | 146 | 248 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.97 vs 208.47` |
+| `2184` | 393 | 218 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8` |
 | `linux.i386-b106` | 92005 | 215 | `edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>` |
 | `share-b106` | 92301 | 215 | `edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>` |
 | `windows-b106` | 95634 | 215 | `edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>` |
@@ -143,11 +179,14 @@ _(none in this corpus)_
 | `share-records` | 1398 | 110 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25` |
 | `windows-records` | 1416 | 110 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25` |
 | `graphs-b491` | 113 | 105 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 125.58 vs 129.69` |
+| `graphs-structs` | 308 | 94 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 168.68 vs 170.53` |
 | `graphs-b145` | 256 | 92 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 95.37 vs 144.25` |
 | `144_ortho` | 257 | 91 | `edge:A->B#0 _draw_ edge:A->B#0/_draw_/op[1].unfilled_bezier[1]: 68.74 vs 70` |
 | `graphs-nestedclust` | 207 | 89 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 227.69 vs 199.69` |
 | `nshare-dotsplines_dot` | 8836 | 89 | `edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57` |
 | `nshare-dotsplines_dot1` | 9332 | 89 | `edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57` |
+| `share-newarrows` | 6364 | 88 | `edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
+| `windows-newarrows` | 6364 | 88 | `edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `graphs-sb_circle` | 244 | 84 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55` |
 | `graphs-biglabel` | 3246 | 82 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1424.12 vs 1425.38` |
 | `graphs-big` | 9231 | 81 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 805.68 vs 793.93` |
@@ -185,12 +224,16 @@ _(none in this corpus)_
 | `graphs-b123` | 59 | 33 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 36 vs 43.36` |
 | `graphs-html2` | 1414 | 33 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.52 vs 107.05` |
 | `2437` | 98 | 32 | `edge:AA3->AA4#0 _draw_ edge:AA3->AA4#0/_draw_/op[1].unfilled_bezier[0]: 69.96 vs 56.41` |
+| `linux.x86-neatosplines_neato1` | 12061 | 32 | `edge:cv->vd#0 _draw_ edge:cv->vd#0/_draw_/op[1].unfilled_bezier[0]: 502.51 vs 507.07` |
+| `nshare-neatosplines_neato1` | 12051 | 32 | `edge:cv->vd#0 _draw_ edge:cv->vd#0/_draw_/op[1].unfilled_bezier[0]: 502.06 vs 506.62` |
 | `graphs-b73a` | 134 | 29 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -5.49` |
 | `graphs-train11` | 777 | 28 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 286.25 vs 311.14` |
 | `share-a3` | 266 | 28 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -8.08` |
 | `share-train11` | 3220 | 28 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 29776.75 vs 29801.64` |
 | `windows-train11` | 3257 | 28 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 30150.69 vs 30175.58` |
 | `graphs-b73` | 124 | 27 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -5.49` |
+| `share-b51` | 29420 | 25 | `edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>` |
+| `windows-b51` | 29685 | 25 | `edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>` |
 | `2168_1` | 729 | 24 | `edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[0]: 65.43 vs 59.13` |
 | `graphs-b545` | 104 | 24 | `edge:N11ne->N11#0 _draw_ edge:N11ne->N11#0/_draw_/op[1].unfilled_bezier[0]: 191.01 vs 189.37` |
 | `graphs-record2` | 155 | 24 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 92.01 vs 17.33` |
@@ -211,6 +254,7 @@ _(none in this corpus)_
 | `nshare-radius_dot` | 418 | 16 | `edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6` |
 | `share-clust1` | 1239 | 16 | `edge:b0->b1#0 _draw_ edge:b0->b1#0/_draw_/op[1].unfilled_bezier[4]: 2048.04 vs 2048.69` |
 | `windows-clust1` | 1261 | 16 | `edge:b0->b1#0 _draw_ edge:b0->b1#0/_draw_/op[1].unfilled_bezier[4]: 2048.04 vs 2048.69` |
+| `windows-proc3d` | 10446 | 16 | `edge:22316->22324#0 pos edge:22316->22324#0/pos[1]: 32817 vs 32818` |
 | `windows-radius_dot` | 418 | 16 | `edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6` |
 | `graphs-xlabels` | 404 | 15 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -15.22` |
 | `graphs-fsm` | 605 | 14 | `edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>` |
@@ -221,6 +265,7 @@ _(none in this corpus)_
 | `graphs-url` | 1242 | 10 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8` |
 | `linux.i386-ER` | 2072 | 10 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104` |
 | `share-ER` | 2072 | 10 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104` |
+| `share-proc3d` | 10429 | 10 | `cluster:cluster_0 bb cluster:cluster_0/bb[1]: 26034 vs 26035` |
 | `windows-ER` | 2051 | 10 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104` |
 | `2801` | 651 | 9 | `edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_[missing]: <absent> vs <present>` |
 | `graphs-b` | 338 | 9 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52` |
@@ -420,7 +465,7 @@ _(none in this corpus)_
 | `windows-b491` | 486 | 1 | `edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>` |
 | `windows-longflat` | 409 | 1 | `edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>` |
 
-## Errors and timeouts (74)
+## Errors and timeouts (16)
 
 | id | status | message |
 |---|---|---|
@@ -439,65 +484,7 @@ _(none in this corpus)_
 | `2721` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot |
 | `graphs-b53` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv |
 | `graphs-badvoro` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
-| `1447_1` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `1453` | port-error | fdp: coincident nodes CONTEXT_MODES/HUFFMAN_CODE_2 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal |
-| `1718` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `1855` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2095_1` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+4" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2108` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+344" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2184` | port-error | fdp: coincident nodes z1/y1 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal |
-| `2242` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+7" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2258` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2343` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2556` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2563` | port-error | fdp: removeOverlapAs mode "scale" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2564` | port-error | fdp: removeOverlapAs mode "scale" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `2609` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-arrows` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-arrowsize` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-awilliams` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b102` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b103` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b124` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b143` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b29` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b69` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-b7` | port-error | fdp: coincident nodes q/z hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal |
-| `graphs-b81` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-clust5` | port-error | fdp: coincident nodes z0/y0 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal |
-| `graphs-mode` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-newarrows` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-root` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-viewport` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `graphs-xx` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.i386-b102` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.x86-arrows_dot` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.x86-neatosplines_neato` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.x86-neatosplines_neato1` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.x86-overlap_neato` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.x86-overlap_neato1` | port-error | fdp: removeOverlapAs mode "scale" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `linux.x86-root_twopi` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `macosx-arrows_dot` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `nshare-arrows_dot` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `nshare-neatosplines_neato` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `nshare-neatosplines_neato1` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `nshare-overlap_neato` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `nshare-overlap_neato1` | port-error | fdp: removeOverlapAs mode "scale" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `nshare-root_twopi` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-b102` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-b51` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived_2" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-clust2` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-clust3` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-ldbxtried` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-newarrows` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `share-proc3d` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-b102` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-b51` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived_2" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-clust2` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-clust3` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-ldbxtried` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-newarrows` | port-error | fdp: removeOverlapAs mode "false" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
-| `windows-proc3d` | port-error | fdp: removeOverlapAs mode "prism" reached for graph "ccderived+0" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal |
+| `2108` | timeout |  |
 
-_Passing ids (295) are omitted for brevity — the full roster is in
+_Passing ids (311) are omitted for brevity — the full roster is in
 `parity-fdp.json`._
