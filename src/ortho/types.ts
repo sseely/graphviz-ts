@@ -104,7 +104,16 @@ export interface SNode {
   nAdj: number; // number of adjacent edges (live)
   saveNAdj: number; // saved nAdj for reset
   cells: [Cell | null, Cell | null]; // [0] left/bottom, [1] top/right
-  adjEdgeList: number[]; // indices into edges array
+  // Adjacency as a spill-capable view into the graph's ONE shared edge-index
+  // buffer (sgraph.c:initSEdges allocates 6*nnodes + 2*maxdeg ints; each regular
+  // node gets a 6-slot region, each dummy `maxdeg`). addEdgeToNode writes at
+  // adjEdgeList[nAdj] with no bound, so a node with >6 incident edges (≤6
+  // permanent + temp edges) OVERFLOWS into the next node's region — and those
+  // spilled writes survive `reset` (only nAdj is restored), a load-bearing C
+  // behavior. An Int32Array subarray from the node's offset to the buffer end
+  // reproduces the forward spill exactly. `number[]` remains for the PQ guard /
+  // never-routed placeholder nodes that hold no edges.
+  adjEdgeList: Int32Array | number[]; // indices into edges array
   index: number; // index in graph nodes array
   isVert: boolean; // true = vertical boundary segment
   x: number; // segment point x — mirrors C snode.p.x (maze dict key, numeric)
@@ -125,6 +134,12 @@ export interface SGraph {
   saveNedges: number;
   nodes: SNode[];
   edges: SEdge[];
+  /**
+   * The single contiguous adjacency buffer that every node's `adjEdgeList` is a
+   * subarray view into (sgraph.c:initSEdges). Kept on the graph so the backing
+   * store outlives the per-node views. Undefined until initSEdges runs.
+   */
+  adjBuf?: Int32Array;
 }
 
 /**

@@ -71,11 +71,26 @@ export function freeSGraph(_g: SGraph): void {
  * @see lib/ortho/sgraph.c:initSEdges
  */
 export function initSEdges(g: SGraph, maxdeg: number): void {
-  // adjacency lists are already dynamic arrays; just ensure capacity
   // The two extra dummy nodes at indices nnodes and nnodes+1 need maxdeg slots
   const total = g.nnodes + 2;
   while (g.nodes.length < total) {
     g.nodes.push(makeSNode(g.nodes.length));
+  }
+  // ONE contiguous buffer, exactly as C (sgraph.c:initSEdges): 6 int slots per
+  // regular node, `maxdeg` per dummy. Each node's adjEdgeList is a subarray view
+  // from its offset to the buffer END — so addEdgeToNode writing past a node's
+  // region spills forward into the next node's slots (and persists across reset),
+  // matching C's unbounded addEdgeToNode into the shared allocation.
+  const buf = new Int32Array(6 * g.nnodes + 2 * maxdeg);
+  g.adjBuf = buf;
+  let off = 0;
+  for (let i = 0; i < g.nnodes; i++) {
+    g.nodes[i].adjEdgeList = buf.subarray(off);
+    off += 6;
+  }
+  for (let i = g.nnodes; i < g.nnodes + 2; i++) {
+    g.nodes[i].adjEdgeList = buf.subarray(off);
+    off += maxdeg;
   }
   // pre-allocate edge array capacity
   g.edges = new Array<SEdge>(3 * g.nnodes + maxdeg);

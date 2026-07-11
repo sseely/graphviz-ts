@@ -121,7 +121,28 @@ export function extractVChans(mp: Maze): Map<number, Map<string, Channel>> {
 }
 
 /**
- * Find the channel containing a segment (interval containment).
+ * Interval comparison — faithful port of ortho.c:chancmpid. Two intervals are
+ * "equal" (return 0) when one CONTAINS the other (nested either way); otherwise
+ * the one with the smaller p1 is less. C's chanSearch relies on this so a
+ * segment that extends BEYOND its channel (segment ⊇ channel, e.g. an edge whose
+ * endpoint reaches out to a node/label past the channel's cell) still matches —
+ * a one-directional `chan ⊇ seg` test misses that case and drops the segment.
+ * @see lib/ortho/ortho.c:chancmpid
+ */
+function chancmpid(k1: { p1: number; p2: number }, k2: { p1: number; p2: number }): number {
+  if (k1.p1 > k2.p1) {
+    if (k1.p2 <= k2.p2) return 0;
+    return 1;
+  }
+  if (k1.p1 < k2.p1) {
+    if (k1.p2 >= k2.p2) return 0;
+    return -1;
+  }
+  return 0;
+}
+
+/**
+ * Find the channel whose interval nests with the segment (chancmpid == 0).
  * @see lib/ortho/ortho.c:chanSearch
  */
 export function chanSearch(
@@ -132,7 +153,7 @@ export function chanSearch(
   const sub = chans.get(commCoord);
   if (!sub) return null;
   for (const [, chan] of sub) {
-    if (chan.p.p1 <= p.p1 && chan.p.p2 >= p.p2) return chan;
+    if (chancmpid(chan.p, p) === 0) return chan;
   }
   return null;
 }
