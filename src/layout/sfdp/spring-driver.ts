@@ -31,11 +31,8 @@ import {
   type SpringElectricalControl,
   AUTOP,
   springElectricalEmbedding,
-  averageEdgeLength,
 } from './spring-electrical.js';
-
-/** @see lib/sparse/general.h:MACHINEACC */
-const MACHINEACC = 1.0e-16;
+import { removeOverlapPrism } from '../neato/overlap-prism.js';
 
 // ---------------------------------------------------------------------------
 // Multilevel driver helpers
@@ -145,44 +142,6 @@ function prolongate(
 }
 
 // ---------------------------------------------------------------------------
-// remove_overlap, ntry = 0 path (the only reachable path: "prism0")
-// ---------------------------------------------------------------------------
-
-/** Uniform scale so the average edge length = avgLabelSize. @see neatogen/overlap.c:scale_to_edge_length */
-function scaleToEdgeLength(dim: number, A: SpMatrix, x: number[], avgLabelSize: number): void {
-  let dist = averageEdgeLength(A, dim, x);
-  dist = avgLabelSize / Math.max(dist, MACHINEACC);
-  for (let i = 0; i < dim * A.m; i++) x[i]! *= dist;
-}
-
-/**
- * The reachable slice of remove_overlap: initial scaling only, then
- * `if (!ntry) return`. ntry > 0 (real prism) is not ported — sfdp's
- * default is "prism0" and no supported input overrides overlap.
- * @see lib/neatogen/overlap.c:remove_overlap (15.0.0)
- */
-export function removeOverlapScalingOnly(
-  dim: number, A: SpMatrix, x: number[], labelSizes: number[] | null,
-  ntry: number, initialScaling: number,
-): void {
-  if (!labelSizes) return;
-  if (initialScaling < 0) {
-    let avgLabelSize = 0;
-    for (let i = 0; i < A.m; i++) {
-      avgLabelSize += labelSizes[i * dim]! + labelSizes[i * dim + 1]!;
-    }
-    avgLabelSize /= A.m;
-    scaleToEdgeLength(dim, A, x, -initialScaling * avgLabelSize);
-  } else if (initialScaling > 0) {
-    scaleToEdgeLength(dim, A, x, initialScaling);
-  }
-  if (!ntry) return;
-  throw new Error(
-    `sfdp remove_overlap ntry=${ntry}: the prism OverlapSmoother is not ` +
-    'ported (unreachable at sfdp defaults); see mission 8 journal');
-}
-
-// ---------------------------------------------------------------------------
 // multilevel_spring_electrical_embedding
 // ---------------------------------------------------------------------------
 
@@ -240,7 +199,11 @@ export function multilevelSpringElectricalEmbedding(
   if (dim === 2) pcpRotate(n, dim, x);
   // ctrl.rotation === 0 for all supported inputs (rotate() not ported)
 
-  removeOverlapScalingOnly(dim, A, x, labelSizes, ctrl.overlap, ctrl.initialScaling);
+  // remove_overlap: initial scaling, then (ntry>0) the PRISM OverlapSmoother.
+  // labelSizes is null unless ctrl.overlap >= 0 (AM_PRISM), so non-prism modes
+  // no-op here; the scale/none family runs post-layout via removeOverlapWith.
+  removeOverlapPrism(
+    dim, A, x, labelSizes, ctrl.overlap, ctrl.initialScaling, ctrl.doShrinking);
 
   Object.assign(ctrl, ctrl0); // C: *ctrl = ctrl0
 }

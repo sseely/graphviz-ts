@@ -29,6 +29,9 @@ import {
 import { CL_OFFSET } from '../twopi/pipeline.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { aggetGraph } from '../fdp/fdp-model.js';
+import { overlapPrismTries } from '../neato/fdp-adjust.js';
+import { adjustNodesScale } from '../neato/sc-adjust.js';
+import { lateDouble } from '../../common/nodeinit.js';
 import {
   type SpringElectricalControl,
   springElectricalControlNew,
@@ -71,49 +74,45 @@ export function sfdpLayoutComponent(
 }
 
 /**
- * Resolve the overlap mode. The reference binary is built with GTS, so
- * the default is "prism0" → AM_PRISM with value 0 (zero smoother
- * iterations) and scaling −4. An explicit "overlap" attribute selects
- * adjust modes that are not ported — throw rather than approximate.
- * @see lib/neatogen/adjust.c:graphAdjustMode (15.0.0)
+ * Resolve the tuned control, component padding, and whether a post-layout
+ * overlap pass is needed. The reference binary is built with GTS, so
+ * graphAdjustMode's default is "prism0" → AM_PRISM value 0 scaling −4.
+ *
+ * When the mode resolves to AM_PRISM (prism*, or the boolean/false fallback),
+ * overlap removal runs inside sfdp: ctrl.overlap = value (0 for prism0, 1000
+ * for prism/false), ctrl.initialScaling = overlap_scaling (default −4), and
+ * doAdjust is false. Otherwise (scale family, AM_NONE, unported modes) sfdp's
+ * in-layout removal is off (ctrl.overlap = −1) and doAdjust drives a
+ * post-layout removeOverlapWith (adjustNodesScale).
+ * @see lib/neatogen/adjust.c:graphAdjustMode / getAdjustMode (15.0.0)
  * @see lib/sfdpgen/sfdpinit.c:sfdp_layout (HAVE_GTS branch)
  */
-function resolveAdjustPrism0(g: Graph): { value: number; scaling: number } {
-  const overlap = aggetGraph(g, 'overlap');
-  if (overlap !== undefined && overlap !== 'prism0' && overlap !== 'prism') {
-    throw new Error(
-      `sfdp overlap="${overlap}": only the default prism0 adjust mode is ` +
-      'ported; see mission 8 journal');
-  }
-  if (overlap === 'prism') {
-    throw new Error(
-      'sfdp overlap="prism": the prism OverlapSmoother (ntry=1000) is not ' +
-      'ported (unreachable at sfdp defaults); see mission 8 journal');
-  }
-  return { value: 0, scaling: -4 };
-}
-
-/**
- * Resolve the tuned control and component padding: prism0 overlap
- * (value 0, scaling −4) plus sepFactor-derived pad in inches.
- * @see lib/sfdpgen/sfdpinit.c:sfdp_layout (control/pad setup)
- */
 function resolveControl(g: Graph): {
-  ctrl: SpringElectricalControl; pad: { x: number; y: number };
+  ctrl: SpringElectricalControl; pad: { x: number; y: number }; doAdjust: boolean;
 } {
   const ctrl = springElectricalControlNew();
   tuneControl(g, ctrl);
-  const am = resolveAdjustPrism0(g);
-  // AM_PRISM && doAdjust: overlap removal happens inside sfdp.
-  ctrl.overlap = am.value;
-  ctrl.initialScaling = am.scaling;
   const pad = { x: DFLT_MARGIN / 72, y: DFLT_MARGIN / 72 }; // PS2INCH
-  const sep = sepFactor(g);
-  if (sep.doAdd) {
-    pad.x = sep.x / 72;
-    pad.y = sep.y / 72;
+
+  // graphAdjustMode(g, &am, "prism0"): agget NULL (unset) → "prism0" default.
+  const overlap = aggetGraph(g, 'overlap');
+  const flag = overlap === undefined ? 'prism0' : overlap;
+  const ntry = overlapPrismTries(flag);
+  if (ntry !== null) {
+    // AM_PRISM && doAdjust: overlap removal happens inside sfdp.
+    ctrl.overlap = ntry;
+    ctrl.initialScaling = lateDouble(
+      g.root.attrs.get('overlap_scaling'), -4.0, -1.e10);
+    const sep = sepFactor(g);
+    if (sep.doAdd) {
+      pad.x = sep.x / 72;
+      pad.y = sep.y / 72;
+    }
+    return { ctrl, pad, doAdjust: false };
   }
-  return { ctrl, pad };
+  // Non-PRISM: turn off in-sfdp removal; run removeOverlapWith after layout.
+  ctrl.overlap = -1;
+  return { ctrl, pad, doAdjust: true };
 }
 
 /**
@@ -126,6 +125,7 @@ function resolveControl(g: Graph): {
 function layoutComponents(
   g: Graph, comps: Graph[],
   ctrl: SpringElectricalControl, pad: { x: number; y: number },
+  doAdjust: boolean,
 ): void {
   const pinfo: PackInfo = {
     aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: false,
@@ -137,6 +137,7 @@ function layoutComponents(
   for (const sg of comps) {
     // ccomps already node-induces edges (graphviz_node_induce).
     sfdpLayoutComponent(sg, ctrl, pad);
+    if (doAdjust) adjustNodesScale(sg); // removeOverlapWith (non-PRISM modes)
     setEdgeType(sg, EDGETYPE_LINE);
     splineEdgesShifted(sg);
   }
@@ -169,13 +170,14 @@ export function sfdpLayout(g: Graph): void {
   csrand(1); // process-start rand() state on the reference platform
 
   if (g.nodes.size > 0) {
-    const { ctrl, pad } = resolveControl(g);
+    const { ctrl, pad, doAdjust } = resolveControl(g);
     const comps = ccomps(g, '_sfdp_cc');
     if (comps.length === 1) {
       sfdpLayoutComponent(g, ctrl, pad);
+      if (doAdjust) adjustNodesScale(g); // removeOverlapWith (non-PRISM modes)
       splineEdgesShifted(g); // C spline_edges: shift + coord sync + route
     } else {
-      layoutComponents(g, comps, ctrl, pad);
+      layoutComponents(g, comps, ctrl, pad, doAdjust);
     }
   }
 
