@@ -46,21 +46,6 @@
       "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 183.86 vs 173.06",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     },
-    "2343": {
-      "class": "A9",
-      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 1271.95 vs 1288.75",
-      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-    },
-    "share-b29": {
-      "class": "A9",
-      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18",
-      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-    },
-    "windows-b29": {
-      "class": "A9",
-      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 (identical mechanism to share-b29)",
-      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
-    },
     "1855": {
       "class": "A1",
       "bound": "842 xdot draw-op diffs; whole radial layout is the exact x-axis mirror of the oracle's (y->-y, ring relabel k<->34-k), max node displacement 6.04pt. Mechanism: 1-ULP V8-vs-libm cos/sin in circleLayout setAbsolutePos, amplified by the symmetry-unstable PRISM overlap-removal equilibrium on the cocircular star. Injection A/B: feeding C's exact circleLayout pos into the port's PRISM reproduces the oracle node-for-node (3e-14).",
@@ -69,6 +54,16 @@
     "241_0": {
       "class": "A9",
       "bound": "6 draw-op diffs; edge 1->6 routed as a 14-pt multispline corridor (port) vs the native plain per-member fallback (8-pt), point deltas <0.07pt. CDT cocircular incircle tie flipped by libm sin/cos 1-ULP \u2014 sibling of the accepted circo/241_0 entry.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "graphs-b29": {
+      "class": "A9",
+      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.1 vs 356.1 (same knife-edge previously accepted for share-b29/windows-b29; variants swapped when polylineMidpoint gained the faithful fmadd contraction - anchor now bit-identical to C, flip is a placeLabels tie on 1-ULP-drifted surrounding objects)",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "linux.i386-b29": {
+      "class": "A9",
+      "bound": "1 draw-op diff; edge label _ldraw_ text[1]: 368.1 vs 356.1 (identical mechanism to graphs-b29)",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   },

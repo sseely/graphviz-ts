@@ -789,10 +789,12 @@ directly.
 tracks** (`parity-twopi.json` / `parity-circo.json`, native `dot -K <engine>
 -Txdot` oracle, `test/corpus/engine-walk.ts`, semantic draw-op comparison at
 ±0.01 — see `test/golden/compare-xdot.ts`) surface this same mechanism
-independently of the dot-engine SVG survey cited above: twopi `2239`,
-`2343`, `share-b29`, `windows-b29` (1 draw-op diff each — the `_ldraw_`
-edge-label text-position flip, the same `poly_init` unit-vertex trig ULP
-cascading through the `floor()` xlabel R-tree chain) and circo `241_0` (41
+independently of the dot-engine SVG survey cited above: twopi `2239` (1
+draw-op diff — the `_ldraw_` edge-label text-position flip, the same
+`poly_init` unit-vertex trig ULP cascading through the `floor()` xlabel
+R-tree chain; `2343`, `share-b29` and `windows-b29`, originally accepted
+under this entry, were *fixed* 2026-07-11 by the faithful fmadd contraction
+in `polylineMidpoint` — see the b29-family paragraph below) and circo `241_0` (41
 draw-op diffs, Δ≈0.2pt on edge `1->2`'s routed bezier — the same
 CDT-diagonal corridor flip; decision journal, 2026-07-10 "CDT rewritten as
 faithful GTS port; 2168_3 outline-ring obstacle; 56/osage bb clobber; A9
@@ -800,6 +802,18 @@ filed" entry). Accepted at the engine-track level via
 `test/corpus/accepted-divergences-engines.json`, joined into
 `PARITY-twopi.md`/`PARITY-circo.md` by `parity-report.ts` — the same join
 `accepted.ts` performs for the dot-track `PARITY-dot.md`.
+
+**b29 family (twopi).** The four b29 variants share one knife-edge: the
+`EqmtTyp` edge label (`Node14732->Node14731`) sits on an exact placeLabels
+side-selection tie whose outcome depends on 1-ULP twopi layout drift in the
+surrounding objects. With the faithful fmadd contraction in
+`polylineMidpoint` (states-family fix, 2026-07-11) the port's label anchor
+is bit-identical to the oracle's, yet the tie still resolves oppositely on
+two of the four variants (`graphs-b29`, `linux.i386-b29`) while the other
+two (`share-b29`, `windows-b29`) now conform — and `2343`'s accepted A9
+label diff cleared entirely. Bound: 1 draw-op, Δ12pt label y. Irreducible
+without eliminating the upstream drift. Full RCA:
+`.agent-notes/twopi-states-rca.md`.
 
 The osage track carries the `polypoly` triple (`graphs-polypoly`,
 `share-polypoly`, `windows-polypoly`; accepted 2026-07-11, full RCA in
