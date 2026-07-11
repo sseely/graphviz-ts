@@ -30,20 +30,18 @@ binary, a rendering server, or a WASM build — none of which run everywhere a
 browser does, and all of which add deployment friction. graphviz-ts removes
 that dependency entirely: the layout engine *is* TypeScript.
 
-## Install & build
-
-Not yet on npm. For now, clone and build:
+## Install
 
 ```bash
-git clone <repo-url> graphviz-ts
-cd graphviz-ts
-npm install
-npm run build        # → dist/index.js (ESM bundle, via esbuild)
+npm i graphviz-ts
 ```
 
-`npm run build` produces a single bundled ES module at `dist/index.js`. (Type
-declarations are not yet emitted by the build — see
-[Known limitations](#known-limitations).)
+Ships as ESM bundles with TypeScript declarations, zero runtime dependencies.
+Entry points: `graphviz-ts` (core), `graphviz-ts/api` (graph-building API),
+`graphviz-ts/render` (renderers).
+
+To build from source instead: clone, `npm install`, `npm run build`
+(esbuild bundles + `.d.ts` declarations into `dist/`).
 
 ## Quick start
 
@@ -223,10 +221,6 @@ from the canonical C Graphviz. New behavior is pinned to the C source — see
 
 ## Known limitations
 
-- **Not yet published to npm.** No package entry points (`main`/`module`/
-  `types`/`exports`) are declared yet, and the esbuild `build` step does not emit
-  `.d.ts` declarations. Both are tracked follow-ups before a `1.0` consumer
-  release.
 - **Feature coverage is incomplete.** The C source defines completeness; gaps
   are tracked in the port catalog rather than hidden.
 
