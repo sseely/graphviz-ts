@@ -61,6 +61,21 @@ git tag "v$(jq -r .version package.json)" && git push origin --tags
 Sanity check after publish: `npm view graphviz-ts version` and a scratch
 `npm i graphviz-ts` + `import { parse, render } from 'graphviz-ts'` smoke test.
 
+## Troubleshooting
+
+**`403 Forbidden … Two-factor authentication or granular access token with
+bypass 2fa enabled is required to publish packages.`** — registry-wide npm
+policy; fix on npmjs.com (not in this repo):
+
+- *Preferred (interactive publishing):* Account Settings → Two-Factor
+  Authentication → enable ("Authorization and writes"). Then `npm publish`
+  prompts for the OTP, or pass `npm publish --otp=<code>`.
+- *Alternative (scripted):* Access Tokens → Generate New Token → **Granular**,
+  packages Read/Write, with **Bypass two-factor authentication** checked.
+  Export it per-shell (`export NPM_TOKEN=…`) and add
+  `//registry.npmjs.org/:_authToken=${NPM_TOKEN}` to `~/.npmrc`. Never commit
+  a token.
+
 ## Notes
 
 - `prepublishOnly` runs `typecheck + build` automatically inside `npm publish`,
