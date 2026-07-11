@@ -717,7 +717,16 @@ floating-point portability constraint below C source semantics — matching
 would require reproducing Apple libm's exact `sin`/`cos` rounding in JS.
 
 **Affected:** `241_0` (circo Δ≈0.2 / twopi canvas Δ≈9 via the corridor flip
-on edge `5:ne->8:nw`). `2168_1` originally sat in this class but became
+on edge `5:ne->8:nw`); `2343`, `2239`, `share-b29`, `windows-b29` (twopi,
+1–2 edge-label position diffs each — the libm 1-ULP arises in
+`poly_init`'s unit-vertex trig (`hypot`/`atan2`/`sin`), puts one node's
+computed height a ULP past the min-size clamp the oracle lands on
+exactly, and cascades through `floor()` in the xlabel R-tree load into a
+single label-candidate flip. A correctly-rounded-hypot fix was tried and
+REFUTED: it fixed `2343` but regressed `2168_3`, whose octagon sizing
+flows through the same call where the oracle's value is NOT the correctly
+rounded one — no deterministic hypot policy matches the oracle on both).
+`2168_1` originally sat in this class but became
 conformant once the port emulated the oracle's fp-contracted `ccw`
 (pathplan `triang.ts`): its corridor failure is governed by the FMA'd
 `pointintri` vertex-endpoint rejection, which the port now reproduces
