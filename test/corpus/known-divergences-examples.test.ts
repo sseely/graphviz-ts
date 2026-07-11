@@ -36,6 +36,10 @@ const DOC_CLAIMS_CONFORMANT = [
   'graphs-proc3d', 'share-proc3d', 'windows-proc3d',
   // A2 closed 2026-07-01 (fix/nan-a2-retire): NaN family now conformant
   'graphs-NaN', 'share-NaN', 'windows-NaN',
+  // A4 sibling 2470 collapsed 2026-07-11 (ortho adj-spill/chancmpid + tie-rounding wave)
+  '2470',
+  // A8 ortho instance 2620 collapsed 2026-07-11 (faithful sgraph adjacency-spill + chancmpid)
+  '2620',
 ];
 
 // Graphs the doc cites as CURRENT accepted divergences (A2/A3 examples). If one
@@ -46,8 +50,6 @@ const DOC_CLAIMS_DIVERGENT = [
   '2368',
   // A3 hypot-tie sibling of the oracle-pinned 241_0 (retired 2026-07-04)
   '241_1',
-  // A4 init_rank/pathplan recovery family, sibling of 2471 (retired 2026-07-04)
-  '2470',
   // A7 round()/box-wall rounding boundary in maximal_bbox (retired 2026-07-04)
   'graphs-honda-tokoro',
   // A3 hypot-tie family extension: label-vnode slit corridor (retired 2026-07-05)
@@ -60,9 +62,6 @@ const DOC_CLAIMS_DIVERGENT = [
   '2371',
   // A8 new class: fp-contract/FMA knife-edge tangency in Proutespline (retired 2026-07-05)
   '2646',
-  // A8 second instance: poly_init vertex-extent ULP amplified by ortho
-  // corridor tie flip (retired 2026-07-05)
-  '2620',
 ];
 
 describe('known-divergences.md prose ↔ parity verdicts', () => {

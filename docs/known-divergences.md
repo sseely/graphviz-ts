@@ -439,10 +439,13 @@ a bounded, sub-perceptual `dot` delta — not an open bug. Full investigation:
 ### A4. Oracle in an acknowledged-broken state (the init_rank / pathplan family)
 
 **Affected:** `2796` (structural-match, maxΔ 49), `2471` (structural-match,
-maxΔ ~9063), `2470` (structural-match, maxΔ 8), `1435` (diverged, maxΔ 503),
-`graphs-structs` (diverged, maxΔ 0), `1581` (diverged, maxΔ 465). Family members
-`1939` and `2825` are **conformant** and carry no entry. `2470` is the sibling of
-`2471` (same triangulation-debris recovery); the port loses the identical edges.
+maxΔ ~9063), `1435` (diverged, maxΔ 503), `1581` (diverged, maxΔ 465). Family
+members `1939` and `2825` are **conformant** and carry no entry, and `2470`
+and `graphs-structs` joined them 2026-07-11 (both collapsed to conformant
+after the ortho adjacency-spill/chancmpid, fmadd `polylineMidpoint`, and
+half-even tie-rounding fixes landed — the port now reproduces the oracle's
+recovery output exactly, including the identical lost edges); their
+acceptance entries are retired.
 
 `1581` and `2825` were crash-recovery cases (fix-element-count-bucket
 mission): fuzzer/degenerate inputs where the upstream tests assert **only**
@@ -687,8 +690,12 @@ require software-FMA emulation across the whole spline fitter — a hot-loop
 cost with corpus-wide rounding blast radius for a sub-pixel, 3-edge reward.
 Full diagnosis: `plans/residual-cleanup/analysis/2646-fp-contract.md`.
 
-**Affected:** `2620` (structural-match, maxΔ 585; 423 diffs on 24 edge paths
-+ 22 arrowheads).
+**Affected (historical):** `2620` (was structural-match, maxΔ 585; 423 diffs
+on 24 edge paths + 22 arrowheads). **Collapsed to conformant 2026-07-11**:
+the faithful `sgraph` adjacency-buffer spill + `chancmpid` bidirectional
+containment port (see `.agent-notes/ortho-maze-circo-rca.md`) removed the
+divergence; the acceptance entry is retired and this section is kept as
+documentation of the A8 class.
 
 **What differs.** The `ortho` (`splines=ortho`) pipeline is byte-conformant
 to C given identical inputs — proven by injecting C's exact maze input
