@@ -65,7 +65,7 @@ PARITY tracks *correctness*; **PERF** tracks *speed* — warm in-process
 Unlike the survey (one cold `tsx` subprocess per render), the bench loads the
 shipped **bundle** once in a pool of resident, JIT-primed worker threads and
 times the pure render, so the numbers reflect the warm steady state a long-lived
-consumer (e.g. plantuml-js) actually sees.
+consumer actually sees.
 
 | Stage | Script | Output |
 |-------|--------|--------|

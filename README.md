@@ -7,7 +7,7 @@ graph-visualization toolkit originally written in C at AT&T Research and Lucent
 Bell Labs. It parses the DOT language, runs Graphviz's layout engines, and emits
 SVG.
 
-The defining property: **pure TypeScript.** No Java, no native binary, no WASM.
+The defining property: **pure TypeScript.** No native binary, no WASM.
 It runs in a browser or in Node with zero external dependencies at runtime. The
 goal is the closest achievable fidelity to the C implementation, which is treated
 as the canonical specification (see [`CLAUDE.md`](./CLAUDE.md)). In practice the
@@ -25,10 +25,10 @@ the exact definition and the comparison code, and
 
 ## Why this exists
 
-Existing ways to render DOT/PlantUML in a JS environment shell out to a Graphviz
-binary, a PlantUML server, or a Java install — none of which run in a browser
-and all of which add deployment friction. graphviz-ts removes that dependency
-entirely: the layout engine *is* TypeScript.
+Existing ways to render DOT in a JS environment shell out to a Graphviz
+binary, a rendering server, or a WASM build — none of which run everywhere a
+browser does, and all of which add deployment friction. graphviz-ts removes
+that dependency entirely: the layout engine *is* TypeScript.
 
 ## Install & build
 

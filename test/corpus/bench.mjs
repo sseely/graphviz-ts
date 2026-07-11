@@ -6,7 +6,7 @@
 // every timing carries ~0.75s of transpile + module-load overhead unrelated to
 // layout. This bench instead loads the SHIPPED bundle (dist/index.js) once in a
 // pool of resident, JIT-primed worker threads and times pure renderSvg() calls
-// — the realistic steady-state a long-lived consumer (e.g. plantuml-js) sees.
+// — the realistic steady-state a long-lived consumer sees.
 //
 // Budget framing: the port's fidelity target is <=3x native. For each input we
 // report nativeMs, portMs (warm best), the ratio, and a verdict (ok / slow /
