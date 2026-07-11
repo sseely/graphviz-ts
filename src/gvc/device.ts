@@ -41,8 +41,10 @@ import {
   resolvePenColor,
   resolvePenType,
   resolvePenWidth,
+  styleHasInvisibleAlias,
   styleTokens,
 } from '../common/style-resolve.js';
+import { isPointNode } from '../common/poly-gencode.js';
 import { resolveRenderColor, withColorScheme } from '../render/color-resolve.js';
 import { emitRoundedBezier } from '../common/poly-shapes.js';
 import { applyClusterObjState, clusterStyle, clusterPeripheries } from './device-cluster.js';
@@ -174,7 +176,15 @@ export function renderNode(n: Node, renderer: RendererPlugin, job: RenderJob, do
   if (!nodeInBox(n, job)) return;
   // Shortcircuit invisible nodes: C omits the whole node before emit_begin_node.
   // @see lib/common/emit.c:emit_node (style "invis" return)
-  if (parseStyleFlags(n.attrs.get('style')).invis) return;
+  const nodeStyle = n.attrs.get('style');
+  if (parseStyleFlags(nodeStyle).invis) return;
+  // The "invisible" alias also suppresses drawing (gvrender_set_style →
+  // PEN_NONE) for shapes that pass their raw style through — but NOT the point
+  // shape, whose gencode overrides style with an exact-"invis" whitelist. C
+  // proceeds past emit_node here and skips only the draw ops (pen-none); the
+  // early return produces the same xdot (node present, no draw ops).
+  // @see lib/gvc/gvrender.c:497 · lib/common/shapes.c:point_gencode
+  if (!isPointNode(n) && styleHasInvisibleAlias(nodeStyle)) return;
   const obj = createObjState(ObjType.Node);
   obj.emitState = EmitState.NDraw;
   job.pushObj(obj);
@@ -213,7 +223,10 @@ function setEdgePen(e: Edge, job: RenderJob): void {
 export function renderEdge(e: Edge, renderer: RendererPlugin, job: RenderJob): void {
   // Shortcircuit invisible edges: C omits the whole edge (no group/title/path)
   // before emit_begin_edge. @see lib/common/emit.c:emit_edge (style "invis" return)
-  if (parseStyleFlags(e.attrs.get('style')).invis) return;
+  // The "invisible" alias likewise suppresses all edge draw ops via PEN_NONE
+  // (edges never use the point-shape whitelist). @see lib/gvc/gvrender.c:497
+  const edgeStyle = e.attrs.get('style');
+  if (parseStyleFlags(edgeStyle).invis || styleHasInvisibleAlias(edgeStyle)) return;
   // push_obj_state in emit_begin_edge (line 2715)
   const obj = createObjState(ObjType.Edge);
   obj.emitState = EmitState.EDraw;

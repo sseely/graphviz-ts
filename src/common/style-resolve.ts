@@ -259,6 +259,33 @@ export function parseStyleFlags(style: string | undefined): PolyStyleFlags {
  * Dashed is checked before dotted (lib/gvc/gvrender.c:493-495).
  * @see lib/gvc/gvrender.c:493
  */
+/**
+ * True when a style string contains the "invisible" pen alias.
+ *
+ * `gvrender_set_style` maps BOTH "invis" and "invisible" to PEN_NONE
+ * (`streq(line,"invis") || streq(line,"invisible")`), suppressing the object's
+ * draw. The exact "invis" token additionally drives emit_node/emit_edge's early
+ * return and the point shape's `{invis,filled}` whitelist (checkStyle uses exact
+ * "invis"), so it is tracked separately as `flags.invis`. This helper reports the
+ * "invisible"-only alias, which suppresses drawing for shapes that pass their raw
+ * style through gvrender_set_style (poly/record/edge) but NOT for the point shape.
+ * Tokenization mirrors parseStyleFlags (comma split, FUNLIMIT truncation).
+ * @see lib/gvc/gvrender.c:497 gvrender_set_style
+ * @see lib/common/shapes.c:point_gencode (point_style whitelist)
+ */
+export function styleHasInvisibleAlias(style: string | undefined): boolean {
+  if (!style) return false;
+  let fun = 0;
+  for (const raw of style.split(',')) {
+    const token = raw.trim();
+    if (token.length === 0) continue;
+    if (fun === FUNLIMIT - 1) return false;
+    fun++;
+    if (token === 'invisible') return true;
+  }
+  return false;
+}
+
 export function resolvePenType(flags: PolyStyleFlags): PenType {
   // invis → PEN_NONE (gvrender.c:497-498); downstream polygon/textspan emission
   // is pen-gated. Nodes/edges never reach here with invis (emit shortcircuits).

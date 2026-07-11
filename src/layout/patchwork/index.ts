@@ -25,6 +25,7 @@ import { layoutMeasurer, commonInitNode } from '../../common/nodeinit.js';
 import { nodeAttr } from '../../common/poly-init.js';
 import { doGraphLabel } from '../dot/graph-label.js';
 import { neutralGraphRankdir } from '../dot/init.js';
+import { mapbool } from '../dot/rank.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
 
@@ -298,9 +299,16 @@ export function walkTree(tree: TreeNode): void {
 // Cluster detection
 // ---------------------------------------------------------------------------
 
-/** @see lib/common/utils.c:is_a_cluster */
+/**
+ * A subgraph is a cluster if it is the root, its name begins (case-insensitively)
+ * with "cluster", OR it carries a truthy `cluster` attribute. The name-only test
+ * missed `cluster=true` subgraphs (e.g. 2717's `domestic_cats`), dropping them
+ * from the treemap cluster list. @see lib/common/utils.c:695 is_a_cluster
+ */
 export function isCluster(g: Graph): boolean {
-  return g.name.startsWith('cluster');
+  if (g === g.root) return true;
+  if (g.name.toLowerCase().startsWith('cluster')) return true;
+  return mapbool(g.attrs.get('cluster'));
 }
 
 /** @see lib/patchwork/patchworkinit.c:mkClusters */

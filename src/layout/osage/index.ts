@@ -31,6 +31,7 @@ import { setEdgeTypeFromAttr } from '../dot/index.js';
 // Engine-neutral C common functions, currently parked under layout/dot:
 import { doGraphLabel } from '../dot/graph-label.js';
 import { neutralGraphRankdir } from '../dot/init.js';
+import { mapbool } from '../dot/rank.js';
 import { BOTTOM_IX, TOP_IX } from '../dot/position-aux.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
@@ -76,12 +77,16 @@ export function PARENT(n: Node): Graph | null {
 // ---------------------------------------------------------------------------
 
 /**
- * Return true if the subgraph name starts with "cluster".
+ * Return true if the subgraph is a cluster: the root, a name beginning
+ * (case-insensitively) with "cluster", OR a truthy `cluster` attribute. The
+ * name-only test dropped `cluster=true` subgraphs (2717's `domestic_cats`).
  *
- * @see lib/common/utils.c:is_a_cluster
+ * @see lib/common/utils.c:695 is_a_cluster
  */
 export function isCluster(g: Graph): boolean {
-  return g.name.startsWith('cluster');
+  if (g === g.root) return true;
+  if (g.name.toLowerCase().startsWith('cluster')) return true;
+  return mapbool(g.attrs.get('cluster'));
 }
 
 // ---------------------------------------------------------------------------

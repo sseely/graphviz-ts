@@ -149,8 +149,21 @@ export function testIsClusterTrue(): void {
 }
 
 export function testIsClusterFalse(): void {
-  const g = new Graph('foo', 'directed');
+  // A non-root subgraph named "foo" with no `cluster` attr is not a cluster.
+  // (A root graph would be, per is_a_cluster's `g == g->root` branch, but
+  // isCluster is only ever called on subgraphs during cluster collection.)
+  const root = new Graph('root', 'directed');
+  const g = addCluster(root, 'foo');
   expect(isCluster(g)).toBe(false);
+}
+
+export function testIsClusterAttr(): void {
+  // cluster=true makes a non-"cluster"-named subgraph a cluster
+  // (is_a_cluster's mapbool(agget(g,"cluster")) branch).
+  const root = new Graph('root', 'directed');
+  const g = addCluster(root, 'domestic_cats');
+  g.attrs.set('cluster', 'true');
+  expect(isCluster(g)).toBe(true);
 }
 
 export function testIsClusterExact(): void {
@@ -441,8 +454,9 @@ describe('PARENT', () => {
 
 describe('isCluster', () => {
   it('returns true for name starting with "cluster"', testIsClusterTrue);
-  it('returns false for name not starting with "cluster"', testIsClusterFalse);
+  it('returns false for a non-root subgraph without cluster attr', testIsClusterFalse);
   it('returns true for name exactly "cluster"', testIsClusterExact);
+  it('returns true for a subgraph with cluster=true', testIsClusterAttr);
 });
 
 describe('clusterInitGraph', () => {

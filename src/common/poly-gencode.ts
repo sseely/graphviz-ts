@@ -276,7 +276,7 @@ function applyGradientFields(
 }
 
 /** True when the node's bound shape is `shape=point`. @see types.h:SH_POINT */
-function isPointNode(n: Node): boolean {
+export function isPointNode(n: Node): boolean {
   return (n.info.shape as ShapeDesc | undefined)?.kind === ShapeKind.SH_POINT;
 }
 
