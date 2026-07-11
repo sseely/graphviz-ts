@@ -125,7 +125,13 @@ function xlhdxload(xlp: XLabelsT): number {
     const rect = objplpmks(obj);
     const cx = rect.boundary[0] + (rect.boundary[2] - rect.boundary[0]) / 2;
     const cy = rect.boundary[1] + (rect.boundary[3] - rect.boundary[1]) / 2;
-    const key = hdHilSFromXy(Math.trunc(cx), Math.trunc(cy), order);
+    // C stores the unsigned hilbert code into a SIGNED `int key` field
+    // (xlabels.h:HDict_t.key) and `icompare` (xlabels.c) compares it as a
+    // signed int. Keys >= 2^31 therefore sort BEFORE positive keys, which
+    // changes the R-tree insertion order (and thus the tree's node MBRs and
+    // RTreeSearch pruning). Reinterpret the code as int32 to match.
+    // @see lib/label/xlabels.c:xlhdxload / icompare
+    const key = hdHilSFromXy(Math.trunc(cx), Math.trunc(cy), order) | 0;
     xlp.hdx.insert({ key, d: { rect, data: obj } });
   }
   return 0;
