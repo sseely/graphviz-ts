@@ -66,7 +66,9 @@ setTextMeasurer(undefined); // restore automatic resolution
 
 Built-in implementations are exported for reuse: `CanvasTextMeasurer` (wrap any
 2D context), `EstimateTextMeasurer` (the deterministic, un-hinted reference that
-matches headless graphviz), and `LutTextMeasurer` (the hinted built-in default).
+matches headless graphviz's `estimate_textspan_size` — **this is the Node
+default**), and `LutTextMeasurer` (a hinted per-font-family lookup table,
+available as an opt-in for closer sizing without a native `canvas` dependency).
 
 ## Why this split
 

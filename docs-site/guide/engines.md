@@ -20,18 +20,21 @@ renderSvg(dot, 'neato');
 
 ## Fidelity note
 
-The `dot` engine receives the most fidelity attention because the primary
-consumer is DOT-centric, and it is **conformant** with the native C binary on
-the golden corpus at defaults — numeric coordinates and paths agree within ±0.01
-and all non-numeric content (tags, colors, text) is exactly equal. This is the
-project's "match" bar; it is **not** a claim of literal byte-for-byte SVG
-output. See [Conformance](/conformance) for the exact definition and the
-comparison code.
+Engines split into two conformance classes (see [Conformance](/conformance)
+for the exact definition and comparison code):
 
-The force-directed engines (`neato`, `fdp`, `sfdp`, `circo`, `twopi`, `osage`)
-are structurally faithful but **not** guaranteed to reproduce identical
-coordinates across platforms, because they depend on floating-point rounding
-that varies by JS engine and CPU. See [Known divergences](/divergences) for details.
+- **Deterministic** — `dot`, `circo`, `twopi`, `osage`, `patchwork`. Held to
+  the same **±0.01** bar: numeric coordinates and paths agree with the native
+  C binary within ±0.01pt and all non-numeric content (tags, colors, text) is
+  exactly equal on the golden corpus.
+- **Iterative** — `neato`, `fdp`, `sfdp`. Force-directed/multiscale solvers
+  that depend on floating-point rounding order, so they are checked at a
+  looser **±0.5**pt bound and for structural (same element tree) agreement
+  rather than tight numeric equality.
+
+Neither bar is a claim of literal byte-for-byte SVG output. For current pass
+counts and any accepted divergences per engine, see [Parity](/parity) (with
+per-engine detail pages) and [Known divergences](/divergences).
 
 ## Try different engines
 

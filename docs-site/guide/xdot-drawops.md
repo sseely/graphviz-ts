@@ -98,26 +98,23 @@ const screenY = canvasHeight - op.ellipse.y;
 
 Ops arrive in paint order: graph background first, then nodes, then edges.
 
-## Current limitation
+## Coverage
 
-::: warning xdot renderer is integration-incomplete
-
-`getDrawOps` reliably surfaces:
+`getDrawOps` surfaces the full paint-order op stream for a graph, including:
 - Node shape ops (`filled_ellipse`, `filled_polygon`, `unfilled_polygon`, etc.)
 - Text and label ops (`text`)
 - Font ops (`font`)
-- Color-setting ops (`fill_color`, `pen_color`)
+- Color-setting ops (`fill_color`, `pen_color`), including custom node
+  `color`/`fillcolor` attributes
+- Edge draw ops (`unfilled_bezier` for the spline, plus `pen_color` /
+  `fill_color` / `filled_polygon` for the arrowhead)
 
-Edge draw ops (`filled_bezier`, `unfilled_bezier`, `polyline` for splines and
-arrowheads) are **not yet emitted**. Custom node pen/fill colors are **not
-applied** to the emitted color ops.
-
-The geometry is fully computed (the SVG renderer draws the same graph
-correctly). Only the xdot emission path is incomplete. A faithful fix is
-tracked as a follow-on. Until then, use `render(g, 'svg')` when complete
-visual fidelity is required.
-
-:::
+For `digraph { a [color=red]; a -> b }`, the `_draw_`/`_hdraw_` geometry and
+color values match native `dot -Txdot` exactly (node ellipse, edge spline,
+arrowhead polygon, and the applied `color=red`). Call `getDrawOps(g)` directly
+on a fresh (not-yet-rendered) graph — calling `render(g, ...)` and
+`getDrawOps(g)` on the *same* graph object runs layout twice and is not a
+supported pattern; use one or the other per graph.
 
 ## Canvas example (node labels only)
 

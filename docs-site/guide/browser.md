@@ -24,11 +24,18 @@ engine and calls `renderSvg` in the browser, with no server round-trip.
 Graphviz needs text dimensions to size labels. graphviz-ts handles this
 automatically:
 
-- **In the browser**, it measures text with the native `<canvas>` 2D context.
-- **Elsewhere** (e.g. SSR), it falls back to a built-in lookup-table metric
-  model.
+- **In the browser** (when `document` exists), it measures text with the
+  native `<canvas>` 2D context — host-faithful, since it's the same font the
+  browser renders the SVG with.
+- **In Node**, it defaults to the built-in **Estimate** measurer — a
+  deterministic, headless-safe model that mirrors Graphviz's own
+  `estimate_textspan_size`. No `canvas` install or font files are required to
+  get correct layout in Node; a hinted lookup-table (LUT) measurer is also
+  available as an opt-in for closer host-faithful sizing without a native
+  canvas dependency. See [Text measurement](/guide/text-measurement) for how
+  to select a measurer explicitly.
 
-No font files are required for layout in either case.
+No font files are required for layout in any case.
 
 ## External images: `setImageSizer`
 
