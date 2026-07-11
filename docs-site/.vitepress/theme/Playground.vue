@@ -6,10 +6,10 @@ import { ref, onMounted, watch } from 'vue';
 import { renderSvg } from 'graphviz-ts';
 // Client-side DOT syntax highlighting, reusing the SAME grammar the docs code
 // blocks use (single source of truth). Shiki runs in the browser here over a
-// transparent-textarea overlay; the plain textarea still works if it fails to
-// load (progressive enhancement).
+// transparent-textarea overlay with its pure-JS regex engine (no WASM); the
+// plain textarea still works if it fails to load (progressive enhancement).
 import { createHighlighterCore, type HighlighterCore } from 'shiki/core';
-import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 import githubLight from '@shikijs/themes/github-light';
 import githubDark from '@shikijs/themes/github-dark';
 import { dotLang } from '../dot.tmLanguage';
@@ -85,7 +85,10 @@ onMounted(async () => {
     highlighter = await createHighlighterCore({
       themes: [githubLight, githubDark],
       langs: [dotLang],
-      engine: createOnigurumaEngine(import('shiki/wasm')),
+      // Pure-JS regex engine: the DOT grammar is simple enough that the
+      // JavaScript engine covers it fully, and it keeps the site's
+      // no-WASM promise (the Oniguruma engine ships a .wasm binary).
+      engine: createJavaScriptRegexEngine(),
     });
     paintHighlight();
   } catch {
