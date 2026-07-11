@@ -801,6 +801,18 @@ filed" entry). Accepted at the engine-track level via
 `PARITY-twopi.md`/`PARITY-circo.md` by `parity-report.ts` — the same join
 `accepted.ts` performs for the dot-track `PARITY-dot.md`.
 
+The osage track carries the `polypoly` triple (`graphs-polypoly`,
+`share-polypoly`, `windows-polypoly`; accepted 2026-07-11, full RCA in
+`.agent-notes/patchwork-tail-rca.md`): the sole diverging operation is the
+bare transcendental `cos(π+θ)` at a distorted-quad orientation-180 vertex —
+V8's `Math.cos` is correctly rounded while Apple libm's `cos` carries a
+±1-ULP argument-dependent error (so only under libm is `|cos(π+θ)| ≠
+|cos(θ)|`); the 1-ULP node-size delta feeds pack's `GRID`/`ceil`, tips a
+perimeter tie, and the qsort places two components in each other's packing
+cells — a rigid whole-node swap with no shape or routing error. No
+deterministic rewrite can reproduce a non-correctly-rounded libm
+transcendental, the textbook A9 shape.
+
 Two further engine-track instances were root-caused and accepted 2026-07-11
 (full RCA: `.agent-notes/circo-edge-tail-rca.md`): twopi `241_0` (6 draw-op
 diffs — the sibling of the circo entry above: the same CDT cocircular

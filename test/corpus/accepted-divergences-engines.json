@@ -83,5 +83,22 @@
       "bound": "10 draw-op diffs on one fan edge (node2->node8): circo trig places node2.y a single ULP above node8.y around the symmetric value 18.0 (18.0000000000000320 vs 18.0), flipping closestSide's dyna head-port TOP/BOTTOM at the exact tie; node boxes and all other edges bit-identical.",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
+  },
+  "osage": {
+    "graphs-polypoly": {
+      "class": "A9",
+      "bound": "Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node \u00b1(182,338)/\u00b12909 translations; <=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) \u2014 V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so |cos(pi+theta)| != |cos(theta)| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "share-polypoly": {
+      "class": "A9",
+      "bound": "Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node \u00b1(182,338)/\u00b12909 translations; <=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) \u2014 V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so |cos(pi+theta)| != |cos(theta)| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "windows-polypoly": {
+      "class": "A9",
+      "bound": "Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node \u00b1(182,338)/\u00b12909 translations; <=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) \u2014 V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so |cos(pi+theta)| != |cos(theta)| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    }
   }
 }
