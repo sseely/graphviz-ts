@@ -39,19 +39,21 @@ when behavior is fully preserved** — if the C structure encodes semantics
 (attribute inheritance, ordering), the semantics must be reproduced and
 verified, not assumed.
 
-Status reflects an agent-assisted survey on **2026-06-18** (HEAD on
-`feature/dot-curved-compound`). Verify the live symbol before acting on any row.
+Status reflects an agent-assisted survey on **2026-06-18**, with a targeted
+refresh on **2026-07-11** (branch `feature/xdot-conformance`) covering the
+neato/fdp/sfdp overlap dispatch, multispline/CDT, legal.c, taper.c, edge-xlabel
+placement, the ortho fidelity fixes, and the parity dashboards. Verify the live
+symbol before acting on any row.
 
 ---
 
-## Primary consumer
+## Prioritization
 
-graphviz-ts is slated to **replace plantuml-js's entire in-house layout code**
-(`src/core/dot/` etc.) as the faithful layout backend. PlantUML is **dot-centric**
-(class/state/component/activity diagrams emit DOT and consume the `dot` engine),
-so **dot-engine edge-case fidelity is the highest-value correctness target** —
-the dot rows in this catalog gate real PlantUML output. The library must still
-be complete for all engines, but prioritize dot when sequencing.
+**dot-engine edge-case fidelity is the highest-value correctness target.** The
+downstream consumers this port serves are DOT-emitting and dot-centric — they
+build a graph, emit DOT, and consume the `dot` engine — so the `dot` rows in
+this catalog gate the most real-world output. The library must still be complete
+for all eight engines, but sequence dot first.
 
 ## Deliberate non-goals (and why)
 
@@ -87,8 +89,8 @@ the Classification principle).
 
 4. **gvpr + expr** — the graph-stream scripting language and its interpreter.
    *Why:* gvpr *transforms* an existing graph; the DOT→SVG path *builds* the
-   graph and only needs layout. Verified unused by the canonical consumer
-   (`~/git/plantuml` invokes only `dot -T<fmt>`). Revisit only if a future
+   graph and only needs layout. The canonical DOT→SVG consumer path invokes only
+   `dot -T<fmt>` and never scripts graph transformation. Revisit only if a future
    consumer needs scripted graph transformation.
 
 5. **Standalone CLI surface** — `args.c` option parsing, `ingraphs` multi-file
@@ -130,7 +132,10 @@ edge-case compatibility has a real long tail** — exactly where the previous
 attempts broke. The remaining `[ ]` / `[~]` work, by area:
 
 ### dot engine
-1. `splines=curved` + verify `compound` — **active** (`../dot-curved-compound/`)
+1. `splines=curved` + `compound` — **DONE** (`EDGETYPE_CURVED` dispatch +
+   `curvedTop` → `src/layout/dot/splines.ts`; `splines=compound` clip wired).
+   The dot (SVG) track has **0 unaccepted gaps**, so curved/compound corpus ids
+   conform. _(was: active mission `../dot-curved-compound/`.)_
 2. `make_regular_edge` obstacle routing (dense corridors) — `recommended-sequence.md` §1.
    _Multi compass-port ends (G2, `ports both dense`) closed by mission-dot-multiport
    (2026-06-19): a mincross `accumCross` tiebreak fix (tie by port `p.x`, not the
@@ -139,22 +144,31 @@ attempts broke. The remaining `[ ]` / `[~]` work, by area:
 4. `nslimit` position-NS iteration cap — DOT-6 (inline)
 5. class1/class2 intercluster-edge merging — confirm completeness
 
-### neato / sgd (largest gap cluster — non-default models & modes)
-6. overlap modes: **voronoi, prism, scan, scalexy, nscale** (Voronoi/Delaunay
-   stack + prism) — NEA-6
+### neato / sgd (still the largest gap cluster — non-default models & modes)
+6. overlap modes: **prism DONE** (`overlap-prism.ts` + `fdp-adjust.ts`, Delaunay
+   via `delaunay.ts`), **scale family DONE** (`scalexy`/`compress`/`nscale` →
+   `sc-adjust.ts`). Still open: **voronoi**, **scan** (Voronoi/Fortune stack).
 7. distance models: **circuit**, **mds**, **closest-pair** — NEA-1/NEA-2
+   (still open — `runMajorization` in `init.ts` uses only `MODEL_SHORTPATH`).
 8. init: **smart_init** (sparse-subspace PCA), **start=regular**, **start=self** — NEA-3/4
-9. **`mode=hier`** (digcola) and **`mode=ipsep`** — currently `console.warn` + fallback
-10. multi-obstacle edge routing (`multispline.c`) and edge `xlabel` placement — NEA-5
-11. supporting solvers the above need: LU, matrix-inverse, QP, embed/PCA
+9. **`mode=hier`** (digcola) and **`mode=ipsep`** — still `console.warn` +
+   majorization fallback (`init.ts:391`)
+10. edge routing `multispline.c` — **DONE** (`multispline.ts` +
+    `multispline-router.ts`, GTS-faithful CDT via `cdt-surface.ts`, 2026-07-10);
+    edge `xlabel` placement (NEA-5) — **DONE**, live corpus-wide
+    (`src/common/xlabels-place.ts` + `src/label/xlabels.ts`).
+11. supporting solvers the still-open models need: LU, matrix-inverse, QP, embed/PCA
 
 ### sfdp / sparse / topfish
-12. `post_process` smoothers (Triangle/Spring/StressMajorization)
+12. `post_process` smoothers — the PRISM `OverlapSmoother` path is **wired**
+    (`spring-driver.ts` → `removeOverlapPrism`); Triangle / StressMajorization
+    smoothers still open.
 13. `edge_labeling_scheme > 0`; topfish multilevel coord rescale; sparse
     modularity clustering (`clustering.c`/`mq.c`)
 
 ### common rendering
-14. `taper.c` tapered edges (`style=tapered`)
+14. `taper.c` tapered edges (`style=tapered`) — **DONE** (`src/common/taper.ts`
+    → `src/render/svg-tapered-edge.ts`).
 15. full `ellipse.c` arc subdivision; `pointset.c`/`intset.c` utilities
 16. verify `input.c` graph-init/`setEdgeType`/default-binding equivalents
     survived the peggy-parser substitution
@@ -165,6 +179,12 @@ attempts broke. The remaining `[ ]` / `[~]` work, by area:
 19. cgraph `tred` / `unflatten` / `acyclic` / `agapply` — confirm none are
     called internally by a layout path before deferring
 20. raster image embedding into SVG (`<image href>`, `gvloadimage`)
+
+**Recently closed (2026-07-11 refresh):** `splines=curved`+`compound` (dot),
+neato/fdp/sfdp overlap dispatch (prism + scale family), `multispline.c` + GTS
+CDT, `legal.c` (`Plegal_arrangement`), edge `xlabel` placement, `taper.c`, and
+the ortho maze fidelity fixes (adjacency-buffer spill + bidirectional
+`chancmpid`). The G2 multi-compass-port note (item 2) was already closed in June.
 
 Everything below is the full per-module catalog backing this list.
 
@@ -227,8 +247,8 @@ Everything below is the full per-module catalog backing this list.
   `src/common/{shapes,shapeData,poly-*,record,compass-port,record-port}.ts`
 - [x] ns.c (~1414) — network simplex ranking → `src/layout/dot/ns-*.ts`
 - [x] splines.c (~1375) — spline clipping, self-edges → `src/common/splines*.ts`
-- [~] routespl.c (~1042) — box-sequence routing ported (`splines-routespl.ts`);
-  - [ ] `makeStraightEdges` + `bend` + `get_cycle_centroid` — `splines=curved` (active mission)
+- [x] routespl.c (~1042) — box-sequence routing ported (`splines-routespl.ts`);
+  `splines=curved` support wired (`EDGETYPE_CURVED` dispatch)
 - [x] arrows.c (~1361) — all arrow types + compound parsing → `src/common/arrows*.ts`
 - [x] emit.c (~4365) — render orchestration → `src/render/svg*.ts`, `src/gvc/{device,job}.ts`
 - [x] htmltable.c / htmllex.c — HTML-like labels → `src/common/htmltable*.ts`
@@ -242,7 +262,8 @@ Everything below is the full per-module catalog backing this list.
   layout-relevant helper left in the CLI/config remainder
 - [~] **ellipse.c** — only wedge arcs ported (`svg-multicolor.ts`); **full
   arc→bezier subdivision not ported** — needed for faithful curved shapes
-- [ ] **taper.c** — tapered edges (`style=tapered`)
+- [x] taper.c — tapered edges (`style=tapered`) → `src/common/taper.ts`
+  (`taperfun`/`taper`), rendered via `src/render/svg-tapered-edge.ts`
 - [ ] **pointset.c / intset.c** — point/int set utilities (currently inlined ad hoc)
 - [~] **input.c** — DOT scanning replaced by peggy parser, BUT `graph_init`,
   `setEdgeType`, attribute/default binding, label preprocessing live here —
@@ -271,10 +292,11 @@ Everything below is the full per-module catalog backing this list.
   - [ ] `nslimit` (nsiter2 cap) — DOT-6
   - [ ] `expand_leaves` (newrank leafsets) — DOT-4
 - [~] dotsplines.c (~2309) → `splines*.ts`/`edge-route*.ts` — dispatch + flat +
-  `line`/`polyline`/`ortho` conformant;
-  - [ ] `splines=curved` (active mission)
+  `line`/`polyline`/`ortho`/`curved` conformant;
+  - [x] `splines=curved` → `curvedTop` in `splines.ts` (edge labels warn→xlabels,
+    faithful to C); dot (SVG) track has 0 unaccepted gaps
   - [ ] `make_regular_edge` obstacle path (dense/port-constrained) — re-verify scope
-  - [x] `splines=compound` clip wired (mission verifies)
+  - [x] `splines=compound` clip wired
 - [x] aspect.c → `aspect.ts` (faithful no-op; C also incomplete)
 
 ### `lib/neatogen/` — **neato/sgd** + shared math → `src/layout/neato/`
@@ -282,23 +304,36 @@ Everything below is the full per-module catalog backing this list.
 - [x] neatoinit→`init.ts`/`index.ts`, stress.c→`stress*.ts`, sgd.c→`sgd.ts`,
   stuff.c, bfs.c, dijkstra.c, conjgrad.c, matrix_ops.c, randomkit→`util/mt19937.ts`
 - [x] neatosplines.c → `splines.ts` (self-arcs, cluster shift)
-  - [ ] edge `xlabel` post-routing placement — NEA-5
-- [~] adjust.c / overlap.c → `overlap.ts`, `sep-factor.ts` — modes none/vpsc/ipsep done
+  - [x] edge `xlabel` post-routing placement (NEA-5) → `src/common/xlabels-place.ts`
+    (`addXLabels`, `nodesInSeq × outEdges` order) + `src/label/xlabels.ts`, live
+    corpus-wide via `postproc.ts`
+- [~] adjust.c / overlap.c → `overlap.ts`, `sep-factor.ts`, `fdp-adjust.ts`,
+  `sc-adjust.ts` — **modes none/vpsc DONE; PRISM DONE** (`overlap-prism.ts`);
+  **scale family DONE** (`scalexy`/`compress`/`nscale` → `sc-adjust.ts`). The
+  overlap-removal *ipsep-cola* mode and voronoi/scan remain unported. (Do not
+  confuse with `mode=ipsep` layout, below.)
 
 **Real gaps (reachable; previously mislabeled "unused"):**
-- [ ] **overlap modes** voronoi/prism/scan/scalexy/nscale (NEA-6) — needs the
-  Voronoi stack below + prism scaling
-- [ ] **Voronoi/Delaunay stack**: voronoi.c, delaunay.c, hedges.c, heap.c,
-  geometry.c, edges.c, site.c, legal.c, call_tri.c — backs `overlap=voronoi`
+- [~] **overlap modes** — prism + scale family (scalexy/nscale/compress) DONE
+  (see adjust.c row). Still open: **voronoi**, **scan** (need the Fortune stack).
+- [~] **Voronoi/Delaunay stack**: delaunay.c → `delaunay.ts` and legal.c
+  (`Plegal_arrangement`) → `legal.ts` **DONE** (2026-07-10, back PRISM's
+  triangulation). Still open for `overlap=voronoi`: voronoi.c, hedges.c, heap.c,
+  geometry.c, edges.c, site.c, call_tri.c.
 - [ ] **constraint layout**: constrained_majorization.c,
   constrained_majorization_ipsep.c, constraint.c, quad_prog_solve.c,
   quad_prog_vpsc.c, compute_hierarchy.c — backs **`mode=hier`** and
-  **`mode=ipsep`** (confirmed warn+fallback at `init.ts:392`)
+  **`mode=ipsep`** (confirmed `console.warn` + majorization fallback at
+  `init.ts:391`)
 - [ ] **distance models**: circuit.c (`model=circuit`), embed_graph.c +
   closest.c (`model=mds`/closest), stress.c circuit/mds branches — NEA-1/2
+  (`runMajorization` still uses only `MODEL_SHORTPATH`)
 - [ ] **init**: smart_ini_x.c + pca.c (`smart_init`/`start=N`), start=regular/self — NEA-3/4
-- [ ] **edge routing**: multispline.c — multi-obstacle spline routing for neato edges
-- [ ] **solver deps** the above need: lu.c, matinv.c, solve.c, opt_arrangement.c, poly.c
+- [x] **edge routing**: multispline.c — multi-obstacle spline routing →
+  `multispline.ts` + `multispline-router.ts`, GTS-faithful CDT via
+  `cdt-surface.ts` (2026-07-10)
+- [ ] **solver deps** the still-open models need: lu.c, matinv.c, solve.c,
+  opt_arrangement.c, poly.c
 - [~] kkutils.c — some APSP ported in bfs/dijkstra/stress; confirm
   neighbor-vector utilities covered
 
@@ -306,7 +341,10 @@ Everything below is the full per-module catalog backing this list.
 
 ### `lib/sfdpgen/` + deps → `src/layout/sfdp/`
 - [x] Multilevel.c→`multilevel.ts`, spring_electrical.c→`spring-*.ts`, sfdpinit→`init.ts`/`index.ts`
-- [ ] post_process.c — Triangle/Spring/StressMajorization smoothers (attr-reachable)
+- [~] post_process.c — the PRISM `OverlapSmoother` path is wired
+  (`spring-driver.ts` routes overlap through `overlap-prism.ts:removeOverlapPrism`,
+  with `resolveControl` in `index.ts` selecting in-layout vs post-layout
+  `adjustNodesScale`); Triangle/StressMajorization smoothers still open
 - [ ] sfdpinit `edge_labeling_scheme > 0`; sparse_solve.c; stress_model.c
 - **`lib/sparse/`**: [x] SparseMatrix.c, QuadTree.c (Barnes-Hut), general.c → `src/layout/sfdp/{sparse-matrix*,quadtree}.ts`
   - [x] brewer color tables — ported in `src/common/colorData.ts`
@@ -333,10 +371,17 @@ Everything below is the full per-module catalog backing this list.
 ### `lib/pathplan/` — obstacle routing → `src/pathplan/`
 - [x] route.c, shortest.c, triang.c, visibility.c, solvers.c; shortestpth.c +
   cvt.c → `vispath.ts`; util.c folded into `route.ts`
-- [ ] **inpoly.c** (in_poly point-in-polygon) — wire when a routing consumer needs it
+- [x] inpoly.c (in_poly point-in-polygon) → `inPoly` in `visibility.ts`
+  (exported from `src/pathplan/index.ts`), consumed by `legal.ts` (`Plegal`)
+  and visibility routing
 
 ### `lib/ortho/` — orthogonal routing → `src/ortho/` — [x] fully ported & oracle-pinned
   (ortho, maze, partition, sgraph, rawgraph, trapezoid→`trap-*.ts`, fPQ)
+  - _2026-07-11: two load-bearing C behaviors were **required** for fidelity —
+    the `sgraph.c:initSEdges` fixed-6-int adjacency buffer that intentionally
+    **spills** cross-node and survives `reset` (`sgraph.ts` shared
+    `Int32Array` view), and `ortho.c:chancmpid`'s **bidirectional** interval
+    nesting in `chanSearch` (`maze-channels.ts`). Fixed 1990/2082/2361/144_ortho._
 
 ---
 
@@ -378,10 +423,10 @@ Everything below is the full per-module catalog backing this list.
 ### Resolved out of scope
 - `lib/gvpr/` + `lib/expr/` — gvpr graph-scripting/stream-editing language and
   its expression interpreter. **Decided out of scope (2026-06-18).** gvpr
-  *transforms* an existing graph; PlantUML and any DOT→SVG path *builds* the
-  graph and only needs the layout engine. Verified against the canonical Java
-  spec `~/git/plantuml`: zero real gvpr usage (only `dot -T<fmt>` invocation).
-  Revisit only if a future consumer needs graph-stream transformation.
+  *transforms* an existing graph; any DOT→SVG path *builds* the graph and only
+  needs the layout engine. The DOT-emitting consumer path exercises zero real
+  gvpr usage (only `dot -T<fmt>` invocation). Revisit only if a future consumer
+  needs graph-stream transformation.
 
 ### Genuinely out of scope (`N/A`)
 `lib/glcomp/` (OpenGL), `lib/sfio/` (buffered I/O → caller string),
@@ -396,39 +441,59 @@ via the FreeType LUT model; only rasterization is excluded.
 
 The highest-value correctness net is differential testing against graphviz's own
 test corpus — it is the long-tail edge-case coverage that broke earlier port
-attempts. The approach below is settled, and the **dot-first** slice is now
-**realized** — see the dashboard.
+attempts. The approach below is settled, and it is now **realized** for both the
+**dot** track and the **per-engine** tracks (circo/twopi/osage/patchwork
+deterministic, neato/fdp/sfdp iterative) — see the dashboards.
 
-### Realized: dot parity dashboard → [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md)
+### Realized: parity dashboards → [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md)
 
-The differential corpus harness lives under `test/corpus/` (`enumerate.ts` →
-`survey.ts` → `dashboard.ts`); see [`test/corpus/README.md`](../../test/corpus/README.md).
-It is the realized **comparison page / parity dashboard** `CLAUDE.md` requires,
-and is a **report, not a gate** — kept separate from the curated golden suite.
+The differential corpus harness lives under `test/corpus/`; see
+[`test/corpus/README.md`](../../test/corpus/README.md). It is the realized
+**comparison page / parity dashboard** `CLAUDE.md` requires, and is a **report,
+not a gate** — kept separate from the curated golden suite. Two layers now
+exist:
 
-Headline, dot engine, oracle `dot 15.1.0`, **796 applicable** inputs
-(805 corpus `.gv`/`.dot` − 9 quarantined: 6 engine-deferred, 3 multi-graph):
+- [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md) — the **cross-engine
+  overview** (one row per engine × comparison surface), generated by
+  `parity-report.ts`.
+- [`test/corpus/PARITY-dot.md`](../../test/corpus/PARITY-dot.md) — the **dot
+  (SVG) dashboard** with per-id verdicts and bucket triage (`dashboard.ts`).
+- `PARITY-<engine>.md` — one per non-dot engine (`parity-report.ts`).
+
+Headline, dot (SVG) engine, oracle `dot 15.1.0`, **788 surveyed** inputs
+(`test/corpus/parity.json`, regenerated 2026-07-11):
 
 | verdict | count | |
 |---------|------:|---|
-| conformant | 112 | port == oracle within 0.01 |
-| structural-match | 218 | same tree, coordinate drift only |
-| **diverged** | **422** | structural difference (the backlog) |
-| errored | 20 | port threw |
-| timeout | 8 | port hung (killed) |
-| oracle-error | 16 | no oracle reference (excluded) |
+| conformant | 762 | port == oracle within 0.01 |
+| structural-match | 14 | same tree, coordinate drift only |
+| **diverged** | **2** | structural difference |
+| errored | 0 | port threw |
+| oracle-error | 10 | no oracle reference (excluded) |
 
-`conformant + structural-match = 330/796 (41.5%)` structurally equal. The
-`diverged` + `errored` sets are triaged into named buckets in PARITY.md — that
-bucket list is the prioritized backlog for follow-on oracle-pinned fix missions
-(largest first: element-count 157, path-structure 109, color-stroke 56,
-font-metrics 49; parser-gap 10). Force engines (neato/fdp/sfdp/circo/twopi/
-osage) remain a deferred follow-on (the harness's `iterative` tolerance class
-already exists).
+**Zero unaccepted tracked gaps.** Every remaining non-conformant id (the 14
+structural-match + 2 diverged) is a documented accepted divergence — see
+[`test/corpus/accepted-divergences.json`](../../test/corpus/accepted-divergences.json)
+and [`test/corpus/PARITY-dot.md`](../../test/corpus/PARITY-dot.md) (the
+cross-engine report reconciles this to 0 diverged / 19 accepted). The dot track
+is functionally complete; PARITY-dot.md's bucket list now records only accepted
+classes, not open backlog.
 
-The dot-first slice above is done; the **force-engine** extension (neato/fdp/
-sfdp/circo/twopi/osage, structural-tolerance comparison) remains a future mission
-— recorded here so the approach stays settled before it starts.
+**Force-engine extension — realized, no longer a future mission.** Per-engine
+xdot tracks now exist for the deterministic engines circo/twopi/osage/patchwork
+(compared at ±0.01) and characterization tracks for the iterative engines
+neato/fdp/sfdp (compared at ±0.5, class A1 FP-determinism), all driven by
+`test/corpus/engine-walk.ts` + `parity-report.ts` with per-engine acceptance in
+[`test/corpus/accepted-divergences-engines.json`](../../test/corpus/accepted-divergences-engines.json).
+Current deterministic-engine state (from the per-engine `parity-<engine>.json`,
+regenerated 2026-07-11) — see the `PARITY-<engine>.md` pages for live numbers
+rather than freezing figures here that will drift:
+
+- **circo**: 745 pass / 3 diverged (241_0, windows-tree, 2475_2 — all A9-class
+  accepted) / 14 oracle-error of 762.
+- twopi / osage / patchwork tracks likewise shipped; the iterative
+  neato/fdp/sfdp tracks land ~a third of the corpus within ±0.5pt of native
+  (drift dominates the rest, as expected on the A1 engines).
 
 ### What's actually there
 
@@ -454,17 +519,21 @@ is inapplicable (ps/png/jpg references, gvpr, C-API memory/lifecycle tests).
    applicable input through the **native binary oracle** (`dot -Tsvg`, etc. —
    the established oracle pattern) and through graphviz-ts, then diff. Scales to
    ~800 inputs without authoring ~800 tests.
-3. **Tier the comparison by engine.** `dot` is **byte-targetable** (goldens
-   already conformant) → byte-diff is the bar. Force engines (sfdp/neato/fdp)
-   are **not** conformant cross-platform (the FP/FMA/`pow` boundary above) →
-   structural/tolerance comparison (same topology, positions within ε), else
-   false failures.
-4. **Sequence dot-first.** The primary consumer (plantuml-js) is dot-centric, so
-   the dot subset of the corpus carries most of the payoff. A tractable first cut
-   is just the `.gv`/`.dot` inputs exercising `dot`, rendered to `-Tsvg`/`-Txdot`.
+3. **Tier the comparison by engine.** The bar is always the **conformance
+   verdict** of [docs/conformance.md](../../docs/conformance.md) — never literal
+   byte equality. For `dot` (deterministic) that verdict is ±0.01 on numeric
+   coordinates with exact non-numeric content. Force engines (sfdp/neato/fdp)
+   are **not** bit-reproducible cross-platform (the FP/FMA/`pow` boundary above),
+   so they are characterized at a looser ±0.5pt tolerance (same topology,
+   positions within ε), else false failures.
+4. **Sequence dot-first.** The downstream consumers are dot-centric, so the dot
+   subset of the corpus carries most of the payoff. A tractable first cut is just
+   the `.gv`/`.dot` inputs exercising `dot`, rendered to `-Tsvg`/`-Txdot`.
 5. **Parity dashboard.** Per input: `conformant | structural-match | diverged |
    quarantined-inapplicable`. This doubles as the "comparison page for every
-   excluded case" that `CLAUDE.md` requires. **Realized** for dot at
+   excluded case" that `CLAUDE.md` requires. **Realized** — dot (SVG) at
+   [`test/corpus/PARITY-dot.md`](../../test/corpus/PARITY-dot.md), the
+   cross-engine overview at
    [`test/corpus/PARITY.md`](../../test/corpus/PARITY.md) (see headline above).
 
 ## Maintenance
