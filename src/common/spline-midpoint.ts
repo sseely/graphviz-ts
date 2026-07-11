@@ -9,6 +9,7 @@
  */
 
 import type { Point } from '../model/geom.js';
+import { fma } from './fma.js';
 
 type BezLike = { list: Point[]; sflag: number; eflag: number; sp: Point; ep: Point; size?: number };
 export type SplLike = { list: BezLike[] };
@@ -75,9 +76,16 @@ export function polylineMidpoint(spl: SplLike): Point {
       const pf = bz.list[j]; const qf = bz.list[k];
       const d = distPt(pf, qf);
       if (d >= total) {
+        // C compiles `(qf.x*dist + pf.x*(d-dist))/d` under -ffp-contract, fusing
+        // the first product `qf.x*dist` into an fmadd (single rounding on the
+        // multiply-add). The plain IEEE two-rounding form drifts 1 ULP, which on
+        // the states/twopi family tips the empty->stolen ('dispatch') label's
+        // side-selection knife-edge. Bit-level A/B against the native oracle
+        // confirmed fma(qf,dist,pf*(d-dist)) reproduces all five edge anchors
+        // exactly (plain matched only 3/5). @see lib/common/splines.c:1271
         return {
-          x: (qf.x * total + pf.x * (d - total)) / d,
-          y: (qf.y * total + pf.y * (d - total)) / d,
+          x: fma(qf.x, total, pf.x * (d - total)) / d,
+          y: fma(qf.y, total, pf.y * (d - total)) / d,
         };
       }
       total -= d;
