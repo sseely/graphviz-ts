@@ -156,10 +156,6 @@ function acceptedTable(entries: AcceptedEntry[]): string {
   return ['| id | opClass | delta | rationale |', '|---|---|---:|---|', ...rows, ''].join('\n');
 }
 
-function collapsedIds(ids: string[]): string {
-  return ids.length === 0 ? '_(none)_' : ids.map((i) => `\`${i}\``).join(' ');
-}
-
 function buildMarkdown(report: XdotParityReport, accepted: AcceptedEntry[]): string {
   const byVerdict = (v: XdotVerdict): XdotWalkResult[] => report.results.filter((r) => r.verdict === v);
   const c: Record<XdotVerdict, number> = Object.assign(
@@ -198,7 +194,8 @@ function buildMarkdown(report: XdotParityReport, accepted: AcceptedEntry[]): str
     'op-for-op with numeric payloads within ±0.01 and canonicalized',
     'colors/fonts/text equal.',
     '',
-    collapsedIds(conformantIds),
+    `_Conformant ids (${conformantIds.length}) are omitted for brevity — the full roster is in`,
+    '[xdot-parity.json](xdot-parity.json)._',
     '',
     `## Tracked diverged (${diverged.length}) — worst-first`,
     '',

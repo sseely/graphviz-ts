@@ -12,11 +12,11 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T13:09:21.063737+00:00)
-- **pass:** 733 (96.6%) · **diverged:** 12
+- **Surveyed:** 759 (generated 2026-07-11T14:08:24.769Z)
+- **pass:** 734 (96.7%) · **diverged:** 11
 - **oracle-error:** 14 · **port-error:** 0 · **timeout:** 0
 
-## Diverged (12)
+## Diverged (11)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -25,7 +25,6 @@ test/corpus/parity-report.ts`.
 | `nshare-shapes_dot` | 4692 | 700 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 491.8 vs 478` |
 | `linux.x86-shapes_dot` | 4861 | 666 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 495.73 vs 573.73` |
 | `1855` | 1335 | 469 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 877.62 vs 876.11` |
-| `1949` | 5632 | 90 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 870.09 vs 881.09` |
 | `2082` | 3033 | 80 | `edge:02c4e90c3fc645e4b0e8f0e5bef12694->2fbd65667241455bb04da4ffb465db70#0 _draw_ edge:02c4e90c3fc645e4b0e8f0e5bef12694->2fbd65667241455bb04da4ffb465db70#0/_draw_/op[1].unfilled_bezier[0]: 258.39 vs 208.36` |
 | `1990` | 610 | 44 | `edge:1⋯7 ❰A❱->1⋯2 'a'#0 _draw_ edge:1⋯7 ❰A❱->1⋯2 'a'#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `241_0` | 578 | 41 | `edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[1].unfilled_bezier[1]: 221.92 vs 222.12` |
@@ -52,5 +51,5 @@ test/corpus/parity-report.ts`.
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 | `graphs-b103` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 
-_Passing ids (733) are omitted for brevity — the full roster is in
+_Passing ids (734) are omitted for brevity — the full roster is in
 `parity-circo.json`._

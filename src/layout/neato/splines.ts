@@ -40,6 +40,7 @@ import { shiftGraphBBs } from '../pack/index.js';
 import { neatoSetAspect } from './init.js';
 import { nodesInSeq } from '../dot/decomp.js';
 import { mapbool } from '../dot/rank.js';
+import { lateDouble } from '../../common/nodeinit.js';
 import { makeStraightEdges, addEdgeLabels } from '../dot/straight-edges.js';
 import { makeMultiSpline, mkRouter } from './multispline.js';
 import { legalArrangement } from './legal.js';
@@ -367,6 +368,24 @@ export function makeStraightEdge(e: Edge, sinfo: SplineInfo): void {
   clipAndInstall(e, e.head, [tp, tp, hp, hp], 4, sinfo);
 }
 
+
+/**
+ * GD_nodesep for the neato-family routing sites. C parses nodesep
+ * engine-neutrally at graph_init (input.c:665-667: POINTS(late_double(g,
+ * "nodesep", 0.25, 0.02))); the port only did so in dot's init, so
+ * neato/circo/twopi self-loops and straight fans silently used the
+ * default 18 regardless of the attr (1949 sets nodesep=0.4 -> 29).
+ * Parses on demand and caches in root.info, mirroring C's assignment.
+ */
+function graphNodesep(g: Graph): number {
+  const root = g.root;
+  if (root.info.nodesep === undefined) {
+    const inches = lateDouble(root.attrs.get('nodesep'), 0.25, 0.02);
+    root.info.nodesep = Math.round(inches * 72); // C POINTS() macro
+  }
+  return root.info.nodesep;
+}
+
 // ---------------------------------------------------------------------------
 // makeSelfArcs
 // ---------------------------------------------------------------------------
@@ -645,7 +664,7 @@ class RoutingHelper {
   static withVconfig(
     g: Graph, obstacles: Poly[], vconfig: VisConfig, edgetype: number,
   ): void {
-    const stepx = g.info.nodesep ?? 18;
+    const stepx = graphNodesep(g);
     const concentrate = g.root.info.concentrate ?? false;
     let rtr: Router | null = null;
     for (const n of nodesInSeq(g)) {
@@ -696,7 +715,7 @@ class RoutingHelper {
   }
 
   static straight(g: Graph, et: number): void {
-    const stepx = g.info.nodesep ?? 18;
+    const stepx = graphNodesep(g);
     for (const n of nodesInSeq(g)) {
       for (const e of n.outEdges(g)) {
         // C spline_edges_: ED_count==0 -> continue (only do representative).
@@ -721,7 +740,7 @@ class RoutingHelper {
     // ED_spl, fails the `useEdges && ED_spl(e)` test, and falls through to
     // makeSelfArcs / makeStraightEdge with neato's NORMAL sinfo (generic
     // bezier clip). Self-loops are never maze-routed and always land here.
-    const stepx = g.info.nodesep ?? 18;
+    const stepx = graphNodesep(g);
     for (const n of nodesInSeq(g)) {
       for (const e of n.outEdges(g)) {
         if (e.info.spl != null) {

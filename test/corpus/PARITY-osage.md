@@ -12,11 +12,11 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T13:09:21.072324+00:00)
-- **pass:** 730 (96.2%) · **diverged:** 24
+- **Surveyed:** 759 (generated 2026-07-11T14:35:50.114Z)
+- **pass:** 731 (96.3%) · **diverged:** 23
 - **oracle-error:** 5 · **port-error:** 0 · **timeout:** 0
 
-## Diverged (24)
+## Diverged (23)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -33,7 +33,6 @@ test/corpus/parity-report.ts`.
 | `windows-polypoly` | 8872 | 106 | `edge:9000->8000#0 _draw_ edge:9000->8000#0/_draw_/op[1].unfilled_bezier[0]: 907.7 vs 1256.63` |
 | `2717` | 325 | 103 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 120 vs 84` |
 | `graphs-polypoly` | 6617 | 89 | `edge:0000->10000#0 _draw_ edge:0000->10000#0/_draw_/op[1].unfilled_bezier[0]: 2625.62 vs 2625.65` |
-| `1949` | 5632 | 61 | `edge:structEtwasErkannt->structEtwasErkannt#0 _draw_ edge:structEtwasErkannt->structEtwasErkannt#0/_draw_/op[1].unfilled_bezier[0]: 183.75 vs 183.67` |
 | `1447` | 6707 | 52 | `edge:0x00400a70->0x00400b71#0 _draw_ edge:0x00400a70->0x00400b71#0/_draw_/op[1].unfilled_bezier[1]: 33.83 vs 33.88` |
 | `graphs-b106` | 48933 | 51 | `edge:Node1315->Node1312#0 _ldraw_ edge:Node1315->Node1312#0/_ldraw_/op[2].text[0]: 700.76 vs 711.88` |
 | `1856` | 621 | 28 | `edge:1->4#0 _draw_ edge:1->4#0/_draw_/op[1].unfilled_bezier[1]: 202 vs 166` |
@@ -55,5 +54,5 @@ test/corpus/parity-report.ts`.
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
-_Passing ids (730) are omitted for brevity — the full roster is in
+_Passing ids (731) are omitted for brevity — the full roster is in
 `parity-osage.json`._

@@ -21,9 +21,9 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 |---|---:|---:|---:|---:|---:|---:|
 | dot (SVG) | 788 | 759 | 0 | 19 | 10 | 96.3% |
 | dot (xdot) | 759 | 754 | 0 | 4 | 1 | 99.3% |
-| circo (xdot) | 759 | 733 | 12 | 0 | 14 | 96.6% |
-| twopi (xdot) | 759 | 729 | 22 | 0 | 8 | 96.0% |
-| osage (xdot) | 759 | 730 | 24 | 0 | 5 | 96.2% |
+| circo (xdot) | 759 | 734 | 11 | 0 | 14 | 96.7% |
+| twopi (xdot) | 759 | 730 | 21 | 0 | 8 | 96.2% |
+| osage (xdot) | 759 | 731 | 23 | 0 | 5 | 96.3% |
 | patchwork (xdot) | 759 | 748 | 6 | 0 | 5 | 98.6% |
 
 

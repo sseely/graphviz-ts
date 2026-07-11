@@ -17,7 +17,7 @@
 // Node-only dev/test infra — never imported by src/index.ts.
 
 import { readFileSync, statSync, appendFileSync, writeFileSync, existsSync } from 'node:fs';
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -105,12 +105,34 @@ for (const it of items) {
     continue;
   }
 
-  // port (spawned, hang-safe)
-  const r = spawnSync('npx', ['tsx', join(REPO, 'test/corpus/render-one-xdot.ts'), it.path, engine], {
-    cwd: REPO, encoding: 'utf8', timeout: 90_000, killSignal: 'SIGKILL',
-    maxBuffer: 512 * 1024 * 1024,
-  });
-  if (r.error && (r.error as NodeJS.ErrnoException).code === 'ETIMEDOUT') {
+  // port (spawned, hang-safe). detached + negative-pid kill takes the WHOLE
+  // process group: killing only the npx wrapper leaves the node grandchild
+  // spinning forever on a hung render (observed: a 241_1/circo render
+  // orphaned at 100% CPU for 20h after spawnSync's killSignal).
+  const r = await new Promise<{ stdout: string; stderr: string; status: number | null; timedOut: boolean }>(
+    (resolve) => {
+      const child = spawn('npx', ['tsx', join(REPO, 'test/corpus/render-one-xdot.ts'), it.path, engine], {
+        cwd: REPO, env: process.env, detached: true,
+      });
+      let stdout = '';
+      let stderr = '';
+      let timedOut = false;
+      const timer = setTimeout(() => {
+        timedOut = true;
+        if (child.pid !== undefined) {
+          try { process.kill(-child.pid, 'SIGKILL'); } catch { /* gone */ }
+        }
+      }, 90_000);
+      child.stdout.on('data', (d: Buffer) => (stdout += d));
+      child.stderr.on('data', (d: Buffer) => (stderr += d));
+      child.on('error', (e) => (stderr += String(e)));
+      child.on('close', (status) => {
+        clearTimeout(timer);
+        resolve({ stdout, stderr, status, timedOut });
+      });
+    },
+  );
+  if (r.timedOut) {
     rec.status = 'timeout';
   } else if (r.status !== 0) {
     const m = /__RENDER_ERROR__ (.*)/.exec(r.stderr ?? '');

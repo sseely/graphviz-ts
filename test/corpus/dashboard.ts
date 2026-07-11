@@ -335,7 +335,8 @@ function buildMarkdown(report: ParityReport, manifest: CorpusEntry[]): string {
     'within the `deterministic` tolerance (±0.01) and all non-numeric content is ' +
     'exactly equal — not literal byte equality. See [docs/conformance.md](../../docs/conformance.md).',
     '',
-    collapsedIds(conformantIds),
+    `_Conformant ids (${conformantIds.length}) are omitted for brevity — the full roster is in`,
+    '[parity.json](parity.json)._',
     '',
     `## Accepted deltas (${accepted.length}) — documented, not chased`,
     '',
@@ -383,11 +384,6 @@ function buildMarkdown(report: ParityReport, manifest: CorpusEntry[]): string {
     bucketTable('errored — by thrown message', bucketize(errored, (r) => erroredBucket(r.errMsg ?? ''))),
   ];
   return parts.join('\n') + '\n';
-}
-
-/** Collapse an id list to a count-friendly, wrapped inline-code blob. */
-function collapsedIds(ids: string[]): string {
-  return ids.length === 0 ? '_(none)_' : ids.map((i) => `\`${i}\``).join(' ');
 }
 
 const report = JSON.parse(readFileSync(PARITY, 'utf8')) as ParityReport;

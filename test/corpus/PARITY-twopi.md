@@ -12,17 +12,16 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T13:09:21.068176+00:00)
-- **pass:** 729 (96.0%) · **diverged:** 22
+- **Surveyed:** 759 (generated 2026-07-11T14:22:39.103Z)
+- **pass:** 730 (96.2%) · **diverged:** 21
 - **oracle-error:** 8 · **port-error:** 0 · **timeout:** 0
 
-## Diverged (22)
+## Diverged (21)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
 | `1855` | 1335 | 871 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 945.31 vs 943.68` |
 | `2361` | 1419 | 184 | `edge:AC->CI#0 _draw_ edge:AC->CI#0/_draw_/op[1].unfilled_bezier[0]: 289.16 vs 282.77` |
-| `1949` | 5632 | 89 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 212.29 vs 223.29` |
 | `2183` | 1601 | 79 | `edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 28.31 vs 24.26` |
 | `graphs-states` | 492 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
 | `share-states` | 858 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
@@ -32,7 +31,7 @@ test/corpus/parity-report.ts`.
 | `graphs-newarrows` | 2045 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `linux.x86-arrows_dot` | 7235 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `macosx-arrows_dot` | 7235 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `nshare-arrows_dot` | 7235 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
+| `nshare-arrows_dot` | 7235 | 25 | `edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93` |
 | `144_ortho` | 257 | 14 | `edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_/op[2].text[0]: 46.05 vs 52.87` |
 | `share-newarrows` | 6364 | 12 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `windows-newarrows` | 6364 | 12 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
@@ -56,5 +55,5 @@ test/corpus/parity-report.ts`.
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K twopi -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K twopi -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
-_Passing ids (729) are omitted for brevity — the full roster is in
+_Passing ids (730) are omitted for brevity — the full roster is in
 `parity-twopi.json`._
