@@ -99,6 +99,11 @@
       "class": "A9",
       "bound": "Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node \u00b1(182,338)/\u00b12909 translations; <=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) \u2014 V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so |cos(pi+theta)| != |cos(theta)| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md.",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "1855": {
+      "class": "A9",
+      "bound": "110 xdot draw-op diffs = 3 obstacle-routed edges (6->1 B10, 16->1 B7, 30->1 B10) routed on the mirror side of the node row; X bit-exact, Y mirrored (6->1 429.120 vs 385.608). Node centers already bit-exact. Mechanism: octagon obstacle vertices (circumscribed_polygon_corner_about_ellipse) differ 3-4 ULP from C because clang -ffp-contract=on fuses the a*b+-c chains in ellipse_tangent_slope/line_intersection while V8 rounds each op; C's fused rounding collapses a gutter column of corner-x to one bit-exact double (exact collinearity), the port's splits it into two, flipping the visibility clear() tangency test so the gutter is no longer blocked -> ~20 extra visibility edges -> Dijkstra resolves the up/down homotopy tie to the mirror side. cos/sin injection is a no-op; C-obstacle injection A/B -> 0 diffs. Full RCA: .agent-notes/osage-spline-family-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   }
 }
