@@ -51,6 +51,8 @@ docs-site/.vitepress/cache/
 # the source of truth is test/corpus/PARITY.md and test/corpus/PERF.md.
 docs-site/parity.md
 docs-site/perf.md
+docs-site/engines.md
+docs-site/parity-*.md
 
 # Corpus survey transient log + any in-repo oracle SVG cache (AD-3: cache is
 # gitignored; default cache lives under the OS tmpdir, outside the repo)

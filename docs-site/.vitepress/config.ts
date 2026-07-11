@@ -22,7 +22,7 @@ export default defineConfig({
       { text: 'Playground', link: '/playground' },
       { text: 'API', link: '/guide/api' },
       { text: 'Conformance', link: '/conformance' },
-      { text: 'Parity', link: '/parity' },
+      { text: 'Parity', link: '/engines' },
     ],
     sidebar: [
       {
@@ -45,7 +45,8 @@ export default defineConfig({
           { text: 'Playground', link: '/playground' },
           { text: 'Conformance (what "match" means)', link: '/conformance' },
           { text: 'Known divergences', link: '/divergences' },
-          { text: 'Parity dashboard', link: '/parity' },
+          { text: 'Parity dashboard (dot)', link: '/parity' },
+          { text: 'Engine parity (all engines)', link: '/engines' },
           { text: 'Performance dashboard', link: '/perf' },
         ],
       },
