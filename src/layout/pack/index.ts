@@ -185,10 +185,21 @@ export function shiftGraphBBs(g: Graph, dx: number, dy: number): void {
   }
 }
 
-/** Translate an edge's spline points and label. @see lib/pack/pack.c:shiftEdge */
+/** Translate an edge's spline points and all four label kinds.
+ * C shiftEdge moves ED_label, ED_xlabel, ED_head_label, ED_tail_label — every
+ * one, in that order — before the spline. Omitting the port (head/tail) or
+ * external labels leaves them behind the shift delta when normalizeGraphBB
+ * translates a label-expanded drawing to origin (twopi 144 head/tail-label
+ * x-offset). @see lib/pack/pack.c:shiftEdge */
 export function shiftEdgePoints(e: Edge, dx: number, dy: number): void {
-  const lab = e.info.label as { pos?: Point } | undefined;
-  if (lab?.pos) lab.pos = { x: lab.pos.x + dx, y: lab.pos.y + dy };
+  const moveLabel = (raw: unknown): void => {
+    const lab = raw as { pos?: Point } | undefined;
+    if (lab?.pos) lab.pos = { x: lab.pos.x + dx, y: lab.pos.y + dy };
+  };
+  moveLabel(e.info.label);
+  moveLabel(e.info.xlabel);
+  moveLabel(e.info.head_label);
+  moveLabel(e.info.tail_label);
   const spl = e.info.spl;
   if (!spl) return;
   for (const bz of spl.list) {
