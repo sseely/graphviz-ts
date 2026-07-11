@@ -27,6 +27,24 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 | patchwork (xdot) | 759 | 748 | 6 | 0 | 5 | 98.6% |
 
 
+### Iterative engines (±0.5 characterization)
+
+neato/fdp/sfdp are iterative force-directed solvers whose results
+depend on floating-point accumulation (FMA, `Math.pow`, libm) that
+JavaScript cannot reproduce bit-for-bit — accepted class
+[A1](../../docs/known-divergences.md). These rows are compared at a
+**±0.5pt** tolerance to *characterize* behavior, not to gate
+byte-fidelity; do not read their pass % against the deterministic
+bar above.
+
+| track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
+|---|---:|---:|---:|---:|---:|---:|
+| neato (xdot) | 759 | 263 | 489 | 0 | 7 | 34.7% |
+| fdp (xdot) | 759 | 295 | 390 | 0 | 74 | 38.9% |
+| sfdp (xdot) | 759 | 254 | 475 | 0 | 30 | 33.5% |
+
+
+
 
 ## Goldens
 
@@ -53,3 +71,6 @@ The golden xdot suite gates these in CI (`test/golden/xdot-suite.test.ts`).
 - [PARITY-twopi.md](./PARITY-twopi.md) — twopi (xdot) dashboard (`parity-report.ts`)
 - [PARITY-osage.md](./PARITY-osage.md) — osage (xdot) dashboard (`parity-report.ts`)
 - [PARITY-patchwork.md](./PARITY-patchwork.md) — patchwork (xdot) dashboard (`parity-report.ts`)
+- [PARITY-neato.md](./PARITY-neato.md) — neato (xdot) dashboard (`parity-report.ts`)
+- [PARITY-fdp.md](./PARITY-fdp.md) — fdp (xdot) dashboard (`parity-report.ts`)
+- [PARITY-sfdp.md](./PARITY-sfdp.md) — sfdp (xdot) dashboard (`parity-report.ts`)

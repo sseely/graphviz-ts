@@ -27,6 +27,11 @@ import { loadAccepted, matchAccepted } from './accepted.js';
 
 /** Non-dot deterministic engines swept by engine-walk.ts. */
 const ENGINES = ['circo', 'twopi', 'osage', 'patchwork'] as const;
+/** Iterative force-directed engines: characterized at the looser ±0.5
+ * bar (accepted class A1 — fp accumulation JS cannot reproduce exactly).
+ * Rendered as a separate Tracks section so their pass %% is never read
+ * against the deterministic bar. */
+const ITERATIVE_ENGINES = ['neato', 'fdp', 'sfdp'] as const;
 
 const PARITY = new URL('./parity.json', import.meta.url);
 const XDOT_PARITY = new URL('./xdot-parity.json', import.meta.url);
@@ -232,6 +237,7 @@ function buildSummary(
   rows: TrackRow[],
   missingEngines: string[],
   presentEngines: string[],
+  iterativeRows: TrackRow[] = [],
 ): string {
   const links = [
     '- [PARITY-dot.md](./PARITY-dot.md) — dot (SVG) dashboard (`dashboard.ts`)',
@@ -265,6 +271,23 @@ function buildSummary(
     '## Tracks',
     '',
     trackTable(rows),
+    '',
+    ...(iterativeRows.length
+      ? [
+          '### Iterative engines (±0.5 characterization)',
+          '',
+          'neato/fdp/sfdp are iterative force-directed solvers whose results',
+          'depend on floating-point accumulation (FMA, `Math.pow`, libm) that',
+          'JavaScript cannot reproduce bit-for-bit — accepted class',
+          '[A1](../../docs/known-divergences.md). These rows are compared at a',
+          '**±0.5pt** tolerance to *characterize* behavior, not to gate',
+          'byte-fidelity; do not read their pass % against the deterministic',
+          'bar above.',
+          '',
+          trackTable(iterativeRows),
+          '',
+        ]
+      : []),
     missingNote,
     '',
     goldensSection(),
@@ -282,23 +305,25 @@ const xdotReport = JSON.parse(readFileSync(XDOT_PARITY, 'utf8')) as XdotParityRe
 const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8')) as CorpusEntry[];
 
 const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
+const iterativeRows: TrackRow[] = [];
 const presentEngines: string[] = [];
 const missingEngines: string[] = [];
-for (const engine of ENGINES) {
+for (const engine of [...ENGINES, ...ITERATIVE_ENGINES]) {
   const url = new URL(`./parity-${engine}.json`, import.meta.url);
   if (!existsSync(url)) {
     missingEngines.push(engine);
     continue;
   }
   const report = JSON.parse(readFileSync(url, 'utf8')) as EngineParityReport;
-  rows.push(engineRow(engine, report));
+  const isIterative = (ITERATIVE_ENGINES as readonly string[]).includes(engine);
+  (isIterative ? iterativeRows : rows).push(engineRow(engine, report));
   presentEngines.push(engine);
   const out = fileURLToPath(new URL(`./PARITY-${engine}.md`, import.meta.url));
   writeFileSync(out, engineMarkdown(engine, report));
   process.stderr.write(`wrote PARITY-${engine}.md (${report.total} surveyed)\n`);
 }
 
-writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines));
+writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines, iterativeRows));
 process.stderr.write(
   `wrote PARITY.md (${rows.length} tracks; not yet surveyed: ${missingEngines.join(', ') || 'none'})\n`,
 );

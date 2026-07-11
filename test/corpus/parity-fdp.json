@@ -1,0 +1,4665 @@
+{
+  "generatedAt": "2026-07-11T16:07:18.112Z",
+  "generatedWith": "test/corpus/engine-walk.ts",
+  "engine": "fdp",
+  "tolerance": 0.5,
+  "total": 759,
+  "counts": {
+    "pass": 295,
+    "diverged": 390,
+    "oracle-error": 15,
+    "port-error": 59,
+    "timeout": 0
+  },
+  "results": [
+    {
+      "id": "2285",
+      "size": 11,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-trivial",
+      "size": 16,
+      "status": "pass"
+    },
+    {
+      "id": "2257",
+      "size": 18,
+      "status": "pass"
+    },
+    {
+      "id": "1909",
+      "size": 29,
+      "status": "diverged",
+      "nDiffs": 50,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 131.4 vs 140.93"
+    },
+    {
+      "id": "graphs-ps_user_shapes",
+      "size": 29,
+      "status": "pass"
+    },
+    {
+      "id": "negative-dpi",
+      "size": 33,
+      "status": "pass"
+    },
+    {
+      "id": "2699",
+      "size": 35,
+      "status": "pass"
+    },
+    {
+      "id": "1724",
+      "size": 36,
+      "status": "pass"
+    },
+    {
+      "id": "usershape",
+      "size": 38,
+      "status": "pass"
+    },
+    {
+      "id": "2614",
+      "size": 39,
+      "status": "pass"
+    },
+    {
+      "id": "813",
+      "size": 39,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-center",
+      "size": 42,
+      "status": "diverged",
+      "nDiffs": 53,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 122.98 vs 127.67"
+    },
+    {
+      "id": "2225",
+      "size": 43,
+      "status": "diverged",
+      "nDiffs": 48,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 131.4 vs 140.93"
+    },
+    {
+      "id": "2636",
+      "size": 43,
+      "status": "pass"
+    },
+    {
+      "id": "1585_0",
+      "size": 44,
+      "status": "pass"
+    },
+    {
+      "id": "2636_1",
+      "size": 45,
+      "status": "pass"
+    },
+    {
+      "id": "2636_2",
+      "size": 45,
+      "status": "pass"
+    },
+    {
+      "id": "1702",
+      "size": 49,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-a",
+      "size": 49,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "2502",
+      "size": 50,
+      "status": "pass"
+    },
+    {
+      "id": "2457_1",
+      "size": 51,
+      "status": "pass"
+    },
+    {
+      "id": "2457_2",
+      "size": 51,
+      "status": "pass"
+    },
+    {
+      "id": "2458",
+      "size": 52,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:q1->q2#0 _ldraw_ edge:q1->q2#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b77",
+      "size": 53,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-in",
+      "size": 55,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-ps",
+      "size": 55,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b123",
+      "size": 59,
+      "status": "diverged",
+      "nDiffs": 33,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 36 vs 43.36"
+    },
+    {
+      "id": "2391",
+      "size": 61,
+      "status": "pass"
+    },
+    {
+      "id": "2743",
+      "size": 66,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-bad",
+      "size": 68,
+      "status": "diverged",
+      "nDiffs": 64,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 289.92 vs 278.1"
+    },
+    {
+      "id": "graphs-b76",
+      "size": 69,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-clover",
+      "size": 69,
+      "status": "pass"
+    },
+    {
+      "id": "2168",
+      "size": 70,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+    },
+    {
+      "id": "2490",
+      "size": 70,
+      "status": "diverged",
+      "nDiffs": 52,
+      "firstDiff": "edge:foo->bar#0 _draw_ edge:foo->bar#0/_draw_/op[1].unfilled_bezier[0]: 63.78 vs 36.66"
+    },
+    {
+      "id": "2682",
+      "size": 71,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:A->B#0 _ldraw_ edge:A->B#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b80a",
+      "size": 71,
+      "status": "diverged",
+      "nDiffs": 59,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 182.03 vs 188.82"
+    },
+    {
+      "id": "1925",
+      "size": 72,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b135",
+      "size": 74,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-radius",
+      "size": 74,
+      "status": "diverged",
+      "nDiffs": 48,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 131.4 vs 140.93"
+    },
+    {
+      "id": "167",
+      "size": 75,
+      "status": "pass"
+    },
+    {
+      "id": "2559",
+      "size": 78,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:a->b#0 _ldraw_ edge:a->b#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-clustlabel",
+      "size": 78,
+      "status": "diverged",
+      "nDiffs": 78,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 118.78 vs 168.47"
+    },
+    {
+      "id": "1865",
+      "size": 79,
+      "status": "pass"
+    },
+    {
+      "id": "2619",
+      "size": 79,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot"
+    },
+    {
+      "id": "165",
+      "size": 81,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b80",
+      "size": 81,
+      "status": "pass"
+    },
+    {
+      "id": "1328",
+      "size": 82,
+      "status": "pass"
+    },
+    {
+      "id": "1585_1",
+      "size": 82,
+      "status": "pass"
+    },
+    {
+      "id": "2391_1",
+      "size": 82,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 118.11 vs 136.16"
+    },
+    {
+      "id": "2564",
+      "size": 82,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "2572",
+      "size": 82,
+      "status": "pass"
+    },
+    {
+      "id": "2721",
+      "size": 82,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot"
+    },
+    {
+      "id": "graphs-b79",
+      "size": 82,
+      "status": "pass"
+    },
+    {
+      "id": "2406",
+      "size": 83,
+      "status": "pass"
+    },
+    {
+      "id": "165_3",
+      "size": 84,
+      "status": "diverged",
+      "nDiffs": 13,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -8.13"
+    },
+    {
+      "id": "graphs-longflat",
+      "size": 86,
+      "status": "diverged",
+      "nDiffs": 61,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -14.87"
+    },
+    {
+      "id": "graphs-rowcolsep",
+      "size": 86,
+      "status": "pass"
+    },
+    {
+      "id": "1444",
+      "size": 87,
+      "status": "diverged",
+      "nDiffs": 22,
+      "firstDiff": "edge:n2->n1#0 _draw_ edge:n2->n1#0/_draw_/op[1].unfilled_bezier[1]: 21.98 vs 14.53"
+    },
+    {
+      "id": "1444-2",
+      "size": 87,
+      "status": "diverged",
+      "nDiffs": 22,
+      "firstDiff": "edge:n2->n1#0 _draw_ edge:n2->n1#0/_draw_/op[1].unfilled_bezier[1]: 21.98 vs 14.53"
+    },
+    {
+      "id": "2168_4",
+      "size": 87,
+      "status": "diverged",
+      "nDiffs": 8,
+      "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+    },
+    {
+      "id": "165_2",
+      "size": 88,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 119.46 vs 131.26"
+    },
+    {
+      "id": "2643",
+      "size": 91,
+      "status": "diverged",
+      "nDiffs": 46,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 128.93 vs 134.06"
+    },
+    {
+      "id": "1644",
+      "size": 92,
+      "status": "pass"
+    },
+    {
+      "id": "2460",
+      "size": 93,
+      "status": "pass"
+    },
+    {
+      "id": "2516",
+      "size": 97,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2516.dot"
+    },
+    {
+      "id": "2437",
+      "size": 98,
+      "status": "diverged",
+      "nDiffs": 32,
+      "firstDiff": "edge:AA3->AA4#0 _draw_ edge:AA3->AA4#0/_draw_/op[1].unfilled_bezier[0]: 69.96 vs 56.41"
+    },
+    {
+      "id": "graphs-Latin1",
+      "size": 99,
+      "status": "pass"
+    },
+    {
+      "id": "2352",
+      "size": 100,
+      "status": "pass"
+    },
+    {
+      "id": "2352_1",
+      "size": 102,
+      "status": "pass"
+    },
+    {
+      "id": "2352_2",
+      "size": 102,
+      "status": "pass"
+    },
+    {
+      "id": "1308",
+      "size": 104,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b545",
+      "size": 104,
+      "status": "diverged",
+      "nDiffs": 24,
+      "firstDiff": "edge:N11ne->N11#0 _draw_ edge:N11ne->N11#0/_draw_/op[1].unfilled_bezier[0]: 191.01 vs 189.37"
+    },
+    {
+      "id": "graphs-b146",
+      "size": 105,
+      "status": "pass"
+    },
+    {
+      "id": "linux.i386-trivial_dot",
+      "size": 105,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-trivial_dot",
+      "size": 105,
+      "status": "pass"
+    },
+    {
+      "id": "macosx-trivial_dot",
+      "size": 105,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-trivial_dot",
+      "size": 105,
+      "status": "pass"
+    },
+    {
+      "id": "windows-trivial_dot",
+      "size": 105,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b60",
+      "size": 112,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b491",
+      "size": 113,
+      "status": "diverged",
+      "nDiffs": 105,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 125.58 vs 129.69"
+    },
+    {
+      "id": "graphs-dir",
+      "size": 113,
+      "status": "pass"
+    },
+    {
+      "id": "2087",
+      "size": 118,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b993",
+      "size": 118,
+      "status": "pass"
+    },
+    {
+      "id": "1902",
+      "size": 119,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-plain",
+      "size": 121,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b62",
+      "size": 123,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b73",
+      "size": 124,
+      "status": "diverged",
+      "nDiffs": 27,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -5.49"
+    },
+    {
+      "id": "reference-test_reference-001.001",
+      "size": 126,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-box",
+      "size": 128,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-cds",
+      "size": 128,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-tab",
+      "size": 128,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-utr",
+      "size": 128,
+      "status": "pass"
+    },
+    {
+      "id": "162",
+      "size": 129,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-edgeclip",
+      "size": 129,
+      "status": "diverged",
+      "nDiffs": 56,
+      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[2]: 78.04 vs 79.21"
+    },
+    {
+      "id": "regression_tests-shapes-reference-none",
+      "size": 129,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-note",
+      "size": 129,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-oval",
+      "size": 129,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-rect",
+      "size": 129,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-box3d",
+      "size": 130,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-circle",
+      "size": 130,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-house",
+      "size": 130,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-square",
+      "size": 130,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-pack",
+      "size": 131,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-Mcircle",
+      "size": 131,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-Msquare",
+      "size": 131,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-folder",
+      "size": 131,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-larrow",
+      "size": 131,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-rarrow",
+      "size": 131,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-diamond",
+      "size": 132,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-ellipse",
+      "size": 132,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-hexagon",
+      "size": 132,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-octagon",
+      "size": 132,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-polygon",
+      "size": 132,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-rnastab",
+      "size": 132,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b33",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-user_shapes",
+      "size": 133,
+      "status": "diverged",
+      "nDiffs": 61,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 280.9 vs 289.68"
+    },
+    {
+      "id": "regression_tests-shapes-reference-Mdiamond",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-assembly",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-cylinder",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-invhouse",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-pentagon",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-promoter",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-ribosite",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-septagon",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-triangle",
+      "size": 133,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b73a",
+      "size": 134,
+      "status": "diverged",
+      "nDiffs": 29,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -5.49"
+    },
+    {
+      "id": "regression_tests-shapes-reference-component",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-insulator",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-lpromoter",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-noverhang",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-plaintext",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-rectangle",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-rpromoter",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-signature",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-trapezium",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-underline",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-point",
+      "size": 135,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-primersite",
+      "size": 135,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-terminator",
+      "size": 135,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-invtriangle",
+      "size": 136,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-proteinstab",
+      "size": 136,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-invtrapezium",
+      "size": 137,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-proteasesite",
+      "size": 137,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-fivepoverhang",
+      "size": 138,
+      "status": "pass"
+    },
+    {
+      "id": "1425",
+      "size": 139,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-egg",
+      "size": 139,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-threepoverhang",
+      "size": 139,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-restrictionsite",
+      "size": 140,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-star",
+      "size": 141,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-doublecircle",
+      "size": 144,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-doubleoctagon",
+      "size": 145,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-tripleoctagon",
+      "size": 145,
+      "status": "pass"
+    },
+    {
+      "id": "2342",
+      "size": 146,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-clust1",
+      "size": 146,
+      "status": "diverged",
+      "nDiffs": 248,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.97 vs 208.47"
+    },
+    {
+      "id": "graphs-clust2",
+      "size": 146,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-clust3",
+      "size": 146,
+      "status": "pass"
+    },
+    {
+      "id": "1221",
+      "size": 149,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1221.dot"
+    },
+    {
+      "id": "regression_tests-shapes-reference-parallelogram",
+      "size": 149,
+      "status": "pass"
+    },
+    {
+      "id": "705",
+      "size": 155,
+      "status": "diverged",
+      "nDiffs": 36,
+      "firstDiff": "edge:aa->ab#0 _draw_ edge:aa->ab#0/_draw_/op[1].unfilled_bezier[0]: 61.63 vs 73.84"
+    },
+    {
+      "id": "graphs-record2",
+      "size": 155,
+      "status": "diverged",
+      "nDiffs": 24,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 92.01 vs 17.33"
+    },
+    {
+      "id": "share-Latin1",
+      "size": 155,
+      "status": "pass"
+    },
+    {
+      "id": "windows-Latin1",
+      "size": 155,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-ordering",
+      "size": 161,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-try",
+      "size": 163,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-d",
+      "size": 165,
+      "status": "pass"
+    },
+    {
+      "id": "1514",
+      "size": 168,
+      "status": "diverged",
+      "nDiffs": 156,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 195.82 vs 251.65"
+    },
+    {
+      "id": "2436",
+      "size": 168,
+      "status": "pass"
+    },
+    {
+      "id": "2639",
+      "size": 170,
+      "status": "pass"
+    },
+    {
+      "id": "2615",
+      "size": 173,
+      "status": "diverged",
+      "nDiffs": 168,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 213.1 vs 224.85"
+    },
+    {
+      "id": "2484",
+      "size": 182,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-fdp",
+      "size": 183,
+      "status": "diverged",
+      "nDiffs": 162,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 180.47 vs 290.4"
+    },
+    {
+      "id": "graphs-labelclust-ndd",
+      "size": 186,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-b58",
+      "size": 194,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelclust-fdd",
+      "size": 202,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ntd",
+      "size": 206,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-nestedclust",
+      "size": 207,
+      "status": "diverged",
+      "nDiffs": 89,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 227.69 vs 199.69"
+    },
+    {
+      "id": "graphs-labelclust-ndl",
+      "size": 208,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-nbd",
+      "size": 209,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ndr",
+      "size": 209,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ndc",
+      "size": 210,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "2563",
+      "size": 213,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "258",
+      "size": 218,
+      "status": "pass"
+    },
+    {
+      "id": "1879-2",
+      "size": 221,
+      "status": "pass"
+    },
+    {
+      "id": "2295",
+      "size": 221,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b7",
+      "size": 222,
+      "status": "port-error",
+      "err": "fdp: coincident nodes q/z hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+    },
+    {
+      "id": "graphs-labelclust-ftd",
+      "size": 222,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "2683",
+      "size": 223,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelclust-fdl",
+      "size": 224,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-fbd",
+      "size": 225,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-fdr",
+      "size": 225,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-fdc",
+      "size": 226,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-ndd",
+      "size": 227,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-rootlabel",
+      "size": 227,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ntl",
+      "size": 228,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ntr",
+      "size": 229,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ntc",
+      "size": 230,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-nbl",
+      "size": 231,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-nbr",
+      "size": 232,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-nbc",
+      "size": 233,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-process",
+      "size": 234,
+      "status": "pass"
+    },
+    {
+      "id": "144_no_ortho",
+      "size": 237,
+      "status": "diverged",
+      "nDiffs": 6,
+      "firstDiff": "edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "2609",
+      "size": 238,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-clust5",
+      "size": 238,
+      "status": "port-error",
+      "err": "fdp: coincident nodes z0/y0 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+    },
+    {
+      "id": "graphs-sb_box",
+      "size": 241,
+      "status": "diverged",
+      "nDiffs": 81,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41"
+    },
+    {
+      "id": "graphs-labelroot-fdd",
+      "size": 243,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-ftl",
+      "size": 244,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-sb_circle",
+      "size": 244,
+      "status": "diverged",
+      "nDiffs": 84,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55"
+    },
+    {
+      "id": "graphs-labelclust-ftr",
+      "size": 245,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-ntd",
+      "size": 245,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "graphs-labelclust-ftc",
+      "size": 246,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-fbl",
+      "size": 247,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-ndl",
+      "size": 247,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelclust-fbr",
+      "size": 248,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-nbd",
+      "size": 248,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-ndr",
+      "size": 248,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-p3",
+      "size": 248,
+      "status": "pass"
+    },
+    {
+      "id": "121",
+      "size": 249,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelclust-fbc",
+      "size": 249,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-ndc",
+      "size": 249,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "925",
+      "size": 256,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b145",
+      "size": 256,
+      "status": "diverged",
+      "nDiffs": 92,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 95.37 vs 144.25"
+    },
+    {
+      "id": "graphs-clust",
+      "size": 256,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-p2",
+      "size": 256,
+      "status": "pass"
+    },
+    {
+      "id": "144_ortho",
+      "size": 257,
+      "status": "diverged",
+      "nDiffs": 91,
+      "firstDiff": "edge:A->B#0 _draw_ edge:A->B#0/_draw_/op[1].unfilled_bezier[1]: 68.74 vs 70"
+    },
+    {
+      "id": "graphs-layers",
+      "size": 258,
+      "status": "diverged",
+      "nDiffs": 55,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 123.49 vs 129.1"
+    },
+    {
+      "id": "graphs-p",
+      "size": 259,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-layer",
+      "size": 260,
+      "status": "diverged",
+      "nDiffs": 55,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 123.49 vs 129.1"
+    },
+    {
+      "id": "graphs-labelroot-ftd",
+      "size": 261,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "graphs-labelroot-fdl",
+      "size": 263,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-fbd",
+      "size": 264,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-fdr",
+      "size": 264,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "1622_3",
+      "size": 265,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelroot-fdc",
+      "size": 265,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-ntl",
+      "size": 265,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "1624",
+      "size": 266,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelroot-ntr",
+      "size": 266,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "share-a1",
+      "size": 266,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-a2",
+      "size": 266,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-a3",
+      "size": 266,
+      "status": "diverged",
+      "nDiffs": 28,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -8.08"
+    },
+    {
+      "id": "graphs-labelroot-ntc",
+      "size": 267,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "graphs-labelroot-nbl",
+      "size": 268,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-nbr",
+      "size": 269,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-color",
+      "size": 270,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelroot-nbc",
+      "size": 270,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-layer2",
+      "size": 274,
+      "status": "diverged",
+      "nDiffs": 55,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 123.49 vs 129.1"
+    },
+    {
+      "id": "graphs-labelroot-ftl",
+      "size": 281,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "graphs-labelroot-ftr",
+      "size": 282,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "graphs-labelroot-ftc",
+      "size": 283,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 206.58 vs 231.38"
+    },
+    {
+      "id": "graphs-labelroot-fbl",
+      "size": 284,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-labelroot-fbr",
+      "size": 285,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-compound",
+      "size": 286,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-labelroot-fbc",
+      "size": 286,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-colorscheme",
+      "size": 290,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-nojustify",
+      "size": 298,
+      "status": "pass"
+    },
+    {
+      "id": "2727",
+      "size": 306,
+      "status": "pass"
+    },
+    {
+      "id": "1939",
+      "size": 307,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-p4",
+      "size": 309,
+      "status": "pass"
+    },
+    {
+      "id": "1622_1",
+      "size": 311,
+      "status": "pass"
+    },
+    {
+      "id": "2825",
+      "size": 312,
+      "status": "pass"
+    },
+    {
+      "id": "2521",
+      "size": 320,
+      "status": "diverged",
+      "nDiffs": 161,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 306.98 vs 317.18"
+    },
+    {
+      "id": "2168_3",
+      "size": 322,
+      "status": "diverged",
+      "nDiffs": 19,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 53.48 vs 54.54"
+    },
+    {
+      "id": "2717",
+      "size": 325,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2717.dot"
+    },
+    {
+      "id": "1767",
+      "size": 326,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1767.dot"
+    },
+    {
+      "id": "graphs-flatedge",
+      "size": 330,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b",
+      "size": 338,
+      "status": "diverged",
+      "nDiffs": 9,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52"
+    },
+    {
+      "id": "graphs-b117",
+      "size": 338,
+      "status": "diverged",
+      "nDiffs": 9,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52"
+    },
+    {
+      "id": "graphs-nhg",
+      "size": 339,
+      "status": "diverged",
+      "nDiffs": 9,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52"
+    },
+    {
+      "id": "2168_2",
+      "size": 349,
+      "status": "diverged",
+      "nDiffs": 8,
+      "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+    },
+    {
+      "id": "graphs-ZapfDingbats",
+      "size": 360,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-colors",
+      "size": 376,
+      "status": "diverged",
+      "nDiffs": 2,
+      "firstDiff": "edge:ddddddd->eeeee#0 _hldraw_ edge:ddddddd->eeeee#0/_hldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-mike",
+      "size": 381,
+      "status": "diverged",
+      "nDiffs": 1130,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 762.09 vs 660.21"
+    },
+    {
+      "id": "graphs-ZapfChancery",
+      "size": 386,
+      "status": "pass"
+    },
+    {
+      "id": "2184",
+      "size": 393,
+      "status": "port-error",
+      "err": "fdp: coincident nodes z1/y1 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+    },
+    {
+      "id": "graphs-sb_box_dbl",
+      "size": 397,
+      "status": "diverged",
+      "nDiffs": 152,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41"
+    },
+    {
+      "id": "graphs-sb_circle_dbl",
+      "size": 400,
+      "status": "diverged",
+      "nDiffs": 158,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55"
+    },
+    {
+      "id": "graphs-clust4",
+      "size": 401,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-clusters",
+      "size": 402,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-xlabels",
+      "size": 404,
+      "status": "diverged",
+      "nDiffs": 15,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -15.22"
+    },
+    {
+      "id": "2368_1",
+      "size": 405,
+      "status": "diverged",
+      "nDiffs": 2,
+      "firstDiff": "edge:376->196#0 _ldraw_ edge:376->196#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-longflat",
+      "size": 405,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "windows-longflat",
+      "size": 409,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "2613",
+      "size": 411,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-KW91",
+      "size": 416,
+      "status": "diverged",
+      "nDiffs": 354,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 323.07 vs 303.09"
+    },
+    {
+      "id": "graphs-records",
+      "size": 417,
+      "status": "diverged",
+      "nDiffs": 139,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 203.93 vs 222.78"
+    },
+    {
+      "id": "linux.i386-radius_dot",
+      "size": 418,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6"
+    },
+    {
+      "id": "linux.x86-radius_dot",
+      "size": 418,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6"
+    },
+    {
+      "id": "macosx-radius_dot",
+      "size": 418,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6"
+    },
+    {
+      "id": "nshare-radius_dot",
+      "size": 418,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6"
+    },
+    {
+      "id": "windows-radius_dot",
+      "size": 418,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:x->y#0 _draw_ edge:x->y#0/_draw_[opCount]: 2 vs 6"
+    },
+    {
+      "id": "share-record2",
+      "size": 421,
+      "status": "diverged",
+      "nDiffs": 22,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 1280.19 vs 1255.96"
+    },
+    {
+      "id": "windows-record2",
+      "size": 421,
+      "status": "diverged",
+      "nDiffs": 22,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 1279.11 vs 1255.1"
+    },
+    {
+      "id": "graphs-ctext",
+      "size": 425,
+      "status": "pass"
+    },
+    {
+      "id": "358",
+      "size": 429,
+      "status": "pass"
+    },
+    {
+      "id": "2258",
+      "size": 460,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "2556",
+      "size": 469,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "1213-1",
+      "size": 481,
+      "status": "diverged",
+      "nDiffs": 2,
+      "firstDiff": "edge:V1->V9#0 _ldraw_ edge:V1->V9#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-b491",
+      "size": 486,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "windows-b491",
+      "size": 486,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b22",
+      "size": 488,
+      "status": "pass"
+    },
+    {
+      "id": "1622_0",
+      "size": 489,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-states",
+      "size": 492,
+      "status": "diverged",
+      "nDiffs": 5,
+      "firstDiff": "edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-grdcluster",
+      "size": 497,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-grdradial_node",
+      "size": 519,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-russian",
+      "size": 520,
+      "status": "diverged",
+      "nDiffs": 58,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 368.27 vs 369.6"
+    },
+    {
+      "id": "graphs-grdlinear_node",
+      "size": 523,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "1213-2",
+      "size": 530,
+      "status": "diverged",
+      "nDiffs": 2,
+      "firstDiff": "edge:H5->H1#0 _ldraw_ edge:H5->H1#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "2159",
+      "size": 538,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b155",
+      "size": 542,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -17.6"
+    },
+    {
+      "id": "1408",
+      "size": 544,
+      "status": "pass"
+    },
+    {
+      "id": "1425_1",
+      "size": 544,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-nul_nul",
+      "size": 576,
+      "status": "pass"
+    },
+    {
+      "id": "241_0",
+      "size": 578,
+      "status": "diverged",
+      "nDiffs": 272,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 359.85 vs 353.14"
+    },
+    {
+      "id": "share-labelclust-ndd",
+      "size": 586,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ndd",
+      "size": 586,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-inv_nul",
+      "size": 588,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-tree",
+      "size": 588,
+      "status": "diverged",
+      "nDiffs": 166,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 100.57 vs 44.97"
+    },
+    {
+      "id": "graphs-b68",
+      "size": 595,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fdd",
+      "size": 595,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fdd",
+      "size": 595,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "linux.x86-edgeclip_dot",
+      "size": 599,
+      "status": "diverged",
+      "nDiffs": 46,
+      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[3]: 1708.88 vs 1702.83"
+    },
+    {
+      "id": "macosx-edgeclip_dot",
+      "size": 599,
+      "status": "diverged",
+      "nDiffs": 46,
+      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[3]: 1708.88 vs 1702.83"
+    },
+    {
+      "id": "nshare-edgeclip_dot",
+      "size": 599,
+      "status": "diverged",
+      "nDiffs": 46,
+      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[3]: 1708.88 vs 1702.83"
+    },
+    {
+      "id": "share-labelclust-ntd",
+      "size": 603,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ntd",
+      "size": 603,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-fsm",
+      "size": 605,
+      "status": "diverged",
+      "nDiffs": 14,
+      "firstDiff": "edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-labelclust-ndl",
+      "size": 605,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ndl",
+      "size": 605,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ndr",
+      "size": 606,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ndr",
+      "size": 606,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ndc",
+      "size": 607,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ndc",
+      "size": 607,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "1990",
+      "size": 610,
+      "status": "diverged",
+      "nDiffs": 184,
+      "firstDiff": "edge:0⋯7 ❰A❱->0⋯1 'a'#0 _draw_ edge:0⋯7 ❰A❱->0⋯1 'a'#0/_draw_/op[1].unfilled_bezier[0]: 238.4 vs 247.59"
+    },
+    {
+      "id": "share-labelclust-nbd",
+      "size": 611,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-nbd",
+      "size": 611,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ftd",
+      "size": 612,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ftd",
+      "size": 612,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fdl",
+      "size": 614,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fdl",
+      "size": 614,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fbd",
+      "size": 615,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fbd",
+      "size": 615,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fdc",
+      "size": 616,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fdr",
+      "size": 616,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fdc",
+      "size": 616,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fdr",
+      "size": 616,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-inv_inv",
+      "size": 618,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-rowcolsep_dot1",
+      "size": 619,
+      "status": "pass"
+    },
+    {
+      "id": "macosx-rowcolsep_dot1",
+      "size": 619,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-rowcolsep_dot1",
+      "size": 619,
+      "status": "pass"
+    },
+    {
+      "id": "share-labelroot-ntd",
+      "size": 619,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "windows-labelroot-ntd",
+      "size": 619,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "graphs-nul_inv",
+      "size": 620,
+      "status": "pass"
+    },
+    {
+      "id": "1856",
+      "size": 621,
+      "status": "diverged",
+      "nDiffs": 152,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 400.93 vs 385.23"
+    },
+    {
+      "id": "2325",
+      "size": 621,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-rowcolsep_dot",
+      "size": 622,
+      "status": "pass"
+    },
+    {
+      "id": "macosx-rowcolsep_dot",
+      "size": 622,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-rowcolsep_dot",
+      "size": 622,
+      "status": "pass"
+    },
+    {
+      "id": "share-labelclust-ntl",
+      "size": 622,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ntl",
+      "size": 622,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ntr",
+      "size": 623,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ntr",
+      "size": 623,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ntc",
+      "size": 624,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ntc",
+      "size": 624,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-nbd",
+      "size": 625,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-nbd",
+      "size": 625,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ftd",
+      "size": 627,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "windows-labelroot-ftd",
+      "size": 627,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "share-labelroot-ndd",
+      "size": 628,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ndd",
+      "size": 628,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-hashtable",
+      "size": 629,
+      "status": "diverged",
+      "nDiffs": 142,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 218.88 vs 290.27"
+    },
+    {
+      "id": "share-labelroot-fbd",
+      "size": 629,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-fbd",
+      "size": 629,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-val_nul",
+      "size": 630,
+      "status": "pass"
+    },
+    {
+      "id": "share-labelclust-nbl",
+      "size": 630,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-nbl",
+      "size": 630,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ftl",
+      "size": 631,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-nbr",
+      "size": 631,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ftl",
+      "size": 631,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-nbr",
+      "size": 631,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-nbc",
+      "size": 632,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-fdd",
+      "size": 632,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-nbc",
+      "size": 632,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-fdd",
+      "size": 632,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ftc",
+      "size": 633,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-ftr",
+      "size": 633,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ftc",
+      "size": 633,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-ftr",
+      "size": 633,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fbl",
+      "size": 634,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fbl",
+      "size": 634,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ntl",
+      "size": 635,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "windows-labelroot-ntl",
+      "size": 635,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "graphs-inv_val",
+      "size": 636,
+      "status": "pass"
+    },
+    {
+      "id": "share-labelclust-fbc",
+      "size": 636,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelclust-fbr",
+      "size": 636,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fbc",
+      "size": 636,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelclust-fbr",
+      "size": 636,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ntc",
+      "size": 637,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "share-labelroot-ntr",
+      "size": 637,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "windows-labelroot-ntc",
+      "size": 637,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "windows-labelroot-ntr",
+      "size": 637,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3629.51 vs 3654.31"
+    },
+    {
+      "id": "share-labelroot-nbl",
+      "size": 641,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-nbl",
+      "size": 641,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ftl",
+      "size": 643,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "share-labelroot-nbc",
+      "size": 643,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-nbr",
+      "size": 643,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ftl",
+      "size": 643,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "windows-labelroot-nbc",
+      "size": 643,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-nbr",
+      "size": 643,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ndl",
+      "size": 644,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ndl",
+      "size": 644,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-fbl",
+      "size": 645,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ftc",
+      "size": 645,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "windows-labelroot-fbl",
+      "size": 645,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ftc",
+      "size": 645,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "share-labelroot-ndc",
+      "size": 646,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ndr",
+      "size": 646,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ndc",
+      "size": 646,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ndr",
+      "size": 646,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-fbc",
+      "size": 647,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-ftr",
+      "size": 647,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "windows-labelroot-fbc",
+      "size": 647,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-ftr",
+      "size": 647,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 313.8 vs 338.6"
+    },
+    {
+      "id": "share-labelroot-fdl",
+      "size": 648,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-fdl",
+      "size": 648,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-labelroot-fbr",
+      "size": 649,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-fbr",
+      "size": 649,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-ER",
+      "size": 650,
+      "status": "diverged",
+      "nDiffs": 286,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
+    },
+    {
+      "id": "share-labelroot-fdc",
+      "size": 650,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-fdc",
+      "size": 650,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "2801",
+      "size": 651,
+      "status": "diverged",
+      "nDiffs": 9,
+      "firstDiff": "edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-labelroot-fdr",
+      "size": 652,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-labelroot-fdr",
+      "size": 652,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-nul_val",
+      "size": 659,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-val_inv",
+      "size": 660,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b786",
+      "size": 667,
+      "status": "diverged",
+      "nDiffs": 202,
+      "firstDiff": "edge:n3->n2#0 _draw_ edge:n3->n2#0/_draw_/op[1].unfilled_bezier[0]: 148.99 vs 135.23"
+    },
+    {
+      "id": "graphs-b85",
+      "size": 668,
+      "status": "diverged",
+      "nDiffs": 74,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 89.09 vs 94.77"
+    },
+    {
+      "id": "graphs-ports",
+      "size": 677,
+      "status": "diverged",
+      "nDiffs": 659,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 459.77 vs 445.02"
+    },
+    {
+      "id": "graphs-val_val",
+      "size": 678,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-sides",
+      "size": 680,
+      "status": "pass"
+    },
+    {
+      "id": "share-structs",
+      "size": 710,
+      "status": "diverged",
+      "nDiffs": 41,
+      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2619.34 vs 2628.94"
+    },
+    {
+      "id": "1658",
+      "size": 711,
+      "status": "diverged",
+      "nDiffs": 406,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 643.37 vs 689.85"
+    },
+    {
+      "id": "windows-structs",
+      "size": 728,
+      "status": "diverged",
+      "nDiffs": 41,
+      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2620.42 vs 2630.49"
+    },
+    {
+      "id": "2168_1",
+      "size": 729,
+      "status": "diverged",
+      "nDiffs": 24,
+      "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[0]: 65.43 vs 59.13"
+    },
+    {
+      "id": "graphs-html",
+      "size": 738,
+      "status": "diverged",
+      "nDiffs": 134,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 172.07 vs 181.8"
+    },
+    {
+      "id": "graphs-b3",
+      "size": 754,
+      "status": "pass"
+    },
+    {
+      "id": "2497",
+      "size": 763,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-rowe",
+      "size": 765,
+      "status": "diverged",
+      "nDiffs": 2140,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 954.65 vs 752.5"
+    },
+    {
+      "id": "graphs-abstract",
+      "size": 770,
+      "status": "diverged",
+      "nDiffs": 1904,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 846.91 vs 912.37"
+    },
+    {
+      "id": "2168_5",
+      "size": 777,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-train11",
+      "size": 777,
+      "status": "diverged",
+      "nDiffs": 28,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 286.25 vs 311.14"
+    },
+    {
+      "id": "graphs-jcctree",
+      "size": 778,
+      "status": "diverged",
+      "nDiffs": 521,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 338.8 vs 346.84"
+    },
+    {
+      "id": "graphs-japanese",
+      "size": 789,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-Heawood",
+      "size": 790,
+      "status": "diverged",
+      "nDiffs": 411,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 315.5 vs 283.09"
+    },
+    {
+      "id": "graphs-b34",
+      "size": 814,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-fig6",
+      "size": 835,
+      "status": "diverged",
+      "nDiffs": 1950,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1086.34 vs 1229.13"
+    },
+    {
+      "id": "graphs-shapes",
+      "size": 840,
+      "status": "pass"
+    },
+    {
+      "id": "share-states",
+      "size": 858,
+      "status": "diverged",
+      "nDiffs": 5,
+      "firstDiff": "edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "windows-states",
+      "size": 878,
+      "status": "diverged",
+      "nDiffs": 5,
+      "firstDiff": "edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-Petersen",
+      "size": 904,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-nestedclust_dot",
+      "size": 907,
+      "status": "pass"
+    },
+    {
+      "id": "macosx-nestedclust_dot",
+      "size": 907,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-nestedclust_dot",
+      "size": 907,
+      "status": "pass"
+    },
+    {
+      "id": "share-flatedge",
+      "size": 918,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-Symbol",
+      "size": 924,
+      "status": "diverged",
+      "nDiffs": 418,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 723.5 vs 577.33"
+    },
+    {
+      "id": "windows-nhg",
+      "size": 926,
+      "status": "diverged",
+      "nDiffs": 6,
+      "firstDiff": "edge:0->1#0 _ldraw_ edge:0->1#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-nhg",
+      "size": 938,
+      "status": "diverged",
+      "nDiffs": 6,
+      "firstDiff": "edge:0->1#0 _ldraw_ edge:0->1#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-alf",
+      "size": 958,
+      "status": "diverged",
+      "nDiffs": 743,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 543.18 vs 755.78"
+    },
+    {
+      "id": "graphs-record",
+      "size": 958,
+      "status": "diverged",
+      "nDiffs": 743,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 543.18 vs 755.78"
+    },
+    {
+      "id": "graphs-dfa",
+      "size": 959,
+      "status": "diverged",
+      "nDiffs": 20,
+      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-world",
+      "size": 980,
+      "status": "diverged",
+      "nDiffs": 1943,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1039.8 vs 1088.38"
+    },
+    {
+      "id": "graphs-style",
+      "size": 983,
+      "status": "diverged",
+      "nDiffs": 719,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 433.91 vs 413.51"
+    },
+    {
+      "id": "graphs-dd",
+      "size": 1053,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-html_dot",
+      "size": 1057,
+      "status": "diverged",
+      "nDiffs": 48,
+      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2561.77 vs 2570.05"
+    },
+    {
+      "id": "nshare-html_dot",
+      "size": 1058,
+      "status": "diverged",
+      "nDiffs": 48,
+      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2578.24 vs 2586.6"
+    },
+    {
+      "id": "2521_1",
+      "size": 1062,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-grdangles",
+      "size": 1076,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-shells",
+      "size": 1102,
+      "status": "diverged",
+      "nDiffs": 1092,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 745 vs 1005.96"
+    },
+    {
+      "id": "share-try",
+      "size": 1141,
+      "status": "pass"
+    },
+    {
+      "id": "windows-try",
+      "size": 1142,
+      "status": "pass"
+    },
+    {
+      "id": "share-ctext",
+      "size": 1171,
+      "status": "pass"
+    },
+    {
+      "id": "windows-ctext",
+      "size": 1171,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-flatedge_dot",
+      "size": 1177,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "nshare-flatedge_dot",
+      "size": 1182,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-clust3",
+      "size": 1195,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-clust3",
+      "size": 1195,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "share-clust2",
+      "size": 1200,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-clust2",
+      "size": 1200,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-grdshapes",
+      "size": 1204,
+      "status": "pass"
+    },
+    {
+      "id": "share-clust",
+      "size": 1218,
+      "status": "pass"
+    },
+    {
+      "id": "windows-clust",
+      "size": 1218,
+      "status": "pass"
+    },
+    {
+      "id": "share-clust1",
+      "size": 1239,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:b0->b1#0 _draw_ edge:b0->b1#0/_draw_/op[1].unfilled_bezier[4]: 2048.04 vs 2048.69"
+    },
+    {
+      "id": "graphs-url",
+      "size": 1242,
+      "status": "diverged",
+      "nDiffs": 10,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "1896",
+      "size": 1261,
+      "status": "pass"
+    },
+    {
+      "id": "windows-clust1",
+      "size": 1261,
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:b0->b1#0 _draw_ edge:b0->b1#0/_draw_/op[1].unfilled_bezier[4]: 2048.04 vs 2048.69"
+    },
+    {
+      "id": "graphs-grammar",
+      "size": 1302,
+      "status": "diverged",
+      "nDiffs": 1514,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 578.66 vs 887.84"
+    },
+    {
+      "id": "1855",
+      "size": 1335,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-dpd",
+      "size": 1357,
+      "status": "diverged",
+      "nDiffs": 1932,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 899.18 vs 888.47"
+    },
+    {
+      "id": "graphs-overlap",
+      "size": 1357,
+      "status": "diverged",
+      "nDiffs": 1932,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 899.18 vs 888.47"
+    },
+    {
+      "id": "share-records",
+      "size": 1398,
+      "status": "diverged",
+      "nDiffs": 110,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25"
+    },
+    {
+      "id": "graphs-html2",
+      "size": 1414,
+      "status": "diverged",
+      "nDiffs": 33,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.52 vs 107.05"
+    },
+    {
+      "id": "windows-records",
+      "size": 1416,
+      "status": "diverged",
+      "nDiffs": 110,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25"
+    },
+    {
+      "id": "2361",
+      "size": 1419,
+      "status": "diverged",
+      "nDiffs": 265,
+      "firstDiff": "edge:AC->CI#0 _draw_ edge:AC->CI#0/_draw_/op[1].unfilled_bezier[1]: 151.19 vs 149"
+    },
+    {
+      "id": "graphs-b56",
+      "size": 1421,
+      "status": "diverged",
+      "nDiffs": 363,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 419.28 vs 456.71"
+    },
+    {
+      "id": "graphs-unix",
+      "size": 1433,
+      "status": "diverged",
+      "nDiffs": 1425,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01"
+    },
+    {
+      "id": "graphs-Times",
+      "size": 1437,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-Bookman",
+      "size": 1454,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-lsunix1",
+      "size": 1456,
+      "status": "diverged",
+      "nDiffs": 1425,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01"
+    },
+    {
+      "id": "graphs-lsunix2",
+      "size": 1456,
+      "status": "diverged",
+      "nDiffs": 1425,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01"
+    },
+    {
+      "id": "graphs-Palatino",
+      "size": 1462,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-lsunix3",
+      "size": 1465,
+      "status": "diverged",
+      "nDiffs": 1425,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01"
+    },
+    {
+      "id": "graphs-AvantGarde",
+      "size": 1484,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-trapeziumlr",
+      "size": 1484,
+      "status": "diverged",
+      "nDiffs": 1937,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 956.93 vs 959.3"
+    },
+    {
+      "id": "linux.x86-compound_dot",
+      "size": 1496,
+      "status": "pass"
+    },
+    {
+      "id": "macosx-compound_dot",
+      "size": 1496,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-compound_dot",
+      "size": 1496,
+      "status": "pass"
+    },
+    {
+      "id": "windows-process",
+      "size": 1511,
+      "status": "pass"
+    },
+    {
+      "id": "share-process",
+      "size": 1512,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-NewCenturySchlbk",
+      "size": 1526,
+      "status": "pass"
+    },
+    {
+      "id": "1323_1",
+      "size": 1588,
+      "status": "diverged",
+      "nDiffs": 71,
+      "firstDiff": "edge:namespace1->vfsmount1#0 _draw_ edge:namespace1->vfsmount1#0/_draw_/op[1].unfilled_bezier[0]: 101.61 vs 138.32"
+    },
+    {
+      "id": "2183",
+      "size": 1601,
+      "status": "diverged",
+      "nDiffs": 815,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 484.91 vs 451.3"
+    },
+    {
+      "id": "graphs-triedds",
+      "size": 1610,
+      "status": "diverged",
+      "nDiffs": 720,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 789.03 vs 794.83"
+    },
+    {
+      "id": "windows-clust5",
+      "size": 1695,
+      "status": "pass"
+    },
+    {
+      "id": "share-clust5",
+      "size": 1698,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-grdcolors",
+      "size": 1704,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-size",
+      "size": 1706,
+      "status": "diverged",
+      "nDiffs": 1589,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 944.33 vs 1504.44"
+    },
+    {
+      "id": "share-clust4",
+      "size": 1709,
+      "status": "pass"
+    },
+    {
+      "id": "windows-clust4",
+      "size": 1709,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-ngk10_4",
+      "size": 1718,
+      "status": "diverged",
+      "nDiffs": 1903,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1048.35 vs 1239.42"
+    },
+    {
+      "id": "graphs-unix2",
+      "size": 1719,
+      "status": "diverged",
+      "nDiffs": 1589,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 944.33 vs 1504.44"
+    },
+    {
+      "id": "graphs-unix2k",
+      "size": 1719,
+      "status": "diverged",
+      "nDiffs": 1589,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 944.33 vs 1504.44"
+    },
+    {
+      "id": "graphs-weight",
+      "size": 1720,
+      "status": "diverged",
+      "nDiffs": 1605,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1613.08 vs 1022.6"
+    },
+    {
+      "id": "linux.i386-hashtable",
+      "size": 1756,
+      "status": "diverged",
+      "nDiffs": 146,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 20.6 vs 10.08"
+    },
+    {
+      "id": "share-hashtable",
+      "size": 1756,
+      "status": "diverged",
+      "nDiffs": 146,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 20.6 vs 10.08"
+    },
+    {
+      "id": "windows-hashtable",
+      "size": 1756,
+      "status": "diverged",
+      "nDiffs": 146,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 20.6 vs 10.08"
+    },
+    {
+      "id": "graphs-viewfile",
+      "size": 1767,
+      "status": "diverged",
+      "nDiffs": 989,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 490.14 vs 526.08"
+    },
+    {
+      "id": "share-Petersen",
+      "size": 1768,
+      "status": "pass"
+    },
+    {
+      "id": "windows-Petersen",
+      "size": 1768,
+      "status": "pass"
+    },
+    {
+      "id": "share-KW91",
+      "size": 1824,
+      "status": "pass"
+    },
+    {
+      "id": "windows-KW91",
+      "size": 1824,
+      "status": "pass"
+    },
+    {
+      "id": "share-tree",
+      "size": 1825,
+      "status": "diverged",
+      "nDiffs": 146,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 10015.76 vs 10005.74"
+    },
+    {
+      "id": "windows-tree",
+      "size": 1825,
+      "status": "diverged",
+      "nDiffs": 141,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 9930.84 vs 9920.72"
+    },
+    {
+      "id": "linux.x86-html2_dot",
+      "size": 1945,
+      "status": "diverged",
+      "nDiffs": 35,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.13 vs 107.49"
+    },
+    {
+      "id": "nshare-html2_dot",
+      "size": 1946,
+      "status": "diverged",
+      "nDiffs": 35,
+      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.07 vs 107.17"
+    },
+    {
+      "id": "share-pm2way",
+      "size": 1974,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-sq_rules",
+      "size": 1979,
+      "status": "pass"
+    },
+    {
+      "id": "windows-pm2way",
+      "size": 1998,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-pm2way",
+      "size": 2020,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-arrows",
+      "size": 2029,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-arrowsize",
+      "size": 2039,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.x86-ordering_dot1",
+      "size": 2042,
+      "status": "pass"
+    },
+    {
+      "id": "macosx-ordering_dot1",
+      "size": 2042,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-ordering_dot1",
+      "size": 2042,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-rd_rules",
+      "size": 2043,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-newarrows",
+      "size": 2045,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-ER",
+      "size": 2051,
+      "status": "diverged",
+      "nDiffs": 10,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
+    },
+    {
+      "id": "graphs-st_box",
+      "size": 2068,
+      "status": "diverged",
+      "nDiffs": 1409,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -36.63"
+    },
+    {
+      "id": "graphs-st_circle",
+      "size": 2071,
+      "status": "diverged",
+      "nDiffs": 1316,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89"
+    },
+    {
+      "id": "linux.i386-ER",
+      "size": 2072,
+      "status": "diverged",
+      "nDiffs": 10,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
+    },
+    {
+      "id": "share-ER",
+      "size": 2072,
+      "status": "diverged",
+      "nDiffs": 10,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
+    },
+    {
+      "id": "linux.x86-ordering_dot",
+      "size": 2097,
+      "status": "diverged",
+      "nDiffs": 410,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3683.88 vs 3705.04"
+    },
+    {
+      "id": "macosx-ordering_dot",
+      "size": 2097,
+      "status": "diverged",
+      "nDiffs": 410,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3683.88 vs 3705.04"
+    },
+    {
+      "id": "nshare-ordering_dot",
+      "size": 2097,
+      "status": "diverged",
+      "nDiffs": 410,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3683.88 vs 3705.04"
+    },
+    {
+      "id": "windows-fsm",
+      "size": 2124,
+      "status": "diverged",
+      "nDiffs": 14,
+      "firstDiff": "edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "2242",
+      "size": 2125,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+7\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "share-fsm",
+      "size": 2142,
+      "status": "diverged",
+      "nDiffs": 14,
+      "firstDiff": "edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-sr_box",
+      "size": 2149,
+      "status": "diverged",
+      "nDiffs": 1475,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.33"
+    },
+    {
+      "id": "graphs-sr_circle",
+      "size": 2152,
+      "status": "diverged",
+      "nDiffs": 1369,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.23"
+    },
+    {
+      "id": "graphs-sl_box",
+      "size": 2156,
+      "status": "diverged",
+      "nDiffs": 1491,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -146.93"
+    },
+    {
+      "id": "graphs-sl_circle",
+      "size": 2159,
+      "status": "diverged",
+      "nDiffs": 1378,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -146.93"
+    },
+    {
+      "id": "1323",
+      "size": 2164,
+      "status": "diverged",
+      "nDiffs": 253,
+      "firstDiff": "edge:namespace1->vfsmount1#0 _draw_ edge:namespace1->vfsmount1#0/_draw_/op[1].unfilled_bezier[0]: 108.47 vs 138.32"
+    },
+    {
+      "id": "share-b786",
+      "size": 2198,
+      "status": "diverged",
+      "nDiffs": 165,
+      "firstDiff": "edge:n3->n2#0 _draw_ edge:n3->n2#0/_draw_/op[1].unfilled_bezier[0]: 3198.23 vs 3202.89"
+    },
+    {
+      "id": "graphs-b53",
+      "size": 2287,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv"
+    },
+    {
+      "id": "share-Heawood",
+      "size": 2340,
+      "status": "pass"
+    },
+    {
+      "id": "windows-Heawood",
+      "size": 2340,
+      "status": "pass"
+    },
+    {
+      "id": "1453",
+      "size": 2446,
+      "status": "port-error",
+      "err": "fdp: coincident nodes CONTEXT_MODES/HUFFMAN_CODE_2 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+    },
+    {
+      "id": "1436",
+      "size": 2599,
+      "status": "diverged",
+      "nDiffs": 432,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 684.09 vs 637.69"
+    },
+    {
+      "id": "share-jcctree",
+      "size": 2612,
+      "status": "pass"
+    },
+    {
+      "id": "windows-jcctree",
+      "size": 2612,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-pgram",
+      "size": 2614,
+      "status": "diverged",
+      "nDiffs": 3136,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1727.26 vs 1848.55"
+    },
+    {
+      "id": "linux.i386-dfa",
+      "size": 2651,
+      "status": "diverged",
+      "nDiffs": 20,
+      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-dfa",
+      "size": 2651,
+      "status": "diverged",
+      "nDiffs": 20,
+      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-NaN",
+      "size": 2672,
+      "status": "diverged",
+      "nDiffs": 3624,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2144.99 vs 2737.29"
+    },
+    {
+      "id": "windows-dfa",
+      "size": 2714,
+      "status": "diverged",
+      "nDiffs": 20,
+      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b71",
+      "size": 2748,
+      "status": "diverged",
+      "nDiffs": 2091,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3271.05 vs 2569.17"
+    },
+    {
+      "id": "linux.x86-pack_neato",
+      "size": 2867,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-pack_neato",
+      "size": 2870,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-pack_neato1",
+      "size": 2881,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-pack_neato1",
+      "size": 2884,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-pack_neato2",
+      "size": 2890,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-pack_neato2",
+      "size": 2894,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-Helvetica",
+      "size": 2966,
+      "status": "diverged",
+      "nDiffs": 508,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 734.81 vs 861.55"
+    },
+    {
+      "id": "2592",
+      "size": 3001,
+      "status": "pass"
+    },
+    {
+      "id": "2082",
+      "size": 3033,
+      "status": "diverged",
+      "nDiffs": 184,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -144 vs -170"
+    },
+    {
+      "id": "share-train11",
+      "size": 3220,
+      "status": "diverged",
+      "nDiffs": 28,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 29776.75 vs 29801.64"
+    },
+    {
+      "id": "graphs-biglabel",
+      "size": 3246,
+      "status": "diverged",
+      "nDiffs": 82,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1424.12 vs 1425.38"
+    },
+    {
+      "id": "windows-train11",
+      "size": 3257,
+      "status": "diverged",
+      "nDiffs": 28,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 30150.69 vs 30175.58"
+    },
+    {
+      "id": "2734",
+      "size": 3272,
+      "status": "diverged",
+      "nDiffs": 421,
+      "firstDiff": "edge:node1->node3#0 _draw_ edge:node1->node3#0/_draw_/op[1].unfilled_bezier[0]: 108.81 vs 107.04"
+    },
+    {
+      "id": "1622_2",
+      "size": 3299,
+      "status": "pass"
+    },
+    {
+      "id": "share-pmpipe",
+      "size": 3346,
+      "status": "pass"
+    },
+    {
+      "id": "windows-pmpipe",
+      "size": 3346,
+      "status": "pass"
+    },
+    {
+      "id": "1880",
+      "size": 3451,
+      "status": "diverged",
+      "nDiffs": 307,
+      "firstDiff": "edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[2].unfilled_bezier[0]: 759.42 vs 760.31"
+    },
+    {
+      "id": "linux.x86-ports_dot",
+      "size": 3470,
+      "status": "diverged",
+      "nDiffs": 150,
+      "firstDiff": "edge:A->a#0 _draw_ edge:A->a#0/_draw_/op[1].unfilled_bezier[0]: 2675.18 vs 2661.77"
+    },
+    {
+      "id": "nshare-ports_dot",
+      "size": 3493,
+      "status": "diverged",
+      "nDiffs": 151,
+      "firstDiff": "edge:A->a#0 _draw_ edge:A->a#0/_draw_/op[1].unfilled_bezier[0]: 2675.19 vs 2661.77"
+    },
+    {
+      "id": "graphs-pmpipe",
+      "size": 3499,
+      "status": "pass"
+    },
+    {
+      "id": "windows-alf",
+      "size": 3605,
+      "status": "pass"
+    },
+    {
+      "id": "share-alf",
+      "size": 3629,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-st_box_dbl",
+      "size": 3640,
+      "status": "diverged",
+      "nDiffs": 2148,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -36.63"
+    },
+    {
+      "id": "graphs-st_circle_dbl",
+      "size": 3643,
+      "status": "diverged",
+      "nDiffs": 2051,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89"
+    },
+    {
+      "id": "2476",
+      "size": 3653,
+      "status": "diverged",
+      "nDiffs": 1,
+      "firstDiff": "edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0 _ldraw_ edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-sr_box_dbl",
+      "size": 3777,
+      "status": "diverged",
+      "nDiffs": 2255,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.37"
+    },
+    {
+      "id": "graphs-sr_circle_dbl",
+      "size": 3780,
+      "status": "diverged",
+      "nDiffs": 2133,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.02"
+    },
+    {
+      "id": "graphs-sl_box_dbl",
+      "size": 3792,
+      "status": "diverged",
+      "nDiffs": 2274,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -275.85"
+    },
+    {
+      "id": "graphs-sl_circle_dbl",
+      "size": 3795,
+      "status": "diverged",
+      "nDiffs": 2156,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -275.85"
+    },
+    {
+      "id": "2669",
+      "size": 3835,
+      "status": "diverged",
+      "nDiffs": 6034,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1932.38 vs 1855.18"
+    },
+    {
+      "id": "share-triedds",
+      "size": 3852,
+      "status": "diverged",
+      "nDiffs": 312,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 26265.97 vs 26275.01"
+    },
+    {
+      "id": "windows-triedds",
+      "size": 3948,
+      "status": "diverged",
+      "nDiffs": 314,
+      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 14848.4 vs 14851.62"
+    },
+    {
+      "id": "graphs-grdlinear",
+      "size": 4071,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-grdfillcolor",
+      "size": 4075,
+      "status": "pass"
+    },
+    {
+      "id": "share-mike",
+      "size": 4090,
+      "status": "pass"
+    },
+    {
+      "id": "windows-mike",
+      "size": 4090,
+      "status": "pass"
+    },
+    {
+      "id": "56",
+      "size": 4247,
+      "status": "diverged",
+      "nDiffs": 409,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1082.12 vs 923.41"
+    },
+    {
+      "id": "linux.x86-record_dot",
+      "size": 4541,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-record_dot",
+      "size": 4632,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-shapes_dot",
+      "size": 4692,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-shapes_dot",
+      "size": 4861,
+      "status": "pass"
+    },
+    {
+      "id": "2095",
+      "size": 4865,
+      "status": "diverged",
+      "nDiffs": 8253,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 5425.41 vs 5672.31"
+    },
+    {
+      "id": "share-viewfile",
+      "size": 4916,
+      "status": "pass"
+    },
+    {
+      "id": "windows-viewfile",
+      "size": 4916,
+      "status": "pass"
+    },
+    {
+      "id": "1898",
+      "size": 5067,
+      "status": "diverged",
+      "nDiffs": 1085,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 750.04 vs 850.62"
+    },
+    {
+      "id": "graphs-ldbxtried",
+      "size": 5155,
+      "status": "diverged",
+      "nDiffs": 2146,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 688.41 vs 725.85"
+    },
+    {
+      "id": "graphs-grdradial",
+      "size": 5370,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "share-shells",
+      "size": 5493,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-crazy",
+      "size": 5556,
+      "status": "diverged",
+      "nDiffs": 1920,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "windows-shells",
+      "size": 5589,
+      "status": "pass"
+    },
+    {
+      "id": "windows-grammar",
+      "size": 5612,
+      "status": "pass"
+    },
+    {
+      "id": "share-grammar",
+      "size": 5613,
+      "status": "pass"
+    },
+    {
+      "id": "1949",
+      "size": 5632,
+      "status": "diverged",
+      "nDiffs": 110,
+      "firstDiff": "edge:structC->structDefaultAuto#0 _tldraw_ edge:structC->structDefaultAuto#0/_tldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-grdlinear_angle",
+      "size": 5758,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "graphs-cairo",
+      "size": 5866,
+      "status": "diverged",
+      "nDiffs": 1925,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 546.01 vs 786.76"
+    },
+    {
+      "id": "graphs-pslib",
+      "size": 5899,
+      "status": "diverged",
+      "nDiffs": 12,
+      "firstDiff": "edge:sdl_stop->sdl_stop2#0 _draw_ edge:sdl_stop->sdl_stop2#0/_draw_/op[1].unfilled_bezier[2]: 262.09 vs 276.83"
+    },
+    {
+      "id": "graphs-proc3d",
+      "size": 6121,
+      "status": "diverged",
+      "nDiffs": 1926,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1606.18 vs 1598.32"
+    },
+    {
+      "id": "graphs-jsort",
+      "size": 6189,
+      "status": "diverged",
+      "nDiffs": 2402,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1772.95 vs 1585.99"
+    },
+    {
+      "id": "share-newarrows",
+      "size": 6364,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-newarrows",
+      "size": 6364,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "2193",
+      "size": 6399,
+      "status": "diverged",
+      "nDiffs": 1941,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4941.45 vs 3747.01"
+    },
+    {
+      "id": "share-unix",
+      "size": 6603,
+      "status": "pass"
+    },
+    {
+      "id": "windows-unix",
+      "size": 6603,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "edge:6th Edition->Mini Unix#0 pos edge:6th Edition->Mini Unix#0/pos[8]: 14197 vs 14198"
+    },
+    {
+      "id": "graphs-polypoly",
+      "size": 6617,
+      "status": "pass"
+    },
+    {
+      "id": "1447",
+      "size": 6707,
+      "status": "diverged",
+      "nDiffs": 1263,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 882.22 vs 912.15"
+    },
+    {
+      "id": "2619_1",
+      "size": 6721,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot"
+    },
+    {
+      "id": "graphs-grdradial_angle",
+      "size": 6918,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
+    },
+    {
+      "id": "windows-trapeziumlr",
+      "size": 7229,
+      "status": "pass"
+    },
+    {
+      "id": "share-trapeziumlr",
+      "size": 7233,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-arrows_dot",
+      "size": 7235,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "macosx-arrows_dot",
+      "size": 7235,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "nshare-arrows_dot",
+      "size": 7235,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-awilliams",
+      "size": 7305,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "share-unix2",
+      "size": 7421,
+      "status": "pass"
+    },
+    {
+      "id": "share-unix2k",
+      "size": 7421,
+      "status": "pass"
+    },
+    {
+      "id": "windows-unix2",
+      "size": 7421,
+      "status": "pass"
+    },
+    {
+      "id": "windows-unix2k",
+      "size": 7421,
+      "status": "pass"
+    },
+    {
+      "id": "share-rowe",
+      "size": 7448,
+      "status": "pass"
+    },
+    {
+      "id": "windows-rowe",
+      "size": 7506,
+      "status": "pass"
+    },
+    {
+      "id": "share-fig6",
+      "size": 7553,
+      "status": "pass"
+    },
+    {
+      "id": "windows-fig6",
+      "size": 7553,
+      "status": "pass"
+    },
+    {
+      "id": "2619_2",
+      "size": 7596,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot"
+    },
+    {
+      "id": "share-abstract",
+      "size": 7614,
+      "status": "pass"
+    },
+    {
+      "id": "windows-abstract",
+      "size": 7664,
+      "status": "pass"
+    },
+    {
+      "id": "share-world",
+      "size": 8062,
+      "status": "pass"
+    },
+    {
+      "id": "windows-world",
+      "size": 8172,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b57",
+      "size": 8472,
+      "status": "diverged",
+      "nDiffs": 1846,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3326.16 vs 2520.51"
+    },
+    {
+      "id": "linux.x86-dotsplines_dot",
+      "size": 8741,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b15",
+      "size": 8774,
+      "status": "diverged",
+      "nDiffs": 3449,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1185.75"
+    },
+    {
+      "id": "nshare-dotsplines_dot",
+      "size": 8836,
+      "status": "diverged",
+      "nDiffs": 89,
+      "firstDiff": "edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57"
+    },
+    {
+      "id": "share-polypoly",
+      "size": 8872,
+      "status": "pass"
+    },
+    {
+      "id": "windows-polypoly",
+      "size": 8872,
+      "status": "pass"
+    },
+    {
+      "id": "linux.x86-dotsplines_dot1",
+      "size": 9206,
+      "status": "diverged",
+      "nDiffs": 20,
+      "firstDiff": "edge:4.2 BSD->4.3 BSD#0 _draw_ edge:4.2 BSD->4.3 BSD#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 20"
+    },
+    {
+      "id": "graphs-big",
+      "size": 9231,
+      "status": "diverged",
+      "nDiffs": 81,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 805.68 vs 793.93"
+    },
+    {
+      "id": "linux.x86-weight_dot",
+      "size": 9278,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-dotsplines_dot1",
+      "size": 9332,
+      "status": "diverged",
+      "nDiffs": 89,
+      "firstDiff": "edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57"
+    },
+    {
+      "id": "nshare-weight_dot",
+      "size": 9391,
+      "status": "pass"
+    },
+    {
+      "id": "share-b94",
+      "size": 9831,
+      "status": "diverged",
+      "nDiffs": 60,
+      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b124",
+      "size": 10284,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-b36",
+      "size": 10388,
+      "status": "diverged",
+      "nDiffs": 2535,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2723.85 vs 2773.06"
+    },
+    {
+      "id": "share-proc3d",
+      "size": 10429,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.i386-crazy",
+      "size": 10433,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "share-crazy",
+      "size": 10433,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "windows-crazy",
+      "size": 10433,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "windows-proc3d",
+      "size": 10446,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-b94",
+      "size": 10503,
+      "status": "diverged",
+      "nDiffs": 116,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 387.25 vs 388.05"
+    },
+    {
+      "id": "nshare-overlap_neato1",
+      "size": 10511,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.x86-overlap_neato1",
+      "size": 10554,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.x86-overlap_neato",
+      "size": 10562,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "nshare-overlap_neato",
+      "size": 10566,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "share-pgram",
+      "size": 10942,
+      "status": "pass"
+    },
+    {
+      "id": "windows-pgram",
+      "size": 11001,
+      "status": "pass"
+    },
+    {
+      "id": "share-ldbxtried",
+      "size": 11505,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.x86-neatosplines_neato",
+      "size": 11690,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "nshare-neatosplines_neato",
+      "size": 11700,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-ldbxtried",
+      "size": 11805,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "share-ngk10_4",
+      "size": 11842,
+      "status": "pass"
+    },
+    {
+      "id": "42",
+      "size": 11978,
+      "status": "pass"
+    },
+    {
+      "id": "windows-ngk10_4",
+      "size": 12029,
+      "status": "pass"
+    },
+    {
+      "id": "nshare-neatosplines_neato1",
+      "size": 12051,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.x86-neatosplines_neato1",
+      "size": 12061,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.x86-rankdir_dot1",
+      "size": 12673,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "nshare-rankdir_dot1",
+      "size": 12675,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "linux.x86-rankdir_dot",
+      "size": 12792,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "nshare-rankdir_dot2",
+      "size": 12795,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "nshare-rankdir_dot",
+      "size": 12803,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "linux.x86-rankdir_dot2",
+      "size": 12815,
+      "status": "diverged",
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"
+    },
+    {
+      "id": "1332",
+      "size": 13890,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1332.dot"
+    },
+    {
+      "id": "share-jsort",
+      "size": 14030,
+      "status": "pass"
+    },
+    {
+      "id": "windows-jsort",
+      "size": 14425,
+      "status": "pass"
+    },
+    {
+      "id": "windows-b94",
+      "size": 14509,
+      "status": "diverged",
+      "nDiffs": 60,
+      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "1447_1",
+      "size": 14827,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-mode",
+      "size": 14907,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-b36",
+      "size": 15050,
+      "status": "pass"
+    },
+    {
+      "id": "linux.i386-b36",
+      "size": 15051,
+      "status": "pass"
+    },
+    {
+      "id": "share-b36",
+      "size": 15051,
+      "status": "pass"
+    },
+    {
+      "id": "share-NaN",
+      "size": 16328,
+      "status": "diverged",
+      "nDiffs": 3459,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 38807.63 vs 38795.75"
+    },
+    {
+      "id": "windows-NaN",
+      "size": 17050,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-b51",
+      "size": 19886,
+      "status": "diverged",
+      "nDiffs": 3836,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4163.86 vs 5135.75"
+    },
+    {
+      "id": "1718",
+      "size": 22038,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-b124",
+      "size": 28038,
+      "status": "pass"
+    },
+    {
+      "id": "share-b124",
+      "size": 28041,
+      "status": "pass"
+    },
+    {
+      "id": "share-b51",
+      "size": 29420,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived_2\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-b51",
+      "size": 29685,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived_2\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-b69",
+      "size": 33033,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-badvoro",
+      "size": 33949,
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "graphs-viewport",
+      "size": 37292,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "2239",
+      "size": 48090,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2239.dot"
+    },
+    {
+      "id": "graphs-b106",
+      "size": 48933,
+      "status": "diverged",
+      "nDiffs": 7002,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41"
+    },
+    {
+      "id": "2343",
+      "size": 59368,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-b143",
+      "size": 62055,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-b29",
+      "size": 62931,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.i386-b106",
+      "size": 92005,
+      "status": "diverged",
+      "nDiffs": 215,
+      "firstDiff": "edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-b106",
+      "size": 92301,
+      "status": "diverged",
+      "nDiffs": 215,
+      "firstDiff": "edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "windows-b106",
+      "size": 95634,
+      "status": "diverged",
+      "nDiffs": 215,
+      "firstDiff": "edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "graphs-b102",
+      "size": 102329,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-xx",
+      "size": 102329,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "2095_1",
+      "size": 105083,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+4\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-root",
+      "size": 128221,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "linux.i386-b29",
+      "size": 136753,
+      "status": "diverged",
+      "nDiffs": 363,
+      "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "share-b29",
+      "size": 137802,
+      "status": "diverged",
+      "nDiffs": 363,
+      "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "windows-b29",
+      "size": 149114,
+      "status": "diverged",
+      "nDiffs": 363,
+      "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
+    },
+    {
+      "id": "linux.i386-b102",
+      "size": 161479,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "share-b102",
+      "size": 161479,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "windows-b102",
+      "size": 184125,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "graphs-b81",
+      "size": 191024,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "1879",
+      "size": 287816,
+      "status": "oracle-error",
+      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"
+    },
+    {
+      "id": "linux.x86-root_twopi",
+      "size": 287907,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "nshare-root_twopi",
+      "size": 287916,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "nshare-root_circo",
+      "size": 313126,
+      "status": "diverged",
+      "nDiffs": 35084,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7463544.31 vs 42601556.38"
+    },
+    {
+      "id": "linux.x86-root_circo",
+      "size": 313168,
+      "status": "diverged",
+      "nDiffs": 35084,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7369748.58 vs 42055799.2"
+    },
+    {
+      "id": "graphs-b103",
+      "size": 377525,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    },
+    {
+      "id": "2475_2",
+      "size": 641284,
+      "status": "diverged",
+      "nDiffs": 321527,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"
+    },
+    {
+      "id": "2222",
+      "size": 2384469,
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2108",
+      "size": 3136769,
+      "status": "port-error",
+      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+344\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+    }
+  ]
+}

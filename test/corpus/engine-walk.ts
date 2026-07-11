@@ -41,6 +41,8 @@ export interface EngineParityReport {
   generatedAt: string;
   generatedWith: string;
   engine: string;
+  /** comparison tolerance in points (0.01 deterministic, 0.5 iterative) */
+  tolerance?: number;
   total: number;
   counts: Record<EngineWalkStatus, number>;
   results: EngineWalkRow[];
@@ -56,6 +58,17 @@ if (!engine) {
   console.error('usage: npx tsx test/corpus/engine-walk.ts <engine> [outJsonlPath]');
   process.exit(2);
 }
+
+/**
+ * Per-engine comparison tolerance. The deterministic engines are held to
+ * the 0.01 bar (every diff is a chaseable defect); the ITERATIVE
+ * force-directed engines (neato/fdp/sfdp) accumulate floating-point that
+ * JS cannot reproduce bit-for-bit (accepted class A1 — FMA/pow/libm), so
+ * their documented bar is 0.5pt: the sweep characterizes behavior rather
+ * than gating byte-fidelity. @see docs/known-divergences.md#a1
+ */
+const ITERATIVE_ENGINES = new Set(['neato', 'fdp', 'sfdp']);
+const TOLERANCE = ITERATIVE_ENGINES.has(engine) ? 0.5 : 0.01;
 const OUT = process.argv[3] ?? fileURLToPath(new URL(`./parity-${engine}.jsonl`, import.meta.url));
 const SUMMARY = fileURLToPath(new URL(`./parity-${engine}.json`, import.meta.url));
 
@@ -139,7 +152,7 @@ for (const it of items) {
     rec.status = 'port-error';
     rec.err = (m?.[1] ?? (r.stderr ?? '')).slice(0, 200);
   } else {
-    const res = compareXdot(r.stdout, oracle);
+    const res = compareXdot(r.stdout, oracle, TOLERANCE);
     if (res.pass) {
       rec.status = 'pass';
     } else {
@@ -169,6 +182,7 @@ const summary: EngineParityReport = {
   generatedAt: new Date().toISOString(),
   generatedWith: 'test/corpus/engine-walk.ts',
   engine,
+  tolerance: TOLERANCE,
   total: results.length,
   counts,
   results,
