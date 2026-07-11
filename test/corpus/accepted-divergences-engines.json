@@ -65,12 +65,22 @@
       "class": "A1",
       "bound": "842 xdot draw-op diffs; whole radial layout is the exact x-axis mirror of the oracle's (y->-y, ring relabel k<->34-k), max node displacement 6.04pt. Mechanism: 1-ULP V8-vs-libm cos/sin in circleLayout setAbsolutePos, amplified by the symmetry-unstable PRISM overlap-removal equilibrium on the cocircular star. Injection A/B: feeding C's exact circleLayout pos into the port's PRISM reproduces the oracle node-for-node (3e-14).",
       "ref": "known-divergences.md#a1-twopi-arrows-family"
+    },
+    "241_0": {
+      "class": "A9",
+      "bound": "6 draw-op diffs; edge 1->6 routed as a 14-pt multispline corridor (port) vs the native plain per-member fallback (8-pt), point deltas <0.07pt. CDT cocircular incircle tie flipped by libm sin/cos 1-ULP \u2014 sibling of the accepted circo/241_0 entry.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   },
   "circo": {
     "241_0": {
       "class": "A9",
       "bound": "41 draw-op diffs; Delta~0.2pt on edge 1->2's routed bezier (unfilled_bezier[1]: 221.92 vs 222.12)",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "windows-tree": {
+      "class": "A9",
+      "bound": "10 draw-op diffs on one fan edge (node2->node8): circo trig places node2.y a single ULP above node8.y around the symmetric value 18.0 (18.0000000000000320 vs 18.0), flipping closestSide's dyna head-port TOP/BOTTOM at the exact tie; node boxes and all other edges bit-identical.",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   }

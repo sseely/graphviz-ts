@@ -801,6 +801,18 @@ filed" entry). Accepted at the engine-track level via
 `PARITY-twopi.md`/`PARITY-circo.md` by `parity-report.ts` — the same join
 `accepted.ts` performs for the dot-track `PARITY-dot.md`.
 
+Two further engine-track instances were root-caused and accepted 2026-07-11
+(full RCA: `.agent-notes/circo-edge-tail-rca.md`): twopi `241_0` (6 draw-op
+diffs — the sibling of the circo entry above: the same CDT cocircular
+incircle tie, flipped by libm `sin`/`cos` 1-ULP, makes the port's
+multispline corridor succeed with a 14-pt spline where the native build
+falls back to plain 8-pt routing; point deltas < 0.07pt) and circo
+`windows-tree` (10 draw-op diffs on one fan edge — circo's placement trig
+lands `node2.y` a single ULP above `node8.y` around the exactly-symmetric
+value 18.0, and `closestSide`'s dyna head-port selection flips TOP/BOTTOM at
+that exact tie; node positions and boxes are otherwise bit-identical to the
+oracle).
+
 ---
 
 ## Tracked long tail (`dot` attribute & edge-case)
