@@ -21,6 +21,7 @@ import { fdpInitNodeEdge, fdpCleanup } from './init.js';
 import { fdpLayout, mkClusters } from './layout.js';
 import { gdata } from './fdp-model.js';
 import { neutralGraphRankdir } from '../dot/init.js';
+import { csrand } from '../../common/crand.js';
 
 export { fdpLayout, mkClusters, evalPositions, setBB } from './layout.js';
 export { fdpTLayout } from './tlayout.js';
@@ -60,6 +61,11 @@ function fdpSplines(g: Graph): void {
  */
 export function fdpLayoutEngine(g: Graph): void {
   neutralGraphRankdir(g);
+  // fdp never calls srand(); the coincident-node rand() fallback draws from
+  // the process-global libc rand() stream, which is unseeded ⇒ srand(1). Reset
+  // the modeled stream per render so repeated renders in one JS process match
+  // a fresh C process. (fdp placement uses a separate srand48/drand48 stream.)
+  csrand(1);
   fdpInitGraph(g);
   if (fdpLayout(g) !== 0) {
     return;

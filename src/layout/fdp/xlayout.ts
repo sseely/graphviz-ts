@@ -8,10 +8,11 @@
  * deliberately NOT ported — the golden refs predate it).
  *
  * The default overlap attribute is "9:prism": up to 9 x_layout tries,
- * then prism overlap removal. Prism (removeOverlapAs) is not ported:
- * recon proved it unreachable for every supported input (x_layout
- * converges); reaching it throws (mission 7 stop condition) rather
- * than silently diverging.
+ * then removeOverlapAs with the remaining mode. x_layout does NOT always
+ * converge (many cluster/derived graphs reach the mode dispatch), so
+ * removeOverlapAs wires the ported neato adjust machinery: AM_PRISM via
+ * fdpAdjust, the scale family via scAdjust. On the GTS reference build
+ * overlap=false resolves to AM_PRISM (value 1000), not a no-op.
  *
  * @see lib/fdpgen/xlayout.c (15.0.0)
  */
@@ -19,6 +20,8 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import { sepFactor, type ExpandT } from '../neato/sep-factor.js';
+import { fdpAdjust, overlapPrismTries } from '../neato/fdp-adjust.js';
+import { scAdjust } from '../neato/sc-adjust.js';
 import {
   type XParams,
   dndata,
@@ -26,7 +29,8 @@ import {
   aggetGraph,
   P_PIN,
 } from './fdp-model.js';
-import { coincidentNodes } from './tlayout.js';
+import { coincidentDelta } from './tlayout.js';
+import { normalizeG } from './normalize.js';
 
 /** @see lib/fdpgen/xlayout.c:DFLT_overlap */
 const DFLT_OVERLAP = '9:prism';
@@ -124,17 +128,22 @@ function cntOverlaps(g: Graph): number {
 
 /**
  * Overlap-aware repulsion; returns 1 if the pair overlaps.
- * The delta/dist2 computation of C's applyRep is inlined here (the
- * C doRep/applyRep split exists only for the rand() re-roll loop,
- * which is a throwing guard in this port).
+ * The delta/dist2 computation of C's applyRep is inlined here; the
+ * C doRep/applyRep split exists for the rand() re-roll loop on
+ * coincident nodes (coincidentDelta), shared with tlayout.
  * @see lib/fdpgen/xlayout.c:doRep
  * @see lib/fdpgen/xlayout.c:applyRep
  */
 function applyRep(p: Node, q: Node, rs: RepStrength): number {
-  const xdelta = q.info.pos![0]! - p.info.pos![0]!;
-  const ydelta = q.info.pos![1]! - p.info.pos![1]!;
-  const dist2 = xdelta * xdelta + ydelta * ydelta;
-  if (dist2 === 0.0) coincidentNodes(p, q);
+  let xdelta = q.info.pos![0]! - p.info.pos![0]!;
+  let ydelta = q.info.pos![1]! - p.info.pos![1]!;
+  let dist2 = xdelta * xdelta + ydelta * ydelta;
+  if (dist2 === 0.0) {
+    const d = coincidentDelta();
+    xdelta = d.xdelta;
+    ydelta = d.ydelta;
+    dist2 = xdelta * xdelta + ydelta * ydelta;
+  }
   const ov = overlap(p, q) ? 1 : 0;
   const force = ov ? rs.ov / dist2 : rs.nonov / dist2;
   const dq = disp(q);
@@ -296,17 +305,46 @@ export function fdpXLayout(g: Graph, xpms: XParams): void {
 }
 
 /**
- * Mode-based overlap removal. Only the no-op modes are ported: recon
- * proved the prism fallback unreachable for every supported input
- * (the 9-try x_layout always converges). Reaching a real mode is a
- * mission stop condition.
- * @see lib/neatogen/adjust.c:removeOverlapAs
+ * Mode-based overlap removal, mirroring C removeOverlapAs → getAdjustMode →
+ * removeOverlapWith with the flag passed explicitly (the parsed "n:mode"
+ * suffix, not the raw overlap attr). removeOverlapWith runs normalize +
+ * simpleScale first, then dispatches on the resolved mode:
+ *   AM_PRISM (prism*, or the boolean/false fallback on GTS) → fdpAdjust;
+ *   scale family (scale/scalexy/compress) → scAdjust;
+ *   AM_NONE ('' / 'true') and unported modes (voronoi) → no-op.
+ * normalize reads "normalize" and simpleScale reads "scale"; deriveGraph
+ * copies only overlap/sep/K, so both are faithfully dead here (as noted in
+ * normalize.ts / sc-adjust.ts) unless set on the derived chain — simpleScale
+ * follows the project's decision to leave it unported.
+ * @see lib/neatogen/adjust.c:removeOverlapAs / removeOverlapWith / getAdjustMode
  */
-function removeOverlapAs(g: Graph, mode: string): void {
-  if (mode === '' || mode === 'true') return; // no overlap removal
-  throw new Error(
-    `fdp: removeOverlapAs mode "${mode}" reached for graph "${g.name}" — ` +
-    'prism/voronoi overlap removal is not ported (recon: unreachable); ' +
-    'see mission 7 journal',
-  );
+function removeOverlapAs(g: Graph, flag: string): void {
+  if (g.nodes.size < 2) return; // removeOverlapWith: <2 nodes short-circuits
+  normalizeG(g); // removeOverlapWith runs normalize before the mode switch
+  const ntry = overlapPrismTries(flag);
+  if (ntry !== null) {
+    fdpAdjust(g, ntry); // AM_PRISM
+    return;
+  }
+  const mode = flag.toLowerCase();
+  if (mode === 'scale') return void scAdjust(g, 1); // AM_NSCALE
+  if (mode === 'scalexy') return void scAdjust(g, 0); // AM_SCALEXY
+  if (mode === 'compress') return void scAdjust(g, -1); // AM_COMPRESS
+  // Genuinely unported adjust algorithms: throw rather than silently leave
+  // overlaps (no supported corpus input reaches these).
+  if (UNPORTED_MODES.has(mode)) {
+    throw new Error(
+      `fdp: removeOverlapAs mode "${mode}" reached for graph "${g.name}" — ` +
+      'that adjust algorithm (voronoi/oscale/vpsc/ortho/ipsep) is not ported',
+    );
+  }
+  // AM_NONE ('', 'true', any boolean-true) → no overlap removal.
 }
+
+/** Named adjust modes whose C algorithm is not ported (would silently
+ * leave overlaps). @see lib/neatogen/adjust.c:removeOverlapWith switch */
+const UNPORTED_MODES = new Set([
+  'voronoi', 'oscale', 'vpsc', 'ipsep',
+  'ortho', 'ortho_yx', 'orthoxy', 'orthoyx',
+  'portho', 'portho_yx', 'porthoxy', 'porthoyx',
+]);

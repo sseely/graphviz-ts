@@ -31,15 +31,18 @@ const FDP_SIMPLE = `graph G {
 }`;
 
 // ---------------------------------------------------------------------------
-// Guard 1: fdp removeOverlapAs  (public API — via fdpLayoutEngine)
+// Guard 1: fdp removeOverlapAs dispatch  (public API — via fdpLayoutEngine)
 //
-// Setting overlap="voronoi" produces tries=0, rest="voronoi" in
-// parseOverlapTries.  With tries=0 the xLayout step is skipped entirely,
-// so removeOverlapAs("voronoi") is reached immediately and throws.
+// Setting a bare mode (e.g. overlap="voronoi") produces tries=0 in
+// parseOverlapTries, so xLayout is skipped and removeOverlapAs(mode) runs
+// immediately. Ported modes render; genuinely-unported adjust algorithms
+// (voronoi/oscale/vpsc/ortho/ipsep) still throw rather than silently leave
+// overlaps. On the GTS reference build overlap="false" resolves to AM_PRISM.
+// @see lib/neatogen/adjust.c:removeOverlapWith / getAdjustMode
 // ---------------------------------------------------------------------------
 
-describe('fdp removeOverlapAs guard', () => {
-  it('throws when overlap="voronoi" is set on the graph', () => {
+describe('fdp removeOverlapAs dispatch', () => {
+  it('throws when overlap="voronoi" is set (unported algorithm)', () => {
     const g = parse(FDP_SIMPLE);
     g.attrs.set('overlap', 'voronoi');
     expect(() => fdpLayoutEngine(g)).toThrow(
@@ -47,14 +50,14 @@ describe('fdp removeOverlapAs guard', () => {
     );
   });
 
-  it('throws when overlap="compress" is set on the graph', () => {
-    // Another unported mode — same guard, different message token
-    const g = parse(FDP_SIMPLE);
-    g.attrs.set('overlap', 'compress');
-    expect(() => fdpLayoutEngine(g)).toThrow(
-      'fdp: removeOverlapAs mode "compress" reached',
-    );
-  });
+  for (const mode of ['false', 'scale', 'scalexy', 'compress']) {
+    it(`renders (no throw) with overlap="${mode}"`, () => {
+      const g = parse(FDP_SIMPLE);
+      g.attrs.set('overlap', mode);
+      expect(() => fdpLayoutEngine(g)).not.toThrow();
+      for (const n of g.nodes.values()) expect(n.info.pos).toBeDefined();
+    });
+  }
 
   it('does not throw with default attrs (no overlap attribute)', () => {
     const g = parse(FDP_SIMPLE);

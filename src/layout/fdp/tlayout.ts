@@ -35,6 +35,7 @@ import {
 } from './fdp-model.js';
 import { parms, cool, initParams, resetParams } from './tlayout-parms.js';
 import { initPositions } from './tlayout-init.js';
+import { crand } from '../../common/crand.js';
 
 export { fdpInitParams, fdpParms, setSeedFdp, INIT_RANDOM, INIT_REGULAR, INIT_SELF } from './tlayout-parms.js';
 
@@ -43,16 +44,25 @@ export { fdpInitParams, fdpParms, setSeedFdp, INIT_RANDOM, INIT_REGULAR, INIT_SE
 // ---------------------------------------------------------------------------
 
 /**
- * Coincident-node fallback. C re-rolls deltas with rand()%10; the
- * libc rand() sequence is platform-specific and unreachable for the
- * supported inputs (drand48 placement is continuous), so reaching it
- * is a STOP condition rather than a silent divergence.
+ * Coincident-node fallback: re-roll the delta with rand() until the pair is
+ * non-zero, mirroring C's `while` loops (doRep re-rolls while dist==0,
+ * applyAttr while dist2==0; both re-roll until (xdelta,ydelta) ≠ (0,0), which
+ * for the integer 5−rand()%10 deltas is equivalent). macOS libc rand() is the
+ * Park–Miller MINSTD stream (crand). fdp seeds only srand48 (a separate
+ * drand48 placement stream), so this rand() stream starts unseeded ⇒ srand(1)
+ * (reset per render in fdpLayoutEngine) and is shared, in call order, across
+ * tlayout doRep/applyAttr and xlayout doRep.
+ * @see lib/fdpgen/tlayout.c:doRep / applyAttr
+ * @see lib/fdpgen/xlayout.c:doRep
  */
-export function coincidentNodes(p: Node, q: Node): never {
-  throw new Error(
-    `fdp: coincident nodes ${p.name}/${q.name} hit the C rand() fallback ` +
-    '(tlayout.c doRep/applyAttr) — not ported; see mission 7 journal',
-  );
+export function coincidentDelta(): { xdelta: number; ydelta: number } {
+  let xdelta = 0;
+  let ydelta = 0;
+  do {
+    xdelta = 5 - crand() % 10;
+    ydelta = 5 - crand() % 10;
+  } while (xdelta === 0 && ydelta === 0);
+  return { xdelta, ydelta };
 }
 
 /**
@@ -64,7 +74,12 @@ function doRep(
 ): void {
   let force: number;
 
-  if (dist2 === 0.0) coincidentNodes(p, q);
+  if (dist2 === 0.0) {
+    const d = coincidentDelta();
+    xdelta = d.xdelta;
+    ydelta = d.ydelta;
+    dist2 = fma(xdelta, xdelta, ydelta * ydelta);
+  }
   if (parms.useNew) {
     const dist = Math.sqrt(dist2);
     force = parms.K * parms.K / (dist * dist2);
@@ -128,10 +143,15 @@ function gridRepulse(cellp: Cell, grid: Grid): void {
  * @see lib/fdpgen/tlayout.c:applyAttr
  */
 function applyAttr(p: Node, q: Node, e: Edge): void {
-  const xdelta = q.info.pos![0]! - p.info.pos![0]!;
-  const ydelta = q.info.pos![1]! - p.info.pos![1]!;
-  const dist2 = fma(xdelta, xdelta, ydelta * ydelta);
-  if (dist2 === 0.0) coincidentNodes(p, q);
+  let xdelta = q.info.pos![0]! - p.info.pos![0]!;
+  let ydelta = q.info.pos![1]! - p.info.pos![1]!;
+  let dist2 = fma(xdelta, xdelta, ydelta * ydelta);
+  if (dist2 === 0.0) {
+    const d = coincidentDelta();
+    xdelta = d.xdelta;
+    ydelta = d.ydelta;
+    dist2 = fma(xdelta, xdelta, ydelta * ydelta);
+  }
   const dist = Math.sqrt(dist2);
   let force: number;
   if (parms.useNew) {
