@@ -3,15 +3,13 @@
 # Repository Inventory
 
 Repos analyzed: the current project (`graphviz-ts`) plus its directly related
-siblings in `~/git`. All three relatives were already cloned
-locally; no new clones were required.
+sibling in `~/git`. It was already cloned locally; no new clones were
+required.
 
 | Repo | Language | Runtime | Framework | Database | Key Deps | Entry | Notes |
 |------|----------|---------|-----------|----------|----------|-------|-------|
 | graphviz-ts | TypeScript (ES2022, strict) | Node 26.3.1 (Volta) + browser | none (zero runtime deps) | — | esbuild, peggy, vitest, vitepress | `src/index.ts` → `renderSvg` / `render` | This project; faithful port of C Graphviz |
 | graphviz | C | native binary | none | — | autotools, libgvc | `lib/` (cgraph, dotgen, …) | Canonical C spec (gitlab upstream, tag 15.0.0) |
-| plantuml-js | TypeScript (ES2022) | Node + browser | none | — | jsonc-parser, katex, vite, vitest | `src/index.ts` | Downstream consumer; PlantUML port |
-| plantuml | Java | JVM | none | — | maven | `net.sourceforge.plantuml` | Java reference for plantuml-js (sseely fork) |
 
 ## Per-repo detail
 
@@ -48,24 +46,3 @@ locally; no new clones were required.
 - **Entry points**: the `dot`/`neato`/… CLIs and `libgvc`.
 - **Role**: the canonical specification. graphviz-ts ports it module-by-module
   (`cdt` → `ast` → `cgraph` → `common` → engines → `gvc`).
-
-### plantuml-js (downstream consumer)
-
-- **Runtime versions**: TypeScript `^5.4.0`, target ES2022, bundler module
-  resolution. Built with Vite.
-- **Languages**: TypeScript.
-- **Key components**: diagram parsers/renderers under `src/diagrams`, a core
-  under `src/core`, and an **in-house dot layout** under `src/core/dot/`
-  (ported from PlantUML's Smetana). graphviz-ts is intended to replace this
-  in-house dot port.
-- **Databases / external services**: none. `katex` for math, `jsonc-parser`
-  for config.
-- **Entry points**: `src/index.ts`.
-
-### plantuml (Java reference)
-
-- **Runtime versions**: Java on the JVM (sseely fork of upstream PlantUML).
-- **Languages**: Java.
-- **Role**: the Java source plantuml-js is ported from. Indirectly related to
-  graphviz-ts (it is the origin of the Smetana dot port that graphviz-ts
-  replaces). Not a build- or run-time dependency of graphviz-ts.

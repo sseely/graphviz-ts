@@ -31,11 +31,11 @@ specification.
 ## How the repos relate
 
 ```
-graphviz (C, canonical spec)            plantuml (Java reference)
-        │ ported module-by-module                │ ported from
-        ▼                                         ▼
-   graphviz-ts  ◄───────── intended to replace in-house dot ──── plantuml-js
-   (this repo)             src/core/dot (Smetana port)          (consumer)
+graphviz (C, canonical spec)
+        │ ported module-by-module
+        ▼
+   graphviz-ts
+   (this repo)
 ```
 
 - **graphviz (C)** is the upstream specification. Each C module
@@ -43,15 +43,10 @@ graphviz (C, canonical spec)            plantuml (Java reference)
   TypeScript module under `src/`. Behavior, function boundaries, and even odd
   edge-case branches are preserved deliberately, validated against the native C
   binary as an oracle.
-- **graphviz-ts** is the port itself: this repository.
-- **plantuml-js** is the downstream consumer. It currently carries its own
-  in-house dot layout under `src/core/dot/` (ported from PlantUML's Smetana,
-  which is itself a Java translation of Graphviz). graphviz-ts is designed to
-  replace that in-house engine, which makes `dot`-engine fidelity the top
-  correctness priority for this project.
-- **plantuml (Java)** is the reference plantuml-js is ported from — relevant
-  only as the ancestral source of the Smetana dot code. It is not a build- or
-  run-time dependency of graphviz-ts.
+- **graphviz-ts** is the port itself: this repository. The `dot` engine
+  receives the most fidelity attention because downstream consumers depend
+  on it, which makes `dot`-engine fidelity the top correctness priority for
+  this project.
 
 ## Key data flows
 
@@ -70,7 +65,5 @@ graphviz (C, canonical spec)            plantuml (Java reference)
 |------|----------|---------|-----------|----------|---------------|
 | graphviz-ts | TypeScript (ES2022, strict) | Node 26.3.1 + browser | none | — | none at runtime (esbuild/vitest/peggy dev-only) |
 | graphviz | C | native | none | — | autotools/libgvc |
-| plantuml-js | TypeScript (ES2022) | Node + browser | none | — | jsonc-parser, katex |
-| plantuml | Java | JVM | none | — | maven |
 
 See [tech-health.md](./tech-health.md) for EOL and CVE status of each version.

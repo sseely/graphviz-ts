@@ -13,11 +13,7 @@ NVD/OSV. Date of check: 2026-06-22.
 | graphviz-ts | esbuild | ^0.28.1 | n/a | None | OK |
 | graphviz-ts | vitest | ^4.1.9 | n/a | None | OK |
 | graphviz-ts | peggy | ^4.0.0 | n/a | None | OK |
-| plantuml-js | TypeScript | ^5.4.0 | n/a | None | Update available |
-| plantuml-js | Vite | ^5.0.0 | n/a | check OSV for 5.x | Update available |
-| plantuml-js | katex | ^0.16.45 | n/a | None known | OK |
 | graphviz (C) | Graphviz | 15.0.0 | n/a (upstream spec) | n/a | OK (reference only) |
-| plantuml | Java/JVM | — | depends on JDK | n/a | reference only |
 
 ## Notes
 
@@ -34,16 +30,13 @@ NVD/OSV. Date of check: 2026-06-22.
   deprecated in 6.0, so plan the bump deliberately.
   ([TypeScript releases](https://github.com/microsoft/typescript/releases))
 - **esbuild / vitest / peggy** — Recent versions, no known High+ CVEs. OK.
-- **Vite 5.x (plantuml-js)** — Vite 5 is a generation behind current; check
-  [osv.dev](https://osv.dev) for the exact patch level before the next release.
-- **graphviz (C) and plantuml (Java)** are reference sources, not shipped
-  dependencies of graphviz-ts, so their version health does not affect the
-  runtime/security posture of the published library. The C checkout at tag
-  15.0.0 simply pins the spec being ported.
+- **graphviz (C)** is a reference source, not a shipped dependency of
+  graphviz-ts, so its version health does not affect the runtime/security
+  posture of the published library. The C checkout at tag 15.0.0 simply pins
+  the spec being ported.
 
 ## Action summary
 
-- `OK`: Node 26.3.1, esbuild, vitest, peggy, katex.
-- `Update available` (non-urgent, no CVE): TypeScript 5.4 → 6.x across both TS
-  repos; Vite 5 → current in plantuml-js.
+- `OK`: Node 26.3.1, esbuild, vitest, peggy.
+- `Update available` (non-urgent, no CVE): TypeScript 5.4 → 6.x.
 - No `EOL — upgrade required` or `CVE — patch required` items found.

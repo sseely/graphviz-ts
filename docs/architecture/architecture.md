@@ -4,21 +4,17 @@
 
 graphviz-ts is a single in-process library, not a distributed system. The
 "architecture" is the rendering pipeline and its relationship to the upstream
-spec and downstream consumer. There are no network calls, data stores, or queues
-— the only external seam is a caller-supplied image-sizing callback.
+spec. There are no network calls, data stores, or queues — the only external
+seam is a caller-supplied image-sizing callback.
 
 ## Repo / dependency context
 
 ```mermaid
 graph TD
     GVC["graphviz (C)<br/>canonical spec<br/>gitlab tag 15.0.0"]
-    PLJAVA["plantuml (Java)<br/>reference source"]
     GVTS["graphviz-ts<br/>(this library)<br/>pure TypeScript, 0 runtime deps"]
-    PLJS["plantuml-js<br/>(consumer)<br/>has in-house src/core/dot (Smetana)"]
 
     GVC -->|"ported module-by-module<br/>(validated vs native C oracle)"| GVTS
-    PLJAVA -->|ported from| PLJS
-    GVTS -->|"intended to replace<br/>in-house dot engine"| PLJS
 
     style GVTS fill:#cde4ff,stroke:#3b6ea5
 ```
@@ -84,5 +80,5 @@ graph TD
   engines and the output-format devices register through `GvcContext`, matching
   the C architecture rather than introducing a new abstraction.
 - **Fidelity boundary**: correctness is defined by the C source. The `dot`
-  engine receives the most fidelity attention because plantuml-js (the consumer)
-  is dot-centric.
+  engine receives the most fidelity attention because downstream consumers
+  are dot-centric.

@@ -76,21 +76,6 @@ graph TD
     style POSITION fill:#e8f0e8
 ```
 
-## plantuml-js (consumer)
-
-```mermaid
-graph TD
-    IDX["src/index.ts"]
-    DIAGRAMS["src/diagrams/<br/>sequence · class · activity · …"]
-    CORE["src/core/<br/>parsing · AST · layout semantics"]
-    INHOUSEDOT["src/core/dot/<br/>in-house dot layout (Smetana port)<br/>← graphviz-ts targets this for replacement"]
-
-    IDX --> DIAGRAMS --> CORE
-    CORE --> INHOUSEDOT
-
-    style INHOUSEDOT fill:#ffe0cc,stroke:#a5603b
-```
-
 ## graphviz (C — spec, for reference)
 
 The C module layout each TS module is ported from:

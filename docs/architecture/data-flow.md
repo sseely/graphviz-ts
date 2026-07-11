@@ -63,14 +63,14 @@ sequenceDiagram
 
 ## 3. Layout → xdot draw operations
 
-`getDrawOps()` exposes per-object draw operations so a consumer (e.g.
-plantuml-js) can paint with a custom renderer instead of the built-in SVG
-emitter. This is the integration seam by which graphviz-ts can replace
-plantuml-js's in-house dot engine.
+`getDrawOps()` exposes per-object draw operations so a downstream consumer
+can paint with a custom renderer instead of the built-in SVG emitter. This is
+the integration seam by which graphviz-ts can replace a consumer's in-house
+dot engine.
 
 ```mermaid
 sequenceDiagram
-    participant Caller as Consumer (e.g. plantuml-js)
+    participant Caller as Consumer
     participant Render as render/ (getDrawOps)
     participant Engine as layout/<engine>
     participant Xdot as xdot/ + render device
