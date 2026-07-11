@@ -215,7 +215,9 @@ export function xlintersections(
   const bp: BestPosT = { n: 0, area: 0, pos: { ...(objp.lbl as XLabelT).pos } };
   for (let i = 0; i < xlp.nObjs; i++) {
     const oi = xlp.objs[i];
-    if (oi === objp || oi.sz.x > 0 || oi.sz.y > 0) continue;
+    // C: skip only when BOTH dimensions are positive (sz.x > 0 && sz.y > 0),
+    // so an object with one zero dimension still participates.
+    if (oi === objp || (oi.sz.x > 0 && oi.sz.y > 0)) continue;
     if (lblenclosing(objp, oi)) bp.n++;
   }
   const rect = objplp2rect(objp);
