@@ -18,10 +18,10 @@ literal byte-for-byte SVG output — see [Conformance](./docs/conformance.md) fo
 the exact definition and the comparison code, and
 [known divergences](./docs/known-divergences.md) for the documented exceptions.
 
-> **Status: `0.1.0` — in active development.** The port is mature enough to lay
-> out and render real graphs across all engines, but it is not yet published to
-> npm and the C feature surface is not 100% covered. The `dot` engine is the
-> primary fidelity target. See [Status & coverage](#status--coverage) below.
+> **Status: `0.1.x` — in active development, published to npm.** The port is
+> mature enough to lay out and render real graphs across all engines; the C
+> feature surface is not 100% covered. The `dot` engine is the primary
+> fidelity target. See [Status & coverage](#status--coverage) below.
 
 ## Why this exists
 
@@ -185,15 +185,32 @@ function parse(dotSource: string): Graph;
 function setImageSizer(sizer: ImageSizer | null): void;
 type ImageSizer = (src: string) => { w: number; h: number } | null;
 
+// Multi-format render + structured xdot draw-ops (from `graphviz-ts/render`,
+// also re-exported from the root package).
+function render(g: Graph, format: OutputFormat, opts?: { engine?: string }): string;
+function getDrawOps(g: Graph, opts?: { engine?: string }): XdotOp[];
+
+// Programmatic graph construction and computed-geometry readback (from
+// `graphviz-ts/api`, also re-exported from the root package) — build a graph
+// without writing DOT source, or read back node/edge/bbox coordinates after
+// layout.
+function createGraph(opts?: CreateGraphOptions): GvGraphBuilder;
+function addEdge(g: Graph, tail: Node, head: Node, name?: string): Edge;
+function getLayout(g: Graph, opts?: { yAxis?: 'up' | 'down' }): LayoutSnapshot;
+
 // Lower-level orchestration, for callers that need engine/render control.
 class GvcContext { /* register engines/renderers, layout, render */ }
-function render(ctx: GvcContext, graph: Graph, format: string): string;
+function renderWithContext(ctx: GvcContext, graph: Graph, format: string): string;
 ```
 
 Most callers only need `renderSvg` (or `tryRenderSvg` for result-style error
-handling). `parse`, `GvcContext`, and `render` are exposed for advanced use —
-e.g. inspecting the parsed model, or driving layout and rendering as separate
-steps.
+handling). `parse`, `GvcContext`, and `renderWithContext` are exposed for
+advanced use — e.g. inspecting the parsed model, or driving layout and
+rendering as separate steps. `createGraph`/`addEdge`, `getLayout`, `render`,
+and `getDrawOps` are the graph-building, geometry-readback, multi-format
+render, and structured-draw-op surfaces respectively — see the
+[API guide](https://sseely.github.io/graphviz-ts/guide/api) for full
+walkthroughs of each.
 
 ## Development
 
@@ -213,11 +230,26 @@ from the canonical C Graphviz. New behavior is pinned to the C source — see
 
 - **What works:** parsing, all eight layout engines, SVG output, and the
   intermediate `json` / `xdot` / `dot` / imagemap text formats.
+- **Conformance bar:** a render is **conformant** when it matches the C oracle
+  within a ±0.01 deterministic tolerance (`dot`, `circo`, `twopi`, `osage`,
+  `patchwork`) or is characterized at a looser ±0.5 tolerance for the
+  iterative force-directed engines (`neato`, `fdp`, `sfdp`) — never literal
+  byte equality. Full definition: [Conformance](./docs/conformance.md).
+- **Current parity** (fresh corpus sweeps, dated 2026-07-11 — see
+  [`test/corpus/PARITY.md`](./test/corpus/PARITY.md) and the
+  [docs-site parity pages](https://sseely.github.io/graphviz-ts/engines) for
+  live counts): `dot` SVG 762/788 conformant (+14 structural-match, 0
+  unaccepted tracked gaps — every remaining non-conformant graph is a
+  documented, accepted divergence); `dot` xdot 754/759; `circo` xdot 745/762;
+  `twopi` xdot 740/762; `osage` xdot 744/759; `patchwork` xdot 757/762
+  (all deterministic, ±0.01). `neato`/`fdp`/`sfdp` are characterized at ±0.5
+  rather than gated at the deterministic bar, per the tolerance split above.
 - **What's tracked:** every C algorithm and its port status is inventoried in
   the [port catalog](./plans/port-catalog/README.md). Items marked `[ ]` there
   are real gaps, not footnotes.
-- **Known behavioral divergences from C** (where output differs in a documented,
-  bounded way) are listed in [`docs/known-divergences.md`](./docs/known-divergences.md).
+- **Known behavioral divergences from C** (differences investigated,
+  root-caused, and deliberately not chased) are listed in
+  [`docs/known-divergences.md`](./docs/known-divergences.md).
 
 ## Known limitations
 

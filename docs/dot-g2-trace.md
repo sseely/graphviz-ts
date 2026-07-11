@@ -2,6 +2,14 @@
 
 # G2 trace — compass-port mincross tiebreak (`ports both dense`)
 
+> **Status (2026-07-11): CLOSED.** Fixed 2026-06-19 (mission `dot-multiport`,
+> task T2) — `accumCross` (`src/layout/dot/mincross-cross.ts`) now breaks
+> `ND_order` ties by port `p.x`, mirroring C's `in_cross`/`out_cross`
+> (mincross.c:593,611). The routing re-verification corpus reached 25/25
+> `MATCH`, 0 `DIVERGE` (see `plans/mission-dot-multiport/decision-journal.md`).
+> The trace below is the investigation record; it is historical, not a live
+> divergence.
+
 **Repro:** `digraph{a:e->b; a:w->c; a->d}` — backlog G2, the lone routing
 re-verification divergence (corpus 24/25).
 

@@ -63,13 +63,25 @@ comparison code does. To verify it yourself:
 - [`test/golden/normalize.ts`](https://github.com/sseely/graphviz-ts/blob/main/test/golden/normalize.ts)
   — how raw SVG is parsed into the comparable element tree.
 - [`test/corpus/survey.ts`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/survey.ts)
-  — `diffVerdict`, which assigns one of the verdicts below.
+  — `diffVerdict`, which assigns one of the verdicts below. `survey.ts` covers
+  the `dot` SVG track only.
+- [`test/corpus/engine-walk.ts`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/engine-walk.ts)
+  — the per-engine **xdot** survey (`npx tsx test/corpus/engine-walk.ts <engine>`),
+  which applies the same class split as the table above
+  (`TOLERANCE = 0.5` for `neato`/`fdp`/`sfdp`, `0.01` for every other engine)
+  and compares semantic draw-op streams (`compareXdot`) rather than SVG. This
+  is how the `circo`/`twopi`/`osage`/`patchwork`/`neato`/`fdp`/`sfdp` tracks
+  are measured; `dot`'s own xdot track uses the sibling
+  [`xdot-walk.ts`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/xdot-walk.ts).
 
 ## The verdicts
 
-The survey assigns each graph exactly one verdict
-([`PARITY-dot.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-dot.md)
-tracks the live counts):
+The survey assigns each graph exactly one verdict. Live counts per track:
+[`PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md)
+rolls up every engine × surface track (deterministic and iterative alike);
+[`PARITY-dot.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-dot.md)
+is the `dot` SVG dashboard, and each other engine has its own
+`PARITY-<engine>.md` dashboard alongside it in `test/corpus/`:
 
 | Verdict | Meaning |
 |---|---|

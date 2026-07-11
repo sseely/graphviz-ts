@@ -2,6 +2,19 @@
 
 # newrank cross-cluster `rank=same` routing — C trace and TS divergence
 
+> **Status (2026-07-11): CLOSED.** The double-install/hang traced below was
+> fixed and merged 2026-06-17 (mission `dot-newrank-2`): `markClusters`
+> (`src/layout/dot/cluster.ts:268,284`) now coerces `(n.info.ranktype ?? 0)`,
+> and `dotRank` (`src/layout/dot/rank.ts:539`) dispatches on
+> `mapbool(g.attrs.get('newrank'))` directly, both matching the C behavior
+> traced in §§1-4 below (see
+> `plans/mission-dot-newrank-2/decision-journal.md`). This is the
+> investigation record, not a live divergence.
+>
+> A separate, unrelated newrank gap remains open in the port catalog:
+> `expand_leaves` (newrank leafsets, `position.c`, tracked as DOT-4) is not
+> covered by this trace.
+
 Repro:
 
 ```dot
