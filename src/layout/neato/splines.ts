@@ -604,9 +604,20 @@ class OrthoHelper {
           if (seen.has(key)) continue;
           seen.add(key);
         }
+        // C attachOrthoEdges endpoints: p1 = ND_coord(tail) + ED_tail_port.p,
+        // q1 = ND_coord(head) + ED_head_port.p (ortho.c:1075-1076). Plumb the
+        // port offset so compass/record ports (tailport=s, headport=n, …) exit
+        // on the correct node side; without it buildSpline falls back to the bb
+        // centre and every ported ortho edge starts/ends at the node centre.
+        const tc = e.tail.info.coord;
+        const hc = e.head.info.coord;
+        const tp = e.info.tail_port.p;
+        const hp = e.info.head_port.p;
         edges.push({
           tail: orthoNodes[nodeArr.indexOf(e.tail)],
           head: orthoNodes[nodeArr.indexOf(e.head)],
+          tailPoint: { x: tc.x + tp.x, y: tc.y + tp.y },
+          headPoint: { x: hc.x + hp.x, y: hc.y + hp.y },
           _edge: e,
         } as TaggedOrthoEdge);
       }
