@@ -254,12 +254,13 @@
 {"id":"graphs-nojustify","size":298,"status":"pass"}
 {"id":"2727","size":306,"status":"pass"}
 {"id":"1939","size":307,"status":"pass"}
+{"id":"graphs-structs","size":308,"status":"pass"}
 {"id":"graphs-p4","size":309,"status":"pass"}
 {"id":"1622_1","size":311,"status":"pass"}
 {"id":"2825","size":312,"status":"pass"}
 {"id":"2521","size":320,"status":"pass"}
 {"id":"2168_3","size":322,"status":"pass"}
-{"id":"2717","size":325,"status":"diverged","nDiffs":69,"firstDiff":"cluster:cluster_domestic_cats _draw_ cluster:cluster_domestic_cats/_draw_/op[1].unfilled_polygon[0]: 47.43 vs 0"}
+{"id":"2717","size":325,"status":"pass"}
 {"id":"1767","size":326,"status":"pass"}
 {"id":"graphs-flatedge","size":330,"status":"pass"}
 {"id":"graphs-b","size":338,"status":"pass"}
@@ -625,7 +626,7 @@
 {"id":"2095","size":4865,"status":"pass"}
 {"id":"share-viewfile","size":4916,"status":"pass"}
 {"id":"windows-viewfile","size":4916,"status":"pass"}
-{"id":"1898","size":5067,"status":"diverged","nDiffs":2,"firstDiff":"node:N19 _draw_ node:N19/_draw_[missing]: <present> vs <absent>"}
+{"id":"1898","size":5067,"status":"pass"}
 {"id":"graphs-ldbxtried","size":5155,"status":"pass"}
 {"id":"graphs-grdradial","size":5370,"status":"pass"}
 {"id":"share-shells","size":5493,"status":"pass"}
@@ -644,7 +645,7 @@
 {"id":"2193","size":6399,"status":"pass"}
 {"id":"share-unix","size":6603,"status":"pass"}
 {"id":"windows-unix","size":6603,"status":"pass"}
-{"id":"graphs-polypoly","size":6617,"status":"diverged","nDiffs":32,"firstDiff":"node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 130 vs 126.49"}
+{"id":"graphs-polypoly","size":6617,"status":"pass"}
 {"id":"1447","size":6707,"status":"pass"}
 {"id":"2619_1","size":6721,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot"}
 {"id":"graphs-grdradial_angle","size":6918,"status":"pass"}
@@ -671,8 +672,8 @@
 {"id":"linux.x86-dotsplines_dot","size":8741,"status":"pass"}
 {"id":"graphs-b15","size":8774,"status":"pass"}
 {"id":"nshare-dotsplines_dot","size":8836,"status":"pass"}
-{"id":"share-polypoly","size":8872,"status":"diverged","nDiffs":32,"firstDiff":"node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 207.42 vs 205.49"}
-{"id":"windows-polypoly","size":8872,"status":"diverged","nDiffs":32,"firstDiff":"node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 207.42 vs 205.49"}
+{"id":"share-polypoly","size":8872,"status":"pass"}
+{"id":"windows-polypoly","size":8872,"status":"pass"}
 {"id":"linux.x86-dotsplines_dot1","size":9206,"status":"pass"}
 {"id":"graphs-big","size":9231,"status":"pass"}
 {"id":"linux.x86-weight_dot","size":9278,"status":"pass"}
@@ -733,6 +734,7 @@
 {"id":"2343","size":59368,"status":"pass"}
 {"id":"graphs-b143","size":62055,"status":"pass"}
 {"id":"graphs-b29","size":62931,"status":"pass"}
+{"id":"2620","size":64908,"status":"pass"}
 {"id":"linux.i386-b106","size":92005,"status":"pass"}
 {"id":"share-b106","size":92301,"status":"pass"}
 {"id":"windows-b106","size":95634,"status":"pass"}
@@ -754,6 +756,7 @@
 {"id":"nshare-root_circo","size":313126,"status":"pass"}
 {"id":"linux.x86-root_circo","size":313168,"status":"pass"}
 {"id":"graphs-b103","size":377525,"status":"pass"}
-{"id":"2475_2","size":641284,"status":"diverged","nDiffs":149037,"firstDiff":"cluster:%10023 <object> cluster:%10023[missing-object]: <absent> vs <present>"}
+{"id":"2475_2","size":641284,"status":"pass"}
+{"id":"2470","size":734358,"status":"pass"}
 {"id":"2222","size":2384469,"status":"pass"}
 {"id":"2108","size":3136769,"status":"pass"}

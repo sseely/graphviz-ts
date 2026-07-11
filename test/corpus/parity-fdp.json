@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-11T16:07:18.112Z",
+  "generatedAt": "2026-07-11T22:40:36.461Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "fdp",
   "tolerance": 0.5,
-  "total": 759,
+  "total": 762,
   "counts": {
-    "pass": 295,
-    "diverged": 390,
+    "pass": 311,
+    "diverged": 435,
     "oracle-error": 15,
-    "port-error": 59,
-    "timeout": 0
+    "port-error": 0,
+    "timeout": 1
   },
   "results": [
     {
@@ -291,8 +291,7 @@
     {
       "id": "2564",
       "size": 82,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "2572",
@@ -1006,8 +1005,7 @@
     {
       "id": "2563",
       "size": 213,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "258",
@@ -1027,8 +1025,7 @@
     {
       "id": "graphs-b7",
       "size": 222,
-      "status": "port-error",
-      "err": "fdp: coincident nodes q/z hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "graphs-labelclust-ftd",
@@ -1141,14 +1138,12 @@
     {
       "id": "2609",
       "size": 238,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "graphs-clust5",
       "size": 238,
-      "status": "port-error",
-      "err": "fdp: coincident nodes z0/y0 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "graphs-sb_box",
@@ -1494,6 +1489,13 @@
       "status": "pass"
     },
     {
+      "id": "graphs-structs",
+      "size": 308,
+      "status": "diverged",
+      "nDiffs": 94,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 168.68 vs 170.53"
+    },
+    {
       "id": "graphs-p4",
       "size": 309,
       "status": "pass"
@@ -1596,8 +1598,9 @@
     {
       "id": "2184",
       "size": 393,
-      "status": "port-error",
-      "err": "fdp: coincident nodes z1/y1 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 218,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "graphs-sb_box_dbl",
@@ -1732,14 +1735,14 @@
     {
       "id": "2258",
       "size": 460,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "2556",
       "size": 469,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 674,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 737.31 vs 571.88"
     },
     {
       "id": "1213-1",
@@ -2975,26 +2978,22 @@
     {
       "id": "share-clust3",
       "size": 1195,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "windows-clust3",
       "size": 1195,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "share-clust2",
       "size": 1200,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "windows-clust2",
       "size": 1200,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "graphs-grdshapes",
@@ -3047,8 +3046,9 @@
     {
       "id": "1855",
       "size": 1335,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 686,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 651.49 vs 631.4"
     },
     {
       "id": "graphs-dpd",
@@ -3364,14 +3364,16 @@
     {
       "id": "graphs-arrows",
       "size": 2029,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 762,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"
     },
     {
       "id": "graphs-arrowsize",
       "size": 2039,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 794,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"
     },
     {
       "id": "linux.x86-ordering_dot1",
@@ -3396,8 +3398,9 @@
     {
       "id": "graphs-newarrows",
       "size": 2045,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 762,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"
     },
     {
       "id": "windows-ER",
@@ -3465,8 +3468,9 @@
     {
       "id": "2242",
       "size": 2125,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+7\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 757,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 555.68 vs 625.45"
     },
     {
       "id": "share-fsm",
@@ -3536,8 +3540,9 @@
     {
       "id": "1453",
       "size": 2446,
-      "status": "port-error",
-      "err": "fdp: coincident nodes CONTEXT_MODES/HUFFMAN_CODE_2 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 1279,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1628.38 vs 938.5"
     },
     {
       "id": "1436",
@@ -3928,8 +3933,8 @@
       "id": "graphs-cairo",
       "size": 5866,
       "status": "diverged",
-      "nDiffs": 1925,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 546.01 vs 786.76"
+      "nDiffs": 1919,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.47 vs 786.76"
     },
     {
       "id": "graphs-pslib",
@@ -3955,14 +3960,16 @@
     {
       "id": "share-newarrows",
       "size": 6364,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 88,
+      "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "windows-newarrows",
       "size": 6364,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 88,
+      "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "2193",
@@ -4021,26 +4028,30 @@
     {
       "id": "linux.x86-arrows_dot",
       "size": 7235,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 295,
+      "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "macosx-arrows_dot",
       "size": 7235,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 295,
+      "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "nshare-arrows_dot",
       "size": 7235,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 295,
+      "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "graphs-awilliams",
       "size": 7305,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 3373,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2237.02 vs 1895.7"
     },
     {
       "id": "share-unix2",
@@ -4185,8 +4196,9 @@
     {
       "id": "graphs-b124",
       "size": 10284,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 7641,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3188.32 vs 3023.15"
     },
     {
       "id": "graphs-b36",
@@ -4198,8 +4210,9 @@
     {
       "id": "share-proc3d",
       "size": 10429,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 10,
+      "firstDiff": "cluster:cluster_0 bb cluster:cluster_0/bb[1]: 26034 vs 26035"
     },
     {
       "id": "linux.i386-crazy",
@@ -4225,8 +4238,9 @@
     {
       "id": "windows-proc3d",
       "size": 10446,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 16,
+      "firstDiff": "edge:22316->22324#0 pos edge:22316->22324#0/pos[1]: 32817 vs 32818"
     },
     {
       "id": "graphs-b94",
@@ -4238,26 +4252,22 @@
     {
       "id": "nshare-overlap_neato1",
       "size": 10511,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "linux.x86-overlap_neato1",
       "size": 10554,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "linux.x86-overlap_neato",
       "size": 10562,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "nshare-overlap_neato",
       "size": 10566,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "share-pgram",
@@ -4272,26 +4282,26 @@
     {
       "id": "share-ldbxtried",
       "size": 11505,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 1986,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 28454.81 vs 28442.53"
     },
     {
       "id": "linux.x86-neatosplines_neato",
       "size": 11690,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "nshare-neatosplines_neato",
       "size": 11700,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "pass"
     },
     {
       "id": "windows-ldbxtried",
       "size": 11805,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 2000,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 27901.04 vs 27924.32"
     },
     {
       "id": "share-ngk10_4",
@@ -4311,14 +4321,16 @@
     {
       "id": "nshare-neatosplines_neato1",
       "size": 12051,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 32,
+      "firstDiff": "edge:cv->vd#0 _draw_ edge:cv->vd#0/_draw_/op[1].unfilled_bezier[0]: 502.06 vs 506.62"
     },
     {
       "id": "linux.x86-neatosplines_neato1",
       "size": 12061,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 32,
+      "firstDiff": "edge:cv->vd#0 _draw_ edge:cv->vd#0/_draw_/op[1].unfilled_bezier[0]: 502.51 vs 507.07"
     },
     {
       "id": "linux.x86-rankdir_dot1",
@@ -4388,14 +4400,16 @@
     {
       "id": "1447_1",
       "size": 14827,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 7199,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2018.94 vs 2257.76"
     },
     {
       "id": "graphs-mode",
       "size": 14907,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 7525,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 847.58 vs 667.17"
     },
     {
       "id": "windows-b36",
@@ -4434,8 +4448,9 @@
     {
       "id": "1718",
       "size": 22038,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 24051,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -80"
     },
     {
       "id": "windows-b124",
@@ -4450,20 +4465,23 @@
     {
       "id": "share-b51",
       "size": 29420,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived_2\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 25,
+      "firstDiff": "edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "windows-b51",
       "size": 29685,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived_2\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 25,
+      "firstDiff": "edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "graphs-b69",
       "size": 33033,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 4191,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2522.84 vs 3390.24"
     },
     {
       "id": "graphs-badvoro",
@@ -4474,8 +4492,9 @@
     {
       "id": "graphs-viewport",
       "size": 37292,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 7531,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 718.41 vs 2563.33"
     },
     {
       "id": "2239",
@@ -4487,26 +4506,36 @@
       "id": "graphs-b106",
       "size": 48933,
       "status": "diverged",
-      "nDiffs": 7002,
+      "nDiffs": 7001,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41"
     },
     {
       "id": "2343",
       "size": 59368,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 25613,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2458.63 vs 2260.56"
     },
     {
       "id": "graphs-b143",
       "size": 62055,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 10709,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2"
     },
     {
       "id": "graphs-b29",
       "size": 62931,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 11040,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"
+    },
+    {
+      "id": "2620",
+      "size": 64908,
+      "status": "diverged",
+      "nDiffs": 8188,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4628.91 vs 4902.78"
     },
     {
       "id": "linux.i386-b106",
@@ -4532,26 +4561,30 @@
     {
       "id": "graphs-b102",
       "size": 102329,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 18244,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1165.18 vs 1109.75"
     },
     {
       "id": "graphs-xx",
       "size": 102329,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 18259,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1559.26 vs 1408.75"
     },
     {
       "id": "2095_1",
       "size": 105083,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+4\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 65978,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"
     },
     {
       "id": "graphs-root",
       "size": 128221,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 35078,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3060.94 vs 2747.66"
     },
     {
       "id": "linux.i386-b29",
@@ -4577,26 +4610,30 @@
     {
       "id": "linux.i386-b102",
       "size": 161479,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 18189,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 769.56 vs 735.23"
     },
     {
       "id": "share-b102",
       "size": 161479,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 18263,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 793.05 vs 787.66"
     },
     {
       "id": "windows-b102",
       "size": 184125,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 18104,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 733.8 vs 747.34"
     },
     {
       "id": "graphs-b81",
       "size": 191024,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 9343,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -34924.12"
     },
     {
       "id": "1652",
@@ -4613,14 +4650,16 @@
     {
       "id": "linux.x86-root_twopi",
       "size": 287907,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 35028,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3305.06 vs 3226.07"
     },
     {
       "id": "nshare-root_twopi",
       "size": 287916,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 34958,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3220.18 vs 3411.29"
     },
     {
       "id": "nshare-root_circo",
@@ -4639,8 +4678,9 @@
     {
       "id": "graphs-b103",
       "size": 377525,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "diverged",
+      "nDiffs": 69777,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1840.48 vs 2176.86"
     },
     {
       "id": "2475_2",
@@ -4648,6 +4688,13 @@
       "status": "diverged",
       "nDiffs": 321527,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"
+    },
+    {
+      "id": "2470",
+      "size": 734358,
+      "status": "diverged",
+      "nDiffs": 16471,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 8835.44 vs 7690.38"
     },
     {
       "id": "2222",
@@ -4658,8 +4705,7 @@
     {
       "id": "2108",
       "size": 3136769,
-      "status": "port-error",
-      "err": "fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+344\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"
+      "status": "timeout"
     }
   ]
 }

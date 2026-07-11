@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-11T15:43:25.370Z",
+  "generatedAt": "2026-07-11T23:16:05.727Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "neato",
   "tolerance": 0.5,
-  "total": 759,
+  "total": 762,
   "counts": {
     "pass": 263,
-    "diverged": 489,
+    "diverged": 492,
     "oracle-error": 7,
     "port-error": 0,
     "timeout": 0
@@ -1463,6 +1463,13 @@
       "id": "1939",
       "size": 307,
       "status": "pass"
+    },
+    {
+      "id": "graphs-structs",
+      "size": 308,
+      "status": "diverged",
+      "nDiffs": 40,
+      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 119.13 vs 101.11"
     },
     {
       "id": "graphs-p4",
@@ -3030,8 +3037,8 @@
       "id": "1855",
       "size": 1335,
       "status": "diverged",
-      "nDiffs": 759,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 62.4 vs 0"
+      "nDiffs": 755,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 62.25 vs 0"
     },
     {
       "id": "graphs-dpd",
@@ -4634,6 +4641,13 @@
       "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
+      "id": "2620",
+      "size": 64908,
+      "status": "diverged",
+      "nDiffs": 6,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 800 vs 832"
+    },
+    {
       "id": "linux.i386-b106",
       "size": 92005,
       "status": "diverged",
@@ -4779,6 +4793,13 @@
       "status": "diverged",
       "nDiffs": 281622,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 13489.64 vs 13553.18"
+    },
+    {
+      "id": "2470",
+      "size": 734358,
+      "status": "diverged",
+      "nDiffs": 499,
+      "firstDiff": "edge:n1->n0#0 _ldraw_ edge:n1->n0#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "2222",

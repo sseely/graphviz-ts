@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-06T21:23:21.385Z",
+  "generatedAt": "2026-07-11T21:10:55.237Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 788,
   "counts": {
-    "conformant": 759,
-    "structural-match": 16,
-    "diverged": 3,
+    "conformant": 762,
+    "structural-match": 14,
+    "diverged": 2,
     "errored": 0,
     "timeout": 0,
     "oracle-error": 10
@@ -585,9 +585,7 @@
     {
       "id": "2470",
       "path": "2470.dot",
-      "verdict": "structural-match",
-      "maxDelta": 8,
-      "maxDeltaPath": "svg/g[1]/g[484]/text[1]/@y"
+      "verdict": "conformant"
     },
     {
       "id": "2471",
@@ -726,9 +724,7 @@
     {
       "id": "2620",
       "path": "2620.dot",
-      "verdict": "structural-match",
-      "maxDelta": 585,
-      "maxDeltaPath": "svg/g[1]/g[428]/path[1]/@d[4]"
+      "verdict": "conformant"
     },
     {
       "id": "2636",
@@ -2056,9 +2052,7 @@
     {
       "id": "graphs-structs",
       "path": "graphs/structs.gv",
-      "verdict": "diverged",
-      "maxDelta": 0,
-      "firstDiffPath": "svg/g[1][childCount]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-style",

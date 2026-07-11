@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-11T16:22:49.355Z",
+  "generatedAt": "2026-07-11T22:56:53.925Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
-  "total": 759,
+  "total": 762,
   "counts": {
-    "pass": 254,
-    "diverged": 475,
+    "pass": 260,
+    "diverged": 494,
     "oracle-error": 7,
-    "port-error": 23,
+    "port-error": 1,
     "timeout": 0
   },
   "results": [
@@ -289,8 +289,7 @@
     {
       "id": "2564",
       "size": 82,
-      "status": "port-error",
-      "err": "sfdp overlap=\"scale\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "pass"
     },
     {
       "id": "2572",
@@ -1006,8 +1005,7 @@
     {
       "id": "2563",
       "size": 213,
-      "status": "port-error",
-      "err": "sfdp overlap=\"scale\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "pass"
     },
     {
       "id": "258",
@@ -1140,8 +1138,9 @@
     {
       "id": "2609",
       "size": 238,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 118,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 282.74 vs 284.5"
     },
     {
       "id": "graphs-clust5",
@@ -1490,6 +1489,13 @@
       "status": "pass"
     },
     {
+      "id": "graphs-structs",
+      "size": 308,
+      "status": "diverged",
+      "nDiffs": 34,
+      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 282.81 vs 345.18"
+    },
+    {
       "id": "graphs-p4",
       "size": 309,
       "status": "diverged",
@@ -1735,14 +1741,13 @@
     {
       "id": "2258",
       "size": 460,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "pass"
     },
     {
       "id": "2556",
       "size": 469,
       "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "err": "armPow: argument outside the ported normal-finite fast path"
     },
     {
       "id": "1213-1",
@@ -3058,8 +3063,9 @@
     {
       "id": "1855",
       "size": 1335,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 725,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 592.32 vs 595.62"
     },
     {
       "id": "graphs-dpd",
@@ -3393,14 +3399,16 @@
     {
       "id": "graphs-arrows",
       "size": 2029,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 774,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "graphs-arrowsize",
       "size": 2039,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 779,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "linux.x86-ordering_dot1",
@@ -3425,8 +3433,9 @@
     {
       "id": "graphs-newarrows",
       "size": 2045,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 774,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "windows-ER",
@@ -3488,8 +3497,9 @@
     {
       "id": "2242",
       "size": 2125,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 105,
+      "firstDiff": "edge:NE4->NF4#0 _draw_ edge:NE4->NF4#0/_draw_/op[2].unfilled_bezier[4]: 378.64 vs 377.3"
     },
     {
       "id": "share-fsm",
@@ -4012,14 +4022,16 @@
     {
       "id": "share-newarrows",
       "size": 6364,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 478,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "windows-newarrows",
       "size": 6364,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 478,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "2193",
@@ -4084,20 +4096,23 @@
     {
       "id": "linux.x86-arrows_dot",
       "size": 7235,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 774,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "macosx-arrows_dot",
       "size": 7235,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 774,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "nshare-arrows_dot",
       "size": 7235,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 774,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "graphs-awilliams",
@@ -4317,26 +4332,24 @@
     {
       "id": "nshare-overlap_neato1",
       "size": 10511,
-      "status": "port-error",
-      "err": "sfdp overlap=\"scale\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "pass"
     },
     {
       "id": "linux.x86-overlap_neato1",
       "size": 10554,
-      "status": "port-error",
-      "err": "sfdp overlap=\"scale\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "pass"
     },
     {
       "id": "linux.x86-overlap_neato",
       "size": 10562,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "pass"
     },
     {
       "id": "nshare-overlap_neato",
       "size": 10566,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 1732,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 671.92 vs 669.31"
     },
     {
       "id": "share-pgram",
@@ -4362,14 +4375,16 @@
     {
       "id": "linux.x86-neatosplines_neato",
       "size": 11690,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 62,
+      "firstDiff": "edge:Cannon->ggt#0 _draw_ edge:Cannon->ggt#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "nshare-neatosplines_neato",
       "size": 11700,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 1732,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 671.92 vs 669.31"
     },
     {
       "id": "windows-ldbxtried",
@@ -4402,14 +4417,16 @@
     {
       "id": "nshare-neatosplines_neato1",
       "size": 12051,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 1734,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 671.92 vs 669.31"
     },
     {
       "id": "linux.x86-neatosplines_neato1",
       "size": 12061,
-      "status": "port-error",
-      "err": "sfdp overlap=\"false\": only the default prism0 adjust mode is ported; see mission 8 journal"
+      "status": "diverged",
+      "nDiffs": 62,
+      "firstDiff": "edge:Cannon->ggt#0 _draw_ edge:Cannon->ggt#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "linux.x86-rankdir_dot1",
@@ -4623,6 +4640,13 @@
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1468.26 vs 1420.3"
     },
     {
+      "id": "2620",
+      "size": 64908,
+      "status": "diverged",
+      "nDiffs": 12755,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2879.18 vs 2860.76"
+    },
+    {
       "id": "linux.i386-b106",
       "size": 92005,
       "status": "diverged",
@@ -4774,6 +4798,13 @@
       "status": "diverged",
       "nDiffs": 305599,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 14372 vs 14375.01"
+    },
+    {
+      "id": "2470",
+      "size": 734358,
+      "status": "diverged",
+      "nDiffs": 18761,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9388.23 vs 7898.3"
     },
     {
       "id": "2222",

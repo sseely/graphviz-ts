@@ -47,7 +47,7 @@
 {"id":"1328","size":82,"status":"pass"}
 {"id":"1585_1","size":82,"status":"pass"}
 {"id":"2391_1","size":82,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 118.11 vs 136.16"}
-{"id":"2564","size":82,"status":"port-error","err":"fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"2564","size":82,"status":"pass"}
 {"id":"2572","size":82,"status":"pass"}
 {"id":"2721","size":82,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot"}
 {"id":"graphs-b79","size":82,"status":"pass"}
@@ -178,11 +178,11 @@
 {"id":"graphs-labelclust-nbd","size":209,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"graphs-labelclust-ndr","size":209,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"graphs-labelclust-ndc","size":210,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
-{"id":"2563","size":213,"status":"port-error","err":"fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"2563","size":213,"status":"pass"}
 {"id":"258","size":218,"status":"pass"}
 {"id":"1879-2","size":221,"status":"pass"}
 {"id":"2295","size":221,"status":"pass"}
-{"id":"graphs-b7","size":222,"status":"port-error","err":"fdp: coincident nodes q/z hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"}
+{"id":"graphs-b7","size":222,"status":"pass"}
 {"id":"graphs-labelclust-ftd","size":222,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"2683","size":223,"status":"pass"}
 {"id":"graphs-labelclust-fdl","size":224,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
@@ -199,8 +199,8 @@
 {"id":"graphs-labelclust-nbc","size":233,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"graphs-process","size":234,"status":"pass"}
 {"id":"144_no_ortho","size":237,"status":"diverged","nDiffs":6,"firstDiff":"edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_[missing]: <absent> vs <present>"}
-{"id":"2609","size":238,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-clust5","size":238,"status":"port-error","err":"fdp: coincident nodes z0/y0 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"}
+{"id":"2609","size":238,"status":"pass"}
+{"id":"graphs-clust5","size":238,"status":"pass"}
 {"id":"graphs-sb_box","size":241,"status":"diverged","nDiffs":81,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41"}
 {"id":"graphs-labelroot-fdd","size":243,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"graphs-labelclust-ftl","size":244,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
@@ -254,6 +254,7 @@
 {"id":"graphs-nojustify","size":298,"status":"pass"}
 {"id":"2727","size":306,"status":"pass"}
 {"id":"1939","size":307,"status":"pass"}
+{"id":"graphs-structs","size":308,"status":"diverged","nDiffs":94,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 168.68 vs 170.53"}
 {"id":"graphs-p4","size":309,"status":"pass"}
 {"id":"1622_1","size":311,"status":"pass"}
 {"id":"2825","size":312,"status":"pass"}
@@ -270,7 +271,7 @@
 {"id":"graphs-colors","size":376,"status":"diverged","nDiffs":2,"firstDiff":"edge:ddddddd->eeeee#0 _hldraw_ edge:ddddddd->eeeee#0/_hldraw_[missing]: <absent> vs <present>"}
 {"id":"graphs-mike","size":381,"status":"diverged","nDiffs":1130,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 762.09 vs 660.21"}
 {"id":"graphs-ZapfChancery","size":386,"status":"pass"}
-{"id":"2184","size":393,"status":"port-error","err":"fdp: coincident nodes z1/y1 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"}
+{"id":"2184","size":393,"status":"diverged","nDiffs":218,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"graphs-sb_box_dbl","size":397,"status":"diverged","nDiffs":152,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41"}
 {"id":"graphs-sb_circle_dbl","size":400,"status":"diverged","nDiffs":158,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55"}
 {"id":"graphs-clust4","size":401,"status":"pass"}
@@ -291,8 +292,8 @@
 {"id":"windows-record2","size":421,"status":"diverged","nDiffs":22,"firstDiff":"edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 1279.11 vs 1255.1"}
 {"id":"graphs-ctext","size":425,"status":"pass"}
 {"id":"358","size":429,"status":"pass"}
-{"id":"2258","size":460,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"2556","size":469,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"2258","size":460,"status":"pass"}
+{"id":"2556","size":469,"status":"diverged","nDiffs":674,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 737.31 vs 571.88"}
 {"id":"1213-1","size":481,"status":"diverged","nDiffs":2,"firstDiff":"edge:V1->V9#0 _ldraw_ edge:V1->V9#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"share-b491","size":486,"status":"diverged","nDiffs":1,"firstDiff":"edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"windows-b491","size":486,"status":"diverged","nDiffs":1,"firstDiff":"edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>"}
@@ -480,10 +481,10 @@
 {"id":"windows-ctext","size":1171,"status":"pass"}
 {"id":"linux.x86-flatedge_dot","size":1177,"status":"diverged","nDiffs":1,"firstDiff":"edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"nshare-flatedge_dot","size":1182,"status":"diverged","nDiffs":1,"firstDiff":"edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"}
-{"id":"share-clust3","size":1195,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"windows-clust3","size":1195,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"share-clust2","size":1200,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"windows-clust2","size":1200,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"share-clust3","size":1195,"status":"pass"}
+{"id":"windows-clust3","size":1195,"status":"pass"}
+{"id":"share-clust2","size":1200,"status":"pass"}
+{"id":"windows-clust2","size":1200,"status":"pass"}
 {"id":"graphs-grdshapes","size":1204,"status":"pass"}
 {"id":"share-clust","size":1218,"status":"pass"}
 {"id":"windows-clust","size":1218,"status":"pass"}
@@ -492,7 +493,7 @@
 {"id":"1896","size":1261,"status":"pass"}
 {"id":"windows-clust1","size":1261,"status":"diverged","nDiffs":16,"firstDiff":"edge:b0->b1#0 _draw_ edge:b0->b1#0/_draw_/op[1].unfilled_bezier[4]: 2048.04 vs 2048.69"}
 {"id":"graphs-grammar","size":1302,"status":"diverged","nDiffs":1514,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 578.66 vs 887.84"}
-{"id":"1855","size":1335,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"1855","size":1335,"status":"diverged","nDiffs":686,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 651.49 vs 631.4"}
 {"id":"graphs-dpd","size":1357,"status":"diverged","nDiffs":1932,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 899.18 vs 888.47"}
 {"id":"graphs-overlap","size":1357,"status":"diverged","nDiffs":1932,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 899.18 vs 888.47"}
 {"id":"share-records","size":1398,"status":"diverged","nDiffs":110,"firstDiff":"edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25"}
@@ -544,13 +545,13 @@
 {"id":"graphs-sq_rules","size":1979,"status":"pass"}
 {"id":"windows-pm2way","size":1998,"status":"pass"}
 {"id":"graphs-pm2way","size":2020,"status":"pass"}
-{"id":"graphs-arrows","size":2029,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-arrowsize","size":2039,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-arrows","size":2029,"status":"diverged","nDiffs":762,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"}
+{"id":"graphs-arrowsize","size":2039,"status":"diverged","nDiffs":794,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"}
 {"id":"linux.x86-ordering_dot1","size":2042,"status":"pass"}
 {"id":"macosx-ordering_dot1","size":2042,"status":"pass"}
 {"id":"nshare-ordering_dot1","size":2042,"status":"pass"}
 {"id":"graphs-rd_rules","size":2043,"status":"pass"}
-{"id":"graphs-newarrows","size":2045,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-newarrows","size":2045,"status":"diverged","nDiffs":762,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"}
 {"id":"windows-ER","size":2051,"status":"diverged","nDiffs":10,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"}
 {"id":"graphs-st_box","size":2068,"status":"diverged","nDiffs":1409,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -36.63"}
 {"id":"graphs-st_circle","size":2071,"status":"diverged","nDiffs":1316,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89"}
@@ -560,7 +561,7 @@
 {"id":"macosx-ordering_dot","size":2097,"status":"diverged","nDiffs":410,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3683.88 vs 3705.04"}
 {"id":"nshare-ordering_dot","size":2097,"status":"diverged","nDiffs":410,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3683.88 vs 3705.04"}
 {"id":"windows-fsm","size":2124,"status":"diverged","nDiffs":14,"firstDiff":"edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"}
-{"id":"2242","size":2125,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+7\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"2242","size":2125,"status":"diverged","nDiffs":757,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 555.68 vs 625.45"}
 {"id":"share-fsm","size":2142,"status":"diverged","nDiffs":14,"firstDiff":"edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"graphs-sr_box","size":2149,"status":"diverged","nDiffs":1475,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.33"}
 {"id":"graphs-sr_circle","size":2152,"status":"diverged","nDiffs":1369,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.23"}
@@ -571,7 +572,7 @@
 {"id":"graphs-b53","size":2287,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv"}
 {"id":"share-Heawood","size":2340,"status":"pass"}
 {"id":"windows-Heawood","size":2340,"status":"pass"}
-{"id":"1453","size":2446,"status":"port-error","err":"fdp: coincident nodes CONTEXT_MODES/HUFFMAN_CODE_2 hit the C rand() fallback (tlayout.c doRep/applyAttr) — not ported; see mission 7 journal"}
+{"id":"1453","size":2446,"status":"diverged","nDiffs":1279,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1628.38 vs 938.5"}
 {"id":"1436","size":2599,"status":"diverged","nDiffs":432,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 684.09 vs 637.69"}
 {"id":"share-jcctree","size":2612,"status":"pass"}
 {"id":"windows-jcctree","size":2612,"status":"pass"}
@@ -635,12 +636,12 @@
 {"id":"share-grammar","size":5613,"status":"pass"}
 {"id":"1949","size":5632,"status":"diverged","nDiffs":110,"firstDiff":"edge:structC->structDefaultAuto#0 _tldraw_ edge:structC->structDefaultAuto#0/_tldraw_[missing]: <absent> vs <present>"}
 {"id":"graphs-grdlinear_angle","size":5758,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
-{"id":"graphs-cairo","size":5866,"status":"diverged","nDiffs":1925,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 546.01 vs 786.76"}
+{"id":"graphs-cairo","size":5866,"status":"diverged","nDiffs":1919,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.47 vs 786.76"}
 {"id":"graphs-pslib","size":5899,"status":"diverged","nDiffs":12,"firstDiff":"edge:sdl_stop->sdl_stop2#0 _draw_ edge:sdl_stop->sdl_stop2#0/_draw_/op[1].unfilled_bezier[2]: 262.09 vs 276.83"}
 {"id":"graphs-proc3d","size":6121,"status":"diverged","nDiffs":1926,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1606.18 vs 1598.32"}
 {"id":"graphs-jsort","size":6189,"status":"diverged","nDiffs":2402,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1772.95 vs 1585.99"}
-{"id":"share-newarrows","size":6364,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"windows-newarrows","size":6364,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"share-newarrows","size":6364,"status":"diverged","nDiffs":88,"firstDiff":"edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
+{"id":"windows-newarrows","size":6364,"status":"diverged","nDiffs":88,"firstDiff":"edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
 {"id":"2193","size":6399,"status":"diverged","nDiffs":1941,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4941.45 vs 3747.01"}
 {"id":"share-unix","size":6603,"status":"pass"}
 {"id":"windows-unix","size":6603,"status":"diverged","nDiffs":4,"firstDiff":"edge:6th Edition->Mini Unix#0 pos edge:6th Edition->Mini Unix#0/pos[8]: 14197 vs 14198"}
@@ -650,10 +651,10 @@
 {"id":"graphs-grdradial_angle","size":6918,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"}
 {"id":"windows-trapeziumlr","size":7229,"status":"pass"}
 {"id":"share-trapeziumlr","size":7233,"status":"pass"}
-{"id":"linux.x86-arrows_dot","size":7235,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"macosx-arrows_dot","size":7235,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"nshare-arrows_dot","size":7235,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-awilliams","size":7305,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"linux.x86-arrows_dot","size":7235,"status":"diverged","nDiffs":295,"firstDiff":"edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
+{"id":"macosx-arrows_dot","size":7235,"status":"diverged","nDiffs":295,"firstDiff":"edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
+{"id":"nshare-arrows_dot","size":7235,"status":"diverged","nDiffs":295,"firstDiff":"edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
+{"id":"graphs-awilliams","size":7305,"status":"diverged","nDiffs":3373,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2237.02 vs 1895.7"}
 {"id":"share-unix2","size":7421,"status":"pass"}
 {"id":"share-unix2k","size":7421,"status":"pass"}
 {"id":"windows-unix2","size":7421,"status":"pass"}
@@ -679,29 +680,29 @@
 {"id":"nshare-dotsplines_dot1","size":9332,"status":"diverged","nDiffs":89,"firstDiff":"edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57"}
 {"id":"nshare-weight_dot","size":9391,"status":"pass"}
 {"id":"share-b94","size":9831,"status":"diverged","nDiffs":60,"firstDiff":"edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"}
-{"id":"graphs-b124","size":10284,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-b124","size":10284,"status":"diverged","nDiffs":7641,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3188.32 vs 3023.15"}
 {"id":"graphs-b36","size":10388,"status":"diverged","nDiffs":2535,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2723.85 vs 2773.06"}
-{"id":"share-proc3d","size":10429,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"share-proc3d","size":10429,"status":"diverged","nDiffs":10,"firstDiff":"cluster:cluster_0 bb cluster:cluster_0/bb[1]: 26034 vs 26035"}
 {"id":"linux.i386-crazy","size":10433,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"}
 {"id":"share-crazy","size":10433,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"}
 {"id":"windows-crazy","size":10433,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"}
-{"id":"windows-proc3d","size":10446,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"windows-proc3d","size":10446,"status":"diverged","nDiffs":16,"firstDiff":"edge:22316->22324#0 pos edge:22316->22324#0/pos[1]: 32817 vs 32818"}
 {"id":"graphs-b94","size":10503,"status":"diverged","nDiffs":116,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 387.25 vs 388.05"}
-{"id":"nshare-overlap_neato1","size":10511,"status":"port-error","err":"fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"linux.x86-overlap_neato1","size":10554,"status":"port-error","err":"fdp: removeOverlapAs mode \"scale\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"linux.x86-overlap_neato","size":10562,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"nshare-overlap_neato","size":10566,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"nshare-overlap_neato1","size":10511,"status":"pass"}
+{"id":"linux.x86-overlap_neato1","size":10554,"status":"pass"}
+{"id":"linux.x86-overlap_neato","size":10562,"status":"pass"}
+{"id":"nshare-overlap_neato","size":10566,"status":"pass"}
 {"id":"share-pgram","size":10942,"status":"pass"}
 {"id":"windows-pgram","size":11001,"status":"pass"}
-{"id":"share-ldbxtried","size":11505,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"linux.x86-neatosplines_neato","size":11690,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"nshare-neatosplines_neato","size":11700,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"windows-ldbxtried","size":11805,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"share-ldbxtried","size":11505,"status":"diverged","nDiffs":1986,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 28454.81 vs 28442.53"}
+{"id":"linux.x86-neatosplines_neato","size":11690,"status":"pass"}
+{"id":"nshare-neatosplines_neato","size":11700,"status":"pass"}
+{"id":"windows-ldbxtried","size":11805,"status":"diverged","nDiffs":2000,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 27901.04 vs 27924.32"}
 {"id":"share-ngk10_4","size":11842,"status":"pass"}
 {"id":"42","size":11978,"status":"pass"}
 {"id":"windows-ngk10_4","size":12029,"status":"pass"}
-{"id":"nshare-neatosplines_neato1","size":12051,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"linux.x86-neatosplines_neato1","size":12061,"status":"port-error","err":"fdp: removeOverlapAs mode \"false\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"nshare-neatosplines_neato1","size":12051,"status":"diverged","nDiffs":32,"firstDiff":"edge:cv->vd#0 _draw_ edge:cv->vd#0/_draw_/op[1].unfilled_bezier[0]: 502.06 vs 506.62"}
+{"id":"linux.x86-neatosplines_neato1","size":12061,"status":"diverged","nDiffs":32,"firstDiff":"edge:cv->vd#0 _draw_ edge:cv->vd#0/_draw_/op[1].unfilled_bezier[0]: 502.51 vs 507.07"}
 {"id":"linux.x86-rankdir_dot1","size":12673,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"}
 {"id":"nshare-rankdir_dot1","size":12675,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"}
 {"id":"linux.x86-rankdir_dot","size":12792,"status":"diverged","nDiffs":4,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -266.4"}
@@ -712,48 +713,50 @@
 {"id":"share-jsort","size":14030,"status":"pass"}
 {"id":"windows-jsort","size":14425,"status":"pass"}
 {"id":"windows-b94","size":14509,"status":"diverged","nDiffs":60,"firstDiff":"edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"}
-{"id":"1447_1","size":14827,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-mode","size":14907,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"1447_1","size":14827,"status":"diverged","nDiffs":7199,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2018.94 vs 2257.76"}
+{"id":"graphs-mode","size":14907,"status":"diverged","nDiffs":7525,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 847.58 vs 667.17"}
 {"id":"windows-b36","size":15050,"status":"pass"}
 {"id":"linux.i386-b36","size":15051,"status":"pass"}
 {"id":"share-b36","size":15051,"status":"pass"}
 {"id":"share-NaN","size":16328,"status":"diverged","nDiffs":3459,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 38807.63 vs 38795.75"}
 {"id":"windows-NaN","size":17050,"status":"pass"}
 {"id":"graphs-b51","size":19886,"status":"diverged","nDiffs":3836,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4163.86 vs 5135.75"}
-{"id":"1718","size":22038,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"1718","size":22038,"status":"diverged","nDiffs":24051,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -80"}
 {"id":"windows-b124","size":28038,"status":"pass"}
 {"id":"share-b124","size":28041,"status":"pass"}
-{"id":"share-b51","size":29420,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived_2\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"windows-b51","size":29685,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived_2\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-b69","size":33033,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"share-b51","size":29420,"status":"diverged","nDiffs":25,"firstDiff":"edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>"}
+{"id":"windows-b51","size":29685,"status":"diverged","nDiffs":25,"firstDiff":"edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>"}
+{"id":"graphs-b69","size":33033,"status":"diverged","nDiffs":4191,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2522.84 vs 3390.24"}
 {"id":"graphs-badvoro","size":33949,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
-{"id":"graphs-viewport","size":37292,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-viewport","size":37292,"status":"diverged","nDiffs":7531,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 718.41 vs 2563.33"}
 {"id":"2239","size":48090,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2239.dot"}
-{"id":"graphs-b106","size":48933,"status":"diverged","nDiffs":7002,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41"}
-{"id":"2343","size":59368,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-b143","size":62055,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-b29","size":62931,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-b106","size":48933,"status":"diverged","nDiffs":7001,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41"}
+{"id":"2343","size":59368,"status":"diverged","nDiffs":25613,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2458.63 vs 2260.56"}
+{"id":"graphs-b143","size":62055,"status":"diverged","nDiffs":10709,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2"}
+{"id":"graphs-b29","size":62931,"status":"diverged","nDiffs":11040,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"}
+{"id":"2620","size":64908,"status":"diverged","nDiffs":8188,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4628.91 vs 4902.78"}
 {"id":"linux.i386-b106","size":92005,"status":"diverged","nDiffs":215,"firstDiff":"edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"share-b106","size":92301,"status":"diverged","nDiffs":215,"firstDiff":"edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"windows-b106","size":95634,"status":"diverged","nDiffs":215,"firstDiff":"edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"}
-{"id":"graphs-b102","size":102329,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-xx","size":102329,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"2095_1","size":105083,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+4\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-root","size":128221,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-b102","size":102329,"status":"diverged","nDiffs":18244,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1165.18 vs 1109.75"}
+{"id":"graphs-xx","size":102329,"status":"diverged","nDiffs":18259,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1559.26 vs 1408.75"}
+{"id":"2095_1","size":105083,"status":"diverged","nDiffs":65978,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"}
+{"id":"graphs-root","size":128221,"status":"diverged","nDiffs":35078,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3060.94 vs 2747.66"}
 {"id":"linux.i386-b29","size":136753,"status":"diverged","nDiffs":363,"firstDiff":"edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"share-b29","size":137802,"status":"diverged","nDiffs":363,"firstDiff":"edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"windows-b29","size":149114,"status":"diverged","nDiffs":363,"firstDiff":"edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"}
-{"id":"linux.i386-b102","size":161479,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"share-b102","size":161479,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"windows-b102","size":184125,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"graphs-b81","size":191024,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"linux.i386-b102","size":161479,"status":"diverged","nDiffs":18189,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 769.56 vs 735.23"}
+{"id":"share-b102","size":161479,"status":"diverged","nDiffs":18263,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 793.05 vs 787.66"}
+{"id":"windows-b102","size":184125,"status":"diverged","nDiffs":18104,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 733.8 vs 747.34"}
+{"id":"graphs-b81","size":191024,"status":"diverged","nDiffs":9343,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -34924.12"}
 {"id":"1652","size":240391,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
-{"id":"linux.x86-root_twopi","size":287907,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
-{"id":"nshare-root_twopi","size":287916,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"linux.x86-root_twopi","size":287907,"status":"diverged","nDiffs":35028,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3305.06 vs 3226.07"}
+{"id":"nshare-root_twopi","size":287916,"status":"diverged","nDiffs":34958,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3220.18 vs 3411.29"}
 {"id":"nshare-root_circo","size":313126,"status":"diverged","nDiffs":35084,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7463544.31 vs 42601556.38"}
 {"id":"linux.x86-root_circo","size":313168,"status":"diverged","nDiffs":35084,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7369748.58 vs 42055799.2"}
-{"id":"graphs-b103","size":377525,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+0\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"graphs-b103","size":377525,"status":"diverged","nDiffs":69777,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1840.48 vs 2176.86"}
 {"id":"2475_2","size":641284,"status":"diverged","nDiffs":321527,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"}
+{"id":"2470","size":734358,"status":"diverged","nDiffs":16471,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 8835.44 vs 7690.38"}
 {"id":"2222","size":2384469,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
-{"id":"2108","size":3136769,"status":"port-error","err":"fdp: removeOverlapAs mode \"prism\" reached for graph \"ccderived+344\" — prism/voronoi overlap removal is not ported (recon: unreachable); see mission 7 journal"}
+{"id":"2108","size":3136769,"status":"timeout"}

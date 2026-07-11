@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-07-11T14:48:32.230Z",
+  "generatedAt": "2026-07-11T22:15:07.089Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "patchwork",
-  "total": 759,
+  "tolerance": 0.01,
+  "total": 762,
   "counts": {
-    "pass": 748,
-    "diverged": 6,
+    "pass": 757,
+    "diverged": 0,
     "oracle-error": 5,
     "port-error": 0,
     "timeout": 0
@@ -1294,6 +1295,11 @@
       "status": "pass"
     },
     {
+      "id": "graphs-structs",
+      "size": 308,
+      "status": "pass"
+    },
+    {
       "id": "graphs-p4",
       "size": 309,
       "status": "pass"
@@ -1321,9 +1327,7 @@
     {
       "id": "2717",
       "size": 325,
-      "status": "diverged",
-      "nDiffs": 69,
-      "firstDiff": "cluster:cluster_domestic_cats _draw_ cluster:cluster_domestic_cats/_draw_/op[1].unfilled_polygon[0]: 47.43 vs 0"
+      "status": "pass"
     },
     {
       "id": "1767",
@@ -3153,9 +3157,7 @@
     {
       "id": "1898",
       "size": 5067,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "node:N19 _draw_ node:N19/_draw_[missing]: <present> vs <absent>"
+      "status": "pass"
     },
     {
       "id": "graphs-ldbxtried",
@@ -3250,9 +3252,7 @@
     {
       "id": "graphs-polypoly",
       "size": 6617,
-      "status": "diverged",
-      "nDiffs": 32,
-      "firstDiff": "node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 130 vs 126.49"
+      "status": "pass"
     },
     {
       "id": "1447",
@@ -3389,16 +3389,12 @@
     {
       "id": "share-polypoly",
       "size": 8872,
-      "status": "diverged",
-      "nDiffs": 32,
-      "firstDiff": "node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 207.42 vs 205.49"
+      "status": "pass"
     },
     {
       "id": "windows-polypoly",
       "size": 8872,
-      "status": "diverged",
-      "nDiffs": 32,
-      "firstDiff": "node:9012 _draw_ node:9012/_draw_/op[1].unfilled_polygon[0]: 207.42 vs 205.49"
+      "status": "pass"
     },
     {
       "id": "linux.x86-dotsplines_dot1",
@@ -3701,6 +3697,11 @@
       "status": "pass"
     },
     {
+      "id": "2620",
+      "size": 64908,
+      "status": "pass"
+    },
+    {
       "id": "linux.i386-b106",
       "size": 92005,
       "status": "pass"
@@ -3809,9 +3810,12 @@
     {
       "id": "2475_2",
       "size": 641284,
-      "status": "diverged",
-      "nDiffs": 149037,
-      "firstDiff": "cluster:%10023 <object> cluster:%10023[missing-object]: <absent> vs <present>"
+      "status": "pass"
+    },
+    {
+      "id": "2470",
+      "size": 734358,
+      "status": "pass"
     },
     {
       "id": "2222",
