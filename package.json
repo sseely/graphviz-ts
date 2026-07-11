@@ -1,7 +1,7 @@
 {
   "name": "graphviz-ts",
   "version": "0.1.26071121",
-  "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) — browser-safe, no native dependencies, oracle-verified against the C implementation.",
+  "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) \u2014 browser-safe, no native dependencies, oracle-verified against the C implementation.",
   "keywords": [
     "graphviz",
     "dot",
@@ -20,7 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/sseely/graphviz-ts.git"
   },
-  "homepage": "https://github.com/sseely/graphviz-ts#readme",
+  "homepage": "https://sseely.github.io/graphviz-ts/",
   "bugs": {
     "url": "https://github.com/sseely/graphviz-ts/issues"
   },
