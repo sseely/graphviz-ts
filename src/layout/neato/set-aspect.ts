@@ -17,6 +17,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { RatioKind } from '../../model/layoutParams.js';
 import { makeDrawing } from '../../model/layoutParams.js';
+import { parseDrawingSize } from '../../gvc/viewport.js';
 import { shiftEdgePoints } from '../pack/index.js';
 
 const POINTS_PER_INCH = 72;
@@ -33,22 +34,18 @@ function neatoRatioKind(g: Graph): { kind: RatioKind; ratio: number } | null {
   return v > 0 ? { kind: 'value', ratio: v } : null;
 }
 
-/** `size` attr in points (+ '!' filled flag). @see lib/common/input.c:setSizeInfo */
+/**
+ * `size` attr in points (+ '!' filled flag). C's getdoubles2ptf stores the
+ * size via the POINTS() macro = ROUND(inches * 72), i.e. integer points — the
+ * value _neato_set_aspect divides by GD_bb to form the fill/expand factors.
+ * Delegates to the dot-path parser so both engines round size identically;
+ * skipping the ROUND left size as float inches*72, which perturbed the fill
+ * x-scale by ~0.17% on ratio=fill layouts (1855 under circo/twopi/osage).
+ * @see lib/common/input.c:476 getdoubles2ptf / lib/common/geom.h:62 POINTS
+ */
 function neatoSizePoints(raw: string | undefined): { x: number; y: number } | null {
-  if (raw === undefined) return null;
-  const m = /^\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*(!?)/.exec(raw);
-  if (m) {
-    const xf = Number(m[1]);
-    const yf = Number(m[2]);
-    if (xf > 0 && yf > 0) return { x: xf * POINTS_PER_INCH, y: yf * POINTS_PER_INCH };
-    return null;
-  }
-  const s = /^\s*(\d+(?:\.\d+)?)\s*(!?)/.exec(raw);
-  if (s) {
-    const xf = Number(s[1]);
-    if (xf > 0) return { x: xf * POINTS_PER_INCH, y: xf * POINTS_PER_INCH };
-  }
-  return null;
+  const sz = parseDrawingSize(raw);
+  return sz ? { x: sz.x, y: sz.y } : null;
 }
 
 /**
