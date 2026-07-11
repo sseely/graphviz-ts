@@ -2,7 +2,7 @@
 
 graphviz-ts is a faithful TypeScript port of [Graphviz](https://graphviz.org/).
 It parses the DOT language, runs Graphviz's layout engines, and emits SVG — in
-pure TypeScript, with no Java, native binary, or WASM.
+pure TypeScript — no C: no native Graphviz binary and no WASM port.
 
 ## Install & build
 

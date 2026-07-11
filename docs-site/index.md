@@ -3,7 +3,7 @@ layout: home
 hero:
   name: graphviz-ts
   text: Graphviz, in pure TypeScript
-  tagline: DOT in, SVG out — no Java, no native binary, no WASM. Runs in the browser.
+  tagline: DOT in, SVG out — no C. No native Graphviz binary, no WASM. Pure TypeScript, runs in the browser.
   actions:
     - theme: brand
       text: Get started
@@ -18,7 +18,7 @@ features:
   - title: Faithful to C Graphviz
     details: A line-by-line port of the canonical C implementation. The dot engine matches the native binary to a tight deterministic tolerance (±0.01 on coordinates, exact non-numeric content) on the golden corpus.
   - title: Browser-native, zero runtime deps
-    details: No native binary, no rendering server, no WASM. The layout engine is TypeScript — bundle it and ship.
+    details: No C — no native Graphviz binary, no WASM port, no rendering server. The layout engine itself is TypeScript — bundle it and ship.
   - title: All eight layout engines
     details: dot, neato, fdp, sfdp, circo, twopi, osage, and patchwork — rendered to SVG.
 ---

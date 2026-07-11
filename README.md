@@ -7,7 +7,7 @@ graph-visualization toolkit originally written in C at AT&T Research and Lucent
 Bell Labs. It parses the DOT language, runs Graphviz's layout engines, and emits
 SVG.
 
-The defining property: **pure TypeScript.** No native binary, no WASM.
+The defining property: **pure TypeScript — no C.** No compiled Graphviz binary, no WASM build of it, no native dependencies.
 It runs in a browser or in Node with zero external dependencies at runtime. The
 goal is the closest achievable fidelity to the C implementation, which is treated
 as the canonical specification (see [`CLAUDE.md`](./CLAUDE.md)). In practice the
