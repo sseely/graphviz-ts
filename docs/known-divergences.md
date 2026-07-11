@@ -803,6 +803,19 @@ filed" entry). Accepted at the engine-track level via
 `PARITY-twopi.md`/`PARITY-circo.md` by `parity-report.ts` — the same join
 `accepted.ts` performs for the dot-track `PARITY-dot.md`.
 
+**circo `2475_2` — cocircular closestNode hypot tie.** In one 28-node
+component of this 10762-node graph, circo's `getRotation`
+(`circpos.c:73-92`) picks the block node closest to the layout origin via
+`hypot` to decide the sub-block's rotation. Two cocircular nodes are
+effectively equidistant; V8's correctly-rounded `Math.hypot` and Apple
+libm's `hypot` round that distance 2 ULP apart, which flips the strict `<`,
+selects a different node, and rotates/reflects the sub-block ~20° (18 nodes
+move, max 296.7pt; the other 10744 nodes are bit-identical, as are the
+block tree, circle order, and every `centerAngle`). The CR-hypot policy was
+already refuted for this class (2026-07-10). Standalone repro:
+`.agent-notes/circo-2475-590-repro.dot`; full RCA:
+`.agent-notes/circo-b81-2475-rca.md` (accepted 2026-07-11).
+
 **b29 family (twopi).** The four b29 variants share one knife-edge: the
 `EqmtTyp` edge label (`Node14732->Node14731`) sits on an exact placeLabels
 side-selection tie whose outcome depends on 1-ULP twopi layout drift in the

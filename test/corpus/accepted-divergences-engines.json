@@ -77,6 +77,11 @@
       "class": "A9",
       "bound": "10 draw-op diffs on one fan edge (node2->node8): circo trig places node2.y a single ULP above node8.y around the symmetric value 18.0 (18.0000000000000320 vs 18.0), flipping closestSide's dyna head-port TOP/BOTTOM at the exact tie; node boxes and all other edges bit-identical.",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "2475_2": {
+      "class": "A9",
+      "bound": "989 draw-op diffs confined to one 28-node 590_ component (18 nodes move, max 296.7pt; 10744/10762 nodes bit-identical). Mechanism: circo getRotation->closestNode (circpos.c:73-92) cocircular hypot tie \u2014 at the bit-identical placement offset the two candidate distances round 2 ULP apart between V8 Math.hypot and Apple libm, flipping the strict < and rotating/reflecting the sub-block ~20deg. Block tree, circle order, and all centerAngles bit-identical; CR-hypot policy previously refuted. Repro: .agent-notes/circo-2475-590-repro.dot; RCA: .agent-notes/circo-b81-2475-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   },
   "osage": {
