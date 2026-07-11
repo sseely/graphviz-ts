@@ -100,6 +100,32 @@ its native engine vs the port. The honest ceiling on that work is to **narrow**
 A1 to "no active divergence on the reference platform," never to eliminate the
 cross-platform caveat.
 
+**Engine-track acceptance: twopi arrows family.** <a id="a1-twopi-arrows-family"></a>
+The blockquote above describes the dot-engine SVG survey, where A1 matches zero
+graphs; the separate `twopi` **xdot engine track** (`parity-twopi.json`, native
+`dot -K twopi -Txdot` oracle, `test/corpus/engine-walk.ts`) *does* run under its
+native engine and surfaces a concrete, verified A1 instance on 8 corpus ids:
+`graphs-arrows`, `graphs-newarrows`, `graphs-arrowsize`, `linux.x86-arrows_dot`,
+`macosx-arrows_dot`, `nshare-arrows_dot`, `share-newarrows`, `windows-newarrows`
+— each diverging on a single dominant edge (`Z->I` or `i->Z`; 12–64 draw-op
+diffs). Injection A/B (decision journal, 2026-07-10 "injection A/B verdicts:
+twopi arrows family EXONERATED..." entry) proved the mechanism directly:
+dumping native `spline_edges`'s entry `ND_pos` and injecting it into the
+port's `splineEdgesShifted` produces **fully conformant** output on
+`graphs-arrows` (`Z->I` becomes byte-identical to the oracle, same 7/14-point
+spline) — so the divergence is 100% pre-routing node-position drift out of
+`twopi`'s PRISM overlap-removal solver, and the port's spline routing/emission
+is exonerated. The visible symptom on 6 of the 8 ids is a bezier point-count
+flip (`unfilled_bezier[ptCount]: 8 vs 14`): `Proutespline`'s fitted piece count
+is sensitive to which side of an obstacle boundary the drifted node position
+lands on, so a sub-ULP position difference downstream of PRISM's iterative
+solve flips the fitted spline's segment count (the other 2 ids,
+`graphs-arrowsize`/`nshare-arrows_dot`, show the same drift as a smaller
+position-only delta with no piece-count flip). Accepted at the engine-track
+level via `test/corpus/accepted-divergences-engines.json`, joined into
+`PARITY-twopi.md` by `parity-report.ts` — the same join `accepted.ts` performs
+for the dot-track `PARITY-dot.md`.
+
 ### A2. Text measurement (font metrics) → label-driven layout — CLOSED
 
 **Status (2026-07-01): closed.** No corpus id is accepted under this class
@@ -744,6 +770,23 @@ determinant on the two input sets confirms the sign flip (+1 with the
 port's inputs, −1 with the oracle's). The residual variable — the 1-ULP
 trig difference — was isolated by comparing `Math.sin`/`sin` bit patterns
 directly.
+
+**Engine-track acceptance (`accepted-divergences-engines.json`).**
+<a id="a9-engine-track-twopi-circo"></a> The twopi/circo **xdot engine
+tracks** (`parity-twopi.json` / `parity-circo.json`, native `dot -K <engine>
+-Txdot` oracle, `test/corpus/engine-walk.ts`, semantic draw-op comparison at
+±0.01 — see `test/golden/compare-xdot.ts`) surface this same mechanism
+independently of the dot-engine SVG survey cited above: twopi `2239`,
+`2343`, `share-b29`, `windows-b29` (1 draw-op diff each — the `_ldraw_`
+edge-label text-position flip, the same `poly_init` unit-vertex trig ULP
+cascading through the `floor()` xlabel R-tree chain) and circo `241_0` (41
+draw-op diffs, Δ≈0.2pt on edge `1->2`'s routed bezier — the same
+CDT-diagonal corridor flip; decision journal, 2026-07-10 "CDT rewritten as
+faithful GTS port; 2168_3 outline-ring obstacle; 56/osage bb clobber; A9
+filed" entry). Accepted at the engine-track level via
+`test/corpus/accepted-divergences-engines.json`, joined into
+`PARITY-twopi.md`/`PARITY-circo.md` by `parity-report.ts` — the same join
+`accepted.ts` performs for the dot-track `PARITY-dot.md`.
 
 ---
 

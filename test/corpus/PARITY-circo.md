@@ -13,10 +13,21 @@ test/corpus/parity-report.ts`.
 ## Summary
 
 - **Surveyed:** 759 (generated 2026-07-11T14:08:24.769Z)
-- **pass:** 734 (96.7%) · **diverged:** 11
+- **pass:** 734 (96.7%) · **diverged (tracked):** 10 · **accepted (documented, won't-fix):** 1
 - **oracle-error:** 14 · **port-error:** 0 · **timeout:** 0
 
-## Diverged (11)
+## Accepted deltas (1) — documented, not chased
+
+Deliberate, root-caused differences we have chosen not to make conformant. Source of
+truth: `test/corpus/accepted-divergences-engines.json`; rationale in
+[Known divergences](../../docs/known-divergences.md). Excluded from the diverged
+table below.
+
+| id | #diffs | class | bound | ref |
+|---|---:|---|---|---|
+| `241_0` | 41 | A9 | 41 draw-op diffs; Delta~0.2pt on edge 1-&gt;2's routed bezier (unfilled_bezier[1]: 221.92 vs 222.12) | known-divergences.md#a9-engine-track-twopi-circo |
+
+## Diverged (10)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -27,7 +38,6 @@ test/corpus/parity-report.ts`.
 | `1855` | 1335 | 469 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 877.62 vs 876.11` |
 | `2082` | 3033 | 80 | `edge:02c4e90c3fc645e4b0e8f0e5bef12694->2fbd65667241455bb04da4ffb465db70#0 _draw_ edge:02c4e90c3fc645e4b0e8f0e5bef12694->2fbd65667241455bb04da4ffb465db70#0/_draw_/op[1].unfilled_bezier[0]: 258.39 vs 208.36` |
 | `1990` | 610 | 44 | `edge:1⋯7 ❰A❱->1⋯2 'a'#0 _draw_ edge:1⋯7 ❰A❱->1⋯2 'a'#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `241_0` | 578 | 41 | `edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[1].unfilled_bezier[1]: 221.92 vs 222.12` |
 | `1856` | 621 | 32 | `edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[1].unfilled_bezier[11]: 36 vs 72` |
 | `windows-tree` | 1825 | 10 | `edge:node2->node8#0 _draw_ edge:node2->node8#0/_draw_/op[1].unfilled_bezier[5]: 20.77 vs 5.03` |
 | `graphs-b786` | 667 | 2 | `edge:n6->n13#0 pos edge:n6->n13#0/pos[2]: 1399.3 vs 1399.2` |

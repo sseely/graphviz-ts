@@ -51,6 +51,23 @@ interface XdotParityReport {
   results: XdotWalkResult[];
 }
 
+/** One accepted/known divergence for a per-engine xdot track (id-keyed — no
+ * glob/engineIn selector, unlike the dot-track registry in accepted.ts). */
+interface EngineAcceptedEntry {
+  class: string;
+  bound?: string;
+  ref: string;
+}
+
+const ACCEPTED_ENGINES = new URL('./accepted-divergences-engines.json', import.meta.url);
+
+/** Read + parse the per-engine accepted-divergence registry (engine -> id -> entry). */
+function loadAcceptedEngines(): Record<string, Record<string, EngineAcceptedEntry>> {
+  const raw = JSON.parse(readFileSync(fileURLToPath(ACCEPTED_ENGINES), 'utf8')) as Record<string, unknown>;
+  const { comment: _comment, ...engines } = raw;
+  return engines as Record<string, Record<string, EngineAcceptedEntry>>;
+}
+
 /** One summary-table row (a "track" = one engine × one comparison surface). */
 interface TrackRow {
   track: string;
@@ -117,17 +134,22 @@ function dotXdotRow(report: XdotParityReport): TrackRow {
   };
 }
 
-function engineRow(engine: string, report: EngineParityReport): TrackRow {
+function engineRow(
+  engine: string,
+  report: EngineParityReport,
+  acceptedMap: Record<string, EngineAcceptedEntry>,
+): TrackRow {
   const c = Object.assign(
     { pass: 0, diverged: 0, 'oracle-error': 0, 'port-error': 0, timeout: 0 },
     report.counts,
   );
+  const accepted = report.results.filter((r) => r.status === 'diverged' && acceptedMap[r.id]).length;
   return {
     track: `${engine} (xdot)`,
     surveyed: report.total,
     pass: c.pass,
-    diverged: c.diverged,
-    accepted: 0, // no acceptance list for this engine yet
+    diverged: c.diverged - accepted,
+    accepted,
     errors: c['oracle-error'] + c['port-error'] + c.timeout,
   };
 }
@@ -166,15 +188,40 @@ function goldensSection(): string {
   ].join('\n');
 }
 
+/** Accepted-deltas table for an engine track: id | #diffs | class | bound | ref. */
+function engineAcceptedTable(rows: Array<{ r: EngineWalkRow; e: EngineAcceptedEntry }>): string {
+  if (rows.length === 0) return '_(none in this corpus)_\n';
+  const sorted = [...rows].sort((a, b) => a.e.class.localeCompare(b.e.class) || a.r.id.localeCompare(b.r.id));
+  const body = sorted.map(
+    ({ r, e }) => `| \`${r.id}\` | ${r.nDiffs ?? 0} | ${e.class} | ${escText(e.bound)} | ${escText(e.ref)} |`,
+  );
+  return ['| id | #diffs | class | bound | ref |', '|---|---:|---|---|---|', ...body, ''].join('\n');
+}
+
 /** Per-engine detail page (PARITY-<engine>.md). */
-function engineMarkdown(engine: string, report: EngineParityReport): string {
+function engineMarkdown(
+  engine: string,
+  report: EngineParityReport,
+  acceptedMap: Record<string, EngineAcceptedEntry>,
+): string {
   const c = Object.assign(
     { pass: 0, diverged: 0, 'oracle-error': 0, 'port-error': 0, timeout: 0 },
     report.counts,
   );
-  const diverged = report.results
+  const allDiverged = report.results
     .filter((r) => r.status === 'diverged')
     .sort((a, b) => (b.nDiffs ?? 0) - (a.nDiffs ?? 0) || a.id.localeCompare(b.id));
+
+  // Split accepted (documented, won't-fix) deltas out of the tracked backlog —
+  // same join accepted.ts performs for the dot track (see accepted-divergences.json).
+  const acceptedRows: Array<{ r: EngineWalkRow; e: EngineAcceptedEntry }> = [];
+  const diverged: EngineWalkRow[] = [];
+  for (const r of allDiverged) {
+    const e = acceptedMap[r.id];
+    if (e) acceptedRows.push({ r, e });
+    else diverged.push(r);
+  }
+
   const faults = report.results
     .filter((r) => r.status === 'oracle-error' || r.status === 'port-error' || r.status === 'timeout')
     .sort((a, b) => a.status.localeCompare(b.status) || a.id.localeCompare(b.id));
@@ -216,10 +263,19 @@ function engineMarkdown(engine: string, report: EngineParityReport): string {
     '## Summary',
     '',
     `- **Surveyed:** ${report.total} (generated ${report.generatedAt})`,
-    `- **pass:** ${c.pass} (${pct(c.pass, report.total)}) · **diverged:** ${c.diverged}`,
+    `- **pass:** ${c.pass} (${pct(c.pass, report.total)}) · **diverged (tracked):** ${diverged.length} · ` +
+      `**accepted (documented, won't-fix):** ${acceptedRows.length}`,
     `- **oracle-error:** ${c['oracle-error']} · **port-error:** ${c['port-error']} · ` +
       `**timeout:** ${c.timeout}`,
     '',
+    `## Accepted deltas (${acceptedRows.length}) — documented, not chased`,
+    '',
+    'Deliberate, root-caused differences we have chosen not to make conformant. Source of',
+    'truth: `test/corpus/accepted-divergences-engines.json`; rationale in',
+    '[Known divergences](../../docs/known-divergences.md). Excluded from the diverged',
+    'table below.',
+    '',
+    engineAcceptedTable(acceptedRows),
     `## Diverged (${diverged.length})`,
     '',
     divergedTable,
@@ -304,6 +360,7 @@ const svgReport = JSON.parse(readFileSync(PARITY, 'utf8')) as SvgParityReport;
 const xdotReport = JSON.parse(readFileSync(XDOT_PARITY, 'utf8')) as XdotParityReport;
 const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8')) as CorpusEntry[];
 
+const acceptedEngines = loadAcceptedEngines();
 const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
 const iterativeRows: TrackRow[] = [];
 const presentEngines: string[] = [];
@@ -315,11 +372,12 @@ for (const engine of [...ENGINES, ...ITERATIVE_ENGINES]) {
     continue;
   }
   const report = JSON.parse(readFileSync(url, 'utf8')) as EngineParityReport;
+  const acceptedMap = acceptedEngines[engine] ?? {};
   const isIterative = (ITERATIVE_ENGINES as readonly string[]).includes(engine);
-  (isIterative ? iterativeRows : rows).push(engineRow(engine, report));
+  (isIterative ? iterativeRows : rows).push(engineRow(engine, report, acceptedMap));
   presentEngines.push(engine);
   const out = fileURLToPath(new URL(`./PARITY-${engine}.md`, import.meta.url));
-  writeFileSync(out, engineMarkdown(engine, report));
+  writeFileSync(out, engineMarkdown(engine, report, acceptedMap));
   process.stderr.write(`wrote PARITY-${engine}.md (${report.total} surveyed)\n`);
 }
 

@@ -13,8 +13,17 @@ test/corpus/parity-report.ts`.
 ## Summary
 
 - **Surveyed:** 759 (generated 2026-07-11T15:43:25.370Z)
-- **pass:** 263 (34.7%) · **diverged:** 489
+- **pass:** 263 (34.7%) · **diverged (tracked):** 489 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
+
+## Accepted deltas (0) — documented, not chased
+
+Deliberate, root-caused differences we have chosen not to make conformant. Source of
+truth: `test/corpus/accepted-divergences-engines.json`; rationale in
+[Known divergences](../../docs/known-divergences.md). Excluded from the diverged
+table below.
+
+_(none in this corpus)_
 
 ## Diverged (489)
 

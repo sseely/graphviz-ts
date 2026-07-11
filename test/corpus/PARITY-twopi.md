@@ -13,10 +13,32 @@ test/corpus/parity-report.ts`.
 ## Summary
 
 - **Surveyed:** 759 (generated 2026-07-11T14:22:39.103Z)
-- **pass:** 730 (96.2%) · **diverged:** 21
+- **pass:** 730 (96.2%) · **diverged (tracked):** 9 · **accepted (documented, won't-fix):** 12
 - **oracle-error:** 8 · **port-error:** 0 · **timeout:** 0
 
-## Diverged (21)
+## Accepted deltas (12) — documented, not chased
+
+Deliberate, root-caused differences we have chosen not to make conformant. Source of
+truth: `test/corpus/accepted-divergences-engines.json`; rationale in
+[Known divergences](../../docs/known-divergences.md). Excluded from the diverged
+table below.
+
+| id | #diffs | class | bound | ref |
+|---|---:|---|---|---|
+| `graphs-arrows` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 | known-divergences.md#a1-twopi-arrows-family |
+| `graphs-arrowsize` | 64 | A1 | 64 draw-op diffs on edge Z-&gt;I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
+| `graphs-newarrows` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `linux.x86-arrows_dot` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `macosx-arrows_dot` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `nshare-arrows_dot` | 25 | A1 | 25 draw-op diffs on edge i-&gt;Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
+| `share-newarrows` | 12 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
+| `windows-newarrows` | 12 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
+| `2239` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 183.86 vs 173.06 | known-divergences.md#a9-engine-track-twopi-circo |
+| `2343` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 1271.95 vs 1288.75 | known-divergences.md#a9-engine-track-twopi-circo |
+| `share-b29` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 | known-divergences.md#a9-engine-track-twopi-circo |
+| `windows-b29` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 368.18 vs 356.18 (identical mechanism to share-b29) | known-divergences.md#a9-engine-track-twopi-circo |
+
+## Diverged (9)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -26,21 +48,9 @@ test/corpus/parity-report.ts`.
 | `graphs-states` | 492 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
 | `share-states` | 858 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
 | `windows-states` | 878 | 77 | `edge:empty->full#0 _draw_ edge:empty->full#0/_draw_/op[1].unfilled_bezier[0]: 46.66 vs 42.14` |
-| `graphs-arrowsize` | 2039 | 64 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[0]: 289.55 vs 297.2` |
-| `graphs-arrows` | 2029 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `graphs-newarrows` | 2045 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `linux.x86-arrows_dot` | 7235 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `macosx-arrows_dot` | 7235 | 32 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `nshare-arrows_dot` | 7235 | 25 | `edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93` |
 | `144_ortho` | 257 | 14 | `edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_/op[2].text[0]: 46.05 vs 52.87` |
-| `share-newarrows` | 6364 | 12 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
-| `windows-newarrows` | 6364 | 12 | `edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14` |
 | `144_no_ortho` | 237 | 6 | `edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_/op[2].text[0]: 46.05 vs 52.87` |
 | `241_0` | 578 | 6 | `edge:1->6#0 _draw_ edge:1->6#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
-| `2239` | 48090 | 1 | `edge:srtpdec1_0x5641244e6b50_rtcp_src_0x7f06a000ebd0->_proxypad10_0x5641244e58c0#0 _ldraw_ edge:srtpdec1_0x5641244e6b50_rtcp_src_0x7f06a000ebd0->_proxypad10_0x5641244e58c0#0/_ldraw_/op[2].text[1]: 183.86 vs 173.06` |
-| `2343` | 59368 | 1 | `edge:node37233->node37766#0 _ldraw_ edge:node37233->node37766#0/_ldraw_/op[2].text[1]: 1271.95 vs 1288.75` |
-| `share-b29` | 137802 | 1 | `edge:Node14732->Node14731#0 _ldraw_ edge:Node14732->Node14731#0/_ldraw_/op[2].text[1]: 368.18 vs 356.18` |
-| `windows-b29` | 149114 | 1 | `edge:Node14732->Node14731#0 _ldraw_ edge:Node14732->Node14731#0/_ldraw_/op[2].text[1]: 368.18 vs 356.18` |
 
 ## Errors and timeouts (8)
 
