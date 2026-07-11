@@ -25,6 +25,11 @@ const delta = 1;   // weight per unit length
 const mu = 500;    // bend penalty per bend edge
 export const BIG = 16384;  // near-infinite weight
 
+/** C round(): half away from zero (not Math.round's half-toward-+inf). */
+function cround(v: number): number {
+  return v >= 0 ? Math.floor(v + 0.5) : Math.ceil(v - 0.5);
+}
+
 // ─── Segment construction ─────────────────────────────────────────────────────
 
 /** @see lib/ortho/ortho.c:setSeg */
@@ -203,7 +208,13 @@ export function htrack(seg: OrthoSegment, mp: Maze): number {
   const f = 1.0 - (seg.trackNo ?? 1) / (chp.segList.length + 1);
   const lo = chp.cp!.bb.LL.y;
   const hi = chp.cp!.bb.UR.y;
-  return Math.round(lo + f * (hi - lo));
+  // C htrack uses libm round() (half away from zero), NOT Math.round (half
+  // toward +inf). The maze routes in a frame whose bottom/left gutter cells sit
+  // at negative coordinates (LL.y as low as -36), so an evenly-spaced track can
+  // land on an exact negative half-integer (e.g. -4.5): C round(-4.5) = -5 but
+  // Math.round(-4.5) = -4, shifting the whole horizontal segment +1 after the
+  // final origin translate. @see lib/ortho/ortho.c:1065 (htrack round)
+  return cround(lo + f * (hi - lo));
 }
 
 // ─── seg_cmp and helpers ──────────────────────────────────────────────────────
