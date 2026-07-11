@@ -69,6 +69,32 @@ describe('printfSig — additional exact ties', () => {
 // Notation/threshold parity with toPrecision for non-tie magnitudes
 // ---------------------------------------------------------------------------
 
+describe('printf-round — non-finite inputs match toFixed/toPrecision', () => {
+  // The bit-decomposition below is only valid for finite magnitudes; the
+  // helpers must fall back to the native method they replace so Infinity/NaN
+  // emit "Infinity"/"NaN" (canonicalized to the oracle's C printf "inf"/"nan"
+  // by the xdot comparator) rather than a spurious ~309-digit integer.
+  // Regression: osage degenerate-cluster _draw_ ops (2721/1221/1332).
+  it.each<[number, number, string]>([
+    [Infinity, 2, 'Infinity'],
+    [-Infinity, 2, '-Infinity'],
+    [NaN, 2, 'NaN'],
+    [Infinity, 0, 'Infinity'],
+  ])('printfFixed(%f, %i) => %s', (v, decimals, expected) => {
+    expect(printfFixed(v, decimals)).toBe(expected);
+    expect(printfFixed(v, decimals)).toBe(v.toFixed(decimals));
+  });
+
+  it.each<[number, number, string]>([
+    [Infinity, 5, 'Infinity'],
+    [-Infinity, 5, '-Infinity'],
+    [NaN, 5, 'NaN'],
+  ])('printfSig(%f, %i) => %s', (v, sig, expected) => {
+    expect(printfSig(v, sig)).toBe(expected);
+    expect(printfSig(v, sig)).toBe(v.toPrecision(sig));
+  });
+});
+
 describe('printfSig — notation matches toPrecision', () => {
   it.each<[number, number]>([
     [1e21, 5],

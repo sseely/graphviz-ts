@@ -80,10 +80,23 @@ export function gridCells(x: number, s: number): number {
 /**
  * Grid cell index containing coordinate v at cell size s.
  *
- * @see lib/pack/pack.c:CVAL
+ * C's `CVAL` macro is applied to the DOUBLE `pointf` fields inside `CELL`
+ * (genBox), so the division is floating-point — it yields a fractional cell
+ * coordinate that genBox then rounds (see {@link cround}). Modelling it with
+ * integer/truncating division (the previous `Math.floor`/`Math.trunc` form)
+ * diverges: e.g. `CVAL(-4, 5)` is `((-4+1)/5)-1 = -1.6` (→ round -2), not
+ * `-1`. That shrank every packed box's footprint by a cell on the negative
+ * side, packing the osage pack_neato2 grid tighter than native.
+ *
+ * @see lib/pack/pack.c:CVAL / CELL
  */
 export function cval(v: number, s: number): number {
-  return v >= 0 ? Math.floor(v / s) : Math.trunc((v + 1) / s) - 1;
+  return v >= 0 ? v / s : (v + 1) / s - 1;
+}
+
+/** C `round()`: half away from zero (genBox rounds each CELL coordinate). */
+export function cround(v: number): number {
+  return v >= 0 ? Math.floor(v + 0.5) : Math.ceil(v - 0.5);
 }
 
 /** Parameters for genBox. */
@@ -101,10 +114,17 @@ export interface GenBoxParams {
  */
 export function genBox(p: GenBoxParams): GInfo {
   const { bb, ssize, margin, idx } = p;
-  const llx = cval(Math.round(bb.ll.x) - margin, ssize);
-  const lly = cval(Math.round(bb.ll.y) - margin, ssize);
-  const urx = cval(Math.round(bb.ur.x) + margin, ssize);
-  const ury = cval(Math.round(bb.ur.y) + margin, ssize);
+  // C rounds the box corners first, then measures the cell region relative to
+  // `center` (always the origin under polyRects/osage): LL = center - margin,
+  // UR = center + (roundedWidth/Height) + margin. Each corner is mapped to a
+  // grid cell by CELL (CVAL on the double coordinate) and then round()ed.
+  // @see lib/pack/pack.c:genBox
+  const w = cround(bb.ur.x) - cround(bb.ll.x);
+  const h = cround(bb.ur.y) - cround(bb.ll.y);
+  const llx = cround(cval(-margin, ssize));
+  const lly = cround(cval(-margin, ssize));
+  const urx = cround(cval(w + margin, ssize));
+  const ury = cround(cval(h + margin, ssize));
   const cells: Point[] = [];
   for (let x = llx; x <= urx; x++) {
     for (let y = lly; y <= ury; y++) {

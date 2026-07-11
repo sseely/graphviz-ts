@@ -88,6 +88,12 @@ function roundHalfEvenDrop(value: bigint, dropCount: number): bigint {
  * @see lib/gvc/gvdevice.c:gvprintdouble
  */
 export function printfFixed(v: number, decimals: number): string {
+  // Non-finite: the exact-decimal decomposition below reads the IEEE-754
+  // bit pattern as a finite mantissa, so Infinity/NaN would emit a spurious
+  // ~309-digit integer. Match the `toFixed` contract this helper replaces:
+  // it returns "Infinity"/"-Infinity"/"NaN" verbatim (canonicalized to the
+  // oracle's C printf "inf"/"nan" by the xdot comparator).
+  if (!Number.isFinite(v)) return v.toFixed(decimals);
   if (v === 0) return decimals > 0 ? '0.' + '0'.repeat(decimals) : '0';
   const sign = v < 0 ? '-' : '';
   const { digits, exponent10 } = exactDecimalDigits(Math.abs(v));
@@ -118,6 +124,11 @@ export function printfFixed(v: number, decimals: number): string {
  * @see lib/common/output.c:71 (agxbprint "%.5g")
  */
 export function printfSig(v: number, sig: number): string {
+  // Non-finite: mirror the `toPrecision` contract this helper replaces
+  // ("Infinity"/"-Infinity"/"NaN"); the bit-decomposition below is only
+  // valid for finite magnitudes. (gfmt5 already short-circuits non-finite,
+  // but the contract must hold for every caller.)
+  if (!Number.isFinite(v)) return v.toPrecision(sig);
   if (v === 0) return sig > 1 ? '0.' + '0'.repeat(sig - 1) : '0';
   const sign = v < 0 ? '-' : '';
   const { digits, exponent10 } = exactDecimalDigits(Math.abs(v));

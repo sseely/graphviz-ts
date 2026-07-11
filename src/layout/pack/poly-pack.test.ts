@@ -6,6 +6,7 @@ import {
   computeStep,
   gridCells,
   cval,
+  cround,
   genBox,
   fits,
   hasCollision,
@@ -119,15 +120,30 @@ describe('gridCells', () => {
 });
 
 describe('cval', () => {
-  it('returns floor(v/s) for non-negative v', () => {
+  it('returns v/s for non-negative v (float, C CVAL on double)', () => {
     expect(cval(6, 3)).toBe(2);
     expect(cval(0, 3)).toBe(0);
   });
 
-  it('handles negative values', () => {
+  it('returns ((v+1)/s)-1 for negative v, as a fractional cell coordinate', () => {
     expect(cval(-1, 3)).toBe(-1);
-    expect(cval(-3, 3)).toBe(-1);
+    // C's CVAL is applied to a double, so this is -2/3 - 1 = -1.667, NOT the
+    // truncated -1. genBox then round()s it (cround) to -2.
+    expect(cval(-3, 3)).toBeCloseTo(-5 / 3, 10);
     expect(cval(-4, 3)).toBe(-2);
+    // The osage pack_neato2 regression case: CVAL(-4,5) = -1.6 (→ cround -2).
+    expect(cval(-4, 5)).toBeCloseTo(-1.6, 10);
+    expect(cround(cval(-4, 5))).toBe(-2);
+  });
+});
+
+describe('cround', () => {
+  it('rounds half away from zero (C round())', () => {
+    expect(cround(-1.6)).toBe(-2);
+    expect(cround(-1.5)).toBe(-2);
+    expect(cround(11.6)).toBe(12);
+    expect(cround(2.5)).toBe(3);
+    expect(cround(8)).toBe(8);
   });
 });
 

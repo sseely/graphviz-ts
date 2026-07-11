@@ -159,9 +159,10 @@ describe('cval', () => {
     expect(cval(0, 3)).toBe(0);
   });
 
-  it('handles negative values', () => {
+  it('handles negative values (fractional CVAL on double, pre-round)', () => {
     expect(cval(-1, 3)).toBe(-1);
-    expect(cval(-3, 3)).toBe(-1);
+    // C applies CVAL to a double: -2/3 - 1 = -1.667, rounded by genBox.
+    expect(cval(-3, 3)).toBeCloseTo(-5 / 3, 10);
     expect(cval(-4, 3)).toBe(-2);
   });
 });

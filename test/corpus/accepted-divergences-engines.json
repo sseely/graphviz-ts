@@ -104,6 +104,21 @@
       "class": "A9",
       "bound": "110 xdot draw-op diffs = 3 obstacle-routed edges (6->1 B10, 16->1 B7, 30->1 B10) routed on the mirror side of the node row; X bit-exact, Y mirrored (6->1 429.120 vs 385.608). Node centers already bit-exact. Mechanism: octagon obstacle vertices (circumscribed_polygon_corner_about_ellipse) differ 3-4 ULP from C because clang -ffp-contract=on fuses the a*b+-c chains in ellipse_tangent_slope/line_intersection while V8 rounds each op; C's fused rounding collapses a gutter column of corner-x to one bit-exact double (exact collinearity), the port's splits it into two, flipping the visibility clear() tangency test so the gutter is no longer blocked -> ~20 extra visibility edges -> Dijkstra resolves the up/down homotopy tie to the mirror side. cos/sin injection is a no-op; C-obstacle injection A/B -> 0 diffs. Full RCA: .agent-notes/osage-spline-family-rca.md.",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "linux.i386-b29": {
+      "class": "A9",
+      "bound": "2 draw-op diffs; edge Node14663->Node14649 label _ldraw_ text x-anchor 878.28 (port) vs 841.06 (oracle) on both label lines. Edge spline (B 4 1040.15 72 ... 679.18 72) and arrowhead _tdraw_ are BIT-IDENTICAL; only the label anchor differs, placed symmetrically about the bit-identical spline midpoint ~859.67 (\u00b118.6 = half the label width). Same placeLabels knife-edge accepted for twopi/graphs-b29: a 1-ULP drift in the surrounding objects tips a label-side tie. share-b29 is the mirror (841.06 vs 878.28). 2 diffs in a 136 KB graph, every other label bit-matches. Full RCA: .agent-notes/osage-small-tail-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "share-b29": {
+      "class": "A9",
+      "bound": "2 draw-op diffs; mirror of linux.i386-b29 (label anchor 841.06 vs 878.28) \u2014 same placeLabels knife-edge tie; edge spline + arrowhead bit-identical, all other labels match.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    },
+    "1652": {
+      "class": "A9",
+      "bound": "2 draw-op diffs; two edges each flip one edge-label anchor with BIT-IDENTICAL spline + arrowhead. Op_1091->Op_1092 label x-anchor 2266.75 vs 2332.07 (symmetric about the identical spline midpoint 2299.4, \u00b132.66 = half the 65.32 label width); Op_2105->Op_2106 label y-anchor 247.54 vs 230.74 (above/below flip on a horizontal edge, x-anchor identical). placeLabels tie on 1-ULP-drifted surroundings, same class as b29. 2 diffs in a 240 KB graph; oracle renders completely (not a timeout). Full RCA: .agent-notes/osage-small-tail-rca.md.",
+      "ref": "known-divergences.md#a9-engine-track-twopi-circo"
     }
   }
 }
