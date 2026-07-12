@@ -887,7 +887,43 @@ function shiftClusters(g: Graph, dx: number, dy: number): void {
   }
 }
 
+/**
+ * T1 (iterative-parity-campaign, batch-1) injection hook: when
+ * `GVTS_POS_INJECT` names a dump file, overwrite `n.info.pos` for every
+ * matching node name before this module's own routing runs — mirroring the
+ * native `spline_edges` entry point where the session-local POS_DUMP patch
+ * captures oracle `ND_pos` (see
+ * `plans/iterative-parity-campaign/diagrams/injection-recipe.md`). This lets
+ * the attribution harness separate "port routing/emission is wrong" from
+ * "the port's own node placement is just a different (but internally
+ * consistent) FP-drift outcome" for the iterative engines (D1: pre-routing
+ * `ND_pos` stage only).
+ *
+ * Dump lines look like `GVTS_POS <name> <x> <y>` (any other line, e.g. dot's
+ * own stderr warnings mixed into the same capture, is ignored). Reads via
+ * `process.getBuiltinModule` rather than a static `node:fs` import so the
+ * browser bundle (esbuild, no `--platform=node`) never tries to resolve a
+ * Node builtin — this whole function is inert (returns immediately) unless
+ * `process` exists and `GVTS_POS_INJECT` is set, which is true only inside
+ * the Node test harness, never in a browser render.
+ */
+function injectOraclePositions(g: Graph): void {
+  if (typeof process === 'undefined') return;
+  const dumpPath = process.env?.['GVTS_POS_INJECT'];
+  if (!dumpPath || typeof process.getBuiltinModule !== 'function') return;
+  const fs = process.getBuiltinModule('node:fs');
+  if (!fs) return;
+  const text = fs.readFileSync(dumpPath, 'utf8');
+  for (const line of text.split('\n')) {
+    const m = /^GVTS_POS (\S+) (\S+) (\S+)/.exec(line);
+    if (!m) continue;
+    const n = g.nodes.get(m[1]!);
+    if (n) n.info.pos = [Number(m[2]), Number(m[3])];
+  }
+}
+
 export function splineEdgesShifted(g: Graph): void {
+  injectOraclePositions(g);
   const bb = computeBBFromPos(g);
   if (process.env['STRESS_DEBUG']) console.error('shiftBB', JSON.stringify(bb));
   shiftAllPos(g, bb.ll.x / 72, bb.ll.y / 72);
