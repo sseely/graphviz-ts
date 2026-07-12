@@ -37,7 +37,7 @@
 // Node-only dev/test infra — never imported by src/index.ts.
 
 import {
-  readFileSync, existsSync, statSync, writeFileSync, appendFileSync, unlinkSync, openSync, closeSync,
+  readFileSync, existsSync, statSync, writeFileSync, appendFileSync, unlinkSync,
 } from 'node:fs';
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -213,40 +213,6 @@ export function dedupeRows(jsonlText: string): AttributionRow[] {
   return [...byId.values()];
 }
 
-/**
- * Refuse to run when another sweep for the same engine is live. Writes a
- * pid lockfile with O_EXCL; an existing lock whose pid is dead (SIGKILLed
- * sweep, crashed run) is stale and gets cleared rather than blocking forever.
- * `process.kill(pid, 0)` is a liveness probe — it signals nothing, it only
- * throws ESRCH when no such process exists.
- */
-async function runExclusive<T>(lockPath: string, body: () => Promise<T>): Promise<T> {
-  if (existsSync(lockPath)) {
-    const pid = Number(readFileSync(lockPath, 'utf8').trim());
-    let alive = false;
-    try { process.kill(pid, 0); alive = true; } catch { alive = false; }
-    if (alive) {
-      console.error(
-        `another attribution sweep (pid ${pid}) is already running against this output — ` +
-        'refusing to start a second one. Two concurrent sweeps share one append-only JSONL ' +
-        'and duplicate every id the first has not yet reached (observed 2026-07-12). ' +
-        `Wait for it, or remove ${lockPath} if you are certain it is stale.`,
-      );
-      process.exit(1);
-    }
-    unlinkSync(lockPath); // stale lock from a killed sweep
-  }
-  closeSync(openSync(lockPath, 'wx')); // 'wx' = atomic create-or-fail: wins the race
-  writeFileSync(lockPath, String(process.pid));
-  try {
-    // `await` is load-bearing: without it the finally below would unlink the
-    // lock the instant the async body returned its (unsettled) promise.
-    return await body();
-  } finally {
-    try { unlinkSync(lockPath); } catch { /* already gone */ }
-  }
-}
-
 // ---------------------------------------------------------------------------
 // Oracle side — ONE invocation captures both the final xdot (stdout) and the
 // pre-routing ND_pos dump (stderr, GVTS_POS_DUMP=1).
@@ -349,10 +315,13 @@ async function main(): Promise<void> {
     console.error('usage: npx tsx test/corpus/attribute-divergence.ts <engine> [--stage pos] [--fresh]');
     process.exit(2);
   }
-  // Serialize sweeps per engine: two concurrent runs share one append-only
-  // JSONL and duplicate every id the first has not yet reached (see dedupeRows).
-  const lockPath = join(REPO, 'test/corpus', `attribution-${engine}.lock`);
-  await runExclusive(lockPath, () => sweep(engine, args));
+  // Do not run two sweeps for one engine concurrently: they share this
+  // engine's append-only JSONL, and each computes its resume skip-set once at
+  // startup, so the second re-attributes every id the first has not yet
+  // reached. `dedupeRows` keeps the emitted report correct regardless (the
+  // attribution is deterministic — every duplicate pair observed on
+  // 2026-07-12 was identical), but the duplicated work is pure waste.
+  await sweep(engine, args);
 }
 
 async function sweep(engine: string, args: string[]): Promise<void> {
