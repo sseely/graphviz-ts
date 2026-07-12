@@ -1,0 +1,4 @@
+{
+  "comment": "Irreducible imagemap (cmapx/imap) divergences (mission: map-conformance, AD-7 twin of accepted-divergences-xdot.json). Each entry: {id, opClass, delta, rationale}. The walker treats listed ids as non-blocking ('accepted') for BOTH formats and continues. Every entry MUST be referenced in the decision journal with its mechanism. Empty at initial survey time — this is the first triage pass; fixes and any resulting acceptances are a follow-up mission.",
+  "divergences": []
+}
