@@ -33,13 +33,16 @@
 // are JSON strings (stoj always double-quotes) compared exactly, except
 // `*color` attrs (canonColor) and `fontname` (canonFont).
 //
-// Known simplification (documented, not a bug): subgraph member lists
-// (`nodes`/`edges`/`subgraphs` — integer _gvid arrays) are NOT deep-compared
-// element-by-element. Since the port currently emits zero subgraphs (AD
-// above), any real graph with subgraphs already surfaces as a `cluster:<name>`
-// missing-object diff on the port side, which is the correct triage signal;
-// deep member-set diffing is deferred until the port has subgraph support to
-// validate.
+// Subgraph member lists (`nodes`/`edges`/`subgraphs` — integer `_gvid` arrays
+// on subgraph objects) ARE deep-compared, by identity: each `_gvid` is resolved
+// to a stable name (nodes/subgraphs) or `tail->head#occurrence` key (edges) on
+// its OWN side, then the two identity SETS are compared order-independently.
+// C emits members in agfstnode / agfstsubg / AGSEQ order, but the identity set
+// is what carries meaning across the two gid-numbering schemes, so the sets are
+// sorted before comparison (see compareMemberLists). The root object's
+// `objects`/`edges` arrays hold full objects (not member ints) and are handled
+// by the object inventory instead — compareMemberLists skips any array that is
+// not a flat array of numbers.
 //
 // Node-only dev/test infra — never imported by src/index.ts.
 
@@ -453,6 +456,92 @@ function compareObject(port: JObj, oracle: JObj, objKey: string, tolerance: numb
 }
 
 // ---------------------------------------------------------------------------
+// Member-list comparison (subgraph nodes/edges/subgraphs — integer _gvid refs)
+// ---------------------------------------------------------------------------
+
+/** True for a flat array of numbers (a member `_gvid` list, not an object array). */
+function isNumArray(v: JVal | undefined): v is number[] {
+  return Array.isArray(v) && v.every((x) => typeof x === 'number');
+}
+
+/** Per-side `_gvid` → stable identity resolvers for member-list comparison. */
+interface Resolvers {
+  /** `_gvid` → object name (nodes and subgraphs). */
+  name: Map<number, string>;
+  /** `_gvid` → `tail->head#occurrence` edge identity. */
+  edge: Map<number, string>;
+}
+
+/** Build the `_gvid` → identity resolvers for one tree root. */
+function buildResolvers(root: JObj): Resolvers {
+  const name = gvidToName(root);
+  const edge = new Map<number, string>();
+  const counter = new Map<string, number>();
+  for (const e of isArr(root.edges) ? root.edges.filter(isObj) : []) {
+    const tailName = name.get(Number(e.tail)) ?? String(e.tail);
+    const headName = name.get(Number(e.head)) ?? String(e.head);
+    const base = `${tailName}->${headName}`;
+    const idx = counter.get(base) ?? 0;
+    counter.set(base, idx + 1);
+    if (typeof e._gvid === 'number') edge.set(e._gvid, `${base}#${idx}`);
+  }
+  return { name, edge };
+}
+
+const MEMBER_FIELDS: ReadonlyArray<readonly ['subgraphs' | 'nodes' | 'edges', 'name' | 'edge']> = [
+  ['subgraphs', 'name'],
+  ['nodes', 'name'],
+  ['edges', 'edge'],
+];
+
+/**
+ * Compare a subgraph object's member `_gvid` lists (`nodes`/`edges`/`subgraphs`)
+ * by resolved identity, as order-independent sets. Arrays that are not flat
+ * number arrays (the root's full `objects`/`edges` arrays) are ignored.
+ */
+function compareMemberLists(
+  port: JObj,
+  oracle: JObj,
+  objKey: string,
+  portRes: Resolvers,
+  oracleRes: Resolvers,
+  diffs: JsonDiff[],
+): void {
+  for (const [field, kind] of MEMBER_FIELDS) {
+    const pv = port[field];
+    const ov = oracle[field];
+    const pMember = isNumArray(pv);
+    const oMember = isNumArray(ov);
+    if (!pMember && !oMember) continue; // not a member list on either side
+    if (pMember !== oMember) {
+      diffs.push({
+        object: objKey,
+        attr: field,
+        path: `${objKey}/${field}[members]`,
+        actual: pMember ? '<member-list>' : '<absent>',
+        expected: oMember ? '<member-list>' : '<absent>',
+        kind: 'structural',
+      });
+      continue;
+    }
+    const pMap = kind === 'name' ? portRes.name : portRes.edge;
+    const oMap = kind === 'name' ? oracleRes.name : oracleRes.edge;
+    const pIds = (pv as number[]).map((g) => pMap.get(g) ?? `#${g}`).sort();
+    const oIds = (ov as number[]).map((g) => oMap.get(g) ?? `#${g}`).sort();
+    if (pIds.join('|') !== oIds.join('|')) {
+      diffs.push({
+        object: objKey,
+        attr: field,
+        path: `${objKey}/${field}[members]`,
+        actual: pIds.join(','),
+        expected: oIds.join(','),
+        kind: 'structural',
+      });
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Object inventory (graph / subgraph / node / edge → keyed JSON objects)
 // ---------------------------------------------------------------------------
 
@@ -549,6 +638,8 @@ export function compareJson(
   const diffs: JsonDiff[] = [];
   const portInv = inventory(portRoot);
   const oracleInv = inventory(oracleRoot);
+  const portRes = buildResolvers(portRoot);
+  const oracleRes = buildResolvers(oracleRoot);
   const keys = new Set<string>([...portInv.keys(), ...oracleInv.keys()]);
 
   for (const key of [...keys].sort()) {
@@ -566,6 +657,7 @@ export function compareJson(
       continue;
     }
     compareObject(p, o, key, tolerance, diffs);
+    compareMemberLists(p, o, key, portRes, oracleRes, diffs);
   }
 
   return { pass: diffs.length === 0, diffs };

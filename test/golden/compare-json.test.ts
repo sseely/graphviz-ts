@@ -263,6 +263,68 @@ describe('compareJson', () => {
     expect(d?.expected).toBe('1');
   });
 
+  // -------------------------------------------------------------------------
+  // Member-list (subgraph nodes/edges/subgraphs) deep comparison
+  // -------------------------------------------------------------------------
+
+  // Two clusters, one node each, cross-referenced by _gvid. The port uses a
+  // DIFFERENT gid numbering than the oracle (subgraphs and nodes swapped in
+  // order) to prove the comparison is by resolved identity, not raw gid.
+  const SUBG_ORACLE = `{
+    "name": "G", "directed": true, "strict": false, "_subgraph_cnt": 2,
+    "objects": [
+      { "name": "cluster0", "_gvid": 0, "nodes": [2] },
+      { "name": "cluster1", "_gvid": 1, "nodes": [3] },
+      { "_gvid": 2, "name": "a", "pos": "1,1" },
+      { "_gvid": 3, "name": "b", "pos": "2,2" }
+    ],
+    "edges": [ { "_gvid": 0, "tail": 2, "head": 3 } ]
+  }`;
+
+  test('member node lists match by identity despite different gid numbering', () => {
+    // Port numbers cluster1 first (gid 0) and node b before a, so the raw gids
+    // differ, but each cluster still references its own node by name.
+    const SUBG_PORT = `{
+      "name": "G", "directed": true, "strict": false, "_subgraph_cnt": 2,
+      "objects": [
+        { "name": "cluster1", "_gvid": 0, "nodes": [2] },
+        { "name": "cluster0", "_gvid": 1, "nodes": [3] },
+        { "_gvid": 2, "name": "b", "pos": "2,2" },
+        { "_gvid": 3, "name": "a", "pos": "1,1" }
+      ],
+      "edges": [ { "_gvid": 0, "tail": 3, "head": 2 } ]
+    }`;
+    const { pass, diffs } = compareJson(SUBG_PORT, SUBG_ORACLE);
+    expect(diffs).toEqual([]);
+    expect(pass).toBe(true);
+  });
+
+  test('wrong member node surfaces as a members structural diff', () => {
+    // Port's cluster0 lists node "b" (gid 3) instead of "a" (gid 2).
+    const SUBG_PORT = SUBG_ORACLE.replace(
+      '{ "name": "cluster0", "_gvid": 0, "nodes": [2] }',
+      '{ "name": "cluster0", "_gvid": 0, "nodes": [3] }',
+    );
+    const { pass, diffs } = compareJson(SUBG_PORT, SUBG_ORACLE);
+    expect(pass).toBe(false);
+    const d = diffs.find((x) => x.object === 'cluster:cluster0' && x.attr === 'nodes');
+    expect(d).toBeDefined();
+    expect(d?.path).toBe('cluster:cluster0/nodes[members]');
+    expect(d?.kind).toBe('structural');
+    expect(d?.actual).toBe('b');
+    expect(d?.expected).toBe('a');
+  });
+
+  test('member list present on one side only surfaces as structural diff', () => {
+    const SUBG_PORT = SUBG_ORACLE.replace(', "nodes": [2] }', ' }');
+    const { pass, diffs } = compareJson(SUBG_PORT, SUBG_ORACLE);
+    expect(pass).toBe(false);
+    const d = diffs.find((x) => x.object === 'cluster:cluster0' && x.attr === 'nodes');
+    expect(d).toBeDefined();
+    expect(d?.actual).toBe('<absent>');
+    expect(d?.expected).toBe('<member-list>');
+  });
+
   test('malformed JSON on the port side surfaces as a parse diff', () => {
     const { pass, diffs } = compareJson('{ not json', ORACLE);
     expect(pass).toBe(false);
