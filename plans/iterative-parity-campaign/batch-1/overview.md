@@ -5,11 +5,11 @@ infra only.
 
 ## Tasks
 
-| Task | Subject | Depends on |
-|---|---|---|
-| T1 | Injection attribution harness (`--stage`, oracle-hash guard, POS_INJECT hook) | none |
-| T2 | Class-acceptance wiring in parity-report + report sections | T1 (needs `attribution-<engine>.json` shape) |
-| T3 | Oracle-error classifier (D6) + sidecar report | T1 (shares the harness's rerun/retry plumbing) |
+| Task | Subject | Depends on | Status |
+|---|---|---|---|
+| T1 | Injection attribution harness (`--stage`, oracle-hash guard, POS_INJECT hook) | none | [x] `ed337d9`, `d165453` |
+| T2 | Class-acceptance wiring in parity-report + report sections | T1 (needs `attribution-<engine>.json` shape) | [x] `104a233` |
+| T3 | Oracle-error classifier (D6) + sidecar report | T1 (shares the harness's rerun/retry plumbing) | [x] `5c1e549` |
 
 T2 and T3 both read T1's output shape but write disjoint files (T2:
 `test/corpus/parity-report.ts` + `docs/known-divergences.md` section
