@@ -12,11 +12,11 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 759 (generated 2026-07-11T23:06:54.978Z)
-- **pass:** 744 (98.0%) · **diverged (tracked):** 3 · **accepted (documented, won't-fix):** 7
+- **Surveyed:** 761 (generated 2026-07-12T02:37:52.033Z)
+- **pass:** 750 (98.6%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 6
 - **oracle-error:** 5 · **port-error:** 0 · **timeout:** 0
 
-## Accepted deltas (7) — documented, not chased
+## Accepted deltas (6) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
@@ -25,7 +25,6 @@ table below.
 
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
-| `1652` | 2 | A9 | 2 draw-op diffs; two edges each flip one edge-label anchor with BIT-IDENTICAL spline + arrowhead. Op_1091-&gt;Op_1092 label x-anchor 2266.75 vs 2332.07 (symmetric about the identical spline midpoint 2299.4, ±32.66 = half the 65.32 label width); Op_2105-&gt;Op_2106 label y-anchor 247.54 vs 230.74 (above/below flip on a horizontal edge, x-anchor identical). placeLabels tie on 1-ULP-drifted surroundings, same class as b29. 2 diffs in a 240 KB graph; oracle renders completely (not a timeout). Full RCA: .agent-notes/osage-small-tail-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
 | `1855` | 110 | A9 | 110 xdot draw-op diffs = 3 obstacle-routed edges (6-&gt;1 B10, 16-&gt;1 B7, 30-&gt;1 B10) routed on the mirror side of the node row; X bit-exact, Y mirrored (6-&gt;1 429.120 vs 385.608). Node centers already bit-exact. Mechanism: octagon obstacle vertices (circumscribed_polygon_corner_about_ellipse) differ 3-4 ULP from C because clang -ffp-contract=on fuses the a*b+-c chains in ellipse_tangent_slope/line_intersection while V8 rounds each op; C's fused rounding collapses a gutter column of corner-x to one bit-exact double (exact collinearity), the port's splits it into two, flipping the visibility clear() tangency test so the gutter is no longer blocked -&gt; ~20 extra visibility edges -&gt; Dijkstra resolves the up/down homotopy tie to the mirror side. cos/sin injection is a no-op; C-obstacle injection A/B -&gt; 0 diffs. Full RCA: .agent-notes/osage-spline-family-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
 | `graphs-polypoly` | 24 | A9 | Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node ±(182,338)/±2909 translations; &lt;=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) — V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so \|cos(pi+theta)\| != \|cos(theta)\| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
 | `linux.i386-b29` | 2 | A9 | 2 draw-op diffs; edge Node14663-&gt;Node14649 label _ldraw_ text x-anchor 878.28 (port) vs 841.06 (oracle) on both label lines. Edge spline (B 4 1040.15 72 ... 679.18 72) and arrowhead _tdraw_ are BIT-IDENTICAL; only the label anchor differs, placed symmetrically about the bit-identical spline midpoint ~859.67 (±18.6 = half the label width). Same placeLabels knife-edge accepted for twopi/graphs-b29: a 1-ULP drift in the surrounding objects tips a label-side tie. share-b29 is the mirror (841.06 vs 878.28). 2 diffs in a 136 KB graph, every other label bit-matches. Full RCA: .agent-notes/osage-small-tail-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
@@ -33,13 +32,9 @@ table below.
 | `share-polypoly` | 12 | A9 | Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node ±(182,338)/±2909 translations; &lt;=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) — V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so \|cos(pi+theta)\| != \|cos(theta)\| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
 | `windows-polypoly` | 12 | A9 | Rigid pack-cell swap of the 9000-series distorted-quad components (whole-node ±(182,338)/±2909 translations; &lt;=24 draw-op diffs per id, no shape/routing error). Mechanism: bare transcendental cos(pi+theta) — V8 Math.cos is correctly rounded while Apple libm's cos carries a 1-ULP argument-dependent error, so \|cos(pi+theta)\| != \|cos(theta)\| only under libm; the 1-ULP size delta feeds pack GRID ceil, tips a perimeter tie, and qsort swaps two components' cells. No deterministic rewrite reproduces a non-correctly-rounded libm transcendental. osage only. Full RCA: .agent-notes/patchwork-tail-rca.md. | known-divergences.md#a9-engine-track-twopi-circo |
 
-## Diverged (3)
+## Diverged (0)
 
-| id | size | #diffs | firstDiff |
-|---|---:|---:|---|
-| `1447_1` | 14827 | 1246 | `edge:ASCIInumbers->string_encoding#0 _draw_ edge:ASCIInumbers->string_encoding#0/_draw_/op[1].unfilled_bezier[1]: 845 vs 832` |
-| `1447` | 6707 | 52 | `edge:0x00400a70->0x00400b71#0 _draw_ edge:0x00400a70->0x00400b71#0/_draw_/op[1].unfilled_bezier[1]: 33.83 vs 33.88` |
-| `graphs-b106` | 48933 | 51 | `edge:Node1315->Node1312#0 _ldraw_ edge:Node1315->Node1312#0/_ldraw_/op[2].text[0]: 700.76 vs 711.88` |
+_(none)_
 
 ## Errors and timeouts (5)
 
@@ -51,5 +46,5 @@ table below.
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
-_Passing ids (744) are omitted for brevity — the full roster is in
+_Passing ids (750) are omitted for brevity — the full roster is in
 `parity-osage.json`._

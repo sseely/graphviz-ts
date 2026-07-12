@@ -12,9 +12,9 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-11T21:33:28.100Z)
-- **pass:** 745 (97.8%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3
-- **oracle-error:** 14 · **port-error:** 0 · **timeout:** 0
+- **Surveyed:** 761 (generated 2026-07-12T02:08:18.186Z)
+- **pass:** 745 (97.9%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3
+- **oracle-error:** 13 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (3) — documented, not chased
 
@@ -33,12 +33,11 @@ table below.
 
 _(none)_
 
-## Errors and timeouts (14)
+## Errors and timeouts (13)
 
 | id | status | message |
 |---|---|---|
 | `1447` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1447.dot |
-| `1652` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 | `1718` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 | `1879` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1879.dot |
 | `1880` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1880.dot |

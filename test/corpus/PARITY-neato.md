@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-11T23:16:05.727Z)
-- **pass:** 263 (34.5%) · **diverged (tracked):** 492 · **accepted (documented, won't-fix):** 0
+- **Surveyed:** 761 (generated 2026-07-12T03:49:18.005Z)
+- **pass:** 263 (34.6%) · **diverged (tracked):** 491 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -25,7 +25,7 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (492)
+## Diverged (491)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -62,7 +62,6 @@ _(none in this corpus)_
 | `share-pgram` | 10942 | 3162 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502 vs 522` |
 | `windows-pgram` | 11001 | 3161 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502 vs 522` |
 | `42` | 11978 | 3156 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 242.62 vs 95571.22` |
-| `1652` | 240391 | 3055 | `edge:Op_0->Op_3#0 _ldraw_ edge:Op_0->Op_3#0/_ldraw_[missing]: <absent> vs <present>` |
 | `windows-b36` | 15050 | 2563 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 696.22 vs 723.77` |
 | `linux.i386-b36` | 15051 | 2562 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 696.22 vs 723.74` |
 | `share-b36` | 15051 | 2562 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 696.22 vs 723.74` |

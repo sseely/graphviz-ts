@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-11T22:15:07.089Z)
-- **pass:** 757 (99.3%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 0
+- **Surveyed:** 761 (generated 2026-07-12T02:51:40.959Z)
+- **pass:** 756 (99.3%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 5 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -39,5 +39,5 @@ _(none)_
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
-_Passing ids (757) are omitted for brevity — the full roster is in
+_Passing ids (756) are omitted for brevity — the full roster is in
 `parity-patchwork.json`._

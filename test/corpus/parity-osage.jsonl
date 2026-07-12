@@ -254,6 +254,7 @@
 {"id":"graphs-nojustify","size":298,"status":"pass"}
 {"id":"2727","size":306,"status":"pass"}
 {"id":"1939","size":307,"status":"pass"}
+{"id":"graphs-structs","size":308,"status":"pass"}
 {"id":"graphs-p4","size":309,"status":"pass"}
 {"id":"1622_1","size":311,"status":"pass"}
 {"id":"2825","size":312,"status":"pass"}
@@ -645,7 +646,7 @@
 {"id":"share-unix","size":6603,"status":"pass"}
 {"id":"windows-unix","size":6603,"status":"pass"}
 {"id":"graphs-polypoly","size":6617,"status":"diverged","nDiffs":24,"firstDiff":"node:9000 _draw_ node:9000/_draw_/op[1].unfilled_polygon[0]: 3145.75 vs 236.75"}
-{"id":"1447","size":6707,"status":"diverged","nDiffs":52,"firstDiff":"edge:0x00400a70->0x00400b71#0 _draw_ edge:0x00400a70->0x00400b71#0/_draw_/op[1].unfilled_bezier[1]: 33.83 vs 33.88"}
+{"id":"1447","size":6707,"status":"pass"}
 {"id":"2619_1","size":6721,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot"}
 {"id":"graphs-grdradial_angle","size":6918,"status":"pass"}
 {"id":"windows-trapeziumlr","size":7229,"status":"pass"}
@@ -712,7 +713,7 @@
 {"id":"share-jsort","size":14030,"status":"pass"}
 {"id":"windows-jsort","size":14425,"status":"pass"}
 {"id":"windows-b94","size":14509,"status":"pass"}
-{"id":"1447_1","size":14827,"status":"diverged","nDiffs":1246,"firstDiff":"edge:ASCIInumbers->string_encoding#0 _draw_ edge:ASCIInumbers->string_encoding#0/_draw_/op[1].unfilled_bezier[1]: 845 vs 832"}
+{"id":"1447_1","size":14827,"status":"pass"}
 {"id":"graphs-mode","size":14907,"status":"pass"}
 {"id":"windows-b36","size":15050,"status":"pass"}
 {"id":"linux.i386-b36","size":15051,"status":"pass"}
@@ -729,10 +730,11 @@
 {"id":"graphs-badvoro","size":33949,"status":"pass"}
 {"id":"graphs-viewport","size":37292,"status":"pass"}
 {"id":"2239","size":48090,"status":"pass"}
-{"id":"graphs-b106","size":48933,"status":"diverged","nDiffs":51,"firstDiff":"edge:Node1315->Node1312#0 _ldraw_ edge:Node1315->Node1312#0/_ldraw_/op[2].text[0]: 700.76 vs 711.88"}
+{"id":"graphs-b106","size":48933,"status":"pass"}
 {"id":"2343","size":59368,"status":"pass"}
 {"id":"graphs-b143","size":62055,"status":"pass"}
 {"id":"graphs-b29","size":62931,"status":"pass"}
+{"id":"2620","size":64908,"status":"pass"}
 {"id":"linux.i386-b106","size":92005,"status":"pass"}
 {"id":"share-b106","size":92301,"status":"pass"}
 {"id":"windows-b106","size":95634,"status":"pass"}
@@ -747,7 +749,6 @@
 {"id":"share-b102","size":161479,"status":"pass"}
 {"id":"windows-b102","size":184125,"status":"pass"}
 {"id":"graphs-b81","size":191024,"status":"pass"}
-{"id":"1652","size":240391,"status":"diverged","nDiffs":2,"firstDiff":"edge:Op_1091->Op_1092#0 _ldraw_ edge:Op_1091->Op_1092#0/_ldraw_/op[2].text[0]: 2266.75 vs 2332.07"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"pass"}
 {"id":"nshare-root_twopi","size":287916,"status":"pass"}
@@ -755,5 +756,6 @@
 {"id":"linux.x86-root_circo","size":313168,"status":"pass"}
 {"id":"graphs-b103","size":377525,"status":"pass"}
 {"id":"2475_2","size":641284,"status":"pass"}
+{"id":"2470","size":734358,"status":"pass"}
 {"id":"2222","size":2384469,"status":"pass"}
 {"id":"2108","size":3136769,"status":"pass"}

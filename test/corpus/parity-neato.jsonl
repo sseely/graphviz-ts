@@ -749,7 +749,6 @@
 {"id":"share-b102","size":161479,"status":"diverged","nDiffs":18271,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 658.51 vs 648.46"}
 {"id":"windows-b102","size":184125,"status":"diverged","nDiffs":18258,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 658.51 vs 648.57"}
 {"id":"graphs-b81","size":191024,"status":"diverged","nDiffs":4742,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 2631.27 vs 37491.22"}
-{"id":"1652","size":240391,"status":"diverged","nDiffs":3055,"firstDiff":"edge:Op_0->Op_3#0 _ldraw_ edge:Op_0->Op_3#0/_ldraw_[missing]: <absent> vs <present>"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"diverged","nDiffs":35009,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2023.36 vs 1659.34"}
 {"id":"nshare-root_twopi","size":287916,"status":"diverged","nDiffs":35044,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2023.36 vs 1658.48"}

@@ -19,13 +19,13 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| [dot (SVG)](./PARITY-dot.md) | 788 | 762 | 0 | 16 | 10 | 96.7% |
+| [dot (SVG)](./PARITY-dot.md) | 788 | 761 | 0 | 16 | 11 | 96.6% |
 | [dot (xdot)](./PARITY-XDOT.md) | 759 | 754 | 0 | 4 | 1 | 99.3% |
-| [dot (json)](./PARITY-JSON.md) | 762 | 0 | 761 | 0 | 1 | 0.0% |
-| [circo (xdot)](./PARITY-circo.md) | 762 | 745 | 0 | 3 | 14 | 97.8% |
-| [twopi (xdot)](./PARITY-twopi.md) | 762 | 740 | 0 | 14 | 8 | 97.1% |
-| [osage (xdot)](./PARITY-osage.md) | 759 | 744 | 3 | 7 | 5 | 98.0% |
-| [patchwork (xdot)](./PARITY-patchwork.md) | 762 | 757 | 0 | 0 | 5 | 99.3% |
+| [dot (json)](./PARITY-JSON.md) | 762 | 720 | 39 | 0 | 3 | 94.5% |
+| [circo (xdot)](./PARITY-circo.md) | 761 | 745 | 0 | 3 | 13 | 97.9% |
+| [twopi (xdot)](./PARITY-twopi.md) | 761 | 739 | 0 | 14 | 8 | 97.1% |
+| [osage (xdot)](./PARITY-osage.md) | 761 | 750 | 0 | 6 | 5 | 98.6% |
+| [patchwork (xdot)](./PARITY-patchwork.md) | 761 | 756 | 0 | 0 | 5 | 99.3% |
 | [dot (imagemap)](./PARITY-MAP.md) | 762 | 641 | 117 | 0 | 4 | 84.1% |
 
 
@@ -41,9 +41,9 @@ bar above.
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| [neato (xdot)](./PARITY-neato.md) | 762 | 263 | 492 | 0 | 7 | 34.5% |
-| [fdp (xdot)](./PARITY-fdp.md) | 762 | 311 | 435 | 0 | 16 | 40.8% |
-| [sfdp (xdot)](./PARITY-sfdp.md) | 762 | 260 | 494 | 0 | 8 | 34.1% |
+| [neato (xdot)](./PARITY-neato.md) | 761 | 263 | 491 | 0 | 7 | 34.6% |
+| [fdp (xdot)](./PARITY-fdp.md) | 761 | 311 | 433 | 0 | 17 | 40.9% |
+| [sfdp (xdot)](./PARITY-sfdp.md) | 761 | 260 | 493 | 0 | 8 | 34.2% |
 
 
 

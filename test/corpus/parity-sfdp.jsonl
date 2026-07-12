@@ -749,7 +749,6 @@
 {"id":"share-b102","size":161479,"status":"diverged","nDiffs":17932,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1193.13 vs 1183.76"}
 {"id":"windows-b102","size":184125,"status":"diverged","nDiffs":17934,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1199.1 vs 1189.69"}
 {"id":"graphs-b81","size":191024,"status":"diverged","nDiffs":9342,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3776.76 vs 4863.8"}
-{"id":"1652","size":240391,"status":"diverged","nDiffs":105381,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 950.58 vs 958.43"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"diverged","nDiffs":33468,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1096.38 vs 1105.16"}
 {"id":"nshare-root_twopi","size":287916,"status":"diverged","nDiffs":33450,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1097.3 vs 1106.08"}

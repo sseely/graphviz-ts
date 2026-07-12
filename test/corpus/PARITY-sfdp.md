@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-11T22:56:53.925Z)
-- **pass:** 260 (34.1%) · **diverged (tracked):** 494 · **accepted (documented, won't-fix):** 0
+- **Surveyed:** 761 (generated 2026-07-12T03:32:55.309Z)
+- **pass:** 260 (34.2%) · **diverged (tracked):** 493 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 7 · **port-error:** 1 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -25,12 +25,11 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (494)
+## Diverged (493)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
 | `2475_2` | 641284 | 305599 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 14372 vs 14375.01` |
-| `1652` | 240391 | 105381 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 950.58 vs 958.43` |
 | `graphs-b103` | 377525 | 61674 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1596.02 vs 1596.86` |
 | `2095_1` | 105083 | 53598 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3321.65 vs 3295.8` |
 | `linux.x86-root_circo` | 313168 | 33468 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1096.38 vs 1105.16` |

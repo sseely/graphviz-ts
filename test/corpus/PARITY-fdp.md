@@ -12,9 +12,9 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-11T22:40:36.461Z)
-- **pass:** 311 (40.8%) · **diverged (tracked):** 435 · **accepted (documented, won't-fix):** 0
-- **oracle-error:** 15 · **port-error:** 0 · **timeout:** 1
+- **Surveyed:** 761 (generated 2026-07-12T03:16:35.908Z)
+- **pass:** 311 (40.9%) · **diverged (tracked):** 433 · **accepted (documented, won't-fix):** 0
+- **oracle-error:** 16 · **port-error:** 0 · **timeout:** 1
 
 ## Accepted deltas (0) — documented, not chased
 
@@ -25,7 +25,7 @@ table below.
 
 _(none in this corpus)_
 
-## Diverged (435)
+## Diverged (433)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
@@ -44,12 +44,11 @@ _(none in this corpus)_
 | `graphs-b102` | 102329 | 18244 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1165.18 vs 1109.75` |
 | `linux.i386-b102` | 161479 | 18189 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 769.56 vs 735.23` |
 | `windows-b102` | 184125 | 18104 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 733.8 vs 747.34` |
-| `2470` | 734358 | 16471 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 8835.44 vs 7690.38` |
+| `2470` | 734358 | 16697 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 8885.14` |
 | `graphs-b29` | 62931 | 11040 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18` |
 | `graphs-b143` | 62055 | 10709 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2` |
 | `graphs-b81` | 191024 | 9343 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -34924.12` |
 | `2095` | 4865 | 8253 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 5425.41 vs 5672.31` |
-| `2620` | 64908 | 8188 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4628.91 vs 4902.78` |
 | `graphs-b124` | 10284 | 7641 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3188.32 vs 3023.15` |
 | `graphs-viewport` | 37292 | 7531 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 718.41 vs 2563.33` |
 | `graphs-mode` | 14907 | 7525 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 847.58 vs 667.17` |
@@ -155,10 +154,10 @@ _(none in this corpus)_
 | `graphs-b786` | 667 | 202 | `edge:n3->n2#0 _draw_ edge:n3->n2#0/_draw_/op[1].unfilled_bezier[0]: 148.99 vs 135.23` |
 | `1990` | 610 | 184 | `edge:0⋯7 ❰A❱->0⋯1 'a'#0 _draw_ edge:0⋯7 ❰A❱->0⋯1 'a'#0/_draw_/op[1].unfilled_bezier[0]: 238.4 vs 247.59` |
 | `2082` | 3033 | 184 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -144 vs -170` |
+| `graphs-fdp` | 183 | 181 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 180.47 vs 272.99` |
 | `2615` | 173 | 168 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 213.1 vs 224.85` |
 | `graphs-tree` | 588 | 166 | `edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 100.57 vs 44.97` |
 | `share-b786` | 2198 | 165 | `edge:n3->n2#0 _draw_ edge:n3->n2#0/_draw_/op[1].unfilled_bezier[0]: 3198.23 vs 3202.89` |
-| `graphs-fdp` | 183 | 162 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 180.47 vs 290.4` |
 | `2521` | 320 | 161 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 306.98 vs 317.18` |
 | `graphs-sb_circle_dbl` | 400 | 158 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55` |
 | `1514` | 168 | 156 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 195.82 vs 251.65` |
@@ -193,7 +192,6 @@ _(none in this corpus)_
 | `graphs-sb_box` | 241 | 81 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41` |
 | `graphs-clustlabel` | 78 | 78 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 118.78 vs 168.47` |
 | `graphs-b85` | 668 | 74 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 89.09 vs 94.77` |
-| `1323_1` | 1588 | 71 | `edge:namespace1->vfsmount1#0 _draw_ edge:namespace1->vfsmount1#0/_draw_/op[1].unfilled_bezier[0]: 101.61 vs 138.32` |
 | `graphs-bad` | 68 | 64 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 289.92 vs 278.1` |
 | `graphs-longflat` | 86 | 61 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -14.87` |
 | `graphs-user_shapes` | 133 | 61 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 280.9 vs 289.68` |
@@ -465,13 +463,13 @@ _(none in this corpus)_
 | `windows-b491` | 486 | 1 | `edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>` |
 | `windows-longflat` | 409 | 1 | `edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>` |
 
-## Errors and timeouts (16)
+## Errors and timeouts (17)
 
 | id | status | message |
 |---|---|---|
 | `1221` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1221.dot |
+| `1323_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1323_1.dot |
 | `1332` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1332.dot |
-| `1652` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 | `1767` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1767.dot |
 | `1879` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot |
 | `2222` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
@@ -480,6 +478,7 @@ _(none in this corpus)_
 | `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
+| `2620` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot |
 | `2717` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2717.dot |
 | `2721` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot |
 | `graphs-b53` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv |

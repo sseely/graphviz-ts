@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-11T23:16:05.727Z",
+  "generatedAt": "2026-07-12T03:49:18.005Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "neato",
   "tolerance": 0.5,
-  "total": 762,
+  "total": 761,
   "counts": {
     "pass": 263,
-    "diverged": 492,
+    "diverged": 491,
     "oracle-error": 7,
     "port-error": 0,
     "timeout": 0
@@ -4740,13 +4740,6 @@
       "status": "diverged",
       "nDiffs": 4742,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 2631.27 vs 37491.22"
-    },
-    {
-      "id": "1652",
-      "size": 240391,
-      "status": "diverged",
-      "nDiffs": 3055,
-      "firstDiff": "edge:Op_0->Op_3#0 _ldraw_ edge:Op_0->Op_3#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "1879",
