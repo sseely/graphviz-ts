@@ -19,12 +19,12 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| dot (SVG) | 788 | 762 | 0 | 16 | 10 | 96.7% |
-| dot (xdot) | 759 | 754 | 0 | 4 | 1 | 99.3% |
-| circo (xdot) | 762 | 745 | 0 | 3 | 14 | 97.8% |
-| twopi (xdot) | 762 | 740 | 0 | 14 | 8 | 97.1% |
-| osage (xdot) | 759 | 744 | 3 | 7 | 5 | 98.0% |
-| patchwork (xdot) | 762 | 757 | 0 | 0 | 5 | 99.3% |
+| [dot (SVG)](./PARITY-dot.md) | 788 | 762 | 0 | 16 | 10 | 96.7% |
+| [dot (xdot)](./PARITY-XDOT.md) | 759 | 754 | 0 | 4 | 1 | 99.3% |
+| [circo (xdot)](./PARITY-circo.md) | 762 | 745 | 0 | 3 | 14 | 97.8% |
+| [twopi (xdot)](./PARITY-twopi.md) | 762 | 740 | 0 | 14 | 8 | 97.1% |
+| [osage (xdot)](./PARITY-osage.md) | 759 | 744 | 3 | 7 | 5 | 98.0% |
+| [patchwork (xdot)](./PARITY-patchwork.md) | 762 | 757 | 0 | 0 | 5 | 99.3% |
 
 
 ### Iterative engines (±0.5 characterization)
@@ -39,9 +39,9 @@ bar above.
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| neato (xdot) | 762 | 263 | 492 | 0 | 7 | 34.5% |
-| fdp (xdot) | 762 | 311 | 435 | 0 | 16 | 40.8% |
-| sfdp (xdot) | 762 | 260 | 494 | 0 | 8 | 34.1% |
+| [neato (xdot)](./PARITY-neato.md) | 762 | 263 | 492 | 0 | 7 | 34.5% |
+| [fdp (xdot)](./PARITY-fdp.md) | 762 | 311 | 435 | 0 | 16 | 40.8% |
+| [sfdp (xdot)](./PARITY-sfdp.md) | 762 | 260 | 494 | 0 | 8 | 34.1% |
 
 
 

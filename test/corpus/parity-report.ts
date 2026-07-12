@@ -110,7 +110,7 @@ function dotSvgRow(report: SvgParityReport, manifest: CorpusEntry[]): TrackRow {
     if (matchAccepted(r.id, engineOf.get(r.id), 'parity', acceptedReg)) accepted++;
   }
   return {
-    track: 'dot (SVG)',
+    track: '[dot (SVG)](./PARITY-dot.md)',
     surveyed: report.total,
     pass: c.conformant,
     diverged: c.diverged + c['structural-match'] - accepted,
@@ -125,7 +125,7 @@ function dotXdotRow(report: XdotParityReport): TrackRow {
     report.counts,
   );
   return {
-    track: 'dot (xdot)',
+    track: '[dot (xdot)](./PARITY-XDOT.md)',
     surveyed: report.total,
     pass: c.conformant,
     diverged: c.diverged,
@@ -145,7 +145,7 @@ function engineRow(
   );
   const accepted = report.results.filter((r) => r.status === 'diverged' && acceptedMap[r.id]).length;
   return {
-    track: `${engine} (xdot)`,
+    track: `[${engine} (xdot)](./PARITY-${engine}.md)`,
     surveyed: report.total,
     pass: c.pass,
     diverged: c.diverged - accepted,
