@@ -15,18 +15,18 @@ numeric-tolerant — see `test/golden/compare-json.ts`). Regenerate:
 ## Summary
 
 - **Oracle:** dot 15.1.0 (`-Tjson`) · **corpus:** `~/git/graphviz/tests`
-- **Walked (conformant SVG set):** 762
-- **json-conformant:** 720 (94.5%)
+- **Walked (conformant SVG set):** 761
+- **json-conformant:** 719 (94.5%)
 - **diverged (tracked, will-fix):** 39 · **accepted (documented, won't-fix):** 0
-- **port-error:** 0 · **timeout:** 2 · **oracle-error:** 1 (excluded from scoring)
+- **port-error:** 0 · **timeout:** 3 · **oracle-error:** 0 (excluded from scoring)
 
-## json-conformant (720)
+## json-conformant (719)
 
 Port json is *conformant* with the oracle: every object/attr/draw-op
 matches, numeric payloads within ±0.01 and canonicalized
 colors/fonts/text equal.
 
-_Conformant ids (720) are omitted for brevity — the full roster is in
+_Conformant ids (719) are omitted for brevity — the full roster is in
 [json-parity.json](json-parity.json)._
 
 ## Tracked diverged (39) — worst-first
@@ -102,16 +102,16 @@ _(none)_
 | id | path | message |
 |---|---|---|
 
-## timeout (2)
+## timeout (3)
 
 | id | path | message |
 |---|---|---|
 | `2095_1` | `2095_1.dot` |  |
+| `2108` | `2108.dot` |  |
 | `2343` | `2343.dot` |  |
 
-## oracle-error (1) — excluded from scoring
+## oracle-error (0) — excluded from scoring
 
 | id | path | message |
 |---|---|---|
-| `1652` | `1652.dot` | oracle exit null |
 

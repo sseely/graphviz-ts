@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-12T02:00:49.351Z",
+  "generatedAt": "2026-07-12T06:51:27.268Z",
   "generatedWith": "test/corpus/json-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
-  "total": 762,
+  "total": 761,
   "counts": {
-    "conformant": 720,
+    "conformant": 719,
     "diverged": 39,
     "accepted": 0,
     "port-error": 0,
-    "oracle-error": 1,
-    "timeout": 2
+    "oracle-error": 0,
+    "timeout": 3
   },
   "results": [
     {
@@ -4622,13 +4622,6 @@
       "verdict": "conformant"
     },
     {
-      "id": "1652",
-      "path": "1652.dot",
-      "size": 240391,
-      "verdict": "oracle-error",
-      "errMsg": "oracle exit null"
-    },
-    {
       "id": "1879",
       "path": "1879.dot",
       "size": 287816,
@@ -4690,7 +4683,8 @@
       "id": "2108",
       "path": "2108.dot",
       "size": 3136769,
-      "verdict": "conformant"
+      "verdict": "timeout",
+      "errMsg": ""
     }
   ]
 }

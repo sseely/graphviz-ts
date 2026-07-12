@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-12T03:19:25.581Z",
+  "generatedAt": "2026-07-12T07:23:58.351Z",
   "generatedWith": "test/corpus/map-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
-  "total": 762,
+  "total": 761,
   "counts": {
-    "conformant": 749,
+    "conformant": 739,
     "diverged": 11,
     "accepted": 0,
     "port-error": 0,
-    "oracle-error": 1,
-    "timeout": 1
+    "oracle-error": 0,
+    "timeout": 11
   },
   "results": [
     {
@@ -303,12 +303,14 @@
       "id": "2458",
       "path": "2458.dot",
       "size": 52,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -316,12 +318,14 @@
       "id": "graphs-b77",
       "path": "graphs/b77.gv",
       "size": 53,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -329,12 +333,14 @@
       "id": "graphs-in",
       "path": "graphs/in.gv",
       "size": 55,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -342,12 +348,14 @@
       "id": "graphs-ps",
       "path": "graphs/ps.gv",
       "size": 55,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -355,12 +363,14 @@
       "id": "graphs-b123",
       "path": "graphs/b123.gv",
       "size": 59,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -368,12 +378,14 @@
       "id": "2391",
       "path": "2391.dot",
       "size": 61,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -381,12 +393,14 @@
       "id": "2743",
       "path": "2743.dot",
       "size": 66,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -394,12 +408,14 @@
       "id": "graphs-bad",
       "path": "graphs/bad.gv",
       "size": 68,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -9590,12 +9606,14 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -9823,21 +9841,6 @@
       "hasHref": false
     },
     {
-      "id": "1652",
-      "path": "1652.dot",
-      "size": 240391,
-      "verdict": "oracle-error",
-      "cmapx": {
-        "verdict": "oracle-error",
-        "errMsg": "oracle exit null"
-      },
-      "imap": {
-        "verdict": "oracle-error",
-        "errMsg": "oracle exit null"
-      },
-      "hasHref": false
-    },
-    {
       "id": "1879",
       "path": "1879.dot",
       "size": 287816,
@@ -9958,12 +9961,14 @@
       "id": "2108",
       "path": "2108.dot",
       "size": 3136769,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     }

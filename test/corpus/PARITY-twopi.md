@@ -12,7 +12,7 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-12T02:23:52.092Z)
+- **Surveyed:** 761 (generated 2026-07-12T05:23:57.970Z)
 - **pass:** 739 (97.1%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 14
 - **oracle-error:** 8 · **port-error:** 0 · **timeout:** 0
 
@@ -26,12 +26,12 @@ table below.
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
 | `1855` | 842 | A1 | 842 xdot draw-op diffs; whole radial layout is the exact x-axis mirror of the oracle's (y-&gt;-y, ring relabel k&lt;-&gt;34-k), max node displacement 6.04pt. Mechanism: 1-ULP V8-vs-libm cos/sin in circleLayout setAbsolutePos, amplified by the symmetry-unstable PRISM overlap-removal equilibrium on the cocircular star. Injection A/B: feeding C's exact circleLayout pos into the port's PRISM reproduces the oracle node-for-node (3e-14). | known-divergences.md#a1-twopi-arrows-family |
-| `graphs-arrows` | 25 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 | known-divergences.md#a1-twopi-arrows-family |
-| `graphs-arrowsize` | 32 | A1 | 64 draw-op diffs on edge Z-&gt;I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
+| `graphs-arrows` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 | known-divergences.md#a1-twopi-arrows-family |
+| `graphs-arrowsize` | 19 | A1 | 64 draw-op diffs on edge Z-&gt;I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
 | `graphs-newarrows` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
 | `linux.x86-arrows_dot` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
-| `macosx-arrows_dot` | 32 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
-| `nshare-arrows_dot` | 25 | A1 | 25 draw-op diffs on edge i-&gt;Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
+| `macosx-arrows_dot` | 16 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `nshare-arrows_dot` | 32 | A1 | 25 draw-op diffs on edge i-&gt;Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
 | `share-newarrows` | 12 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
 | `windows-newarrows` | 12 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
 | `2239` | 1 | A9 | 1 draw-op diff; edge label _ldraw_ text[1]: 183.86 vs 173.06 | known-divergences.md#a9-engine-track-twopi-circo |

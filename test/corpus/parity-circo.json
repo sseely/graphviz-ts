@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-12T02:08:18.186Z",
+  "generatedAt": "2026-07-12T05:09:04.552Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "circo",
   "tolerance": 0.01,
   "total": 761,
   "counts": {
-    "pass": 745,
+    "pass": 743,
     "diverged": 3,
     "oracle-error": 13,
     "port-error": 0,
-    "timeout": 0
+    "timeout": 2
   },
   "results": [
     {
@@ -2014,7 +2014,7 @@
     {
       "id": "windows-labelroot-ntr",
       "size": 637,
-      "status": "pass"
+      "status": "timeout"
     },
     {
       "id": "share-labelroot-nbl",
@@ -2856,7 +2856,7 @@
     {
       "id": "graphs-sl_box",
       "size": 2156,
-      "status": "pass"
+      "status": "timeout"
     },
     {
       "id": "graphs-sl_circle",

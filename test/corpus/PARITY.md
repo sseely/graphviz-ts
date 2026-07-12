@@ -21,12 +21,12 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 |---|---:|---:|---:|---:|---:|---:|
 | [dot (SVG)](./PARITY-dot.md) | 788 | 761 | 0 | 16 | 11 | 96.6% |
 | [dot (xdot)](./PARITY-XDOT.md) | 759 | 754 | 0 | 4 | 1 | 99.3% |
-| [dot (json)](./PARITY-JSON.md) | 762 | 720 | 39 | 0 | 3 | 94.5% |
-| [circo (xdot)](./PARITY-circo.md) | 761 | 745 | 0 | 3 | 13 | 97.9% |
+| [dot (json)](./PARITY-JSON.md) | 761 | 719 | 39 | 0 | 3 | 94.5% |
+| [circo (xdot)](./PARITY-circo.md) | 761 | 743 | 0 | 3 | 15 | 97.6% |
 | [twopi (xdot)](./PARITY-twopi.md) | 761 | 739 | 0 | 14 | 8 | 97.1% |
 | [osage (xdot)](./PARITY-osage.md) | 761 | 750 | 0 | 6 | 5 | 98.6% |
 | [patchwork (xdot)](./PARITY-patchwork.md) | 761 | 756 | 0 | 0 | 5 | 99.3% |
-| [dot (imagemap)](./PARITY-MAP.md) | 762 | 641 | 117 | 0 | 4 | 84.1% |
+| [dot (imagemap)](./PARITY-MAP.md) | 761 | 739 | 11 | 0 | 11 | 97.1% |
 
 
 ### Iterative engines (±0.5 characterization)
@@ -42,7 +42,7 @@ bar above.
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
 | [neato (xdot)](./PARITY-neato.md) | 761 | 263 | 491 | 0 | 7 | 34.6% |
-| [fdp (xdot)](./PARITY-fdp.md) | 761 | 311 | 433 | 0 | 17 | 40.9% |
+| [fdp (xdot)](./PARITY-fdp.md) | 761 | 311 | 434 | 0 | 16 | 40.9% |
 | [sfdp (xdot)](./PARITY-sfdp.md) | 761 | 260 | 493 | 0 | 8 | 34.2% |
 
 

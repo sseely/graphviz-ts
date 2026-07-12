@@ -545,8 +545,8 @@
 {"id":"graphs-sq_rules","size":1979,"status":"pass"}
 {"id":"windows-pm2way","size":1998,"status":"pass"}
 {"id":"graphs-pm2way","size":2020,"status":"pass"}
-{"id":"graphs-arrows","size":2029,"status":"diverged","nDiffs":25,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"}
-{"id":"graphs-arrowsize","size":2039,"status":"diverged","nDiffs":32,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 264.42 vs 289.55"}
+{"id":"graphs-arrows","size":2029,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
+{"id":"graphs-arrowsize","size":2039,"status":"diverged","nDiffs":19,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 264.42 vs 314.69"}
 {"id":"linux.x86-ordering_dot1","size":2042,"status":"pass"}
 {"id":"macosx-ordering_dot1","size":2042,"status":"pass"}
 {"id":"nshare-ordering_dot1","size":2042,"status":"pass"}
@@ -652,8 +652,8 @@
 {"id":"windows-trapeziumlr","size":7229,"status":"pass"}
 {"id":"share-trapeziumlr","size":7233,"status":"pass"}
 {"id":"linux.x86-arrows_dot","size":7235,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
-{"id":"macosx-arrows_dot","size":7235,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
-{"id":"nshare-arrows_dot","size":7235,"status":"diverged","nDiffs":25,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"}
+{"id":"macosx-arrows_dot","size":7235,"status":"diverged","nDiffs":16,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8"}
+{"id":"nshare-arrows_dot","size":7235,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
 {"id":"graphs-awilliams","size":7305,"status":"pass"}
 {"id":"share-unix2","size":7421,"status":"pass"}
 {"id":"share-unix2k","size":7421,"status":"pass"}

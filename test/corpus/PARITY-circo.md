@@ -12,9 +12,9 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-12T02:08:18.186Z)
-- **pass:** 745 (97.9%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3
-- **oracle-error:** 13 · **port-error:** 0 · **timeout:** 0
+- **Surveyed:** 761 (generated 2026-07-12T05:09:04.552Z)
+- **pass:** 743 (97.6%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3
+- **oracle-error:** 13 · **port-error:** 0 · **timeout:** 2
 
 ## Accepted deltas (3) — documented, not chased
 
@@ -33,7 +33,7 @@ table below.
 
 _(none)_
 
-## Errors and timeouts (13)
+## Errors and timeouts (15)
 
 | id | status | message |
 |---|---|---|
@@ -50,6 +50,8 @@ _(none)_
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 | `graphs-b103` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
+| `graphs-sl_box` | timeout |  |
+| `windows-labelroot-ntr` | timeout |  |
 
-_Passing ids (745) are omitted for brevity — the full roster is in
+_Passing ids (743) are omitted for brevity — the full roster is in
 `parity-circo.json`._

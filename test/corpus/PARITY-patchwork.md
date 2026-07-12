@@ -12,7 +12,7 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-12T02:51:40.959Z)
+- **Surveyed:** 761 (generated 2026-07-12T05:50:19.941Z)
 - **pass:** 756 (99.3%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 5 · **port-error:** 0 · **timeout:** 0
 

@@ -15,11 +15,11 @@ EXACTLY, coords compared exact-after-round — both sides are already
 ## Summary
 
 - **Oracle:** dot 15.1.0 · **corpus:** `~/git/graphviz/tests`
-- **Walked (conformant SVG set):** 762
-- **map-conformant (overall, worst-of-both-formats):** 749 (98.3%)
-- **cmapx-conformant:** 749 (98.3%) · **imap-conformant:** 752 (98.7%)
+- **Walked (conformant SVG set):** 761
+- **map-conformant (overall, worst-of-both-formats):** 739 (97.1%)
+- **cmapx-conformant:** 739 (97.1%) · **imap-conformant:** 742 (97.5%)
 - **diverged (tracked, will-fix, either format):** 11 · **accepted (documented, won't-fix):** 0
-- **port-error:** 0 · **timeout:** 1 · **oracle-error:** 1 (excluded from scoring)
+- **port-error:** 0 · **timeout:** 11 · **oracle-error:** 0 (excluded from scoring)
 - **href-bearing ids in the surveyed set:** 34 — the substantive
   coverage (ids whose ORACLE output actually emits ≥1 real href, not an
   empty or tooltip-only map); see the dedicated table below.
@@ -68,13 +68,13 @@ reader does not have to cross-reference `map-parity.json`.
 | `windows-b106` | `windows/b106.gv` | conformant | conformant | conformant |
 | `windows-b29` | `windows/b29.gv` | conformant | conformant | conformant |
 
-## map-conformant (749)
+## map-conformant (739)
 
 Port output is *conformant* with the oracle in BOTH cmapx and imap: every
 area/line matches exactly (shape/href/title/alt/target) with coords equal
 after rounding.
 
-_Conformant ids (749) are omitted for brevity — the full roster is in
+_Conformant ids (739) are omitted for brevity — the full roster is in
 [map-parity.json](map-parity.json)._
 
 ## Tracked diverged (19 format-rows) — worst-first
@@ -123,15 +123,24 @@ _(none)_
 | id | path | message |
 |---|---|---|
 
-## timeout (1)
+## timeout (11)
 
 | id | path | message |
 |---|---|---|
 | `2095_1` | `2095_1.dot` |  |
+| `2108` | `2108.dot` |  |
+| `2343` | `2343.dot` |  |
+| `2391` | `2391.dot` |  |
+| `2458` | `2458.dot` |  |
+| `2743` | `2743.dot` |  |
+| `graphs-b123` | `graphs/b123.gv` |  |
+| `graphs-b77` | `graphs/b77.gv` |  |
+| `graphs-bad` | `graphs/bad.gv` |  |
+| `graphs-in` | `graphs/in.gv` |  |
+| `graphs-ps` | `graphs/ps.gv` |  |
 
-## oracle-error (1) — excluded from scoring
+## oracle-error (0) — excluded from scoring
 
 | id | path | message |
 |---|---|---|
-| `1652` | `1652.dot` | oracle exit null |
 
