@@ -67,19 +67,27 @@ spring-model engines). The `dot` engine's *layout* is **not** affected by this
 iterative-model determinism; a separate, narrowly-bounded `dot` spline-routing
 floating-point delta is covered in **A3** below.
 
-> **Scope, not an observed corpus divergence.** A1 is a **prospective
-> portability caveat**, not a measured divergence in the parity survey. The
-> survey is **dot-engine only**: the native oracle runs under
-> `GVBINDIR=/tmp/ghl`, which symlinks **only** the `core` + `dot_layout` plugins
-> (`test/corpus/gen-headless-gvbindir.sh` loops over exactly `core dot_layout` —
-> no `neato`/`fdp`/`circo`/`twopi`/`osage`/`sfdp` layout plugin is present), and
-> both oracle and port are invoked with the `dot` engine
-> (`test/corpus/survey.ts`). So the force-directed engines are **implemented**
-> (`src/layout/{neato,fdp,sfdp,circo,twopi,osage}`, registered and unit-tested)
-> **but never exercised by the parity dashboard** — corpus ids like `*_neato` /
-> `*_circo` / `root_twopi` are *filenames* laid out with `dot`, not their native
-> engine. A1 therefore matches **zero** corpus graphs today because those
-> engines are unsurveyed, **not** because they are proven conformant.
+> **Scope, historically an unmeasured caveat — now partially measured.** The
+> **main dot-engine SVG survey** (`test/corpus/survey.ts`) is still
+> **dot-only**: the native oracle runs under `GVBINDIR=/tmp/ghl`, which
+> symlinks **only** the `core` + `dot_layout` plugins
+> (`test/corpus/gen-headless-gvbindir.sh` loops over exactly `core dot_layout`
+> — no `neato`/`fdp`/`circo`/`twopi`/`osage`/`sfdp` layout plugin is present),
+> and both oracle and port are invoked with the `dot` engine. So corpus ids
+> like `*_neato` / `*_circo` / `root_twopi` are *filenames* laid out with
+> `dot` on that survey, not their native engine, and A1 matches **zero**
+> graphs there — not because the engines are proven conformant, but because
+> that particular survey never exercises them.
+>
+> **But all six A1 engines now have their own native-engine survey**, via
+> `test/corpus/engine-walk.ts` + `parity-report.ts` (`GVBINDIR`-independent —
+> each spawns `dot -K <engine> -Txdot` directly), at two different rigor
+> levels documented separately below: `circo`/`twopi`/`osage` run at the same
+> **±0.01 deterministic** tolerance as the dot survey with per-id root-cause
+> triage ("Engine-track acceptance" below); `neato`/`fdp`/`sfdp` run at a
+> looser **±0.5 characterization** tolerance with no per-id triage yet
+> ("Iterative-engine characterization" below). Current cross-engine numbers:
+> [`PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md).
 
 **Characterization.** These engines run iterative numerical layouts whose results
 depend on floating-point rounding — specifically fused multiply-add (FMA) and
@@ -93,12 +101,17 @@ potential divergence is in fine node coordinates.
 **Why accepted.** This is a hard constraint of running in JS, not a design choice
 — the same family as A3's Apple-`hypot` sensitivity. There is no way to guarantee
 bit-identical transcendental/FMA results across all target runtimes, so a byte bar
-would be untestable rather than merely expensive. **To actually assess A1** (as
-opposed to caveat it) requires a separate force-directed parity track: a
-`GVBINDIR` variant carrying the force-directed plugins, each input surveyed under
-its native engine vs the port. The honest ceiling on that work is to **narrow**
-A1 to "no active divergence on the reference platform," never to eliminate the
-cross-platform caveat.
+would be untestable rather than merely expensive. **Assessing A1** (as opposed to
+just caveating it) required a separate native-engine parity track — built
+2026-07-11 as `test/corpus/engine-walk.ts` + `parity-report.ts`, surveying each
+input under its own engine instead of `dot`. The honest ceiling on that work is
+to **narrow** A1 to "no active divergence on the reference platform," never to
+eliminate the cross-platform caveat; the results so far (below) hold to that
+ceiling: `circo`/`twopi`/`osage` have each surfaced and root-caused a handful of
+genuine A1/A9 instances, and `neato`/`fdp`/`sfdp`'s first characterization sweep
+shows roughly a third of the corpus already within 0.5pt of native, meaning the
+ported arithmetic (`fma.ts`, `arm-pow.ts`, matched PRNG) holds for most small/
+medium graphs — the rest is untriaged drift, not yet individually root-caused.
 
 **Engine-track acceptance: twopi arrows family.** <a id="a1-twopi-arrows-family"></a>
 The blockquote above describes the dot-engine SVG survey, where A1 matches zero
@@ -138,6 +151,32 @@ PRISM reproduces the oracle node-for-node (3e-14), and restoring only the 5
 ULP-divergent leaf positions flips the entire layout back to the port's
 mirror. Full RCA: `.agent-notes/twopi-radial-drift-rca.md` (decision journal
 2026-07-11).
+
+**Iterative-engine characterization: neato/fdp/sfdp.** <a id="a1-iterative-characterization"></a>
+Unlike the `circo`/`twopi`/`osage` engine tracks above, `neato`/`fdp`/`sfdp`
+are **not** yet triaged per-id — `engine-walk.ts` records a `tolerance: 0.5`
+field for these three and `parity-report.ts` renders them in a separate
+"Iterative engines (±0.5 characterization)" section of
+[`PARITY.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY.md),
+explicitly **not** comparable to the ±0.01 deterministic pass rates elsewhere
+in this document. First sweep (2026-07-11):
+
+| engine | surveyed | within ±0.5pt | diverged | errors |
+|---|---:|---:|---:|---:|
+| `neato` | 762 | 263 (34.5%) | 492 | 7 |
+| `fdp`   | 762 | 311 (40.8%) | 435 | 16 |
+| `sfdp`  | 762 | 260 (34.1%) | 494 | 8 |
+
+Reading: roughly a third of the corpus lands within 0.5pt of native even on
+these engines, i.e. the ported iterative arithmetic holds for most small/
+medium graphs; drift dominates the rest. None of the 1,421 combined diverged
+rows have been individually root-caused yet — this is a **characterization**,
+not an accepted-deltas list, and no id here is (yet) claimed as a verified A1
+instance the way the twopi arrows family and `1855` are above. Per-id triage
+of this backlog is future work; live counts in the per-engine dashboards
+([`PARITY-neato.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-neato.md),
+[`PARITY-fdp.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-fdp.md),
+[`PARITY-sfdp.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-sfdp.md)).
 
 ### A2. Text measurement (font metrics) → label-driven layout — CLOSED
 
