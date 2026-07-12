@@ -80,3 +80,26 @@ fidelity fix to an existing emitter.
 ## Rollback
 
 Reversible — `git revert`; no migrations.
+
+## Baseline reality (landed 2026-07-11 late — supersedes the "triage buckets" framing)
+
+The baseline survey is in: **0/762 conformant, 761 diverged, 1 timeout** —
+this task is a PORTING mission, not a fix-up. `PARITY-JSON.md` buckets:
+
+1. **400 ids — `[graph]/_draw_[missing]`**: the port emits no graph-level
+   attrs at all (`_draw_`, `bb`, `xdotversion`). C: `attach_attrs`/graph
+   xdot emission in `gvrender_core_json.c`.
+2. **304 ids — `[graph]/_subgraph_cnt`**: hardcoded 0; `write_subgs`
+   recursion (subgraph/cluster objects) entirely unported.
+3. **56 ids — invalid JSON**: cgraph `0x01` sentinel bytes leak into edge
+   attr values (e.g. 2743 `"l": "\u0001"`). This is a MODEL-side leak —
+   check whether other emitters (dot/imagemap) can also see raw sentinel
+   values, and fix at the attr-read boundary, not per-emitter.
+4. **Every node/edge — `"_draw_": []`**: draw-op arrays exist but are
+   never populated; wire the xdot op stream (the xdot renderer is
+   conformant 754/759 — reuse its op generation, do not re-derive).
+
+Recommended split if this exceeds one task: T11a graph-level attrs +
+draw-op population; T11b write_subgs recursion; T11c sentinel-leak fix
+(shared boundary — coordinate write-set with anything touching
+model attr reads).
