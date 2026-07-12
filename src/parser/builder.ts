@@ -388,7 +388,9 @@ export function buildFromAst(ast: ParsedGraph): Graph {
   else if (ast.directed) kind = 'directed';
   else if (ast.strict) kind = 'strict-undirected';
   else kind = 'undirected';
-  const graph = new Graph(ast.id ?? '', kind);
+  // ast.id is null for a nameless root (`digraph {`) and '' for an explicit
+  // empty name (`digraph "" {`); only the former is anonymous in cgraph (→ `%1`).
+  const graph = new Graph(ast.id ?? '', kind, ast.id == null);
   // An unnamed root graph is itself anonymous in cgraph (agopen with no name),
   // consuming anon id 1 before any statement — so the first anonymous subgraph is
   // %3, not %1 (a named root leaves the counter at 0 → first subgraph %1).

@@ -14,10 +14,23 @@ import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import type { Point } from '../model/geom.js';
+import { POINTS_PER_INCH } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
+import type { TextlabelT } from '../common/types.js';
+import { lateDouble } from '../common/nodeinit.js';
+import { substObjAnchor } from '../common/subst.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import type { ObjState, RenderJob } from '../gvc/job.js';
 import { MapShape } from '../gvc/job.js';
+import {
+  type MapCtx,
+  computeNodeUrlMap,
+  computeGraphUrlMap,
+  computeClusterUrlMap,
+  computeLabelRectMap,
+  computeEdgeSplineMaps,
+} from '../gvc/anchor.js';
+import { initJobViewportZoom, parseDrawingSize } from '../gvc/viewport.js';
 import { escapeXml } from './svg-helpers.js';
 
 // ---------------------------------------------------------------------------
@@ -284,153 +297,197 @@ export class PlainExtRenderer implements RendererPlugin {
 }
 
 // ---------------------------------------------------------------------------
-// ImapRenderer
+// Imagemap renderers (cmapx / imap and their no-polygon `_np` variants)
 // ---------------------------------------------------------------------------
+
+/** Graph name as `agnameof` returns it: the DOT name, or `%1` for an anonymous
+ * root (cgraph's first anonymous id). The port stores `''` for an anonymous
+ * root (dot/xdot re-serialization must not print a `%`-name — see dot.ts), so
+ * the imagemap layer restores the internal name only here.
+ * @see lib/cgraph/id.c:agnameof ; lib/cgraph/id.c:idmap (anon → `%1`) */
+export function mapGraphName(g: Graph): string {
+  return g.anonymous ? '%1' : g.name;
+}
+
+/** First non-empty attr walking parent scopes (agget inheritance). */
+function graphAttr(g: Graph, key: string): string | undefined {
+  for (let s: Graph | null = g; s !== null; s = s.parent) {
+    const v = s.attrs.get(key);
+    if (v !== undefined && v !== '') return v;
+  }
+  return undefined;
+}
+
+/** Root graph URL (href, then URL) with \-substitution, for the imap `default`
+ * line. Resolved from attrs because obj.url is populated after beginGraph.
+ * @see lib/common/emit.c:initObjMapData ; gvrender_core_map.c:map_begin_page */
+export function graphMapUrl(g: Graph): string | null {
+  const raw = graphAttr(g, 'href') ?? graphAttr(g, 'URL');
+  return raw === undefined ? null : substObjAnchor(raw, g);
+}
+
+/** Build the imagemap coordinate context. The map device's default dpi is 96
+ * (dpi/resolution attrs override); zoom fits the drawing into `size=` exactly
+ * as the SVG path (initJobViewportZoom). @see gvrender_core_map.c device_features_map */
+export function buildMapCtx(g: Graph, job: RenderJob, mapPolygon: boolean): MapCtx {
+  const drawingDpi = lateDouble(g.attrs.get('dpi'), lateDouble(g.attrs.get('resolution'), 0, 0), 0);
+  const mapDpi = drawingDpi > 0 ? drawingDpi : 96;
+  const devscale = mapDpi / POINTS_PER_INCH;
+  const z = initJobViewportZoom(job.bb, parseDrawingSize(g.attrs.get('size')), job.pad);
+  // The graph `margin=` enters device space as `margin * dpi/72` (independent
+  // of zoom), added after the scaled transform. @see emit.c:setup_page.
+  const marginOff = { x: job.margin.x * devscale, y: job.margin.y * devscale };
+  return { bb: job.bb, pad: job.pad, scale: z * devscale, marginOff, mapPolygon };
+}
+
+/** Head/tail/center label anchor bundle. */
+interface EdgeLabelAnchor { url: string | null; tooltip: string | null; target: string | null; explicit: boolean; }
+
+/** Coalesce nullable anchor fields to '' (gvrender_begin_anchor passes ""). */
+function anchorOf(url: string | null, tooltip: string | null, target: string | null, id: string | null): AnchorCtx {
+  return { url: url ?? '', tooltip: tooltip ?? '', target: target ?? '', id: id ?? '' };
+}
+
+/**
+ * Shared imagemap renderer. Ports plugin/core/gvrender_core_map.c: the
+ * `url_map_p` geometry (src/gvc/anchor.ts) is populated in the begin hooks and
+ * emitted as `<area>` (cmapx) or `keyword url coords` (imap) lines in traversal
+ * order. The `_np` subclasses disable polygon/circle shapes
+ * (device_features_map_nopoly).
+ * @see plugin/core/gvrender_core_map.c
+ */
+abstract class MapRendererBase implements RendererPlugin {
+  abstract readonly type: string;
+  readonly quality = 0;
+  protected abstract readonly isCmapx: boolean;
+  protected abstract readonly mapPolygon: boolean;
+  private mapCtx: MapCtx | null = null;
+
+  beginGraph(g: Graph, job: RenderJob): void {
+    // Reset per render — instance may be reused across diagrams.
+    this.mapCtx = buildMapCtx(g, job, this.mapPolygon);
+    if (this.isCmapx) {
+      const name = escapeXml(mapGraphName(g));
+      job.write('<map id=' + DQ + name + DQ + ' name=' + DQ + name + DQ + '>\n');
+      return;
+    }
+    job.write('base referer\n');
+    const url = graphMapUrl(g);
+    if (url) job.write('default ' + url + '\n');
+  }
+
+  endGraph(_g: Graph, job: RenderJob): void {
+    if (!this.isCmapx) return;
+    const obj = job.obj;
+    // Root graph hot spot (map_end_page). @see gvrender_core_map.c:map_end_page
+    if (obj !== null && this.mapCtx !== null && (obj.url !== null || obj.explicitTooltip)) {
+      computeGraphUrlMap(obj, this.mapCtx);
+    }
+    const buf: string[] = [];
+    writeCmapxGraphShape(job, buf);
+    job.write(buf.join(''));
+    job.write('</map>\n');
+  }
+
+  beginNode(n: Node, job: RenderJob): void {
+    if (this.mapCtx !== null && job.obj !== null) computeNodeUrlMap(n, job.obj, this.mapCtx);
+  }
+
+  beginCluster(sg: Graph, job: RenderJob): void {
+    const bb = sg.info.bb;
+    if (this.mapCtx !== null && job.obj !== null && bb !== undefined) {
+      computeClusterUrlMap(bb, job.obj, this.mapCtx);
+    }
+  }
+
+  endEdge(e: Edge, job: RenderJob): void {
+    if (this.mapCtx !== null && job.obj !== null) this.emitEdge(e, job.obj, job);
+  }
+
+  beginAnchor(url: string, tip: string, target: string, id: string, job: RenderJob): void {
+    const obj = job.obj;
+    if (obj === null || obj.urlMapPts.length === 0) return;
+    this.emitShape(obj.urlMapShape, obj.urlMapPts, { url, tooltip: tip, target, id }, job);
+  }
+
+  endNode(_n: Node, _job: RenderJob): void { /* no-op */ }
+  beginEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
+  endCluster(_sg: Graph, _job: RenderJob): void { /* no-op */ }
+  textspan(_pos: Point, _span: TextSpan, _job: RenderJob): void { /* no-op */ }
+  ellipse(_c: Point, _rx: number, _ry: number, _f: boolean, _j: RenderJob): void { /* no-op */ }
+  polygon(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
+  bezier(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
+  polyline(_pts: Point[], _job: RenderJob): void { /* no-op */ }
+
+  /** Emit one hot spot: `<area>` (cmapx) or a plain `keyword url coords` line. */
+  private emitShape(shape: MapShape, pts: Point[], a: AnchorCtx, job: RenderJob): void {
+    const buf: string[] = [];
+    if (this.isCmapx) mapOutputCmapx(shape, pts, a, true, buf);
+    else mapOutputImap(shape, pts, a.url, buf);
+    job.write(buf.join(''));
+  }
+
+  /** Whole-edge spline outline(s) then center/head/tail label hot spots.
+   * @see lib/common/emit.c:emit_begin_edge (2851-2872) / emit_end_edge */
+  private emitEdge(e: Edge, obj: ObjState, job: RenderJob): void {
+    const spl = e.info.spl;
+    const wholeEdge = obj.url !== null || obj.explicitTooltip;
+    if (spl !== undefined && this.mapPolygon && wholeEdge) {
+      const w2 = Math.max(obj.penWidth / 2, 2);
+      const anchor = anchorOf(obj.url, obj.tooltip, obj.target, obj.id);
+      for (const poly of computeEdgeSplineMaps(spl, w2, this.mapCtx!)) {
+        this.emitShape(MapShape.Polygon, poly, anchor, job);
+      }
+    }
+    const centerA: EdgeLabelAnchor = {
+      url: obj.labelUrl, tooltip: obj.labelTooltip, target: obj.labelTarget, explicit: obj.explicitLabelTooltip,
+    };
+    this.emitEdgeLabel(e.info.label, centerA, obj, job);
+    this.emitEdgeLabel(e.info.xlabel, centerA, obj, job);
+    this.emitEdgeLabel(e.info.head_label,
+      { url: obj.headUrl, tooltip: obj.headTooltip, target: obj.headTarget, explicit: obj.explicitHeadTooltip },
+      obj, job);
+    this.emitEdgeLabel(e.info.tail_label,
+      { url: obj.tailUrl, tooltip: obj.tailTooltip, target: obj.tailTarget, explicit: obj.explicitTailTooltip },
+      obj, job);
+  }
+
+  /** One edge label hot spot (map_label rect), if placed and url/explicit-tip.
+   * @see lib/common/emit.c:emit_edge_label */
+  private emitEdgeLabel(lab: TextlabelT | undefined, la: EdgeLabelAnchor, obj: ObjState, job: RenderJob): void {
+    const placed = lab !== undefined && lab.set && this.mapCtx !== null;
+    if (!placed || (la.url === null && !la.explicit)) return;
+    computeLabelRectMap(lab, obj, this.mapCtx!);
+    this.emitShape(MapShape.Rectangle, obj.urlMapPts, anchorOf(la.url, la.tooltip, la.target, obj.id), job);
+  }
+}
 
 /** @see plugin/core/gvrender_core_map.c FORMAT_IMAP */
-export class ImapRenderer implements RendererPlugin {
+export class ImapRenderer extends MapRendererBase {
   readonly type = 'imap';
-  readonly quality = 0;
-
-  beginGraph(_g: Graph, job: RenderJob): void {
-    job.write('base referer\n');
-    const url = job.obj?.url;
-    if (url) job.write('default ' + url + '\n');
-  }
-
-  endGraph(_g: Graph, _job: RenderJob): void { /* no-op */ }
-  beginNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  endNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  beginEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  endEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  textspan(_pos: Point, _span: TextSpan, _job: RenderJob): void { /* no-op */ }
-  ellipse(_c: Point, _rx: number, _ry: number, _f: boolean, _j: RenderJob): void { /* no-op */ }
-  polygon(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  bezier(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  polyline(_pts: Point[], _job: RenderJob): void { /* no-op */ }
-
-  beginAnchor(href: string, _tip: string, _tgt: string, _id: string, job: RenderJob): void {
-    const obj = job.obj;
-    if (!obj || !obj.urlMapPts.length) return;
-    const buf: string[] = [];
-    mapOutputImap(obj.urlMapShape, obj.urlMapPts, href, buf);
-    job.write(buf.join(''));
-  }
+  protected readonly isCmapx = false;
+  protected readonly mapPolygon = true;
 }
-
-// ---------------------------------------------------------------------------
-// ImapNpRenderer
-// ---------------------------------------------------------------------------
 
 /** @see plugin/core/gvrender_core_map.c FORMAT_IMAP (no-polygon device) */
-export class ImapNpRenderer implements RendererPlugin {
+export class ImapNpRenderer extends MapRendererBase {
   readonly type = 'imap-np';
-  readonly quality = 0;
-
-  beginGraph(_g: Graph, job: RenderJob): void {
-    job.write('base referer\n');
-    const url = job.obj?.url;
-    if (url) job.write('default ' + url + '\n');
-  }
-
-  endGraph(_g: Graph, _job: RenderJob): void { /* no-op */ }
-  beginNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  endNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  beginEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  endEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  textspan(_pos: Point, _span: TextSpan, _job: RenderJob): void { /* no-op */ }
-  ellipse(_c: Point, _rx: number, _ry: number, _f: boolean, _j: RenderJob): void { /* no-op */ }
-  polygon(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  bezier(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  polyline(_pts: Point[], _job: RenderJob): void { /* no-op */ }
-
-  beginAnchor(href: string, _tip: string, _tgt: string, _id: string, job: RenderJob): void {
-    const obj = job.obj;
-    if (!obj || !obj.urlMapPts.length) return;
-    const buf: string[] = [];
-    mapOutputImap(obj.urlMapShape, obj.urlMapPts, href, buf);
-    job.write(buf.join(''));
-  }
+  protected readonly isCmapx = false;
+  protected readonly mapPolygon = false;
 }
-
-// ---------------------------------------------------------------------------
-// CmapxRenderer
-// ---------------------------------------------------------------------------
 
 /** @see plugin/core/gvrender_core_map.c FORMAT_CMAPX */
-export class CmapxRenderer implements RendererPlugin {
+export class CmapxRenderer extends MapRendererBase {
   readonly type = 'cmapx';
-  readonly quality = 0;
-
-  beginGraph(g: Graph, job: RenderJob): void {
-    const name = escapeXml(g.name);
-    job.write('<map id=' + DQ + name + DQ + ' name=' + DQ + name + DQ + '>\n');
-  }
-
-  endGraph(_g: Graph, job: RenderJob): void {
-    const buf: string[] = [];
-    writeCmapxGraphShape(job, buf);
-    job.write(buf.join(''));
-    job.write('</map>\n');
-  }
-
-  beginNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  endNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  beginEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  endEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  textspan(_pos: Point, _span: TextSpan, _job: RenderJob): void { /* no-op */ }
-  ellipse(_c: Point, _rx: number, _ry: number, _f: boolean, _j: RenderJob): void { /* no-op */ }
-  polygon(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  bezier(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  polyline(_pts: Point[], _job: RenderJob): void { /* no-op */ }
-
-  beginAnchor(href: string, tip: string, target: string, id: string, job: RenderJob): void {
-    const obj = job.obj;
-    if (!obj || !obj.urlMapPts.length) return;
-    const buf: string[] = [];
-    mapOutputCmapx(obj.urlMapShape, obj.urlMapPts, { url: href, tooltip: tip, target, id }, true, buf);
-    job.write(buf.join(''));
-  }
+  protected readonly isCmapx = true;
+  protected readonly mapPolygon = true;
 }
 
-// ---------------------------------------------------------------------------
-// CmapxNpRenderer
-// ---------------------------------------------------------------------------
-
 /** @see plugin/core/gvrender_core_map.c FORMAT_CMAPX (no-polygon device) */
-export class CmapxNpRenderer implements RendererPlugin {
+export class CmapxNpRenderer extends MapRendererBase {
   readonly type = 'cmapx-np';
-  readonly quality = 0;
-
-  beginGraph(g: Graph, job: RenderJob): void {
-    const name = escapeXml(g.name);
-    job.write('<map id=' + DQ + name + DQ + ' name=' + DQ + name + DQ + '>\n');
-  }
-
-  endGraph(_g: Graph, job: RenderJob): void {
-    const buf: string[] = [];
-    writeCmapxGraphShape(job, buf);
-    job.write(buf.join(''));
-    job.write('</map>\n');
-  }
-
-  beginNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  endNode(_n: Node, _job: RenderJob): void { /* no-op */ }
-  beginEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  endEdge(_e: Edge, _job: RenderJob): void { /* no-op */ }
-  textspan(_pos: Point, _span: TextSpan, _job: RenderJob): void { /* no-op */ }
-  ellipse(_c: Point, _rx: number, _ry: number, _f: boolean, _j: RenderJob): void { /* no-op */ }
-  polygon(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  bezier(_pts: Point[], _filled: boolean, _job: RenderJob): void { /* no-op */ }
-  polyline(_pts: Point[], _job: RenderJob): void { /* no-op */ }
-
-  beginAnchor(href: string, tip: string, target: string, id: string, job: RenderJob): void {
-    const obj = job.obj;
-    if (!obj || !obj.urlMapPts.length) return;
-    const buf: string[] = [];
-    mapOutputCmapx(obj.urlMapShape, obj.urlMapPts, { url: href, tooltip: tip, target, id }, true, buf);
-    job.write(buf.join(''));
-  }
+  protected readonly isCmapx = true;
+  protected readonly mapPolygon = false;
 }
 
 // ---------------------------------------------------------------------------

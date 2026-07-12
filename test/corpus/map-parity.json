@@ -1,27 +1,25 @@
 {
-  "generatedAt": "2026-07-12T01:36:02.434Z",
+  "generatedAt": "2026-07-12T03:19:25.581Z",
   "generatedWith": "test/corpus/map-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 762,
   "counts": {
-    "conformant": 641,
-    "diverged": 117,
+    "conformant": 749,
+    "diverged": 11,
     "accepted": 0,
     "port-error": 0,
     "oracle-error": 1,
-    "timeout": 3
+    "timeout": 1
   },
   "results": [
     {
       "id": "2285",
       "path": "2285.dot",
       "size": 11,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -45,11 +43,9 @@
       "id": "2257",
       "path": "2257.dot",
       "size": 18,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -86,11 +82,9 @@
       "id": "negative-dpi",
       "path": "negative-dpi.dot",
       "size": 33,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -101,11 +95,9 @@
       "id": "2699",
       "path": "2699.dot",
       "size": 35,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -116,11 +108,9 @@
       "id": "1724",
       "path": "1724.dot",
       "size": 36,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -131,11 +121,9 @@
       "id": "usershape",
       "path": "usershape.dot",
       "size": 38,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -159,11 +147,9 @@
       "id": "813",
       "path": "813.dot",
       "size": 39,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -187,11 +173,9 @@
       "id": "2225",
       "path": "2225.dot",
       "size": 43,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -202,11 +186,9 @@
       "id": "2636",
       "path": "2636.dot",
       "size": 43,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -230,11 +212,9 @@
       "id": "2636_1",
       "path": "2636_1.dot",
       "size": 45,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -245,11 +225,9 @@
       "id": "2636_2",
       "path": "2636_2.dot",
       "size": 45,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -299,11 +277,9 @@
       "id": "2457_1",
       "path": "2457_1.dot",
       "size": 51,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -314,11 +290,9 @@
       "id": "2457_2",
       "path": "2457_2.dot",
       "size": 51,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -329,11 +303,9 @@
       "id": "2458",
       "path": "2458.dot",
       "size": 52,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -396,11 +368,9 @@
       "id": "2391",
       "path": "2391.dot",
       "size": 61,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -411,11 +381,9 @@
       "id": "2743",
       "path": "2743.dot",
       "size": 66,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -465,11 +433,9 @@
       "id": "2168",
       "path": "2168.dot",
       "size": 70,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -480,11 +446,9 @@
       "id": "2490",
       "path": "2490.dot",
       "size": 70,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -495,11 +459,9 @@
       "id": "2682",
       "path": "2682.dot",
       "size": 71,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -549,11 +511,9 @@
       "id": "graphs-radius",
       "path": "graphs/radius.gv",
       "size": 74,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -577,11 +537,9 @@
       "id": "2559",
       "path": "2559.dot",
       "size": 78,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -618,11 +576,9 @@
       "id": "2619",
       "path": "2619.dot",
       "size": 79,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -633,11 +589,9 @@
       "id": "165",
       "path": "165.dot",
       "size": 81,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -687,11 +641,9 @@
       "id": "2391_1",
       "path": "2391_1.dot",
       "size": 82,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -702,11 +654,9 @@
       "id": "2564",
       "path": "2564.dot",
       "size": 82,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -717,11 +667,9 @@
       "id": "2572",
       "path": "2572.dot",
       "size": 82,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -771,11 +719,9 @@
       "id": "165_3",
       "path": "165_3.dot",
       "size": 84,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -812,11 +758,9 @@
       "id": "1444",
       "path": "1444.dot",
       "size": 87,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -827,11 +771,9 @@
       "id": "1444-2",
       "path": "1444-2.dot",
       "size": 87,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -842,11 +784,9 @@
       "id": "2168_4",
       "path": "2168_4.dot",
       "size": 87,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -857,11 +797,9 @@
       "id": "165_2",
       "path": "165_2.dot",
       "size": 88,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -872,11 +810,9 @@
       "id": "2643",
       "path": "2643.dot",
       "size": 91,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -900,11 +836,9 @@
       "id": "2460",
       "path": "2460.dot",
       "size": 93,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -928,11 +862,9 @@
       "id": "2437",
       "path": "2437.dot",
       "size": 98,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -1138,11 +1070,9 @@
       "id": "2087",
       "path": "2087.dot",
       "size": 118,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -1166,11 +1096,9 @@
       "id": "1902",
       "path": "1902.dot",
       "size": 119,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -1964,8 +1892,8 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 3,
-        "firstDiff": "map/@id"
+        "diffCount": 1,
+        "firstDiff": "map/area[count]"
       },
       "imap": {
         "verdict": "conformant"
@@ -2067,11 +1995,9 @@
       "id": "2342",
       "path": "2342.dot",
       "size": 146,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -2238,11 +2164,9 @@
       "id": "1514",
       "path": "1514.dot",
       "size": 168,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -2266,11 +2190,9 @@
       "id": "2639",
       "path": "2639.dot",
       "size": 170,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -2479,8 +2401,8 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 3,
-        "firstDiff": "map/@id"
+        "diffCount": 1,
+        "firstDiff": "map/area[count]"
       },
       "imap": {
         "verdict": "diverged",
@@ -2519,11 +2441,9 @@
       "id": "2683",
       "path": "2683.dot",
       "size": 223,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -2716,11 +2636,9 @@
       "id": "2609",
       "path": "2609.dot",
       "size": 238,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3498,11 +3416,9 @@
       "id": "2168_3",
       "path": "2168_3.dot",
       "size": 322,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3539,11 +3455,9 @@
       "id": "graphs-flatedge",
       "path": "graphs/flatedge.gv",
       "size": 330,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3593,11 +3507,9 @@
       "id": "2168_2",
       "path": "2168_2.dot",
       "size": 349,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3608,11 +3520,9 @@
       "id": "graphs-ZapfDingbats",
       "path": "graphs/ZapfDingbats.gv",
       "size": 360,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3649,11 +3559,9 @@
       "id": "graphs-ZapfChancery",
       "path": "graphs/ZapfChancery.gv",
       "size": 386,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3781,11 +3689,9 @@
       "id": "2613",
       "path": "2613.dot",
       "size": 411,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3822,11 +3728,9 @@
       "id": "linux.i386-radius_dot",
       "path": "linux.i386/radius_dot.gv",
       "size": 418,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3837,11 +3741,9 @@
       "id": "linux.x86-radius_dot",
       "path": "linux.x86/radius_dot.gv",
       "size": 418,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3852,11 +3754,9 @@
       "id": "macosx-radius_dot",
       "path": "macosx/radius_dot.gv",
       "size": 418,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3867,11 +3767,9 @@
       "id": "nshare-radius_dot",
       "path": "nshare/radius_dot.gv",
       "size": 418,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3882,11 +3780,9 @@
       "id": "windows-radius_dot",
       "path": "windows/radius_dot.gv",
       "size": 418,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -3949,16 +3845,12 @@
       "id": "2258",
       "path": "2258.dot",
       "size": 460,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -3966,11 +3858,9 @@
       "id": "2556",
       "path": "2556.dot",
       "size": 469,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -4124,11 +4014,9 @@
       "id": "2159",
       "path": "2159.dot",
       "size": 538,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -4139,16 +4027,12 @@
       "id": "graphs-b155",
       "path": "graphs/b155.gv",
       "size": 542,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -4172,8 +4056,8 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 3,
-        "firstDiff": "map/@id"
+        "diffCount": 1,
+        "firstDiff": "map/area[count]"
       },
       "imap": {
         "verdict": "diverged",
@@ -4199,11 +4083,9 @@
       "id": "241_0",
       "path": "241_0.dot",
       "size": 578,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -4734,11 +4616,9 @@
       "id": "2325",
       "path": "2325.dot",
       "size": 621,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -5724,11 +5604,9 @@
       "id": "2801",
       "path": "2801.dot",
       "size": 651,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -5804,16 +5682,12 @@
       "id": "graphs-b85",
       "path": "graphs/b85.gv",
       "size": 668,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -5847,11 +5721,9 @@
       "id": "graphs-sides",
       "path": "graphs/sides.gv",
       "size": 680,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -5875,11 +5747,9 @@
       "id": "1658",
       "path": "1658.dot",
       "size": 711,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -5903,11 +5773,9 @@
       "id": "2168_1",
       "path": "2168_1.dot",
       "size": 729,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -5983,11 +5851,9 @@
       "id": "2168_5",
       "path": "2168_5.dot",
       "size": 777,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6167,11 +6033,9 @@
       "id": "share-flatedge",
       "path": "share/flatedge.gv",
       "size": 918,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6182,11 +6046,9 @@
       "id": "graphs-Symbol",
       "path": "graphs/Symbol.gv",
       "size": 924,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6327,11 +6189,9 @@
       "id": "2521_1",
       "path": "2521_1.dot",
       "size": 1062,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6420,11 +6280,9 @@
       "id": "linux.x86-flatedge_dot",
       "path": "linux.x86/flatedge_dot.gv",
       "size": 1177,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6435,11 +6293,9 @@
       "id": "nshare-flatedge_dot",
       "path": "nshare/flatedge_dot.gv",
       "size": 1182,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6557,13 +6413,17 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "diffCount": 67,
+        "firstDiff": "area[0].shape",
+        "maxDelta": 468,
+        "maxDeltaPath": "area[17].coords[0]"
       },
       "imap": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "diffCount": 33,
+        "firstDiff": "imap/line[2].keyword",
+        "maxDelta": 468,
+        "maxDeltaPath": "imap/line[19].coords[0]"
       },
       "hasHref": true
     },
@@ -6610,11 +6470,9 @@
       "id": "1855",
       "path": "1855.dot",
       "size": 1335,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6667,13 +6525,13 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "diffCount": 15,
+        "firstDiff": "area[0].shape"
       },
       "imap": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "diffCount": 6,
+        "firstDiff": "imap/line[1].keyword"
       },
       "hasHref": true
     },
@@ -6733,11 +6591,9 @@
       "id": "graphs-Times",
       "path": "graphs/Times.gv",
       "size": 1437,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6748,11 +6604,9 @@
       "id": "graphs-Bookman",
       "path": "graphs/Bookman.gv",
       "size": 1454,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6789,11 +6643,9 @@
       "id": "graphs-Palatino",
       "path": "graphs/Palatino.gv",
       "size": 1462,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6817,11 +6669,9 @@
       "id": "graphs-AvantGarde",
       "path": "graphs/AvantGarde.gv",
       "size": 1484,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -6910,11 +6760,9 @@
       "id": "graphs-NewCenturySchlbk",
       "path": "graphs/NewCenturySchlbk.gv",
       "size": 1526,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -7227,13 +7075,13 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "diffCount": 15,
+        "firstDiff": "area[0].shape"
       },
       "imap": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "diffCount": 6,
+        "firstDiff": "imap/line[1].keyword"
       },
       "hasHref": true
     },
@@ -7244,13 +7092,13 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "diffCount": 15,
+        "firstDiff": "area[0].shape"
       },
       "imap": {
         "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "diffCount": 6,
+        "firstDiff": "imap/line[1].keyword"
       },
       "hasHref": true
     },
@@ -7674,11 +7522,9 @@
       "id": "1436",
       "path": "1436.dot",
       "size": 2599,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -7871,11 +7717,9 @@
       "id": "graphs-Helvetica",
       "path": "graphs/Helvetica.gv",
       "size": 2966,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -7886,11 +7730,9 @@
       "id": "2592",
       "path": "2592.dot",
       "size": 3001,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -8008,8 +7850,10 @@
       "verdict": "diverged",
       "cmapx": {
         "verdict": "diverged",
-        "diffCount": 3,
-        "firstDiff": "map/@id"
+        "diffCount": 139,
+        "firstDiff": "area[2].shape",
+        "maxDelta": 854,
+        "maxDeltaPath": "area[22].coords[2]"
       },
       "imap": {
         "verdict": "conformant"
@@ -8176,11 +8020,9 @@
       "id": "2669",
       "path": "2669.dot",
       "size": 3835,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -8334,11 +8176,9 @@
       "id": "2095",
       "path": "2095.dot",
       "size": 4865,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -8639,12 +8479,10 @@
       "cmapx": {
         "verdict": "diverged",
         "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "firstDiff": "area[23].title"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9336,11 +9174,9 @@
       "id": "42",
       "path": "42.dot",
       "size": 11978,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -9520,16 +9356,12 @@
       "id": "1447_1",
       "path": "1447_1.dot",
       "size": 14827,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9628,14 +9460,12 @@
       "id": "1718",
       "path": "1718.dot",
       "size": 22038,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -9747,16 +9577,12 @@
       "id": "graphs-b106",
       "path": "graphs/b106.gv",
       "size": 48933,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9764,11 +9590,9 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -9779,16 +9603,12 @@
       "id": "graphs-b143",
       "path": "graphs/b143.gv",
       "size": 62055,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9796,16 +9616,12 @@
       "id": "graphs-b29",
       "path": "graphs/b29.gv",
       "size": 62931,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9826,16 +9642,12 @@
       "id": "linux.i386-b106",
       "path": "linux.i386/b106.gv",
       "size": 92005,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9843,16 +9655,12 @@
       "id": "share-b106",
       "path": "share/b106.gv",
       "size": 92301,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9860,16 +9668,12 @@
       "id": "windows-b106",
       "path": "windows/b106.gv",
       "size": 95634,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9877,16 +9681,12 @@
       "id": "graphs-b102",
       "path": "graphs/b102.gv",
       "size": 102329,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9894,16 +9694,12 @@
       "id": "graphs-xx",
       "path": "graphs/xx.gv",
       "size": 102329,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9926,16 +9722,12 @@
       "id": "graphs-root",
       "path": "graphs/root.gv",
       "size": 128221,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9943,16 +9735,12 @@
       "id": "linux.i386-b29",
       "path": "linux.i386/b29.gv",
       "size": 136753,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9960,16 +9748,12 @@
       "id": "share-b29",
       "path": "share/b29.gv",
       "size": 137802,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9977,16 +9761,12 @@
       "id": "windows-b29",
       "path": "windows/b29.gv",
       "size": 149114,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9994,16 +9774,12 @@
       "id": "linux.i386-b102",
       "path": "linux.i386/b102.gv",
       "size": 161479,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10011,16 +9787,12 @@
       "id": "share-b102",
       "path": "share/b102.gv",
       "size": 161479,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10028,16 +9800,12 @@
       "id": "windows-b102",
       "path": "windows/b102.gv",
       "size": 184125,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10073,16 +9841,12 @@
       "id": "1879",
       "path": "1879.dot",
       "size": 287816,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10090,16 +9854,12 @@
       "id": "linux.x86-root_twopi",
       "path": "linux.x86/root_twopi.gv",
       "size": 287907,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10107,16 +9867,12 @@
       "id": "nshare-root_twopi",
       "path": "nshare/root_twopi.gv",
       "size": 287916,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10124,16 +9880,12 @@
       "id": "nshare-root_circo",
       "path": "nshare/root_circo.gv",
       "size": 313126,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10141,16 +9893,12 @@
       "id": "linux.x86-root_circo",
       "path": "linux.x86/root_circo.gv",
       "size": 313168,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10158,16 +9906,12 @@
       "id": "graphs-b103",
       "path": "graphs/b103.gv",
       "size": 377525,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -10175,11 +9919,9 @@
       "id": "2475_2",
       "path": "2475_2.dot",
       "size": 641284,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -10190,11 +9932,9 @@
       "id": "2470",
       "path": "2470.dot",
       "size": 734358,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 2,
-        "firstDiff": "map/@id"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -10218,14 +9958,12 @@
       "id": "2108",
       "path": "2108.dot",
       "size": 3136769,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     }

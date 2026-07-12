@@ -45,6 +45,17 @@ export class Graph {
   readonly name: string;
 
   /**
+   * True when the graph was declared with NO name (`digraph {`), as opposed to
+   * an explicit empty name (`digraph "" {`). Both store `name === ''`, but
+   * cgraph gives the truly-anonymous root the internal id `%1` (agnameof) while
+   * the empty-named one keeps `""`. Only the imagemap `<map id/name>` reads this
+   * (map.ts:mapGraphName); dot/xdot re-serialization keeps `name` so an
+   * anonymous root round-trips as `digraph {`, not `digraph %1 {`.
+   * @see lib/cgraph/id.c:idmap (anon → `%1`) ; lib/cgraph/agraph.c:agnameof
+   */
+  readonly anonymous: boolean;
+
+  /**
    * Directed/strict classification; mirrors Agdesc_t.directed and
    * Agdesc_t.strict. @see lib/cgraph/cgraph.h:Agdesc_s
    */
@@ -144,8 +155,9 @@ export class Graph {
   declaredGraphAttrs: Set<string> = new Set();
 
   /** @see lib/cgraph/graph.c:agopen */
-  constructor(name: string, kind: GraphKind) {
+  constructor(name: string, kind: GraphKind, anonymous = false) {
     this.name = name;
+    this.anonymous = anonymous;
     this.kind = kind;
     this.nodes = new Map();
     this.edges = [];
