@@ -88,32 +88,61 @@ targeted checks used to confirm 0 regressions before commit.
 
 ---
 
-## 1447_1 under osage — in-progress (dot primary engine already passes 0 diffs)
+## 1447_1 under osage — **FIXED** (cdt Dtoset corrupted-walk port)
 
-1246 xdot diffs, ALL `edge:` draw/pos numeric (0 node diffs). splines=ortho +
-ratio=compress. Node draw boxes match to %.5g on both sides. The b106 node-size
-fix leaves it unchanged (1246 -> 1246), i.e. a **separate** mechanism.
+1246 xdot diffs -> **0 (conformant)**. All diffs were ortho edge tracks
+(Δ up to 118; nodes/bb bit-exact). dot primary engine already passed.
 
-### First divergence localized to ortho track assignment
-First diff: `edge:ASCIInumbers->string_encoding pos[3]` = a **Y** coordinate
-(horizontal track): PORT 845 vs oracle 832, Δ13. In the ortho maze this is an
-`htrack` output `y = round(lo + (1 - trk/(nseg+1))*(hi-lo))`. Channel width
-~64, nseg~12 -> one track step ≈5, so Δ13 ≈ a **2-3 track-number difference**
-(discrete), NOT an FP residual amplification (a sub-0.01 node shift can only
-move y by <0.01 through the interpolation).
+### Instrumentation ladder (each rung matched, narrowing the divergence)
+1. htrack/vtrack traces: same segments, same channels (lo/hi/nseg identical),
+   same call order — ONLY `trackNo` differed (first: trk=6 port vs 7 C,
+   hchan cc=482 nseg=7). Δ13 = 2-3 discrete track steps, not FP.
+2. Channel dump: channel SETS identical (294), seg_list ORDER identical,
+   final precedence-graph ADJACENCY differed in 29 channels.
+3. Post-np-phase adjacency dump: byte-identical -> np edges match; the
+   divergence is inside the parallel pass.
+4. Parallel-pass decision trace (every addPEdges pair + SPE entry + hop
+   channel resolution + removeEdge): IDENTICAL for 451 lines, then the port
+   processes h-channel pairs C never touches and C processes v-channel
+   pairs the port skips.
+5. C channel-VISIT dump: C's add_p_edges walk visits only **157 of 294**
+   channels.
 
-Track numbers come from `assignTrackNo` = topological/longest-path over the
-precedence graph built by `add_edges_in_G` from pairwise `seg_cmp`
-(ortho.c:646). So the divergence is in either (a) `seg_list` ordering within a
-channel (order segments were routed/added), or (b) `seg_cmp` tie results, or
-(c) the topological-sort tie order. C reference captured: 916 htrack + 658
-vtrack calls (VT_DUMP instrumentation on ortho.c htrack/vtrack).
+### Root cause (mechanism)
+C walks the channel dicts with `dtflatten` + `dtlink` (raw `->right`
+pointers): ortho.c add_p_edges. Every `chanSearch` in the loop body is a
+`dtmatch`, which UNFLATTENs the dict (cdt dtrestore: for DT_OSET the
+flattened chain simply becomes the tree again) and TOP-DOWN-SPLAYS it
+(cdt dttree.c), rewriting the `->right` pointers under the walker. Channels
+moved into left subtrees by splay rotations are silently SKIPPED. This
+corrupted walk is deterministic and LOAD-BEARING: it decides which channels
+get parallel pairs resolved and which cross-channel SPE hop edges exist,
+and those precedence graphs drive top_sort track numbers. The port's
+Map-based dicts walked all 294 channels -> different precedence edges ->
+different tracks.
 
-### Next step (blocked on running osage sweep — cannot edit src mid-sweep)
-Instrument port `htrack`/`vtrack` (ortho-route.ts, fields commCoord/p.p1/p.p2/
-trackNo/segList.length/cp.bb) identically to the C VT_DUMP, diff the ordered
-traces; the first line differing in (lo,hi,trk,nseg) says channel-partition vs
-track-assignment. Then compare port `segCmp` + seg_list build order
-(insertChan/assignSegs) against C add_edges_in_G / assignTrackNo. Candidate
-classes: seg_list insertion order, seg_cmp parallel-segment tie, longest-path
-tie order.
+### Fix
+- `src/ortho/chan-dict.ts` (new): C-exact cdt Dtoset — dttree.c do_search
+  loop + has_root/no_root reassembly (DT_MATCH; DT_INSERT incl. containment
+  dedup returning the existing object), dtflatten.c RROTATE right-
+  linearisation, UNFLATTEN = flag clear (chain IS the tree). The repo's
+  generic DtSplay deviates deliberately in not-found reassembly and insert
+  attachment (splay-core.ts) — shape-changing, unusable here.
+- `Maze.hchans/vchans` -> two-level `CdtOset` mirroring chanItemDisc
+  (v, dcmpid/fcmp) and chanDisc (interval p, chancmpid).
+- `chansInOrder` -> live `flatten()` + `.right` generator (reads `.right`
+  lazily each resume, so mid-walk splays corrupt it exactly like C).
+- `chanSearch` -> two `match()` (dtmatch) calls, splaying like C.
+
+### Ruled out
+htrack/vtrack math; channel partition; seg_list build order; np-edge phase
+(byte-identical); segCmp/propagatePrec/decidePoint/setParallelEdges flip
+table (identical decision traces to the divergence); channel iteration
+ORDER alone (a sorted walk changed nothing — COVERAGE, not order, was the
+issue).
+
+### Verification
+tsc clean; npm test 2965/2965; 17 splines=ortho ids under dot all 0 diffs
+(2538 = 8 pre-existing, unchanged); same 17 under osage: 1447 52->0 and
+1447_1 1246->0, rest 0 (14/2538/2620 not in the osage corpus set); b106
+family still 0. Native probes reverted, oracle rebuilt clean.

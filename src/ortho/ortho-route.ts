@@ -10,10 +10,10 @@
 
 import type {
   OrthoSegment, Route, Cell, SGraph, SNode, SEdge,
-  Channel, Maze,
+  Channel, ChanDict, Maze,
 } from "./types.js";
 import { Bend, M_LEFT, M_RIGHT, M_TOP, M_BOTTOM } from "./types.js";
-import { chanSearch } from "./maze-channels.js";
+import { chanSearch, chansInOrder } from "./maze-channels.js";
 import { makeGraph } from "./rawgraph.js";
 import { insertEdge, edgeExists, removeRedge, topSort } from "./rawgraph.js";
 import { updateWts } from "./maze.js";
@@ -313,31 +313,25 @@ function addEdgesInG(cp: Channel): number {
   return 0;
 }
 
-function addNpEdges(chans: Map<number, Map<string, Channel>>): number {
-  for (const [, sub] of chans) {
-    for (const [, cp] of sub) {
-      if (cp.segList.length > 0 && addEdgesInG(cp) !== 0) return -1;
-    }
+function addNpEdges(chans: ChanDict): number {
+  for (const [, cp] of chansInOrder(chans)) {
+    if (cp.segList.length > 0 && addEdgesInG(cp) !== 0) return -1;
   }
   return 0;
 }
 
-function createGraphs(chans: Map<number, Map<string, Channel>>): void {
-  for (const [, sub] of chans) {
-    for (const [, cp] of sub) {
-      cp.G = makeGraph(cp.segList.length);
-    }
+function createGraphs(chans: ChanDict): void {
+  for (const [, cp] of chansInOrder(chans)) {
+    cp.G = makeGraph(cp.segList.length);
   }
 }
 
-function assignTrackNo(chans: Map<number, Map<string, Channel>>): void {
-  for (const [, sub] of chans) {
-    for (const [, cp] of sub) {
-      if (cp.segList.length > 0 && cp.G) {
-        topSort(cp.G);
-        for (let k = 0; k < cp.segList.length; k++) {
-          cp.segList[k].trackNo = cp.G.vertices[k].topsortOrder + 1;
-        }
+function assignTrackNo(chans: ChanDict): void {
+  for (const [, cp] of chansInOrder(chans)) {
+    if (cp.segList.length > 0 && cp.G) {
+      topSort(cp.G);
+      for (let k = 0; k < cp.segList.length; k++) {
+        cp.segList[k].trackNo = cp.G.vertices[k].topsortOrder + 1;
       }
     }
   }

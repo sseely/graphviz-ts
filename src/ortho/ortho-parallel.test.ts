@@ -23,8 +23,10 @@
 import { describe, it, expect } from "vitest";
 import { addPEdgesAll } from "./ortho-parallel.js";
 import { makeGraph, edgeExists } from "./rawgraph.js";
+import { newChanDict } from "./maze-channels.js";
+import { CdtOset } from "./chan-dict.js";
 import { Bend } from "./types.js";
-import type { OrthoSegment, Channel, Maze, SGraph } from "./types.js";
+import type { OrthoSegment, Channel, ChanItem, Paird, Maze, SGraph } from "./types.js";
 
 function parallelSegment(indNo: number): OrthoSegment {
   return {
@@ -53,8 +55,13 @@ function makeSharedChannel(): Channel {
 }
 
 function makeMaze(chan: Channel): Maze {
-  const hchans = new Map<number, Map<string, Channel>>();
-  hchans.set(chan.segList[0].commCoord, new Map([["10~50", chan]]));
+  const hchans = newChanDict();
+  const item: ChanItem = {
+    v: chan.segList[0].commCoord,
+    chans: new CdtOset<Channel, Paird>((c) => c.p, chancmpidTest),
+  };
+  item.chans.insert(chan);
+  hchans.insert(item);
   return {
     ncells: 0,
     ngcells: 0,
@@ -62,8 +69,15 @@ function makeMaze(chan: Channel): Maze {
     gcells: [],
     sg: {} as SGraph,
     hchans,
-    vchans: new Map(),
+    vchans: newChanDict(),
   };
+}
+
+/** Local mirror of chancmpid for the fixture (containment == equal). */
+function chancmpidTest(k1: Paird, k2: Paird): number {
+  if (k1.p1 > k2.p1) return k1.p2 <= k2.p2 ? 0 : 1;
+  if (k1.p1 < k2.p1) return k1.p2 >= k2.p2 ? 0 : -1;
+  return 0;
 }
 
 describe("addPEdges — parallel-segment precedence edges", () => {

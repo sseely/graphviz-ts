@@ -5,9 +5,10 @@
  * @see lib/ortho/ortho.c:extractHChans, extractVChans, chanSearch
  */
 
-import type { Cell, Maze, Channel } from "./types.js";
+import type { Cell, Maze, Channel, ChanItem, ChanDict, Paird } from "./types.js";
 import { MZ_HSCAN, MZ_VSCAN, MZ_ISNODE, M_LEFT, M_RIGHT, M_TOP, M_BOTTOM } from "./types.js";
 import { makeGraph } from "./rawgraph.js";
+import { CdtOset } from "./chan-dict.js";
 
 export { makeGraph };
 
@@ -15,19 +16,32 @@ function isNode(cp: Cell): boolean {
   return (cp.flags & MZ_ISNODE) !== 0;
 }
 
-function chanKey(p: { p1: number; p2: number }): string {
-  return `${p.p1}~${p.p2}`;
+/** dcmpid: plain double comparison (fcmp). @see lib/ortho/ortho.c:dcmpid */
+function dcmpid(a: number, b: number): number {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
 }
 
-function addChan(
-  chdict: Map<number, Map<string, Channel>>,
-  cp: Channel,
-  j: number,
-): void {
-  let sub = chdict.get(j);
-  if (!sub) { sub = new Map(); chdict.set(j, sub); }
-  const k = chanKey(cp.p);
-  if (!sub.has(k)) sub.set(k, cp);
+/** New empty two-level channel dict (outer Dtoset keyed by v). */
+export function newChanDict(): ChanDict {
+  return new CdtOset<ChanItem, number>((it) => it.v, dcmpid);
+}
+
+/**
+ * Insert channel cp under line j — C addChan: dtmatch the chanItem for j
+ * (creating it on miss), then dtinsert cp into its inner Dtoset. When the
+ * inner insert finds an "equal" channel (chancmpid containment) it returns
+ * the existing one and the new cp is dropped (C frees it).
+ * @see lib/ortho/ortho.c:addChan
+ */
+function addChan(chdict: ChanDict, cp: Channel, j: number): void {
+  let subd = chdict.match(j);
+  if (!subd) {
+    subd = { v: j, chans: new CdtOset<Channel, Paird>((c) => c.p, chancmpid) };
+    chdict.insert(subd);
+  }
+  subd.chans.insert(cp); // existing-on-containment: cp silently dropped
 }
 
 function moveLeft(cp: Cell): Cell {
@@ -86,8 +100,8 @@ function moveUp(cp: Cell): Cell {
  * Extract horizontal channels from the maze.
  * @see lib/ortho/ortho.c:extractHChans
  */
-export function extractHChans(mp: Maze): Map<number, Map<string, Channel>> {
-  const hchans: Map<number, Map<string, Channel>> = new Map();
+export function extractHChans(mp: Maze): ChanDict {
+  const hchans = newChanDict();
   for (let i = 0; i < mp.ncells; i++) {
     const cp = mp.cells[i];
     if (cp.flags & MZ_HSCAN) continue;
@@ -105,8 +119,8 @@ export function extractHChans(mp: Maze): Map<number, Map<string, Channel>> {
  * Extract vertical channels from the maze.
  * @see lib/ortho/ortho.c:extractVChans
  */
-export function extractVChans(mp: Maze): Map<number, Map<string, Channel>> {
-  const vchans: Map<number, Map<string, Channel>> = new Map();
+export function extractVChans(mp: Maze): ChanDict {
+  const vchans = newChanDict();
   for (let i = 0; i < mp.ncells; i++) {
     const cp = mp.cells[i];
     if (cp.flags & MZ_VSCAN) continue;
@@ -118,6 +132,30 @@ export function extractVChans(mp: Maze): Map<number, Map<string, Channel>> {
     addChan(vchans, chp, cur.bb.LL.x);
   }
   return vchans;
+}
+
+/**
+ * Walk channels exactly as C's assignTracks-family loops do:
+ *   for (l1 = dtflatten(chans); l1; l1 = dtlink(chans,l1))
+ *     for (l2 = dtflatten(lp); l2; l2 = dtlink(lp,l2))
+ * dtflatten right-linearises the splay tree into a sorted chain, and dtlink
+ * follows raw `.right` pointers LIVE. When the loop body performs a
+ * chanSearch (dtmatch), the dict is unflattened and re-splayed mid-walk, so
+ * the `.right` chain the walker follows is rewritten under it — C then
+ * silently SKIPS every channel a rotation moved into a left subtree. This
+ * corrupted-walk behavior is deterministic and load-bearing for the
+ * parallel-edge pass (corpus 1447_1/osage: C visits 157 of 294 channels).
+ * The generator reads `.right` lazily at each resume, reproducing it.
+ * @see lib/ortho/ortho.c:assignTracks, add_p_edges (dtflatten walks)
+ * @see src/ortho/chan-dict.ts (flatten/unflatten mechanics)
+ */
+export function* chansInOrder(chans: ChanDict): Generator<[number, Channel]> {
+  for (let l1 = chans.flatten(); l1 !== null; l1 = l1.right) {
+    const item = l1.obj;
+    for (let l2 = item.chans.flatten(); l2 !== null; l2 = l2.right) {
+      yield [item.v, l2.obj];
+    }
+  }
 }
 
 /**
@@ -143,17 +181,16 @@ function chancmpid(k1: { p1: number; p2: number }, k2: { p1: number; p2: number 
 
 /**
  * Find the channel whose interval nests with the segment (chancmpid == 0).
+ * Both lookups are C dtmatch calls: they SPLAY the dicts, which is what
+ * corrupts any dtflatten walk in progress (see chansInOrder).
  * @see lib/ortho/ortho.c:chanSearch
  */
 export function chanSearch(
-  chans: Map<number, Map<string, Channel>>,
+  chans: ChanDict,
   commCoord: number,
   p: { p1: number; p2: number },
 ): Channel | null {
-  const sub = chans.get(commCoord);
-  if (!sub) return null;
-  for (const [, chan] of sub) {
-    if (chancmpid(chan.p, p) === 0) return chan;
-  }
-  return null;
+  const chani = chans.match(commCoord);
+  if (!chani) return null;
+  return chani.chans.match(p);
 }

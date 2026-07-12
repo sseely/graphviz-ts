@@ -22,9 +22,9 @@
  * @see lib/ortho/ortho.c:add_p_edges
  */
 
-import type { OrthoSegment, Channel, Maze } from "./types.js";
+import type { OrthoSegment, Channel, ChanDict, Maze } from "./types.js";
 import { Bend } from "./types.js";
-import { chanSearch } from "./maze-channels.js";
+import { chanSearch, chansInOrder } from "./maze-channels.js";
 import { insertEdge, edgeExists, removeRedge } from "./rawgraph.js";
 import { segCmp } from "./ortho-route.js";
 
@@ -142,7 +142,6 @@ function setParallelEdges(
     const nchan = seg1.isVert
       ? chanSearch(mp.hchans, prev1.commCoord, prev1.p)!
       : chanSearch(mp.vchans, prev1.commCoord, prev1.p)!;
-
     const commCoordMatchesP1 = prev1.commCoord === seg1.p.p1;
     const lDir = commCoordMatchesP1 ? seg1.l1 : seg1.l2;
     const target = seg1.isVert ? Bend.B_LEFT : Bend.B_UP;
@@ -244,11 +243,12 @@ function addPEdges(cp: Channel, mp: Maze): number {
 }
 
 /** @see lib/ortho/ortho.c:add_p_edges */
-export function addPEdgesAll(chans: Map<number, Map<string, Channel>>, mp: Maze): number {
-  for (const [, sub] of chans) {
-    for (const [, cp] of sub) {
-      if (addPEdges(cp, mp) !== 0) return -1;
-    }
+export function addPEdgesAll(chans: ChanDict, mp: Maze): number {
+  // C walks the Dtoset channel dicts via dtflatten = sorted order; addPEdges
+  // inserts edges into OTHER channels' graphs and skips already-connected
+  // pairs, so this iteration order is load-bearing (corpus 1447_1 osage).
+  for (const [, cp] of chansInOrder(chans)) {
+    if (addPEdges(cp, mp) !== 0) return -1;
   }
   return 0;
 }

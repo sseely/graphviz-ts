@@ -18,6 +18,7 @@ import {
 } from "./types.js";
 import { partition } from "./partition.js";
 import { dfpCmp } from "./trap-types.js";
+import { newChanDict } from "./maze-channels.js";
 import {
   createSGraph, createSNode, createSEdge,
   initSEdges, gsave,
@@ -300,7 +301,7 @@ export function mkMaze(g: OrthoGraph): Maze {
     ncells: cells.length, ngcells: gcells.length,
     cells, gcells,
     sg: createSGraph(0),
-    hchans: new Map(), vchans: new Map(),
+    hchans: newChanDict(), vchans: newChanDict(),
   };
   mp.sg = mkMazeGraph(mp, BB);
   return mp;

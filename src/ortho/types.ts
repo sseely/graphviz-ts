@@ -11,6 +11,8 @@
  * @see lib/ortho/rawgraph.h
  */
 
+import type { CdtOset } from "./chan-dict.js";
+
 /**
  * A 2D point with floating-point coordinates.
  * Corresponds to `pointf` in the C source.
@@ -167,8 +169,8 @@ export interface Maze {
   cells: Cell[]; // non-node cells
   gcells: Cell[]; // node cells
   sg: SGraph;
-  hchans: Map<number, Map<string, Channel>>; // horizontal channels
-  vchans: Map<number, Map<string, Channel>>; // vertical channels
+  hchans: ChanDict; // horizontal channels
+  vchans: ChanDict; // vertical channels
 }
 
 // ─── Rawgraph ────────────────────────────────────────────────────────────────
@@ -207,6 +209,24 @@ export interface Channel {
   G: RawGraph | null; // ordering graph
   cp: Cell | null; // first cell in channel
 }
+
+/**
+ * One line of channels — outer channel-dict entry.
+ * Corresponds to `chanItem` in ortho.c.
+ * @see lib/ortho/ortho.c:chanItem
+ */
+export interface ChanItem {
+  v: number;
+  chans: CdtOset<Channel, Paird>;
+}
+
+/**
+ * Two-level channel dictionary — C's `Dt_t*` of chanItem (Dtoset keyed by v),
+ * each holding a Dtoset of Channel keyed by interval p (chancmpid).
+ * MUST be a C-exact cdt Dtoset: add_p_edges walks it flattened while
+ * chanSearch re-splays it mid-walk (load-bearing; see chan-dict.ts).
+ */
+export type ChanDict = CdtOset<ChanItem, number>;
 
 // ─── Public graph interface (self-contained) ─────────────────────────────────
 
