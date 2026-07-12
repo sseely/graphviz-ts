@@ -289,7 +289,16 @@ function storeNodeSize(
   n.info.outline_height = unflipped.outlineH / 72;
   n.info.base_width = unflipped.baseW / 72;
   n.info.base_height = unflipped.baseH / 72;
-  const size = gvNodesize(widthPts, unflipped.ht, flip);
+  // C gv_nodesize derives lw/rw/ht from INCH2PS(ND_width/ND_height), i.e. it
+  // round-trips the points size through the PS2INCH inch value it just stored
+  // (shapes.c:2372 ND_width=PS2INCH(bb.x); utils.c:1543 w=INCH2PS(ND_width)).
+  // Passing the raw poly points here skips that round-trip, so ND_xsize
+  // (lw+rw) would differ from INCH2PS(ND_width) by 1 ULP — which in osage
+  // desyncs the packing-box centre from addNodeObj's coord-sz/2 and flips a
+  // floor() in objplpmks. Round-trip to match C exactly.
+  const size = gvNodesize(
+    n.info.width * POINTS_PER_INCH, n.info.height * POINTS_PER_INCH, flip,
+  );
   n.info.lw = size.lw;
   n.info.rw = size.rw;
   n.info.ht = size.ht;
