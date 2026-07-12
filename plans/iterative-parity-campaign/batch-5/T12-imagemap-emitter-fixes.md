@@ -77,3 +77,23 @@ N/A — no new observable runtime operations.
 ## Rollback
 
 Reversible — `git revert`; no migrations.
+
+## Baseline reality (landed 2026-07-11 late)
+
+Survey: **641/762 conformant (84.1%)**; cmapx 641, imap 724; 3 timeouts
+(known perf family) + 1 oracle 300s cap. All 34 href-bearing ids diverge in
+BOTH formats. Two mechanisms cover every diff:
+
+1. **Zero `<area>`/imap lines (32 cmapx + 34 imap ids)**: `src/gvc/anchor.ts`
+   deliberately skipped the imagemap half of `emit.c:initObjMapData`
+   (`url_map_p` computation, emit.c:1666-1779) — `obj.urlMapPts` is always
+   empty and every `beginAnchor` in map.ts early-returns. THE fix target:
+   port the url_map_p rect/poly computation per shape.
+2. **`map/@id` (85 cmapx ids)**: anonymous-graph identity — native
+   `agnameof` yields the internal `%1` name (`<map id="%1" name="%1">`);
+   port emits `""`. Mirror the C naming.
+
+Harness note: `render()` is not re-entrant on one graph (232/762 ids throw
+on a second render — freeLayout residue); the walker parses fresh per
+format. The library-level hazard is tracked separately (session task #20),
+NOT part of this task.
