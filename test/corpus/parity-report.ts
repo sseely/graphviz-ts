@@ -157,6 +157,19 @@ function dotXdotRow(report: XdotParityReport): TrackRow {
 
 function dotJsonRow(report: JsonParityReport): TrackRow {
   const c: Record<JsonVerdict, number> = Object.assign(
+    { conformant: 0, diverged: 0, accepted: 0, 'port-error': 0, 'oracle-error': 0, timeout: 0 },
+    report.counts,
+  );
+  return {
+    track: '[dot (json)](./PARITY-JSON.md)',
+    surveyed: report.total,
+    pass: c.conformant,
+    diverged: c.diverged,
+    accepted: c.accepted,
+    errors: c['port-error'] + c['oracle-error'] + c.timeout,
+  };
+}
+
 // map-conformance (BEGIN): dot (imagemap) track row. Overall verdict per id
 // is already the worst-of-{cmapx,imap} (map-walk.ts worstVerdict) — no extra
 // join needed here, unlike the per-engine accepted-registry join above.
@@ -166,7 +179,6 @@ function dotMapRow(report: MapParityReport): TrackRow {
     report.counts,
   );
   return {
-    track: '[dot (json)](./PARITY-JSON.md)',
     track: '[dot (imagemap)](./PARITY-MAP.md)',
     surveyed: report.total,
     pass: c.conformant,
