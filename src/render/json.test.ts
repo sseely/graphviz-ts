@@ -149,7 +149,12 @@ export function testJsonEndGraph(): void {
   const out = job.output.join('');
   type G1 = { objects: Array<Record<string, unknown>> };
   const parsed = JSON.parse(out) as G1;
-  expect(parsed.objects[0]!['_draw_']).toEqual([]);
+  // JsonRenderer re-renders the laid-out graph to xdot (mirroring C's
+  // json_begin_graph) and populates each node's `_draw_` with typed op
+  // objects; a drawn node therefore carries a non-empty op array.
+  const draw = parsed.objects[0]!['_draw_'];
+  expect(Array.isArray(draw)).toBe(true);
+  expect((draw as unknown[]).length).toBeGreaterThan(0);
 }
 
 // ---------------------------------------------------------------------------
