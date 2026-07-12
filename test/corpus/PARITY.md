@@ -21,6 +21,7 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 |---|---:|---:|---:|---:|---:|---:|
 | [dot (SVG)](./PARITY-dot.md) | 788 | 762 | 0 | 16 | 10 | 96.7% |
 | [dot (xdot)](./PARITY-XDOT.md) | 759 | 754 | 0 | 4 | 1 | 99.3% |
+| [dot (json)](./PARITY-JSON.md) | 762 | 0 | 761 | 0 | 1 | 0.0% |
 | [circo (xdot)](./PARITY-circo.md) | 762 | 745 | 0 | 3 | 14 | 97.8% |
 | [twopi (xdot)](./PARITY-twopi.md) | 762 | 740 | 0 | 14 | 8 | 97.1% |
 | [osage (xdot)](./PARITY-osage.md) | 759 | 744 | 3 | 7 | 5 | 98.0% |
@@ -67,6 +68,7 @@ The golden xdot suite gates these in CI (`test/golden/xdot-suite.test.ts`).
 
 - [PARITY-dot.md](./PARITY-dot.md) — dot (SVG) dashboard (`dashboard.ts`)
 - [PARITY-XDOT.md](./PARITY-XDOT.md) — dot (xdot) dashboard (`xdot-dashboard.ts`)
+- [PARITY-JSON.md](./PARITY-JSON.md) — dot (json) dashboard (`json-dashboard.ts`)
 - [PARITY-circo.md](./PARITY-circo.md) — circo (xdot) dashboard (`parity-report.ts`)
 - [PARITY-twopi.md](./PARITY-twopi.md) — twopi (xdot) dashboard (`parity-report.ts`)
 - [PARITY-osage.md](./PARITY-osage.md) — osage (xdot) dashboard (`parity-report.ts`)

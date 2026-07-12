@@ -21,6 +21,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import type { SurveyResult, Verdict } from './survey.js';
 import type { XdotVerdict, XdotWalkResult } from './xdot-walk.js';
+import type { JsonVerdict, JsonWalkResult } from './json-walk.js';
 import type { EngineParityReport, EngineWalkRow } from './engine-walk.js';
 import type { CorpusEntry } from './enumerate.js';
 import { loadAccepted, matchAccepted } from './accepted.js';
@@ -35,6 +36,7 @@ const ITERATIVE_ENGINES = ['neato', 'fdp', 'sfdp'] as const;
 
 const PARITY = new URL('./parity.json', import.meta.url);
 const XDOT_PARITY = new URL('./xdot-parity.json', import.meta.url);
+const JSON_PARITY = new URL('./json-parity.json', import.meta.url);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
 const GOLDEN_MANIFEST = new URL('../golden/manifest.json', import.meta.url);
 const OUT = new URL('./PARITY.md', import.meta.url);
@@ -49,6 +51,12 @@ interface XdotParityReport {
   total: number;
   counts: Record<XdotVerdict, number>;
   results: XdotWalkResult[];
+}
+
+interface JsonParityReport {
+  total: number;
+  counts: Record<JsonVerdict, number>;
+  results: JsonWalkResult[];
 }
 
 /** One accepted/known divergence for a per-engine xdot track (id-keyed — no
@@ -126,6 +134,21 @@ function dotXdotRow(report: XdotParityReport): TrackRow {
   );
   return {
     track: '[dot (xdot)](./PARITY-XDOT.md)',
+    surveyed: report.total,
+    pass: c.conformant,
+    diverged: c.diverged,
+    accepted: c.accepted,
+    errors: c['port-error'] + c['oracle-error'] + c.timeout,
+  };
+}
+
+function dotJsonRow(report: JsonParityReport): TrackRow {
+  const c: Record<JsonVerdict, number> = Object.assign(
+    { conformant: 0, diverged: 0, accepted: 0, 'port-error': 0, 'oracle-error': 0, timeout: 0 },
+    report.counts,
+  );
+  return {
+    track: '[dot (json)](./PARITY-JSON.md)',
     surveyed: report.total,
     pass: c.conformant,
     diverged: c.diverged,
@@ -298,6 +321,7 @@ function buildSummary(
   const links = [
     '- [PARITY-dot.md](./PARITY-dot.md) — dot (SVG) dashboard (`dashboard.ts`)',
     '- [PARITY-XDOT.md](./PARITY-XDOT.md) — dot (xdot) dashboard (`xdot-dashboard.ts`)',
+    '- [PARITY-JSON.md](./PARITY-JSON.md) — dot (json) dashboard (`json-dashboard.ts`)',
     ...presentEngines.map(
       (e) => `- [PARITY-${e}.md](./PARITY-${e}.md) — ${e} (xdot) dashboard (\`parity-report.ts\`)`,
     ),
@@ -362,6 +386,10 @@ const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8')) as CorpusEntry[];
 
 const acceptedEngines = loadAcceptedEngines();
 const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
+if (existsSync(JSON_PARITY)) {
+  const jsonReport = JSON.parse(readFileSync(JSON_PARITY, 'utf8')) as JsonParityReport;
+  rows.push(dotJsonRow(jsonReport));
+}
 const iterativeRows: TrackRow[] = [];
 const presentEngines: string[] = [];
 const missingEngines: string[] = [];

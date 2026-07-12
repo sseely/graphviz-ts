@@ -1,0 +1,4 @@
+{
+  "comment": "Irreducible json divergences (mission: json-conformance). Each entry: {id, opClass, delta, rationale}. The walker treats listed ids as non-blocking ('accepted') and continues. Every entry MUST be referenced in the decision journal with its mechanism. Empty at baseline — the first survey's divergences are emitter gaps (missing graph attrs, unpopulated _draw_ arrays, no subgraph support), not irreducible FP/platform quirks, so nothing qualifies for acceptance yet.",
+  "divergences": []
+}
