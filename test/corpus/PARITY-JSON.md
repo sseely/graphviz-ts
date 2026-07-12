@@ -16,94 +16,78 @@ numeric-tolerant — see `test/golden/compare-json.ts`). Regenerate:
 
 - **Oracle:** dot 15.1.0 (`-Tjson`) · **corpus:** `~/git/graphviz/tests`
 - **Walked (conformant SVG set):** 762
-- **json-conformant:** 0 (0.0%)
-- **diverged (tracked, will-fix):** 761 · **accepted (documented, won't-fix):** 0
-- **port-error:** 0 · **timeout:** 1 · **oracle-error:** 0 (excluded from scoring)
+- **json-conformant:** 720 (94.5%)
+- **diverged (tracked, will-fix):** 39 · **accepted (documented, won't-fix):** 0
+- **port-error:** 0 · **timeout:** 2 · **oracle-error:** 1 (excluded from scoring)
 
-## json-conformant (0)
+## json-conformant (720)
 
 Port json is *conformant* with the oracle: every object/attr/draw-op
 matches, numeric payloads within ±0.01 and canonicalized
 colors/fonts/text equal.
 
-_Conformant ids (0) are omitted for brevity — the full roster is in
+_Conformant ids (720) are omitted for brevity — the full roster is in
 [json-parity.json](json-parity.json)._
 
-## Tracked diverged (761) — worst-first
+## Tracked diverged (39) — worst-first
 
 | id | size | maxΔ | #diffs | firstDiff |
 |---|---:|---:|---:|---|
-| `nshare-root_circo` | 313126 | 1058781.60 | 14550 | `[graph]/_draw_[missing]` |
-| `linux.x86-root_circo` | 313168 | 1044681.60 | 14665 | `[graph]/_draw_[missing]` |
-| `nshare-root_twopi` | 287916 | 76386.40 | 14550 | `[graph]/_draw_[missing]` |
-| `linux.x86-root_twopi` | 287907 | 76373.60 | 14665 | `[graph]/_draw_[missing]` |
-| `share-b51` | 29420 | 9013.00 | 1097 | `[graph]/_subgraph_cnt` |
-| `windows-b51` | 29685 | 9012.00 | 1094 | `[graph]/_subgraph_cnt` |
-| `graphs-viewport` | 37292 | 7699.30 | 2990 | `[graph]/_draw_[missing]` |
-| `linux.i386-b102` | 161479 | 7223.00 | 6921 | `[graph]/_draw_[missing]` |
-| `share-b102` | 161479 | 7218.00 | 7164 | `[graph]/_draw_[missing]` |
-| `windows-b102` | 184125 | 6986.10 | 6240 | `[graph]/_draw_[missing]` |
-| `windows-b29` | 149114 | 3010.00 | 5253 | `[graph]/_draw_[missing]` |
-| `share-b124` | 28041 | 2949.60 | 2253 | `[graph]/_draw_[missing]` |
-| `windows-b124` | 28038 | 2496.20 | 2253 | `[graph]/_draw_[missing]` |
-| `windows-b106` | 95634 | 2067.60 | 3977 | `[graph]/_draw_[missing]` |
-| `share-b29` | 137802 | 1933.50 | 10796 | `[graph]/_draw_[missing]` |
-| `linux.i386-b106` | 92005 | 1863.00 | 6304 | `[graph]/_draw_[missing]` |
-| `share-b106` | 92301 | 1814.80 | 6444 | `[graph]/_draw_[missing]` |
-| `windows-b94` | 14509 | 1783.45 | 681 | `[graph]/_draw_[missing]` |
-| `linux.i386-b29` | 136753 | 1618.40 | 10299 | `[graph]/_draw_[missing]` |
-| `share-b94` | 9831 | 1244.66 | 1097 | `[graph]/_draw_[missing]` |
-| `nshare-rankdir_dot` | 12803 | 1131.20 | 960 | `[graph]/_draw_[missing]` |
-| `nshare-rankdir_dot2` | 12795 | 1096.20 | 952 | `[graph]/_draw_[missing]` |
-| `linux.x86-rankdir_dot` | 12792 | 1094.50 | 955 | `[graph]/_draw_[missing]` |
-| `linux.x86-rankdir_dot2` | 12815 | 1061.10 | 958 | `[graph]/_draw_[missing]` |
-| `linux.x86-neatosplines_neato1` | 12061 | 1001.35 | 691 | `[graph]/_draw_[missing]` |
-| `linux.x86-neatosplines_neato` | 11690 | 1001.35 | 679 | `[graph]/_draw_[missing]` |
-| `linux.x86-overlap_neato` | 10562 | 1001.35 | 643 | `[graph]/_draw_[missing]` |
-| `linux.x86-overlap_neato1` | 10554 | 995.38 | 643 | `[graph]/_draw_[missing]` |
-| `nshare-overlap_neato1` | 10511 | 889.15 | 643 | `[graph]/_draw_[missing]` |
-| `nshare-neatosplines_neato` | 11700 | 867.06 | 673 | `[graph]/_draw_[missing]` |
-| `nshare-overlap_neato` | 10566 | 867.06 | 671 | `[graph]/_draw_[missing]` |
-| `nshare-neatosplines_neato1` | 12051 | 867.06 | 640 | `[graph]/_draw_[missing]` |
-| `nshare-pack_neato` | 2870 | 729.40 | 260 | `[graph]/_subgraph_cnt` |
-| `linux.x86-pack_neato` | 2867 | 715.48 | 260 | `[graph]/_subgraph_cnt` |
-| `windows-proc3d` | 10446 | 714.90 | 765 | `[graph]/_subgraph_cnt` |
-| `share-proc3d` | 10429 | 700.50 | 774 | `[graph]/_subgraph_cnt` |
-| `nshare-rankdir_dot1` | 12675 | 499.70 | 873 | `[graph]/_draw_[missing]` |
-| `windows-dfa` | 2714 | 490.86 | 260 | `[graph]/_subgraph_cnt` |
-| `linux.x86-rankdir_dot1` | 12673 | 485.60 | 881 | `[graph]/_draw_[missing]` |
-| `windows-crazy` | 10433 | 463.40 | 962 | `[graph]/_draw_[missing]` |
-| `share-crazy` | 10433 | 462.30 | 961 | `[graph]/_draw_[missing]` |
-| `linux.i386-crazy` | 10433 | 457.60 | 961 | `[graph]/_draw_[missing]` |
-| `linux.i386-dfa` | 2651 | 438.80 | 263 | `[graph]/_subgraph_cnt` |
-| `share-dfa` | 2651 | 438.80 | 263 | `[graph]/_subgraph_cnt` |
-| `nshare-pack_neato1` | 2884 | 423.12 | 261 | `[graph]/_subgraph_cnt` |
-| `share-jsort` | 14030 | 385.30 | 1456 | `[graph]/_draw_[missing]` |
-| `windows-jsort` | 14425 | 385.30 | 1309 | `[graph]/_draw_[missing]` |
-| `linux.x86-pack_neato1` | 2881 | 336.29 | 261 | `[graph]/_subgraph_cnt` |
-| `linux.x86-pack_neato2` | 2890 | 336.29 | 261 | `[graph]/_subgraph_cnt` |
-| `windows-ldbxtried` | 11805 | 315.89 | 1266 | `[graph]/_subgraph_cnt` |
-| `nshare-pack_neato2` | 2894 | 308.12 | 261 | `[graph]/_subgraph_cnt` |
-| `share-pgram` | 10942 | 301.20 | 1406 | `[graph]/_subgraph_cnt` |
-| `windows-pgram` | 11001 | 289.50 | 1376 | `[graph]/_subgraph_cnt` |
-| `share-shells` | 5493 | 271.30 | 616 | `[graph]/_subgraph_cnt` |
-| `windows-shells` | 5589 | 269.30 | 586 | `[graph]/_subgraph_cnt` |
-| `windows-clust5` | 1695 | 268.50 | 173 | `[graph]/_subgraph_cnt` |
-| `share-clust5` | 1698 | 268.50 | 173 | `[graph]/_subgraph_cnt` |
-| `windows-triedds` | 3948 | 251.02 | 209 | `[graph]/_draw_[missing]` |
-| `share-NaN` | 16328 | 248.00 | 2242 | `[graph]/_draw_[missing]` |
-| `windows-NaN` | 17050 | 239.50 | 1956 | `[graph]/_draw_[missing]` |
-
-_… and 701 more (full set in json-parity.json)._
+| `graphs-grdshapes` | 1204 | 2085.66 | 64 | `node:n1/_draw_/op[1].C[1]` |
+| `1436` | 2599 | 1638.00 | 12 | `cluster:cluster/_draw_/op[1].p[0]` |
+| `graphs-grdlinear_angle` | 5758 | 1260.04 | 150 | `[graph]/_draw_/op[1].C[1]` |
+| `graphs-grdlinear` | 4071 | 1229.78 | 150 | `[graph]/_draw_/op[1].C[1]` |
+| `graphs-grdfillcolor` | 4075 | 1180.18 | 152 | `[graph]/_draw_/op[1].C[1]` |
+| `graphs-grdradial` | 5370 | 1157.54 | 6 | `[graph]/_draw_/op[1].C[1]` |
+| `graphs-grdradial_angle` | 6918 | 1157.54 | 6 | `[graph]/_draw_/op[1].C[1]` |
+| `graphs-grdcolors` | 1704 | 690.18 | 48 | `node:n0/_draw_/op[1].C[1]` |
+| `graphs-grdcluster` | 497 | 644.00 | 8 | `cluster:cluster0/_draw_/op[1].C[1]` |
+| `graphs-grdangles` | 1076 | 451.80 | 18 | `node:n1/_draw_/op[1].C[1]` |
+| `2258` | 460 | 288.50 | 4 | `node:e17e1a62c7e692fdee219e2a59f/_draw_/op[1].C[1]` |
+| `graphs-grdlinear_node` | 523 | 244.82 | 16 | `[graph]/_draw_/op[1].C[1]` |
+| `1902` | 119 | 144.00 | 12 | `cluster:cluster/_draw_/op[1].p[0]` |
+| `1879` | 287816 | 0.00 | 466 | `[graph]/_ldraw_/op[2].T.text` |
+| `1990` | 610 | 0.00 | 15 | `node:0⋯1 'a'/_ldraw_/op[2].T.text` |
+| `graphs-Symbol` | 924 | 0.00 | 15 | `node:a/_ldraw_/op[2].T.text` |
+| `graphs-cairo` | 5866 | 0.00 | 14 | `node:БЛЭР [1120]/_ldraw_/op[2].T.text` |
+| `graphs-russian` | 520 | 0.00 | 11 | `node:БанковскиеСчета/_ldraw_/op[2].T.text` |
+| `graphs-japanese` | 789 | 0.00 | 8 | `[graph]/_ldraw_/op[2].T.text` |
+| `1332` | 13890 | 0.00 | 7 | `node:c4115/_ldraw_/op[8].T.text` |
+| `graphs-b56` | 1421 | 0.00 | 5 | `node:Prefix/_ldraw_/op[5].T.text` |
+| `graphs-b993` | 118 | 0.00 | 3 | `node:2/_ldraw_/op[2].T.text` |
+| `2619_1` | 6721 | 0.00 | 3 | `node:I19/_ldraw_[opCount]` |
+| `2619_2` | 7596 | 0.00 | 3 | `node:I19/_ldraw_[opCount]` |
+| `share-Latin1` | 155 | 0.00 | 2 | `node:a/_ldraw_/op[2].T.text` |
+| `windows-Latin1` | 155 | 0.00 | 2 | `node:a/_ldraw_/op[2].T.text` |
+| `1514` | 168 | 0.00 | 2 | `cluster:%7/nodes[members]` |
+| `graphs-b7` | 222 | 0.00 | 2 | `cluster:cluster_1/_draw_[missing]` |
+| `2825` | 312 | 0.00 | 2 | `cluster:%17/rank[missing]` |
+| `2239` | 48090 | 0.00 | 2 | `cluster:cluster_rtpbin_0x56412448e390/_ldraw_/op[11].T.text` |
+| `1724` | 36 | 0.00 | 1 | `node:ÿ/_ldraw_/op[2].T.text` |
+| `2502` | 50 | 0.00 | 1 | `node:A/_ldraw_/op[2].T.text` |
+| `graphs-Latin1` | 99 | 0.00 | 1 | `node:a/_ldraw_/op[2].T.text` |
+| `graphs-b60` | 112 | 0.00 | 1 | `node:0/_ldraw_/op[2].T.text` |
+| `925` | 256 | 0.00 | 1 | `node:recrus/_ldraw_[opCount]` |
+| `2368_1` | 405 | 0.00 | 1 | `edge:256->376#0/lp[missing]` |
+| `graphs-b34` | 814 | 0.00 | 1 | `node:7/_ldraw_/op[2].T.text` |
+| `1453` | 2446 | 0.00 | 1 | `cluster:%15/rank[missing]` |
+| `2470` | 734358 | 0.00 | 1 | `edge:n96->n36#0/lp[missing]` |
 
 ### Diverged buckets — by (object · attr · shape)
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `graph · _draw_ · missing-attr` | 400 | `2285`, `graphs-trivial`, `2257` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
-| `graph · _subgraph_cnt · subgraph-count` | 304 | `graphs-center`, `graphs-clustlabel`, `1865` | `_subgraph_cnt` differs — port has no subgraph/cluster support in json output |
-| `parse · port · numeric-or-scalar` | 56 | `2743`, `2619`, `2516` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `graph · K · missing-attr` | 1 | `2556` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
+| `node · _ldraw_ · text` | 14 | `1724`, `2502`, `graphs-Latin1` | rendered label text differs (content/escaping/encoding) |
+| `graph · _draw_ · numeric-or-scalar` | 6 | `graphs-grdlinear_node`, `graphs-grdlinear`, `graphs-grdfillcolor` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
+| `node · _draw_ · numeric-or-scalar` | 4 | `2258`, `graphs-grdangles`, `graphs-grdshapes` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
+| `cluster · _draw_ · numeric-or-scalar` | 3 | `1902`, `graphs-grdcluster`, `1436` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
+| `node · _ldraw_ · op-count` | 3 | `925`, `2619_1`, `2619_2` | the draw-op array has a different length (port emits `_draw_: []` unconditionally) |
+| `cluster · rank · missing-attr` | 2 | `2825`, `1453` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
+| `edge · lp · missing-attr` | 2 | `2368_1`, `2470` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
+| `graph · _ldraw_ · text` | 2 | `graphs-japanese`, `1879` | rendered label text differs (content/escaping/encoding) |
+| `cluster · nodes · numeric-or-scalar` | 1 | `1514` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
+| `cluster · _draw_ · missing-attr` | 1 | `graphs-b7` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
+| `cluster · _ldraw_ · text` | 1 | `2239` | rendered label text differs (content/escaping/encoding) |
 
 ## Accepted divergences (0) — documented, not chased
 
@@ -118,14 +102,16 @@ _(none)_
 | id | path | message |
 |---|---|---|
 
-## timeout (1)
+## timeout (2)
 
 | id | path | message |
 |---|---|---|
-| `1652` | `1652.dot` |  |
+| `2095_1` | `2095_1.dot` |  |
+| `2343` | `2343.dot` |  |
 
-## oracle-error (0) — excluded from scoring
+## oracle-error (1) — excluded from scoring
 
 | id | path | message |
 |---|---|---|
+| `1652` | `1652.dot` | oracle exit null |
 
