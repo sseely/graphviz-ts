@@ -13,7 +13,7 @@ test/corpus/parity-report.ts`.
 ## Summary
 
 - **Surveyed:** 761 (generated 2026-07-12T06:30:11.226Z)
-- **pass:** 260 (34.2%) · **diverged (tracked):** 493 · **accepted (documented, won't-fix):** 0
+- **pass:** 260 (34.2%) · **diverged (tracked):** 493 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 0
 - **oracle-error:** 7 · **port-error:** 1 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -24,6 +24,16 @@ truth: `test/corpus/accepted-divergences-engines.json`; rationale in
 table below.
 
 _(none in this corpus)_
+
+## Accepted class: A1-drift — computed, not enumerated
+
+Membership is computed at report time from the injection-attribution
+harness output (D2) — every diverged id whose native pre-routing position
+exonerates it (`verdict: drift-exonerated`) is subtracted from the
+Diverged table below and counted in Summary; an id that starts passing
+outright leaves the class silently on the next report regen.
+
+- **A1-drift**: _attribution pending_ — `attribution-sfdp.json` not generated yet, 0 members. Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
 ## Diverged (493)
 

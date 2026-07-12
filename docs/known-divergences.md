@@ -178,6 +178,31 @@ of this backlog is future work; live counts in the per-engine dashboards
 [`PARITY-fdp.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-fdp.md),
 [`PARITY-sfdp.md`](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/PARITY-sfdp.md)).
 
+**A1-drift class acceptance (iterative engines, computed membership).**
+<a id="a1-drift-iterative-engines"></a> `test/corpus/accepted-divergences-engines.json`
+carries one `"A1-drift"` **class** entry per iterative engine (`neato`,
+`fdp`, `sfdp`) — `{ class: true, attributionFile, ref }` — distinct from the
+per-id entries used by the `circo`/`twopi`/`osage` tracks above (D2,
+`plans/iterative-parity-campaign/decisions.md`). Unlike a per-id entry, class
+membership is never hand-enumerated in the registry: `parity-report.ts`
+computes it at report time from the matching `attribution-<engine>.json`
+(T1's injection-attribution harness, `test/corpus/attribute-divergence.ts`)
+— every diverged id whose native pre-routing `ND_pos` was injected into the
+port and re-compared conforms at ±0.5 gets `verdict: 'drift-exonerated'` in
+that file, meaning the two engines' iterative solvers converged to
+numerically different but each internally consistent layouts (a floating-point
+accumulation difference per the A1 characterization above, not a port routing
+or emission bug). Per-id evidence — bucket shape, base vs. injected diff
+count, uniform-translation/mirror detection — lives in the attribution
+artifact itself, not duplicated into this doc or the registry (D2). An id
+that later starts passing outright, or whose re-attribution changes verdict,
+drops out of the class automatically on the next report regen — no stale
+acceptance edit required, and no guard-test failure. Engines whose
+`attribution-<engine>.json` has not been generated yet render the class as
+"attribution pending" with zero members, identical to having no acceptance at
+all — the class entry is allowed to precede its data (see
+`test/corpus/accepted-divergences-engines.test.ts`).
+
 ### A2. Text measurement (font metrics) → label-driven layout — CLOSED
 
 **Status (2026-07-01): closed.** No corpus id is accepted under this class

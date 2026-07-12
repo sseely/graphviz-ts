@@ -1,5 +1,5 @@
 {
-  "comment": "Accepted-divergence registry for the per-ENGINE xdot tracks (circo/twopi/osage/patchwork/neato/fdp/sfdp \u2014 parity-<engine>.json, written by test/corpus/engine-walk.ts). Mirrors test/corpus/accepted-divergences.json's role for the dot SVG track, but keyed simply as engine -> id -> entry (no glob/engineIn selectors needed yet: every entry here is a specific corpus id already root-caused for that one engine). Joined at report-time by test/corpus/parity-report.ts into PARITY-<engine>.md (accepted deltas pulled out of the Diverged table, counted separately in Summary) and into the cross-engine PARITY.md track row. An accepted entry is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted tracked gap. Adding/removing an entry must be paired with prose in docs/known-divergences.md.",
+  "comment": "Accepted-divergence registry for the per-ENGINE xdot tracks (circo/twopi/osage/patchwork/neato/fdp/sfdp \u2014 parity-<engine>.json, written by test/corpus/engine-walk.ts). Mirrors test/corpus/accepted-divergences.json's role for the dot SVG track, but keyed simply as engine -> id -> entry (no glob/engineIn selectors needed yet: every entry here is a specific corpus id already root-caused for that one engine). Joined at report-time by test/corpus/parity-report.ts into PARITY-<engine>.md (accepted deltas pulled out of the Diverged table, counted separately in Summary) and into the cross-engine PARITY.md track row. An accepted entry is a deliberate, documented, won't-fix difference; everything non-conformant NOT listed here is an unaccepted tracked gap. Adding/removing an entry must be paired with prose in docs/known-divergences.md. Two shapes share this registry (see plans/iterative-parity-campaign/decisions.md#D2): per-id { class: string, bound?, ref } (hand-root-caused, one row per id, as above), and CLASS { class: true, attributionFile, ref } (neato/fdp/sfdp A1-drift below) \u2014 class membership is COMPUTED at report time from attribution-<engine>.json's drift-exonerated verdicts, never hand-enumerated; an id that starts passing outright leaves the class silently on the next report regen.",
   "twopi": {
     "graphs-arrows": {
       "class": "A1",
@@ -124,6 +124,27 @@
       "class": "A9",
       "bound": "2 draw-op diffs; two edges each flip one edge-label anchor with BIT-IDENTICAL spline + arrowhead. Op_1091->Op_1092 label x-anchor 2266.75 vs 2332.07 (symmetric about the identical spline midpoint 2299.4, \u00b132.66 = half the 65.32 label width); Op_2105->Op_2106 label y-anchor 247.54 vs 230.74 (above/below flip on a horizontal edge, x-anchor identical). placeLabels tie on 1-ULP-drifted surroundings, same class as b29. 2 diffs in a 240 KB graph; oracle renders completely (not a timeout). Full RCA: .agent-notes/osage-small-tail-rca.md.",
       "ref": "known-divergences.md#a9-engine-track-twopi-circo"
+    }
+  },
+  "neato": {
+    "A1-drift": {
+      "class": true,
+      "attributionFile": "attribution-neato.json",
+      "ref": "known-divergences.md#a1-drift-iterative-engines"
+    }
+  },
+  "fdp": {
+    "A1-drift": {
+      "class": true,
+      "attributionFile": "attribution-fdp.json",
+      "ref": "known-divergences.md#a1-drift-iterative-engines"
+    }
+  },
+  "sfdp": {
+    "A1-drift": {
+      "class": true,
+      "attributionFile": "attribution-sfdp.json",
+      "ref": "known-divergences.md#a1-drift-iterative-engines"
     }
   }
 }

@@ -28,6 +28,10 @@ import { loadAccepted, matchAccepted } from './accepted.js';
 // map-conformance (BEGIN): dot (imagemap) track types — see MAP block below.
 import type { MapVerdict, MapWalkResult } from './map-walk.js';
 // map-conformance (END)
+// T3's oracle-error classifier hook (batch-1/overview.md coordination note —
+// T3 exposed renderOracleErrorsSidecar as a standalone export; T2 wires the
+// call-site into engineMarkdown below).
+import { renderOracleErrorsSidecar } from './oracle-error-classifier.js';
 
 /** Non-dot deterministic engines swept by engine-walk.ts. */
 const ENGINES = ['circo', 'twopi', 'osage', 'patchwork'] as const;
@@ -80,13 +84,115 @@ interface EngineAcceptedEntry {
   ref: string;
 }
 
+/** A class-acceptance entry (D2, plans/iterative-parity-campaign/decisions.md):
+ * membership is COMPUTED from `attributionFile`'s drift-exonerated verdicts at
+ * report time, never hand-enumerated. Discriminated from EngineAcceptedEntry
+ * by `class === true` (boolean) vs. `class: string`. */
+interface EngineAcceptedClassEntry {
+  class: true;
+  attributionFile: string;
+  ref: string;
+}
+
+type EngineAcceptedRegistryEntry = EngineAcceptedEntry | EngineAcceptedClassEntry;
+
+function isClassEntry(e: EngineAcceptedRegistryEntry): e is EngineAcceptedClassEntry {
+  return e.class === true;
+}
+
+/** attribution-<engine>.json shape (T1 interface contract,
+ * plans/iterative-parity-campaign/batch-1/T1-injection-harness.md). */
+interface AttributionResultRow {
+  id: string;
+  verdict: 'drift-exonerated' | 'not-cleared' | 'harness-error';
+  baseDiffs: number;
+  injectedDiffs: number;
+  bucket?: { shape: string; uniformDelta?: [number, number]; mirror?: boolean };
+}
+interface AttributionReport {
+  generatedAt: string;
+  oracleSha1: string;
+  tolerance: number;
+  results: AttributionResultRow[];
+}
+
+/** Pure: ids the injection-attribution harness exonerated as A1-drift (D2) —
+ * a missing report (T1's harness has not run for this engine yet) exonerates
+ * none, which is exactly the "attribution pending" state the report renders. */
+function exoneratedIds(report: AttributionReport | null): Set<string> {
+  if (!report) return new Set();
+  return new Set(
+    report.results.filter((r) => r.verdict === 'drift-exonerated').map((r) => r.id),
+  );
+}
+
+/** Impure: read `<file>` relative to test/corpus — returns null (never
+ * throws) when the file doesn't exist yet, so a class entry is allowed to
+ * precede its data (D2; see accepted-divergences-engines.test.ts). */
+function loadAttribution(file: string): AttributionReport | null {
+  const url = new URL(`./${file}`, import.meta.url);
+  if (!existsSync(url)) return null;
+  return JSON.parse(readFileSync(fileURLToPath(url), 'utf8')) as AttributionReport;
+}
+
+/** One resolved class-acceptance entry, ready to render/count. */
+interface ClassAcceptance {
+  name: string;
+  attributionFile: string;
+  ref: string;
+  status: 'pending' | 'loaded';
+  exonerated: Set<string>;
+}
+
+function resolveClassAcceptance(name: string, entry: EngineAcceptedClassEntry): ClassAcceptance {
+  const report = loadAttribution(entry.attributionFile);
+  return {
+    name,
+    attributionFile: entry.attributionFile,
+    ref: entry.ref,
+    status: report ? 'loaded' : 'pending',
+    exonerated: exoneratedIds(report),
+  };
+}
+
+/** Split a raw registry slice (engine -> name -> entry) into the two shapes
+ * it may hold: per-id entries (existing) and class entries (D2), resolved
+ * against their attribution files. */
+function splitAcceptedMap(
+  raw: Record<string, EngineAcceptedRegistryEntry>,
+): { perId: Record<string, EngineAcceptedEntry>; classes: ClassAcceptance[] } {
+  const perId: Record<string, EngineAcceptedEntry> = {};
+  const classes: ClassAcceptance[] = [];
+  for (const [key, entry] of Object.entries(raw)) {
+    if (isClassEntry(entry)) classes.push(resolveClassAcceptance(key, entry));
+    else perId[key] = entry;
+  }
+  return { perId, classes };
+}
+
+/** Every diverged id accepted either by a per-id entry or by class membership
+ * (union — an id can't be double-counted even if it somehow appears in both). */
+function computeAcceptedIds(
+  report: EngineParityReport,
+  perId: Record<string, EngineAcceptedEntry>,
+  classes: ClassAcceptance[],
+): Set<string> {
+  const classExonerated = new Set(classes.flatMap((c) => [...c.exonerated]));
+  const ids = new Set<string>();
+  for (const r of report.results) {
+    if (r.status !== 'diverged') continue;
+    if (perId[r.id] || classExonerated.has(r.id)) ids.add(r.id);
+  }
+  return ids;
+}
+
 const ACCEPTED_ENGINES = new URL('./accepted-divergences-engines.json', import.meta.url);
 
 /** Read + parse the per-engine accepted-divergence registry (engine -> id -> entry). */
-function loadAcceptedEngines(): Record<string, Record<string, EngineAcceptedEntry>> {
+function loadAcceptedEngines(): Record<string, Record<string, EngineAcceptedRegistryEntry>> {
   const raw = JSON.parse(readFileSync(fileURLToPath(ACCEPTED_ENGINES), 'utf8')) as Record<string, unknown>;
   const { comment: _comment, ...engines } = raw;
-  return engines as Record<string, Record<string, EngineAcceptedEntry>>;
+  return engines as Record<string, Record<string, EngineAcceptedRegistryEntry>>;
 }
 
 /** One summary-table row (a "track" = one engine × one comparison surface). */
@@ -192,13 +298,14 @@ function dotMapRow(report: MapParityReport): TrackRow {
 function engineRow(
   engine: string,
   report: EngineParityReport,
-  acceptedMap: Record<string, EngineAcceptedEntry>,
+  rawAcceptedMap: Record<string, EngineAcceptedRegistryEntry>,
 ): TrackRow {
   const c = Object.assign(
     { pass: 0, diverged: 0, 'oracle-error': 0, 'port-error': 0, timeout: 0 },
     report.counts,
   );
-  const accepted = report.results.filter((r) => r.status === 'diverged' && acceptedMap[r.id]).length;
+  const { perId, classes } = splitAcceptedMap(rawAcceptedMap);
+  const accepted = computeAcceptedIds(report, perId, classes).size;
   return {
     track: `[${engine} (xdot)](./PARITY-${engine}.md)`,
     surveyed: report.total,
@@ -253,33 +360,75 @@ function engineAcceptedTable(rows: Array<{ r: EngineWalkRow; e: EngineAcceptedEn
   return ['| id | #diffs | class | bound | ref |', '|---|---:|---|---|---|', ...body, ''].join('\n');
 }
 
+/** Class-acceptance section for a PARITY-<engine>.md page (D2). Deliberately
+ * NOT a per-id table — roster-brevity convention (2026-07-11 journal entry):
+ * link the attribution JSON, don't enumerate members. Renders "attribution
+ * pending" with 0 members when the harness hasn't produced the file yet, so
+ * an engine without it reads identically to having no class entry at all. */
+function classAcceptanceSection(classes: ClassAcceptance[]): string {
+  if (classes.length === 0) return '';
+  const items = classes.map((c) => {
+    const n = c.exonerated.size;
+    const status = c.status === 'pending'
+      ? `_attribution pending_ — \`${c.attributionFile}\` not generated yet, 0 members`
+      : `**${n}** member${n === 1 ? '' : 's'} — full per-id evidence in ` +
+        `[\`${c.attributionFile}\`](./${c.attributionFile})`;
+    return `- **${c.name}**: ${status}. Rationale: ` +
+      `[Known divergences](../../docs/${c.ref}).`;
+  });
+  return [
+    `## Accepted class: A1-drift — computed, not enumerated`,
+    '',
+    'Membership is computed at report time from the injection-attribution',
+    'harness output (D2) — every diverged id whose native pre-routing position',
+    'exonerates it (`verdict: drift-exonerated`) is subtracted from the',
+    'Diverged table below and counted in Summary; an id that starts passing',
+    'outright leaves the class silently on the next report regen.',
+    '',
+    ...items,
+    '',
+  ].join('\n');
+}
+
 /** Per-engine detail page (PARITY-<engine>.md). */
 function engineMarkdown(
   engine: string,
   report: EngineParityReport,
-  acceptedMap: Record<string, EngineAcceptedEntry>,
+  rawAcceptedMap: Record<string, EngineAcceptedRegistryEntry>,
 ): string {
   const c = Object.assign(
     { pass: 0, diverged: 0, 'oracle-error': 0, 'port-error': 0, timeout: 0 },
     report.counts,
   );
+  const { perId: acceptedMap, classes } = splitAcceptedMap(rawAcceptedMap);
+  const classExonerated = new Set(classes.flatMap((cl) => [...cl.exonerated]));
   const allDiverged = report.results
     .filter((r) => r.status === 'diverged')
     .sort((a, b) => (b.nDiffs ?? 0) - (a.nDiffs ?? 0) || a.id.localeCompare(b.id));
 
   // Split accepted (documented, won't-fix) deltas out of the tracked backlog —
   // same join accepted.ts performs for the dot track (see accepted-divergences.json).
+  // Class-exonerated ids are also excluded here (D2) but rendered separately
+  // by classAcceptanceSection, not inlined into this per-id table.
   const acceptedRows: Array<{ r: EngineWalkRow; e: EngineAcceptedEntry }> = [];
   const diverged: EngineWalkRow[] = [];
   for (const r of allDiverged) {
     const e = acceptedMap[r.id];
     if (e) acceptedRows.push({ r, e });
-    else diverged.push(r);
+    else if (!classExonerated.has(r.id)) diverged.push(r);
   }
+  const classAcceptedCount = allDiverged.filter(
+    (r) => !acceptedMap[r.id] && classExonerated.has(r.id),
+  ).length;
 
   const faults = report.results
     .filter((r) => r.status === 'oracle-error' || r.status === 'port-error' || r.status === 'timeout')
     .sort((a, b) => a.status.localeCompare(b.status) || a.id.localeCompare(b.id));
+
+  // T3's oracle-error classifier hook (D6, batch-1/T3-oracle-error-classifier.md
+  // #Interface contracts) — reads oracle-errors-<engine>.json when present,
+  // '' otherwise (tolerates T3 not having run for this engine yet).
+  const oracleErrorsSidecar = renderOracleErrorsSidecar(engine);
 
   const divergedTable = diverged.length === 0
     ? '_(none)_\n'
@@ -319,7 +468,8 @@ function engineMarkdown(
     '',
     `- **Surveyed:** ${report.total} (generated ${report.generatedAt})`,
     `- **pass:** ${c.pass} (${pct(c.pass, report.total)}) · **diverged (tracked):** ${diverged.length} · ` +
-      `**accepted (documented, won't-fix):** ${acceptedRows.length}`,
+      `**accepted (documented, won't-fix):** ${acceptedRows.length}` +
+      (classes.length ? ` · **accepted (A1-drift class):** ${classAcceptedCount}` : ''),
     `- **oracle-error:** ${c['oracle-error']} · **port-error:** ${c['port-error']} · ` +
       `**timeout:** ${c.timeout}`,
     '',
@@ -331,12 +481,14 @@ function engineMarkdown(
     'table below.',
     '',
     engineAcceptedTable(acceptedRows),
+    ...(classes.length ? [classAcceptanceSection(classes)] : []),
     `## Diverged (${diverged.length})`,
     '',
     divergedTable,
     `## Errors and timeouts (${faults.length})`,
     '',
     faultTable,
+    ...(oracleErrorsSidecar ? [oracleErrorsSidecar] : []),
     `_Passing ids (${c.pass}) are omitted for brevity — the full roster is in`,
     `\`parity-${engine}.json\`._`,
     '',
@@ -419,46 +571,78 @@ function buildSummary(
 
 // ---------------------------------------------------------------------------
 
-const svgReport = JSON.parse(readFileSync(PARITY, 'utf8')) as SvgParityReport;
-const xdotReport = JSON.parse(readFileSync(XDOT_PARITY, 'utf8')) as XdotParityReport;
-const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8')) as CorpusEntry[];
+// Guarded so importing this module for its pure/rendering functions (unit
+// tests, T3's report-hook coordination) never triggers the report's file
+// I/O side effects — mirrors the isMain pattern used by engine-walk.ts,
+// survey.ts, xdot-walk.ts, json-walk.ts, and map-walk.ts.
+function main(): void {
+  const svgReport = JSON.parse(readFileSync(PARITY, 'utf8')) as SvgParityReport;
+  const xdotReport = JSON.parse(readFileSync(XDOT_PARITY, 'utf8')) as XdotParityReport;
+  const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8')) as CorpusEntry[];
 
-const acceptedEngines = loadAcceptedEngines();
-const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
-if (existsSync(JSON_PARITY)) {
-  const jsonReport = JSON.parse(readFileSync(JSON_PARITY, 'utf8')) as JsonParityReport;
-  rows.push(dotJsonRow(jsonReport));
-}
-const iterativeRows: TrackRow[] = [];
-const presentEngines: string[] = [];
-const missingEngines: string[] = [];
-for (const engine of [...ENGINES, ...ITERATIVE_ENGINES]) {
-  const url = new URL(`./parity-${engine}.json`, import.meta.url);
-  if (!existsSync(url)) {
-    missingEngines.push(engine);
-    continue;
+  const acceptedEngines = loadAcceptedEngines();
+  const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
+  if (existsSync(JSON_PARITY)) {
+    const jsonReport = JSON.parse(readFileSync(JSON_PARITY, 'utf8')) as JsonParityReport;
+    rows.push(dotJsonRow(jsonReport));
   }
-  const report = JSON.parse(readFileSync(url, 'utf8')) as EngineParityReport;
-  const acceptedMap = acceptedEngines[engine] ?? {};
-  const isIterative = (ITERATIVE_ENGINES as readonly string[]).includes(engine);
-  (isIterative ? iterativeRows : rows).push(engineRow(engine, report, acceptedMap));
-  presentEngines.push(engine);
-  const out = fileURLToPath(new URL(`./PARITY-${engine}.md`, import.meta.url));
-  writeFileSync(out, engineMarkdown(engine, report, acceptedMap));
-  process.stderr.write(`wrote PARITY-${engine}.md (${report.total} surveyed)\n`);
+  const iterativeRows: TrackRow[] = [];
+  const presentEngines: string[] = [];
+  const missingEngines: string[] = [];
+  for (const engine of [...ENGINES, ...ITERATIVE_ENGINES]) {
+    const url = new URL(`./parity-${engine}.json`, import.meta.url);
+    if (!existsSync(url)) {
+      missingEngines.push(engine);
+      continue;
+    }
+    const report = JSON.parse(readFileSync(url, 'utf8')) as EngineParityReport;
+    const acceptedMap = acceptedEngines[engine] ?? {};
+    const isIterative = (ITERATIVE_ENGINES as readonly string[]).includes(engine);
+    (isIterative ? iterativeRows : rows).push(engineRow(engine, report, acceptedMap));
+    presentEngines.push(engine);
+    const out = fileURLToPath(new URL(`./PARITY-${engine}.md`, import.meta.url));
+    writeFileSync(out, engineMarkdown(engine, report, acceptedMap));
+    process.stderr.write(`wrote PARITY-${engine}.md (${report.total} surveyed)\n`);
+  }
+
+  // map-conformance (BEGIN): dot (imagemap) track row — reads map-parity.json
+  // (written by map-walk.ts --survey). map-dashboard.ts owns PARITY-MAP.md
+  // itself; this block only folds its summary row into PARITY.md.
+  const mapPresent = existsSync(MAP_PARITY);
+  if (mapPresent) {
+    const mapReport = JSON.parse(readFileSync(MAP_PARITY, 'utf8')) as MapParityReport;
+    rows.push(dotMapRow(mapReport));
+  }
+  // map-conformance (END)
+
+  writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines, iterativeRows, mapPresent));
+  process.stderr.write(
+    `wrote PARITY.md (${rows.length} tracks; not yet surveyed: ${missingEngines.join(', ') || 'none'})\n`,
+  );
 }
 
-// map-conformance (BEGIN): dot (imagemap) track row — reads map-parity.json
-// (written by map-walk.ts --survey). map-dashboard.ts owns PARITY-MAP.md
-// itself; this block only folds its summary row into PARITY.md.
-const mapPresent = existsSync(MAP_PARITY);
-if (mapPresent) {
-  const mapReport = JSON.parse(readFileSync(MAP_PARITY, 'utf8')) as MapParityReport;
-  rows.push(dotMapRow(mapReport));
-}
-// map-conformance (END)
+const isMain =
+  process.argv[1] !== undefined && import.meta.url === new URL(`file://${process.argv[1]}`).href;
+if (isMain) main();
 
-writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines, iterativeRows, mapPresent));
-process.stderr.write(
-  `wrote PARITY.md (${rows.length} tracks; not yet surveyed: ${missingEngines.join(', ') || 'none'})\n`,
-);
+// Exported for test/corpus/parity-report.test.ts and any future report-hook
+// coordination (e.g. T3) — pure functions/types only, no file I/O at import
+// time (see the isMain guard above).
+export {
+  isClassEntry,
+  exoneratedIds,
+  resolveClassAcceptance,
+  splitAcceptedMap,
+  computeAcceptedIds,
+  classAcceptanceSection,
+  engineRow,
+  engineMarkdown,
+};
+export type {
+  EngineAcceptedEntry,
+  EngineAcceptedClassEntry,
+  EngineAcceptedRegistryEntry,
+  AttributionReport,
+  AttributionResultRow,
+  ClassAcceptance,
+};

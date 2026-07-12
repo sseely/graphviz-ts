@@ -1,0 +1,36 @@
+{
+  "comment": "TEST FIXTURE — not a real engine's attribution output. Exercises parity-report.ts's A1-drift class-membership rendering (T2, plans/iterative-parity-campaign/batch-1/T2-class-acceptance-reports.md) against T1's attribution-<engine>.json contract (T1-injection-harness.md #Interface contracts) while T1's harness has not run yet. See test/corpus/parity-report.test.ts and accepted-divergences-engines.test.ts.",
+  "generatedAt": "2026-07-12T00:00:00.000Z",
+  "oracleSha1": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+  "tolerance": 0.5,
+  "results": [
+    {
+      "id": "fixture-drift-a",
+      "verdict": "drift-exonerated",
+      "baseDiffs": 6,
+      "injectedDiffs": 0,
+      "bucket": { "shape": "unfilled_bezier[ptCount]" }
+    },
+    {
+      "id": "fixture-drift-b",
+      "verdict": "drift-exonerated",
+      "baseDiffs": 12,
+      "injectedDiffs": 0,
+      "bucket": { "shape": "position-drift", "uniformDelta": [1.2, -0.4] }
+    },
+    {
+      "id": "fixture-not-cleared",
+      "verdict": "not-cleared",
+      "baseDiffs": 40,
+      "injectedDiffs": 38,
+      "bucket": { "shape": "ellipse[@cx]" }
+    },
+    {
+      "id": "fixture-harness-error",
+      "verdict": "harness-error",
+      "baseDiffs": 0,
+      "injectedDiffs": 0,
+      "bucket": { "shape": "oracle-dump-missing" }
+    }
+  ]
+}
