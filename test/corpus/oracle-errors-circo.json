@@ -1,0 +1,96 @@
+{
+  "generatedAt": "2026-07-12T18:28:45.048Z",
+  "engine": "circo",
+  "results": [
+    {
+      "id": "2619",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619.dot"
+    },
+    {
+      "id": "2516",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2516.dot"
+    },
+    {
+      "id": "windows-labelroot-ntr",
+      "classification": "timeout-flake",
+      "attempts": 1,
+      "lastErr": ""
+    },
+    {
+      "id": "graphs-sl_box",
+      "classification": "timeout-flake",
+      "attempts": 1,
+      "lastErr": ""
+    },
+    {
+      "id": "1880",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1880.dot"
+    },
+    {
+      "id": "1447",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1447.dot"
+    },
+    {
+      "id": "2619_1",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot"
+    },
+    {
+      "id": "2619_2",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot"
+    },
+    {
+      "id": "1718",
+      "classification": "timeout-flake",
+      "attempts": 2,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2343",
+      "classification": "timeout-flake",
+      "attempts": 2,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2095_1",
+      "classification": "timeout-flake",
+      "attempts": 3,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "1879",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"
+    },
+    {
+      "id": "graphs-b103",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2222",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2108",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    }
+  ]
+}

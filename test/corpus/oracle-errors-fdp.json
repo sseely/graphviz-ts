@@ -1,0 +1,102 @@
+{
+  "generatedAt": "2026-07-12T17:41:07.590Z",
+  "engine": "fdp",
+  "results": [
+    {
+      "id": "2619",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot"
+    },
+    {
+      "id": "2721",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot"
+    },
+    {
+      "id": "2516",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2516.dot"
+    },
+    {
+      "id": "1221",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1221.dot"
+    },
+    {
+      "id": "2717",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2717.dot"
+    },
+    {
+      "id": "1767",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1767.dot"
+    },
+    {
+      "id": "graphs-b53",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv"
+    },
+    {
+      "id": "2619_1",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot"
+    },
+    {
+      "id": "2619_2",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot"
+    },
+    {
+      "id": "1332",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1332.dot"
+    },
+    {
+      "id": "graphs-badvoro",
+      "classification": "timeout-flake",
+      "attempts": 3,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2239",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2239.dot"
+    },
+    {
+      "id": "2620",
+      "classification": "timeout-flake",
+      "attempts": 1,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot"
+    },
+    {
+      "id": "1879",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"
+    },
+    {
+      "id": "2222",
+      "classification": "native-crash",
+      "attempts": 3,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "2108",
+      "classification": "timeout-flake",
+      "attempts": 2,
+      "lastErr": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    }
+  ]
+}
