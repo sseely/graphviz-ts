@@ -1,5 +1,18 @@
 # Recommended Sequencing
 
+> **2026-07-11 note:** the iterative-engine (neato/fdp/sfdp) divergence work
+> — attributing and resolving the ±0.5-tolerance parity tails — is now
+> sequenced by its own mission brief,
+> [`plans/iterative-parity-campaign/`](../iterative-parity-campaign/README.md)
+> (started 2026-07-11). That brief owns bug-fixing/characterizing existing
+> engine output. This document's remaining relevance is **unported-mode
+> feature work** — DOT attributes/values that still throw, warn, or
+> silently no-op because the underlying C algorithm was never ported
+> (voronoi/scan overlap, `model=circuit`/`mds`, `smart_init`,
+> `mode=hier`/`ipsep`, topfish rescale). See `plans/port-catalog/README.md`
+> for the live per-module status; this file records prioritization, not
+> ground truth — verify against the catalog before acting on any row below.
+
 ## Promotion criteria
 
 A gap is worth promoting to a mission when:
@@ -64,6 +77,28 @@ downstream missions that add labels to edges (DOT-2, NEA-5, etc.).
 ---
 
 ### 2. `mission-neato-overlap` — NEA-6 + TWO-1 + CIR-1 + SFDP-3 + FDP-3
+
+**✅ PRISM + scale family DONE (2026-07-09 through 2026-07-11) — do NOT
+re-promote for prism/scalexy/compress/nscale.** Per the decision journal
+(`plans/decision-journal.md` 2026-07-10 "PRISM PORTED", 2026-07-09
+"scAdjust", 2026-07-11 "fdp/sfdp overlap dispatch") and
+`plans/port-catalog/README.md` (neatogen §6, §12): `overlap=false`/`prism`
+now dispatches to a faithful `AM_PRISM` port (`overlap-prism.ts` +
+`fdp-adjust.ts`, Delaunay via `delaunay.ts`, `legal.ts`
+`Plegal_arrangement`) wired into neato, twopi (`twopi/init.ts`), circo
+(`circo/circular.ts`), fdp (`fdp/xlayout.ts` — the default-risk throw is
+gone), and sfdp (`spring-driver.ts` → `removeOverlapPrism`). The scale
+family (`scalexy`/`compress`/`nscale`) is ported in `sc-adjust.ts` and
+wired for neato/twopi/fdp/sfdp. **Still genuinely open per the catalog:**
+`overlap=voronoi` and `overlap=scan` (need the Fortune-sweep Voronoi
+stack — voronoi.c/hedges.c/heap.c/geometry.c/edges.c/site.c/call_tri.c —
+none of which are ported), and fdp's non-PRISM overlap algorithms
+(`oscale`/`vpsc`/`ortho`/`ipsep`) still throw per the 2026-07-11 journal
+entry. If those modes matter, re-scope a narrower "neato overlap
+voronoi/scan" mission — the prism/scale scope below is retired.
+
+**Historical text below (STALE as of 2026-06-17, superseded above) — kept
+for context only, do not act on it directly:**
 
 **⚠️ STALE — disproven by oracle verification (2026-06-17). Do NOT
 promote as written.** Evidence from a 5-engine corpus (fdp/sfdp/twopi/
@@ -149,9 +184,19 @@ those edges. Medium priority; the feature is legitimate but niche.
 
 ### `mission-neato-xlabels` — NEA-5
 
-**Why:** External edge labels are a common DOT feature. They are
-suppressed in neato output. Medium priority because dot xlabels are
-handled separately.
+**✅ DONE (2026-07-10/11) — do NOT promote.** Per
+`plans/port-catalog/README.md` (neatogen §10) and the decision journal
+(2026-07-10 "port-label bucket FIXED", 2026-07-11 "states family:
+addXLabels object ORDER fixed"): edge `xlabel` post-routing placement is
+ported and wired corpus-wide via `src/common/xlabels-place.ts`
+(`addXLabels`, `nodesInSeq × outEdges` iteration order) +
+`src/label/xlabels.ts`, invoked from `postproc.ts` for all neato-family
+engines. The original "suppressed in neato output" framing below is
+obsolete.
+
+**Why (historical, superseded above):** External edge labels are a
+common DOT feature. They are suppressed in neato output. Medium priority
+because dot xlabels are handled separately.
 
 ---
 
@@ -184,14 +229,23 @@ is off-dot or quick inline fixes.
 mission-dot-splines        ✅ DONE (2026-06-19) — corpus 25/25, incl. G2 multiport
 mission-dot-newrank        ✅ DONE (2026-06-17) — newrank parity merged
 mission-dot-flat-labels    ✅ DONE — DOT-9/10/11/12 flat residue merged
-mission-neato-overlap      STALE as written — re-scope to "neato overlap modes"
+mission-neato-overlap      ✅ DONE (2026-07-09..11) for prism/scalexy/compress/
+                            nscale; voronoi + scan still open (Fortune stack
+                            unported) — re-scope narrower if promoted
 mission-sfdp-beautify      DONE (SFDP-1 beautify_leaves)
 mission-neato-models       open (no deps) — circuit/mds/smart_init, ATTR-gated
 mission-fdp-clusters       open (no deps) — FDP-1 cluster-endpoint edges
-mission-neato-xlabels      open (no deps) — NEA-5 edge xlabel placement
+mission-neato-xlabels      ✅ DONE (2026-07-10/11) — edge xlabel placement live
+                            corpus-wide (xlabels-place.ts)
 ```
 
-**Next-mission candidates (2026-06-19):** with dot routing closed, the highest-
-leverage remaining work is the differential corpus harness (~800 real graphviz
-inputs vs the oracle — the project's long-tail net) or the off-dot neato/sfdp
-gaps above. dot itself has only DOT-6 `nslimit` (trivial inline) left.
+**Next-mission candidates (2026-07-11):** with dot routing, prism/scale
+overlap, multispline/CDT, and NEA-5 xlabels all landed, the highest-leverage
+remaining work is (a) the iterative-parity-campaign's neato/fdp/sfdp
+divergence-tail attribution (see the note at the top of this file) and (b)
+the genuinely unported feature modes: `overlap=voronoi`/`scan`,
+`model=circuit`/`mds`, `smart_init`, `mode=hier`/`ipsep`, and topfish
+multilevel rescale. dot itself has only DOT-6 `nslimit` (trivial inline)
+left. (Historical 2026-06-19 note, superseded: "with dot routing closed,
+the highest-leverage remaining work is the differential corpus harness" —
+that harness is now realized, see `test/corpus/PARITY.md`.)
