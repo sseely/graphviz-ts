@@ -43,6 +43,9 @@ const REPORTS = [
       [/\]\(\.\/PARITY-(circo|twopi|osage|patchwork|neato|fdp|sfdp)\.md\)/g, '](/parity-$1)'],
       [/\]\(\.\/PARITY-XDOT\.md\)/g, '](/parity-xdot)'],
       [/\]\(\.\/PARITY-JSON\.md\)/g, '](/parity-json)'],
+      // map-conformance (BEGIN)
+      [/\]\(\.\/PARITY-MAP\.md\)/g, '](/parity-map)'],
+      // map-conformance (END)
       [/\]\(\.\/(parity[^)]*\.json[l]?)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/$1)'],
       [/\]\(\.\/(accepted-divergences[^)]*\.json)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/$1)'],
     ],
@@ -62,6 +65,25 @@ const REPORTS = [
       [/\]\(\.\/(xdot-parity\.json)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/$1)'],
     ],
   },
+  // map-conformance (BEGIN): dot (imagemap) dashboard mirror — twin of the
+  // PARITY-XDOT.md block above.
+  {
+    src: '../test/corpus/PARITY-MAP.md',
+    dst: 'parity-map.md',
+    rewrites: [
+      [/\]\(\.\.\/\.\.\/docs\/known-divergences\.md(#[^)]*)?\)/g, '](/divergences$1)'],
+      [/\]\(\.\.\/\.\.\/docs\/conformance\.md\)/g, '](/conformance)'],
+      [/\]\(\.\.\/\.\.\/plans\/([^)]+)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/plans/$1)'],
+      [/\]\(\.\/PARITY\.md\)/g, '](/engines)'],
+      [/\]\(\.\/PARITY-dot\.md\)/g, '](/parity)'],
+      [/\]\(\.\/PARITY-(circo|twopi|osage|patchwork|neato|fdp|sfdp)\.md\)/g, '](/parity-$1)'],
+      [/\]\(\.\/PARITY-XDOT\.md\)/g, '](/parity-xdot)'],
+      [/\]\(\.\/(parity[^)]*\.json[l]?)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/$1)'],
+      [/\]\(\.\/(accepted-divergences[^)]*\.json)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/$1)'],
+      [/\]\(\.\/(map-parity\.json)\)/g, '](https://github.com/sseely/graphviz-ts/blob/main/test/corpus/$1)'],
+    ],
+  },
+  // map-conformance (END)
   {
     src: '../test/corpus/PARITY-JSON.md',
     dst: 'parity-json.md',

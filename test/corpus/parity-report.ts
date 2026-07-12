@@ -25,6 +25,9 @@ import type { JsonVerdict, JsonWalkResult } from './json-walk.js';
 import type { EngineParityReport, EngineWalkRow } from './engine-walk.js';
 import type { CorpusEntry } from './enumerate.js';
 import { loadAccepted, matchAccepted } from './accepted.js';
+// map-conformance (BEGIN): dot (imagemap) track types — see MAP block below.
+import type { MapVerdict, MapWalkResult } from './map-walk.js';
+// map-conformance (END)
 
 /** Non-dot deterministic engines swept by engine-walk.ts. */
 const ENGINES = ['circo', 'twopi', 'osage', 'patchwork'] as const;
@@ -40,6 +43,9 @@ const JSON_PARITY = new URL('./json-parity.json', import.meta.url);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
 const GOLDEN_MANIFEST = new URL('../golden/manifest.json', import.meta.url);
 const OUT = new URL('./PARITY.md', import.meta.url);
+// map-conformance (BEGIN): dot (imagemap) track artifact path — see MAP block below.
+const MAP_PARITY = new URL('./map-parity.json', import.meta.url);
+// map-conformance (END)
 
 interface SvgParityReport {
   total: number;
@@ -58,6 +64,13 @@ interface JsonParityReport {
   counts: Record<JsonVerdict, number>;
   results: JsonWalkResult[];
 }
+// map-conformance (BEGIN): dot (imagemap) track report shape.
+interface MapParityReport {
+  total: number;
+  counts: Record<MapVerdict, number>;
+  results: MapWalkResult[];
+}
+// map-conformance (END)
 
 /** One accepted/known divergence for a per-engine xdot track (id-keyed — no
  * glob/engineIn selector, unlike the dot-track registry in accepted.ts). */
@@ -144,11 +157,17 @@ function dotXdotRow(report: XdotParityReport): TrackRow {
 
 function dotJsonRow(report: JsonParityReport): TrackRow {
   const c: Record<JsonVerdict, number> = Object.assign(
+// map-conformance (BEGIN): dot (imagemap) track row. Overall verdict per id
+// is already the worst-of-{cmapx,imap} (map-walk.ts worstVerdict) — no extra
+// join needed here, unlike the per-engine accepted-registry join above.
+function dotMapRow(report: MapParityReport): TrackRow {
+  const c: Record<MapVerdict, number> = Object.assign(
     { conformant: 0, diverged: 0, accepted: 0, 'port-error': 0, 'oracle-error': 0, timeout: 0 },
     report.counts,
   );
   return {
     track: '[dot (json)](./PARITY-JSON.md)',
+    track: '[dot (imagemap)](./PARITY-MAP.md)',
     surveyed: report.total,
     pass: c.conformant,
     diverged: c.diverged,
@@ -156,6 +175,7 @@ function dotJsonRow(report: JsonParityReport): TrackRow {
     errors: c['port-error'] + c['oracle-error'] + c.timeout,
   };
 }
+// map-conformance (END)
 
 function engineRow(
   engine: string,
@@ -317,11 +337,18 @@ function buildSummary(
   missingEngines: string[],
   presentEngines: string[],
   iterativeRows: TrackRow[] = [],
+  // map-conformance (BEGIN): dot (imagemap) link, gated on artifact presence
+  // the same way engine links are — see MAP block in the main body below.
+  mapPresent = false,
+  // map-conformance (END)
 ): string {
   const links = [
     '- [PARITY-dot.md](./PARITY-dot.md) — dot (SVG) dashboard (`dashboard.ts`)',
     '- [PARITY-XDOT.md](./PARITY-XDOT.md) — dot (xdot) dashboard (`xdot-dashboard.ts`)',
     '- [PARITY-JSON.md](./PARITY-JSON.md) — dot (json) dashboard (`json-dashboard.ts`)',
+    // map-conformance (BEGIN)
+    ...(mapPresent ? ['- [PARITY-MAP.md](./PARITY-MAP.md) — dot (imagemap) dashboard (`map-dashboard.ts`)'] : []),
+    // map-conformance (END)
     ...presentEngines.map(
       (e) => `- [PARITY-${e}.md](./PARITY-${e}.md) — ${e} (xdot) dashboard (\`parity-report.ts\`)`,
     ),
@@ -409,7 +436,17 @@ for (const engine of [...ENGINES, ...ITERATIVE_ENGINES]) {
   process.stderr.write(`wrote PARITY-${engine}.md (${report.total} surveyed)\n`);
 }
 
-writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines, iterativeRows));
+// map-conformance (BEGIN): dot (imagemap) track row — reads map-parity.json
+// (written by map-walk.ts --survey). map-dashboard.ts owns PARITY-MAP.md
+// itself; this block only folds its summary row into PARITY.md.
+const mapPresent = existsSync(MAP_PARITY);
+if (mapPresent) {
+  const mapReport = JSON.parse(readFileSync(MAP_PARITY, 'utf8')) as MapParityReport;
+  rows.push(dotMapRow(mapReport));
+}
+// map-conformance (END)
+
+writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines, iterativeRows, mapPresent));
 process.stderr.write(
   `wrote PARITY.md (${rows.length} tracks; not yet surveyed: ${missingEngines.join(', ') || 'none'})\n`,
 );
