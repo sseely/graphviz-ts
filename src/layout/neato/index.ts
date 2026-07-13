@@ -47,8 +47,10 @@ import { isACluster } from '../dot/rank.js';
 import { doGraphLabel } from '../dot/graph-label.js';
 import { neutralGraphRankdir } from '../dot/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
+import { gvPostprocess } from '../../common/postproc.js';
 import { layoutMeasurer } from '../../common/nodeinit.js';
 import { commonInitNodeEdge } from '../../common/nodeinit.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
 
 // Re-export constants for downstream consumers
 export {
@@ -152,6 +154,16 @@ export function neatoLayout(g: Graph): void {
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);
   for (const [, n] of g.nodes) neatoInitNode(n);
+  // C neato_init_node_edge runs a SECOND loop calling neato_init_edge ->
+  // common_init_edge, which creates ED_label(e) and ORs GD_has_labels with
+  // EDGE_LABEL. Without it the edge label object never exists and addXLabels'
+  // gate (has_labels & EDGE_LABEL) is dead.
+  // @see lib/neatogen/neatoinit.c:142 neato_init_node_edge (edge loop)
+  // @see lib/neatogen/neatoinit.c:68 neato_init_edge -> common_init_edge
+  const measurer = layoutMeasurer(g);
+  if (measurer !== undefined) {
+    for (const e of g.edges) initEdgeLabels(e, g, measurer);
+  }
 
   const mode = parseMode(g);
   const model = parseModel(g);
@@ -169,7 +181,13 @@ export function neatoLayout(g: Graph): void {
   // after layout; gv_postprocess then places the cluster labels.
   addClusters(g);
   g.info.bb = computeSubgraphBB(g, 0);
+  // C: gv_postprocess(g, !noTranslate) — place_graph_label (cluster labels),
+  // then addXLabels, which is what positions the *edge* labels under neato:
+  // neato never sets ED_label(e)->pos during routing (unlike dot's
+  // dot_position), so the label arrives here unset and is placed by the
+  // xlabel map placement pass. @see lib/neatogen/neatoinit.c:1440
   placeGraphLabel(g);
+  gvPostprocess(g);
 }
 
 /**

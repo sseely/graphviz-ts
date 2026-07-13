@@ -28,6 +28,7 @@ import {
 } from '../pack/index.js';
 import { CL_OFFSET } from '../twopi/pipeline.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
+import { gvPostprocess } from '../../common/postproc.js';
 import { aggetGraph } from '../fdp/fdp-model.js';
 import { overlapPrismTries } from '../neato/fdp-adjust.js';
 import { adjustNodesScale } from '../neato/sc-adjust.js';
@@ -153,7 +154,12 @@ function postprocess(g: Graph): void {
   const bb = computeSubgraphBB(g, 0);
   if (bb.ll.x !== 0 || bb.ll.y !== 0) shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
   g.info.bb = computeSubgraphBB(g, 0);
+  // C sfdp_layout ends with dotneato_postprocess(g) = gv_postprocess(g, 1):
+  // place_graph_label, then addXLabels — the pass that positions the *edge*
+  // labels (sfdp never sets ED_label(e)->pos during routing).
+  // @see lib/sfdpgen/sfdpinit.c:295
   placeGraphLabel(g);
+  gvPostprocess(g);
 }
 
 /**
