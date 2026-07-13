@@ -21,10 +21,9 @@ import { ps2inch } from '../pack/index.js';
 import type { Rectangle } from './tree-map.js';
 import { treeMap } from './tree-map.js';
 import { gvQsort } from '../../util/bsd-qsort.js';
-import { layoutMeasurer, commonInitNode } from '../../common/nodeinit.js';
+import { commonInitNode } from '../../common/nodeinit.js';
 import { nodeAttr } from '../../common/poly-init.js';
-import { doGraphLabel } from '../dot/graph-label.js';
-import { neutralGraphRankdir } from '../dot/init.js';
+import { graphInit } from '../../common/graph-init.js';
 import { mapbool } from '../dot/rank.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
@@ -397,7 +396,12 @@ export function finishNodes(g: Graph): void {
 /** @see lib/patchwork/patchworkinit.c:patchwork_layout */
 export function patchworkEngineLayout(g: Graph): void {
   if (g.nodes.size === 0 && (g.info.n_cluster ?? 0) === 0) return;
-  neutralGraphRankdir(g);
+  // C: gvLayoutJobs runs graph_init(g, LAYOUT_USES_RANKDIR) before
+  // patchwork_layout; patchwork does not set the flag → useRankdir=false.
+  // graph_init also creates the ROOT graph label, which dotneato_postprocess
+  // below sizes the canvas for and places.
+  // @see lib/common/input.c:600, lib/gvc/gvlayout.c:81
+  graphInit(g, false);
   // C patchwork_init_graph sets the AGNODE "shape" DEFAULT to box
   // (agattr_text, overwriting e.g. a `node [shape=record]` default), and
   // patchwork_init_node then agsets EVERY node's shape to box — explicit
@@ -408,10 +412,6 @@ export function patchworkEngineLayout(g: Graph): void {
     n.attrs.set('shape', 'box');
     if (n.nodeDefaultsSnapshot !== undefined) n.nodeDefaultsSnapshot.set('shape', 'box');
   }
-  // C creates the ROOT graph label in the engine-neutral graph_init before any
-  // engine layout; dotneato_postprocess below then adds its height to the
-  // canvas and places it. @see lib/common/input.c:719 graph_init
-  doGraphLabel(g, layoutMeasurer(g));
   mkClusters(g);
   patchworkLayout(g);
   // C: walkTree calls finishNode per leaf after tiling (fontsize quirk +

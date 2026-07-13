@@ -17,13 +17,11 @@ import { EDGETYPE_LINE, EDGETYPE_NONE, splineEdges } from '../neato/splines.js';
 import { neatoSetAspect } from '../neato/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
-import { doGraphLabel } from '../dot/graph-label.js';
-import { layoutMeasurer } from '../../common/nodeinit.js';
 import { fdpInitParams } from './tlayout-parms.js';
 import { fdpInitNodeEdge, fdpCleanup } from './init.js';
 import { fdpLayout, mkClusters } from './layout.js';
 import { gdata } from './fdp-model.js';
-import { neutralGraphRankdir } from '../dot/init.js';
+import { graphInit } from '../../common/graph-init.js';
 import { csrand } from '../../common/crand.js';
 
 export { fdpLayout, mkClusters, evalPositions, setBB } from './layout.js';
@@ -41,12 +39,9 @@ export { fdpInitParams, fdpParms } from './tlayout-parms.js';
  * @see lib/fdpgen/layout.c:fdp_init_graph
  */
 export function fdpInitGraph(g: Graph): void {
-  // Root graph label — C's graph_init (input.c:719 do_graph_label) runs for
-  // every engine from gvLayoutJobs (gvlayout.c:81) BEFORE fdp_layout. mkClusters
-  // below only labels the *clusters* (layout.c:413), never the root; without
-  // this call GD_label(g) stays NULL and gv_postprocess skips both the bb
-  // expansion and place_root_label. @see lib/gvc/gvlayout.c:81
-  doGraphLabel(g, layoutMeasurer(g));
+  // The root graph label is created by the shared graphInit (do_graph_label),
+  // called once from fdpLayoutEngine — C's graph_init runs before fdp_layout.
+  // mkClusters below only labels the *clusters* (layout.c:413), never the root.
   setEdgeType(g, EDGETYPE_LINE);
   gdata(g); // GD_alg(g) = gv_alloc(sizeof(gdata))
   mkClusters(g, null, g);
@@ -69,7 +64,10 @@ function fdpSplines(g: Graph): void {
  * @see lib/fdpgen/layout.c:fdp_layout
  */
 export function fdpLayoutEngine(g: Graph): void {
-  neutralGraphRankdir(g);
+  // C: gvLayoutJobs runs graph_init(g, LAYOUT_USES_RANKDIR) before fdp_layout.
+  // fdp does not set the flag → useRankdir=false. Creates GD_label(g) too.
+  // @see lib/common/input.c:600, lib/gvc/gvlayout.c:81
+  graphInit(g, false);
   // fdp never calls srand(); the coincident-node rand() fallback draws from
   // the process-global libc rand() stream, which is unseeded ⇒ srand(1). Reset
   // the modeled stream per render so repeated renders in one JS process match

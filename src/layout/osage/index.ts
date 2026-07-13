@@ -30,7 +30,7 @@ import { splineEdges, EDGETYPE_NONE, EDGETYPE_LINE } from '../neato/splines.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
 // Engine-neutral C common functions, currently parked under layout/dot:
 import { doGraphLabel } from '../dot/graph-label.js';
-import { neutralGraphRankdir } from '../dot/init.js';
+import { graphInit } from '../../common/graph-init.js';
 import { mapbool } from '../dot/rank.js';
 import { BOTTOM_IX, TOP_IX } from '../dot/position-aux.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
@@ -102,7 +102,12 @@ export function isCluster(g: Graph): boolean {
  * @see lib/osage/osageinit.c:cluster_init_graph
  */
 export function clusterInitGraph(g: Graph): void {
-  neutralGraphRankdir(g);
+  // C: gvLayoutJobs runs graph_init(g, LAYOUT_USES_RANKDIR) before osage_layout;
+  // osage does not set the flag → useRankdir=false. graph_init also creates the
+  // ROOT graph label: the layout() label block widens rootbb by it and adds its
+  // height via GD_border[TOP/BOTTOM]. Clusters get theirs via mkClusters.
+  // @see lib/common/input.c:600, lib/gvc/gvlayout.c:81, osageinit.c:168
+  graphInit(g, false);
   // C: setEdgeType(g, EDGETYPE_LINE) — osage defaults edges to straight lines,
   // but honors an explicit `splines` attr (ortho/curved/none). Without this the
   // edge-type nibble stays EDGETYPE_NONE and osageLayout skips splineEdges
@@ -111,12 +116,6 @@ export function clusterInitGraph(g: Graph): void {
   setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   g.info.ndim = 2;
   const measurer = layoutMeasurer(g);
-  // C sets the ROOT graph's label + border in the common graph_init before
-  // osage_layout; the layout() label block then widens rootbb by the label and
-  // adds its height via GD_border[TOP/BOTTOM]. Without this the root graph label
-  // is never created, so the canvas height omits the label. Clusters get their
-  // label via mkClusters/doGraphLabel; the root needs it here. @see osageinit.c:168
-  doGraphLabel(g, measurer);
   for (const n of g.nodes.values()) {
     neatoInitNode(n, 2);
     if (measurer !== undefined) {

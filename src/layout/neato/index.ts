@@ -45,7 +45,7 @@ import {
 import { CL_OFFSET } from '../twopi/pipeline.js';
 import { isACluster } from '../dot/rank.js';
 import { doGraphLabel } from '../dot/graph-label.js';
-import { neutralGraphRankdir } from '../dot/init.js';
+import { graphInit, DEFAULT_NODESEP_POINTS } from '../../common/graph-init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
 import { layoutMeasurer } from '../../common/nodeinit.js';
@@ -125,7 +125,16 @@ export function maybeRemoveOverlap(g: Graph): void {
   const overlap = g.attrs.get('overlap');
   if (overlap === undefined || overlap === 'true') return;
   const nodes = Array.from(g.nodes.values());
-  const nodesep = (g.info.nodesep ?? 18) / 72; // points → inches
+  // Separation is DELIBERATELY the *default* nodesep, not GD_nodesep(g). C's
+  // overlap removal derives its padding from `sep`/DFLT_MARGIN (adjust.c:591-600
+  // sepFactor) and never reads GD_nodesep — that field is used only by
+  // makeSelfArcs (neatosplines.c:673) and routespl.c:1006. Before graph_init was
+  // consolidated, GD_nodesep was unset under neato at this point, so this site
+  // always saw the 18pt default; now that graphInit parses `nodesep` for every
+  // engine (as C does), reading it here would silently change the VPSC
+  // separation on graphs that set both `nodesep` and `overlap` (corpus: 1554,
+  // 2242) — a divergence C does not have. Pinned to the default it always used.
+  const nodesep = DEFAULT_NODESEP_POINTS / 72; // points → inches
   removeOverlap(nodes, { x: nodesep / 2, y: nodesep / 2 });
 }
 
@@ -149,17 +158,14 @@ export function maybeRemoveOverlap(g: Graph): void {
  * @see lib/neatogen/neatoinit.c:neato_layout
  */
 export function neatoLayout(g: Graph): void {
-  neutralGraphRankdir(g);
-  // Root graph label. C creates it in the engine-agnostic graph_init
-  // (input.c:719 do_graph_label), which gvLayoutJobs runs for EVERY engine
-  // (gvlayout.c:81) before the engine's layout(). This port has no shared
-  // graph_init, so each engine must make the call itself: without it
-  // GD_label(g) is NULL and gv_postprocess's `GD_label(g) && !set` gate skips
-  // BOTH the bb expansion and place_root_label, so the graph label is never
-  // emitted and the drawing is never shifted up to make room for it.
-  // @see lib/common/input.c:719 (do_graph_label at the end of graph_init)
-  // @see lib/gvc/gvlayout.c:81 (graph_init call, all engines)
-  doGraphLabel(g, layoutMeasurer(g));
+  // C runs graph_init(g, LAYOUT_USES_RANKDIR) for EVERY engine from
+  // gvLayoutJobs (gvlayout.c:81) before the engine's layout(). neato does not
+  // set LAYOUT_USES_RANKDIR, so useRankdir=false: the real rankdir lands in
+  // bits 2-3 and the effective rankdir stays TB. graph_init also creates the
+  // ROOT graph label (do_graph_label) — without it GD_label(g) is NULL and
+  // gv_postprocess's `GD_label(g) && !set` gate skips BOTH the bb expansion and
+  // place_root_label. @see lib/common/input.c:600 graph_init
+  graphInit(g, false);
   // C: neato_init_graph sets EDGETYPE_LINE before node/edge init.
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);
