@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-13T04:49:41.071Z",
+  "generatedAt": "2026-07-13T17:43:59.232Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "twopi",
   "tolerance": 0.01,
-  "total": 761,
+  "total": 762,
   "counts": {
-    "pass": 739,
+    "pass": 740,
     "diverged": 14,
     "oracle-error": 8,
     "port-error": 0,
@@ -3313,8 +3313,8 @@
       "id": "nshare-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 32,
-      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+      "nDiffs": 25,
+      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"
     },
     {
       "id": "graphs-awilliams",
@@ -3796,6 +3796,11 @@
     {
       "id": "graphs-b81",
       "size": 191024,
+      "status": "pass"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
       "status": "pass"
     },
     {

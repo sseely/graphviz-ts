@@ -727,6 +727,7 @@
 {"id":"share-b51","size":29420,"status":"pass"}
 {"id":"windows-b51","size":29685,"status":"pass"}
 {"id":"graphs-b69","size":33033,"status":"pass"}
+{"id":"graphs-badvoro","size":33949,"status":"pass"}
 {"id":"graphs-viewport","size":37292,"status":"pass"}
 {"id":"2239","size":48090,"status":"pass"}
 {"id":"graphs-b106","size":48933,"status":"pass"}
@@ -748,6 +749,7 @@
 {"id":"share-b102","size":161479,"status":"pass"}
 {"id":"windows-b102","size":184125,"status":"pass"}
 {"id":"graphs-b81","size":191024,"status":"pass"}
+{"id":"1652","size":240391,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K circo -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"pass"}
 {"id":"nshare-root_twopi","size":287916,"status":"pass"}
@@ -758,4 +760,3 @@
 {"id":"2470","size":734358,"status":"pass"}
 {"id":"2222","size":2384469,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
 {"id":"2108","size":3136769,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
-{"id":"graphs-badvoro","size":33949,"status":"pass"}

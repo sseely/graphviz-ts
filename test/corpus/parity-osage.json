@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-13T05:29:00.768Z",
+  "generatedAt": "2026-07-13T17:56:43.893Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "osage",
   "tolerance": 0.01,
-  "total": 761,
+  "total": 762,
   "counts": {
     "pass": 750,
-    "diverged": 6,
+    "diverged": 7,
     "oracle-error": 5,
     "port-error": 0,
     "timeout": 0
@@ -3782,6 +3782,13 @@
       "id": "graphs-b81",
       "size": 191024,
       "status": "pass"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
+      "status": "diverged",
+      "nDiffs": 2,
+      "firstDiff": "edge:Op_1091->Op_1092#0 _ldraw_ edge:Op_1091->Op_1092#0/_ldraw_/op[2].text[0]: 2266.75 vs 2332.07"
     },
     {
       "id": "1879",

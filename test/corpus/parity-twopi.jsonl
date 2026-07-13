@@ -653,7 +653,7 @@
 {"id":"share-trapeziumlr","size":7233,"status":"pass"}
 {"id":"linux.x86-arrows_dot","size":7235,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
 {"id":"macosx-arrows_dot","size":7235,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
-{"id":"nshare-arrows_dot","size":7235,"status":"diverged","nDiffs":32,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
+{"id":"nshare-arrows_dot","size":7235,"status":"diverged","nDiffs":25,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"}
 {"id":"graphs-awilliams","size":7305,"status":"pass"}
 {"id":"share-unix2","size":7421,"status":"pass"}
 {"id":"share-unix2k","size":7421,"status":"pass"}
@@ -749,6 +749,7 @@
 {"id":"share-b102","size":161479,"status":"pass"}
 {"id":"windows-b102","size":184125,"status":"pass"}
 {"id":"graphs-b81","size":191024,"status":"pass"}
+{"id":"1652","size":240391,"status":"pass"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K twopi -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"pass"}
 {"id":"nshare-root_twopi","size":287916,"status":"pass"}
