@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T02:10:17.988Z",
+  "generatedAt": "2026-07-13T05:52:29.930Z",
   "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
   "tolerance": 0.5,
   "results": [
@@ -9,7 +9,9 @@
       "baseDiffs": 22,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -18,7 +20,9 @@
       "baseDiffs": 1,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -27,7 +31,9 @@
       "baseDiffs": 33,
       "injectedDiffs": 33,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -36,7 +42,9 @@
       "baseDiffs": 48,
       "injectedDiffs": 48,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -45,7 +53,9 @@
       "baseDiffs": 52,
       "injectedDiffs": 52,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_tdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -54,7 +64,9 @@
       "baseDiffs": 1,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -63,7 +75,9 @@
       "baseDiffs": 46,
       "injectedDiffs": 46,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -72,7 +86,9 @@
       "baseDiffs": 1,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -81,7 +97,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -90,7 +108,9 @@
       "baseDiffs": 13,
       "injectedDiffs": 13,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
@@ -99,7 +119,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -108,7 +130,9 @@
       "baseDiffs": 22,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -117,7 +141,9 @@
       "baseDiffs": 22,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -126,7 +152,9 @@
       "baseDiffs": 24,
       "injectedDiffs": 24,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -135,7 +163,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -144,7 +174,9 @@
       "baseDiffs": 40,
       "injectedDiffs": 40,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -153,7 +185,9 @@
       "baseDiffs": 32,
       "injectedDiffs": 32,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_tdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -162,7 +196,9 @@
       "baseDiffs": 24,
       "injectedDiffs": 24,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -171,7 +207,9 @@
       "baseDiffs": 1,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -180,7 +218,9 @@
       "baseDiffs": 36,
       "injectedDiffs": 36,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -189,7 +229,9 @@
       "baseDiffs": 46,
       "injectedDiffs": 46,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -198,7 +240,9 @@
       "baseDiffs": 41,
       "injectedDiffs": 41,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -207,7 +251,9 @@
       "baseDiffs": 42,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/unknown"
+        "shape": "cluster/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -216,7 +262,9 @@
       "baseDiffs": 24,
       "injectedDiffs": 24,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -225,7 +273,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -234,7 +284,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -243,7 +295,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -252,7 +306,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -261,7 +317,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -270,7 +328,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -279,7 +339,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -288,7 +350,9 @@
       "baseDiffs": 72,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -297,7 +361,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -306,7 +372,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -315,7 +383,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -324,7 +394,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -333,7 +405,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -342,7 +416,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -351,7 +427,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -360,7 +438,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -369,7 +449,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -378,7 +460,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -387,7 +471,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -396,7 +482,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -405,7 +493,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -414,7 +504,9 @@
       "baseDiffs": 84,
       "injectedDiffs": 84,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/numeric+…(11)"
       }
     },
     {
@@ -423,7 +515,9 @@
       "baseDiffs": 102,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -432,7 +526,9 @@
       "baseDiffs": 127,
       "injectedDiffs": 127,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -441,7 +537,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -450,7 +548,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -459,7 +559,9 @@
       "baseDiffs": 115,
       "injectedDiffs": 115,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -468,7 +570,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -477,7 +581,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -486,7 +592,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -495,7 +603,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -504,7 +614,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -513,7 +625,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -522,7 +636,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -531,7 +647,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -540,7 +658,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -549,7 +669,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -558,7 +680,9 @@
       "baseDiffs": 121,
       "injectedDiffs": 121,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/numeric+…(11)"
       }
     },
     {
@@ -567,7 +691,9 @@
       "baseDiffs": 2,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/unknown"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -576,7 +702,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -585,7 +713,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -594,7 +724,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -603,7 +735,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -612,7 +746,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -621,7 +757,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -630,7 +768,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -639,7 +779,9 @@
       "baseDiffs": 33,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -648,7 +790,9 @@
       "baseDiffs": 43,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -657,7 +801,9 @@
       "baseDiffs": 43,
       "injectedDiffs": 43,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -666,7 +812,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -675,7 +823,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -684,7 +834,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -693,7 +845,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -702,7 +856,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -711,7 +867,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -720,7 +878,9 @@
       "baseDiffs": 4,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -729,7 +889,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -738,7 +900,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -747,7 +911,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -756,7 +922,9 @@
       "baseDiffs": 40,
       "injectedDiffs": 40,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -765,7 +933,9 @@
       "baseDiffs": 19,
       "injectedDiffs": 19,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -774,7 +944,9 @@
       "baseDiffs": 1,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -783,7 +955,9 @@
       "baseDiffs": 11,
       "injectedDiffs": 11,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
@@ -792,7 +966,9 @@
       "baseDiffs": 11,
       "injectedDiffs": 11,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
@@ -801,7 +977,9 @@
       "baseDiffs": 11,
       "injectedDiffs": 11,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
@@ -810,7 +988,9 @@
       "baseDiffs": 24,
       "injectedDiffs": 24,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -819,7 +999,9 @@
       "baseDiffs": 2,
       "injectedDiffs": 2,
       "bucket": {
-        "shape": "edge/_hldraw_/structural"
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural"
       }
     },
     {
@@ -828,7 +1010,9 @@
       "baseDiffs": 121,
       "injectedDiffs": 121,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+…(11)"
       }
     },
     {
@@ -837,7 +1021,9 @@
       "baseDiffs": 203,
       "injectedDiffs": 203,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -846,7 +1032,9 @@
       "baseDiffs": 191,
       "injectedDiffs": 191,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -856,6 +1044,8 @@
       "injectedDiffs": 122,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)",
         "uniformDelta": [
           -14,
           -16.8
@@ -868,7 +1058,9 @@
       "baseDiffs": 2,
       "injectedDiffs": 2,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -877,7 +1069,9 @@
       "baseDiffs": 67,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -886,7 +1080,9 @@
       "baseDiffs": 67,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -895,7 +1091,9 @@
       "baseDiffs": 126,
       "injectedDiffs": 126,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -904,7 +1102,9 @@
       "baseDiffs": 69,
       "injectedDiffs": 26,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -913,7 +1113,9 @@
       "baseDiffs": 69,
       "injectedDiffs": 26,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -922,7 +1124,9 @@
       "baseDiffs": 69,
       "injectedDiffs": 26,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -931,7 +1135,9 @@
       "baseDiffs": 69,
       "injectedDiffs": 26,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -940,7 +1146,9 @@
       "baseDiffs": 69,
       "injectedDiffs": 26,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -949,7 +1157,9 @@
       "baseDiffs": 72,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -958,7 +1168,9 @@
       "baseDiffs": 72,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -967,7 +1179,9 @@
       "baseDiffs": 38,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -976,7 +1190,9 @@
       "baseDiffs": 690,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -985,7 +1201,9 @@
       "baseDiffs": 2,
       "injectedDiffs": 2,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -994,7 +1212,9 @@
       "baseDiffs": 111,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -1003,7 +1223,9 @@
       "baseDiffs": 111,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -1012,7 +1234,9 @@
       "baseDiffs": 5,
       "injectedDiffs": 5,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -1021,7 +1245,9 @@
       "baseDiffs": 41,
       "injectedDiffs": 41,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -1030,7 +1256,9 @@
       "baseDiffs": 41,
       "injectedDiffs": 41,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -1039,7 +1267,9 @@
       "baseDiffs": 2,
       "injectedDiffs": 2,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -1048,7 +1278,9 @@
       "baseDiffs": 14,
       "injectedDiffs": 14,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -1057,7 +1289,9 @@
       "baseDiffs": 226,
       "injectedDiffs": 224,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
@@ -1066,7 +1300,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1075,7 +1311,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1084,7 +1322,9 @@
       "baseDiffs": 162,
       "injectedDiffs": 162,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -1093,7 +1333,9 @@
       "baseDiffs": 208,
       "injectedDiffs": 208,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -1102,7 +1344,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1111,7 +1355,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1120,7 +1366,9 @@
       "baseDiffs": 114,
       "injectedDiffs": 46,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -1129,7 +1377,9 @@
       "baseDiffs": 114,
       "injectedDiffs": 46,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -1138,7 +1388,9 @@
       "baseDiffs": 114,
       "injectedDiffs": 46,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -1147,7 +1399,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1156,7 +1410,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1165,7 +1421,9 @@
       "baseDiffs": 14,
       "injectedDiffs": 14,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -1174,7 +1432,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1183,7 +1443,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1192,7 +1454,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1201,7 +1465,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1210,7 +1476,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1219,7 +1487,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1228,7 +1498,9 @@
       "baseDiffs": 189,
       "injectedDiffs": 189,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
@@ -1237,7 +1509,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1246,7 +1520,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1255,7 +1531,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1264,7 +1542,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1273,7 +1553,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1282,7 +1564,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1291,7 +1575,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1300,7 +1586,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1309,7 +1597,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1318,7 +1608,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1327,7 +1619,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1336,7 +1630,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1345,7 +1641,9 @@
       "baseDiffs": 132,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1354,7 +1652,9 @@
       "baseDiffs": 132,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1363,7 +1663,9 @@
       "baseDiffs": 132,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1372,7 +1674,9 @@
       "baseDiffs": 88,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1381,7 +1685,9 @@
       "baseDiffs": 88,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1390,7 +1696,9 @@
       "baseDiffs": 120,
       "injectedDiffs": 120,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -1399,7 +1707,9 @@
       "baseDiffs": 132,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1408,7 +1718,9 @@
       "baseDiffs": 132,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1417,7 +1729,9 @@
       "baseDiffs": 132,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1426,7 +1740,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1435,7 +1751,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1444,7 +1762,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1453,7 +1773,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1462,7 +1784,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1471,7 +1795,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1480,7 +1806,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1489,7 +1817,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1498,7 +1828,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1507,7 +1839,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1516,7 +1850,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1525,7 +1861,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1534,7 +1872,9 @@
       "baseDiffs": 146,
       "injectedDiffs": 146,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -1543,7 +1883,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1552,7 +1894,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1561,7 +1905,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1570,7 +1916,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1579,7 +1927,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1588,7 +1938,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1597,7 +1949,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1606,7 +1960,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1615,7 +1971,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1624,7 +1982,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1633,7 +1993,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1642,7 +2004,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1651,7 +2015,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1660,7 +2026,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1669,7 +2037,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1678,7 +2048,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1687,7 +2059,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1696,7 +2070,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1705,7 +2081,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1714,7 +2092,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1723,7 +2103,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1732,7 +2114,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1741,7 +2125,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1750,7 +2136,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1759,7 +2147,9 @@
       "baseDiffs": 88,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1768,7 +2158,9 @@
       "baseDiffs": 88,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1777,7 +2169,9 @@
       "baseDiffs": 88,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1786,7 +2180,9 @@
       "baseDiffs": 88,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1795,7 +2191,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1804,7 +2202,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1813,7 +2213,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1822,7 +2224,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1831,7 +2235,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1840,7 +2246,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1849,7 +2257,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1858,7 +2268,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1867,7 +2279,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1876,7 +2290,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1885,7 +2301,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1894,7 +2312,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1903,7 +2323,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1912,7 +2334,9 @@
       "baseDiffs": 86,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1921,7 +2345,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1930,7 +2356,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1939,7 +2367,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1948,7 +2378,9 @@
       "baseDiffs": 95,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1957,7 +2389,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1966,7 +2400,9 @@
       "baseDiffs": 87,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1975,7 +2411,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -1984,7 +2422,9 @@
       "baseDiffs": 87,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -1993,7 +2433,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2002,7 +2444,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2011,7 +2455,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2020,7 +2466,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2029,7 +2477,9 @@
       "baseDiffs": 160,
       "injectedDiffs": 160,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2038,7 +2488,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2047,7 +2499,9 @@
       "baseDiffs": 93,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2056,7 +2510,9 @@
       "baseDiffs": 9,
       "injectedDiffs": 9,
       "bucket": {
-        "shape": "edge/_hldraw_/structural"
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural"
       }
     },
     {
@@ -2065,7 +2521,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2074,7 +2532,9 @@
       "baseDiffs": 94,
       "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2083,7 +2543,9 @@
       "baseDiffs": 209,
       "injectedDiffs": 209,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2092,7 +2554,9 @@
       "baseDiffs": 170,
       "injectedDiffs": 170,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2101,7 +2565,9 @@
       "baseDiffs": 152,
       "injectedDiffs": 44,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2110,7 +2576,9 @@
       "baseDiffs": 140,
       "injectedDiffs": 33,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2119,7 +2587,9 @@
       "baseDiffs": 22,
       "injectedDiffs": 22,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2128,7 +2598,9 @@
       "baseDiffs": 46,
       "injectedDiffs": 46,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2137,7 +2609,9 @@
       "baseDiffs": 11,
       "injectedDiffs": 11,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2146,7 +2620,9 @@
       "baseDiffs": 28,
       "injectedDiffs": 28,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -2155,7 +2631,9 @@
       "baseDiffs": 113,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/unknown"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2164,7 +2642,9 @@
       "baseDiffs": 121,
       "injectedDiffs": 121,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2173,7 +2653,9 @@
       "baseDiffs": 155,
       "injectedDiffs": 80,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2182,7 +2664,9 @@
       "baseDiffs": 155,
       "injectedDiffs": 80,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2191,7 +2675,9 @@
       "baseDiffs": 117,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2200,7 +2686,9 @@
       "baseDiffs": 117,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2209,7 +2697,9 @@
       "baseDiffs": 117,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2218,7 +2708,9 @@
       "baseDiffs": 184,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -2227,7 +2719,9 @@
       "baseDiffs": 296,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2237,6 +2731,8 @@
       "injectedDiffs": 108,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)",
         "uniformDelta": [
           -13,
           -1
@@ -2250,6 +2746,8 @@
       "injectedDiffs": 108,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)",
         "uniformDelta": [
           -13,
           -1
@@ -2262,7 +2760,9 @@
       "baseDiffs": 20,
       "injectedDiffs": 20,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -2271,7 +2771,9 @@
       "baseDiffs": 205,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2280,7 +2782,9 @@
       "baseDiffs": 150,
       "injectedDiffs": 48,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2289,7 +2793,9 @@
       "baseDiffs": 150,
       "injectedDiffs": 48,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2298,7 +2804,9 @@
       "baseDiffs": 259,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2307,7 +2815,9 @@
       "baseDiffs": 259,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2316,7 +2826,9 @@
       "baseDiffs": 199,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2325,7 +2837,9 @@
       "baseDiffs": 199,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2334,7 +2848,9 @@
       "baseDiffs": 183,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -2343,7 +2859,9 @@
       "baseDiffs": 183,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -2352,7 +2870,9 @@
       "baseDiffs": 315,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2361,7 +2881,9 @@
       "baseDiffs": 315,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2370,7 +2892,9 @@
       "baseDiffs": 318,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2379,7 +2903,9 @@
       "baseDiffs": 318,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2388,7 +2914,9 @@
       "baseDiffs": 409,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/unknown"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2397,7 +2925,9 @@
       "baseDiffs": 295,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2406,7 +2936,9 @@
       "baseDiffs": 295,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2415,7 +2947,9 @@
       "baseDiffs": 310,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2424,7 +2958,9 @@
       "baseDiffs": 135,
       "injectedDiffs": 128,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/structural+…(15)"
       }
     },
     {
@@ -2433,7 +2969,9 @@
       "baseDiffs": 310,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2442,7 +2980,9 @@
       "baseDiffs": 38,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/unknown"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2451,7 +2991,9 @@
       "baseDiffs": 755,
       "injectedDiffs": 413,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(9)"
       }
     },
     {
@@ -2460,7 +3002,9 @@
       "baseDiffs": 320,
       "injectedDiffs": 119,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2469,7 +3013,9 @@
       "baseDiffs": 34,
       "injectedDiffs": 34,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2478,7 +3024,9 @@
       "baseDiffs": 320,
       "injectedDiffs": 119,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2487,7 +3035,9 @@
       "baseDiffs": 32,
       "injectedDiffs": 32,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2497,6 +3047,8 @@
       "injectedDiffs": 1948,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)",
         "uniformDelta": [
           23.96,
           31.58
@@ -2509,7 +3061,9 @@
       "baseDiffs": 282,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2518,7 +3072,9 @@
       "baseDiffs": 282,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2527,7 +3083,9 @@
       "baseDiffs": 282,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2536,7 +3094,9 @@
       "baseDiffs": 252,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2545,7 +3105,9 @@
       "baseDiffs": 254,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2554,7 +3116,9 @@
       "baseDiffs": 64,
       "injectedDiffs": 64,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2563,7 +3127,9 @@
       "baseDiffs": 626,
       "injectedDiffs": 623,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+…(15)"
       }
     },
     {
@@ -2572,7 +3138,9 @@
       "baseDiffs": 371,
       "injectedDiffs": 370,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2581,7 +3149,9 @@
       "baseDiffs": 426,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2590,7 +3160,9 @@
       "baseDiffs": 426,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2599,7 +3171,9 @@
       "baseDiffs": 424,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2608,7 +3182,9 @@
       "baseDiffs": 424,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2617,7 +3193,9 @@
       "baseDiffs": 383,
       "injectedDiffs": 142,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2626,7 +3204,9 @@
       "baseDiffs": 383,
       "injectedDiffs": 142,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2635,7 +3215,9 @@
       "baseDiffs": 383,
       "injectedDiffs": 142,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2644,7 +3226,9 @@
       "baseDiffs": 297,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2653,7 +3237,9 @@
       "baseDiffs": 297,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2662,7 +3248,9 @@
       "baseDiffs": 363,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2671,7 +3259,9 @@
       "baseDiffs": 363,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2680,7 +3270,9 @@
       "baseDiffs": 414,
       "injectedDiffs": 151,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2689,7 +3281,9 @@
       "baseDiffs": 414,
       "injectedDiffs": 151,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2698,7 +3292,9 @@
       "baseDiffs": 192,
       "injectedDiffs": 34,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2707,7 +3303,9 @@
       "baseDiffs": 192,
       "injectedDiffs": 34,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2716,7 +3314,9 @@
       "baseDiffs": 318,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2725,7 +3325,9 @@
       "baseDiffs": 318,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2734,7 +3336,9 @@
       "baseDiffs": 846,
       "injectedDiffs": 185,
       "bucket": {
-        "shape": "edge/_hldraw_/structural"
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -2743,7 +3347,9 @@
       "baseDiffs": 869,
       "injectedDiffs": 203,
       "bucket": {
-        "shape": "edge/_hldraw_/structural"
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+…(8)"
       }
     },
     {
@@ -2752,7 +3358,9 @@
       "baseDiffs": 450,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2761,7 +3369,9 @@
       "baseDiffs": 450,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2770,7 +3380,9 @@
       "baseDiffs": 450,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2779,7 +3391,9 @@
       "baseDiffs": 846,
       "injectedDiffs": 185,
       "bucket": {
-        "shape": "edge/_hldraw_/structural"
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -2788,7 +3402,9 @@
       "baseDiffs": 313,
       "injectedDiffs": 160,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2797,7 +3413,9 @@
       "baseDiffs": 1431,
       "injectedDiffs": 1431,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -2806,7 +3424,9 @@
       "baseDiffs": 1318,
       "injectedDiffs": 1318,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -2815,7 +3435,9 @@
       "baseDiffs": 313,
       "injectedDiffs": 160,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2824,7 +3446,9 @@
       "baseDiffs": 313,
       "injectedDiffs": 160,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -2833,7 +3457,9 @@
       "baseDiffs": 450,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2842,7 +3468,9 @@
       "baseDiffs": 450,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2851,7 +3479,9 @@
       "baseDiffs": 450,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2860,7 +3490,9 @@
       "baseDiffs": 442,
       "injectedDiffs": 14,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -2869,7 +3501,9 @@
       "baseDiffs": 658,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2878,7 +3512,9 @@
       "baseDiffs": 442,
       "injectedDiffs": 14,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -2887,7 +3523,9 @@
       "baseDiffs": 948,
       "injectedDiffs": 948,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -2896,7 +3534,9 @@
       "baseDiffs": 954,
       "injectedDiffs": 954,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -2905,7 +3545,9 @@
       "baseDiffs": 1499,
       "injectedDiffs": 1499,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -2914,7 +3556,9 @@
       "baseDiffs": 1389,
       "injectedDiffs": 1389,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -2923,7 +3567,9 @@
       "baseDiffs": 252,
       "injectedDiffs": 252,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2932,7 +3578,9 @@
       "baseDiffs": 492,
       "injectedDiffs": 200,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2941,7 +3589,9 @@
       "baseDiffs": 370,
       "injectedDiffs": 370,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric+…(12)"
       }
     },
     {
@@ -2950,7 +3600,9 @@
       "baseDiffs": 426,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2959,7 +3611,9 @@
       "baseDiffs": 426,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2968,7 +3622,9 @@
       "baseDiffs": 545,
       "injectedDiffs": 545,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2977,7 +3633,9 @@
       "baseDiffs": 385,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2986,7 +3644,9 @@
       "baseDiffs": 540,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2995,7 +3655,9 @@
       "baseDiffs": 540,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3004,7 +3666,9 @@
       "baseDiffs": 54,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "unknown"
+        "shape": "unknown",
+        "kind": "position",
+        "signature": "none"
       },
       "err": "port render timeout (injected)"
     },
@@ -3014,7 +3678,9 @@
       "baseDiffs": 560,
       "injectedDiffs": 20,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3023,7 +3689,9 @@
       "baseDiffs": 560,
       "injectedDiffs": 20,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3032,7 +3700,9 @@
       "baseDiffs": 555,
       "injectedDiffs": 20,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3041,7 +3711,9 @@
       "baseDiffs": 468,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3050,7 +3722,9 @@
       "baseDiffs": 467,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3059,7 +3733,9 @@
       "baseDiffs": 468,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3068,7 +3744,9 @@
       "baseDiffs": 462,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3077,7 +3755,9 @@
       "baseDiffs": 470,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3086,7 +3766,9 @@
       "baseDiffs": 465,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3095,7 +3777,9 @@
       "baseDiffs": 275,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3104,7 +3788,9 @@
       "baseDiffs": 138,
       "injectedDiffs": 138,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(8)"
       }
     },
     {
@@ -3113,7 +3799,9 @@
       "baseDiffs": 828,
       "injectedDiffs": 28,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -3122,7 +3810,9 @@
       "baseDiffs": 39,
       "injectedDiffs": 39,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3131,7 +3821,9 @@
       "baseDiffs": 828,
       "injectedDiffs": 28,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -3140,7 +3832,9 @@
       "baseDiffs": 421,
       "injectedDiffs": 421,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_tdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3149,7 +3843,9 @@
       "baseDiffs": 616,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3158,7 +3854,9 @@
       "baseDiffs": 616,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3167,7 +3865,9 @@
       "baseDiffs": 672,
       "injectedDiffs": 172,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3176,7 +3876,9 @@
       "baseDiffs": 674,
       "injectedDiffs": 170,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3185,7 +3887,9 @@
       "baseDiffs": 786,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3194,7 +3898,9 @@
       "baseDiffs": 783,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3203,7 +3909,9 @@
       "baseDiffs": 2181,
       "injectedDiffs": 2181,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -3212,7 +3920,9 @@
       "baseDiffs": 2052,
       "injectedDiffs": 2052,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -3221,7 +3931,9 @@
       "baseDiffs": 1,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3230,7 +3942,9 @@
       "baseDiffs": 1618,
       "injectedDiffs": 1613,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -3239,7 +3953,9 @@
       "baseDiffs": 1673,
       "injectedDiffs": 1673,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -3248,7 +3964,9 @@
       "baseDiffs": 2279,
       "injectedDiffs": 2278,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -3257,7 +3975,9 @@
       "baseDiffs": 2151,
       "injectedDiffs": 2152,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(10)"
       }
     },
     {
@@ -3266,7 +3986,9 @@
       "baseDiffs": 771,
       "injectedDiffs": 359,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3275,7 +3997,9 @@
       "baseDiffs": 771,
       "injectedDiffs": 373,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3284,7 +4008,9 @@
       "baseDiffs": 792,
       "injectedDiffs": 792,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3293,7 +4019,9 @@
       "baseDiffs": 1140,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3302,7 +4030,9 @@
       "baseDiffs": 1140,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3311,7 +4041,9 @@
       "baseDiffs": 294,
       "injectedDiffs": 294,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+…(12)"
       }
     },
     {
@@ -3320,7 +4052,9 @@
       "baseDiffs": 782,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3329,7 +4063,9 @@
       "baseDiffs": 777,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3338,7 +4074,9 @@
       "baseDiffs": 1456,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3347,7 +4085,9 @@
       "baseDiffs": 1456,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3356,7 +4096,9 @@
       "baseDiffs": 7320,
       "injectedDiffs": 1,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3365,7 +4107,9 @@
       "baseDiffs": 993,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3374,7 +4118,9 @@
       "baseDiffs": 993,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3383,7 +4129,9 @@
       "baseDiffs": 48,
       "injectedDiffs": 48,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -3392,7 +4140,9 @@
       "baseDiffs": 792,
       "injectedDiffs": 792,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3401,7 +4151,9 @@
       "baseDiffs": 1086,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3410,7 +4162,9 @@
       "baseDiffs": 959,
       "injectedDiffs": 959,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3419,7 +4173,9 @@
       "baseDiffs": 1086,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3428,7 +4184,9 @@
       "baseDiffs": 1530,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3437,7 +4195,9 @@
       "baseDiffs": 1530,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3446,7 +4206,9 @@
       "baseDiffs": 239,
       "injectedDiffs": 113,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural+edge/pos/numeric+…(8)"
       }
     },
     {
@@ -3455,7 +4217,9 @@
       "baseDiffs": 792,
       "injectedDiffs": 792,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3464,7 +4228,9 @@
       "baseDiffs": 71,
       "injectedDiffs": 71,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3473,7 +4239,9 @@
       "baseDiffs": 12,
       "injectedDiffs": 12,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3482,7 +4250,9 @@
       "baseDiffs": 554,
       "injectedDiffs": 60,
       "bucket": {
-        "shape": "edge/_draw_/structural"
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hldraw_/structural+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -3491,7 +4261,9 @@
       "baseDiffs": 554,
       "injectedDiffs": 60,
       "bucket": {
-        "shape": "edge/_draw_/structural"
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hldraw_/structural+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -3500,7 +4272,9 @@
       "baseDiffs": 1061,
       "injectedDiffs": 1061,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3509,7 +4283,9 @@
       "baseDiffs": 1422,
       "injectedDiffs": 1422,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3518,7 +4294,9 @@
       "baseDiffs": 1424,
       "injectedDiffs": 1424,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3527,7 +4305,9 @@
       "baseDiffs": 98,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/unknown"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3536,7 +4316,9 @@
       "baseDiffs": 792,
       "injectedDiffs": 792,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3546,6 +4328,8 @@
       "injectedDiffs": 1948,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)",
         "uniformDelta": [
           25.56,
           38.66
@@ -3559,6 +4343,8 @@
       "injectedDiffs": 1948,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)",
         "uniformDelta": [
           26.19,
           38.45
@@ -3571,7 +4357,9 @@
       "baseDiffs": 874,
       "injectedDiffs": 140,
       "bucket": {
-        "shape": "edge/_draw_/structural"
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -3580,7 +4368,9 @@
       "baseDiffs": 874,
       "injectedDiffs": 140,
       "bucket": {
-        "shape": "edge/_draw_/structural"
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -3589,7 +4379,9 @@
       "baseDiffs": 874,
       "injectedDiffs": 140,
       "bucket": {
-        "shape": "edge/_draw_/structural"
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural"
       }
     },
     {
@@ -3598,7 +4390,9 @@
       "baseDiffs": 1606,
       "injectedDiffs": 1544,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3607,7 +4401,9 @@
       "baseDiffs": 1606,
       "injectedDiffs": 1544,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3616,7 +4412,9 @@
       "baseDiffs": 1607,
       "injectedDiffs": 1538,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3625,7 +4423,9 @@
       "baseDiffs": 1607,
       "injectedDiffs": 1538,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3634,7 +4434,9 @@
       "baseDiffs": 2149,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3643,7 +4445,9 @@
       "baseDiffs": 2149,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3652,7 +4456,9 @@
       "baseDiffs": 1942,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3661,7 +4467,9 @@
       "baseDiffs": 1942,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3670,7 +4478,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3679,7 +4489,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3688,7 +4500,9 @@
       "baseDiffs": 1928,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3697,7 +4511,9 @@
       "baseDiffs": 1928,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3706,7 +4522,9 @@
       "baseDiffs": 7,
       "injectedDiffs": 7,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3715,7 +4533,9 @@
       "baseDiffs": 1604,
       "injectedDiffs": 1496,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3724,7 +4544,9 @@
       "baseDiffs": 2082,
       "injectedDiffs": 2041,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hdraw_/structural+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
@@ -3733,7 +4555,9 @@
       "baseDiffs": 1602,
       "injectedDiffs": 1495,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3742,7 +4566,9 @@
       "baseDiffs": 3691,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3751,7 +4577,9 @@
       "baseDiffs": 3691,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3760,7 +4588,9 @@
       "baseDiffs": 1604,
       "injectedDiffs": 1496,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3769,7 +4599,9 @@
       "baseDiffs": 39,
       "injectedDiffs": 39,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3778,7 +4610,9 @@
       "baseDiffs": 1605,
       "injectedDiffs": 1499,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3787,7 +4621,9 @@
       "baseDiffs": 1602,
       "injectedDiffs": 1495,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3796,7 +4632,9 @@
       "baseDiffs": 1605,
       "injectedDiffs": 1499,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3805,7 +4643,9 @@
       "baseDiffs": 1556,
       "injectedDiffs": 60,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3814,7 +4654,9 @@
       "baseDiffs": 1942,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3823,7 +4665,9 @@
       "baseDiffs": 1913,
       "injectedDiffs": 1913,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3832,7 +4676,9 @@
       "baseDiffs": 1914,
       "injectedDiffs": 1913,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3841,7 +4687,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 1916,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -3850,7 +4698,9 @@
       "baseDiffs": 1943,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3860,6 +4710,8 @@
       "injectedDiffs": 96,
       "bucket": {
         "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+…(7)",
         "uniformDelta": [
           126,
           378
@@ -3872,7 +4724,9 @@
       "baseDiffs": 1946,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3881,7 +4735,9 @@
       "baseDiffs": 1948,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3890,7 +4746,9 @@
       "baseDiffs": 1946,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3899,7 +4757,9 @@
       "baseDiffs": 1933,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3908,7 +4768,9 @@
       "baseDiffs": 3162,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "unknown"
+        "shape": "unknown",
+        "kind": "position",
+        "signature": "none"
       },
       "err": "port render timeout (injected)"
     },
@@ -3918,7 +4780,9 @@
       "baseDiffs": 3174,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "unknown"
+        "shape": "unknown",
+        "kind": "position",
+        "signature": "none"
       },
       "err": "port render timeout (injected)"
     },
@@ -3928,7 +4792,9 @@
       "baseDiffs": 2177,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3937,7 +4803,9 @@
       "baseDiffs": 1946,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3946,7 +4814,9 @@
       "baseDiffs": 1933,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3955,7 +4825,9 @@
       "baseDiffs": 2180,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3964,7 +4836,9 @@
       "baseDiffs": 1890,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3973,7 +4847,9 @@
       "baseDiffs": 3156,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3982,7 +4858,9 @@
       "baseDiffs": 1890,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3991,7 +4869,9 @@
       "baseDiffs": 1933,
       "injectedDiffs": 24,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -4000,7 +4880,9 @@
       "baseDiffs": 1946,
       "injectedDiffs": 24,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -4009,7 +4891,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 1813,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4018,7 +4902,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 1813,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4027,7 +4913,9 @@
       "baseDiffs": 1916,
       "injectedDiffs": 1916,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4036,7 +4924,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 1815,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4045,7 +4935,9 @@
       "baseDiffs": 1916,
       "injectedDiffs": 1916,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4054,7 +4946,9 @@
       "baseDiffs": 1917,
       "injectedDiffs": 1815,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4063,7 +4957,9 @@
       "baseDiffs": 3296,
       "injectedDiffs": 2556,
       "bucket": {
-        "shape": "edge/_draw_/numeric"
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -4072,7 +4968,9 @@
       "baseDiffs": 2412,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4081,7 +4979,9 @@
       "baseDiffs": 2412,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4090,7 +4990,9 @@
       "baseDiffs": 1563,
       "injectedDiffs": 60,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4099,7 +5001,9 @@
       "baseDiffs": 474,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/unknown"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4108,7 +5012,9 @@
       "baseDiffs": 2563,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4117,7 +5023,9 @@
       "baseDiffs": 2562,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4126,7 +5034,9 @@
       "baseDiffs": 2562,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4135,7 +5045,9 @@
       "baseDiffs": 3623,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4144,7 +5056,9 @@
       "baseDiffs": 3615,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4153,7 +5067,9 @@
       "baseDiffs": 25,
       "injectedDiffs": 25,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4162,7 +5078,9 @@
       "baseDiffs": 12036,
       "injectedDiffs": 12036,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(8)"
       }
     },
     {
@@ -4171,7 +5089,9 @@
       "baseDiffs": 7684,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4180,7 +5100,9 @@
       "baseDiffs": 4288,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4189,7 +5111,9 @@
       "baseDiffs": 3639,
       "injectedDiffs": 25,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4198,7 +5122,9 @@
       "baseDiffs": 3639,
       "injectedDiffs": 25,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4207,7 +5133,9 @@
       "baseDiffs": 3212,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4216,7 +5144,9 @@
       "baseDiffs": 3502,
       "injectedDiffs": 3502,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/structural+…(15)"
       }
     },
     {
@@ -4225,7 +5155,9 @@
       "baseDiffs": 3608,
       "injectedDiffs": 3608,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4234,7 +5166,9 @@
       "baseDiffs": 624,
       "injectedDiffs": 622,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4243,7 +5177,9 @@
       "baseDiffs": 306,
       "injectedDiffs": 306,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4252,7 +5188,9 @@
       "baseDiffs": 363,
       "injectedDiffs": 363,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4261,7 +5199,9 @@
       "baseDiffs": 6,
       "injectedDiffs": 4,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
       }
     },
     {
@@ -4271,6 +5211,8 @@
       "injectedDiffs": 221,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
         "uniformDelta": [
           -26.48,
           -1169.4
@@ -4284,6 +5226,8 @@
       "injectedDiffs": 221,
       "bucket": {
         "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
         "uniformDelta": [
           -26.45,
           -1166.95
@@ -4296,7 +5240,9 @@
       "baseDiffs": 6997,
       "injectedDiffs": 3611,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4305,7 +5251,9 @@
       "baseDiffs": 34576,
       "injectedDiffs": 956,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4314,7 +5262,9 @@
       "baseDiffs": 710,
       "injectedDiffs": 710,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4323,7 +5273,9 @@
       "baseDiffs": 11032,
       "injectedDiffs": 363,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4332,7 +5284,9 @@
       "baseDiffs": 11012,
       "injectedDiffs": 363,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4341,7 +5295,9 @@
       "baseDiffs": 11004,
       "injectedDiffs": 363,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4350,7 +5306,9 @@
       "baseDiffs": 18274,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4359,7 +5317,9 @@
       "baseDiffs": 18271,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4368,7 +5328,9 @@
       "baseDiffs": 18258,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4377,7 +5339,9 @@
       "baseDiffs": 4742,
       "injectedDiffs": 4737,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
       }
     },
     {
@@ -4386,7 +5350,9 @@
       "baseDiffs": 35009,
       "injectedDiffs": 710,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4395,7 +5361,9 @@
       "baseDiffs": 35044,
       "injectedDiffs": 710,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4404,7 +5372,9 @@
       "baseDiffs": 35027,
       "injectedDiffs": 710,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4413,7 +5383,9 @@
       "baseDiffs": 34968,
       "injectedDiffs": 710,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4422,7 +5394,9 @@
       "baseDiffs": 281622,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -4431,7 +5405,9 @@
       "baseDiffs": 499,
       "injectedDiffs": 499,
       "bucket": {
-        "shape": "edge/_ldraw_/structural"
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
       }
     }
   ]
