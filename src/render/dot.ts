@@ -416,17 +416,56 @@ function appendRecordRects(n: Node, f: FieldT, out: string[]): void {
 }
 
 /**
+ * Echo an attribute that `attach_attrs_and_arrows` did NOT overwrite.
+ *
+ * Every computed attribute is `agset` behind a gate (`rects` only for a
+ * `record` shape; an edge's `lp` only for a routed edge that HAS a label;
+ * a graph's `lp` only when `GD_label(g)` exists...). When the gate FAILS, C
+ * simply does not write — so the slot keeps whatever the INPUT file parsed
+ * into it, and `agwrite` (which serializes the whole attribute table, not
+ * just the fields layout computed) prints that stale value verbatim. This is
+ * highly visible under patchwork, which forces every shape to `box` and routes
+ * no edges: on a re-fed dot output (most of the corpus) native echoes back the
+ * `rects` / `lp` a *previous* dot run wrote, in that run's coordinate space.
+ *
+ * cgraph interns attribute strings, so a value equal to the declared (empty)
+ * default is the SAME pointer as the default and write.c's
+ * `data->str[sym->id] != sym->defval` test drops it — hence an empty value is
+ * never printed.
+ * @see lib/cgraph/write.c:427 write_nondefault_attrs · lib/common/output.c:270
+ */
+function echoAttr(attrs: Map<string, string>, key: string): string[] {
+  const v = attrs.get(key);
+  if (v === undefined || v.length === 0) return [];
+  return [key + '="' + agcanonEscape(v) + '"'];
+}
+
+/** `echoAttr`'s result as a space-prefixed suffix for the string-built node block. */
+function pfx(parts: string[]): string {
+  return parts.length === 0 ? '' : ' ' + parts.join(' ');
+}
+
+/**
  * The `lp`/`lwidth`/`lheight` triple for a graph or cluster, in C's order.
  * `rec_attach_bb` attaches them to the root graph AND recursively to every
  * cluster, but ONLY when the graph carries a label with non-empty text
  * (`GD_label(g) && GD_label(g)->text[0]`) — an absent or empty-text label emits
  * none of the three. `lp` is the label centre in points (`%.5g`); `lwidth` and
  * `lheight` are the label's `dimen` converted to inches and written `%.2f`.
+ * When the gate fails, the input's own values survive and are echoed: patchwork
+ * and osage never build a cluster label object, so a re-fed dot file's cluster
+ * `lp` comes straight back out.
  * @see lib/common/output.c:239-248 rec_attach_bb
  */
 function graphLabelAttrs(g: Graph): string[] {
   const label = g.info.label as TextlabelT | undefined;
-  if (!label || label.text.length === 0) return [];
+  if (!label || label.text.length === 0) {
+    return [
+      ...echoAttr(g.attrs, 'lp'),
+      ...echoAttr(g.attrs, 'lwidth'),
+      ...echoAttr(g.attrs, 'lheight'),
+    ];
+  }
   return [
     'lp="' + lpStr(label.pos) + '"',
     'lwidth=' + gfmt2(label.dimen.x / POINTS_PER_INCH),
@@ -1215,11 +1254,23 @@ export class XdotRenderer implements RendererPlugin {
   }
 
   /** Non-draw graph attrs a subgraph emits (rank for rank=same; clusters use
-   *  clusterAttrs). Only comparator-relevant fields need be exact. */
+   *  clusterAttrs). Only comparator-relevant fields need be exact.
+   *
+   *  `rec_attach_bb` walks the ROOT and then `GD_clust` recursively, so a
+   *  subgraph the layout did not box is attached NEITHER `bb` NOR the label
+   *  triple — both keep the INPUT's values, which agwrite echoes. circo and
+   *  twopi lay out no clusters at all (`GD_clust` empty — mirrored here by
+   *  `this.clusters`, filled from endCluster), so on a re-fed dot output their
+   *  `cluster0` comes back carrying the *previous* run's `bb` and `lp`.
+   *  @see lib/common/output.c:249 rec_attach_bb */
   private subgGraphAttrs(sg: Graph): string {
     if (this.clusters.includes(sg)) return this.clusterAttrs(sg);
+    const parts: string[] = [];
     const rank = sg.attrs.get('rank');
-    return rank !== undefined ? 'rank=' + xdotId(rank) : '';
+    if (rank !== undefined) parts.push('rank=' + xdotId(rank));
+    parts.push(...echoAttr(sg.attrs, 'bb'));
+    parts.push(...graphLabelAttrs(sg));
+    return parts.join(' ');
   }
 
   private indent(ctx: SerCtx): string {
@@ -1353,18 +1404,24 @@ export class XdotRenderer implements RendererPlugin {
       ' width=' + gfmt5((info.lw + info.rw) / 72) + ' height=' + gfmt5(info.ht / 72);
     // xlp — only when the node HAS an xlabel AND the xlabel placer actually set
     // its position (`ND_xlabel(n)->set`). An xlabel that was never placed is
-    // omitted entirely. @see lib/common/output.c:309-313
+    // omitted entirely — so an input `xlp` survives and is echoed.
+    // @see lib/common/output.c:309-313
     const xlabel = info.xlabel as TextlabelT | undefined;
     if (xlabel && xlabel.set) s += ' xlp="' + lpStr(xlabel.pos) + '"';
+    else s += pfx(echoAttr(n.attrs, 'xlp'));
     // rects — record field boxes. C gates on the SHAPE NAME being exactly
     // "record" (`strcmp(ND_shape(n)->name, "record") == 0`), so `Mrecord` and
-    // HTML-table nodes get NO rects; confirmed against the native oracle.
-    // @see lib/common/output.c:314-317
+    // HTML-table nodes get NO rects; confirmed against the native oracle. When
+    // the shape is not a record the input's `rects` is never overwritten and is
+    // echoed — patchwork forces every node to `box`, so a re-fed dot output
+    // returns its old record rects untouched. @see lib/common/output.c:314-317
     const shape = info.shape as ShapeDesc | undefined;
     if (shape?.name === 'record') {
       const rects: string[] = [];
       appendRecordRects(n, info.shape_info as FieldT, rects);
       s += ' rects="' + rects.join(' ') + '"';
+    } else {
+      s += pfx(echoAttr(n.attrs, 'rects'));
     }
     const d = this.draws.get(n);
     if (d?.draw) s += ' ' + this.drawAttr('_draw_', d.draw);
@@ -1389,23 +1446,29 @@ export class XdotRenderer implements RendererPlugin {
       // C's attach_attrs only agsets `pos` when the edge HAS a spline
       // (output.c:348); an engine that never routes (patchwork) leaves the
       // INPUT's own pos attribute intact and write.c emits it verbatim.
-      const inPos = e.attrs.get('pos');
-      if (inPos !== undefined) parts.push('pos="' + agcanonEscape(inPos) + '"');
+      parts.push(...echoAttr(e.attrs, 'pos'));
     }
     // The label-position attributes live inside the SAME loop that writes `pos`
     // (output.c:377-396), so they are attached only for a routed, non-IGNORED
     // edge. Note the asymmetry C encodes: `lp`/`head_lp`/`tail_lp` are emitted
     // whenever the label EXISTS, but `xlp` additionally requires `->set` — an
     // unplaced xlabel is omitted. Order mirrors C: lp, xlp, head_lp, tail_lp.
-    if (edgeAttrsAttached(e)) {
-      const info = e.info;
-      if (info.label) parts.push('lp="' + lpStr(info.label.pos) + '"');
-      if (info.xlabel && info.xlabel.set) {
-        parts.push('xlp="' + lpStr(info.xlabel.pos) + '"');
-      }
-      if (info.head_label) parts.push('head_lp="' + lpStr(info.head_label.pos) + '"');
-      if (info.tail_label) parts.push('tail_lp="' + lpStr(info.tail_label.pos) + '"');
-    }
+    // Each gate is independent, and each FAILED gate leaves the input's own
+    // value in the slot for write.c to echo: an unrouted edge (patchwork routes
+    // none) returns the `lp` a previous dot run wrote.
+    const attached = edgeAttrsAttached(e);
+    const info = e.info;
+    if (attached && info.label) parts.push('lp="' + lpStr(info.label.pos) + '"');
+    else parts.push(...echoAttr(e.attrs, 'lp'));
+    if (attached && info.xlabel && info.xlabel.set) {
+      parts.push('xlp="' + lpStr(info.xlabel.pos) + '"');
+    } else parts.push(...echoAttr(e.attrs, 'xlp'));
+    if (attached && info.head_label) {
+      parts.push('head_lp="' + lpStr(info.head_label.pos) + '"');
+    } else parts.push(...echoAttr(e.attrs, 'head_lp'));
+    if (attached && info.tail_label) {
+      parts.push('tail_lp="' + lpStr(info.tail_label.pos) + '"');
+    } else parts.push(...echoAttr(e.attrs, 'tail_lp'));
     return parts.join(' ');
   }
 }
