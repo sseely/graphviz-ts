@@ -907,7 +907,7 @@ function shiftClusters(g: Graph, dx: number, dy: number): void {
  * `process` exists and `GVTS_POS_INJECT` is set, which is true only inside
  * the Node test harness, never in a browser render.
  */
-function injectOraclePositions(g: Graph): void {
+export function injectOraclePositions(g: Graph): void {
   if (typeof process === 'undefined') return;
   const dumpPath = process.env?.['GVTS_POS_INJECT'];
   if (!dumpPath || typeof process.getBuiltinModule !== 'function') return;

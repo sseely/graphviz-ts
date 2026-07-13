@@ -141,6 +141,58 @@ format) — a human following this recipe by hand can point
 post-processing; any other stderr line (dot warnings, etc.) mixed into
 the same capture is silently ignored by the regex.
 
+## Second dump site: fdp (NOT spline_edges)
+
+`fdp` never calls `spline_edges` — it has its own `fdpSplines` →
+`spline_edges1` (`lib/fdpgen/layout.c:1034`). Patching only
+`neatosplines.c` therefore yields **zero** dump lines under `-Kfdp`, and
+the harness correctly refuses every id with `no GVTS_POS dump lines
+captured` (observed 2026-07-13: 429/429 harness-error). neato and sfdp
+both reach `spline_edges`; fdp does not.
+
+The fdp dump goes in `fdp_layout` (`lib/fdpgen/layout.c:1062`), between
+`fdpLayout()` and `neato_set_aspect()`:
+
+```diff
+     if (fdpLayout(g) != 0) {
+ 	return;
+     }
++    if (getenv("GVTS_POS_DUMP")) {
++	node_t *dn;
++	for (dn = agfstnode(g); dn; dn = agnxtnode(g, dn)) {
++	    fprintf(stderr, "GVTS_POS %s %.17g %.17g\n",
++		    agnameof(dn), ND_pos(dn)[0], ND_pos(dn)[1]);
++	}
++    }
+     neato_set_aspect(g);
+```
+
+**It must go BEFORE `neato_set_aspect`, not at `fdpSplines` entry.**
+`neato_set_aspect` derives `ND_coord` (points) from `ND_pos` (inches),
+and fdp's routing reads `ND_coord` — so a dump/inject pair placed at
+`fdpSplines` (the naive mirror of neato's site) would be a **silent
+no-op**: the port would inject `pos` that nothing downstream reads, every
+id would come back `not-cleared`, and the run would look like a huge
+fdp defect tail rather than a broken harness. This is still D1's
+pre-routing `ND_pos` stage, so no ADR is bent — fdp simply reaches that
+stage at a different place.
+
+The port hook mirrors it exactly: `injectOraclePositions(g)` is called in
+`fdpLayoutEngine` (`src/layout/fdp/index.ts`) immediately before
+`neatoSetAspect(g)`.
+
+Rebuild target is the same (`make gvplugin_neato_layout` — fdpgen links
+into that plugin). Always smoke-test that a dump actually appears before
+spending an hour on a sweep:
+
+```
+GVTS_POS_DUMP=1 GVBINDIR=/tmp/ghl dot -Kfdp -Txdot tests/graphs/b76.gv 2>&1 >/dev/null | grep -c GVTS_POS
+```
+
+Wrap the whole window in a shell `trap revert EXIT` so the native tree is
+restored even if a sweep dies mid-flight — a patched oracle left in place
+silently poisons every later sweep.
+
 ## Oracle-hash guard (D4)
 
 Before any injection run, the harness `sha1`s the oracle binary

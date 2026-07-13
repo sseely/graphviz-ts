@@ -13,7 +13,9 @@
 import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
 import { setEdgeType } from '../dot/index.js';
-import { EDGETYPE_LINE, EDGETYPE_NONE, splineEdges } from '../neato/splines.js';
+import {
+  EDGETYPE_LINE, EDGETYPE_NONE, splineEdges, injectOraclePositions,
+} from '../neato/splines.js';
 import { neatoSetAspect } from '../neato/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { fdpInitParams } from './tlayout-parms.js';
@@ -70,6 +72,14 @@ export function fdpLayoutEngine(g: Graph): void {
   if (fdpLayout(g) !== 0) {
     return;
   }
+  // T1 injection hook (iterative-parity-campaign): inert unless GVTS_POS_INJECT
+  // is set. fdp does NOT route through neato's spline_edges — it has its own
+  // fdpSplines — so the neato hook is never reached here. This must run BEFORE
+  // neatoSetAspect, which derives coord (points) from pos (inches): routing
+  // reads coord, so injecting after it would be a silent no-op. Mirrors the
+  // native dump site in fdp_layout, between fdpLayout() and neato_set_aspect().
+  // @see lib/fdpgen/layout.c:1062 fdp_layout
+  injectOraclePositions(g);
   neatoSetAspect(g); // C neato_set_aspect: pos (inches) → coord (points)
 
   const et = g.info.flags & 0xf;

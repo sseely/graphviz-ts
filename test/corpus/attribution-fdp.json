@@ -1,0 +1,4903 @@
+{
+  "generatedAt": "2026-07-13T12:19:39.092Z",
+  "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
+  "tolerance": 0.5,
+  "results": [
+    {
+      "id": "1909",
+      "verdict": "not-cleared",
+      "baseDiffs": 50,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -1.59,
+          -9.53
+        ]
+      }
+    },
+    {
+      "id": "graphs-center",
+      "verdict": "not-cleared",
+      "baseDiffs": 53,
+      "injectedDiffs": 3,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2225",
+      "verdict": "not-cleared",
+      "baseDiffs": 48,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -1.59,
+          -9.53
+        ]
+      }
+    },
+    {
+      "id": "graphs-a",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2458",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b123",
+      "verdict": "not-cleared",
+      "baseDiffs": 33,
+      "injectedDiffs": 33,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-bad",
+      "verdict": "not-cleared",
+      "baseDiffs": 64,
+      "injectedDiffs": 3,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2168",
+      "verdict": "not-cleared",
+      "baseDiffs": 16,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "2490",
+      "verdict": "not-cleared",
+      "baseDiffs": 52,
+      "injectedDiffs": 52,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_tdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "2682",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b80a",
+      "verdict": "not-cleared",
+      "baseDiffs": 59,
+      "injectedDiffs": 3,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-radius",
+      "verdict": "not-cleared",
+      "baseDiffs": 48,
+      "injectedDiffs": 18,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+      }
+    },
+    {
+      "id": "2559",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-clustlabel",
+      "verdict": "harness-error",
+      "baseDiffs": 78,
+      "injectedDiffs": 0,
+      "bucket": {
+        "shape": "unknown",
+        "kind": "position",
+        "signature": "none"
+      },
+      "err": "port render timeout (injected)"
+    },
+    {
+      "id": "2391_1",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "165_3",
+      "verdict": "not-cleared",
+      "baseDiffs": 13,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-longflat",
+      "verdict": "not-cleared",
+      "baseDiffs": 61,
+      "injectedDiffs": 7,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          14.87,
+          -4.69
+        ]
+      }
+    },
+    {
+      "id": "1444",
+      "verdict": "not-cleared",
+      "baseDiffs": 22,
+      "injectedDiffs": 22,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "1444-2",
+      "verdict": "not-cleared",
+      "baseDiffs": 22,
+      "injectedDiffs": 22,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "2168_4",
+      "verdict": "not-cleared",
+      "baseDiffs": 8,
+      "injectedDiffs": 8,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "165_2",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2643",
+      "verdict": "not-cleared",
+      "baseDiffs": 46,
+      "injectedDiffs": 30,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+      }
+    },
+    {
+      "id": "2437",
+      "verdict": "not-cleared",
+      "baseDiffs": 32,
+      "injectedDiffs": 32,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_tdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-b545",
+      "verdict": "not-cleared",
+      "baseDiffs": 24,
+      "injectedDiffs": 24,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-b491",
+      "verdict": "not-cleared",
+      "baseDiffs": 105,
+      "injectedDiffs": 7,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          0.96,
+          -4.11
+        ]
+      }
+    },
+    {
+      "id": "graphs-b73",
+      "verdict": "not-cleared",
+      "baseDiffs": 27,
+      "injectedDiffs": 27,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-edgeclip",
+      "verdict": "not-cleared",
+      "baseDiffs": 56,
+      "injectedDiffs": 56,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-user_shapes",
+      "verdict": "not-cleared",
+      "baseDiffs": 61,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          5.41,
+          -8.78
+        ]
+      }
+    },
+    {
+      "id": "graphs-b73a",
+      "verdict": "not-cleared",
+      "baseDiffs": 29,
+      "injectedDiffs": 29,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-clust1",
+      "verdict": "not-cleared",
+      "baseDiffs": 248,
+      "injectedDiffs": 21,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "705",
+      "verdict": "drift-exonerated",
+      "baseDiffs": 36,
+      "injectedDiffs": 0,
+      "bucket": {
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
+      }
+    },
+    {
+      "id": "graphs-record2",
+      "verdict": "not-cleared",
+      "baseDiffs": 24,
+      "injectedDiffs": 24,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "1514",
+      "verdict": "not-cleared",
+      "baseDiffs": 156,
+      "injectedDiffs": 12,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2615",
+      "verdict": "not-cleared",
+      "baseDiffs": 168,
+      "injectedDiffs": 24,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-fdp",
+      "verdict": "not-cleared",
+      "baseDiffs": 162,
+      "injectedDiffs": 72,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(11)"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ndd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fdd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ntd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-nestedclust",
+      "verdict": "not-cleared",
+      "baseDiffs": 89,
+      "injectedDiffs": 9,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ndl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-nbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ndr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ndc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ftd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fdl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fdr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fdc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ndd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-rootlabel",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ntl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ntr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ntc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-nbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-nbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-nbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "144_no_ortho",
+      "verdict": "not-cleared",
+      "baseDiffs": 6,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_tldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-sb_box",
+      "verdict": "not-cleared",
+      "baseDiffs": 81,
+      "injectedDiffs": 81,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fdd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ftl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-sb_circle",
+      "verdict": "not-cleared",
+      "baseDiffs": 84,
+      "injectedDiffs": 84,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ftr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ntd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-ftc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ndl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-nbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ndr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelclust-fbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ndc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-b145",
+      "verdict": "not-cleared",
+      "baseDiffs": 92,
+      "injectedDiffs": 47,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+…(12)"
+      }
+    },
+    {
+      "id": "144_ortho",
+      "verdict": "not-cleared",
+      "baseDiffs": 91,
+      "injectedDiffs": 91,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+…(8)"
+      }
+    },
+    {
+      "id": "graphs-layers",
+      "verdict": "not-cleared",
+      "baseDiffs": 55,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -12.01,
+          -5.61
+        ]
+      }
+    },
+    {
+      "id": "graphs-layer",
+      "verdict": "not-cleared",
+      "baseDiffs": 55,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -12.01,
+          -5.61
+        ]
+      }
+    },
+    {
+      "id": "graphs-labelroot-ftd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fdl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fdr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fdc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ntl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ntr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-a1",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-a2",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-a3",
+      "verdict": "not-cleared",
+      "baseDiffs": 28,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ntc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-nbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-nbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-nbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-layer2",
+      "verdict": "not-cleared",
+      "baseDiffs": 55,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -12.01,
+          -5.61
+        ]
+      }
+    },
+    {
+      "id": "graphs-labelroot-ftl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ftr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-ftc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-labelroot-fbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-structs",
+      "verdict": "not-cleared",
+      "baseDiffs": 94,
+      "injectedDiffs": 42,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2521",
+      "verdict": "not-cleared",
+      "baseDiffs": 161,
+      "injectedDiffs": 30,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2168_3",
+      "verdict": "not-cleared",
+      "baseDiffs": 19,
+      "injectedDiffs": 19,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-flatedge",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b",
+      "verdict": "not-cleared",
+      "baseDiffs": 9,
+      "injectedDiffs": 9,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-b117",
+      "verdict": "not-cleared",
+      "baseDiffs": 9,
+      "injectedDiffs": 9,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-nhg",
+      "verdict": "not-cleared",
+      "baseDiffs": 9,
+      "injectedDiffs": 9,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2168_2",
+      "verdict": "not-cleared",
+      "baseDiffs": 8,
+      "injectedDiffs": 8,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "graphs-colors",
+      "verdict": "not-cleared",
+      "baseDiffs": 2,
+      "injectedDiffs": 2,
+      "bucket": {
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-mike",
+      "verdict": "not-cleared",
+      "baseDiffs": 1130,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          571.89,
+          101.88
+        ]
+      }
+    },
+    {
+      "id": "2184",
+      "verdict": "not-cleared",
+      "baseDiffs": 218,
+      "injectedDiffs": 45,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-sb_box_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 152,
+      "injectedDiffs": 152,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sb_circle_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 158,
+      "injectedDiffs": 158,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-xlabels",
+      "verdict": "not-cleared",
+      "baseDiffs": 15,
+      "injectedDiffs": 15,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/structural",
+        "uniformDelta": [
+          15.22,
+          -16.8
+        ]
+      }
+    },
+    {
+      "id": "2368_1",
+      "verdict": "not-cleared",
+      "baseDiffs": 2,
+      "injectedDiffs": 2,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-longflat",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "windows-longflat",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-KW91",
+      "verdict": "not-cleared",
+      "baseDiffs": 354,
+      "injectedDiffs": 26,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-records",
+      "verdict": "not-cleared",
+      "baseDiffs": 139,
+      "injectedDiffs": 139,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "linux.i386-radius_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 16,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "linux.x86-radius_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 16,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "macosx-radius_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 16,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "nshare-radius_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 16,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "windows-radius_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 16,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "share-record2",
+      "verdict": "not-cleared",
+      "baseDiffs": 22,
+      "injectedDiffs": 22,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "windows-record2",
+      "verdict": "not-cleared",
+      "baseDiffs": 22,
+      "injectedDiffs": 22,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "2556",
+      "verdict": "not-cleared",
+      "baseDiffs": 674,
+      "injectedDiffs": 12,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "1213-1",
+      "verdict": "not-cleared",
+      "baseDiffs": 2,
+      "injectedDiffs": 2,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-b491",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "windows-b491",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-states",
+      "verdict": "not-cleared",
+      "baseDiffs": 5,
+      "injectedDiffs": 5,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-grdradial_node",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-russian",
+      "verdict": "not-cleared",
+      "baseDiffs": 58,
+      "injectedDiffs": 3,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-grdlinear_node",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "1213-2",
+      "verdict": "not-cleared",
+      "baseDiffs": 2,
+      "injectedDiffs": 2,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b155",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "241_0",
+      "verdict": "not-cleared",
+      "baseDiffs": 272,
+      "injectedDiffs": 193,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+      }
+    },
+    {
+      "id": "share-labelclust-ndd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ndd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-tree",
+      "verdict": "not-cleared",
+      "baseDiffs": 166,
+      "injectedDiffs": 166,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-b68",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fdd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fdd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-edgeclip_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 46,
+      "injectedDiffs": 46,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "macosx-edgeclip_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 46,
+      "injectedDiffs": 46,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "nshare-edgeclip_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 46,
+      "injectedDiffs": 46,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ntd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ntd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-fsm",
+      "verdict": "not-cleared",
+      "baseDiffs": 14,
+      "injectedDiffs": 14,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-labelclust-ndl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ndl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ndr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ndr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ndc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ndc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "1990",
+      "verdict": "not-cleared",
+      "baseDiffs": 184,
+      "injectedDiffs": 184,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "share-labelclust-nbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-nbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ftd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ftd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fdl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fdl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fdc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fdr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fdc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fdr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ntd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ntd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "1856",
+      "verdict": "not-cleared",
+      "baseDiffs": 152,
+      "injectedDiffs": 94,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ntl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ntl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ntr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ntr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ntc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ntc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-nbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-nbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ftd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ftd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ndd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ndd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-hashtable",
+      "verdict": "not-cleared",
+      "baseDiffs": 142,
+      "injectedDiffs": 142,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fbd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-nbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-nbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ftl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-nbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ftl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-nbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-nbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fdd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-nbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fdd",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ftc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-ftr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ftc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-ftr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ntl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ntl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelclust-fbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelclust-fbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ntc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ntr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ntc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ntr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-nbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-nbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ftl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-nbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-nbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ftl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-nbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-nbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ndl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ndl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ftc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ftc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ndc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ndr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ndc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ndr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-ftr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fbc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-ftr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fdl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fdl",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fbr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-ER",
+      "verdict": "not-cleared",
+      "baseDiffs": 286,
+      "injectedDiffs": 16,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-labelroot-fdc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fdc",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2801",
+      "verdict": "not-cleared",
+      "baseDiffs": 9,
+      "injectedDiffs": 9,
+      "bucket": {
+        "shape": "edge/_hldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural"
+      }
+    },
+    {
+      "id": "share-labelroot-fdr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-labelroot-fdr",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-b786",
+      "verdict": "not-cleared",
+      "baseDiffs": 202,
+      "injectedDiffs": 202,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-b85",
+      "verdict": "not-cleared",
+      "baseDiffs": 74,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          1.55,
+          -5.68
+        ]
+      }
+    },
+    {
+      "id": "graphs-ports",
+      "verdict": "not-cleared",
+      "baseDiffs": 659,
+      "injectedDiffs": 185,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-structs",
+      "verdict": "not-cleared",
+      "baseDiffs": 41,
+      "injectedDiffs": 41,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "1658",
+      "verdict": "not-cleared",
+      "baseDiffs": 406,
+      "injectedDiffs": 122,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-structs",
+      "verdict": "not-cleared",
+      "baseDiffs": 41,
+      "injectedDiffs": 41,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "2168_1",
+      "verdict": "not-cleared",
+      "baseDiffs": 24,
+      "injectedDiffs": 24,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-html",
+      "verdict": "not-cleared",
+      "baseDiffs": 134,
+      "injectedDiffs": 54,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-rowe",
+      "verdict": "not-cleared",
+      "baseDiffs": 2140,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          36.61,
+          202.15
+        ]
+      }
+    },
+    {
+      "id": "graphs-abstract",
+      "verdict": "not-cleared",
+      "baseDiffs": 1904,
+      "injectedDiffs": 8,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
+        "uniformDelta": [
+          -59.89,
+          -34.96
+        ]
+      }
+    },
+    {
+      "id": "graphs-train11",
+      "verdict": "not-cleared",
+      "baseDiffs": 28,
+      "injectedDiffs": 28,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-jcctree",
+      "verdict": "not-cleared",
+      "baseDiffs": 521,
+      "injectedDiffs": 7,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/structural",
+        "uniformDelta": [
+          -64.98,
+          -8.04
+        ]
+      }
+    },
+    {
+      "id": "graphs-japanese",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-Heawood",
+      "verdict": "not-cleared",
+      "baseDiffs": 411,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          22.37,
+          32.41
+        ]
+      }
+    },
+    {
+      "id": "graphs-fig6",
+      "verdict": "not-cleared",
+      "baseDiffs": 1950,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          242.79,
+          -28.63
+        ]
+      }
+    },
+    {
+      "id": "share-states",
+      "verdict": "not-cleared",
+      "baseDiffs": 5,
+      "injectedDiffs": 5,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "windows-states",
+      "verdict": "not-cleared",
+      "baseDiffs": 5,
+      "injectedDiffs": 5,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-flatedge",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-Symbol",
+      "verdict": "not-cleared",
+      "baseDiffs": 418,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          137.09,
+          146.17
+        ]
+      }
+    },
+    {
+      "id": "windows-nhg",
+      "verdict": "not-cleared",
+      "baseDiffs": 6,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-nhg",
+      "verdict": "not-cleared",
+      "baseDiffs": 6,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-alf",
+      "verdict": "not-cleared",
+      "baseDiffs": 743,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          85.88,
+          -36.83
+        ]
+      }
+    },
+    {
+      "id": "graphs-record",
+      "verdict": "not-cleared",
+      "baseDiffs": 743,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          85.88,
+          -36.83
+        ]
+      }
+    },
+    {
+      "id": "graphs-dfa",
+      "verdict": "not-cleared",
+      "baseDiffs": 20,
+      "injectedDiffs": 20,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-world",
+      "verdict": "not-cleared",
+      "baseDiffs": 1943,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          37.99,
+          -24.72
+        ]
+      }
+    },
+    {
+      "id": "graphs-style",
+      "verdict": "not-cleared",
+      "baseDiffs": 719,
+      "injectedDiffs": 60,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-html_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 48,
+      "injectedDiffs": 48,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "nshare-html_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 48,
+      "injectedDiffs": 48,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-flatedge_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "nshare-flatedge_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-clust1",
+      "verdict": "drift-exonerated",
+      "baseDiffs": 16,
+      "injectedDiffs": 0,
+      "bucket": {
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
+      }
+    },
+    {
+      "id": "graphs-url",
+      "verdict": "not-cleared",
+      "baseDiffs": 10,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-clust1",
+      "verdict": "drift-exonerated",
+      "baseDiffs": 16,
+      "injectedDiffs": 0,
+      "bucket": {
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
+      }
+    },
+    {
+      "id": "graphs-grammar",
+      "verdict": "not-cleared",
+      "baseDiffs": 1514,
+      "injectedDiffs": 8,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
+        "uniformDelta": [
+          -70.97,
+          -43.71
+        ]
+      }
+    },
+    {
+      "id": "1855",
+      "verdict": "not-cleared",
+      "baseDiffs": 686,
+      "injectedDiffs": 457,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(9)"
+      }
+    },
+    {
+      "id": "graphs-dpd",
+      "verdict": "not-cleared",
+      "baseDiffs": 1932,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -10.37,
+          10.71
+        ]
+      }
+    },
+    {
+      "id": "graphs-overlap",
+      "verdict": "not-cleared",
+      "baseDiffs": 1932,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -10.37,
+          10.71
+        ]
+      }
+    },
+    {
+      "id": "share-records",
+      "verdict": "not-cleared",
+      "baseDiffs": 110,
+      "injectedDiffs": 110,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-html2",
+      "verdict": "not-cleared",
+      "baseDiffs": 33,
+      "injectedDiffs": 33,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "windows-records",
+      "verdict": "not-cleared",
+      "baseDiffs": 110,
+      "injectedDiffs": 110,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "2361",
+      "verdict": "not-cleared",
+      "baseDiffs": 265,
+      "injectedDiffs": 265,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "graphs-b56",
+      "verdict": "not-cleared",
+      "baseDiffs": 363,
+      "injectedDiffs": 47,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-unix",
+      "verdict": "not-cleared",
+      "baseDiffs": 1425,
+      "injectedDiffs": 1340,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-lsunix1",
+      "verdict": "not-cleared",
+      "baseDiffs": 1425,
+      "injectedDiffs": 1340,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-lsunix2",
+      "verdict": "not-cleared",
+      "baseDiffs": 1425,
+      "injectedDiffs": 1340,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-lsunix3",
+      "verdict": "not-cleared",
+      "baseDiffs": 1425,
+      "injectedDiffs": 1340,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-trapeziumlr",
+      "verdict": "not-cleared",
+      "baseDiffs": 1937,
+      "injectedDiffs": 971,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "1323_1",
+      "verdict": "not-cleared",
+      "baseDiffs": 71,
+      "injectedDiffs": 71,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "2183",
+      "verdict": "not-cleared",
+      "baseDiffs": 815,
+      "injectedDiffs": 302,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+…(12)"
+      }
+    },
+    {
+      "id": "graphs-triedds",
+      "verdict": "not-cleared",
+      "baseDiffs": 720,
+      "injectedDiffs": 353,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-size",
+      "verdict": "not-cleared",
+      "baseDiffs": 1589,
+      "injectedDiffs": 1476,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-ngk10_4",
+      "verdict": "not-cleared",
+      "baseDiffs": 1903,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -48.61,
+          -35.39
+        ]
+      }
+    },
+    {
+      "id": "graphs-unix2",
+      "verdict": "not-cleared",
+      "baseDiffs": 1589,
+      "injectedDiffs": 1476,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-unix2k",
+      "verdict": "not-cleared",
+      "baseDiffs": 1589,
+      "injectedDiffs": 1476,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "graphs-weight",
+      "verdict": "not-cleared",
+      "baseDiffs": 1605,
+      "injectedDiffs": 1484,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "linux.i386-hashtable",
+      "verdict": "not-cleared",
+      "baseDiffs": 146,
+      "injectedDiffs": 146,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "share-hashtable",
+      "verdict": "not-cleared",
+      "baseDiffs": 146,
+      "injectedDiffs": 146,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "windows-hashtable",
+      "verdict": "not-cleared",
+      "baseDiffs": 146,
+      "injectedDiffs": 146,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-viewfile",
+      "verdict": "not-cleared",
+      "baseDiffs": 989,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -67.42,
+          -23.65
+        ]
+      }
+    },
+    {
+      "id": "share-tree",
+      "verdict": "not-cleared",
+      "baseDiffs": 146,
+      "injectedDiffs": 146,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "windows-tree",
+      "verdict": "not-cleared",
+      "baseDiffs": 141,
+      "injectedDiffs": 141,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-html2_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 35,
+      "injectedDiffs": 35,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "nshare-html2_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 35,
+      "injectedDiffs": 35,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/_tdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-arrows",
+      "verdict": "not-cleared",
+      "baseDiffs": 762,
+      "injectedDiffs": 207,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural+…(9)"
+      }
+    },
+    {
+      "id": "graphs-arrowsize",
+      "verdict": "not-cleared",
+      "baseDiffs": 794,
+      "injectedDiffs": 233,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+…(11)"
+      }
+    },
+    {
+      "id": "graphs-newarrows",
+      "verdict": "not-cleared",
+      "baseDiffs": 762,
+      "injectedDiffs": 207,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+edge/pos/structural+…(9)"
+      }
+    },
+    {
+      "id": "windows-ER",
+      "verdict": "not-cleared",
+      "baseDiffs": 10,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-st_box",
+      "verdict": "not-cleared",
+      "baseDiffs": 1409,
+      "injectedDiffs": 706,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-st_circle",
+      "verdict": "not-cleared",
+      "baseDiffs": 1316,
+      "injectedDiffs": 745,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "linux.i386-ER",
+      "verdict": "not-cleared",
+      "baseDiffs": 10,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-ER",
+      "verdict": "not-cleared",
+      "baseDiffs": 10,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-ordering_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 410,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "macosx-ordering_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 410,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-ordering_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 410,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-fsm",
+      "verdict": "not-cleared",
+      "baseDiffs": 14,
+      "injectedDiffs": 14,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "2242",
+      "verdict": "not-cleared",
+      "baseDiffs": 757,
+      "injectedDiffs": 81,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-fsm",
+      "verdict": "not-cleared",
+      "baseDiffs": 14,
+      "injectedDiffs": 14,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-sr_box",
+      "verdict": "not-cleared",
+      "baseDiffs": 1475,
+      "injectedDiffs": 577,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sr_circle",
+      "verdict": "not-cleared",
+      "baseDiffs": 1369,
+      "injectedDiffs": 637,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sl_box",
+      "verdict": "not-cleared",
+      "baseDiffs": 1491,
+      "injectedDiffs": 772,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sl_circle",
+      "verdict": "not-cleared",
+      "baseDiffs": 1378,
+      "injectedDiffs": 780,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "1323",
+      "verdict": "not-cleared",
+      "baseDiffs": 253,
+      "injectedDiffs": 253,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "share-b786",
+      "verdict": "not-cleared",
+      "baseDiffs": 165,
+      "injectedDiffs": 165,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "1453",
+      "verdict": "not-cleared",
+      "baseDiffs": 1279,
+      "injectedDiffs": 759,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+…(8)"
+      }
+    },
+    {
+      "id": "1436",
+      "verdict": "not-cleared",
+      "baseDiffs": 432,
+      "injectedDiffs": 24,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-pgram",
+      "verdict": "not-cleared",
+      "baseDiffs": 3136,
+      "injectedDiffs": 1875,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "linux.i386-dfa",
+      "verdict": "not-cleared",
+      "baseDiffs": 20,
+      "injectedDiffs": 20,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-dfa",
+      "verdict": "not-cleared",
+      "baseDiffs": 20,
+      "injectedDiffs": 20,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-NaN",
+      "verdict": "not-cleared",
+      "baseDiffs": 3624,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          192.73,
+          -11.29
+        ]
+      }
+    },
+    {
+      "id": "windows-dfa",
+      "verdict": "not-cleared",
+      "baseDiffs": 20,
+      "injectedDiffs": 20,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b71",
+      "verdict": "not-cleared",
+      "baseDiffs": 2091,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-Helvetica",
+      "verdict": "not-cleared",
+      "baseDiffs": 508,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          566.91,
+          -91.66
+        ]
+      }
+    },
+    {
+      "id": "2082",
+      "verdict": "not-cleared",
+      "baseDiffs": 184,
+      "injectedDiffs": 134,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "share-train11",
+      "verdict": "not-cleared",
+      "baseDiffs": 28,
+      "injectedDiffs": 28,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-biglabel",
+      "verdict": "not-cleared",
+      "baseDiffs": 82,
+      "injectedDiffs": 42,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-train11",
+      "verdict": "not-cleared",
+      "baseDiffs": 28,
+      "injectedDiffs": 28,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2734",
+      "verdict": "not-cleared",
+      "baseDiffs": 421,
+      "injectedDiffs": 404,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_tdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "1880",
+      "verdict": "not-cleared",
+      "baseDiffs": 307,
+      "injectedDiffs": 307,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "linux.x86-ports_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 150,
+      "injectedDiffs": 150,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "nshare-ports_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 151,
+      "injectedDiffs": 151,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-st_box_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 2148,
+      "injectedDiffs": 1427,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-st_circle_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 2051,
+      "injectedDiffs": 1480,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "2476",
+      "verdict": "not-cleared",
+      "baseDiffs": 1,
+      "injectedDiffs": 1,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-sr_box_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 2255,
+      "injectedDiffs": 1224,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sr_circle_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 2133,
+      "injectedDiffs": 1363,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sl_box_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 2274,
+      "injectedDiffs": 1536,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "graphs-sl_circle_dbl",
+      "verdict": "not-cleared",
+      "baseDiffs": 2156,
+      "injectedDiffs": 1553,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+…(7)"
+      }
+    },
+    {
+      "id": "2669",
+      "verdict": "not-cleared",
+      "baseDiffs": 6034,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          174.42,
+          77.2
+        ]
+      }
+    },
+    {
+      "id": "share-triedds",
+      "verdict": "not-cleared",
+      "baseDiffs": 312,
+      "injectedDiffs": 312,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "windows-triedds",
+      "verdict": "not-cleared",
+      "baseDiffs": 314,
+      "injectedDiffs": 314,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-grdlinear",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "56",
+      "verdict": "not-cleared",
+      "baseDiffs": 409,
+      "injectedDiffs": 166,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+…(11)"
+      }
+    },
+    {
+      "id": "2095",
+      "verdict": "not-cleared",
+      "baseDiffs": 8253,
+      "injectedDiffs": 59,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(8)"
+      }
+    },
+    {
+      "id": "1898",
+      "verdict": "not-cleared",
+      "baseDiffs": 1085,
+      "injectedDiffs": 51,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric",
+        "uniformDelta": [
+          -99.4,
+          -100.58
+        ]
+      }
+    },
+    {
+      "id": "graphs-ldbxtried",
+      "verdict": "not-cleared",
+      "baseDiffs": 2146,
+      "injectedDiffs": 20,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-grdradial",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-crazy",
+      "verdict": "not-cleared",
+      "baseDiffs": 1920,
+      "injectedDiffs": 1708,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric+…(9)"
+      }
+    },
+    {
+      "id": "1949",
+      "verdict": "not-cleared",
+      "baseDiffs": 110,
+      "injectedDiffs": 110,
+      "bucket": {
+        "shape": "edge/_tldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_ldraw_/structural+edge/_tldraw_/structural+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-grdlinear_angle",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-cairo",
+      "verdict": "not-cleared",
+      "baseDiffs": 1919,
+      "injectedDiffs": 1919,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
+      }
+    },
+    {
+      "id": "graphs-pslib",
+      "verdict": "not-cleared",
+      "baseDiffs": 12,
+      "injectedDiffs": 12,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "graphs-proc3d",
+      "verdict": "not-cleared",
+      "baseDiffs": 1926,
+      "injectedDiffs": 90,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-jsort",
+      "verdict": "not-cleared",
+      "baseDiffs": 2402,
+      "injectedDiffs": 1220,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+      }
+    },
+    {
+      "id": "share-newarrows",
+      "verdict": "not-cleared",
+      "baseDiffs": 88,
+      "injectedDiffs": 88,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hldraw_/structural+edge/_tldraw_/structural+edge/pos/structural"
+      }
+    },
+    {
+      "id": "windows-newarrows",
+      "verdict": "not-cleared",
+      "baseDiffs": 88,
+      "injectedDiffs": 88,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hldraw_/structural+edge/_tldraw_/structural+edge/pos/structural"
+      }
+    },
+    {
+      "id": "2193",
+      "verdict": "not-cleared",
+      "baseDiffs": 1941,
+      "injectedDiffs": 1902,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/structural+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(9)"
+      }
+    },
+    {
+      "id": "windows-unix",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "edge/pos/numeric",
+        "kind": "position",
+        "signature": "edge/pos/numeric+node/pos/numeric"
+      }
+    },
+    {
+      "id": "1447",
+      "verdict": "not-cleared",
+      "baseDiffs": 1263,
+      "injectedDiffs": 678,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+      }
+    },
+    {
+      "id": "graphs-grdradial_angle",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-arrows_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 295,
+      "injectedDiffs": 295,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+…(8)"
+      }
+    },
+    {
+      "id": "macosx-arrows_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 295,
+      "injectedDiffs": 295,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+…(8)"
+      }
+    },
+    {
+      "id": "nshare-arrows_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 295,
+      "injectedDiffs": 295,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/structural+edge/_tdraw_/numeric+edge/_tldraw_/structural+…(8)"
+      }
+    },
+    {
+      "id": "graphs-awilliams",
+      "verdict": "not-cleared",
+      "baseDiffs": 3373,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
+        "uniformDelta": [
+          -107.16,
+          341.31
+        ]
+      }
+    },
+    {
+      "id": "graphs-b57",
+      "verdict": "not-cleared",
+      "baseDiffs": 1846,
+      "injectedDiffs": 13,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -122.57,
+          805.67
+        ]
+      }
+    },
+    {
+      "id": "graphs-b15",
+      "verdict": "not-cleared",
+      "baseDiffs": 3449,
+      "injectedDiffs": 2079,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+…(11)"
+      }
+    },
+    {
+      "id": "nshare-dotsplines_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 89,
+      "injectedDiffs": 84,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-dotsplines_dot1",
+      "verdict": "not-cleared",
+      "baseDiffs": 20,
+      "injectedDiffs": 20,
+      "bucket": {
+        "shape": "edge/_draw_/structural",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+      }
+    },
+    {
+      "id": "graphs-big",
+      "verdict": "not-cleared",
+      "baseDiffs": 81,
+      "injectedDiffs": 46,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-dotsplines_dot1",
+      "verdict": "not-cleared",
+      "baseDiffs": 89,
+      "injectedDiffs": 84,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
+      }
+    },
+    {
+      "id": "share-b94",
+      "verdict": "not-cleared",
+      "baseDiffs": 60,
+      "injectedDiffs": 60,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b124",
+      "verdict": "not-cleared",
+      "baseDiffs": 7641,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          369.77,
+          165.15
+        ]
+      }
+    },
+    {
+      "id": "graphs-b36",
+      "verdict": "not-cleared",
+      "baseDiffs": 2535,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-proc3d",
+      "verdict": "not-cleared",
+      "baseDiffs": 10,
+      "injectedDiffs": 3,
+      "bucket": {
+        "shape": "cluster/bb/numeric",
+        "kind": "position",
+        "signature": "cluster/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.i386-crazy",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-crazy",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-crazy",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-proc3d",
+      "verdict": "drift-exonerated",
+      "baseDiffs": 16,
+      "injectedDiffs": 0,
+      "bucket": {
+        "shape": "edge/pos/unknown",
+        "kind": "position",
+        "signature": "none"
+      }
+    },
+    {
+      "id": "graphs-b94",
+      "verdict": "not-cleared",
+      "baseDiffs": 116,
+      "injectedDiffs": 63,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-ldbxtried",
+      "verdict": "not-cleared",
+      "baseDiffs": 1986,
+      "injectedDiffs": 14,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-ldbxtried",
+      "verdict": "not-cleared",
+      "baseDiffs": 2000,
+      "injectedDiffs": 14,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-neatosplines_neato1",
+      "verdict": "not-cleared",
+      "baseDiffs": 32,
+      "injectedDiffs": 32,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-neatosplines_neato1",
+      "verdict": "not-cleared",
+      "baseDiffs": 32,
+      "injectedDiffs": 32,
+      "bucket": {
+        "shape": "edge/_draw_/numeric",
+        "kind": "position",
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-rankdir_dot1",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-rankdir_dot1",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-rankdir_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-rankdir_dot2",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-rankdir_dot",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "linux.x86-rankdir_dot2",
+      "verdict": "not-cleared",
+      "baseDiffs": 4,
+      "injectedDiffs": 4,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "windows-b94",
+      "verdict": "not-cleared",
+      "baseDiffs": 60,
+      "injectedDiffs": 60,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "1447_1",
+      "verdict": "not-cleared",
+      "baseDiffs": 7199,
+      "injectedDiffs": 1980,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(9)"
+      }
+    },
+    {
+      "id": "graphs-mode",
+      "verdict": "not-cleared",
+      "baseDiffs": 7525,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          23.08,
+          180.41
+        ]
+      }
+    },
+    {
+      "id": "share-NaN",
+      "verdict": "not-cleared",
+      "baseDiffs": 3459,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-b51",
+      "verdict": "not-cleared",
+      "baseDiffs": 3836,
+      "injectedDiffs": 203,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "1718",
+      "verdict": "not-cleared",
+      "baseDiffs": 24051,
+      "injectedDiffs": 10,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/_ldraw_/structural+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "share-b51",
+      "verdict": "not-cleared",
+      "baseDiffs": 25,
+      "injectedDiffs": 25,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "windows-b51",
+      "verdict": "not-cleared",
+      "baseDiffs": 25,
+      "injectedDiffs": 25,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b69",
+      "verdict": "not-cleared",
+      "baseDiffs": 4191,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "graphs-viewport",
+      "verdict": "not-cleared",
+      "baseDiffs": 7531,
+      "injectedDiffs": 8,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
+        "uniformDelta": [
+          -66.15,
+          -26.54
+        ]
+      }
+    },
+    {
+      "id": "graphs-b106",
+      "verdict": "not-cleared",
+      "baseDiffs": 7001,
+      "injectedDiffs": 224,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2343",
+      "verdict": "not-cleared",
+      "baseDiffs": 25613,
+      "injectedDiffs": 628,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -96.71,
+          198.05
+        ]
+      }
+    },
+    {
+      "id": "graphs-b143",
+      "verdict": "not-cleared",
+      "baseDiffs": 10709,
+      "injectedDiffs": 314,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
+        "uniformDelta": [
+          651.89,
+          -30.41
+        ]
+      }
+    },
+    {
+      "id": "graphs-b29",
+      "verdict": "not-cleared",
+      "baseDiffs": 11040,
+      "injectedDiffs": 369,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          -91.53,
+          102.01
+        ]
+      }
+    },
+    {
+      "id": "linux.i386-b106",
+      "verdict": "not-cleared",
+      "baseDiffs": 215,
+      "injectedDiffs": 215,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-b106",
+      "verdict": "not-cleared",
+      "baseDiffs": 215,
+      "injectedDiffs": 215,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "windows-b106",
+      "verdict": "not-cleared",
+      "baseDiffs": 215,
+      "injectedDiffs": 215,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "graphs-b102",
+      "verdict": "not-cleared",
+      "baseDiffs": 18244,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          173.5,
+          55.42
+        ]
+      }
+    },
+    {
+      "id": "graphs-xx",
+      "verdict": "not-cleared",
+      "baseDiffs": 18259,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2095_1",
+      "verdict": "not-cleared",
+      "baseDiffs": 65978,
+      "injectedDiffs": 962,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          192.69,
+          -36.39
+        ]
+      }
+    },
+    {
+      "id": "linux.i386-b29",
+      "verdict": "not-cleared",
+      "baseDiffs": 363,
+      "injectedDiffs": 363,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "share-b29",
+      "verdict": "not-cleared",
+      "baseDiffs": 363,
+      "injectedDiffs": 363,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "windows-b29",
+      "verdict": "not-cleared",
+      "baseDiffs": 363,
+      "injectedDiffs": 363,
+      "bucket": {
+        "shape": "edge/_ldraw_/structural",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural"
+      }
+    },
+    {
+      "id": "linux.i386-b102",
+      "verdict": "not-cleared",
+      "baseDiffs": 18189,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          69.69,
+          34.33
+        ]
+      }
+    },
+    {
+      "id": "share-b102",
+      "verdict": "not-cleared",
+      "baseDiffs": 18263,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          35.24,
+          5.39
+        ]
+      }
+    },
+    {
+      "id": "windows-b102",
+      "verdict": "not-cleared",
+      "baseDiffs": 18104,
+      "injectedDiffs": 6,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "graph/_draw_/numeric+graph/bb/numeric",
+        "uniformDelta": [
+          118.73,
+          -13.54
+        ]
+      }
+    },
+    {
+      "id": "graphs-b81",
+      "verdict": "not-cleared",
+      "baseDiffs": 9343,
+      "injectedDiffs": 141,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "nshare-root_circo",
+      "verdict": "not-cleared",
+      "baseDiffs": 35084,
+      "injectedDiffs": 714,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric",
+        "uniformDelta": [
+          -226.34,
+          -36.48
+        ]
+      }
+    },
+    {
+      "id": "linux.x86-root_circo",
+      "verdict": "not-cleared",
+      "baseDiffs": 35084,
+      "injectedDiffs": 714,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_ldraw_/structural+graph/_draw_/numeric",
+        "uniformDelta": [
+          -225.76,
+          -36.49
+        ]
+      }
+    },
+    {
+      "id": "2475_2",
+      "verdict": "not-cleared",
+      "baseDiffs": 321527,
+      "injectedDiffs": 10973,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "position",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+      }
+    },
+    {
+      "id": "2470",
+      "verdict": "not-cleared",
+      "baseDiffs": 16472,
+      "injectedDiffs": 5452,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_ldraw_/structural+…(9)"
+      }
+    }
+  ]
+}

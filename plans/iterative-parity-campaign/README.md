@@ -68,7 +68,7 @@ inside a worktree (`EnterWorktree`), never the main tree.
 | # | Tasks | Status |
 |---|---|---|
 | B1 — injection harness + reporting infra | T1, T2, T3 | [x] |
-| B2 — per-engine attribution surveys | T4, T5, T6 | [ ] |
+| B2 — per-engine attribution surveys | T4, T5, T6 | [x] |
 | B3 — repeating fix/accept rounds (loop until dry) | round 3a, 3b, … | [ ] |
 | B4 — A1-drift class acceptances | T10 | [ ] |
 | B5 — JSON/imagemap emitter tracks (gated) | T11, T12, T13 | [ ] |
