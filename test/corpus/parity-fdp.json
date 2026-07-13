@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-13T05:30:19.311Z",
+  "generatedAt": "2026-07-13T15:14:09.242Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "fdp",
   "tolerance": 0.5,
   "total": 761,
   "counts": {
-    "pass": 311,
-    "diverged": 429,
-    "oracle-error": 20,
+    "pass": 403,
+    "diverged": 343,
+    "oracle-error": 14,
     "port-error": 0,
     "timeout": 1
   },
@@ -133,9 +133,7 @@
     {
       "id": "2458",
       "size": 52,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:q1->q2#0 _ldraw_ edge:q1->q2#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b77",
@@ -155,9 +153,7 @@
     {
       "id": "graphs-b123",
       "size": 59,
-      "status": "diverged",
-      "nDiffs": 33,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 36 vs 43.36"
+      "status": "pass"
     },
     {
       "id": "2391",
@@ -190,22 +186,18 @@
       "id": "2168",
       "size": 70,
       "status": "diverged",
-      "nDiffs": 16,
+      "nDiffs": 13,
       "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "2490",
       "size": 70,
-      "status": "diverged",
-      "nDiffs": 52,
-      "firstDiff": "edge:foo->bar#0 _draw_ edge:foo->bar#0/_draw_/op[1].unfilled_bezier[0]: 63.78 vs 36.66"
+      "status": "pass"
     },
     {
       "id": "2682",
       "size": 71,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:A->B#0 _ldraw_ edge:A->B#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b80a",
@@ -239,9 +231,7 @@
     {
       "id": "2559",
       "size": 78,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:a->b#0 _ldraw_ edge:a->b#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-clustlabel",
@@ -284,9 +274,7 @@
     {
       "id": "2391_1",
       "size": 82,
-      "status": "diverged",
-      "nDiffs": 4,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 118.11 vs 136.16"
+      "status": "pass"
     },
     {
       "id": "2564",
@@ -325,8 +313,8 @@
       "id": "graphs-longflat",
       "size": 86,
       "status": "diverged",
-      "nDiffs": 61,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -14.87"
+      "nDiffs": 62,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: -16.38 vs -14.87"
     },
     {
       "id": "graphs-rowcolsep",
@@ -336,30 +324,24 @@
     {
       "id": "1444",
       "size": 87,
-      "status": "diverged",
-      "nDiffs": 22,
-      "firstDiff": "edge:n2->n1#0 _draw_ edge:n2->n1#0/_draw_/op[1].unfilled_bezier[1]: 21.98 vs 14.53"
+      "status": "pass"
     },
     {
       "id": "1444-2",
       "size": 87,
-      "status": "diverged",
-      "nDiffs": 22,
-      "firstDiff": "edge:n2->n1#0 _draw_ edge:n2->n1#0/_draw_/op[1].unfilled_bezier[1]: 21.98 vs 14.53"
+      "status": "pass"
     },
     {
       "id": "2168_4",
       "size": 87,
       "status": "diverged",
-      "nDiffs": 8,
+      "nDiffs": 5,
       "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "165_2",
       "size": 88,
-      "status": "diverged",
-      "nDiffs": 4,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 119.46 vs 131.26"
+      "status": "pass"
     },
     {
       "id": "2643",
@@ -387,9 +369,7 @@
     {
       "id": "2437",
       "size": 98,
-      "status": "diverged",
-      "nDiffs": 32,
-      "firstDiff": "edge:AA3->AA4#0 _draw_ edge:AA3->AA4#0/_draw_/op[1].unfilled_bezier[0]: 69.96 vs 56.41"
+      "status": "pass"
     },
     {
       "id": "graphs-Latin1",
@@ -419,9 +399,7 @@
     {
       "id": "graphs-b545",
       "size": 104,
-      "status": "diverged",
-      "nDiffs": 24,
-      "firstDiff": "edge:N11ne->N11#0 _draw_ edge:N11ne->N11#0/_draw_/op[1].unfilled_bezier[0]: 191.01 vs 189.37"
+      "status": "pass"
     },
     {
       "id": "graphs-b146",
@@ -462,7 +440,7 @@
       "id": "graphs-b491",
       "size": 113,
       "status": "diverged",
-      "nDiffs": 105,
+      "nDiffs": 106,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 125.58 vs 129.69"
     },
     {
@@ -498,9 +476,7 @@
     {
       "id": "graphs-b73",
       "size": 124,
-      "status": "diverged",
-      "nDiffs": 27,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -5.49"
+      "status": "pass"
     },
     {
       "id": "reference-test_reference-001.001",
@@ -535,9 +511,7 @@
     {
       "id": "graphs-edgeclip",
       "size": 129,
-      "status": "diverged",
-      "nDiffs": 56,
-      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[2]: 78.04 vs 79.21"
+      "status": "pass"
     },
     {
       "id": "regression_tests-shapes-reference-none",
@@ -699,9 +673,7 @@
     {
       "id": "graphs-b73a",
       "size": 134,
-      "status": "diverged",
-      "nDiffs": 29,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -5.49"
+      "status": "pass"
     },
     {
       "id": "regression_tests-shapes-reference-component",
@@ -740,6 +712,11 @@
     },
     {
       "id": "regression_tests-shapes-reference-signature",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "regression_tests-shapes-reference-trapezium",
       "size": 134,
       "status": "pass"
     },
@@ -871,9 +848,7 @@
     {
       "id": "graphs-record2",
       "size": 155,
-      "status": "diverged",
-      "nDiffs": 24,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 92.01 vs 17.33"
+      "status": "pass"
     },
     {
       "id": "share-Latin1",
@@ -1126,9 +1101,7 @@
     {
       "id": "144_no_ortho",
       "size": 237,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:A->B#0 _hldraw_ edge:A->B#0/_hldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "2609",
@@ -1144,8 +1117,8 @@
       "id": "graphs-sb_box",
       "size": 241,
       "status": "diverged",
-      "nDiffs": 81,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41"
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -34.8 vs -59.6"
     },
     {
       "id": "graphs-labelroot-fdd",
@@ -1165,8 +1138,8 @@
       "id": "graphs-sb_circle",
       "size": 244,
       "status": "diverged",
-      "nDiffs": 84,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55"
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -34.8 vs -59.6"
     },
     {
       "id": "graphs-labelclust-ftr",
@@ -1274,7 +1247,7 @@
       "id": "144_ortho",
       "size": 257,
       "status": "diverged",
-      "nDiffs": 91,
+      "nDiffs": 96,
       "firstDiff": "edge:A->B#0 _draw_ edge:A->B#0/_draw_/op[1].unfilled_bezier[1]: 68.74 vs 70"
     },
     {
@@ -1487,7 +1460,7 @@
       "id": "graphs-structs",
       "size": 308,
       "status": "diverged",
-      "nDiffs": 94,
+      "nDiffs": 89,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 168.68 vs 170.53"
     },
     {
@@ -1516,7 +1489,7 @@
       "id": "2168_3",
       "size": 322,
       "status": "diverged",
-      "nDiffs": 19,
+      "nDiffs": 11,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 53.48 vs 54.54"
     },
     {
@@ -1534,36 +1507,28 @@
     {
       "id": "graphs-flatedge",
       "size": 330,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b",
       "size": 338,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52"
+      "status": "pass"
     },
     {
       "id": "graphs-b117",
       "size": 338,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52"
+      "status": "pass"
     },
     {
       "id": "graphs-nhg",
       "size": 339,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -2.52"
+      "status": "pass"
     },
     {
       "id": "2168_2",
       "size": 349,
       "status": "diverged",
-      "nDiffs": 8,
+      "nDiffs": 6,
       "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
@@ -1574,9 +1539,7 @@
     {
       "id": "graphs-colors",
       "size": 376,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:ddddddd->eeeee#0 _hldraw_ edge:ddddddd->eeeee#0/_hldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-mike",
@@ -1601,15 +1564,15 @@
       "id": "graphs-sb_box_dbl",
       "size": 397,
       "status": "diverged",
-      "nDiffs": 152,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -37.41"
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -52.8 vs -77.6"
     },
     {
       "id": "graphs-sb_circle_dbl",
       "size": 400,
       "status": "diverged",
-      "nDiffs": 158,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -26.55"
+      "nDiffs": 4,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -52.8 vs -77.6"
     },
     {
       "id": "graphs-clust4",
@@ -1624,30 +1587,22 @@
     {
       "id": "graphs-xlabels",
       "size": 404,
-      "status": "diverged",
-      "nDiffs": 15,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -15.22"
+      "status": "pass"
     },
     {
       "id": "2368_1",
       "size": 405,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:376->196#0 _ldraw_ edge:376->196#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-longflat",
       "size": 405,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "windows-longflat",
       "size": 409,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:c->b#0 _ldraw_ edge:c->b#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "2613",
@@ -1664,9 +1619,7 @@
     {
       "id": "graphs-records",
       "size": 417,
-      "status": "diverged",
-      "nDiffs": 139,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 203.93 vs 222.78"
+      "status": "pass"
     },
     {
       "id": "linux.i386-radius_dot",
@@ -1706,16 +1659,12 @@
     {
       "id": "share-record2",
       "size": 421,
-      "status": "diverged",
-      "nDiffs": 22,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 1280.19 vs 1255.96"
+      "status": "pass"
     },
     {
       "id": "windows-record2",
       "size": 421,
-      "status": "diverged",
-      "nDiffs": 22,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 1279.11 vs 1255.1"
+      "status": "pass"
     },
     {
       "id": "graphs-ctext",
@@ -1742,23 +1691,17 @@
     {
       "id": "1213-1",
       "size": 481,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:V1->V9#0 _ldraw_ edge:V1->V9#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-b491",
       "size": 486,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "windows-b491",
       "size": 486,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:Node29->Node29#0 _ldraw_ edge:Node29->Node29#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b22",
@@ -1773,9 +1716,7 @@
     {
       "id": "graphs-states",
       "size": 492,
-      "status": "diverged",
-      "nDiffs": 5,
-      "firstDiff": "edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-grdcluster",
@@ -1806,9 +1747,7 @@
     {
       "id": "1213-2",
       "size": 530,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:H5->H1#0 _ldraw_ edge:H5->H1#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "2159",
@@ -1841,7 +1780,7 @@
       "id": "241_0",
       "size": 578,
       "status": "diverged",
-      "nDiffs": 272,
+      "nDiffs": 265,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 359.85 vs 353.14"
     },
     {
@@ -1866,9 +1805,7 @@
     {
       "id": "graphs-tree",
       "size": 588,
-      "status": "diverged",
-      "nDiffs": 166,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 100.57 vs 44.97"
+      "status": "pass"
     },
     {
       "id": "graphs-b68",
@@ -1894,23 +1831,17 @@
     {
       "id": "linux.x86-edgeclip_dot",
       "size": 599,
-      "status": "diverged",
-      "nDiffs": 46,
-      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[3]: 1708.88 vs 1702.83"
+      "status": "pass"
     },
     {
       "id": "macosx-edgeclip_dot",
       "size": 599,
-      "status": "diverged",
-      "nDiffs": 46,
-      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[3]: 1708.88 vs 1702.83"
+      "status": "pass"
     },
     {
       "id": "nshare-edgeclip_dot",
       "size": 599,
-      "status": "diverged",
-      "nDiffs": 46,
-      "firstDiff": "edge:AB->CD#0 _draw_ edge:AB->CD#0/_draw_/op[1].unfilled_bezier[3]: 1708.88 vs 1702.83"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ntd",
@@ -1929,9 +1860,7 @@
     {
       "id": "graphs-fsm",
       "size": 605,
-      "status": "diverged",
-      "nDiffs": 14,
-      "firstDiff": "edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ndl",
@@ -2109,7 +2038,7 @@
       "id": "1856",
       "size": 621,
       "status": "diverged",
-      "nDiffs": 152,
+      "nDiffs": 142,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 400.93 vs 385.23"
     },
     {
@@ -2219,9 +2148,7 @@
     {
       "id": "graphs-hashtable",
       "size": 629,
-      "status": "diverged",
-      "nDiffs": 142,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 218.88 vs 290.27"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fbd",
@@ -2615,7 +2542,7 @@
       "id": "graphs-ER",
       "size": 650,
       "status": "diverged",
-      "nDiffs": 286,
+      "nDiffs": 291,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
     },
     {
@@ -2635,9 +2562,7 @@
     {
       "id": "2801",
       "size": 651,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fdr",
@@ -2654,6 +2579,11 @@
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
+      "id": "graphs-nul_val",
+      "size": 659,
+      "status": "pass"
+    },
+    {
       "id": "graphs-val_inv",
       "size": 660,
       "status": "pass"
@@ -2661,9 +2591,7 @@
     {
       "id": "graphs-b786",
       "size": 667,
-      "status": "diverged",
-      "nDiffs": 202,
-      "firstDiff": "edge:n3->n2#0 _draw_ edge:n3->n2#0/_draw_/op[1].unfilled_bezier[0]: 148.99 vs 135.23"
+      "status": "pass"
     },
     {
       "id": "graphs-b85",
@@ -2676,7 +2604,7 @@
       "id": "graphs-ports",
       "size": 677,
       "status": "diverged",
-      "nDiffs": 659,
+      "nDiffs": 655,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 459.77 vs 445.02"
     },
     {
@@ -2692,9 +2620,7 @@
     {
       "id": "share-structs",
       "size": 710,
-      "status": "diverged",
-      "nDiffs": 41,
-      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2619.34 vs 2628.94"
+      "status": "pass"
     },
     {
       "id": "1658",
@@ -2706,22 +2632,18 @@
     {
       "id": "windows-structs",
       "size": 728,
-      "status": "diverged",
-      "nDiffs": 41,
-      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2620.42 vs 2630.49"
+      "status": "pass"
     },
     {
       "id": "2168_1",
       "size": 729,
-      "status": "diverged",
-      "nDiffs": 24,
-      "firstDiff": "edge:node1->node2#0 _draw_ edge:node1->node2#0/_draw_/op[1].unfilled_bezier[0]: 65.43 vs 59.13"
+      "status": "pass"
     },
     {
       "id": "graphs-html",
       "size": 738,
       "status": "diverged",
-      "nDiffs": 134,
+      "nDiffs": 116,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 172.07 vs 181.8"
     },
     {
@@ -2756,9 +2678,7 @@
     {
       "id": "graphs-train11",
       "size": 777,
-      "status": "diverged",
-      "nDiffs": 28,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 286.25 vs 311.14"
+      "status": "pass"
     },
     {
       "id": "graphs-jcctree",
@@ -2801,16 +2721,12 @@
     {
       "id": "share-states",
       "size": 858,
-      "status": "diverged",
-      "nDiffs": 5,
-      "firstDiff": "edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "windows-states",
       "size": 878,
-      "status": "diverged",
-      "nDiffs": 5,
-      "firstDiff": "edge:empty->full#0 _ldraw_ edge:empty->full#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-Petersen",
@@ -2835,9 +2751,7 @@
     {
       "id": "share-flatedge",
       "size": 918,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-Symbol",
@@ -2849,16 +2763,12 @@
     {
       "id": "windows-nhg",
       "size": 926,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:0->1#0 _ldraw_ edge:0->1#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-nhg",
       "size": 938,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:0->1#0 _ldraw_ edge:0->1#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-alf",
@@ -2877,9 +2787,7 @@
     {
       "id": "graphs-dfa",
       "size": 959,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-world",
@@ -2903,16 +2811,12 @@
     {
       "id": "linux.x86-html_dot",
       "size": 1057,
-      "status": "diverged",
-      "nDiffs": 48,
-      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2561.77 vs 2570.05"
+      "status": "pass"
     },
     {
       "id": "nshare-html_dot",
       "size": 1058,
-      "status": "diverged",
-      "nDiffs": 48,
-      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 2578.24 vs 2586.6"
+      "status": "pass"
     },
     {
       "id": "2521_1",
@@ -2927,7 +2831,9 @@
     {
       "id": "graphs-shells",
       "size": 1102,
-      "status": "timeout"
+      "status": "diverged",
+      "nDiffs": 1092,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 745 vs 1005.96"
     },
     {
       "id": "share-try",
@@ -2952,16 +2858,12 @@
     {
       "id": "linux.x86-flatedge_dot",
       "size": 1177,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "nshare-flatedge_dot",
       "size": 1182,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 _ldraw_ edge:tcp->kernel_linux#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-clust3",
@@ -3009,7 +2911,7 @@
       "id": "graphs-url",
       "size": 1242,
       "status": "diverged",
-      "nDiffs": 10,
+      "nDiffs": 4,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
@@ -3055,23 +2957,17 @@
     {
       "id": "share-records",
       "size": 1398,
-      "status": "diverged",
-      "nDiffs": 110,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25"
+      "status": "pass"
     },
     {
       "id": "graphs-html2",
       "size": 1414,
-      "status": "diverged",
-      "nDiffs": 33,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.52 vs 107.05"
+      "status": "pass"
     },
     {
       "id": "windows-records",
       "size": 1416,
-      "status": "diverged",
-      "nDiffs": 110,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[1]: 5317.9 vs 5323.25"
+      "status": "pass"
     },
     {
       "id": "2361",
@@ -3175,22 +3071,20 @@
     {
       "id": "1323_1",
       "size": 1588,
-      "status": "diverged",
-      "nDiffs": 71,
-      "firstDiff": "edge:namespace1->vfsmount1#0 _draw_ edge:namespace1->vfsmount1#0/_draw_/op[1].unfilled_bezier[0]: 101.61 vs 138.32"
+      "status": "pass"
     },
     {
       "id": "2183",
       "size": 1601,
       "status": "diverged",
-      "nDiffs": 815,
+      "nDiffs": 819,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 484.91 vs 451.3"
     },
     {
       "id": "graphs-triedds",
       "size": 1610,
       "status": "diverged",
-      "nDiffs": 720,
+      "nDiffs": 695,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 789.03 vs 794.83"
     },
     {
@@ -3256,23 +3150,17 @@
     {
       "id": "linux.i386-hashtable",
       "size": 1756,
-      "status": "diverged",
-      "nDiffs": 146,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 20.6 vs 10.08"
+      "status": "pass"
     },
     {
       "id": "share-hashtable",
       "size": 1756,
-      "status": "diverged",
-      "nDiffs": 146,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 20.6 vs 10.08"
+      "status": "pass"
     },
     {
       "id": "windows-hashtable",
       "size": 1756,
-      "status": "diverged",
-      "nDiffs": 146,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 20.6 vs 10.08"
+      "status": "pass"
     },
     {
       "id": "graphs-viewfile",
@@ -3304,30 +3192,22 @@
     {
       "id": "share-tree",
       "size": 1825,
-      "status": "diverged",
-      "nDiffs": 146,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 10015.76 vs 10005.74"
+      "status": "pass"
     },
     {
       "id": "windows-tree",
       "size": 1825,
-      "status": "diverged",
-      "nDiffs": 141,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[0]: 9930.84 vs 9920.72"
+      "status": "pass"
     },
     {
       "id": "linux.x86-html2_dot",
       "size": 1945,
-      "status": "diverged",
-      "nDiffs": 35,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.13 vs 107.49"
+      "status": "pass"
     },
     {
       "id": "nshare-html2_dot",
       "size": 1946,
-      "status": "diverged",
-      "nDiffs": 35,
-      "firstDiff": "edge:a->b#0 _draw_ edge:a->b#0/_draw_/op[1].unfilled_bezier[0]: 115.07 vs 107.17"
+      "status": "pass"
     },
     {
       "id": "share-pm2way",
@@ -3353,14 +3233,14 @@
       "id": "graphs-arrows",
       "size": 2029,
       "status": "diverged",
-      "nDiffs": 762,
+      "nDiffs": 798,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"
     },
     {
       "id": "graphs-arrowsize",
       "size": 2039,
       "status": "diverged",
-      "nDiffs": 794,
+      "nDiffs": 830,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"
     },
     {
@@ -3387,42 +3267,42 @@
       "id": "graphs-newarrows",
       "size": 2045,
       "status": "diverged",
-      "nDiffs": 762,
+      "nDiffs": 798,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 502.44 vs 505.93"
     },
     {
       "id": "windows-ER",
       "size": 2051,
       "status": "diverged",
-      "nDiffs": 10,
+      "nDiffs": 4,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
     },
     {
       "id": "graphs-st_box",
       "size": 2068,
       "status": "diverged",
-      "nDiffs": 1409,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -36.63"
+      "nDiffs": 1381,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "graphs-st_circle",
       "size": 2071,
       "status": "diverged",
-      "nDiffs": 1316,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89"
+      "nDiffs": 1303,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: -30.05 vs -21.89"
     },
     {
       "id": "linux.i386-ER",
       "size": 2072,
       "status": "diverged",
-      "nDiffs": 10,
+      "nDiffs": 4,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
     },
     {
       "id": "share-ER",
       "size": 2072,
       "status": "diverged",
-      "nDiffs": 10,
+      "nDiffs": 4,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -104"
     },
     {
@@ -3449,9 +3329,7 @@
     {
       "id": "windows-fsm",
       "size": 2124,
-      "status": "diverged",
-      "nDiffs": 14,
-      "firstDiff": "edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "2242",
@@ -3463,51 +3341,45 @@
     {
       "id": "share-fsm",
       "size": 2142,
-      "status": "diverged",
-      "nDiffs": 14,
-      "firstDiff": "edge:LR_0->LR_1#0 _ldraw_ edge:LR_0->LR_1#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-sr_box",
       "size": 2149,
       "status": "diverged",
-      "nDiffs": 1475,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.33"
+      "nDiffs": 1484,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -5.53 vs -30.33"
     },
     {
       "id": "graphs-sr_circle",
       "size": 2152,
       "status": "diverged",
-      "nDiffs": 1369,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.23"
+      "nDiffs": 1367,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -5.43 vs -30.23"
     },
     {
       "id": "graphs-sl_box",
       "size": 2156,
       "status": "diverged",
-      "nDiffs": 1491,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -146.93"
+      "nDiffs": 1484,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "graphs-sl_circle",
       "size": 2159,
       "status": "diverged",
-      "nDiffs": 1378,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -146.93"
+      "nDiffs": 1367,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "1323",
       "size": 2164,
-      "status": "diverged",
-      "nDiffs": 253,
-      "firstDiff": "edge:namespace1->vfsmount1#0 _draw_ edge:namespace1->vfsmount1#0/_draw_/op[1].unfilled_bezier[0]: 108.47 vs 138.32"
+      "status": "pass"
     },
     {
       "id": "share-b786",
       "size": 2198,
-      "status": "diverged",
-      "nDiffs": 165,
-      "firstDiff": "edge:n3->n2#0 _draw_ edge:n3->n2#0/_draw_/op[1].unfilled_bezier[0]: 3198.23 vs 3202.89"
+      "status": "pass"
     },
     {
       "id": "graphs-b53",
@@ -3559,16 +3431,12 @@
     {
       "id": "linux.i386-dfa",
       "size": 2651,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-dfa",
       "size": 2651,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-NaN",
@@ -3580,9 +3448,7 @@
     {
       "id": "windows-dfa",
       "size": 2714,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 _ldraw_ edge:n1->n2#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b71",
@@ -3643,30 +3509,26 @@
     {
       "id": "share-train11",
       "size": 3220,
-      "status": "diverged",
-      "nDiffs": 28,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 29776.75 vs 29801.64"
+      "status": "pass"
     },
     {
       "id": "graphs-biglabel",
       "size": 3246,
       "status": "diverged",
-      "nDiffs": 82,
+      "nDiffs": 76,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1424.12 vs 1425.38"
     },
     {
       "id": "windows-train11",
       "size": 3257,
-      "status": "diverged",
-      "nDiffs": 28,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 30150.69 vs 30175.58"
+      "status": "pass"
     },
     {
       "id": "2734",
       "size": 3272,
       "status": "diverged",
-      "nDiffs": 421,
-      "firstDiff": "edge:node1->node3#0 _draw_ edge:node1->node3#0/_draw_/op[1].unfilled_bezier[0]: 108.81 vs 107.04"
+      "nDiffs": 35,
+      "firstDiff": "edge:node1->node3#0 _draw_ edge:node1->node3#0/_draw_/op[1].unfilled_bezier[1]: 56.3 vs 55.6"
     },
     {
       "id": "1622_2",
@@ -3693,16 +3555,12 @@
     {
       "id": "linux.x86-ports_dot",
       "size": 3470,
-      "status": "diverged",
-      "nDiffs": 150,
-      "firstDiff": "edge:A->a#0 _draw_ edge:A->a#0/_draw_/op[1].unfilled_bezier[0]: 2675.18 vs 2661.77"
+      "status": "pass"
     },
     {
       "id": "nshare-ports_dot",
       "size": 3493,
-      "status": "diverged",
-      "nDiffs": 151,
-      "firstDiff": "edge:A->a#0 _draw_ edge:A->a#0/_draw_/op[1].unfilled_bezier[0]: 2675.19 vs 2661.77"
+      "status": "pass"
     },
     {
       "id": "graphs-pmpipe",
@@ -3723,50 +3581,48 @@
       "id": "graphs-st_box_dbl",
       "size": 3640,
       "status": "diverged",
-      "nDiffs": 2148,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -36.63"
+      "nDiffs": 2084,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "graphs-st_circle_dbl",
       "size": 3643,
       "status": "diverged",
-      "nDiffs": 2051,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -21.89"
+      "nDiffs": 2025,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: -30.05 vs -21.89"
     },
     {
       "id": "2476",
       "size": 3653,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0 _ldraw_ edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-sr_box_dbl",
       "size": 3777,
       "status": "diverged",
-      "nDiffs": 2255,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.37"
+      "nDiffs": 2244,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -5.57 vs -30.37"
     },
     {
       "id": "graphs-sr_circle_dbl",
       "size": 3780,
       "status": "diverged",
-      "nDiffs": 2133,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -30.02"
+      "nDiffs": 2127,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -5.22 vs -30.02"
     },
     {
       "id": "graphs-sl_box_dbl",
       "size": 3792,
       "status": "diverged",
-      "nDiffs": 2274,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -275.85"
+      "nDiffs": 2244,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "graphs-sl_circle_dbl",
       "size": 3795,
       "status": "diverged",
-      "nDiffs": 2156,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -275.85"
+      "nDiffs": 2127,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
       "id": "2669",
@@ -3778,16 +3634,12 @@
     {
       "id": "share-triedds",
       "size": 3852,
-      "status": "diverged",
-      "nDiffs": 312,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 26265.97 vs 26275.01"
+      "status": "pass"
     },
     {
       "id": "windows-triedds",
       "size": 3948,
-      "status": "diverged",
-      "nDiffs": 314,
-      "firstDiff": "edge:node0->node1#0 _draw_ edge:node0->node1#0/_draw_/op[1].unfilled_bezier[1]: 14848.4 vs 14851.62"
+      "status": "pass"
     },
     {
       "id": "graphs-grdlinear",
@@ -3815,7 +3667,7 @@
       "id": "56",
       "size": 4247,
       "status": "diverged",
-      "nDiffs": 409,
+      "nDiffs": 432,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1082.12 vs 923.41"
     },
     {
@@ -3842,7 +3694,7 @@
       "id": "2095",
       "size": 4865,
       "status": "diverged",
-      "nDiffs": 8253,
+      "nDiffs": 8254,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 5425.41 vs 5672.31"
     },
     {
@@ -3859,8 +3711,8 @@
       "id": "1898",
       "size": 5067,
       "status": "diverged",
-      "nDiffs": 1085,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 750.04 vs 850.62"
+      "nDiffs": 1201,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 759.35 vs 850.62"
     },
     {
       "id": "graphs-ldbxtried",
@@ -3906,9 +3758,7 @@
     {
       "id": "1949",
       "size": 5632,
-      "status": "diverged",
-      "nDiffs": 110,
-      "firstDiff": "edge:structC->structDefaultAuto#0 _tldraw_ edge:structC->structDefaultAuto#0/_tldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-grdlinear_angle",
@@ -3921,15 +3771,13 @@
       "id": "graphs-cairo",
       "size": 5866,
       "status": "diverged",
-      "nDiffs": 1919,
+      "nDiffs": 1989,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.47 vs 786.76"
     },
     {
       "id": "graphs-pslib",
       "size": 5899,
-      "status": "diverged",
-      "nDiffs": 12,
-      "firstDiff": "edge:sdl_stop->sdl_stop2#0 _draw_ edge:sdl_stop->sdl_stop2#0/_draw_/op[1].unfilled_bezier[2]: 262.09 vs 276.83"
+      "status": "pass"
     },
     {
       "id": "graphs-proc3d",
@@ -3949,21 +3797,21 @@
       "id": "share-newarrows",
       "size": 6364,
       "status": "diverged",
-      "nDiffs": 88,
+      "nDiffs": 101,
       "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "windows-newarrows",
       "size": 6364,
       "status": "diverged",
-      "nDiffs": 88,
+      "nDiffs": 101,
       "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "2193",
       "size": 6399,
       "status": "diverged",
-      "nDiffs": 1941,
+      "nDiffs": 1961,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4941.45 vs 3747.01"
     },
     {
@@ -4017,21 +3865,21 @@
       "id": "linux.x86-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 295,
+      "nDiffs": 308,
       "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "macosx-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 295,
+      "nDiffs": 308,
       "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "nshare-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 295,
+      "nDiffs": 308,
       "firstDiff": "edge:Z->A#0 _draw_ edge:Z->A#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
@@ -4111,7 +3959,7 @@
       "id": "graphs-b57",
       "size": 8472,
       "status": "diverged",
-      "nDiffs": 1846,
+      "nDiffs": 1853,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3326.16 vs 2520.51"
     },
     {
@@ -4123,7 +3971,7 @@
       "id": "graphs-b15",
       "size": 8774,
       "status": "diverged",
-      "nDiffs": 3449,
+      "nDiffs": 5074,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1185.75"
     },
     {
@@ -4154,7 +4002,7 @@
       "id": "graphs-big",
       "size": 9231,
       "status": "diverged",
-      "nDiffs": 81,
+      "nDiffs": 65,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 805.68 vs 793.93"
     },
     {
@@ -4177,9 +4025,7 @@
     {
       "id": "share-b94",
       "size": 9831,
-      "status": "diverged",
-      "nDiffs": 60,
-      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b124",
@@ -4234,7 +4080,7 @@
       "id": "graphs-b94",
       "size": 10503,
       "status": "diverged",
-      "nDiffs": 116,
+      "nDiffs": 58,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 387.25 vs 388.05"
     },
     {
@@ -4381,9 +4227,7 @@
     {
       "id": "windows-b94",
       "size": 14509,
-      "status": "diverged",
-      "nDiffs": 60,
-      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "1447_1",
@@ -4430,8 +4274,8 @@
       "id": "graphs-b51",
       "size": 19886,
       "status": "diverged",
-      "nDiffs": 3836,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4163.86 vs 5135.75"
+      "nDiffs": 3933,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4163.86 vs 5104.24"
     },
     {
       "id": "1718",
@@ -4453,16 +4297,12 @@
     {
       "id": "share-b51",
       "size": 29420,
-      "status": "diverged",
-      "nDiffs": 25,
-      "firstDiff": "edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "windows-b51",
       "size": 29685,
-      "status": "diverged",
-      "nDiffs": 25,
-      "firstDiff": "edge:blok_12->blok_14#0 _ldraw_ edge:blok_12->blok_14#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b69",
@@ -4494,56 +4334,51 @@
       "id": "graphs-b106",
       "size": 48933,
       "status": "diverged",
-      "nDiffs": 7001,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -296.41"
+      "nDiffs": 8309,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -55.36 vs -296.41"
     },
     {
       "id": "2343",
       "size": 59368,
       "status": "diverged",
-      "nDiffs": 25613,
+      "nDiffs": 26234,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2458.63 vs 2260.56"
     },
     {
       "id": "graphs-b143",
       "size": 62055,
       "status": "diverged",
-      "nDiffs": 10709,
+      "nDiffs": 11269,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2"
     },
     {
       "id": "graphs-b29",
       "size": 62931,
       "status": "diverged",
-      "nDiffs": 11040,
+      "nDiffs": 11633,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"
     },
     {
       "id": "2620",
       "size": 64908,
-      "status": "oracle-error",
-      "err": "Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot"
+      "status": "diverged",
+      "nDiffs": 8386,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4628.91 vs 4413.45"
     },
     {
       "id": "linux.i386-b106",
       "size": 92005,
-      "status": "diverged",
-      "nDiffs": 215,
-      "firstDiff": "edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-b106",
       "size": 92301,
-      "status": "diverged",
-      "nDiffs": 215,
-      "firstDiff": "edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "windows-b106",
       "size": 95634,
-      "status": "diverged",
-      "nDiffs": 215,
-      "firstDiff": "edge:Node1295->Node1391#0 _ldraw_ edge:Node1295->Node1391#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "graphs-b102",
@@ -4563,35 +4398,30 @@
       "id": "2095_1",
       "size": 105083,
       "status": "diverged",
-      "nDiffs": 65978,
+      "nDiffs": 66932,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"
     },
     {
       "id": "graphs-root",
       "size": 128221,
-      "status": "oracle-error",
-      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+      "status": "diverged",
+      "nDiffs": 35788,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3060.94 vs 2747.66"
     },
     {
       "id": "linux.i386-b29",
       "size": 136753,
-      "status": "diverged",
-      "nDiffs": 363,
-      "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "share-b29",
       "size": 137802,
-      "status": "diverged",
-      "nDiffs": 363,
-      "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "windows-b29",
       "size": 149114,
-      "status": "diverged",
-      "nDiffs": 363,
-      "firstDiff": "edge:Node14648->Node14648#0 _ldraw_ edge:Node14648->Node14648#0/_ldraw_[missing]: <absent> vs <present>"
+      "status": "pass"
     },
     {
       "id": "linux.i386-b102",
@@ -4618,8 +4448,8 @@
       "id": "graphs-b81",
       "size": 191024,
       "status": "diverged",
-      "nDiffs": 9343,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -34924.12"
+      "nDiffs": 10125,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: -32074.67 vs -34924.12"
     },
     {
       "id": "1879",
@@ -4630,34 +4460,37 @@
     {
       "id": "linux.x86-root_twopi",
       "size": 287907,
-      "status": "oracle-error",
-      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+      "status": "diverged",
+      "nDiffs": 35736,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3305.06 vs 3226.07"
     },
     {
       "id": "nshare-root_twopi",
       "size": 287916,
-      "status": "oracle-error",
-      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+      "status": "diverged",
+      "nDiffs": 35656,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3220.18 vs 3411.29"
     },
     {
       "id": "nshare-root_circo",
       "size": 313126,
       "status": "diverged",
-      "nDiffs": 35084,
+      "nDiffs": 35794,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7463544.31 vs 42601556.38"
     },
     {
       "id": "linux.x86-root_circo",
       "size": 313168,
       "status": "diverged",
-      "nDiffs": 35084,
+      "nDiffs": 35794,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 7369748.58 vs 42055799.2"
     },
     {
       "id": "graphs-b103",
       "size": 377525,
-      "status": "oracle-error",
-      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+      "status": "diverged",
+      "nDiffs": 69777,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1840.48 vs 2176.86"
     },
     {
       "id": "2475_2",
@@ -4670,8 +4503,8 @@
       "id": "2470",
       "size": 734358,
       "status": "diverged",
-      "nDiffs": 16472,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 7690.38"
+      "nDiffs": 17132,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 8715.6"
     },
     {
       "id": "2222",
@@ -4682,18 +4515,7 @@
     {
       "id": "2108",
       "size": 3136769,
-      "status": "oracle-error",
-      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
-    },
-    {
-      "id": "regression_tests-shapes-reference-trapezium",
-      "size": 134,
-      "status": "pass"
-    },
-    {
-      "id": "graphs-nul_val",
-      "size": 659,
-      "status": "pass"
+      "status": "timeout"
     }
   ]
 }
