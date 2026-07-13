@@ -4,8 +4,10 @@
 // Semantic xdot comparator (mission: xdot-conformance, T2 / decisions.md AD-1).
 //
 // xdot output is a DOT file whose objects carry draw-op strings in `_draw_`,
-// `_ldraw_`, `_hdraw_`, `_tdraw_`, `_hldraw_`, `_tldraw_` attributes plus
-// positional `pos`/`bb`/`width`/`height`. A literal/byte compare drowns in
+// `_ldraw_`, `_hdraw_`, `_tdraw_`, `_hldraw_`, `_tldraw_` attributes plus the
+// positional attributes attach_attrs computes: `pos`/`bb`/`width`/`height` and
+// the label-geometry family `lp`/`lwidth`/`lheight`/`xlp`/`head_lp`/`tail_lp`
+// and record `rects` (see POSITIONAL_ATTRS). A literal/byte compare drowns in
 // formatting noise (`width=.75` vs `0.75`, attribute order, the
 // `node [label="\N"]` default line, named vs hex colors). This comparator is
 // SEMANTIC: it parses both sides, keys objects by identity (graph / node name /
@@ -131,8 +133,44 @@ function isDrawAttr(name: string): boolean {
   return /^_[a-z]*draw_$/.test(name);
 }
 
-/** Positional attributes compared numerically (points / inches). */
-const POSITIONAL_ATTRS = ['pos', 'bb', 'width', 'height'] as const;
+/**
+ * Positional attributes compared numerically (points / inches).
+ *
+ * These are the attributes `attach_attrs` COMPUTES and attaches to the laid-out
+ * graph (lib/common/output.c) — as opposed to the input attributes agwrite just
+ * echoes back. Every one of them is a layout result, so a divergence here is a
+ * real geometry difference:
+ *
+ * - `pos`/`bb`/`width`/`height` — node centres, graph/cluster boxes, node size.
+ * - `lp`      — graph/cluster label centre, and edge label centre.
+ * - `lwidth`/`lheight` — graph/cluster label size, in INCHES (C writes `%.2f`).
+ * - `xlp`     — placed external-label (xlabel) centre, on nodes and edges.
+ * - `head_lp`/`tail_lp` — edge head/tail label centres.
+ * - `rects`   — record-shape field boxes: a flat `llx,lly,urx,ury ...` list,
+ *               which `extractNumbers` flattens like any other coordinate list.
+ *
+ * The label-position family was originally absent from this list, which made the
+ * comparator blind to label geometry: a graph could place every label wrongly
+ * (or not at all) and still be reported conformant. A one-sided attribute now
+ * raises a `[missing]` structural diff, so an unemitted `lp` is a failure rather
+ * than a silent pass.
+ *
+ * @see lib/common/output.c:254 attach_attrs_and_arrows
+ * @see lib/common/output.c:229 rec_attach_bb (lp/lwidth/lheight)
+ */
+const POSITIONAL_ATTRS = [
+  'pos',
+  'bb',
+  'width',
+  'height',
+  'lp',
+  'lwidth',
+  'lheight',
+  'xlp',
+  'head_lp',
+  'tail_lp',
+  'rects',
+] as const;
 
 // ---------------------------------------------------------------------------
 // Object inventory (graph / cluster / node / edge → draw-bearing attrs)
