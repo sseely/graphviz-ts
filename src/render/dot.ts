@@ -37,7 +37,9 @@ import { PenType, FillType } from '../gvc/context.js';
 import type { RenderJob, ObjState } from '../gvc/job.js';
 import { EmitState, toFixed2HalfEven } from '../gvc/job.js';
 import { renderEdgeLabels } from '../gvc/edge-labels.js';
-import { printfSig } from '../util/printf-round.js';
+import { printfSig, printfFixed } from '../util/printf-round.js';
+import { POINTS_PER_INCH } from '../model/geom.js';
+import type { TextlabelT, FieldT, ShapeDesc } from '../common/types.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -359,6 +361,77 @@ export function gfmt5(v: number): string {
   }
   if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
   return s;
+}
+
+/**
+ * Format a number as C's `%.2f` — fixed 2 decimals, half-to-even on exact ties.
+ * `attach_attrs` writes the graph-label size attributes `lwidth`/`lheight` in
+ * INCHES with `%.2f`, unlike every other computed attribute (which uses `%.5g`).
+ * @see lib/common/output.c:244-247 (agxbprint "%.2f", PS2INCH)
+ */
+function gfmt2(v: number): string {
+  return printfFixed(v, 2);
+}
+
+/**
+ * Format a label position as the `x,y` pair every computed `*_lp` attribute
+ * uses: both coordinates at `%.5g`. C passes y through `yDir()`, which is the
+ * identity unless `Y_invert` — and `Y_invert` is only set by `-Ty` (plain/dot),
+ * never for xdot — so no inversion is applied here, exactly as the existing
+ * `pos`/`bb` emission does.
+ * @see lib/common/output.c:35 yDir · lib/common/output.c:241 (agxbprint "%.5g,%.5g")
+ */
+function lpStr(p: Point): string {
+  return gfmt5(p.x) + ',' + gfmt5(p.y);
+}
+
+/**
+ * C's `attach_attrs` edge loop skips IGNORED edges and edges with no spline
+ * (`ED_spl(e) == NULL`) via `continue`, so such an edge is attached NEITHER
+ * `pos` NOR any of `lp`/`xlp`/`head_lp`/`tail_lp` — even when it carries a
+ * label. All five attributes therefore share this one gate.
+ * @see lib/common/output.c:349-353
+ */
+function edgeAttrsAttached(e: Edge): boolean {
+  return e.info.edge_type !== IGNORED && e.info.spl != null;
+}
+
+/**
+ * Append the leaf-field rectangles of a record node, mirroring the recursion in
+ * `set_record_rects`: a field with sub-fields contributes nothing itself, while
+ * a LEAF field (`n_flds == 0`) contributes its box translated by the node centre
+ * as `llx,lly,urx,ury` at `%.5g`. C emits each field followed by a space and
+ * then pops the trailing one — joining with a single space is equivalent.
+ * @see lib/common/output.c:215 set_record_rects
+ */
+function appendRecordRects(n: Node, f: FieldT, out: string[]): void {
+  const c = n.info.coord;
+  if (f.n_flds === 0) {
+    out.push(
+      gfmt5(f.b.ll.x + c.x) + ',' + gfmt5(f.b.ll.y + c.y) + ',' +
+      gfmt5(f.b.ur.x + c.x) + ',' + gfmt5(f.b.ur.y + c.y),
+    );
+  }
+  for (let i = 0; i < f.n_flds; i++) appendRecordRects(n, f.fld![i], out);
+}
+
+/**
+ * The `lp`/`lwidth`/`lheight` triple for a graph or cluster, in C's order.
+ * `rec_attach_bb` attaches them to the root graph AND recursively to every
+ * cluster, but ONLY when the graph carries a label with non-empty text
+ * (`GD_label(g) && GD_label(g)->text[0]`) — an absent or empty-text label emits
+ * none of the three. `lp` is the label centre in points (`%.5g`); `lwidth` and
+ * `lheight` are the label's `dimen` converted to inches and written `%.2f`.
+ * @see lib/common/output.c:239-248 rec_attach_bb
+ */
+function graphLabelAttrs(g: Graph): string[] {
+  const label = g.info.label as TextlabelT | undefined;
+  if (!label || label.text.length === 0) return [];
+  return [
+    'lp="' + lpStr(label.pos) + '"',
+    'lwidth=' + gfmt2(label.dimen.x / POINTS_PER_INCH),
+    'lheight=' + gfmt2(label.dimen.y / POINTS_PER_INCH),
+  ];
 }
 
 // ---------------------------------------------------------------------------
@@ -1249,6 +1322,7 @@ export class XdotRenderer implements RendererPlugin {
     if (d?.draw) parts.push(this.drawAttr('_draw_', d.draw));
     if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     parts.push('bb="' + this.bbStr(g) + '"');
+    parts.push(...graphLabelAttrs(g));
     parts.push('xdotversion="' + XDOT_VERSION + '"');
     return parts.join(' ');
   }
@@ -1262,6 +1336,9 @@ export class XdotRenderer implements RendererPlugin {
     const parts: string[] = [this.drawAttr('_draw_', d?.draw ?? '')];
     if (d?.ldraw) parts.push(this.drawAttr('_ldraw_', d.ldraw));
     if (sg.info.bb) parts.push('bb="' + this.bbStr(sg) + '"');
+    // rec_attach_bb recurses into GD_clust, so a labelled cluster carries the
+    // same lp/lwidth/lheight triple as the root. @see lib/common/output.c:249
+    parts.push(...graphLabelAttrs(sg));
     return parts.join(' ');
   }
 
@@ -1274,6 +1351,21 @@ export class XdotRenderer implements RendererPlugin {
     // clobber ND_width/height while the tile survives in lw/rw/ht.
     let s = 'pos="' + gfmt5(info.coord.x) + ',' + gfmt5(info.coord.y) + '"' +
       ' width=' + gfmt5((info.lw + info.rw) / 72) + ' height=' + gfmt5(info.ht / 72);
+    // xlp — only when the node HAS an xlabel AND the xlabel placer actually set
+    // its position (`ND_xlabel(n)->set`). An xlabel that was never placed is
+    // omitted entirely. @see lib/common/output.c:309-313
+    const xlabel = info.xlabel as TextlabelT | undefined;
+    if (xlabel && xlabel.set) s += ' xlp="' + lpStr(xlabel.pos) + '"';
+    // rects — record field boxes. C gates on the SHAPE NAME being exactly
+    // "record" (`strcmp(ND_shape(n)->name, "record") == 0`), so `Mrecord` and
+    // HTML-table nodes get NO rects; confirmed against the native oracle.
+    // @see lib/common/output.c:314-317
+    const shape = info.shape as ShapeDesc | undefined;
+    if (shape?.name === 'record') {
+      const rects: string[] = [];
+      appendRecordRects(n, info.shape_info as FieldT, rects);
+      s += ' rects="' + rects.join(' ') + '"';
+    }
     const d = this.draws.get(n);
     if (d?.draw) s += ' ' + this.drawAttr('_draw_', d.draw);
     if (d?.ldraw) s += ' ' + this.drawAttr('_ldraw_', d.ldraw);
@@ -1299,6 +1391,20 @@ export class XdotRenderer implements RendererPlugin {
       // INPUT's own pos attribute intact and write.c emits it verbatim.
       const inPos = e.attrs.get('pos');
       if (inPos !== undefined) parts.push('pos="' + agcanonEscape(inPos) + '"');
+    }
+    // The label-position attributes live inside the SAME loop that writes `pos`
+    // (output.c:377-396), so they are attached only for a routed, non-IGNORED
+    // edge. Note the asymmetry C encodes: `lp`/`head_lp`/`tail_lp` are emitted
+    // whenever the label EXISTS, but `xlp` additionally requires `->set` — an
+    // unplaced xlabel is omitted. Order mirrors C: lp, xlp, head_lp, tail_lp.
+    if (edgeAttrsAttached(e)) {
+      const info = e.info;
+      if (info.label) parts.push('lp="' + lpStr(info.label.pos) + '"');
+      if (info.xlabel && info.xlabel.set) {
+        parts.push('xlp="' + lpStr(info.xlabel.pos) + '"');
+      }
+      if (info.head_label) parts.push('head_lp="' + lpStr(info.head_label.pos) + '"');
+      if (info.tail_label) parts.push('tail_lp="' + lpStr(info.tail_label.pos) + '"');
     }
     return parts.join(' ');
   }
