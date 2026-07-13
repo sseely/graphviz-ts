@@ -18,6 +18,8 @@ import { makeNodeInfo } from '../model/nodeInfo.js';
 import { NODE_XLABEL } from '../layout/dot/rank.js';
 import { commonInitNode } from './nodeinit.js';
 import { HTML_STRING_MARK } from './html-string.js';
+import { parse } from '../parser/index.js';
+import { render } from '../render/public.js';
 
 const stubMeasurer: TextMeasurer = { measure: () => ({ w: 10, h: 5 }) };
 
@@ -231,5 +233,114 @@ describe('commonInitNode — html xlabel bits', () => {
   it('plain-text xlabel remains html=false', () => {
     const { n } = nodeWithXlabel('plain');
     expect((n.info.xlabel as TextlabelT).html).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// xlabel on RECORD shapes — @see lib/common/utils.c:441-453
+//
+// C's common_init_node runs the same three steps for EVERY shape: make_label
+// (:441, with is_record only selecting the raw-text branch of labels.c:139),
+// then ND_xlabel (:443-447), then the shape's initfn (:453). SH_RECORD selects
+// initfn=record_init; it is NOT a reason to skip the xlabel. The port used to
+// early-return on the record branch and never create ND_xlabel, so record and
+// Mrecord nodes silently lost their xlabel: no placement, no `_ldraw_` text op,
+// no `xlp` attribute, and a graph `bb` short by the xlabel's extent.
+//
+// The corpus cannot catch this — record ∩ xlabel is EMPTY across all 180
+// corpus inputs — so these are hand-written regressions.
+// ---------------------------------------------------------------------------
+
+/** Init a node of the given shape carrying an xlabel. */
+function shapedNodeWithXlabel(shape: string): { g: Graph; n: Node } {
+  const g = makeGraph();
+  const n = addNode(g, 'A', { shape, label: '<p1>x|<p2>y', xlabel: 'NX' });
+  commonInitNode(n, g);
+  return { g, n };
+}
+
+describe.each(['record', 'Mrecord', 'box'])('commonInitNode — xlabel on shape=%s', (shape) => {
+  it('creates ND_xlabel with the attr text', () => {
+    const { n } = shapedNodeWithXlabel(shape);
+    expect(n.info.xlabel).toBeDefined();
+    expect((n.info.xlabel as TextlabelT).text).toBe('NX');
+  });
+
+  it('measures the xlabel dimen (stub measurer: 10x5)', () => {
+    const { n } = shapedNodeWithXlabel(shape);
+    const xl = n.info.xlabel as TextlabelT;
+    expect(xl.dimen.x).toBe(10);
+    expect(xl.dimen.y).toBe(5);
+  });
+
+  it('sets the NODE_XLABEL bit on the root has_labels', () => {
+    const { g } = shapedNodeWithXlabel(shape);
+    expect((g.root.info.has_labels ?? 0) & NODE_XLABEL).toBe(NODE_XLABEL);
+  });
+
+  it('still builds the main label and sizes the node', () => {
+    const { n } = shapedNodeWithXlabel(shape);
+    expect(n.info.label).toBeDefined();
+    expect(n.info.ht).toBeGreaterThan(0);
+    expect((n.info.lw ?? 0) + (n.info.rw ?? 0)).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// End-to-end: the xlabel must survive placement and reach the xdot output.
+// Values below are the native oracle's
+// (`GVBINDIR=/tmp/ghl ~/git/graphviz/build/cmd/dot/dot -Txdot -Kdot`).
+// ---------------------------------------------------------------------------
+
+/** Render one node of `shape` with xlabel "NX" plus a plain box, to xdot. */
+function renderXdotWithXlabel(shape: string): string {
+  const g = parse(
+    `digraph { r [shape=${shape}, label="<p1>x|<p2>y", xlabel="NX"]; ` +
+      `s [shape=box, xlabel="BX"]; r -> s }`,
+  );
+  return render(g, 'xdot', { engine: 'dot' });
+}
+
+/** The attribute block xdot emits for node `name`. */
+function nodeBlock(xdot: string, name: string): string {
+  const line = xdot.split('\n').find((l) => l.trimStart().startsWith(`${name} [`));
+  expect(line, `no xdot block for node ${name}`).toBeDefined();
+  return line!;
+}
+
+describe.each(['record', 'Mrecord', 'box'])('xdot output — xlabel on shape=%s', (shape) => {
+  it('emits an xlp attribute for the xlabeled node', () => {
+    expect(nodeBlock(renderXdotWithXlabel(shape), 'r')).toMatch(/xlp="[-\d.,]+"/);
+  });
+
+  it('emits the xlabel text as an _ldraw_ text op', () => {
+    // T <x> <y> <justify> <width> <len> -<text>; the xlabel text is "NX" (len 2).
+    expect(nodeBlock(renderXdotWithXlabel(shape), 'r')).toMatch(/_ldraw_="[^"]*T [-\d.]+ [-\d.]+ 0 [\d.]+ 2 -NX/);
+  });
+
+  it('the plain box node keeps its own xlabel (control)', () => {
+    expect(nodeBlock(renderXdotWithXlabel(shape), 's')).toMatch(/_ldraw_="[^"]*2 -BX/);
+  });
+});
+
+describe('xdot output — record xlabel matches the native oracle', () => {
+  // Oracle (dot -Txdot -Kdot) for
+  //   digraph { r [shape=record, label="<p1>x|<p2>y", xlabel="NX"];
+  //             s [shape=box, xlabel="BX"]; r -> s }
+  // r: xlp="10.11,117.4", _ldraw_ ... T 10.11 113.2 0 20.22 2 -NX
+  // graph bb="0,0,74.221,125.8" — the bb includes the xlabel's extent; before
+  // the fix the port emitted bb="0,0,73.448,109", short by the xlabel.
+  const xdot = renderXdotWithXlabel('record');
+
+  it('places the record xlabel at the oracle position', () => {
+    expect(nodeBlock(xdot, 'r')).toContain('xlp="10.11,117.4"');
+  });
+
+  it('draws the record xlabel text at the oracle position', () => {
+    expect(nodeBlock(xdot, 'r')).toContain('T 10.11 113.2 0 20.22 2 -NX');
+  });
+
+  it('grows the graph bb to cover the xlabel', () => {
+    expect(xdot).toContain('bb="0,0,74.221,125.8"');
   });
 });

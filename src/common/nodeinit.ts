@@ -19,7 +19,7 @@ import { assignShapeInfo, buildNodeLabel, nodeAttr, readFontAttrs } from './poly
 import { makeAnyLabel } from './make-label.js';
 import { isHtmlValue, htmlValueContent } from './html-string.js';
 import { NODE_XLABEL } from '../layout/dot/rank.js';
-import { recordNodeInit } from './record.js';
+import { recordInit, recordMakeLabel } from './record.js';
 import {
   GAP,
   gvNodesize,
@@ -231,7 +231,13 @@ function initNodeFromLabel(n: Node, g: Graph, measurer: TextMeasurer): boolean {
   const shape = bindShape(nodeAttr(n, g, 'shape') ?? 'ellipse', nodeAttr(n, g, 'shapefile'));
   n.info.shape = shape;
   if (shape.kind === ShapeKind.SH_RECORD) {
-    recordNodeInit(n, g, measurer); // sets lw/rw/ht from the field tree
+    // C runs the SAME three steps for every shape: make_label (with the
+    // is_record flag), then ND_xlabel, then the shape's initfn. SH_RECORD
+    // only selects make_label's is_record flag and initfn=record_init — it is
+    // NOT a reason to skip the xlabel (utils.c:441/443/453).
+    recordMakeLabel(n, g, measurer);
+    initNodeXLabel(n, g, measurer);
+    recordInit(n, g, measurer); // initfn: sets lw/rw/ht from the field tree
     return true;
   }
   buildNodeLabel(n, g, measurer);

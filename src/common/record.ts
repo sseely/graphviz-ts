@@ -411,15 +411,32 @@ export function recordInit(n: Node, g: Graph, measurer: TextMeasurer): void {
 }
 
 /**
- * Build the node's record label and field tree; the caller must have bound
- * `n.info.shape` first. Equivalent to common_init_node's label construction
- * followed by record_init.
- * @see lib/common/utils.c:common_init_node
+ * Build ND_label for a record node — common_init_node's make_label call with
+ * is_record=true, which stores the raw text for record_init to parse.
+ * The caller must have bound `n.info.shape` first.
+ * @see lib/common/utils.c:441 (make_label with shapeOf(n) == SH_RECORD)
+ * @see lib/common/labels.c:139 (is_record branch: rv->text = gv_strdup(str))
  */
-export function recordNodeInit(n: Node, g: Graph, measurer: TextMeasurer): void {
+export function recordMakeLabel(n: Node, g: Graph, measurer: TextMeasurer): void {
   const labelText = nodeAttr(n, g, 'label') ?? n.name;
   const { fontname, fontsize, fontcolor } = readFontAttrs(n, g);
   n.info.label = makeLabel(labelText, fontname, fontsize, fontcolor, measurer);
+}
+
+/**
+ * Build the node's record label and field tree; the caller must have bound
+ * `n.info.shape` first. Equivalent to common_init_node's label construction
+ * followed by record_init.
+ *
+ * NOTE: C creates ND_xlabel BETWEEN these two steps (utils.c:443-447, before
+ * the initfn dispatch on :453). commonInitNode therefore does not call this
+ * wrapper — it calls recordMakeLabel / initNodeXLabel / recordInit in C's
+ * order. This wrapper remains for the render-time re-init path (poly_init),
+ * where C never creates xlabels.
+ * @see lib/common/utils.c:common_init_node
+ */
+export function recordNodeInit(n: Node, g: Graph, measurer: TextMeasurer): void {
+  recordMakeLabel(n, g, measurer);
   recordInit(n, g, measurer);
 }
 
