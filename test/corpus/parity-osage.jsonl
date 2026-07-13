@@ -742,14 +742,13 @@
 {"id":"graphs-xx","size":102329,"status":"pass"}
 {"id":"2095_1","size":105083,"status":"pass"}
 {"id":"graphs-root","size":128221,"status":"pass"}
-{"id":"linux.i386-b29","size":136753,"status":"diverged","nDiffs":2,"firstDiff":"edge:Node14663->Node14649#0 _ldraw_ edge:Node14663->Node14649#0/_ldraw_/op[2].text[0]: 878.28 vs 841.06"}
-{"id":"share-b29","size":137802,"status":"diverged","nDiffs":2,"firstDiff":"edge:Node14663->Node14649#0 _ldraw_ edge:Node14663->Node14649#0/_ldraw_/op[2].text[0]: 841.06 vs 878.28"}
+{"id":"linux.i386-b29","size":136753,"status":"diverged","nDiffs":3,"firstDiff":"edge:Node14663->Node14649#0 _ldraw_ edge:Node14663->Node14649#0/_ldraw_/op[2].text[0]: 878.28 vs 841.06"}
+{"id":"share-b29","size":137802,"status":"diverged","nDiffs":3,"firstDiff":"edge:Node14663->Node14649#0 _ldraw_ edge:Node14663->Node14649#0/_ldraw_/op[2].text[0]: 841.06 vs 878.28"}
 {"id":"windows-b29","size":149114,"status":"pass"}
 {"id":"linux.i386-b102","size":161479,"status":"pass"}
 {"id":"share-b102","size":161479,"status":"pass"}
 {"id":"windows-b102","size":184125,"status":"pass"}
 {"id":"graphs-b81","size":191024,"status":"pass"}
-{"id":"1652","size":240391,"status":"diverged","nDiffs":2,"firstDiff":"edge:Op_1091->Op_1092#0 _ldraw_ edge:Op_1091->Op_1092#0/_ldraw_/op[2].text[0]: 2266.75 vs 2332.07"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"pass"}
 {"id":"nshare-root_twopi","size":287916,"status":"pass"}

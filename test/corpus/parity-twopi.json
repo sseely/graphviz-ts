@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-13T17:43:59.232Z",
+  "generatedAt": "2026-07-13T21:18:10.581Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "twopi",
   "tolerance": 0.01,
-  "total": 762,
+  "total": 761,
   "counts": {
-    "pass": 740,
+    "pass": 739,
     "diverged": 14,
     "oracle-error": 8,
     "port-error": 0,
@@ -2757,14 +2757,14 @@
       "id": "graphs-arrows",
       "size": 2029,
       "status": "diverged",
-      "nDiffs": 32,
+      "nDiffs": 40,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "graphs-arrowsize",
       "size": 2039,
       "status": "diverged",
-      "nDiffs": 64,
+      "nDiffs": 72,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[0]: 289.55 vs 297.2"
     },
     {
@@ -2791,7 +2791,7 @@
       "id": "graphs-newarrows",
       "size": 2045,
       "status": "diverged",
-      "nDiffs": 32,
+      "nDiffs": 40,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
@@ -3239,14 +3239,14 @@
       "id": "share-newarrows",
       "size": 6364,
       "status": "diverged",
-      "nDiffs": 12,
+      "nDiffs": 20,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "windows-newarrows",
       "size": 6364,
       "status": "diverged",
-      "nDiffs": 12,
+      "nDiffs": 20,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
@@ -3299,22 +3299,22 @@
       "id": "linux.x86-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 32,
+      "nDiffs": 40,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "macosx-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 32,
+      "nDiffs": 40,
       "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "nshare-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 25,
-      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"
+      "nDiffs": 40,
+      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "graphs-awilliams",
@@ -3696,7 +3696,7 @@
       "id": "2239",
       "size": 48090,
       "status": "diverged",
-      "nDiffs": 1,
+      "nDiffs": 2,
       "firstDiff": "edge:srtpdec1_0x5641244e6b50_rtcp_src_0x7f06a000ebd0->_proxypad10_0x5641244e58c0#0 _ldraw_ edge:srtpdec1_0x5641244e6b50_rtcp_src_0x7f06a000ebd0->_proxypad10_0x5641244e58c0#0/_ldraw_/op[2].text[1]: 183.86 vs 173.06"
     },
     {
@@ -3718,7 +3718,7 @@
       "id": "graphs-b29",
       "size": 62931,
       "status": "diverged",
-      "nDiffs": 1,
+      "nDiffs": 2,
       "firstDiff": "edge:Node14732->Node14731#0 _ldraw_ edge:Node14732->Node14731#0/_ldraw_/op[2].text[1]: 368.1 vs 356.1"
     },
     {
@@ -3765,7 +3765,7 @@
       "id": "linux.i386-b29",
       "size": 136753,
       "status": "diverged",
-      "nDiffs": 1,
+      "nDiffs": 2,
       "firstDiff": "edge:Node14732->Node14731#0 _ldraw_ edge:Node14732->Node14731#0/_ldraw_/op[2].text[1]: 368.1 vs 356.1"
     },
     {
@@ -3796,11 +3796,6 @@
     {
       "id": "graphs-b81",
       "size": 191024,
-      "status": "pass"
-    },
-    {
-      "id": "1652",
-      "size": 240391,
       "status": "pass"
     },
     {
@@ -3843,7 +3838,7 @@
       "id": "2470",
       "size": 734358,
       "status": "diverged",
-      "nDiffs": 298,
+      "nDiffs": 596,
       "firstDiff": "edge:n13->n12#0 _ldraw_ edge:n13->n12#0/_ldraw_/op[2].text[0]: 7270.33 vs 7192.55"
     },
     {

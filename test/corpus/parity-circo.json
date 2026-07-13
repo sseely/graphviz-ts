@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-13T17:29:21.056Z",
+  "generatedAt": "2026-07-13T21:03:47.956Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "circo",
   "tolerance": 0.01,
-  "total": 762,
+  "total": 761,
   "counts": {
     "pass": 745,
     "diverged": 3,
-    "oracle-error": 14,
+    "oracle-error": 13,
     "port-error": 0,
     "timeout": 0
   },
@@ -3779,12 +3779,6 @@
       "id": "graphs-b81",
       "size": 191024,
       "status": "pass"
-    },
-    {
-      "id": "1652",
-      "size": 240391,
-      "status": "oracle-error",
-      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "1879",
