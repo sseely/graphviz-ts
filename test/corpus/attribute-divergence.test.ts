@@ -6,8 +6,11 @@
 // end-to-end by the corpus sweep, mirroring engine-walk.ts's and
 // oracle-error-classifier.ts's convention.
 
-import { describe, it, expect } from 'vitest';
-import { classifyBucket, dedupeRows } from './attribute-divergence.js';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { existsSync, writeFileSync, unlinkSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { classifyBucket, dedupeRows, runExclusive } from './attribute-divergence.js';
 import type { XdotDiff } from '../golden/compare-xdot.js';
 
 const META = '{"_meta":true,"oracleSha1":"abc","generatedAt":"2026-07-12T00:00:00.000Z"}';
@@ -15,6 +18,46 @@ const META = '{"_meta":true,"oracleSha1":"abc","generatedAt":"2026-07-12T00:00:0
 function row(id: string, verdict: string, injectedDiffs = 0): string {
   return JSON.stringify({ id, verdict, baseDiffs: 3, injectedDiffs, bucket: { shape: 'node/pos/numeric' } });
 }
+
+describe('runExclusive (sweep lock)', () => {
+  const LOCK = join(tmpdir(), `gvts-attr-test-${process.pid}.lock`);
+  afterEach(() => { try { unlinkSync(LOCK); } catch { /* already gone */ } });
+
+  it('runs the body and releases the lock afterwards', async () => {
+    const out = await runExclusive(LOCK, async () => {
+      expect(existsSync(LOCK)).toBe(true); // held for the duration
+      return 'ran';
+    });
+    expect(out).toBe('ran');
+    expect(existsSync(LOCK)).toBe(false); // released
+  });
+
+  it('releases the lock even when the body throws', async () => {
+    await expect(runExclusive(LOCK, () => Promise.reject(new Error('boom'))))
+      .rejects.toThrow('boom');
+    expect(existsSync(LOCK)).toBe(false);
+  });
+
+  it('clears a stale lock whose owning pid is dead', async () => {
+    // pid 2^22 is above the max pid on macOS/Linux, so it cannot be alive.
+    writeFileSync(LOCK, String(2 ** 22));
+    const out = await runExclusive(LOCK, () => Promise.resolve('ran anyway'));
+    expect(out).toBe('ran anyway');
+  });
+
+  it('refuses to start when a live sweep already holds the lock', async () => {
+    writeFileSync(LOCK, String(process.pid)); // this process is, definitionally, alive
+    const exit = vi.spyOn(process, 'exit').mockImplementation(((): never => {
+      throw new Error('EXIT');
+    }) as never);
+    const err = vi.spyOn(console, 'error').mockImplementation(() => {});
+    await expect(runExclusive(LOCK, () => Promise.resolve('should not run')))
+      .rejects.toThrow('EXIT');
+    expect(err.mock.calls[0]?.[0]).toContain('already running');
+    exit.mockRestore();
+    err.mockRestore();
+  });
+});
 
 describe('dedupeRows', () => {
   it('keeps one row per id, last-write-wins', () => {
