@@ -45,6 +45,8 @@ const INT_MAX = 2147483647;
  * @see lib/sfdpgen/sfdpinit.c:sfdp_init_node_edge
  */
 export function sfdpInitGraph(g: Graph): void {
+  // The root graph label is created by the shared graphInit (do_graph_label),
+  // called once from sfdpLayout — C's graph_init runs before sfdp_layout.
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g); // common_init_node inside neato_init_node
   for (const n of g.nodes.values()) neatoInitNode(n);

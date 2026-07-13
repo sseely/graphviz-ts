@@ -11,195 +11,49 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { commonInitNode, lateInt, lateDouble, layoutMeasurer } from '../../common/nodeinit.js';
-import { POINTS_PER_INCH } from '../../model/geom.js';
-import { makeDrawing } from '../../model/layoutParams.js';
-import type { RatioKind } from '../../model/layoutParams.js';
+import { commonInitNode, lateInt } from '../../common/nodeinit.js';
 import { nonconstraintEdge } from './classify.js';
 import { nodeAttr } from '../../common/poly-init.js';
 import { NORMAL, deleteFastNode, removeFromRank } from './fastgr.js';
 import { mapbool } from './rank.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
-import { doGraphLabel } from './graph-label.js';
+import { graphInit } from '../../common/graph-init.js';
 import { agsubg, agdelnode, agdelsubg } from '../../model/cgraph-ops.js';
 import { nodesInSeq } from './decomp.js';
 
 // ---------------------------------------------------------------------------
-// RANKDIR constants
+// RANKDIR constants — re-exported from the shared graph_init port, which owns
+// them (they are const.h values, not dot's). Kept exported here so the existing
+// importers (postproc, compass-port, splines-flat, …) do not have to churn.
 // @see lib/common/const.h RANKDIR_TB/LR/BT/RL
 // ---------------------------------------------------------------------------
 
-/** @see lib/common/const.h:RANKDIR_TB */
-export const RANKDIR_TB = 0;
-/** @see lib/common/const.h:RANKDIR_LR */
-export const RANKDIR_LR = 1;
-/** @see lib/common/const.h:RANKDIR_BT */
-export const RANKDIR_BT = 2;
-/** @see lib/common/const.h:RANKDIR_RL */
-export const RANKDIR_RL = 3;
+export { RANKDIR_TB, RANKDIR_LR, RANKDIR_BT, RANKDIR_RL } from '../../common/graph-init.js';
 
 // ---------------------------------------------------------------------------
-// nodesep / ranksep separation defaults — @see lib/common/const.h:85-88
-// ---------------------------------------------------------------------------
-
-const DEFAULT_NODESEP = 0.25;
-const MIN_NODESEP = 0.02;
-const DEFAULT_RANKSEP = 0.5;
-const MIN_RANKSEP = 0.02;
-
-/** Inches→points exactly as C's POINTS macro: ROUND(in * 72). @see geom.h:62 */
-function points(inches: number): number {
-  return Math.round(inches * POINTS_PER_INCH);
-}
-
-/**
- * Parse the `nodesep` and `ranksep` graph attributes into g.info, mirroring
- * graph_init. nodesep is a plain late_double; ranksep additionally honours the
- * `equally` keyword (sets exact_ranksep) and a bare number that may be followed
- * by text. Absent attrs yield POINTS(DEFAULT_*) = 18 / 36, matching the prior
- * dotInitSubg defaults (so non-setting graphs stay identical).
- * @see lib/common/input.c:665-681
- */
-function parseSepAttrs(g: Graph): void {
-  g.info.nodesep = points(lateDouble(g.attrs.get('nodesep'), DEFAULT_NODESEP, MIN_NODESEP));
-  const p = g.attrs.get('ranksep');
-  let xf = DEFAULT_RANKSEP;
-  if (p !== undefined && p !== '') {
-    // C: sscanf(p, "%lf", &xf) == 0 → no leading number → DEFAULT_RANKSEP.
-    const parsed = Number.parseFloat(p);
-    xf = Number.isNaN(parsed) ? DEFAULT_RANKSEP : Math.max(parsed, MIN_RANKSEP);
-    if (p.includes('equally')) g.info.exact_ranksep = true;
-  }
-  g.info.ranksep = points(xf);
-}
-
-/** sscanf("%lf")-style float token. @see lib/common/input.c:476 getdoubles2ptf */
-const SIZE_FLOAT = '[-+]?[0-9.]+(?:[eE][-+]?[0-9]+)?';
-const SIZE_XY_RE = new RegExp(`^\\s*(${SIZE_FLOAT})\\s*,\\s*(${SIZE_FLOAT})(.?)`);
-const SIZE_X_RE = new RegExp(`^\\s*(${SIZE_FLOAT})(.?)`);
-
-/**
- * Local port of `getdoubles2ptf(g,"size",…)`: parse `"x,y"` (or a lone `"x"`
- * meaning square) → points, with a trailing `!` as the *filled* flag. Returns
- * null when absent or non-positive. Re-derived here rather than imported from
- * `gvc/viewport` to avoid a layout→render dependency edge (ADR-2 deviation, same
- * result). @see lib/common/input.c:476 getdoubles2ptf
- */
-function parseSizePoints(raw: string | undefined): { x: number; y: number; filled: boolean } | null {
-  if (raw === undefined) return null;
-  const xy = SIZE_XY_RE.exec(raw);
-  if (xy) {
-    const xf = Number(xy[1]);
-    const yf = Number(xy[2]);
-    if (xf > 0 && yf > 0) return { x: points(xf), y: points(yf), filled: xy[3] === '!' };
-  }
-  const x = SIZE_X_RE.exec(raw);
-  if (x) {
-    const xf = Number(x[1]);
-    if (xf > 0) return { x: points(xf), y: points(xf), filled: x[2] === '!' };
-  }
-  return null;
-}
-
-/**
- * Port of `setRatio` (input.c:576): map the `ratio` attr to a RatioKind. A
- * positive numeric value is R_VALUE; anything else absent/unrecognized → none.
- * @see lib/common/input.c:576 setRatio
- */
-function parseRatioKind(g: Graph): RatioKind | undefined {
-  const p = g.attrs.get('ratio');
-  if (p === undefined) return undefined;
-  if (p === 'auto') return 'auto';
-  if (p === 'compress') return 'compress';
-  if (p === 'expand') return 'expand';
-  if (p === 'fill') return 'fill';
-  return Number.parseFloat(p) > 0 ? 'value' : undefined;
-}
-
-/**
- * Populate `g.info.drawing` for the ratio kinds whose layout reshape is ported
- * AND corpus-validated: `compress` (compressGraph x-NS, position-cluster.ts) and
- * `fill` (setAspect R_FILL, position-bbox.ts — scales node coords by
- * size/bbox per axis). `expand`/`value` have the math in setAspect but no corpus
- * coverage, and `auto` needs `idealsize` (unported); all three stay deferred —
- * leaving `drawing` unset keeps setAspect/compressGraph a no-op for them.
- * @see lib/dotgen/position.c:set_aspect (904), compress_graph (501);
- *      lib/common/input.c:576 setRatio, 694 size
- */
-function parseRatioDrawing(g: Graph): void {
-  const kind = parseRatioKind(g);
-  if (kind !== 'compress' && kind !== 'fill') return;
-  const sz = parseSizePoints(g.attrs.get('size'));
-  g.info.drawing = makeDrawing({
-    ratioKind: kind,
-    size: sz ? { x: sz.x, y: sz.y } : { x: 0, y: 0 },
-    filled: sz?.filled ?? false,
-  });
-}
-
-// ---------------------------------------------------------------------------
-// dotGraphInit — parse rankdir and propagate to subgraphs (graph_init semantics)
-// @see lib/common/input.c:600-663 graph_init
+// dotGraphInit — dot's binding of the shared graph_init
+// @see lib/common/input.c:600 graph_init
 // @see lib/dotgen/dotinit.c:352 initSubg (GD_rankdir2 propagation)
 // ---------------------------------------------------------------------------
 
 /**
- * Parse the `rankdir` graph attribute and store the encoded value on g.info.rankdir.
- * Mirrors C's graph_init SET_RANKDIR with use_rankdir=true for the dot engine:
- *   SET_RANKDIR(g, (rankdir << 2) | rankdir)
- * Also sets g.info.flip = (rankdir & 1) == 1 (true for LR and RL).
+ * dot's call into the engine-agnostic `graph_init`, plus the one piece of
+ * rankdir handling that is genuinely dot's: propagating GD_rankdir2 down to the
+ * clusters (C does this in dot's own `initSubg`, dotinit.c:352 — NOT in
+ * graph_init).
  *
- * @see lib/common/input.c:600-663 graph_init
- * @see lib/common/types.h:GD_rankdir2
+ * dot is the only engine with `LAYOUT_USES_RANKDIR`
+ * (plugin/dot_layout/gvlayout_dot_layout.c:27), hence `useRankdir = true`: the
+ * effective rankdir (bits 0-1) tracks the attr instead of being pinned to TB.
+ *
+ * @see lib/common/input.c:600 graph_init
+ * @see lib/gvc/gvlayout.c:81 (graph_init(g, LAYOUT_USES_RANKDIR))
+ * @see lib/dotgen/dotinit.c:352 initSubg
  */
-/**
- * graph_init's rankdir handling for engines WITHOUT LAYOUT_USES_RANKDIR:
- * SET_RANKDIR(g, rankdir << 2) — the REAL rankdir lands in bits 2-3 (read by
- * record_init via GD_realflip) while the EFFECTIVE rankdir (bits 0-1) stays
- * TB so nothing rotates or flips. @see lib/common/input.c:661-663
- */
-export function neutralGraphRankdir(g: Graph): void {
-  let rankdir = RANKDIR_TB;
-  const p = g.attrs.get('rankdir');
-  if (p === 'LR') rankdir = RANKDIR_LR;
-  else if (p === 'BT') rankdir = RANKDIR_BT;
-  else if (p === 'RL') rankdir = RANKDIR_RL;
-  g.info.rankdir = rankdir << 2;
-  g.info.flip = false;
-}
-
 export function dotGraphInit(g: Graph): void {
-  // EdgeLabelsDone reset at layout start (AD2 per-layout semantics)
-  // @see lib/common/input.c:711
-  g.info.edgeLabelsDone = false;
-  let rankdir = RANKDIR_TB;
-  const p = g.attrs.get('rankdir');
-  if (p === 'LR') rankdir = RANKDIR_LR;
-  else if (p === 'BT') rankdir = RANKDIR_BT;
-  else if (p === 'RL') rankdir = RANKDIR_RL;
-  // SET_RANKDIR: effective rankdir in bits 0-1, real rankdir in bits 2-3
-  g.info.rankdir = (rankdir << 2) | rankdir;
-  // GD_flip: bit 0 of effective rankdir
-  g.info.flip = (rankdir & 1) === 1;
-  // Propagate to subgraphs (dotinit.c:352: GD_rankdir2(sg) = GD_rankdir2(g))
+  graphInit(g, true);
   initSubgraphRankdir(g);
-  // nodesep / ranksep (input.c:665-681) — parsed here so the values are set
-  // before dotInitSubg's defaults and before ranking uses GD_ranksep.
-  parseSepAttrs(g);
-  // ratio + size → g.info.drawing (input.c:693-694: setRatio then size). Scoped
-  // to ratio=compress (compressGraph) + ratio=fill (setAspect R_FILL).
-  // @see input.c:576,694
-  parseRatioDrawing(g);
-  // concentrate (input.c:708-709): Concentrate = mapbool(agget(g,"concentrate")).
-  // Gates both the class2 merge path (classify.ts) and dot_concentrate
-  // (position.ts). @see lib/common/input.c:708, lib/common/globals.h:Concentrate
-  g.info.concentrate = mapbool(g.attrs.get('concentrate'));
-  // Root graph label: dimensions measured here so bb expansion in gvPostprocess
-  // has the dimen available. Cluster labels are handled by buildSkeleton/rank.ts.
-  // HTML labels not yet supported — plain-text only.
-  // @see lib/common/input.c:719 (do_graph_label call at end of graph_init)
-  doGraphLabel(g, layoutMeasurer(g));
 }
 
 /**

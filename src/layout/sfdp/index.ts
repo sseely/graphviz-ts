@@ -14,6 +14,7 @@
 import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
 import { csrand } from '../../common/crand.js';
+import { graphInit } from '../../common/graph-init.js';
 import { setEdgeType } from '../dot/index.js';
 import { EDGETYPE_LINE, splineEdgesShifted } from '../neato/splines.js';
 import { sepFactor, DFLT_MARGIN } from '../neato/sep-factor.js';
@@ -172,6 +173,12 @@ function postprocess(g: Graph): void {
  * @see lib/sfdpgen/sfdpinit.c:sfdp_layout
  */
 export function sfdpLayout(g: Graph): void {
+  // C: gvLayoutJobs runs graph_init(g, LAYOUT_USES_RANKDIR) before sfdp_layout.
+  // sfdp does not set the flag → useRankdir=false. This is also the ONLY place
+  // sfdp gets a rankdir at all: it previously never ran SET_RANKDIR, so
+  // GD_realrankdir stayed TB even for rankdir=LR graphs (record shapes read it).
+  // @see lib/common/input.c:600, lib/gvc/gvlayout.c:81
+  graphInit(g, false);
   sfdpInitGraph(g);
   csrand(1); // process-start rand() state on the reference platform
 
