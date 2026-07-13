@@ -16,6 +16,7 @@ import { setEdgeType } from '../dot/index.js';
 import { EDGETYPE_LINE, EDGETYPE_NONE, splineEdges } from '../neato/splines.js';
 import { neatoSetAspect } from '../neato/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
+import { gvPostprocess } from '../../common/postproc.js';
 import { fdpInitParams } from './tlayout-parms.js';
 import { fdpInitNodeEdge, fdpCleanup } from './init.js';
 import { fdpLayout, mkClusters } from './layout.js';
@@ -75,9 +76,12 @@ export function fdpLayoutEngine(g: Graph): void {
   const et = g.info.flags & 0xf;
   if (et !== EDGETYPE_NONE) fdpSplines(g);
 
-  // C gv_postprocess: the drawing is already origin-based (finalCC);
-  // place cluster labels for emission.
+  // C gv_postprocess(g, 0): the drawing is already origin-based (finalCC), so
+  // translation is suppressed — but the pass still runs addXLabels, which is
+  // what positions the *edge* labels under fdp (fdpSplines never sets
+  // ED_label(e)->pos). @see lib/fdpgen/layout.c:1076
   placeGraphLabel(g);
+  gvPostprocess(g, false);
 }
 
 /**

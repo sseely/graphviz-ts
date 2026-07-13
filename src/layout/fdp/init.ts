@@ -15,7 +15,9 @@
 import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
-import { commonInitNodeEdge, lateDouble } from '../../common/nodeinit.js';
+import { commonInitNodeEdge, lateDouble, layoutMeasurer } from '../../common/nodeinit.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
+import type { TextMeasurer } from '../../common/textmeasure.js';
 import { fdpParms } from './tlayout-parms.js';
 import { fdpData, P_SET, P_PIN } from './fdp-model.js';
 
@@ -45,10 +47,16 @@ function applyPosAttr(np: Node, p: string): void {
   fdpData(np).pinned = pinned ? P_PIN : P_SET;
 }
 
-/** Per-edge weight/length resolution. @see lib/fdpgen/fdpinit.c:init_edge */
-function initEdge(e: Edge): void {
+/**
+ * Per-edge weight/length resolution, then common_init_edge — which creates
+ * ED_label(e) and ORs GD_has_labels with EDGE_LABEL so addXLabels (in
+ * gv_postprocess) can position the edge label.
+ * @see lib/fdpgen/fdpinit.c:init_edge (common_init_edge at fdpinit.c:73)
+ */
+function initEdge(e: Edge, g: Graph, measurer: TextMeasurer | undefined): void {
   e.info.factor = lateDouble(e.attrs.get('weight'), 1.0, 0.0);
   e.info.dist = lateDouble(e.attrs.get('len'), fdpParms.K, 0.0);
+  if (measurer !== undefined) initEdgeLabels(e, g, measurer);
 }
 
 /** Per-node init: geometry + pos allocation. @see fdpinit.c:init_node */
@@ -75,9 +83,10 @@ export function fdpInitNodeEdge(g: Graph): void {
   for (const n of g.nodes.values()) {
     initNode(n, i++);
   }
+  const measurer = layoutMeasurer(g);
   for (const n of g.nodes.values()) {
     for (const e of n.outEdges(g)) {
-      initEdge(e);
+      initEdge(e, g, measurer);
     }
   }
   initialPositions(g);

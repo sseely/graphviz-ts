@@ -14,7 +14,10 @@ import type { Graph } from '../../model/graph.js';
 import { setEdgeType } from '../dot/index.js';
 import { EDGETYPE_LINE } from '../neato/splines.js';
 import { neatoInitNode } from '../neato/init.js';
-import { commonInitNodeEdge, lateDouble, lateInt } from '../../common/nodeinit.js';
+import {
+  commonInitNodeEdge, lateDouble, lateInt, layoutMeasurer,
+} from '../../common/nodeinit.js';
+import { initEdgeLabels } from '../../common/edge-label-init.js';
 import { aggetGraph } from '../fdp/fdp-model.js';
 import {
   type SpMatrix,
@@ -45,6 +48,18 @@ export function sfdpInitGraph(g: Graph): void {
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g); // common_init_node inside neato_init_node
   for (const n of g.nodes.values()) neatoInitNode(n);
+  // C sfdp_init_node_edge runs a second loop over out-edges calling
+  // sfdp_init_edge -> common_init_edge: it creates ED_label(e) and ORs
+  // GD_has_labels with EDGE_LABEL, which is what lets addXLabels (in
+  // dotneato_postprocess) position the edge label.
+  // @see lib/sfdpgen/sfdpinit.c:30 sfdp_init_edge
+  // @see lib/sfdpgen/sfdpinit.c:44 sfdp_init_node_edge (edge loop)
+  const measurer = layoutMeasurer(g);
+  if (measurer !== undefined) {
+    for (const n of g.nodes.values()) {
+      for (const e of n.outEdges(g)) initEdgeLabels(e, g, measurer);
+    }
+  }
 }
 
 /** @see lib/common/utils.c:mapbool */

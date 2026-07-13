@@ -401,7 +401,10 @@ export function placeRootLabel(g: Graph, dimen: { x: number; y: number }): void 
 // ---------------------------------------------------------------------------
 
 /**
- * Port of gv_postprocess with allowTranslation=1 (dotneato_postprocess path).
+ * Port of gv_postprocess. `allowTranslation` mirrors the C parameter:
+ * `dotneato_postprocess` (dot, sfdp, circo, twopi) and `neato_layout` pass 1;
+ * `fdp_layout` passes 0 (layout.c:1076) because fdp's finalCC has already
+ * placed the drawing at the origin.
  *
  * Order matches C: addXLabels → expand bb for root label → compute Offset →
  * translateDrawing → place_root_label.
@@ -413,15 +416,18 @@ export function placeRootLabel(g: Graph, dimen: { x: number; y: number }): void 
  * @see lib/common/postproc.c:gv_postprocess
  * @see lib/common/postproc.c:dotneato_postprocess
  */
-export function gvPostprocess(g: Graph): void {
+export function gvPostprocess(g: Graph, allowTranslation = true): void {
   Rankdir = g.info.rankdir & 0x3;
   // addXLabels at postproc.c:616 — after place_graph_label, before bb adjust.
   addXLabels(g);
   // Expand bb to make room for root graph label (postproc.c:619-655).
   const dimen = expandBbForRootLabel(g);
-  // Compute Offset from the (possibly expanded) bb, then translate.
-  Offset = computeOffset(g.info.bb, Rankdir);
-  translateDrawing(g);
+  // Compute Offset from the (possibly expanded) bb, then translate
+  // (postproc.c:656-674 — gated on allowTranslation).
+  if (allowTranslation) {
+    Offset = computeOffset(g.info.bb, Rankdir);
+    translateDrawing(g);
+  }
   // Place root graph label after translation (postproc.c:675-676).
   const rootLabel = g.info.label as TextlabelT | undefined;
   if (rootLabel && !rootLabel.set) {
