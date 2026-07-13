@@ -94,10 +94,81 @@ export function expandBounds(
   b.urx = Math.max(b.urx, x + rw + margin);
   b.ury = Math.max(b.ury, y + ht / 2 + margin);
 }
-/** Compute bounding box for a subgraph's nodes. @see lib/pack/pack.c:computeBB */
+/**
+ * Expand accumulated bounds by one edge's routed spline and its labels.
+ *
+ * C's `compute_bb` walks every out-edge of every node and expands the box over
+ * each bezier's control points, then over the edge's centre/head/tail/x labels
+ * when they are `set`. Splines that bulge outside the node hull — a self-loop,
+ * a curved or ported edge, a flat edge routed around a node — therefore belong
+ * to the graph box. Omitting them truncates the graph bb (and, since the
+ * background `filled_polygon` is drawn from the bb, the drawn background too):
+ * a lone node with a self-loop reports a 54pt-wide graph instead of 72pt,
+ * because the loop bulges 18pt to the node's right.
+ *
+ * `bz.size` — never `bz.list.length` — bounds the point loop: the point lists
+ * are over-allocated, exactly as C's `ED_spl(e)->list[i].size` bounds its own.
+ *
+ * @see lib/common/utils.c:633 compute_bb (the `for (e = agfstout(g, n); ...)` arm)
+ */
+function expandBoundsByEdge(
+  b: { llx: number; lly: number; urx: number; ury: number },
+  e: Edge, flip: boolean,
+): void {
+  const spl = e.info.spl;
+  if (spl !== undefined) {
+    for (let i = 0; i < spl.size; i++) {
+      const bz = spl.list[i];
+      if (bz === undefined) continue;
+      for (let j = 0; j < bz.size; j++) {
+        const p = bz.list[j];
+        if (p === undefined) continue;
+        b.llx = Math.min(b.llx, p.x);
+        b.lly = Math.min(b.lly, p.y);
+        b.urx = Math.max(b.urx, p.x);
+        b.ury = Math.max(b.ury, p.y);
+      }
+    }
+  }
+  for (const l of [e.info.label, e.info.head_label, e.info.tail_label, e.info.xlabel]) {
+    if (l === undefined || l.set !== true) continue;
+    // C addLabelBB: under flip (rankdir=LR/RL) the stored dimen axes swap.
+    // @see lib/common/utils.c:569 addLabelBB
+    const hw = (flip ? l.dimen.y : l.dimen.x) / 2;
+    const hh = (flip ? l.dimen.x : l.dimen.y) / 2;
+    b.llx = Math.min(b.llx, l.pos.x - hw);
+    b.lly = Math.min(b.lly, l.pos.y - hh);
+    b.urx = Math.max(b.urx, l.pos.x + hw);
+    b.ury = Math.max(b.ury, l.pos.y + hh);
+  }
+}
+
+/**
+ * Compute a graph's bounding box: node extents, plus every routed edge spline
+ * and edge label.
+ *
+ * This is the port of C's `compute_bb` — the final bb of every non-dot engine
+ * (neato/fdp/sfdp/circo/twopi/osage all reach it, and `pack` uses it for
+ * component boxes; dot sets its own bb in `set_aspect`). It was node-only until
+ * 2026-07-12, which truncated the box of any graph whose edges leave the node
+ * hull; see `expandBoundsByEdge`.
+ *
+ * DELIBERATE DEVIATION from C's `compute_bb`, which also expands over node
+ * xlabels, cluster bbs, and the graph label: the port already grows the bb for
+ * those in dedicated passes (the xlabel placement pass, `addClusters`, and
+ * `placeGraphLabel`, each of which runs after this call and expands
+ * `g.info.bb`). Folding them in here as well would double-expand rather than
+ * match C. The edge arm has no such counterpart pass — it was simply missing.
+ *
+ * @see lib/common/utils.c:633 compute_bb
+ * @see lib/neatogen/neatoinit.c:1419 (compute_bb called right after spline_edges)
+ * @see lib/pack/pack.c:801 computeBB
+ */
 export function computeSubgraphBB(g: Graph, margin: number): Box {
   const b = { llx: Infinity, lly: Infinity, urx: -Infinity, ury: -Infinity };
   for (const n of g.nodes.values()) expandBounds(b, n, margin);
+  const flip = g.info.flip === true;
+  for (const e of g.edges) expandBoundsByEdge(b, e, flip);
   if (!isFinite(b.llx)) return { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
   return { ll: { x: b.llx, y: b.lly }, ur: { x: b.urx, y: b.ury } };
 }

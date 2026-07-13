@@ -62,6 +62,29 @@ export interface AttributionBucket {
   uniformDelta?: [number, number];
   /** Present (true) only when the remaining diffs are a pure y-negation. */
   mirror?: boolean;
+  /**
+   * D5's count-vs-position split. `count` when ANY diff is structural — an
+   * element the port failed to emit or emitted too many of (`[missing]`,
+   * `[opCount]`, `[ptCount]`, `[count]`); `position` when every diff is
+   * numeric, i.e. the right elements exist and only their coordinates drift.
+   *
+   * This is the axis `shape` cannot express, and the one that actually
+   * separates mechanisms: a missing element is a porting gap, drifting
+   * coordinates are an arithmetic gap. They are never the same bug.
+   */
+  kind: 'count' | 'position';
+  /**
+   * Every distinct `<objectType>/<attr>/<diffKind>` in the id's diff list,
+   * sorted, joined with `+` (capped at 6 entries).
+   *
+   * `shape` records only the FIRST diff, which is not a mechanism: on the
+   * 2026-07-12 neato run, `graph/_draw_/numeric` collected 252 ids spanning at
+   * least two unrelated bugs (a truncated graph bb, and a graph label the port
+   * never emitted) purely because a graph-level numeric diff happens to sort
+   * first in both. Bucketing B3's rounds on `shape` alone chases a fiction;
+   * this signature is what rounds should group on.
+   */
+  signature: string;
 }
 
 /** One entry of attribution-<engine>.json's `results`. */
@@ -144,15 +167,26 @@ function round2(v: number): number {
  */
 export function classifyBucket(diffs: XdotDiff[], fallbackFirstDiff?: string): AttributionBucket {
   if (diffs.length === 0) {
-    if (!fallbackFirstDiff) return { shape: 'unknown' };
+    if (!fallbackFirstDiff) return { shape: 'unknown', kind: 'position', signature: 'none' };
     const sp = fallbackFirstDiff.split(' ');
     const object = sp[0] ?? 'unknown';
     const attr = sp[1] ?? 'unknown';
-    return { shape: `${objectTypeOf(object)}/${attr}/unknown` };
+    return {
+      shape: `${objectTypeOf(object)}/${attr}/unknown`,
+      kind: 'position',
+      signature: 'none',
+    };
   }
 
   const first = diffs[0]!;
-  const bucket: AttributionBucket = { shape: `${objectTypeOf(first.object)}/${first.attr}/${first.kind}` };
+  const terms = [...new Set(diffs.map((d) => `${objectTypeOf(d.object)}/${d.attr}/${d.kind}`))].sort();
+  const bucket: AttributionBucket = {
+    shape: `${objectTypeOf(first.object)}/${first.attr}/${first.kind}`,
+    // A structural diff means an element is missing or duplicated, not merely
+    // displaced — C emitted something the port did not (or vice versa).
+    kind: diffs.some((d) => d.kind === 'structural') ? 'count' : 'position',
+    signature: terms.slice(0, 6).join('+') + (terms.length > 6 ? `+…(${terms.length})` : ''),
+  };
 
   const numeric = diffs.filter((d) => d.kind === 'numeric' && d.delta !== undefined);
   if (numeric.length < 2) return bucket;
@@ -404,7 +438,7 @@ async function sweep(engine: string, args: string[]): Promise<void> {
     if (done.has(row.id)) continue;
     const rec: AttributionRow = {
       id: row.id, verdict: 'harness-error', baseDiffs: row.nDiffs ?? 0, injectedDiffs: 0,
-      bucket: { shape: 'unknown' },
+      bucket: { shape: 'unknown', kind: 'position', signature: 'none' },
     };
 
     const path = pathById.get(row.id);

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-12T05:09:04.552Z",
+  "generatedAt": "2026-07-13T05:31:17.919Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "circo",
   "tolerance": 0.01,
   "total": 761,
   "counts": {
-    "pass": 743,
+    "pass": 745,
     "diverged": 3,
     "oracle-error": 13,
     "port-error": 0,
-    "timeout": 2
+    "timeout": 0
   },
   "results": [
     {
@@ -2014,7 +2014,7 @@
     {
       "id": "windows-labelroot-ntr",
       "size": 637,
-      "status": "timeout"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-nbl",
@@ -2856,7 +2856,7 @@
     {
       "id": "graphs-sl_box",
       "size": 2156,
-      "status": "timeout"
+      "status": "pass"
     },
     {
       "id": "graphs-sl_circle",
@@ -3669,11 +3669,6 @@
       "status": "pass"
     },
     {
-      "id": "graphs-badvoro",
-      "size": 33949,
-      "status": "pass"
-    },
-    {
       "id": "graphs-viewport",
       "size": 37292,
       "status": "pass"
@@ -3835,6 +3830,11 @@
       "size": 3136769,
       "status": "oracle-error",
       "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "graphs-badvoro",
+      "size": 33949,
+      "status": "pass"
     }
   ]
 }

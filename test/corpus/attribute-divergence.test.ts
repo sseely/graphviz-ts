@@ -72,11 +72,12 @@ describe('classifyBucket (D5)', () => {
 
   describe('fallback when injection cleared every diff', () => {
     it('parses the pre-injection firstDiff string, marking the kind unknown', () => {
-      expect(classifyBucket([], 'node:a pos numeric drift')).toEqual({ shape: 'node/pos/unknown' });
+      expect(classifyBucket([], 'node:a pos numeric drift'))
+        .toEqual({ shape: 'node/pos/unknown', kind: 'position', signature: 'none' });
     });
 
     it('reports `unknown` when there is no fallback firstDiff to parse', () => {
-      expect(classifyBucket([])).toEqual({ shape: 'unknown' });
+      expect(classifyBucket([])).toEqual({ shape: 'unknown', kind: 'position', signature: 'none' });
     });
   });
 
@@ -126,10 +127,69 @@ describe('classifyBucket (D5)', () => {
     });
   });
 
+  describe('count-vs-position split (D5)', () => {
+    it('classifies an all-numeric diff list as `position`', () => {
+      const diffs = [num('node:a', 'pos', 0, 12.5, 10.0), num('node:a', 'pos', 1, 27.0, 20.0)];
+      const b = classifyBucket(diffs);
+      expect(b.kind).toBe('position');
+    });
+
+    it('classifies as `count` when ANY diff is structural, even if numeric ones dominate', () => {
+      const diffs: XdotDiff[] = [
+        num('node:a', 'pos', 0, 12.5, 10.0),
+        num('node:a', 'pos', 1, 27.0, 20.0),
+        { object: '[graph]', attr: '_ldraw_', path: '[graph]/_ldraw_[missing]', actual: '<absent>', expected: '<present>', kind: 'structural' },
+      ];
+      expect(classifyBucket(diffs).kind).toBe('count');
+    });
+  });
+
+  describe('signature (mechanism key, not first-diff shape)', () => {
+    it('collects every distinct objectType/attr/kind, sorted and deduped', () => {
+      const diffs: XdotDiff[] = [
+        { object: '[graph]', attr: '_draw_', path: '[graph]/_draw_[0]', actual: '1', expected: '2', delta: 1, kind: 'numeric' },
+        { object: '[graph]', attr: '_draw_', path: '[graph]/_draw_[1]', actual: '3', expected: '4', delta: 1, kind: 'numeric' },
+        { object: '[graph]', attr: '_ldraw_', path: '[graph]/_ldraw_[missing]', actual: '<absent>', expected: '<present>', kind: 'structural' },
+      ];
+      // Duplicate graph/_draw_/numeric collapses; result is sorted.
+      expect(classifyBucket(diffs).signature).toBe('graph/_draw_/numeric+graph/_ldraw_/structural');
+    });
+
+    it('separates two ids that share a first-diff shape but differ in mechanism', () => {
+      // Both start with graph/_draw_/numeric — the real 252-id bucket collision.
+      const truncatedBB: XdotDiff[] = [
+        { object: '[graph]', attr: '_draw_', path: '[graph]/_draw_[4]', actual: '54', expected: '72', delta: 18, kind: 'numeric' },
+        { object: '[graph]', attr: 'bb', path: '[graph]/bb[2]', actual: '54', expected: '72', delta: 18, kind: 'numeric' },
+      ];
+      const missingLabel: XdotDiff[] = [
+        { object: '[graph]', attr: '_draw_', path: '[graph]/_draw_[3]', actual: '108', expected: '132.8', delta: 24.8, kind: 'numeric' },
+        { object: '[graph]', attr: '_ldraw_', path: '[graph]/_ldraw_[missing]', actual: '<absent>', expected: '<present>', kind: 'structural' },
+      ];
+      const a = classifyBucket(truncatedBB);
+      const b = classifyBucket(missingLabel);
+      expect(a.shape).toBe(b.shape); // shape cannot tell them apart...
+      expect(a.signature).not.toBe(b.signature); // ...signature can.
+      expect(a.kind).toBe('position');
+      expect(b.kind).toBe('count');
+    });
+
+    it('caps the signature at 6 terms and records the true count', () => {
+      const diffs: XdotDiff[] = Array.from({ length: 8 }, (_, i) => ({
+        object: `node:n${i}`, attr: `a${i}`, path: `node:n${i}/a${i}[0]`,
+        actual: '1', expected: '2', delta: 1, kind: 'numeric' as const,
+      }));
+      const sig = classifyBucket(diffs).signature;
+      expect(sig).toContain('…(8)');
+      expect(sig.split('+')).toHaveLength(7); // 6 terms + the ellipsis marker
+    });
+  });
+
   describe('detector preconditions', () => {
     it('skips both detectors when fewer than two numeric diffs exist', () => {
       const diffs = [num('node:a', 'pos', 0, 12.5, 10.0)];
-      expect(classifyBucket(diffs)).toEqual({ shape: 'node/pos/numeric' });
+      expect(classifyBucket(diffs)).toEqual({
+        shape: 'node/pos/numeric', kind: 'position', signature: 'node/pos/numeric',
+      });
     });
 
     it('ignores numeric diffs whose path carries no trailing [index]', () => {

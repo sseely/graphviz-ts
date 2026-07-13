@@ -1,8 +1,7 @@
-{"_meta":true,"oracleSha1":"5caf7a368dae445bdf045a7b0823f73b89806256","generatedAt":"2026-07-12T20:32:50.086Z"}
+{"_meta":true,"oracleSha1":"5caf7a368dae445bdf045a7b0823f73b89806256","generatedAt":"2026-07-13T01:54:16.418Z"}
 {"id":"graphs-a","verdict":"not-cleared","baseDiffs":22,"injectedDiffs":22,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"2458","verdict":"not-cleared","baseDiffs":1,"injectedDiffs":1,"bucket":{"shape":"edge/_ldraw_/structural"}}
-{"id":"graphs-b123","verdict":"not-cleared","baseDiffs":36,"injectedDiffs":36,"bucket":{"shape":"graph/_draw_/numeric"}}
-{"id":"graphs-b76","verdict":"not-cleared","baseDiffs":3,"injectedDiffs":3,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"graphs-b123","verdict":"not-cleared","baseDiffs":33,"injectedDiffs":33,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"2168","verdict":"not-cleared","baseDiffs":48,"injectedDiffs":48,"bucket":{"shape":"edge/_draw_/numeric"}}
 {"id":"2490","verdict":"not-cleared","baseDiffs":52,"injectedDiffs":52,"bucket":{"shape":"edge/_draw_/numeric"}}
 {"id":"2682","verdict":"not-cleared","baseDiffs":1,"injectedDiffs":1,"bucket":{"shape":"edge/_ldraw_/structural"}}
@@ -18,11 +17,10 @@
 {"id":"2643","verdict":"not-cleared","baseDiffs":40,"injectedDiffs":40,"bucket":{"shape":"edge/_draw_/numeric"}}
 {"id":"2437","verdict":"not-cleared","baseDiffs":32,"injectedDiffs":32,"bucket":{"shape":"edge/_draw_/numeric"}}
 {"id":"graphs-b545","verdict":"not-cleared","baseDiffs":24,"injectedDiffs":24,"bucket":{"shape":"edge/_draw_/numeric"}}
-{"id":"graphs-b146","verdict":"not-cleared","baseDiffs":3,"injectedDiffs":3,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"graphs-b491","verdict":"not-cleared","baseDiffs":1,"injectedDiffs":1,"bucket":{"shape":"edge/_ldraw_/structural"}}
-{"id":"graphs-b73","verdict":"not-cleared","baseDiffs":39,"injectedDiffs":39,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"graphs-b73","verdict":"not-cleared","baseDiffs":36,"injectedDiffs":36,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"graphs-edgeclip","verdict":"not-cleared","baseDiffs":46,"injectedDiffs":46,"bucket":{"shape":"edge/_draw_/numeric"}}
-{"id":"graphs-b73a","verdict":"not-cleared","baseDiffs":44,"injectedDiffs":44,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"graphs-b73a","verdict":"not-cleared","baseDiffs":41,"injectedDiffs":41,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"graphs-clust1","verdict":"drift-exonerated","baseDiffs":42,"injectedDiffs":0,"bucket":{"shape":"cluster/_draw_/unknown"}}
 {"id":"graphs-record2","verdict":"not-cleared","baseDiffs":24,"injectedDiffs":24,"bucket":{"shape":"edge/_draw_/numeric"}}
 {"id":"graphs-labelclust-ndd","verdict":"not-cleared","baseDiffs":54,"injectedDiffs":54,"bucket":{"shape":"graph/_draw_/numeric"}}
@@ -332,10 +330,9 @@
 {"id":"1436","verdict":"drift-exonerated","baseDiffs":385,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"share-jcctree","verdict":"drift-exonerated","baseDiffs":540,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"windows-jcctree","verdict":"drift-exonerated","baseDiffs":540,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
-{"id":"graphs-pgram","verdict":"harness-error","baseDiffs":1631,"injectedDiffs":0,"bucket":{"shape":"unknown"},"err":"port render timeout (injected)"}
+{"id":"graphs-pgram","verdict":"harness-error","baseDiffs":54,"injectedDiffs":0,"bucket":{"shape":"unknown"},"err":"port render timeout (injected)"}
 {"id":"linux.i386-dfa","verdict":"not-cleared","baseDiffs":560,"injectedDiffs":20,"bucket":{"shape":"edge/_ldraw_/structural"}}
 {"id":"share-dfa","verdict":"not-cleared","baseDiffs":560,"injectedDiffs":20,"bucket":{"shape":"edge/_ldraw_/structural"}}
-{"id":"graphs-NaN","verdict":"not-cleared","baseDiffs":3,"injectedDiffs":3,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"windows-dfa","verdict":"not-cleared","baseDiffs":555,"injectedDiffs":20,"bucket":{"shape":"edge/_ldraw_/structural"}}
 {"id":"linux.x86-pack_neato","verdict":"drift-exonerated","baseDiffs":468,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"nshare-pack_neato","verdict":"drift-exonerated","baseDiffs":467,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
@@ -421,19 +418,19 @@
 {"id":"linux.x86-weight_dot","verdict":"not-cleared","baseDiffs":1605,"injectedDiffs":1499,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"nshare-dotsplines_dot1","verdict":"not-cleared","baseDiffs":1602,"injectedDiffs":1495,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"nshare-weight_dot","verdict":"not-cleared","baseDiffs":1605,"injectedDiffs":1499,"bucket":{"shape":"graph/_draw_/numeric"}}
-{"id":"share-b94","verdict":"not-cleared","baseDiffs":1562,"injectedDiffs":1566,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"share-b94","verdict":"not-cleared","baseDiffs":1556,"injectedDiffs":60,"bucket":{"shape":"edge/_ldraw_/structural"}}
 {"id":"share-proc3d","verdict":"drift-exonerated","baseDiffs":1942,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"linux.i386-crazy","verdict":"not-cleared","baseDiffs":1913,"injectedDiffs":1913,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"share-crazy","verdict":"not-cleared","baseDiffs":1914,"injectedDiffs":1913,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"windows-crazy","verdict":"not-cleared","baseDiffs":1917,"injectedDiffs":1916,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"windows-proc3d","verdict":"drift-exonerated","baseDiffs":1943,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
-{"id":"graphs-b94","verdict":"not-cleared","baseDiffs":867,"injectedDiffs":867,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"graphs-b94","verdict":"not-cleared","baseDiffs":96,"injectedDiffs":96,"bucket":{"shape":"edge/_ldraw_/structural","uniformDelta":[126,378]}}
 {"id":"nshare-overlap_neato1","verdict":"drift-exonerated","baseDiffs":1946,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"linux.x86-overlap_neato1","verdict":"drift-exonerated","baseDiffs":1948,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"linux.x86-overlap_neato","verdict":"drift-exonerated","baseDiffs":1946,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"nshare-overlap_neato","verdict":"drift-exonerated","baseDiffs":1933,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"share-pgram","verdict":"harness-error","baseDiffs":3162,"injectedDiffs":0,"bucket":{"shape":"unknown"},"err":"port render timeout (injected)"}
-{"id":"windows-pgram","verdict":"harness-error","baseDiffs":3161,"injectedDiffs":0,"bucket":{"shape":"unknown"},"err":"port render timeout (injected)"}
+{"id":"windows-pgram","verdict":"harness-error","baseDiffs":3174,"injectedDiffs":0,"bucket":{"shape":"unknown"},"err":"port render timeout (injected)"}
 {"id":"share-ldbxtried","verdict":"drift-exonerated","baseDiffs":2177,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"linux.x86-neatosplines_neato","verdict":"drift-exonerated","baseDiffs":1946,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"nshare-neatosplines_neato","verdict":"drift-exonerated","baseDiffs":1933,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
@@ -452,13 +449,13 @@
 {"id":"1332","verdict":"not-cleared","baseDiffs":3296,"injectedDiffs":2556,"bucket":{"shape":"edge/_draw_/numeric"}}
 {"id":"share-jsort","verdict":"drift-exonerated","baseDiffs":2412,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"windows-jsort","verdict":"drift-exonerated","baseDiffs":2412,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
-{"id":"windows-b94","verdict":"not-cleared","baseDiffs":1566,"injectedDiffs":1566,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"windows-b94","verdict":"not-cleared","baseDiffs":1563,"injectedDiffs":60,"bucket":{"shape":"edge/_ldraw_/structural"}}
 {"id":"graphs-mode","verdict":"drift-exonerated","baseDiffs":474,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown"}}
 {"id":"windows-b36","verdict":"drift-exonerated","baseDiffs":2563,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"linux.i386-b36","verdict":"drift-exonerated","baseDiffs":2562,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"share-b36","verdict":"drift-exonerated","baseDiffs":2562,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
-{"id":"share-NaN","verdict":"not-cleared","baseDiffs":3623,"injectedDiffs":3,"bucket":{"shape":"graph/_draw_/numeric"}}
-{"id":"windows-NaN","verdict":"not-cleared","baseDiffs":3615,"injectedDiffs":3,"bucket":{"shape":"graph/_draw_/numeric"}}
+{"id":"share-NaN","verdict":"drift-exonerated","baseDiffs":3623,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
+{"id":"windows-NaN","verdict":"drift-exonerated","baseDiffs":3615,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}
 {"id":"graphs-b51","verdict":"not-cleared","baseDiffs":25,"injectedDiffs":25,"bucket":{"shape":"edge/_ldraw_/structural"}}
 {"id":"1718","verdict":"not-cleared","baseDiffs":12036,"injectedDiffs":12036,"bucket":{"shape":"graph/_draw_/numeric"}}
 {"id":"windows-b124","verdict":"drift-exonerated","baseDiffs":7684,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown"}}

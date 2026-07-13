@@ -397,7 +397,7 @@
 {"id":"share-labelroot-ntc","size":637,"status":"pass"}
 {"id":"share-labelroot-ntr","size":637,"status":"pass"}
 {"id":"windows-labelroot-ntc","size":637,"status":"pass"}
-{"id":"windows-labelroot-ntr","size":637,"status":"timeout"}
+{"id":"windows-labelroot-ntr","size":637,"status":"pass"}
 {"id":"share-labelroot-nbl","size":641,"status":"pass"}
 {"id":"windows-labelroot-nbl","size":641,"status":"pass"}
 {"id":"share-labelroot-ftl","size":643,"status":"pass"}
@@ -565,7 +565,7 @@
 {"id":"share-fsm","size":2142,"status":"pass"}
 {"id":"graphs-sr_box","size":2149,"status":"pass"}
 {"id":"graphs-sr_circle","size":2152,"status":"pass"}
-{"id":"graphs-sl_box","size":2156,"status":"timeout"}
+{"id":"graphs-sl_box","size":2156,"status":"pass"}
 {"id":"graphs-sl_circle","size":2159,"status":"pass"}
 {"id":"1323","size":2164,"status":"pass"}
 {"id":"share-b786","size":2198,"status":"pass"}
@@ -727,7 +727,6 @@
 {"id":"share-b51","size":29420,"status":"pass"}
 {"id":"windows-b51","size":29685,"status":"pass"}
 {"id":"graphs-b69","size":33033,"status":"pass"}
-{"id":"graphs-badvoro","size":33949,"status":"pass"}
 {"id":"graphs-viewport","size":37292,"status":"pass"}
 {"id":"2239","size":48090,"status":"pass"}
 {"id":"graphs-b106","size":48933,"status":"pass"}
@@ -759,3 +758,4 @@
 {"id":"2470","size":734358,"status":"pass"}
 {"id":"2222","size":2384469,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
 {"id":"2108","size":3136769,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
+{"id":"graphs-badvoro","size":33949,"status":"pass"}

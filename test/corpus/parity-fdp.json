@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-12T06:13:10.104Z",
+  "generatedAt": "2026-07-13T05:30:19.311Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "fdp",
   "tolerance": 0.5,
   "total": 761,
   "counts": {
     "pass": 311,
-    "diverged": 434,
-    "oracle-error": 16,
+    "diverged": 429,
+    "oracle-error": 20,
     "port-error": 0,
-    "timeout": 0
+    "timeout": 1
   },
   "results": [
     {
@@ -740,11 +740,6 @@
     },
     {
       "id": "regression_tests-shapes-reference-signature",
-      "size": 134,
-      "status": "pass"
-    },
-    {
-      "id": "regression_tests-shapes-reference-trapezium",
       "size": 134,
       "status": "pass"
     },
@@ -2659,11 +2654,6 @@
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: 0 vs -24.8"
     },
     {
-      "id": "graphs-nul_val",
-      "size": 659,
-      "status": "pass"
-    },
-    {
       "id": "graphs-val_inv",
       "size": 660,
       "status": "pass"
@@ -2937,9 +2927,7 @@
     {
       "id": "graphs-shells",
       "size": 1102,
-      "status": "diverged",
-      "nDiffs": 1092,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 745 vs 1005.96"
+      "status": "timeout"
     },
     {
       "id": "share-try",
@@ -4581,9 +4569,8 @@
     {
       "id": "graphs-root",
       "size": 128221,
-      "status": "diverged",
-      "nDiffs": 35078,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3060.94 vs 2747.66"
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "linux.i386-b29",
@@ -4643,16 +4630,14 @@
     {
       "id": "linux.x86-root_twopi",
       "size": 287907,
-      "status": "diverged",
-      "nDiffs": 35028,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3305.06 vs 3226.07"
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "nshare-root_twopi",
       "size": 287916,
-      "status": "diverged",
-      "nDiffs": 34958,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3220.18 vs 3411.29"
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "nshare-root_circo",
@@ -4671,16 +4656,15 @@
     {
       "id": "graphs-b103",
       "size": 377525,
-      "status": "diverged",
-      "nDiffs": 69777,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1840.48 vs 2176.86"
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "2475_2",
       "size": 641284,
       "status": "diverged",
-      "nDiffs": 326077,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18547.92"
+      "nDiffs": 321527,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"
     },
     {
       "id": "2470",
@@ -4700,6 +4684,16 @@
       "size": 3136769,
       "status": "oracle-error",
       "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "regression_tests-shapes-reference-trapezium",
+      "size": 134,
+      "status": "pass"
+    },
+    {
+      "id": "graphs-nul_val",
+      "size": 659,
+      "status": "pass"
     }
   ]
 }

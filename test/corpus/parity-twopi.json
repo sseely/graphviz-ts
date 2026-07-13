@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T05:23:57.970Z",
+  "generatedAt": "2026-07-13T04:49:41.071Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "twopi",
   "tolerance": 0.01,
@@ -2764,8 +2764,8 @@
       "id": "graphs-arrowsize",
       "size": 2039,
       "status": "diverged",
-      "nDiffs": 19,
-      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 264.42 vs 314.69"
+      "nDiffs": 64,
+      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[0]: 289.55 vs 297.2"
     },
     {
       "id": "linux.x86-ordering_dot1",
@@ -3306,8 +3306,8 @@
       "id": "macosx-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 16,
-      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8"
+      "nDiffs": 32,
+      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "nshare-arrows_dot",

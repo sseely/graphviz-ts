@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-12T06:30:11.226Z",
+  "generatedAt": "2026-07-13T05:30:20.861Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
   "total": 761,
   "counts": {
-    "pass": 260,
-    "diverged": 493,
+    "pass": 262,
+    "diverged": 489,
     "oracle-error": 7,
     "port-error": 1,
-    "timeout": 0
+    "timeout": 2
   },
   "results": [
     {
@@ -150,7 +150,7 @@
       "id": "graphs-b123",
       "size": 59,
       "status": "diverged",
-      "nDiffs": 36,
+      "nDiffs": 33,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 36 vs 43.36"
     },
     {
@@ -173,9 +173,7 @@
     {
       "id": "graphs-b76",
       "size": 69,
-      "status": "diverged",
-      "nDiffs": 3,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 54 vs 72"
+      "status": "pass"
     },
     {
       "id": "graphs-clover",
@@ -427,9 +425,7 @@
     {
       "id": "graphs-b146",
       "size": 105,
-      "status": "diverged",
-      "nDiffs": 3,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 54 vs 72"
+      "status": "pass"
     },
     {
       "id": "linux.i386-trivial_dot",
@@ -506,7 +502,7 @@
       "id": "graphs-b73",
       "size": 124,
       "status": "diverged",
-      "nDiffs": 39,
+      "nDiffs": 36,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 37 vs 42.49"
     },
     {
@@ -707,7 +703,7 @@
       "id": "graphs-b73a",
       "size": 134,
       "status": "diverged",
-      "nDiffs": 44,
+      "nDiffs": 41,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 37 vs 42.49"
     },
     {
@@ -742,11 +738,6 @@
     },
     {
       "id": "regression_tests-shapes-reference-rpromoter",
-      "size": 134,
-      "status": "pass"
-    },
-    {
-      "id": "regression_tests-shapes-reference-signature",
       "size": 134,
       "status": "pass"
     },
@@ -2655,9 +2646,7 @@
     {
       "id": "2801",
       "size": 651,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_[missing]: <absent> vs <present>"
+      "status": "timeout"
     },
     {
       "id": "share-labelroot-fdr",
@@ -2933,9 +2922,7 @@
     {
       "id": "nshare-html_dot",
       "size": 1058,
-      "status": "diverged",
-      "nDiffs": 36,
-      "firstDiff": "edge:struct1->struct2#0 _draw_ edge:struct1->struct2#0/_draw_/op[1].unfilled_bezier[0]: 277.16 vs 333.67"
+      "status": "timeout"
     },
     {
       "id": "2521_1",
@@ -3982,7 +3969,7 @@
       "size": 5632,
       "status": "diverged",
       "nDiffs": 109,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 660.3 vs 709.75"
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 689.3 vs 709.75"
     },
     {
       "id": "graphs-grdlinear_angle",
@@ -4272,8 +4259,8 @@
       "id": "share-b94",
       "size": 9831,
       "status": "diverged",
-      "nDiffs": 867,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 268 vs 797.66"
+      "nDiffs": 60,
+      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "graphs-b124",
@@ -4326,8 +4313,8 @@
       "id": "graphs-b94",
       "size": 10503,
       "status": "diverged",
-      "nDiffs": 867,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 268 vs 797.66"
+      "nDiffs": 60,
+      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "nshare-overlap_neato1",
@@ -4495,8 +4482,8 @@
       "id": "windows-b94",
       "size": 14509,
       "status": "diverged",
-      "nDiffs": 867,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 268 vs 797.66"
+      "nDiffs": 60,
+      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 _ldraw_ edge:h130_104_19_203->h130_75_118_14_p1080#0/_ldraw_[missing]: <absent> vs <present>"
     },
     {
       "id": "1447_1",
@@ -4810,6 +4797,11 @@
       "size": 3136769,
       "status": "oracle-error",
       "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
+    },
+    {
+      "id": "regression_tests-shapes-reference-signature",
+      "size": 134,
+      "status": "pass"
     }
   ]
 }

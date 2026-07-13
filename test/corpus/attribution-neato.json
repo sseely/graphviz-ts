@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T21:22:00.853Z",
+  "generatedAt": "2026-07-13T02:10:17.988Z",
   "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
   "tolerance": 0.5,
   "results": [
@@ -24,17 +24,8 @@
     {
       "id": "graphs-b123",
       "verdict": "not-cleared",
-      "baseDiffs": 36,
-      "injectedDiffs": 36,
-      "bucket": {
-        "shape": "graph/_draw_/numeric"
-      }
-    },
-    {
-      "id": "graphs-b76",
-      "verdict": "not-cleared",
-      "baseDiffs": 3,
-      "injectedDiffs": 3,
+      "baseDiffs": 33,
+      "injectedDiffs": 33,
       "bucket": {
         "shape": "graph/_draw_/numeric"
       }
@@ -175,15 +166,6 @@
       }
     },
     {
-      "id": "graphs-b146",
-      "verdict": "not-cleared",
-      "baseDiffs": 3,
-      "injectedDiffs": 3,
-      "bucket": {
-        "shape": "graph/_draw_/numeric"
-      }
-    },
-    {
       "id": "graphs-b491",
       "verdict": "not-cleared",
       "baseDiffs": 1,
@@ -195,8 +177,8 @@
     {
       "id": "graphs-b73",
       "verdict": "not-cleared",
-      "baseDiffs": 39,
-      "injectedDiffs": 39,
+      "baseDiffs": 36,
+      "injectedDiffs": 36,
       "bucket": {
         "shape": "graph/_draw_/numeric"
       }
@@ -213,8 +195,8 @@
     {
       "id": "graphs-b73a",
       "verdict": "not-cleared",
-      "baseDiffs": 44,
-      "injectedDiffs": 44,
+      "baseDiffs": 41,
+      "injectedDiffs": 41,
       "bucket": {
         "shape": "graph/_draw_/numeric"
       }
@@ -3019,7 +3001,7 @@
     {
       "id": "graphs-pgram",
       "verdict": "harness-error",
-      "baseDiffs": 1631,
+      "baseDiffs": 54,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "unknown"
@@ -3042,15 +3024,6 @@
       "injectedDiffs": 20,
       "bucket": {
         "shape": "edge/_ldraw_/structural"
-      }
-    },
-    {
-      "id": "graphs-NaN",
-      "verdict": "not-cleared",
-      "baseDiffs": 3,
-      "injectedDiffs": 3,
-      "bucket": {
-        "shape": "graph/_draw_/numeric"
       }
     },
     {
@@ -3829,10 +3802,10 @@
     {
       "id": "share-b94",
       "verdict": "not-cleared",
-      "baseDiffs": 1562,
-      "injectedDiffs": 1566,
+      "baseDiffs": 1556,
+      "injectedDiffs": 60,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "edge/_ldraw_/structural"
       }
     },
     {
@@ -3883,10 +3856,14 @@
     {
       "id": "graphs-b94",
       "verdict": "not-cleared",
-      "baseDiffs": 867,
-      "injectedDiffs": 867,
+      "baseDiffs": 96,
+      "injectedDiffs": 96,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "edge/_ldraw_/structural",
+        "uniformDelta": [
+          126,
+          378
+        ]
       }
     },
     {
@@ -3938,7 +3915,7 @@
     {
       "id": "windows-pgram",
       "verdict": "harness-error",
-      "baseDiffs": 3161,
+      "baseDiffs": 3174,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "unknown"
@@ -4110,10 +4087,10 @@
     {
       "id": "windows-b94",
       "verdict": "not-cleared",
-      "baseDiffs": 1566,
-      "injectedDiffs": 1566,
+      "baseDiffs": 1563,
+      "injectedDiffs": 60,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "edge/_ldraw_/structural"
       }
     },
     {
@@ -4154,20 +4131,20 @@
     },
     {
       "id": "share-NaN",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3623,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/unknown"
       }
     },
     {
       "id": "windows-NaN",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3615,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric"
+        "shape": "graph/_draw_/unknown"
       }
     },
     {
