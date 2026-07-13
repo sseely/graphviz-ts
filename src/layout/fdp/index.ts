@@ -17,6 +17,8 @@ import { EDGETYPE_LINE, EDGETYPE_NONE, splineEdges } from '../neato/splines.js';
 import { neatoSetAspect } from '../neato/init.js';
 import { placeGraphLabel } from '../dot/position-bbox.js';
 import { gvPostprocess } from '../../common/postproc.js';
+import { doGraphLabel } from '../dot/graph-label.js';
+import { layoutMeasurer } from '../../common/nodeinit.js';
 import { fdpInitParams } from './tlayout-parms.js';
 import { fdpInitNodeEdge, fdpCleanup } from './init.js';
 import { fdpLayout, mkClusters } from './layout.js';
@@ -39,6 +41,12 @@ export { fdpInitParams, fdpParms } from './tlayout-parms.js';
  * @see lib/fdpgen/layout.c:fdp_init_graph
  */
 export function fdpInitGraph(g: Graph): void {
+  // Root graph label — C's graph_init (input.c:719 do_graph_label) runs for
+  // every engine from gvLayoutJobs (gvlayout.c:81) BEFORE fdp_layout. mkClusters
+  // below only labels the *clusters* (layout.c:413), never the root; without
+  // this call GD_label(g) stays NULL and gv_postprocess skips both the bb
+  // expansion and place_root_label. @see lib/gvc/gvlayout.c:81
+  doGraphLabel(g, layoutMeasurer(g));
   setEdgeType(g, EDGETYPE_LINE);
   gdata(g); // GD_alg(g) = gv_alloc(sizeof(gdata))
   mkClusters(g, null, g);

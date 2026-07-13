@@ -150,6 +150,16 @@ export function maybeRemoveOverlap(g: Graph): void {
  */
 export function neatoLayout(g: Graph): void {
   neutralGraphRankdir(g);
+  // Root graph label. C creates it in the engine-agnostic graph_init
+  // (input.c:719 do_graph_label), which gvLayoutJobs runs for EVERY engine
+  // (gvlayout.c:81) before the engine's layout(). This port has no shared
+  // graph_init, so each engine must make the call itself: without it
+  // GD_label(g) is NULL and gv_postprocess's `GD_label(g) && !set` gate skips
+  // BOTH the bb expansion and place_root_label, so the graph label is never
+  // emitted and the drawing is never shifted up to make room for it.
+  // @see lib/common/input.c:719 (do_graph_label at the end of graph_init)
+  // @see lib/gvc/gvlayout.c:81 (graph_init call, all engines)
+  doGraphLabel(g, layoutMeasurer(g));
   // C: neato_init_graph sets EDGETYPE_LINE before node/edge init.
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);

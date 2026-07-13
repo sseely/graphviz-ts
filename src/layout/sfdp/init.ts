@@ -18,6 +18,7 @@ import {
   commonInitNodeEdge, lateDouble, lateInt, layoutMeasurer,
 } from '../../common/nodeinit.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
+import { doGraphLabel } from '../dot/graph-label.js';
 import { aggetGraph } from '../fdp/fdp-model.js';
 import {
   type SpMatrix,
@@ -45,6 +46,13 @@ const INT_MAX = 2147483647;
  * @see lib/sfdpgen/sfdpinit.c:sfdp_init_node_edge
  */
 export function sfdpInitGraph(g: Graph): void {
+  // Root graph label — C's graph_init (input.c:719 do_graph_label) runs for
+  // every engine from gvLayoutJobs (gvlayout.c:81) BEFORE sfdp_layout. This
+  // port has no shared graph_init, so the engine must make the call itself:
+  // without it GD_label(g) is NULL and gv_postprocess's `GD_label(g) && !set`
+  // gate skips both the bb expansion and place_root_label.
+  // @see lib/gvc/gvlayout.c:81 (graph_init call, all engines)
+  doGraphLabel(g, layoutMeasurer(g));
   setEdgeType(g, EDGETYPE_LINE);
   commonInitNodeEdge(g); // common_init_node inside neato_init_node
   for (const n of g.nodes.values()) neatoInitNode(n);
