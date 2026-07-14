@@ -163,9 +163,35 @@ The fdp dump goes in `fdp_layout` (`lib/fdpgen/layout.c:1062`), between
 +	    fprintf(stderr, "GVTS_POS %s %.17g %.17g\n",
 +		    agnameof(dn), ND_pos(dn)[0], ND_pos(dn)[1]);
 +	}
++	fprintf(stderr, "GVTS_BB %.17g %.17g %.17g %.17g\n",
++		GD_bb(g).LL.x, GD_bb(g).LL.y, GD_bb(g).UR.x, GD_bb(g).UR.y);
 +    }
      neato_set_aspect(g);
 ```
+
+**The `GVTS_BB` line is fdp-only, and it is load-bearing** — omitting it
+silently produces a huge phantom defect family. neato/sfdp reach the hook at
+the top of `spline_edges`, which is one line ABOVE the `compute_bb` that
+derives `GD_bb` (`neatosplines.c:841`), so on those engines the bb is a pure
+function of the injected positions and needs nothing extra. fdp is the
+exception: its `GD_bb` is a product of `fdpLayout` *itself* (`finalCC` →
+`setBB`, `layout.c:1030`), which has already run and returned by the time the
+dump/inject point is reached. Inject positions without the bb and the port
+emits the oracle's node coordinates inside *its own* (drifted) bounding box —
+a bb belonging to neither layout.
+
+That omission is exactly what produced the `graph/_draw_+graph/bb` bucket: 60
+not-cleared fdp ids whose ONLY residual diff was the graph bb and the
+background polygon drawn from it, with the port's bb short on 24 ids and
+**taller on 18** — a sign-split no bb bug can produce, and the tell that the
+number was a measurement artifact rather than a defect. With the `GVTS_BB`
+line all 60 clear (verified 2026-07-13). The bb is layout-stage state exactly
+like `ND_pos`; neutralizing it is what lets the comparison isolate
+routing/emission, which is all this harness claims to measure.
+
+`attribute-divergence.ts` keeps both `GVTS_POS ` and `GVTS_BB ` lines in the
+dump file it hands to the port, and still requires at least one `GVTS_POS `
+line (a bb with no positions means the patch is only half-applied).
 
 **It must go BEFORE `neato_set_aspect`, not at `fdpSplines` entry.**
 `neato_set_aspect` derives `ND_coord` (points) from `ND_pos` (inches),
