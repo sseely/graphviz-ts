@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-13T21:03:47.956Z",
+  "generatedAt": "2026-07-13T23:35:24.404Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "circo",
   "tolerance": 0.01,
-  "total": 761,
+  "total": 762,
   "counts": {
-    "pass": 745,
+    "pass": 744,
     "diverged": 3,
-    "oracle-error": 13,
+    "oracle-error": 14,
     "port-error": 0,
-    "timeout": 0
+    "timeout": 1
   },
   "results": [
     {
@@ -727,7 +727,7 @@
     {
       "id": "regression_tests-shapes-reference-proteasesite",
       "size": 137,
-      "status": "pass"
+      "status": "timeout"
     },
     {
       "id": "regression_tests-shapes-reference-fivepoverhang",
@@ -3779,6 +3779,12 @@
       "id": "graphs-b81",
       "size": 191024,
       "status": "pass"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "1879",

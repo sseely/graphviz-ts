@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-13T20:42:21.237Z",
+  "generatedAt": "2026-07-14T00:04:32.519Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
-  "total": 761,
+  "total": 762,
   "counts": {
     "pass": 500,
-    "diverged": 253,
+    "diverged": 254,
     "oracle-error": 7,
     "port-error": 1,
     "timeout": 0
@@ -4263,6 +4263,13 @@
       "id": "graphs-b81",
       "size": 191024,
       "status": "pass"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
+      "status": "diverged",
+      "nDiffs": 114202,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 955.45 vs 958.43"
     },
     {
       "id": "1879",

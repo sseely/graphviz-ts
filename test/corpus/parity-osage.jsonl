@@ -749,6 +749,7 @@
 {"id":"share-b102","size":161479,"status":"pass"}
 {"id":"windows-b102","size":184125,"status":"pass"}
 {"id":"graphs-b81","size":191024,"status":"pass"}
+{"id":"1652","size":240391,"status":"diverged","nDiffs":4,"firstDiff":"edge:Op_1091->Op_1092#0 _ldraw_ edge:Op_1091->Op_1092#0/_ldraw_/op[2].text[0]: 2266.75 vs 2332.07"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K osage -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
 {"id":"linux.x86-root_twopi","size":287907,"status":"pass"}
 {"id":"nshare-root_twopi","size":287916,"status":"pass"}

@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-13T21:42:10.479Z",
+  "generatedAt": "2026-07-13T23:12:03.981Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "patchwork",
   "tolerance": 0.01,
-  "total": 761,
+  "total": 762,
   "counts": {
-    "pass": 583,
-    "diverged": 173,
+    "pass": 757,
+    "diverged": 0,
     "oracle-error": 5,
     "port-error": 0,
     "timeout": 0
@@ -1417,16 +1417,12 @@
     {
       "id": "share-longflat",
       "size": 405,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:c->b#0 lp edge:c->b#0/lp[missing]: <absent> vs 160,54"
+      "status": "pass"
     },
     {
       "id": "windows-longflat",
       "size": 409,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:c->b#0 lp edge:c->b#0/lp[missing]: <absent> vs 112,62"
+      "status": "pass"
     },
     {
       "id": "2613",
@@ -1471,16 +1467,12 @@
     {
       "id": "share-record2",
       "size": 421,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "node:a rects node:a/rects[missing]: <absent> vs 23,108,58,144 58,108,83,144 83,108,119,144"
+      "status": "pass"
     },
     {
       "id": "windows-record2",
       "size": 421,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "node:a rects node:a/rects[missing]: <absent> vs 23,108,58,144 58,108,82,144 82,108,117,144"
+      "status": "pass"
     },
     {
       "id": "graphs-ctext",
@@ -1510,16 +1502,12 @@
     {
       "id": "share-b491",
       "size": 486,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:Node29->Node29#0 lp edge:Node29->Node29#0/lp[missing]: <absent> vs 132,92"
+      "status": "pass"
     },
     {
       "id": "windows-b491",
       "size": 486,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:Node29->Node29#0 lp edge:Node29->Node29#0/lp[missing]: <absent> vs 134,92"
+      "status": "pass"
     },
     {
       "id": "graphs-b22",
@@ -1594,16 +1582,12 @@
     {
       "id": "share-labelclust-ndd",
       "size": 586,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ndd",
       "size": 586,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "graphs-inv_nul",
@@ -1623,16 +1607,12 @@
     {
       "id": "share-labelclust-fdd",
       "size": 595,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fdd",
       "size": 595,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "linux.x86-edgeclip_dot",
@@ -1652,16 +1632,12 @@
     {
       "id": "share-labelclust-ntd",
       "size": 603,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ntd",
       "size": 603,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "graphs-fsm",
@@ -1671,44 +1647,32 @@
     {
       "id": "share-labelclust-ndl",
       "size": 605,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ndl",
       "size": 605,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ndr",
       "size": 606,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ndr",
       "size": 606,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ndc",
       "size": 607,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ndc",
       "size": 607,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "1990",
@@ -1718,86 +1682,62 @@
     {
       "id": "share-labelclust-nbd",
       "size": 611,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-nbd",
       "size": 611,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ftd",
       "size": 612,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ftd",
       "size": 612,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-fdl",
       "size": 614,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fdl",
       "size": 614,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-fbd",
       "size": 615,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fbd",
       "size": 615,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-fdc",
       "size": 616,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-fdr",
       "size": 616,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fdc",
       "size": 616,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fdr",
       "size": 616,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"
+      "status": "pass"
     },
     {
       "id": "graphs-inv_inv",
@@ -1822,16 +1762,12 @@
     {
       "id": "share-labelroot-ntd",
       "size": 619,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ntd",
       "size": 619,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"
+      "status": "pass"
     },
     {
       "id": "graphs-nul_inv",
@@ -1866,86 +1802,62 @@
     {
       "id": "share-labelclust-ntl",
       "size": 622,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ntl",
       "size": 622,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ntr",
       "size": 623,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ntr",
       "size": 623,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ntc",
       "size": 624,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ntc",
       "size": 624,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-nbd",
       "size": 625,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-nbd",
       "size": 625,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ftd",
       "size": 627,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ftd",
       "size": 627,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ndd",
       "size": 628,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ndd",
       "size": 628,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "graphs-hashtable",
@@ -1955,16 +1867,12 @@
     {
       "id": "share-labelroot-fbd",
       "size": 629,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fbd",
       "size": 629,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "graphs-val_nul",
@@ -1974,128 +1882,92 @@
     {
       "id": "share-labelclust-nbl",
       "size": 630,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-nbl",
       "size": 630,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ftl",
       "size": 631,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-nbr",
       "size": 631,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ftl",
       "size": 631,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-nbr",
       "size": 631,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-nbc",
       "size": 632,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fdd",
       "size": 632,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-nbc",
       "size": 632,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fdd",
       "size": 632,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ftc",
       "size": 633,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-ftr",
       "size": 633,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ftc",
       "size": 633,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-ftr",
       "size": 633,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-fbl",
       "size": 634,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fbl",
       "size": 634,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ntl",
       "size": 635,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ntl",
       "size": 635,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"
+      "status": "pass"
     },
     {
       "id": "graphs-inv_val",
@@ -2105,240 +1977,172 @@
     {
       "id": "share-labelclust-fbc",
       "size": 636,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "share-labelclust-fbr",
       "size": 636,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fbc",
       "size": 636,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelclust-fbr",
       "size": 636,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ntc",
       "size": 637,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ntr",
       "size": 637,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ntc",
       "size": 637,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ntr",
       "size": 637,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,20"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-nbl",
       "size": 641,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-nbl",
       "size": 641,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ftl",
       "size": 643,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-nbc",
       "size": 643,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-nbr",
       "size": 643,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ftl",
       "size": 643,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-nbc",
       "size": 643,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-nbr",
       "size": 643,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ndl",
       "size": 644,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ndl",
       "size": 644,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fbl",
       "size": 645,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ftc",
       "size": 645,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fbl",
       "size": 645,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ftc",
       "size": 645,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ndc",
       "size": 646,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ndr",
       "size": 646,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ndc",
       "size": 646,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ndr",
       "size": 646,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fbc",
       "size": 647,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-ftr",
       "size": 647,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,20"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fbc",
       "size": 647,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-ftr",
       "size": 647,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,20"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fdl",
       "size": 648,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fdl",
       "size": 648,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fbr",
       "size": 649,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fbr",
       "size": 649,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"
+      "status": "pass"
     },
     {
       "id": "graphs-ER",
@@ -2348,16 +2152,12 @@
     {
       "id": "share-labelroot-fdc",
       "size": 650,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fdc",
       "size": 650,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"
+      "status": "pass"
     },
     {
       "id": "2801",
@@ -2367,16 +2167,12 @@
     {
       "id": "share-labelroot-fdr",
       "size": 652,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"
+      "status": "pass"
     },
     {
       "id": "windows-labelroot-fdr",
       "size": 652,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"
+      "status": "pass"
     },
     {
       "id": "graphs-nul_val",
@@ -2416,9 +2212,7 @@
     {
       "id": "share-structs",
       "size": 710,
-      "status": "diverged",
-      "nDiffs": 3,
-      "firstDiff": "node:struct1 rects node:struct1/rects[missing]: <absent> vs 10,108,45,144 45,108,100,144 100,108,144,144"
+      "status": "pass"
     },
     {
       "id": "1658",
@@ -2428,9 +2222,7 @@
     {
       "id": "windows-structs",
       "size": 728,
-      "status": "diverged",
-      "nDiffs": 3,
-      "firstDiff": "node:struct1 rects node:struct1/rects[missing]: <absent> vs 12,108,47,144 47,108,102,144 102,108,145,144"
+      "status": "pass"
     },
     {
       "id": "2168_1",
@@ -2505,16 +2297,12 @@
     {
       "id": "share-states",
       "size": 858,
-      "status": "diverged",
-      "nDiffs": 5,
-      "firstDiff": "edge:empty->full#0 lp edge:empty->full#0/lp[missing]: <absent> vs 246,47"
+      "status": "pass"
     },
     {
       "id": "windows-states",
       "size": 878,
-      "status": "diverged",
-      "nDiffs": 5,
-      "firstDiff": "edge:empty->full#0 lp edge:empty->full#0/lp[missing]: <absent> vs 245,47"
+      "status": "pass"
     },
     {
       "id": "graphs-Petersen",
@@ -2539,9 +2327,7 @@
     {
       "id": "share-flatedge",
       "size": 918,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 lp edge:tcp->kernel_linux#0/lp[missing]: <absent> vs 74,63"
+      "status": "pass"
     },
     {
       "id": "graphs-Symbol",
@@ -2551,16 +2337,12 @@
     {
       "id": "windows-nhg",
       "size": 926,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:0->1#0 lp edge:0->1#0/lp[missing]: <absent> vs 114,110"
+      "status": "pass"
     },
     {
       "id": "share-nhg",
       "size": 938,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:0->1#0 lp edge:0->1#0/lp[missing]: <absent> vs 97,110"
+      "status": "pass"
     },
     {
       "id": "graphs-alf",
@@ -2620,16 +2402,12 @@
     {
       "id": "share-try",
       "size": 1141,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster_big lp cluster:cluster_big/lp[missing]: <absent> vs 53,524"
+      "status": "pass"
     },
     {
       "id": "windows-try",
       "size": 1142,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster_big lp cluster:cluster_big/lp[missing]: <absent> vs 53,524"
+      "status": "pass"
     },
     {
       "id": "share-ctext",
@@ -2644,16 +2422,12 @@
     {
       "id": "linux.x86-flatedge_dot",
       "size": 1177,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 lp edge:tcp->kernel_linux#0/lp[missing]: <absent> vs 69.245,61.5"
+      "status": "pass"
     },
     {
       "id": "nshare-flatedge_dot",
       "size": 1182,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:tcp->kernel_linux#0 lp edge:tcp->kernel_linux#0/lp[missing]: <absent> vs 67.445,61.5"
+      "status": "pass"
     },
     {
       "id": "share-clust3",
@@ -2683,16 +2457,12 @@
     {
       "id": "share-clust",
       "size": 1218,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 229,152"
+      "status": "pass"
     },
     {
       "id": "windows-clust",
       "size": 1218,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 229,152"
+      "status": "pass"
     },
     {
       "id": "share-clust1",
@@ -2737,9 +2507,7 @@
     {
       "id": "share-records",
       "size": 1398,
-      "status": "diverged",
-      "nDiffs": 7,
-      "firstDiff": "node:a rects node:a/rects[missing]: <absent> vs 0,138,80,178 0,114,80,138 0,90,80,114"
+      "status": "pass"
     },
     {
       "id": "graphs-html2",
@@ -2749,9 +2517,7 @@
     {
       "id": "windows-records",
       "size": 1416,
-      "status": "diverged",
-      "nDiffs": 7,
-      "firstDiff": "node:a rects node:a/rects[missing]: <absent> vs 0,138,80,178 0,114,80,138 0,90,80,114"
+      "status": "pass"
     },
     {
       "id": "2361",
@@ -2876,16 +2642,12 @@
     {
       "id": "share-clust4",
       "size": 1709,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 53,354"
+      "status": "pass"
     },
     {
       "id": "windows-clust4",
       "size": 1709,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 53,354"
+      "status": "pass"
     },
     {
       "id": "graphs-ngk10_4",
@@ -2910,23 +2672,17 @@
     {
       "id": "linux.i386-hashtable",
       "size": 1756,
-      "status": "diverged",
-      "nDiffs": 8,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 1,168,22,192 1,144,22,168 1,120,22,144 1,96,22,120 1,72,22,96 1,48,22,72 1,24,22,48 1,0,22,24"
+      "status": "pass"
     },
     {
       "id": "share-hashtable",
       "size": 1756,
-      "status": "diverged",
-      "nDiffs": 8,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 1,168,22,192 1,144,22,168 1,120,22,144 1,96,22,120 1,72,22,96 1,48,22,72 1,24,22,48 1,0,22,24"
+      "status": "pass"
     },
     {
       "id": "windows-hashtable",
       "size": 1756,
-      "status": "diverged",
-      "nDiffs": 8,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 1,168,22,192 1,144,22,168 1,120,22,144 1,96,22,120 1,72,22,96 1,48,22,72 1,24,22,48 1,0,22,24"
+      "status": "pass"
     },
     {
       "id": "graphs-viewfile",
@@ -2946,44 +2702,32 @@
     {
       "id": "share-KW91",
       "size": 1824,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "cluster:cluster_inner lp cluster:cluster_inner/lp[missing]: <absent> vs 170,352"
+      "status": "pass"
     },
     {
       "id": "windows-KW91",
       "size": 1824,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "cluster:cluster_inner lp cluster:cluster_inner/lp[missing]: <absent> vs 170,376"
+      "status": "pass"
     },
     {
       "id": "share-tree",
       "size": 1825,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 171,180,192,204 192,180,219,204 219,180,240,204"
+      "status": "pass"
     },
     {
       "id": "windows-tree",
       "size": 1825,
-      "status": "diverged",
-      "nDiffs": 9,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 169,180,190,204 190,180,217,204 217,180,238,204"
+      "status": "pass"
     },
     {
       "id": "linux.x86-html2_dot",
       "size": 1945,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:d->c#0 lp edge:d->c#0/lp[missing]: <absent> vs 169,249.44"
+      "status": "pass"
     },
     {
       "id": "nshare-html2_dot",
       "size": 1946,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "edge:d->c#0 lp edge:d->c#0/lp[missing]: <absent> vs 169,249.44"
+      "status": "pass"
     },
     {
       "id": "share-pm2way",
@@ -3043,9 +2787,7 @@
     {
       "id": "windows-ER",
       "size": 2051,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:C-I->institute#0 lp edge:C-I->institute#0/lp[missing]: <absent> vs 200,454"
+      "status": "pass"
     },
     {
       "id": "graphs-st_box",
@@ -3060,16 +2802,12 @@
     {
       "id": "linux.i386-ER",
       "size": 2072,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:C-I->institute#0 lp edge:C-I->institute#0/lp[missing]: <absent> vs 197,450"
+      "status": "pass"
     },
     {
       "id": "share-ER",
       "size": 2072,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "edge:C-I->institute#0 lp edge:C-I->institute#0/lp[missing]: <absent> vs 197,454"
+      "status": "pass"
     },
     {
       "id": "linux.x86-ordering_dot",
@@ -3089,9 +2827,7 @@
     {
       "id": "windows-fsm",
       "size": 2124,
-      "status": "diverged",
-      "nDiffs": 14,
-      "firstDiff": "edge:LR_0->LR_1#0 lp edge:LR_0->LR_1#0/lp[missing]: <absent> vs 113,100"
+      "status": "pass"
     },
     {
       "id": "2242",
@@ -3101,9 +2837,7 @@
     {
       "id": "share-fsm",
       "size": 2142,
-      "status": "diverged",
-      "nDiffs": 14,
-      "firstDiff": "edge:LR_0->LR_1#0 lp edge:LR_0->LR_1#0/lp[missing]: <absent> vs 113,98"
+      "status": "pass"
     },
     {
       "id": "graphs-sr_box",
@@ -3133,9 +2867,7 @@
     {
       "id": "share-b786",
       "size": 2198,
-      "status": "diverged",
-      "nDiffs": 11,
-      "firstDiff": "node:n12 rects node:n12/rects[missing]: <absent> vs 16,16,37,52 37,16,67,52 67,16,88,52"
+      "status": "pass"
     },
     {
       "id": "graphs-b53",
@@ -3180,16 +2912,12 @@
     {
       "id": "linux.i386-dfa",
       "size": 2651,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 lp edge:n1->n2#0/lp[missing]: <absent> vs 80,502"
+      "status": "pass"
     },
     {
       "id": "share-dfa",
       "size": 2651,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 lp edge:n1->n2#0/lp[missing]: <absent> vs 80,502"
+      "status": "pass"
     },
     {
       "id": "graphs-NaN",
@@ -3199,9 +2927,7 @@
     {
       "id": "windows-dfa",
       "size": 2714,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:n1->n2#0 lp edge:n1->n2#0/lp[missing]: <absent> vs 89,502"
+      "status": "pass"
     },
     {
       "id": "graphs-b71",
@@ -3256,9 +2982,7 @@
     {
       "id": "share-train11",
       "size": 3220,
-      "status": "diverged",
-      "nDiffs": 25,
-      "firstDiff": "edge:st0->st0#0 lp edge:st0->st0#0/lp[missing]: <absent> vs 225,161"
+      "status": "pass"
     },
     {
       "id": "graphs-biglabel",
@@ -3268,9 +2992,7 @@
     {
       "id": "windows-train11",
       "size": 3257,
-      "status": "diverged",
-      "nDiffs": 25,
-      "firstDiff": "edge:st0->st0#0 lp edge:st0->st0#0/lp[missing]: <absent> vs 223,178"
+      "status": "pass"
     },
     {
       "id": "2734",
@@ -3300,16 +3022,12 @@
     {
       "id": "linux.x86-ports_dot",
       "size": 3470,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "node:b rects node:b/rects[missing]: <absent> vs 570,72.5,605,141.5 605,118.5,660,141.5 605,95.5,660,118.5 605,72.5,660,95.5 660,72.5,702,141.5"
+      "status": "pass"
     },
     {
       "id": "nshare-ports_dot",
       "size": 3493,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "node:b rects node:b/rects[missing]: <absent> vs 574.5,72.5,608.5,141.5 608.5,118.5,662.5,141.5 608.5,95.5,662.5,118.5 608.5,72.5,662.5,95.5 662.5,72.5,703.5,141.5"
+      "status": "pass"
     },
     {
       "id": "graphs-pmpipe",
@@ -3319,16 +3037,12 @@
     {
       "id": "windows-alf",
       "size": 3605,
-      "status": "diverged",
-      "nDiffs": 19,
-      "firstDiff": "node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 515,204,590,240"
+      "status": "pass"
     },
     {
       "id": "share-alf",
       "size": 3629,
-      "status": "diverged",
-      "nDiffs": 19,
-      "firstDiff": "node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 518,204,594,240"
+      "status": "pass"
     },
     {
       "id": "graphs-st_box_dbl",
@@ -3373,16 +3087,12 @@
     {
       "id": "share-triedds",
       "size": 3852,
-      "status": "diverged",
-      "nDiffs": 13,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 0,476,70,503 0,449,70,476"
+      "status": "pass"
     },
     {
       "id": "windows-triedds",
       "size": 3948,
-      "status": "diverged",
-      "nDiffs": 13,
-      "firstDiff": "node:node0 rects node:node0/rects[missing]: <absent> vs 1,314,74,341 1,287,74,314"
+      "status": "pass"
     },
     {
       "id": "graphs-grdlinear",
@@ -3412,16 +3122,12 @@
     {
       "id": "linux.x86-record_dot",
       "size": 4541,
-      "status": "diverged",
-      "nDiffs": 19,
-      "firstDiff": "node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 507.5,202.5,580.5,238.5"
+      "status": "pass"
     },
     {
       "id": "nshare-record_dot",
       "size": 4632,
-      "status": "diverged",
-      "nDiffs": 19,
-      "firstDiff": "node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 514,202.5,587,238.5"
+      "status": "pass"
     },
     {
       "id": "nshare-shapes_dot",
@@ -3521,16 +3227,12 @@
     {
       "id": "share-newarrows",
       "size": 6364,
-      "status": "diverged",
-      "nDiffs": 36,
-      "firstDiff": "edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62,30"
+      "status": "pass"
     },
     {
       "id": "windows-newarrows",
       "size": 6364,
-      "status": "diverged",
-      "nDiffs": 36,
-      "firstDiff": "edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62,30"
+      "status": "pass"
     },
     {
       "id": "2193",
@@ -3581,23 +3283,17 @@
     {
       "id": "linux.x86-arrows_dot",
       "size": 7235,
-      "status": "diverged",
-      "nDiffs": 36,
-      "firstDiff": "edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62.196,32.755"
+      "status": "pass"
     },
     {
       "id": "macosx-arrows_dot",
       "size": 7235,
-      "status": "diverged",
-      "nDiffs": 36,
-      "firstDiff": "edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62.196,32.755"
+      "status": "pass"
     },
     {
       "id": "nshare-arrows_dot",
       "size": 7235,
-      "status": "diverged",
-      "nDiffs": 36,
-      "firstDiff": "edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62.196,32.755"
+      "status": "pass"
     },
     {
       "id": "graphs-awilliams",
@@ -3728,9 +3424,7 @@
     {
       "id": "share-b94",
       "size": 9831,
-      "status": "diverged",
-      "nDiffs": 60,
-      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 lp edge:h130_104_19_203->h130_75_118_14_p1080#0/lp[missing]: <absent> vs 2249,62"
+      "status": "pass"
     },
     {
       "id": "graphs-b124",
@@ -3745,9 +3439,7 @@
     {
       "id": "share-proc3d",
       "size": 10429,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 256,428"
+      "status": "pass"
     },
     {
       "id": "linux.i386-crazy",
@@ -3767,9 +3459,7 @@
     {
       "id": "windows-proc3d",
       "size": 10446,
-      "status": "diverged",
-      "nDiffs": 6,
-      "firstDiff": "cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 235,464"
+      "status": "pass"
     },
     {
       "id": "graphs-b94",
@@ -3809,9 +3499,7 @@
     {
       "id": "share-ldbxtried",
       "size": 11505,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 233,616"
+      "status": "pass"
     },
     {
       "id": "linux.x86-neatosplines_neato",
@@ -3826,9 +3514,7 @@
     {
       "id": "windows-ldbxtried",
       "size": 11805,
-      "status": "diverged",
-      "nDiffs": 1,
-      "firstDiff": "cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 235,610"
+      "status": "pass"
     },
     {
       "id": "share-ngk10_4",
@@ -3903,9 +3589,7 @@
     {
       "id": "windows-b94",
       "size": 14509,
-      "status": "diverged",
-      "nDiffs": 60,
-      "firstDiff": "edge:h130_104_19_203->h130_75_118_14_p1080#0 lp edge:h130_104_19_203->h130_75_118_14_p1080#0/lp[missing]: <absent> vs 2991,62"
+      "status": "pass"
     },
     {
       "id": "1447_1",
@@ -3920,23 +3604,17 @@
     {
       "id": "windows-b36",
       "size": 15050,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "node:\\<base-output\\> rects node:\\<base-output\\>/rects[missing]: <absent> vs 452,1512,730,1536 452,1488,586,1512 586,1488,730,1512 452,1236,538,1488 452,984,538,1236 538,1464,730,1488 538,1440,730,1464 538,1416,730,1440 538,1392,730,1416 538,1368,730,1392 538,1344,730,1368 538,1320,730,1344 538,1296,730,1320 538,1272,730,1296 538,1248,730,1272 538,1224,730,1248 538,1200,730,1224 538,1176,730,1200 538,1152,730,1176 538,1128,730,1152 538,1104,730,1128 538,1080,730,1104 538,1056,730,1080 538,1032,730,1056 538,1008,730,1032 538,984,730,1008"
+      "status": "pass"
     },
     {
       "id": "linux.i386-b36",
       "size": 15051,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "node:\\<base-output\\> rects node:\\<base-output\\>/rects[missing]: <absent> vs 452,1512,732,1536 452,1488,588,1512 588,1488,732,1512 452,1236,539,1488 452,984,539,1236 539,1464,732,1488 539,1440,732,1464 539,1416,732,1440 539,1392,732,1416 539,1368,732,1392 539,1344,732,1368 539,1320,732,1344 539,1296,732,1320 539,1272,732,1296 539,1248,732,1272 539,1224,732,1248 539,1200,732,1224 539,1176,732,1200 539,1152,732,1176 539,1128,732,1152 539,1104,732,1128 539,1080,732,1104 539,1056,732,1080 539,1032,732,1056 539,1008,732,1032 539,984,732,1008"
+      "status": "pass"
     },
     {
       "id": "share-b36",
       "size": 15051,
-      "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "node:\\<base-output\\> rects node:\\<base-output\\>/rects[missing]: <absent> vs 452,1512,732,1536 452,1488,588,1512 588,1488,732,1512 452,1236,539,1488 452,984,539,1236 539,1464,732,1488 539,1440,732,1464 539,1416,732,1440 539,1392,732,1416 539,1368,732,1392 539,1344,732,1368 539,1320,732,1344 539,1296,732,1320 539,1272,732,1296 539,1248,732,1272 539,1224,732,1248 539,1200,732,1224 539,1176,732,1200 539,1152,732,1176 539,1128,732,1152 539,1104,732,1128 539,1080,732,1104 539,1056,732,1080 539,1032,732,1056 539,1008,732,1032 539,984,732,1008"
+      "status": "pass"
     },
     {
       "id": "share-NaN",
@@ -3971,16 +3649,12 @@
     {
       "id": "share-b51",
       "size": 29420,
-      "status": "diverged",
-      "nDiffs": 38,
-      "firstDiff": "cluster:cluster_for_15 lp cluster:cluster_for_15/lp[missing]: <absent> vs 517,10666"
+      "status": "pass"
     },
     {
       "id": "windows-b51",
       "size": 29685,
-      "status": "diverged",
-      "nDiffs": 38,
-      "firstDiff": "cluster:cluster_for_15 lp cluster:cluster_for_15/lp[missing]: <absent> vs 515,10666"
+      "status": "pass"
     },
     {
       "id": "graphs-b69",
@@ -4030,23 +3704,17 @@
     {
       "id": "linux.i386-b106",
       "size": 92005,
-      "status": "diverged",
-      "nDiffs": 215,
-      "firstDiff": "edge:Node1295->Node1391#0 lp edge:Node1295->Node1391#0/lp[missing]: <absent> vs 3373,311"
+      "status": "pass"
     },
     {
       "id": "share-b106",
       "size": 92301,
-      "status": "diverged",
-      "nDiffs": 215,
-      "firstDiff": "edge:Node1295->Node1391#0 lp edge:Node1295->Node1391#0/lp[missing]: <absent> vs 3373,308"
+      "status": "pass"
     },
     {
       "id": "windows-b106",
       "size": 95634,
-      "status": "diverged",
-      "nDiffs": 215,
-      "firstDiff": "edge:Node1295->Node1391#0 lp edge:Node1295->Node1391#0/lp[missing]: <absent> vs 3962,356"
+      "status": "pass"
     },
     {
       "id": "graphs-b102",
@@ -4071,23 +3739,17 @@
     {
       "id": "linux.i386-b29",
       "size": 136753,
-      "status": "diverged",
-      "nDiffs": 363,
-      "firstDiff": "edge:Node14648->Node14648#0 lp edge:Node14648->Node14648#0/lp[missing]: <absent> vs 1783,655"
+      "status": "pass"
     },
     {
       "id": "share-b29",
       "size": 137802,
-      "status": "diverged",
-      "nDiffs": 363,
-      "firstDiff": "edge:Node14648->Node14648#0 lp edge:Node14648->Node14648#0/lp[missing]: <absent> vs 1783,672"
+      "status": "pass"
     },
     {
       "id": "windows-b29",
       "size": 149114,
-      "status": "diverged",
-      "nDiffs": 363,
-      "firstDiff": "edge:Node14648->Node14648#0 lp edge:Node14648->Node14648#0/lp[missing]: <absent> vs 1776,672"
+      "status": "pass"
     },
     {
       "id": "linux.i386-b102",
@@ -4110,6 +3772,11 @@
       "status": "pass"
     },
     {
+      "id": "1652",
+      "size": 240391,
+      "status": "pass"
+    },
+    {
       "id": "1879",
       "size": 287816,
       "status": "oracle-error",
@@ -4118,30 +3785,22 @@
     {
       "id": "linux.x86-root_twopi",
       "size": 287907,
-      "status": "diverged",
-      "nDiffs": 710,
-      "firstDiff": "edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 2612,3629.5"
+      "status": "pass"
     },
     {
       "id": "nshare-root_twopi",
       "size": 287916,
-      "status": "diverged",
-      "nDiffs": 710,
-      "firstDiff": "edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 2614.3,3629.5"
+      "status": "pass"
     },
     {
       "id": "nshare-root_circo",
       "size": 313126,
-      "status": "diverged",
-      "nDiffs": 710,
-      "firstDiff": "edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 1.0375e+06,4.9654e+05"
+      "status": "pass"
     },
     {
       "id": "linux.x86-root_circo",
       "size": 313168,
-      "status": "diverged",
-      "nDiffs": 710,
-      "firstDiff": "edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 1.0238e+06,4.9e+05"
+      "status": "pass"
     },
     {
       "id": "graphs-b103",

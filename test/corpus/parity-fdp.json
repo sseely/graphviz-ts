@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-13T20:27:36.363Z",
+  "generatedAt": "2026-07-14T00:47:15.620Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "fdp",
   "tolerance": 0.5,
-  "total": 761,
+  "total": 762,
   "counts": {
     "pass": 579,
     "diverged": 166,
-    "oracle-error": 15,
+    "oracle-error": 16,
     "port-error": 0,
     "timeout": 1
   },
@@ -2824,8 +2824,8 @@
       "id": "graphs-weight",
       "size": 1720,
       "status": "diverged",
-      "nDiffs": 1605,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1613.08 vs 1022.6"
+      "nDiffs": 1607,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1613.08 vs 861.11"
     },
     {
       "id": "linux.i386-hashtable",
@@ -3637,8 +3637,8 @@
       "id": "graphs-b15",
       "size": 8774,
       "status": "diverged",
-      "nDiffs": 5663,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1728.46"
+      "nDiffs": 5662,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1185.75"
     },
     {
       "id": "nshare-dotsplines_dot",
@@ -3888,8 +3888,8 @@
       "id": "graphs-mode",
       "size": 14907,
       "status": "diverged",
-      "nDiffs": 7525,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 847.58 vs 667.17"
+      "nDiffs": 7523,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 847.58 vs 756.03"
     },
     {
       "id": "windows-b36",
@@ -4088,8 +4088,8 @@
       "id": "windows-b102",
       "size": 184125,
       "status": "diverged",
-      "nDiffs": 18104,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 733.8 vs 747.34"
+      "nDiffs": 18092,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 733.8 vs 739.29"
     },
     {
       "id": "graphs-b81",
@@ -4097,6 +4097,12 @@
       "status": "diverged",
       "nDiffs": 10389,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: -32074.67 vs -34924.12"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     },
     {
       "id": "1879",
@@ -4143,15 +4149,15 @@
       "id": "2475_2",
       "size": 641284,
       "status": "diverged",
-      "nDiffs": 323062,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"
+      "nDiffs": 327324,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18609.58"
     },
     {
       "id": "2470",
       "size": 734358,
       "status": "diverged",
-      "nDiffs": 18417,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 7690.38"
+      "nDiffs": 18559,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 8500.44"
     },
     {
       "id": "2222",

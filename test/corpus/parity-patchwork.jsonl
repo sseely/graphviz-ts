@@ -278,8 +278,8 @@
 {"id":"graphs-clusters","size":402,"status":"pass"}
 {"id":"graphs-xlabels","size":404,"status":"pass"}
 {"id":"2368_1","size":405,"status":"pass"}
-{"id":"share-longflat","size":405,"status":"diverged","nDiffs":1,"firstDiff":"edge:c->b#0 lp edge:c->b#0/lp[missing]: <absent> vs 160,54"}
-{"id":"windows-longflat","size":409,"status":"diverged","nDiffs":1,"firstDiff":"edge:c->b#0 lp edge:c->b#0/lp[missing]: <absent> vs 112,62"}
+{"id":"share-longflat","size":405,"status":"pass"}
+{"id":"windows-longflat","size":409,"status":"pass"}
 {"id":"2613","size":411,"status":"pass"}
 {"id":"graphs-KW91","size":416,"status":"pass"}
 {"id":"graphs-records","size":417,"status":"pass"}
@@ -288,15 +288,15 @@
 {"id":"macosx-radius_dot","size":418,"status":"pass"}
 {"id":"nshare-radius_dot","size":418,"status":"pass"}
 {"id":"windows-radius_dot","size":418,"status":"pass"}
-{"id":"share-record2","size":421,"status":"diverged","nDiffs":2,"firstDiff":"node:a rects node:a/rects[missing]: <absent> vs 23,108,58,144 58,108,83,144 83,108,119,144"}
-{"id":"windows-record2","size":421,"status":"diverged","nDiffs":2,"firstDiff":"node:a rects node:a/rects[missing]: <absent> vs 23,108,58,144 58,108,82,144 82,108,117,144"}
+{"id":"share-record2","size":421,"status":"pass"}
+{"id":"windows-record2","size":421,"status":"pass"}
 {"id":"graphs-ctext","size":425,"status":"pass"}
 {"id":"358","size":429,"status":"pass"}
 {"id":"2258","size":460,"status":"pass"}
 {"id":"2556","size":469,"status":"pass"}
 {"id":"1213-1","size":481,"status":"pass"}
-{"id":"share-b491","size":486,"status":"diverged","nDiffs":2,"firstDiff":"edge:Node29->Node29#0 lp edge:Node29->Node29#0/lp[missing]: <absent> vs 132,92"}
-{"id":"windows-b491","size":486,"status":"diverged","nDiffs":2,"firstDiff":"edge:Node29->Node29#0 lp edge:Node29->Node29#0/lp[missing]: <absent> vs 134,92"}
+{"id":"share-b491","size":486,"status":"pass"}
+{"id":"windows-b491","size":486,"status":"pass"}
 {"id":"graphs-b22","size":488,"status":"pass"}
 {"id":"1622_0","size":489,"status":"pass"}
 {"id":"graphs-states","size":492,"status":"pass"}
@@ -311,125 +311,125 @@
 {"id":"1425_1","size":544,"status":"pass"}
 {"id":"graphs-nul_nul","size":576,"status":"pass"}
 {"id":"241_0","size":578,"status":"pass"}
-{"id":"share-labelclust-ndd","size":586,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
-{"id":"windows-labelclust-ndd","size":586,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
+{"id":"share-labelclust-ndd","size":586,"status":"pass"}
+{"id":"windows-labelclust-ndd","size":586,"status":"pass"}
 {"id":"graphs-inv_nul","size":588,"status":"pass"}
 {"id":"graphs-tree","size":588,"status":"pass"}
 {"id":"graphs-b68","size":595,"status":"pass"}
-{"id":"share-labelclust-fdd","size":595,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"windows-labelclust-fdd","size":595,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
+{"id":"share-labelclust-fdd","size":595,"status":"pass"}
+{"id":"windows-labelclust-fdd","size":595,"status":"pass"}
 {"id":"linux.x86-edgeclip_dot","size":599,"status":"pass"}
 {"id":"macosx-edgeclip_dot","size":599,"status":"pass"}
 {"id":"nshare-edgeclip_dot","size":599,"status":"pass"}
-{"id":"share-labelclust-ntd","size":603,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
-{"id":"windows-labelclust-ntd","size":603,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
+{"id":"share-labelclust-ntd","size":603,"status":"pass"}
+{"id":"windows-labelclust-ntd","size":603,"status":"pass"}
 {"id":"graphs-fsm","size":605,"status":"pass"}
-{"id":"share-labelclust-ndl","size":605,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"}
-{"id":"windows-labelclust-ndl","size":605,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"}
-{"id":"share-labelclust-ndr","size":606,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"}
-{"id":"windows-labelclust-ndr","size":606,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"}
-{"id":"share-labelclust-ndc","size":607,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
-{"id":"windows-labelclust-ndc","size":607,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
+{"id":"share-labelclust-ndl","size":605,"status":"pass"}
+{"id":"windows-labelclust-ndl","size":605,"status":"pass"}
+{"id":"share-labelclust-ndr","size":606,"status":"pass"}
+{"id":"windows-labelclust-ndr","size":606,"status":"pass"}
+{"id":"share-labelclust-ndc","size":607,"status":"pass"}
+{"id":"windows-labelclust-ndc","size":607,"status":"pass"}
 {"id":"1990","size":610,"status":"pass"}
-{"id":"share-labelclust-nbd","size":611,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"windows-labelclust-nbd","size":611,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"share-labelclust-ftd","size":612,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"windows-labelclust-ftd","size":612,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"share-labelclust-fdl","size":614,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"}
-{"id":"windows-labelclust-fdl","size":614,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"}
-{"id":"share-labelclust-fbd","size":615,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"windows-labelclust-fbd","size":615,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"share-labelclust-fdc","size":616,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"share-labelclust-fdr","size":616,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"}
-{"id":"windows-labelclust-fdc","size":616,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"windows-labelclust-fdr","size":616,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"}
+{"id":"share-labelclust-nbd","size":611,"status":"pass"}
+{"id":"windows-labelclust-nbd","size":611,"status":"pass"}
+{"id":"share-labelclust-ftd","size":612,"status":"pass"}
+{"id":"windows-labelclust-ftd","size":612,"status":"pass"}
+{"id":"share-labelclust-fdl","size":614,"status":"pass"}
+{"id":"windows-labelclust-fdl","size":614,"status":"pass"}
+{"id":"share-labelclust-fbd","size":615,"status":"pass"}
+{"id":"windows-labelclust-fbd","size":615,"status":"pass"}
+{"id":"share-labelclust-fdc","size":616,"status":"pass"}
+{"id":"share-labelclust-fdr","size":616,"status":"pass"}
+{"id":"windows-labelclust-fdc","size":616,"status":"pass"}
+{"id":"windows-labelclust-fdr","size":616,"status":"pass"}
 {"id":"graphs-inv_inv","size":618,"status":"pass"}
 {"id":"linux.x86-rowcolsep_dot1","size":619,"status":"pass"}
 {"id":"macosx-rowcolsep_dot1","size":619,"status":"pass"}
 {"id":"nshare-rowcolsep_dot1","size":619,"status":"pass"}
-{"id":"share-labelroot-ntd","size":619,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"}
-{"id":"windows-labelroot-ntd","size":619,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"}
+{"id":"share-labelroot-ntd","size":619,"status":"pass"}
+{"id":"windows-labelroot-ntd","size":619,"status":"pass"}
 {"id":"graphs-nul_inv","size":620,"status":"pass"}
 {"id":"1856","size":621,"status":"pass"}
 {"id":"2325","size":621,"status":"pass"}
 {"id":"linux.x86-rowcolsep_dot","size":622,"status":"pass"}
 {"id":"macosx-rowcolsep_dot","size":622,"status":"pass"}
 {"id":"nshare-rowcolsep_dot","size":622,"status":"pass"}
-{"id":"share-labelclust-ntl","size":622,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"}
-{"id":"windows-labelclust-ntl","size":622,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,168"}
-{"id":"share-labelclust-ntr","size":623,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"}
-{"id":"windows-labelclust-ntr","size":623,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,168"}
-{"id":"share-labelclust-ntc","size":624,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
-{"id":"windows-labelclust-ntc","size":624,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,168"}
-{"id":"share-labelroot-nbd","size":625,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"windows-labelroot-nbd","size":625,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"share-labelroot-ftd","size":627,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"}
-{"id":"windows-labelroot-ftd","size":627,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"}
-{"id":"share-labelroot-ndd","size":628,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"windows-labelroot-ndd","size":628,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
+{"id":"share-labelclust-ntl","size":622,"status":"pass"}
+{"id":"windows-labelclust-ntl","size":622,"status":"pass"}
+{"id":"share-labelclust-ntr","size":623,"status":"pass"}
+{"id":"windows-labelclust-ntr","size":623,"status":"pass"}
+{"id":"share-labelclust-ntc","size":624,"status":"pass"}
+{"id":"windows-labelclust-ntc","size":624,"status":"pass"}
+{"id":"share-labelroot-nbd","size":625,"status":"pass"}
+{"id":"windows-labelroot-nbd","size":625,"status":"pass"}
+{"id":"share-labelroot-ftd","size":627,"status":"pass"}
+{"id":"windows-labelroot-ftd","size":627,"status":"pass"}
+{"id":"share-labelroot-ndd","size":628,"status":"pass"}
+{"id":"windows-labelroot-ndd","size":628,"status":"pass"}
 {"id":"graphs-hashtable","size":629,"status":"pass"}
-{"id":"share-labelroot-fbd","size":629,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"windows-labelroot-fbd","size":629,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
+{"id":"share-labelroot-fbd","size":629,"status":"pass"}
+{"id":"windows-labelroot-fbd","size":629,"status":"pass"}
 {"id":"graphs-val_nul","size":630,"status":"pass"}
-{"id":"share-labelclust-nbl","size":630,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"windows-labelclust-nbl","size":630,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"share-labelclust-ftl","size":631,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"}
-{"id":"share-labelclust-nbr","size":631,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"}
-{"id":"windows-labelclust-ftl","size":631,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,96"}
-{"id":"windows-labelclust-nbr","size":631,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"}
-{"id":"share-labelclust-nbc","size":632,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"share-labelroot-fdd","size":632,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"windows-labelclust-nbc","size":632,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"windows-labelroot-fdd","size":632,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"share-labelclust-ftc","size":633,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"share-labelclust-ftr","size":633,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"}
-{"id":"windows-labelclust-ftc","size":633,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,96"}
-{"id":"windows-labelclust-ftr","size":633,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,96"}
-{"id":"share-labelclust-fbl","size":634,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"windows-labelclust-fbl","size":634,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"share-labelroot-ntl","size":635,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"}
-{"id":"windows-labelroot-ntl","size":635,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"}
+{"id":"share-labelclust-nbl","size":630,"status":"pass"}
+{"id":"windows-labelclust-nbl","size":630,"status":"pass"}
+{"id":"share-labelclust-ftl","size":631,"status":"pass"}
+{"id":"share-labelclust-nbr","size":631,"status":"pass"}
+{"id":"windows-labelclust-ftl","size":631,"status":"pass"}
+{"id":"windows-labelclust-nbr","size":631,"status":"pass"}
+{"id":"share-labelclust-nbc","size":632,"status":"pass"}
+{"id":"share-labelroot-fdd","size":632,"status":"pass"}
+{"id":"windows-labelclust-nbc","size":632,"status":"pass"}
+{"id":"windows-labelroot-fdd","size":632,"status":"pass"}
+{"id":"share-labelclust-ftc","size":633,"status":"pass"}
+{"id":"share-labelclust-ftr","size":633,"status":"pass"}
+{"id":"windows-labelclust-ftc","size":633,"status":"pass"}
+{"id":"windows-labelclust-ftr","size":633,"status":"pass"}
+{"id":"share-labelclust-fbl","size":634,"status":"pass"}
+{"id":"windows-labelclust-fbl","size":634,"status":"pass"}
+{"id":"share-labelroot-ntl","size":635,"status":"pass"}
+{"id":"windows-labelroot-ntl","size":635,"status":"pass"}
 {"id":"graphs-inv_val","size":636,"status":"pass"}
-{"id":"share-labelclust-fbc","size":636,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"share-labelclust-fbr","size":636,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"}
-{"id":"windows-labelclust-fbc","size":636,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"windows-labelclust-fbr","size":636,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"}
-{"id":"share-labelroot-ntc","size":637,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"}
-{"id":"share-labelroot-ntr","size":637,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,20"}
-{"id":"windows-labelroot-ntc","size":637,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,20"}
-{"id":"windows-labelroot-ntr","size":637,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,20"}
-{"id":"share-labelroot-nbl","size":641,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"windows-labelroot-nbl","size":641,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"share-labelroot-ftl","size":643,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"}
-{"id":"share-labelroot-nbc","size":643,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"share-labelroot-nbr","size":643,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"}
-{"id":"windows-labelroot-ftl","size":643,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,20"}
-{"id":"windows-labelroot-nbc","size":643,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"windows-labelroot-nbr","size":643,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"}
-{"id":"share-labelroot-ndl","size":644,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"windows-labelroot-ndl","size":644,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"share-labelroot-fbl","size":645,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"share-labelroot-ftc","size":645,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"}
-{"id":"windows-labelroot-fbl","size":645,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"windows-labelroot-ftc","size":645,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,20"}
-{"id":"share-labelroot-ndc","size":646,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"share-labelroot-ndr","size":646,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"}
-{"id":"windows-labelroot-ndc","size":646,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 43,44"}
-{"id":"windows-labelroot-ndr","size":646,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 48,44"}
-{"id":"share-labelroot-fbc","size":647,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"share-labelroot-ftr","size":647,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,20"}
-{"id":"windows-labelroot-fbc","size":647,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"windows-labelroot-ftr","size":647,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,20"}
-{"id":"share-labelroot-fdl","size":648,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"windows-labelroot-fdl","size":648,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 38,44"}
-{"id":"share-labelroot-fbr","size":649,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"}
-{"id":"windows-labelroot-fbr","size":649,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"}
+{"id":"share-labelclust-fbc","size":636,"status":"pass"}
+{"id":"share-labelclust-fbr","size":636,"status":"pass"}
+{"id":"windows-labelclust-fbc","size":636,"status":"pass"}
+{"id":"windows-labelclust-fbr","size":636,"status":"pass"}
+{"id":"share-labelroot-ntc","size":637,"status":"pass"}
+{"id":"share-labelroot-ntr","size":637,"status":"pass"}
+{"id":"windows-labelroot-ntc","size":637,"status":"pass"}
+{"id":"windows-labelroot-ntr","size":637,"status":"pass"}
+{"id":"share-labelroot-nbl","size":641,"status":"pass"}
+{"id":"windows-labelroot-nbl","size":641,"status":"pass"}
+{"id":"share-labelroot-ftl","size":643,"status":"pass"}
+{"id":"share-labelroot-nbc","size":643,"status":"pass"}
+{"id":"share-labelroot-nbr","size":643,"status":"pass"}
+{"id":"windows-labelroot-ftl","size":643,"status":"pass"}
+{"id":"windows-labelroot-nbc","size":643,"status":"pass"}
+{"id":"windows-labelroot-nbr","size":643,"status":"pass"}
+{"id":"share-labelroot-ndl","size":644,"status":"pass"}
+{"id":"windows-labelroot-ndl","size":644,"status":"pass"}
+{"id":"share-labelroot-fbl","size":645,"status":"pass"}
+{"id":"share-labelroot-ftc","size":645,"status":"pass"}
+{"id":"windows-labelroot-fbl","size":645,"status":"pass"}
+{"id":"windows-labelroot-ftc","size":645,"status":"pass"}
+{"id":"share-labelroot-ndc","size":646,"status":"pass"}
+{"id":"share-labelroot-ndr","size":646,"status":"pass"}
+{"id":"windows-labelroot-ndc","size":646,"status":"pass"}
+{"id":"windows-labelroot-ndr","size":646,"status":"pass"}
+{"id":"share-labelroot-fbc","size":647,"status":"pass"}
+{"id":"share-labelroot-ftr","size":647,"status":"pass"}
+{"id":"windows-labelroot-fbc","size":647,"status":"pass"}
+{"id":"windows-labelroot-ftr","size":647,"status":"pass"}
+{"id":"share-labelroot-fdl","size":648,"status":"pass"}
+{"id":"windows-labelroot-fdl","size":648,"status":"pass"}
+{"id":"share-labelroot-fbr","size":649,"status":"pass"}
+{"id":"windows-labelroot-fbr","size":649,"status":"pass"}
 {"id":"graphs-ER","size":650,"status":"pass"}
-{"id":"share-labelroot-fdc","size":650,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
-{"id":"windows-labelroot-fdc","size":650,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 88,44"}
+{"id":"share-labelroot-fdc","size":650,"status":"pass"}
+{"id":"windows-labelroot-fdc","size":650,"status":"pass"}
 {"id":"2801","size":651,"status":"pass"}
-{"id":"share-labelroot-fdr","size":652,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"}
-{"id":"windows-labelroot-fdr","size":652,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 138,44"}
+{"id":"share-labelroot-fdr","size":652,"status":"pass"}
+{"id":"windows-labelroot-fdr","size":652,"status":"pass"}
 {"id":"graphs-nul_val","size":659,"status":"pass"}
 {"id":"graphs-val_inv","size":660,"status":"pass"}
 {"id":"graphs-b786","size":667,"status":"pass"}
@@ -437,9 +437,9 @@
 {"id":"graphs-ports","size":677,"status":"pass"}
 {"id":"graphs-val_val","size":678,"status":"pass"}
 {"id":"graphs-sides","size":680,"status":"pass"}
-{"id":"share-structs","size":710,"status":"diverged","nDiffs":3,"firstDiff":"node:struct1 rects node:struct1/rects[missing]: <absent> vs 10,108,45,144 45,108,100,144 100,108,144,144"}
+{"id":"share-structs","size":710,"status":"pass"}
 {"id":"1658","size":711,"status":"pass"}
-{"id":"windows-structs","size":728,"status":"diverged","nDiffs":3,"firstDiff":"node:struct1 rects node:struct1/rects[missing]: <absent> vs 12,108,47,144 47,108,102,144 102,108,145,144"}
+{"id":"windows-structs","size":728,"status":"pass"}
 {"id":"2168_1","size":729,"status":"pass"}
 {"id":"graphs-html","size":738,"status":"pass"}
 {"id":"graphs-b3","size":754,"status":"pass"}
@@ -454,16 +454,16 @@
 {"id":"graphs-b34","size":814,"status":"pass"}
 {"id":"graphs-fig6","size":835,"status":"pass"}
 {"id":"graphs-shapes","size":840,"status":"pass"}
-{"id":"share-states","size":858,"status":"diverged","nDiffs":5,"firstDiff":"edge:empty->full#0 lp edge:empty->full#0/lp[missing]: <absent> vs 246,47"}
-{"id":"windows-states","size":878,"status":"diverged","nDiffs":5,"firstDiff":"edge:empty->full#0 lp edge:empty->full#0/lp[missing]: <absent> vs 245,47"}
+{"id":"share-states","size":858,"status":"pass"}
+{"id":"windows-states","size":878,"status":"pass"}
 {"id":"graphs-Petersen","size":904,"status":"pass"}
 {"id":"linux.x86-nestedclust_dot","size":907,"status":"pass"}
 {"id":"macosx-nestedclust_dot","size":907,"status":"pass"}
 {"id":"nshare-nestedclust_dot","size":907,"status":"pass"}
-{"id":"share-flatedge","size":918,"status":"diverged","nDiffs":1,"firstDiff":"edge:tcp->kernel_linux#0 lp edge:tcp->kernel_linux#0/lp[missing]: <absent> vs 74,63"}
+{"id":"share-flatedge","size":918,"status":"pass"}
 {"id":"graphs-Symbol","size":924,"status":"pass"}
-{"id":"windows-nhg","size":926,"status":"diverged","nDiffs":6,"firstDiff":"edge:0->1#0 lp edge:0->1#0/lp[missing]: <absent> vs 114,110"}
-{"id":"share-nhg","size":938,"status":"diverged","nDiffs":6,"firstDiff":"edge:0->1#0 lp edge:0->1#0/lp[missing]: <absent> vs 97,110"}
+{"id":"windows-nhg","size":926,"status":"pass"}
+{"id":"share-nhg","size":938,"status":"pass"}
 {"id":"graphs-alf","size":958,"status":"pass"}
 {"id":"graphs-record","size":958,"status":"pass"}
 {"id":"graphs-dfa","size":959,"status":"pass"}
@@ -475,19 +475,19 @@
 {"id":"2521_1","size":1062,"status":"pass"}
 {"id":"graphs-grdangles","size":1076,"status":"pass"}
 {"id":"graphs-shells","size":1102,"status":"pass"}
-{"id":"share-try","size":1141,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster_big lp cluster:cluster_big/lp[missing]: <absent> vs 53,524"}
-{"id":"windows-try","size":1142,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster_big lp cluster:cluster_big/lp[missing]: <absent> vs 53,524"}
+{"id":"share-try","size":1141,"status":"pass"}
+{"id":"windows-try","size":1142,"status":"pass"}
 {"id":"share-ctext","size":1171,"status":"pass"}
 {"id":"windows-ctext","size":1171,"status":"pass"}
-{"id":"linux.x86-flatedge_dot","size":1177,"status":"diverged","nDiffs":1,"firstDiff":"edge:tcp->kernel_linux#0 lp edge:tcp->kernel_linux#0/lp[missing]: <absent> vs 69.245,61.5"}
-{"id":"nshare-flatedge_dot","size":1182,"status":"diverged","nDiffs":1,"firstDiff":"edge:tcp->kernel_linux#0 lp edge:tcp->kernel_linux#0/lp[missing]: <absent> vs 67.445,61.5"}
+{"id":"linux.x86-flatedge_dot","size":1177,"status":"pass"}
+{"id":"nshare-flatedge_dot","size":1182,"status":"pass"}
 {"id":"share-clust3","size":1195,"status":"pass"}
 {"id":"windows-clust3","size":1195,"status":"pass"}
 {"id":"share-clust2","size":1200,"status":"pass"}
 {"id":"windows-clust2","size":1200,"status":"pass"}
 {"id":"graphs-grdshapes","size":1204,"status":"pass"}
-{"id":"share-clust","size":1218,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 229,152"}
-{"id":"windows-clust","size":1218,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 229,152"}
+{"id":"share-clust","size":1218,"status":"pass"}
+{"id":"windows-clust","size":1218,"status":"pass"}
 {"id":"share-clust1","size":1239,"status":"pass"}
 {"id":"graphs-url","size":1242,"status":"pass"}
 {"id":"1896","size":1261,"status":"pass"}
@@ -496,9 +496,9 @@
 {"id":"1855","size":1335,"status":"pass"}
 {"id":"graphs-dpd","size":1357,"status":"pass"}
 {"id":"graphs-overlap","size":1357,"status":"pass"}
-{"id":"share-records","size":1398,"status":"diverged","nDiffs":7,"firstDiff":"node:a rects node:a/rects[missing]: <absent> vs 0,138,80,178 0,114,80,138 0,90,80,114"}
+{"id":"share-records","size":1398,"status":"pass"}
 {"id":"graphs-html2","size":1414,"status":"pass"}
-{"id":"windows-records","size":1416,"status":"diverged","nDiffs":7,"firstDiff":"node:a rects node:a/rects[missing]: <absent> vs 0,138,80,178 0,114,80,138 0,90,80,114"}
+{"id":"windows-records","size":1416,"status":"pass"}
 {"id":"2361","size":1419,"status":"pass"}
 {"id":"graphs-b56","size":1421,"status":"pass"}
 {"id":"graphs-unix","size":1433,"status":"pass"}
@@ -523,24 +523,24 @@
 {"id":"share-clust5","size":1698,"status":"pass"}
 {"id":"graphs-grdcolors","size":1704,"status":"pass"}
 {"id":"graphs-size","size":1706,"status":"pass"}
-{"id":"share-clust4","size":1709,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 53,354"}
-{"id":"windows-clust4","size":1709,"status":"diverged","nDiffs":2,"firstDiff":"cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 53,354"}
+{"id":"share-clust4","size":1709,"status":"pass"}
+{"id":"windows-clust4","size":1709,"status":"pass"}
 {"id":"graphs-ngk10_4","size":1718,"status":"pass"}
 {"id":"graphs-unix2","size":1719,"status":"pass"}
 {"id":"graphs-unix2k","size":1719,"status":"pass"}
 {"id":"graphs-weight","size":1720,"status":"pass"}
-{"id":"linux.i386-hashtable","size":1756,"status":"diverged","nDiffs":8,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 1,168,22,192 1,144,22,168 1,120,22,144 1,96,22,120 1,72,22,96 1,48,22,72 1,24,22,48 1,0,22,24"}
-{"id":"share-hashtable","size":1756,"status":"diverged","nDiffs":8,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 1,168,22,192 1,144,22,168 1,120,22,144 1,96,22,120 1,72,22,96 1,48,22,72 1,24,22,48 1,0,22,24"}
-{"id":"windows-hashtable","size":1756,"status":"diverged","nDiffs":8,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 1,168,22,192 1,144,22,168 1,120,22,144 1,96,22,120 1,72,22,96 1,48,22,72 1,24,22,48 1,0,22,24"}
+{"id":"linux.i386-hashtable","size":1756,"status":"pass"}
+{"id":"share-hashtable","size":1756,"status":"pass"}
+{"id":"windows-hashtable","size":1756,"status":"pass"}
 {"id":"graphs-viewfile","size":1767,"status":"pass"}
 {"id":"share-Petersen","size":1768,"status":"pass"}
 {"id":"windows-Petersen","size":1768,"status":"pass"}
-{"id":"share-KW91","size":1824,"status":"diverged","nDiffs":1,"firstDiff":"cluster:cluster_inner lp cluster:cluster_inner/lp[missing]: <absent> vs 170,352"}
-{"id":"windows-KW91","size":1824,"status":"diverged","nDiffs":1,"firstDiff":"cluster:cluster_inner lp cluster:cluster_inner/lp[missing]: <absent> vs 170,376"}
-{"id":"share-tree","size":1825,"status":"diverged","nDiffs":9,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 171,180,192,204 192,180,219,204 219,180,240,204"}
-{"id":"windows-tree","size":1825,"status":"diverged","nDiffs":9,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 169,180,190,204 190,180,217,204 217,180,238,204"}
-{"id":"linux.x86-html2_dot","size":1945,"status":"diverged","nDiffs":1,"firstDiff":"edge:d->c#0 lp edge:d->c#0/lp[missing]: <absent> vs 169,249.44"}
-{"id":"nshare-html2_dot","size":1946,"status":"diverged","nDiffs":1,"firstDiff":"edge:d->c#0 lp edge:d->c#0/lp[missing]: <absent> vs 169,249.44"}
+{"id":"share-KW91","size":1824,"status":"pass"}
+{"id":"windows-KW91","size":1824,"status":"pass"}
+{"id":"share-tree","size":1825,"status":"pass"}
+{"id":"windows-tree","size":1825,"status":"pass"}
+{"id":"linux.x86-html2_dot","size":1945,"status":"pass"}
+{"id":"nshare-html2_dot","size":1946,"status":"pass"}
 {"id":"share-pm2way","size":1974,"status":"pass"}
 {"id":"graphs-sq_rules","size":1979,"status":"pass"}
 {"id":"windows-pm2way","size":1998,"status":"pass"}
@@ -552,23 +552,23 @@
 {"id":"nshare-ordering_dot1","size":2042,"status":"pass"}
 {"id":"graphs-rd_rules","size":2043,"status":"pass"}
 {"id":"graphs-newarrows","size":2045,"status":"pass"}
-{"id":"windows-ER","size":2051,"status":"diverged","nDiffs":6,"firstDiff":"edge:C-I->institute#0 lp edge:C-I->institute#0/lp[missing]: <absent> vs 200,454"}
+{"id":"windows-ER","size":2051,"status":"pass"}
 {"id":"graphs-st_box","size":2068,"status":"pass"}
 {"id":"graphs-st_circle","size":2071,"status":"pass"}
-{"id":"linux.i386-ER","size":2072,"status":"diverged","nDiffs":6,"firstDiff":"edge:C-I->institute#0 lp edge:C-I->institute#0/lp[missing]: <absent> vs 197,450"}
-{"id":"share-ER","size":2072,"status":"diverged","nDiffs":6,"firstDiff":"edge:C-I->institute#0 lp edge:C-I->institute#0/lp[missing]: <absent> vs 197,454"}
+{"id":"linux.i386-ER","size":2072,"status":"pass"}
+{"id":"share-ER","size":2072,"status":"pass"}
 {"id":"linux.x86-ordering_dot","size":2097,"status":"pass"}
 {"id":"macosx-ordering_dot","size":2097,"status":"pass"}
 {"id":"nshare-ordering_dot","size":2097,"status":"pass"}
-{"id":"windows-fsm","size":2124,"status":"diverged","nDiffs":14,"firstDiff":"edge:LR_0->LR_1#0 lp edge:LR_0->LR_1#0/lp[missing]: <absent> vs 113,100"}
+{"id":"windows-fsm","size":2124,"status":"pass"}
 {"id":"2242","size":2125,"status":"pass"}
-{"id":"share-fsm","size":2142,"status":"diverged","nDiffs":14,"firstDiff":"edge:LR_0->LR_1#0 lp edge:LR_0->LR_1#0/lp[missing]: <absent> vs 113,98"}
+{"id":"share-fsm","size":2142,"status":"pass"}
 {"id":"graphs-sr_box","size":2149,"status":"pass"}
 {"id":"graphs-sr_circle","size":2152,"status":"pass"}
 {"id":"graphs-sl_box","size":2156,"status":"pass"}
 {"id":"graphs-sl_circle","size":2159,"status":"pass"}
 {"id":"1323","size":2164,"status":"pass"}
-{"id":"share-b786","size":2198,"status":"diverged","nDiffs":11,"firstDiff":"node:n12 rects node:n12/rects[missing]: <absent> vs 16,16,37,52 37,16,67,52 67,16,88,52"}
+{"id":"share-b786","size":2198,"status":"pass"}
 {"id":"graphs-b53","size":2287,"status":"pass"}
 {"id":"share-Heawood","size":2340,"status":"pass"}
 {"id":"windows-Heawood","size":2340,"status":"pass"}
@@ -577,10 +577,10 @@
 {"id":"share-jcctree","size":2612,"status":"pass"}
 {"id":"windows-jcctree","size":2612,"status":"pass"}
 {"id":"graphs-pgram","size":2614,"status":"pass"}
-{"id":"linux.i386-dfa","size":2651,"status":"diverged","nDiffs":20,"firstDiff":"edge:n1->n2#0 lp edge:n1->n2#0/lp[missing]: <absent> vs 80,502"}
-{"id":"share-dfa","size":2651,"status":"diverged","nDiffs":20,"firstDiff":"edge:n1->n2#0 lp edge:n1->n2#0/lp[missing]: <absent> vs 80,502"}
+{"id":"linux.i386-dfa","size":2651,"status":"pass"}
+{"id":"share-dfa","size":2651,"status":"pass"}
 {"id":"graphs-NaN","size":2672,"status":"pass"}
-{"id":"windows-dfa","size":2714,"status":"diverged","nDiffs":20,"firstDiff":"edge:n1->n2#0 lp edge:n1->n2#0/lp[missing]: <absent> vs 89,502"}
+{"id":"windows-dfa","size":2714,"status":"pass"}
 {"id":"graphs-b71","size":2748,"status":"pass"}
 {"id":"linux.x86-pack_neato","size":2867,"status":"pass"}
 {"id":"nshare-pack_neato","size":2870,"status":"pass"}
@@ -591,19 +591,19 @@
 {"id":"graphs-Helvetica","size":2966,"status":"pass"}
 {"id":"2592","size":3001,"status":"pass"}
 {"id":"2082","size":3033,"status":"pass"}
-{"id":"share-train11","size":3220,"status":"diverged","nDiffs":25,"firstDiff":"edge:st0->st0#0 lp edge:st0->st0#0/lp[missing]: <absent> vs 225,161"}
+{"id":"share-train11","size":3220,"status":"pass"}
 {"id":"graphs-biglabel","size":3246,"status":"pass"}
-{"id":"windows-train11","size":3257,"status":"diverged","nDiffs":25,"firstDiff":"edge:st0->st0#0 lp edge:st0->st0#0/lp[missing]: <absent> vs 223,178"}
+{"id":"windows-train11","size":3257,"status":"pass"}
 {"id":"2734","size":3272,"status":"pass"}
 {"id":"1622_2","size":3299,"status":"pass"}
 {"id":"share-pmpipe","size":3346,"status":"pass"}
 {"id":"windows-pmpipe","size":3346,"status":"pass"}
 {"id":"1880","size":3451,"status":"pass"}
-{"id":"linux.x86-ports_dot","size":3470,"status":"diverged","nDiffs":1,"firstDiff":"node:b rects node:b/rects[missing]: <absent> vs 570,72.5,605,141.5 605,118.5,660,141.5 605,95.5,660,118.5 605,72.5,660,95.5 660,72.5,702,141.5"}
-{"id":"nshare-ports_dot","size":3493,"status":"diverged","nDiffs":1,"firstDiff":"node:b rects node:b/rects[missing]: <absent> vs 574.5,72.5,608.5,141.5 608.5,118.5,662.5,141.5 608.5,95.5,662.5,118.5 608.5,72.5,662.5,95.5 662.5,72.5,703.5,141.5"}
+{"id":"linux.x86-ports_dot","size":3470,"status":"pass"}
+{"id":"nshare-ports_dot","size":3493,"status":"pass"}
 {"id":"graphs-pmpipe","size":3499,"status":"pass"}
-{"id":"windows-alf","size":3605,"status":"diverged","nDiffs":19,"firstDiff":"node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 515,204,590,240"}
-{"id":"share-alf","size":3629,"status":"diverged","nDiffs":19,"firstDiff":"node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 518,204,594,240"}
+{"id":"windows-alf","size":3605,"status":"pass"}
+{"id":"share-alf","size":3629,"status":"pass"}
 {"id":"graphs-st_box_dbl","size":3640,"status":"pass"}
 {"id":"graphs-st_circle_dbl","size":3643,"status":"pass"}
 {"id":"2476","size":3653,"status":"pass"}
@@ -612,15 +612,15 @@
 {"id":"graphs-sl_box_dbl","size":3792,"status":"pass"}
 {"id":"graphs-sl_circle_dbl","size":3795,"status":"pass"}
 {"id":"2669","size":3835,"status":"pass"}
-{"id":"share-triedds","size":3852,"status":"diverged","nDiffs":13,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 0,476,70,503 0,449,70,476"}
-{"id":"windows-triedds","size":3948,"status":"diverged","nDiffs":13,"firstDiff":"node:node0 rects node:node0/rects[missing]: <absent> vs 1,314,74,341 1,287,74,314"}
+{"id":"share-triedds","size":3852,"status":"pass"}
+{"id":"windows-triedds","size":3948,"status":"pass"}
 {"id":"graphs-grdlinear","size":4071,"status":"pass"}
 {"id":"graphs-grdfillcolor","size":4075,"status":"pass"}
 {"id":"share-mike","size":4090,"status":"pass"}
 {"id":"windows-mike","size":4090,"status":"pass"}
 {"id":"56","size":4247,"status":"pass"}
-{"id":"linux.x86-record_dot","size":4541,"status":"diverged","nDiffs":19,"firstDiff":"node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 507.5,202.5,580.5,238.5"}
-{"id":"nshare-record_dot","size":4632,"status":"diverged","nDiffs":19,"firstDiff":"node:Aggregate rects node:Aggregate/rects[missing]: <absent> vs 514,202.5,587,238.5"}
+{"id":"linux.x86-record_dot","size":4541,"status":"pass"}
+{"id":"nshare-record_dot","size":4632,"status":"pass"}
 {"id":"nshare-shapes_dot","size":4692,"status":"pass"}
 {"id":"linux.x86-shapes_dot","size":4861,"status":"pass"}
 {"id":"2095","size":4865,"status":"pass"}
@@ -640,8 +640,8 @@
 {"id":"graphs-pslib","size":5899,"status":"pass"}
 {"id":"graphs-proc3d","size":6121,"status":"pass"}
 {"id":"graphs-jsort","size":6189,"status":"pass"}
-{"id":"share-newarrows","size":6364,"status":"diverged","nDiffs":36,"firstDiff":"edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62,30"}
-{"id":"windows-newarrows","size":6364,"status":"diverged","nDiffs":36,"firstDiff":"edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62,30"}
+{"id":"share-newarrows","size":6364,"status":"pass"}
+{"id":"windows-newarrows","size":6364,"status":"pass"}
 {"id":"2193","size":6399,"status":"pass"}
 {"id":"share-unix","size":6603,"status":"pass"}
 {"id":"windows-unix","size":6603,"status":"pass"}
@@ -651,9 +651,9 @@
 {"id":"graphs-grdradial_angle","size":6918,"status":"pass"}
 {"id":"windows-trapeziumlr","size":7229,"status":"pass"}
 {"id":"share-trapeziumlr","size":7233,"status":"pass"}
-{"id":"linux.x86-arrows_dot","size":7235,"status":"diverged","nDiffs":36,"firstDiff":"edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62.196,32.755"}
-{"id":"macosx-arrows_dot","size":7235,"status":"diverged","nDiffs":36,"firstDiff":"edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62.196,32.755"}
-{"id":"nshare-arrows_dot","size":7235,"status":"diverged","nDiffs":36,"firstDiff":"edge:Z->A#0 head_lp edge:Z->A#0/head_lp[missing]: <absent> vs 62.196,32.755"}
+{"id":"linux.x86-arrows_dot","size":7235,"status":"pass"}
+{"id":"macosx-arrows_dot","size":7235,"status":"pass"}
+{"id":"nshare-arrows_dot","size":7235,"status":"pass"}
 {"id":"graphs-awilliams","size":7305,"status":"pass"}
 {"id":"share-unix2","size":7421,"status":"pass"}
 {"id":"share-unix2k","size":7421,"status":"pass"}
@@ -679,14 +679,14 @@
 {"id":"linux.x86-weight_dot","size":9278,"status":"pass"}
 {"id":"nshare-dotsplines_dot1","size":9332,"status":"pass"}
 {"id":"nshare-weight_dot","size":9391,"status":"pass"}
-{"id":"share-b94","size":9831,"status":"diverged","nDiffs":60,"firstDiff":"edge:h130_104_19_203->h130_75_118_14_p1080#0 lp edge:h130_104_19_203->h130_75_118_14_p1080#0/lp[missing]: <absent> vs 2249,62"}
+{"id":"share-b94","size":9831,"status":"pass"}
 {"id":"graphs-b124","size":10284,"status":"pass"}
 {"id":"graphs-b36","size":10388,"status":"pass"}
-{"id":"share-proc3d","size":10429,"status":"diverged","nDiffs":6,"firstDiff":"cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 256,428"}
+{"id":"share-proc3d","size":10429,"status":"pass"}
 {"id":"linux.i386-crazy","size":10433,"status":"pass"}
 {"id":"share-crazy","size":10433,"status":"pass"}
 {"id":"windows-crazy","size":10433,"status":"pass"}
-{"id":"windows-proc3d","size":10446,"status":"diverged","nDiffs":6,"firstDiff":"cluster:cluster_0 lp cluster:cluster_0/lp[missing]: <absent> vs 235,464"}
+{"id":"windows-proc3d","size":10446,"status":"pass"}
 {"id":"graphs-b94","size":10503,"status":"pass"}
 {"id":"nshare-overlap_neato1","size":10511,"status":"pass"}
 {"id":"linux.x86-overlap_neato1","size":10554,"status":"pass"}
@@ -694,10 +694,10 @@
 {"id":"nshare-overlap_neato","size":10566,"status":"pass"}
 {"id":"share-pgram","size":10942,"status":"pass"}
 {"id":"windows-pgram","size":11001,"status":"pass"}
-{"id":"share-ldbxtried","size":11505,"status":"diverged","nDiffs":1,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 233,616"}
+{"id":"share-ldbxtried","size":11505,"status":"pass"}
 {"id":"linux.x86-neatosplines_neato","size":11690,"status":"pass"}
 {"id":"nshare-neatosplines_neato","size":11700,"status":"pass"}
-{"id":"windows-ldbxtried","size":11805,"status":"diverged","nDiffs":1,"firstDiff":"cluster:cluster0 lp cluster:cluster0/lp[missing]: <absent> vs 235,610"}
+{"id":"windows-ldbxtried","size":11805,"status":"pass"}
 {"id":"share-ngk10_4","size":11842,"status":"pass"}
 {"id":"42","size":11978,"status":"pass"}
 {"id":"windows-ngk10_4","size":12029,"status":"pass"}
@@ -712,20 +712,20 @@
 {"id":"1332","size":13890,"status":"pass"}
 {"id":"share-jsort","size":14030,"status":"pass"}
 {"id":"windows-jsort","size":14425,"status":"pass"}
-{"id":"windows-b94","size":14509,"status":"diverged","nDiffs":60,"firstDiff":"edge:h130_104_19_203->h130_75_118_14_p1080#0 lp edge:h130_104_19_203->h130_75_118_14_p1080#0/lp[missing]: <absent> vs 2991,62"}
+{"id":"windows-b94","size":14509,"status":"pass"}
 {"id":"1447_1","size":14827,"status":"pass"}
 {"id":"graphs-mode","size":14907,"status":"pass"}
-{"id":"windows-b36","size":15050,"status":"diverged","nDiffs":20,"firstDiff":"node:\\<base-output\\> rects node:\\<base-output\\>/rects[missing]: <absent> vs 452,1512,730,1536 452,1488,586,1512 586,1488,730,1512 452,1236,538,1488 452,984,538,1236 538,1464,730,1488 538,1440,730,1464 538,1416,730,1440 538,1392,730,1416 538,1368,730,1392 538,1344,730,1368 538,1320,730,1344 538,1296,730,1320 538,1272,730,1296 538,1248,730,1272 538,1224,730,1248 538,1200,730,1224 538,1176,730,1200 538,1152,730,1176 538,1128,730,1152 538,1104,730,1128 538,1080,730,1104 538,1056,730,1080 538,1032,730,1056 538,1008,730,1032 538,984,730,1008"}
-{"id":"linux.i386-b36","size":15051,"status":"diverged","nDiffs":20,"firstDiff":"node:\\<base-output\\> rects node:\\<base-output\\>/rects[missing]: <absent> vs 452,1512,732,1536 452,1488,588,1512 588,1488,732,1512 452,1236,539,1488 452,984,539,1236 539,1464,732,1488 539,1440,732,1464 539,1416,732,1440 539,1392,732,1416 539,1368,732,1392 539,1344,732,1368 539,1320,732,1344 539,1296,732,1320 539,1272,732,1296 539,1248,732,1272 539,1224,732,1248 539,1200,732,1224 539,1176,732,1200 539,1152,732,1176 539,1128,732,1152 539,1104,732,1128 539,1080,732,1104 539,1056,732,1080 539,1032,732,1056 539,1008,732,1032 539,984,732,1008"}
-{"id":"share-b36","size":15051,"status":"diverged","nDiffs":20,"firstDiff":"node:\\<base-output\\> rects node:\\<base-output\\>/rects[missing]: <absent> vs 452,1512,732,1536 452,1488,588,1512 588,1488,732,1512 452,1236,539,1488 452,984,539,1236 539,1464,732,1488 539,1440,732,1464 539,1416,732,1440 539,1392,732,1416 539,1368,732,1392 539,1344,732,1368 539,1320,732,1344 539,1296,732,1320 539,1272,732,1296 539,1248,732,1272 539,1224,732,1248 539,1200,732,1224 539,1176,732,1200 539,1152,732,1176 539,1128,732,1152 539,1104,732,1128 539,1080,732,1104 539,1056,732,1080 539,1032,732,1056 539,1008,732,1032 539,984,732,1008"}
+{"id":"windows-b36","size":15050,"status":"pass"}
+{"id":"linux.i386-b36","size":15051,"status":"pass"}
+{"id":"share-b36","size":15051,"status":"pass"}
 {"id":"share-NaN","size":16328,"status":"pass"}
 {"id":"windows-NaN","size":17050,"status":"pass"}
 {"id":"graphs-b51","size":19886,"status":"pass"}
 {"id":"1718","size":22038,"status":"pass"}
 {"id":"windows-b124","size":28038,"status":"pass"}
 {"id":"share-b124","size":28041,"status":"pass"}
-{"id":"share-b51","size":29420,"status":"diverged","nDiffs":38,"firstDiff":"cluster:cluster_for_15 lp cluster:cluster_for_15/lp[missing]: <absent> vs 517,10666"}
-{"id":"windows-b51","size":29685,"status":"diverged","nDiffs":38,"firstDiff":"cluster:cluster_for_15 lp cluster:cluster_for_15/lp[missing]: <absent> vs 515,10666"}
+{"id":"share-b51","size":29420,"status":"pass"}
+{"id":"windows-b51","size":29685,"status":"pass"}
 {"id":"graphs-b69","size":33033,"status":"pass"}
 {"id":"graphs-badvoro","size":33949,"status":"pass"}
 {"id":"graphs-viewport","size":37292,"status":"pass"}
@@ -735,25 +735,26 @@
 {"id":"graphs-b143","size":62055,"status":"pass"}
 {"id":"graphs-b29","size":62931,"status":"pass"}
 {"id":"2620","size":64908,"status":"pass"}
-{"id":"linux.i386-b106","size":92005,"status":"diverged","nDiffs":215,"firstDiff":"edge:Node1295->Node1391#0 lp edge:Node1295->Node1391#0/lp[missing]: <absent> vs 3373,311"}
-{"id":"share-b106","size":92301,"status":"diverged","nDiffs":215,"firstDiff":"edge:Node1295->Node1391#0 lp edge:Node1295->Node1391#0/lp[missing]: <absent> vs 3373,308"}
-{"id":"windows-b106","size":95634,"status":"diverged","nDiffs":215,"firstDiff":"edge:Node1295->Node1391#0 lp edge:Node1295->Node1391#0/lp[missing]: <absent> vs 3962,356"}
+{"id":"linux.i386-b106","size":92005,"status":"pass"}
+{"id":"share-b106","size":92301,"status":"pass"}
+{"id":"windows-b106","size":95634,"status":"pass"}
 {"id":"graphs-b102","size":102329,"status":"pass"}
 {"id":"graphs-xx","size":102329,"status":"pass"}
 {"id":"2095_1","size":105083,"status":"pass"}
 {"id":"graphs-root","size":128221,"status":"pass"}
-{"id":"linux.i386-b29","size":136753,"status":"diverged","nDiffs":363,"firstDiff":"edge:Node14648->Node14648#0 lp edge:Node14648->Node14648#0/lp[missing]: <absent> vs 1783,655"}
-{"id":"share-b29","size":137802,"status":"diverged","nDiffs":363,"firstDiff":"edge:Node14648->Node14648#0 lp edge:Node14648->Node14648#0/lp[missing]: <absent> vs 1783,672"}
-{"id":"windows-b29","size":149114,"status":"diverged","nDiffs":363,"firstDiff":"edge:Node14648->Node14648#0 lp edge:Node14648->Node14648#0/lp[missing]: <absent> vs 1776,672"}
+{"id":"linux.i386-b29","size":136753,"status":"pass"}
+{"id":"share-b29","size":137802,"status":"pass"}
+{"id":"windows-b29","size":149114,"status":"pass"}
 {"id":"linux.i386-b102","size":161479,"status":"pass"}
 {"id":"share-b102","size":161479,"status":"pass"}
 {"id":"windows-b102","size":184125,"status":"pass"}
 {"id":"graphs-b81","size":191024,"status":"pass"}
+{"id":"1652","size":240391,"status":"pass"}
 {"id":"1879","size":287816,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/1879.dot"}
-{"id":"linux.x86-root_twopi","size":287907,"status":"diverged","nDiffs":710,"firstDiff":"edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 2612,3629.5"}
-{"id":"nshare-root_twopi","size":287916,"status":"diverged","nDiffs":710,"firstDiff":"edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 2614.3,3629.5"}
-{"id":"nshare-root_circo","size":313126,"status":"diverged","nDiffs":710,"firstDiff":"edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 1.0375e+06,4.9654e+05"}
-{"id":"linux.x86-root_circo","size":313168,"status":"diverged","nDiffs":710,"firstDiff":"edge:1->189E#0 lp edge:1->189E#0/lp[missing]: <absent> vs 1.0238e+06,4.9e+05"}
+{"id":"linux.x86-root_twopi","size":287907,"status":"pass"}
+{"id":"nshare-root_twopi","size":287916,"status":"pass"}
+{"id":"nshare-root_circo","size":313126,"status":"pass"}
+{"id":"linux.x86-root_circo","size":313168,"status":"pass"}
 {"id":"graphs-b103","size":377525,"status":"pass"}
 {"id":"2475_2","size":641284,"status":"pass"}
 {"id":"2470","size":734358,"status":"pass"}
