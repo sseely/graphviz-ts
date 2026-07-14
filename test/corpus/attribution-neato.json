@@ -1,30 +1,8 @@
 {
-  "generatedAt": "2026-07-14T02:04:52.776Z",
+  "generatedAt": "2026-07-14T11:32:33.407Z",
   "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
   "tolerance": 0.5,
   "results": [
-    {
-      "id": "graphs-radius",
-      "verdict": "not-cleared",
-      "baseDiffs": 46,
-      "injectedDiffs": 46,
-      "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
-      }
-    },
-    {
-      "id": "2643",
-      "verdict": "not-cleared",
-      "baseDiffs": 40,
-      "injectedDiffs": 40,
-      "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
-      }
-    },
     {
       "id": "graphs-clust1",
       "verdict": "drift-exonerated",
@@ -56,17 +34,6 @@
         "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "144_ortho",
-      "verdict": "not-cleared",
-      "baseDiffs": 72,
-      "injectedDiffs": 72,
-      "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
       }
     },
     {
@@ -111,17 +78,6 @@
         "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "2168_3",
-      "verdict": "not-cleared",
-      "baseDiffs": 11,
-      "injectedDiffs": 11,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {
@@ -181,57 +137,57 @@
     },
     {
       "id": "linux.i386-radius_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 69,
-      "injectedDiffs": 26,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "linux.x86-radius_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 69,
-      "injectedDiffs": 26,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "macosx-radius_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 69,
-      "injectedDiffs": 26,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "nshare-radius_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 69,
-      "injectedDiffs": 26,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "windows-radius_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 69,
-      "injectedDiffs": 26,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
@@ -270,7 +226,7 @@
     {
       "id": "2556",
       "verdict": "drift-exonerated",
-      "baseDiffs": 690,
+      "baseDiffs": 680,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -303,12 +259,12 @@
     {
       "id": "241_0",
       "verdict": "not-cleared",
-      "baseDiffs": 37,
-      "injectedDiffs": 34,
+      "baseDiffs": 13,
+      "injectedDiffs": 14,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
       }
     },
     {
@@ -479,12 +435,16 @@
     {
       "id": "1990",
       "verdict": "not-cleared",
-      "baseDiffs": 189,
-      "injectedDiffs": 189,
+      "baseDiffs": 17,
+      "injectedDiffs": 17,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural",
+        "uniformDelta": [
+          -30.44,
+          -1
+        ]
       }
     },
     {
@@ -1511,17 +1471,6 @@
       }
     },
     {
-      "id": "2168_5",
-      "verdict": "not-cleared",
-      "baseDiffs": 11,
-      "injectedDiffs": 11,
-      "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
-      }
-    },
-    {
       "id": "graphs-jcctree",
       "verdict": "drift-exonerated",
       "baseDiffs": 113,
@@ -1853,13 +1802,13 @@
     },
     {
       "id": "1855",
-      "verdict": "not-cleared",
-      "baseDiffs": 739,
-      "injectedDiffs": 52,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 743,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -1941,13 +1890,13 @@
     },
     {
       "id": "2183",
-      "verdict": "not-cleared",
-      "baseDiffs": 281,
-      "injectedDiffs": 279,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 22,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_ldraw_/numeric+edge/lp/numeric+edge/pos/numeric+…(7)"
+        "shape": "edge/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2139,24 +2088,24 @@
     },
     {
       "id": "graphs-arrows",
-      "verdict": "not-cleared",
-      "baseDiffs": 954,
-      "injectedDiffs": 201,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 938,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "graphs-arrowsize",
-      "verdict": "not-cleared",
-      "baseDiffs": 977,
-      "injectedDiffs": 219,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 987,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+…(10)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2194,13 +2143,13 @@
     },
     {
       "id": "graphs-newarrows",
-      "verdict": "not-cleared",
-      "baseDiffs": 954,
-      "injectedDiffs": 201,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 938,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2355,17 +2304,6 @@
         "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "1453",
-      "verdict": "not-cleared",
-      "baseDiffs": 545,
-      "injectedDiffs": 545,
-      "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -2822,24 +2760,24 @@
     },
     {
       "id": "share-newarrows",
-      "verdict": "not-cleared",
-      "baseDiffs": 662,
-      "injectedDiffs": 68,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 592,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hldraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+edge/pos/structural+edge/tail_lp/numeric"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "windows-newarrows",
-      "verdict": "not-cleared",
-      "baseDiffs": 662,
-      "injectedDiffs": 68,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 592,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hldraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+edge/pos/structural+edge/tail_lp/numeric"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -2910,35 +2848,35 @@
     },
     {
       "id": "linux.x86-arrows_dot",
-      "verdict": "not-cleared",
-      "baseDiffs": 982,
-      "injectedDiffs": 148,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 888,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "macosx-arrows_dot",
-      "verdict": "not-cleared",
-      "baseDiffs": 982,
-      "injectedDiffs": 148,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 888,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "nshare-arrows_dot",
-      "verdict": "not-cleared",
-      "baseDiffs": 982,
-      "injectedDiffs": 148,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 888,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/structural",
-        "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -3400,24 +3338,24 @@
     },
     {
       "id": "nshare-neatosplines_neato1",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1933,
-      "injectedDiffs": 24,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "linux.x86-neatosplines_neato1",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1946,
-      "injectedDiffs": 24,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/pos/numeric"
+        "signature": "none"
       }
     },
     {
@@ -3875,7 +3813,7 @@
       "id": "2470",
       "verdict": "not-cleared",
       "baseDiffs": 682,
-      "injectedDiffs": 682,
+      "injectedDiffs": 680,
       "bucket": {
         "shape": "edge/_ldraw_/numeric",
         "kind": "position",

@@ -733,8 +733,8 @@
 {"id":"graphs-b106","size":48933,"status":"diverged","nDiffs":8738,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -55.36 vs -296.41"}
 {"id":"2343","size":59368,"status":"diverged","nDiffs":27477,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2458.63 vs 2260.56"}
 {"id":"graphs-b143","size":62055,"status":"diverged","nDiffs":11881,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2"}
-{"id":"graphs-b29","size":62931,"status":"diverged","nDiffs":12359,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"}
-{"id":"2620","size":64908,"status":"diverged","nDiffs":10473,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[0]: 0 vs -25.43"}
+{"id":"graphs-b29","size":62931,"status":"diverged","nDiffs":12359,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1535.27"}
+{"id":"2620","size":64908,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot"}
 {"id":"linux.i386-b106","size":92005,"status":"pass"}
 {"id":"share-b106","size":92301,"status":"pass"}
 {"id":"windows-b106","size":95634,"status":"pass"}

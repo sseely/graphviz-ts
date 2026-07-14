@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-14T05:33:02.686Z",
+  "generatedAt": "2026-07-14T13:23:04.928Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
   "total": 762,
   "counts": {
-    "pass": 508,
-    "diverged": 244,
+    "pass": 509,
+    "diverged": 245,
     "oracle-error": 7,
     "port-error": 1,
-    "timeout": 2
+    "timeout": 0
   },
   "results": [
     {
@@ -3346,7 +3346,7 @@
     {
       "id": "graphs-sr_circle_dbl",
       "size": 3780,
-      "status": "timeout"
+      "status": "pass"
     },
     {
       "id": "graphs-sl_box_dbl",
@@ -3624,7 +3624,9 @@
     {
       "id": "nshare-arrows_dot",
       "size": 7235,
-      "status": "timeout"
+      "status": "diverged",
+      "nDiffs": 1136,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 474.65 vs 486.24"
     },
     {
       "id": "graphs-awilliams",
