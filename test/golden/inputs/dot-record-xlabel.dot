@@ -1,0 +1,7 @@
+digraph G {
+  r [shape=record,  label="<f0> foo | x | <f1> bar", xlabel="RX"];
+  m [shape=Mrecord, label="a | b", xlabel="MX"];
+  p [shape=box, xlabel="BX"];
+  r:f0 -> m;
+  m -> p;
+}

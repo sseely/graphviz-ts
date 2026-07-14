@@ -25,7 +25,12 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 
+// Both trees count as coverage: the upstream corpus AND our own golden inputs.
+// Scanning only upstream would report a cell as dark after we have closed it
+// with a fixture — the number has to reflect what actually gets exercised.
 const CORPUS = join(homedir(), 'git/graphviz/tests');
+const GOLDEN = new URL('../golden/inputs', import.meta.url).pathname;
+const ONLY_UPSTREAM = process.argv.includes('--upstream-only');
 
 /** Feature detectors, keyed by the DOT construct a fixture author would write. */
 const FEATURES: Record<string, (s: string) => boolean> = {
@@ -40,7 +45,11 @@ const FEATURES: Record<string, (s: string) => boolean> = {
   record: (s) => /\bshape\s*=\s*"?M?record/i.test(s),
   htmllabel: (s) => /label\s*=\s*</i.test(s),
   compound: (s) => /\bcompound\s*=\s*true|\bl(head|tail)\s*=/i.test(s),
-  ports: (s) => /(->|--)\s*[\w"]+\s*:\s*\w/.test(s),
+  // Both spellings: a TAIL port (`a:f0 -> b`) and a HEAD port (`a -> b:f1`).
+  // Matching only the head form under-reports coverage — it is how this
+  // scanner initially mislabelled `pack x ports` as dark when a pack fixture
+  // already carried a tail port.
+  ports: (s) => /(->|--)\s*[\w"]+\s*:\s*\w/.test(s) || /[\w"]+\s*:\s*\w+\s*(->|--)/.test(s),
   samehead: (s) => /\bsame(head|tail)\s*=/i.test(s),
   splines: (s) => /\bsplines\s*=/i.test(s),
   rankdir: (s) => /\brankdir\s*=/i.test(s),
@@ -70,7 +79,8 @@ function walk(dir: string, out: string[]): string[] {
   return out;
 }
 
-const rows = walk(CORPUS, []).flatMap((p) => {
+const sources = ONLY_UPSTREAM ? [CORPUS] : [CORPUS, GOLDEN];
+const rows = sources.flatMap((d) => walk(d, [])).flatMap((p) => {
   let s: string;
   try {
     s = readFileSync(p, 'utf8');
