@@ -28,6 +28,7 @@ import { makeDrawing, FontnameKind } from '../model/layoutParams.js';
 import type { RatioKind } from '../model/layoutParams.js';
 import { doGraphLabel } from '../layout/dot/graph-label.js';
 import { mapbool, setClType, LOCAL, GLOBAL, NOCLUST } from '../layout/dot/rank.js';
+import { cround } from './arith.js';
 
 // ---------------------------------------------------------------------------
 // Constants — @see lib/common/const.h
@@ -64,7 +65,7 @@ export const CHAR_BIG5 = 2;
 
 /** Inches→points exactly as C's POINTS macro: ROUND(in * 72). @see geom.h:62 */
 function points(inches: number): number {
-  return Math.round(inches * POINTS_PER_INCH);
+  return cround(inches * POINTS_PER_INCH);
 }
 
 // ---------------------------------------------------------------------------

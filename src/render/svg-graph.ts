@@ -21,6 +21,7 @@ import { resolveRenderColor, colorPaint } from './color-resolve.js';
 import { svgGraphId, svgGraphClass } from './svg-id.js';
 import { parseGradientSpec } from '../common/htmltable-emit-fill.js';
 import { findStopColor, parseStyleFlags } from '../common/style-resolve.js';
+import { cround } from '../common/arith.js';
 import {
   emitLinearGradient,
   emitRadialGradient,
@@ -85,8 +86,8 @@ export function emitSvgTag(job: RenderJob): void {
   const pageX = rotated ? viewY : viewX;
   const pageY = rotated ? viewX : viewY;
   // job->width/job->height (emit.c:1249-1250, dpi=72 so *dpi/72 is a no-op).
-  const w = Math.round(pageX + 2 * job.margin.x);
-  const h = Math.round(pageY + 2 * job.margin.y);
+  const w = cround(pageX + 2 * job.margin.x);
+  const h = cround(pageY + 2 * job.margin.y);
   job.write('<svg width="' + String(w) + 'pt" height="' + String(h) + 'pt"\n');
   // job->pageBoundingBox (canvasBox.LL = margin+centering, canvasBox.UR = LL +
   // imageSize, then ROUND -- emit.c:1282-1293). C's rotation-branch double
@@ -94,10 +95,10 @@ export function emitSvgTag(job: RenderJob): void {
   // swap-back, emit.c:1275-1298) cancels for LL (always plain margin) but NOT
   // for UR, which ends up paired with the page-oriented (rotation-swapped)
   // view extent -- i.e. the same `pageX`/`pageY` used for width/height above.
-  const vbLLx = Math.round(job.margin.x);
-  const vbLLy = Math.round(job.margin.y);
-  const vbURx = Math.round(job.margin.x + pageX);
-  const vbURy = Math.round(job.margin.y + pageY);
+  const vbLLx = cround(job.margin.x);
+  const vbLLy = cround(job.margin.y);
+  const vbURx = cround(job.margin.x + pageX);
+  const vbURy = cround(job.margin.y + pageY);
   job.write('     viewBox="' + String(vbLLx) + '.00 ' + String(vbLLy) + '.00 ' +
     String(vbURx) + '.00 ' + String(vbURy) + '.00"\n');
   job.write('     xmlns="http://www.w3.org/2000/svg"');

@@ -18,6 +18,7 @@ import {
   PK_BOT_ALIGN,
 } from './types.js';
 import { gvQsort } from '../../util/bsd-qsort.js';
+import { cround } from '../../common/arith.js';
 
 /** Internal info for one rectangle during array packing. */
 export interface AInfo {
@@ -180,9 +181,12 @@ export function heightsToCumulative(heights: number[], nr: number): void {
 export function placeX(flags: number, widths: number[], col: number, bb: Box): number {
   const w0 = widths[col] ?? 0;
   const w1 = widths[col + 1] ?? 0;
-  if (flags & PK_LEFT_ALIGN) return Math.round(w0);
-  if (flags & PK_RIGHT_ALIGN) return Math.round(w1 - (bb.ur.x - bb.ll.x));
-  return Math.round((w0 + w1 - bb.ur.x - bb.ll.x) / 2.0);
+  // C round(): half away from zero. The right-aligned and centred forms are
+  // negative whenever the rect overhangs its column, and the /2.0 centring puts
+  // an exact .5 on the table for any odd slack. @see lib/pack/pack.c:693-698
+  if (flags & PK_LEFT_ALIGN) return cround(w0);
+  if (flags & PK_RIGHT_ALIGN) return cround(w1 - (bb.ur.x - bb.ll.x));
+  return cround((w0 + w1 - bb.ur.x - bb.ll.x) / 2.0);
 }
 
 /**
@@ -193,9 +197,10 @@ export function placeX(flags: number, widths: number[], col: number, bb: Box): n
 export function placeY(flags: number, heights: number[], row: number, bb: Box): number {
   const h0 = heights[row] ?? 0;
   const h1 = heights[row + 1] ?? 0;
-  if (flags & PK_TOP_ALIGN) return Math.round(h0 - (bb.ur.y - bb.ll.y));
-  if (flags & PK_BOT_ALIGN) return Math.round(h1);
-  return Math.round((h0 + h1 - bb.ur.y - bb.ll.y) / 2.0);
+  // C round(): half away from zero. @see lib/pack/pack.c:700-705
+  if (flags & PK_TOP_ALIGN) return cround(h0 - (bb.ur.y - bb.ll.y));
+  if (flags & PK_BOT_ALIGN) return cround(h1);
+  return cround((h0 + h1 - bb.ur.y - bb.ll.y) / 2.0);
 }
 
 /** Accumulated position tables for array packing. */

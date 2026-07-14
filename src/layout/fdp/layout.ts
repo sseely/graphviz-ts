@@ -30,6 +30,7 @@ import { findCComp } from './comp.js';
 import { deriveGraph, type LayoutInfo } from './derive.js';
 import { expandCluster } from './ports.js';
 import { normalizeG } from './normalize.js';
+import { cround } from '../../common/arith.js';
 import {
   type XParams,
   gdata,
@@ -146,7 +147,8 @@ function emptyBounds(rg: Graph): Box {
 function widenForLabel(rg: Graph, bb: Box): boolean {
   const label = rg.info.label as TextlabelT | undefined;
   if (!label) return false;
-  let d = Math.round(label.dimen.x) - (bb.ur.x - bb.ll.x);
+  // C round(): half away from zero. @see lib/fdpgen/layout.c:125
+  let d = cround(label.dimen.x) - (bb.ur.x - bb.ll.x);
   if (d > 0) { /* height of label added below */
     d /= 2;
     bb.ll.x -= d;

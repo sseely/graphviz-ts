@@ -13,6 +13,7 @@ import type { Point } from '../model/geom.js';
 import type { GVColor } from '../common/color.js';
 import type { RenderJob } from '../gvc/job.js';
 import { escapeXml } from './svg-helpers.js';
+import { cround } from '../common/arith.js';
 
 interface GradientPoints { g0: Point; g1: Point; }
 interface BBox { minX: number; maxX: number; minY: number; maxY: number; }
@@ -153,8 +154,9 @@ export function emitRadialGradient(job: RenderJob, id: string): void {
   let ifx = 50, ify = 50;
   if (obj.gradientAngle !== 0) {
     const angle = obj.gradientAngle * Math.PI / 180;
-    ifx = Math.round(50 * (1 + Math.cos(angle)));
-    ify = Math.round(50 * (1 - Math.sin(angle)));
+    // @see plugin/core/gvrender_core_svg.c:622-623 (round())
+    ifx = cround(50 * (1 + Math.cos(angle)));
+    ify = cround(50 * (1 - Math.sin(angle)));
   }
   job.write('<defs>\n<radialGradient id="' + id + '"');
   job.write(' cx="50%" cy="50%" r="75%"');

@@ -6,7 +6,6 @@ import {
   computeStep,
   gridCells,
   cval,
-  cround,
   genBox,
   fits,
   hasCollision,
@@ -19,6 +18,7 @@ import {
   insertPS,
   cmpByGPerimeter,
 } from './poly-pack.js';
+import { cround } from '../../common/arith.js';
 import { PS2INCH, ps2inch, inch2ps, type PackInfo, PackMode } from './types.js';
 
 // ---------------------------------------------------------------------------

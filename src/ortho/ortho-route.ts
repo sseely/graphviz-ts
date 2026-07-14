@@ -18,17 +18,13 @@ import { makeGraph } from "./rawgraph.js";
 import { insertEdge, edgeExists, removeRedge, topSort } from "./rawgraph.js";
 import { updateWts } from "./maze.js";
 import { addPEdgesAll } from "./ortho-parallel.js";
+import { cround } from "../common/arith.js";
 
 // ─── weight constants ─────────────────────────────────────────────────────────
 
 const delta = 1;   // weight per unit length
 const mu = 500;    // bend penalty per bend edge
 export const BIG = 16384;  // near-infinite weight
-
-/** C round(): half away from zero (not Math.round's half-toward-+inf). */
-function cround(v: number): number {
-  return v >= 0 ? Math.floor(v + 0.5) : Math.ceil(v - 0.5);
-}
 
 // ─── Segment construction ─────────────────────────────────────────────────────
 

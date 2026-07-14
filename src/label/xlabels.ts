@@ -16,6 +16,7 @@ import { DtBag } from '../cdt/bag.js';
 import { type Rect } from './rectangle.js';
 import { hdHilSFromXy, objplpmks } from './xlabels-geom.js';
 import { xladjust } from './xlabels-intersect.js';
+import { cround } from '../common/arith.js';
 
 // ---------------------------------------------------------------------------
 // Public types  (xlabels.h)
@@ -91,7 +92,9 @@ interface XLabelsT {
  */
 function xlhorder(xlp: XLabelsT): number {
   const m = Math.max(xlp.params.bb.ur.x, xlp.params.bb.ur.y);
-  return Math.floor(Math.log2(Math.round(m))) + 1;
+  // C: (unsigned)floor(log2(round(fmax(maxx, maxy)))) + 1
+  // @see lib/label/xlabels.c:77
+  return Math.floor(Math.log2(cround(m))) + 1;
 }
 
 // ---------------------------------------------------------------------------

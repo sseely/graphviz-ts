@@ -17,6 +17,7 @@ import { nodeBoxOf } from './edge-route-helpers.js';
 import { bezierClipNode } from './edge-route-clip.js';
 import { nodeInsideFn } from './edge-route-routing.js';
 import { nodesInSeq } from './decomp.js';
+import { cround } from '../../common/arith.js';
 
 // ---------------------------------------------------------------------------
 // ARR_LEN — distance from node boundary for arr_port
@@ -118,8 +119,11 @@ export function averageDirection(u: Node, edges: Edge[]): { x: number; y: number
 export function buildSharedPort(u: Node, edges: Edge[], ranksep: number): Port {
   const dir = averageDirection(u, edges);
   const { x1, y1 } = computeBoundaryOffset(u, dir.x, dir.y, ranksep);
-  const px = Math.round(x1);
-  const py = Math.round(y1);
+  // C round(): half away from zero. x1/y1 are offsets from the node CENTRE, so
+  // they are negative for roughly half of all samehead/sametail ports.
+  // @see lib/dotgen/sameport.c:149 (`.p = {.x = round(x1), .y = round(y1)}`)
+  const px = cround(x1);
+  const py = cround(y1);
   const lw = u.info.lw ?? 0;
   const rw = u.info.rw ?? 0;
   const order = (lw + rw) !== 0 ? (MC_SCALE * (lw + px)) / (lw + rw) : 0;

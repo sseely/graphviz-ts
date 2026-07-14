@@ -28,6 +28,7 @@ import type { Box, Point } from '../model/geom.js';
 import { POINTS_PER_INCH } from '../model/geom.js';
 import { SVG_PAD, SVG_MARGIN } from '../render/svg-helpers.js';
 import type { Graph } from '../model/graph.js';
+import { cround } from '../common/arith.js';
 
 /** Parsed `size=` drawing size in points, plus the *filled* flag. */
 export interface DrawingSize {
@@ -49,7 +50,7 @@ const PAD_X_RE = new RegExp(`^\\s*(${FLOAT})`);
 
 /** Inches→points exactly as C's POINTS macro: ROUND(in * 72). @see geom.h:62 */
 function toPoints(inches: number): number {
-  return Math.round(inches * POINTS_PER_INCH);
+  return cround(inches * POINTS_PER_INCH);
 }
 
 /**

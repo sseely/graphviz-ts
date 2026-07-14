@@ -14,6 +14,7 @@ import { fastEdge, findFastEdge } from './fastgr.js';
 import { SLACKNODE, EDGE_LABEL } from './rank.js';
 import { selfRightSpace } from '../../common/splines-selfedge.js';
 import { lateInt } from '../../common/nodeinit.js';
+import { cround } from '../../common/arith.js';
 
 /** @see lib/common/const.h:CL_OFFSET */
 export const CL_OFFSET = 8;
@@ -101,7 +102,8 @@ export function graphRanksep(g: Graph): number { return g.info.ranksep ?? 0; }
 /** @see lib/dotgen/position.c:make_aux_edge */
 export function makeAuxEdge(u: Node, v: Node, len: number, wt: number): Edge {
   const e = new EdgeClass(u, v, '');
-  e.info.minlen = Math.round(Math.min(len, 2147483647));
+  // C ROUND() is half away from zero. @see lib/dotgen/position.c:195
+  e.info.minlen = cround(Math.min(len, 2147483647));
   e.info.weight = wt;
   fastEdge(e);
   return e;
@@ -155,7 +157,8 @@ export function processFlatEdge(g: Graph, u: Node, e: Edge): void {
   let m0 = Math.trunc(edgeMinlen(e) * nodesep + width);
   const ex = findFastEdge(t0, h0);
   if (ex !== undefined) {
-    m0 = Math.trunc(Math.max(m0, width + nodesep + Math.round(edgeDist(e))));
+    // C ROUND(ED_dist(e)) — half away from zero. @see lib/dotgen/position.c:307
+    m0 = Math.trunc(Math.max(m0, width + nodesep + cround(edgeDist(e))));
     ex.info.minlen = Math.max(ex.info.minlen ?? 1, m0);
     ex.info.weight = Math.max(ex.info.weight ?? 0, edgeWeight(e));
   } else if (!e.info.label) {
