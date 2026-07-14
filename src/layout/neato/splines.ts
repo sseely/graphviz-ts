@@ -906,6 +906,23 @@ function shiftClusters(g: Graph, dx: number, dy: number): void {
  * Node builtin — this whole function is inert (returns immediately) unless
  * `process` exists and `GVTS_POS_INJECT` is set, which is true only inside
  * the Node test harness, never in a browser render.
+ *
+ * An optional `GVTS_BB <llx> <lly> <urx> <ury>` line (points) overwrites the
+ * graph bb as well. It is emitted only by the *fdp* dump site, and it is
+ * load-bearing there: neato/sfdp reach this hook at the top of `spline_edges`,
+ * one line ABOVE the `compute_bb` that derives GD_bb — so their bb is a pure
+ * function of the injected positions and needs no injection of its own. fdp is
+ * the exception: `GD_bb` is a product of `fdpLayout` itself (`finalCC` →
+ * `setBB`, layout.c:1030), which has already run and returned by the time the
+ * hook fires, so without this line the injected render keeps the port's OWN
+ * (drifted) bb while emitting the oracle's node positions — a bb that belongs
+ * to neither layout. That mismatch, not any defect in the port's bb code, is
+ * what made `graph/bb`+`graph/_draw_` the largest not-cleared fdp bucket (60
+ * ids, bb short on 24 and TALL on 18 — a sign-split no bb bug can produce).
+ * The bb is layout-stage state exactly like `ND_pos`; neutralizing it is what
+ * lets the comparison isolate routing/emission, which is all the harness
+ * claims to measure.
+ * @see lib/fdpgen/layout.c:1063 fdp_layout
  */
 export function injectOraclePositions(g: Graph): void {
   if (typeof process === 'undefined') return;
@@ -916,9 +933,18 @@ export function injectOraclePositions(g: Graph): void {
   const text = fs.readFileSync(dumpPath, 'utf8');
   for (const line of text.split('\n')) {
     const m = /^GVTS_POS (\S+) (\S+) (\S+)/.exec(line);
-    if (!m) continue;
-    const n = g.nodes.get(m[1]!);
-    if (n) n.info.pos = [Number(m[2]), Number(m[3])];
+    if (m) {
+      const n = g.nodes.get(m[1]!);
+      if (n) n.info.pos = [Number(m[2]), Number(m[3])];
+      continue;
+    }
+    const b = /^GVTS_BB (\S+) (\S+) (\S+) (\S+)/.exec(line);
+    if (b) {
+      g.info.bb = {
+        ll: { x: Number(b[1]), y: Number(b[2]) },
+        ur: { x: Number(b[3]), y: Number(b[4]) },
+      };
+    }
   }
 }
 

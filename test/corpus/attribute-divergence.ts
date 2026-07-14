@@ -315,8 +315,15 @@ function runOracleWithDump(engine: string, path: string): OracleDumpResult {
   }
   const xdot = r.stdout ?? '';
   if (!xdot.trimEnd().endsWith('}')) return { ok: false, err: 'incomplete oracle output' };
-  const dumpLines = (r.stderr ?? '').split('\n').filter((l) => l.startsWith('GVTS_POS '));
-  if (dumpLines.length === 0) {
+  // `GVTS_BB` is emitted by the fdp dump site only (see injection-recipe.md):
+  // fdp's GD_bb is computed *inside* fdpLayout, upstream of the injection
+  // point, so unlike neato/sfdp it is not re-derived from the injected
+  // positions and has to be carried across explicitly. Keep both line kinds;
+  // still require at least one GVTS_POS, since a dump with a bb and no
+  // positions means the native patch is only half-applied.
+  const dumpLines = (r.stderr ?? '').split('\n')
+    .filter((l) => l.startsWith('GVTS_POS ') || l.startsWith('GVTS_BB '));
+  if (!dumpLines.some((l) => l.startsWith('GVTS_POS '))) {
     return { ok: false, err: 'no GVTS_POS dump lines captured (native POS_DUMP patch missing/reverted?)' };
   }
   return { ok: true, xdot, dumpLines };
