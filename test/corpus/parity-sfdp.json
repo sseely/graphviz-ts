@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-14T16:00:07.593Z",
+  "generatedAt": "2026-07-14T18:18:18.097Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
   "total": 761,
   "counts": {
-    "pass": 509,
-    "diverged": 244,
+    "pass": 510,
+    "diverged": 243,
     "oracle-error": 7,
     "port-error": 1,
     "timeout": 0
@@ -3930,9 +3930,7 @@
     {
       "id": "linux.x86-neatosplines_neato1",
       "size": 12061,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:vd->cv#0 _draw_ edge:vd->cv#0/_draw_[opCount]: 2 vs 4"
+      "status": "pass"
     },
     {
       "id": "linux.x86-rankdir_dot1",

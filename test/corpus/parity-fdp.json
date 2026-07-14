@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-14T15:45:09.927Z",
+  "generatedAt": "2026-07-14T18:02:40.654Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "fdp",
   "tolerance": 0.5,
   "total": 761,
   "counts": {
-    "pass": 599,
-    "diverged": 146,
+    "pass": 600,
+    "diverged": 145,
     "oracle-error": 15,
     "port-error": 0,
     "timeout": 1
@@ -3583,9 +3583,7 @@
     {
       "id": "windows-world",
       "size": 8172,
-      "status": "diverged",
-      "nDiffs": 71,
-      "firstDiff": "edge:22->23#0 _draw_ edge:22->23#0/_draw_/op[1].unfilled_bezier[4]: 29593.11 vs 29597.41"
+      "status": "pass"
     },
     {
       "id": "graphs-b57",
@@ -3603,8 +3601,8 @@
       "id": "graphs-b15",
       "size": 8774,
       "status": "diverged",
-      "nDiffs": 5663,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1728.46"
+      "nDiffs": 5662,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1219.77 vs 1185.75"
     },
     {
       "id": "nshare-dotsplines_dot",
@@ -3963,8 +3961,8 @@
       "id": "graphs-b29",
       "size": 62931,
       "status": "diverged",
-      "nDiffs": 12359,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"
+      "nDiffs": 12347,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1633.23"
     },
     {
       "id": "2620",
@@ -4005,7 +4003,7 @@
       "id": "2095_1",
       "size": 105083,
       "status": "diverged",
-      "nDiffs": 68842,
+      "nDiffs": 68851,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"
     },
     {
@@ -4103,15 +4101,15 @@
       "id": "2475_2",
       "size": 641284,
       "status": "diverged",
-      "nDiffs": 331854,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18740.12"
+      "nDiffs": 323062,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"
     },
     {
       "id": "2470",
       "size": 734358,
       "status": "diverged",
-      "nDiffs": 19512,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 8752.73"
+      "nDiffs": 20080,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 7690.38"
     },
     {
       "id": "2222",
