@@ -1332,5 +1332,13 @@
     "input": "test/golden/inputs/parallel-cluster-ldbxtried.gv",
     "reference": "test/golden/refs/parallel-cluster-ldbxtried.svg",
     "description": "Full ldbxtried (clustered 'toucan' graph), an active whole-SVG conformance gate. The fix-ldbxtried mission corrected interclexp's edge-iteration order (g.edges insertion order -> C agfstedge order), which restored the merged ED_xpenalty on parallel intercluster multi-edges (n488->n2: 1->2), fixed rcross(rank3) (17->19) and so the ReMincross best within-rank order, which had cascaded into 13 nodes' X coords plus a rank reorder (n518). Port now structural-matches the headless oracle (/tmp/ghl). Previously skipped as deeply-diverged; that residual WAS this X-coord cascade. The focused 'ldbxtried n0->n1 corridor' test remains a finer pin."
+  },
+  {
+    "id": "dot-cluster-labeled-minlen0",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-labeled-minlen0.dot",
+    "reference": "test/golden/refs/dot-cluster-labeled-minlen0.svg",
+    "description": "Labeled minlen=0 flat edge into a cluster: abomination's +1 rank renumber must shift cluster rank state (plantuml-ts xusuxe-62-guba767)"
   }
 ]
