@@ -225,6 +225,53 @@ export function flatNode(e: Edge): void {
 
 // abomination  @see lib/dotgen/flat.c:abomination
 
+/** Fresh empty rank entry (the slot vacated by the +1 renumber). */
+export function emptyRankEntry(): RankEntry {
+  return {
+    n: 0, v: [], an: 0, av: [],
+    ht1: 1, ht2: 1, pht1: 1, pht2: 1,
+    candidate: false, valid: false, cache_nc: 0, flat: undefined, vStart: 0,
+  };
+}
+
+/**
+ * Shift a cluster subtree's absolute-rank-indexed state to follow the +1
+ * renumber performed by `abomination` (AD-2).
+ *
+ * C needs no such pass: its abomination adds the label rank at index -1
+ * (`GD_rank(g) = rptr + 1`, `GD_minrank(g)--`) and never touches ND_rank, so a
+ * cluster's GD_minrank/GD_maxrank, GD_rank(clust)[] and GD_rankleader(clust)[]
+ * — all indexed by ABSOLUTE rank — stay correct. JS has no negative index, so
+ * the port renumbers +1 instead, and every absolute-rank-indexed structure has
+ * to move with it. Skipping the clusters leaves them pointing one rank too low:
+ * the next step of flat_edges (rec_reset_vlists → reset_vlist) re-aliases
+ * GD_rank(clust)[r].v = GD_rank(root)[r].v at the cluster's stale r, which now
+ * addresses the newly inserted flat-label rank instead of the cluster's own.
+ *
+ * @see lib/dotgen/flat.c:abomination
+ * @see lib/dotgen/mincross.c:reset_vlist
+ */
+export function shiftClusterRanks(g: Graph): void {
+  const nClust = g.info.n_cluster ?? 0;
+  for (let c = 1; c <= nClust; c++) {
+    const sub = g.info.clust![c - 1];
+    const mn = graphMinrank(sub);
+    const mx = graphMaxrank(sub);
+    const rank = sub.info.rank;
+    if (rank) {
+      for (let r = mx; r >= mn; r--) rank[r + 1] = rank[r];
+      rank[mn] = emptyRankEntry();
+    }
+    // GD_rankleader(clust)[r] is absolute-rank-indexed too (save_vlist writes
+    // it at r = minrank..maxrank; map_interclust_node reads it at ND_rank(n)).
+    const rl = sub.info.rankleader;
+    if (rl) for (let r = mx; r >= mn; r--) rl[r + 1] = rl[r];
+    sub.info.minrank = mn + 1;
+    sub.info.maxrank = mx + 1;
+    shiftClusterRanks(sub);
+  }
+}
+
 /** Make room for a flat label vnode below the lowest rank (name from C; AD-2).
  * @see lib/dotgen/flat.c:abomination */
 export function abomination(g: Graph): void {
@@ -236,15 +283,15 @@ export function abomination(g: Graph): void {
   const mx = graphMaxrank(g);
   const rank = g.info.rank!;
   for (let r = mx; r >= 0; r--) rank[r + 1] = rank[r];
-  rank[0] = {
-    n: 0, v: [], an: 0, av: [],
-    ht1: 1, ht2: 1, pht1: 1, pht2: 1,
-    candidate: false, valid: false, cache_nc: 0, flat: undefined, vStart: 0,
-  };
+  rank[0] = emptyRankEntry();
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
     n.info.rank = (n.info.rank ?? 0) + 1;
   }
   g.info.maxrank = mx + 1;
+  // The root's nlist holds every node (merge_ranks calls fast_node(root, v) on
+  // each cluster member), so the ND_rank bump above already covers the clusters'
+  // nodes. What it does NOT cover is the clusters' own rank-indexed bookkeeping.
+  shiftClusterRanks(g);
   // Record the +1 renumber so make_LR_constraints can recover C's rank-index
   // parity: C inserts the label rank at -1 and keeps real nodes on even ranks;
   // this 0-based shift puts them on odd ranks, inverting `sep[i & 1]`.

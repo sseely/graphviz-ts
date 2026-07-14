@@ -153,6 +153,92 @@ describe('abomination: new rank entry', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Cluster rank state must follow the +1 renumber (plantuml-ts xusuxe-62-guba767)
+//
+// C's abomination puts the flat-label rank at index -1 and never touches
+// ND_rank, so a cluster's ABSOLUTE-rank-indexed state stays valid. The port
+// renumbers +1 instead (AD-2), so that state has to move with it — otherwise
+// rec_reset_vlists (mincross.c:reset_vlist) re-aliases the cluster's rank window
+// onto the newly inserted label rank and contain_nodes reads a hole.
+// @see lib/dotgen/flat.c:abomination
+// ---------------------------------------------------------------------------
+
+describe('abomination: shifts cluster rank state (AD-2)', () => {
+  /** Root with one cluster occupying absolute rank 0. */
+  function makeClusteredAbomGraph() {
+    const g = makeAbomGraph();
+    const [sub] = makeTestGraph(0);
+    const leader = { info: { rank: 0, order: 0 } } as unknown as Node;
+    sub.info.minrank = 0;
+    sub.info.maxrank = 0;
+    sub.info.rank = [
+      { n: 2, an: 0, v: [], av: [], ht1: 1, ht2: 1, pht1: 1, pht2: 1,
+        candidate: false, valid: false, cache_nc: 0, vStart: 0 },
+    ] as unknown as RankEntry[];
+    sub.info.rankleader = [leader];
+    g.info.clust = [sub];
+    g.info.n_cluster = 1;
+    return { g, sub, leader, clusterRank0: sub.info.rank![0] };
+  }
+
+  it('bumps the cluster minrank/maxrank with the root renumber', () => {
+    const { g, sub } = makeClusteredAbomGraph();
+    abomination(g);
+    expect(sub.info.minrank).toBe(1);
+    expect(sub.info.maxrank).toBe(1);
+  });
+
+  it('moves the cluster rank entry up one absolute index', () => {
+    const { g, sub, clusterRank0 } = makeClusteredAbomGraph();
+    abomination(g);
+    // The cluster's window (n=2) now lives at rank 1, where its nodes are.
+    expect(sub.info.rank![1]).toBe(clusterRank0);
+    expect(sub.info.rank![1].n).toBe(2);
+    // The vacated slot is a fresh empty rank, not a stale alias of the window.
+    expect(sub.info.rank![0]).not.toBe(clusterRank0);
+    expect(sub.info.rank![0].n).toBe(0);
+  });
+
+  it('moves the cluster rankleader up one absolute index', () => {
+    const { g, sub, leader } = makeClusteredAbomGraph();
+    abomination(g);
+    expect(sub.info.rankleader![1]).toBe(leader);
+  });
+});
+
+// Regression (plantuml-ts fixture xusuxe-62-guba767): a labeled minlen=0 edge
+// from an external node into a cluster member, with a second edge-less member.
+// The labeled flat edge triggers abomination; before the cluster-rank shift the
+// cluster window aliased the label rank (n=2 over a 1-element array) and
+// contain_nodes threw "Cannot read properties of undefined (reading 'info')".
+// Geometry is pinned by test/golden/{refs,refs-xdot}/dot-cluster-labeled-minlen0;
+// this asserts the layout completes and lands on the native oracle's frame.
+describe('labeled minlen=0 edge into a cluster (xusuxe-62-guba767)', () => {
+  const src = `digraph G {
+    nodesep=0.4861111111111111;
+    ranksep=0.8333333333333334;
+    subgraph cluster0 {
+      label="Cloudogu Ecosystem";
+      smeagol [shape=box, fixedsize=true, label="", width=4.215820313277778, height=1.1388888888888888];
+      nexus   [shape=box, fixedsize=true, label="", width=4.0079888244166675, height=1.1388888888888888];
+    }
+    developer [shape=box, fixedsize=true, label="", width=0.925604926166667, height=1.0277777777777777];
+    developer -> smeagol [minlen=0, label="\\"Edit Slides\\"", fontname="Times"];
+  }`;
+
+  it('lays out without throwing', () => {
+    expect(() => renderSvg(src, 'dot')).not.toThrow();
+  });
+
+  it('matches the native oracle drawing frame', () => {
+    // Native oracle: graph bb="0,0,745.32,253.8" -> svg viewBox 753 x 262.
+    // Before the cluster-rank shift this input could not lay out at all.
+    const svg = renderSvg(src, 'dot');
+    expect(svg).toContain('viewBox="0.00 0.00 753.00 262.00"');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // flat_limits / findlr — graphviz #1213
 //
 // A labeled flat edge's label virtual node must be placed on rank r-1 using C's

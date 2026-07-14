@@ -1,0 +1,50 @@
+digraph G {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 253.8 745.32 253.8 745.32 0 ",
+		bb="0,0,745.32,253.8",
+		nodesep=0.4861111111111111,
+		ranksep=0.8333333333333334,
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph cluster0 {
+		graph [_draw_="c 7 -#000000 p 4 8 8 8 155.6 651 155.6 651 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 329.5 139 0 119.38 18 -Cloudogu Ecosystem ",
+			bb="8,8,651,155.6",
+			label="Cloudogu Ecosystem",
+			lheight=0.23,
+			lp="329.5,143.2",
+			lwidth=1.66
+		];
+		smeagol	[_draw_="c 7 -#000000 p 4 319.77 98 16.23 98 16.23 16 319.77 16 ",
+			fixedsize=true,
+			height=1.1389,
+			label="",
+			pos="168,57",
+			shape=box,
+			width=4.2158];
+		nexus	[_draw_="c 7 -#000000 p 4 643.29 98 354.71 98 354.71 16 643.29 16 ",
+			fixedsize=true,
+			height=1.1389,
+			label="",
+			pos="499,57",
+			shape=box,
+			width=4.008];
+	}
+	developer	[_draw_="c 7 -#000000 p 4 745.32 94 678.68 94 678.68 20 745.32 20 ",
+		fixedsize=true,
+		height=1.0278,
+		label="",
+		pos="712,57",
+		shape=box,
+		width=0.9256];
+	developer -> smeagol	[_draw_="c 7 -#000000 B 10 701.79 94.23 693.85 115.46 680.47 140.3 659 152.97 597.37 189.33 406.18 171.24 337 152.97 300.35 143.29 263.32 \
+123.62 233.31 104.6 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 235.38 101.78 225.09 99.28 231.58 107.65 ",
+		_ldraw_="F 14 5 -Times c 7 -#000000 T 499 167.8 0 72.49 13 -\"Edit Slides\" ",
+		fontname=Times,
+		label="\"Edit Slides\"",
+		lp="499,172",
+		minlen=0,
+		pos="e,223.82,98.46 701.79,94.234 693.85,115.46 680.47,140.3 659,152.97 597.37,189.33 406.18,171.24 337,152.97 300.35,143.29 263.32,123.62 \
+233.31,104.6"];
+}

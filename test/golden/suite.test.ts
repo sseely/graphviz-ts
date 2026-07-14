@@ -111,8 +111,8 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 // + 1 edgecmp-order fixture (fix-edge-route-order: edge-order-min — lone edge
 //   dispatched before a vnode-moving parallel group; conforms to the oracle and
 //   guards the unified single-pass router against breaking simple cases)
-test('manifest has 165 entries', () => {
-  expect(manifest).toHaveLength(165);
+test('manifest has 166 entries', () => {
+  expect(manifest).toHaveLength(166);
 });
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,29 @@
+/* Labeled flat edge crossing a cluster boundary (plantuml-ts fixture
+ * xusuxe-62-guba767, reduced).
+ *
+ * minlen=0 on a labeled edge lets the endpoints share a rank, so the edge is
+ * FLAT and its label is non-adjacent -> dotgen's abomination() inserts a rank
+ * for the flat label vnode. C adds that rank at index -1 and leaves every
+ * ND_rank alone; the port has no negative index and renumbers +1 instead, which
+ * must carry the clusters' absolute-rank-indexed state (minrank/maxrank, rank[],
+ * rankleader[]) with it. When it did not, rec_reset_vlists re-aliased the
+ * cluster's rank window onto the new label rank and dot threw
+ * "Cannot read properties of undefined" out of contain_nodes.
+ *
+ * The edge-less second cluster member (nexus) is load-bearing: it makes the
+ * stale window claim n=2 over a 1-element array, which is what exposes the hole.
+ *
+ * @see lib/dotgen/flat.c:abomination
+ * @see lib/dotgen/mincross.c:reset_vlist
+ */
+digraph G {
+  nodesep=0.4861111111111111;
+  ranksep=0.8333333333333334;
+  subgraph cluster0 {
+    label="Cloudogu Ecosystem";
+    smeagol [shape=box, fixedsize=true, label="", width=4.215820313277778, height=1.1388888888888888];
+    nexus   [shape=box, fixedsize=true, label="", width=4.0079888244166675, height=1.1388888888888888];
+  }
+  developer [shape=box, fixedsize=true, label="", width=0.925604926166667, height=1.0277777777777777];
+  developer -> smeagol [minlen=0, label="\"Edit Slides\"", fontname="Times"];
+}
