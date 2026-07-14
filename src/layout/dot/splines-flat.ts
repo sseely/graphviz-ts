@@ -510,7 +510,10 @@ export function flatVspace(g: Graph, tn: Node, top: boolean): number {
   const r = tn.info.rank!;
   if (top) {
     if (r <= 0) return graphRanksep(g);
-    const prevIdx = (g.info.has_labels & EDGE_LABEL) !== 0 ? r - 2 : r - 1;
+    // C reads GD_has_labels(g->root), not the layout graph: under `pack` the
+    // component's own flag is 0 while the true root carries EDGE_LABEL.
+    // @see lib/dotgen/dotsplines.c:1552 (make_flat_edge)
+    const prevIdx = (g.root.info.has_labels & EDGE_LABEL) !== 0 ? r - 2 : r - 1;
     // With EDGE_LABEL the previous *node* rank is r-2; after `abomination` shifts
     // a flat-label rank in, r-2 can fall below minrank (no node rank above) —
     // fall back to ranksep rather than dereferencing an absent rank.

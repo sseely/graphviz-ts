@@ -456,7 +456,10 @@ export function makeLineEdge(g: Graph, fe: Edge): Point[] | null {
   const hn = e.head;
   if (tn.info.rank === undefined || hn.info.rank === undefined) return null;
   const delr = Math.abs(hn.info.rank - tn.info.rank);
-  const hasEdgeLabel = ((g.info.has_labels ?? 0) & EDGE_LABEL) !== 0;
+  // C reads GD_has_labels(g->root), not the layout graph: under `pack` the
+  // component's own flag is 0 while the true root carries EDGE_LABEL.
+  // @see lib/dotgen/dotsplines.c:1650 (makeLineEdge)
+  const hasEdgeLabel = ((g.root.info.has_labels ?? 0) & EDGE_LABEL) !== 0;
   if (delr === 1 || (delr === 2 && hasEdgeLabel)) return null;
 
   let startp: Point;

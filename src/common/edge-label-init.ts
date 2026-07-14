@@ -123,7 +123,18 @@ function getLabelFontInfo(e: Edge): FontInfo {
 /**
  * Create center edge label and set EDGE_LABEL bit when label attr is non-empty.
  *
- * @see lib/common/utils.c:common_init_edge (lines 517-523)
+ * The flag goes on `g.root` — C's `graph_t *sg = agraphof(agtail(e))`, i.e. the
+ * TRUE cgraph root, never the graph currently being initialized. This matters
+ * under `pack`: each connected component is init'd and laid out as its own graph,
+ * but C still ORs the flags onto the shared root, and the dot layout reads them
+ * back via `GD_has_labels(g->root)` (position.c:234 make_LR_constraints,
+ * dotsplines.c:243/1552/1650/1776). Setting them on the component left the root's
+ * flags clear, so every `g->root` reader took the no-edge-label branch — e.g.
+ * make_LR_constraints used the full nodesep on odd ranks instead of C's `sep[1]=5`.
+ * (`GD_has_labels(g)` on the component stays 0, which is what `edgelabel_ranks`
+ * — rank.c:170, the one reader C scopes to the layout graph — requires.)
+ *
+ * @see lib/common/utils.c:common_init_edge (graph_t *sg = agraphof(agtail(e)))
  * @see lib/common/utils.c:519 — make_label(e, str, aghtmlstr(str), false, ...)
  */
 function applyLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): void {
@@ -132,7 +143,7 @@ function applyLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): vo
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
   e.info.label = makeAnyLabel(content, isHtml, fi, measurer, e);
-  g.info.has_labels |= EDGE_LABEL;
+  g.root.info.has_labels |= EDGE_LABEL;
   // ED_label_ontop: mapbool(late_string(e, E_label_float, "false"))
   // @see lib/common/utils.c:522
   e.info.label_ontop = mapbool(e.attrs.get('label_float')) ? 1 : 0;
@@ -155,7 +166,8 @@ function applyXLabel(e: Edge, g: Graph, fi: FontInfo, measurer: TextMeasurer): v
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
   e.info.xlabel = makeAnyLabel(content, isHtml, fi, measurer, e);
-  g.info.has_labels |= EDGE_XLABEL;
+  // C: GD_has_labels(sg) where sg = agraphof(agtail(e)) — the true root.
+  g.root.info.has_labels |= EDGE_XLABEL;
 }
 
 // ---------------------------------------------------------------------------
@@ -173,7 +185,8 @@ function applyHeadLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
   e.info.head_label = makeAnyLabel(content, isHtml, lfi, measurer, e);
-  g.info.has_labels = (g.info.has_labels ?? 0) | HEAD_LABEL;
+  // C: GD_has_labels(sg) where sg = agraphof(agtail(e)) — the true root.
+  g.root.info.has_labels = (g.root.info.has_labels ?? 0) | HEAD_LABEL;
 }
 
 // ---------------------------------------------------------------------------
@@ -191,7 +204,8 @@ function applyTailLabel(e: Edge, g: Graph, lfi: FontInfo, measurer: TextMeasurer
   const isHtml = isHtmlValue(str);
   const content = isHtml ? htmlValueContent(str) : str;
   e.info.tail_label = makeAnyLabel(content, isHtml, lfi, measurer, e);
-  g.info.has_labels = (g.info.has_labels ?? 0) | TAIL_LABEL;
+  // C: GD_has_labels(sg) where sg = agraphof(agtail(e)) — the true root.
+  g.root.info.has_labels = (g.root.info.has_labels ?? 0) | TAIL_LABEL;
 }
 
 // ---------------------------------------------------------------------------

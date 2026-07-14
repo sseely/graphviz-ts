@@ -132,10 +132,17 @@ export function allocateAuxEdges(g: Graph): void {
  * (real nodes sit on even ranks 0,2,4…). `abomination` inserts a flat-label
  * rank at -1 in C, but this 0-based port shifts every rank up by 1 instead
  * (AD-2), inverting the parity; `abomShift` undoes that so the parity matches C.
- * @see lib/dotgen/position.c:make_LR_constraints */
+ *
+ * The EDGE_LABEL gate reads `g.root`, not `g`: C is `GD_has_labels(g->root)`.
+ * Under `pack` the layout graph is a component whose own has_labels is 0 (C
+ * scopes only `edgelabel_ranks`, rank.c:170, to the layout graph) while the true
+ * root carries the flag — so reading `g` here silently used the full nodesep on
+ * odd ranks instead of C's `sep[1] = 5`, widening every packed component that
+ * contains an edge label.
+ * @see lib/dotgen/position.c:make_LR_constraints (GD_has_labels(g->root)) */
 export function lrSep(g: Graph, rankIdx: number): number {
   const nodesep = graphNodesep(g);
-  if (!((g.info.has_labels ?? 0) & EDGE_LABEL)) return nodesep;
+  if (!((g.root.info.has_labels ?? 0) & EDGE_LABEL)) return nodesep;
   return (rankIdx + (g.info.abomShift ?? 0)) & 1 ? 5 : nodesep;
 }
 

@@ -203,12 +203,24 @@ export function flatNodeEdges(vn: Node, e: Edge): void {
   eh.info.edge_type = FLATORDER;
 }
 
-/** Create a VIRTUAL label node (ND_alg → e) above a non-adjacent flat edge.
- * @see lib/dotgen/flat.c:flat_node */
-export function flatNode(e: Edge): void {
+/**
+ * Create a VIRTUAL label node (ND_alg → e) above a non-adjacent flat edge.
+ *
+ * `g` is the graph being laid out. C reads it as `dot_root(agtail(e))`, which is
+ * `GD_dotroot(agroot(e))` — a MUTABLE slot on the cgraph root that `dot_init_subg`
+ * re-points at the graph currently being laid out. It is therefore NOT the same as
+ * `agroot(agtail(e))`: under `pack`, each connected component is laid out as its own
+ * dot-root, so `dot_root()` yields the COMPONENT while `agroot()` yields the true
+ * root (which has no rank table at all). The port has no such mutable slot, so the
+ * layout graph is threaded in from `flat_edges` — which is exactly what C's
+ * `dot_root()` evaluates to at every call site here.
+ *
+ * @see lib/dotgen/flat.c:flat_node (g = dot_root(agtail(e)))
+ * @see lib/dotgen/dotinit.c:dot_init_subg (GD_dotroot(agroot(g)) = droot)
+ */
+export function flatNode(g: Graph, e: Edge): void {
   const lbl = e.info.label;
   if (lbl === undefined) return;
-  const g = e.tail.root;
   const r = nodeRank(e.tail);
   const place = flatLimits(g, e);
   const ypos = flatLabelYpos(g, r);
@@ -261,6 +273,10 @@ export function shiftClusterRanks(g: Graph): void {
     if (rank) {
       for (let r = mx; r >= mn; r--) rank[r + 1] = rank[r];
       rank[mn] = emptyRankEntry();
+      // The shift overwrote the zeroed sentinel that `allocate_ranks` parks at
+      // maxrank+1 (C: gv_calloc(maxrank + 2)); re-establish it at the NEW
+      // maxrank+1 so rank[maxrank+1] is never a hole. @see below (abomination).
+      rank[mx + 2] = emptyRankEntry();
     }
     // GD_rankleader(clust)[r] is absolute-rank-indexed too (save_vlist writes
     // it at r = minrank..maxrank; map_interclust_node reads it at ND_rank(n)).
@@ -284,6 +300,17 @@ export function abomination(g: Graph): void {
   const rank = g.info.rank!;
   for (let r = mx; r >= 0; r--) rank[r + 1] = rank[r];
   rank[0] = emptyRankEntry();
+  // C allocates THREE extra rank slots here ("one for new rank, one for
+  // sentinel, one for off-by-one", flat.c:193) and re-bases the pointer, so the
+  // zeroed sentinel that `allocate_ranks` keeps at maxrank+1
+  // (`gv_calloc(GD_maxrank(g) + 2)`, mincross.c:1155) survives the insert. This
+  // port shifts UP in place instead of using a -1 index, so the shift writes the
+  // old top rank OVER that sentinel; without re-establishing it, rank[maxrank+1]
+  // is a hole. Readers that index maxrank+1 unguarded — `transposeCounts`' useOut
+  // gate (`GD_rank(g)[r+1].n`, mincross.c:650) and `mergeRanks`
+  // (`GD_rank(root)[mx+1].valid`, cluster.c:245) — would then fault on undefined.
+  // @see lib/dotgen/flat.c:abomination (gv_recalloc to GD_maxrank(g) + 3)
+  rank[mx + 2] = emptyRankEntry();
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
     n.info.rank = (n.info.rank ?? 0) + 1;
   }
@@ -325,18 +352,20 @@ export function hasInterveningNode(rk: RankEntry, lo: number, hi: number): boole
  * rep (`ED_adjacent(e) = ED_adjacent(le)`). Marking only the leaf left the rep
  * unmarked, so that copy clobbered the flag back to 0 and the edge mis-routed
  * through the generic fitter (a spurious y-slope on a flat edge).
- * @see lib/dotgen/flat.c:checkFlatAdjacent
+ *
+ * `g` is the graph being laid out — C's `dot_root(tn)`, NOT `agroot(tn)`. See
+ * `flatNode` above for why these differ under `pack`.
+ *
+ * @see lib/dotgen/flat.c:checkFlatAdjacent (rank = &GD_rank(dot_root(tn))[...])
  */
-export function checkFlatAdjacent(e: Edge): void {
+export function checkFlatAdjacent(g: Graph, e: Edge): void {
   const tOrd = nodeOrder(e.tail);
   const hOrd = nodeOrder(e.head);
   const lo = Math.min(tOrd, hOrd);
   const hi = Math.max(tOrd, hOrd);
   let adjacent = hi - lo <= 1;
   if (!adjacent) {
-    const rank = e.tail.root.info.rank;
-    if (!rank) return;
-    adjacent = !hasInterveningNode(rank[nodeRank(e.tail)], lo, hi);
+    adjacent = !hasInterveningNode(g.info.rank![nodeRank(e.tail)], lo, hi);
   }
   if (!adjacent) return;
   for (let le: Edge | undefined = e; le; le = le.info.to_virt) le.info.adjacent = 1;
@@ -351,14 +380,14 @@ export function isLabeledFlat(e: Edge): boolean {
   return e.info.label !== undefined;
 }
 
-export function markEdgeList(edges: EdgeList | undefined): void {
+export function markEdgeList(g: Graph, edges: EdgeList | undefined): void {
   if (!edges) return;
-  for (let i = 0; i < edges.size; i++) checkFlatAdjacent(edges.list[i]);
+  for (let i = 0; i < edges.size; i++) checkFlatAdjacent(g, edges.list[i]);
 }
 
 export function markAdjacent(g: Graph): void {
   for (let n: Node | undefined = g.info.nlist; n; n = n.info.next) {
-    markEdgeList(n.info.flat_out);
+    markEdgeList(g, n.info.flat_out);
     // ND_other entries are marked only when actually flat: a cross-rank merged
     // 2-cycle member must NOT get adjacent=1 (the chain-walk would set it on
     // its rep too, and groupSize's flat-adjacent short-circuit would then
@@ -366,7 +395,7 @@ export function markAdjacent(g: Graph): void {
     if (n.info.other) {
       for (let i = 0; i < n.info.other.size; i++) {
         const e = n.info.other.list[i];
-        if (nodeRank(e.tail) === nodeRank(e.head)) checkFlatAdjacent(e);
+        if (nodeRank(e.tail) === nodeRank(e.head)) checkFlatAdjacent(g, e);
       }
     }
   }
@@ -424,7 +453,7 @@ function flatClassRep(e: Edge): Edge {
 export function processFlatOutLabel(g: Graph, e: Edge, reset: boolean): boolean {
   if (!isLabeledFlat(e)) return reset;
   if (e.info.adjacent) { applyLabelDist(g, e); return reset; }
-  flatNode(e);
+  flatNode(g, e);
   return true;
 }
 
@@ -442,7 +471,7 @@ export function processOtherLabel(g: Graph, e: Edge, reset: boolean): boolean {
     le.info.dist = Math.max(labelWidth(g, e), le.info.dist ?? 0);
     return reset;
   }
-  flatNode(e);
+  flatNode(g, e);
   return true;
 }
 

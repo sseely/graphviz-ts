@@ -338,3 +338,73 @@ describe('flat_limits #1213: constraint=false splines match the C oracle', () =>
     });
   }
 });
+
+// ---------------------------------------------------------------------------
+// abomination must preserve the rank-table SENTINEL
+//
+// C's allocate_ranks always parks a zeroed sentinel at maxrank+1
+// (`gv_calloc(GD_maxrank(g) + 2, sizeof(rank_t))`, mincross.c:1155), and
+// abomination keeps it: it allocates THREE extra slots and re-bases the pointer
+// ("one for new rank, one for sentinel, one for off-by-one", flat.c:193-197), so
+// the new rank goes to index -1 and maxrank never moves.
+//
+// The port has no negative index, so it renumbers +1 instead and shifts the
+// table UP in place — which writes the old top rank OVER that sentinel and then
+// raises maxrank, leaving rank[maxrank+1] a hole. Readers that index maxrank+1
+// unguarded (transposeCounts' useOut gate `GD_rank(g)[r+1].n`, mincross.c:650;
+// mergeRanks' `GD_rank(root)[mx+1].valid`, cluster.c:245) would fault on it.
+// @see lib/dotgen/flat.c:abomination
+// ---------------------------------------------------------------------------
+
+describe('abomination: preserves the maxrank+1 sentinel', () => {
+  /** A rank entry as `allocate_ranks` builds it (C gv_calloc → zeroed). */
+  function emptyRank(n: number): RankEntry {
+    return { n, an: 0, v: [], av: [], ht1: 1, ht2: 1, pht1: 1, pht2: 1,
+      candidate: false, valid: false, cache_nc: 0, vStart: 0 } as unknown as RankEntry;
+  }
+
+  /**
+   * Root sized the way `allocate_ranks` really sizes it: maxrank+2 slots, so the
+   * last entry (index maxrank+1) is the zeroed sentinel.
+   */
+  function makeAbomGraphWithSentinel() {
+    const [g] = makeTestGraph(0);
+    g.info.minrank = 0;
+    g.info.maxrank = 1;
+    // indices 0, 1 (real ranks) + 2 (sentinel) === maxrank + 2 entries
+    g.info.rank = [emptyRank(1), emptyRank(1), emptyRank(0)];
+    return g;
+  }
+
+  it('leaves a zeroed sentinel at the NEW maxrank+1 (root)', () => {
+    const g = makeAbomGraphWithSentinel();
+    abomination(g);
+    const mx = g.info.maxrank!;
+    expect(mx).toBe(2); // renumbered +1
+    const sentinel = g.info.rank![mx + 1];
+    expect(sentinel).toBeDefined();
+    expect(sentinel.n).toBe(0);
+    // and it must not be an alias of the old top rank the shift moved up
+    expect(sentinel).not.toBe(g.info.rank![mx]);
+  });
+
+  it('leaves a zeroed sentinel at the NEW maxrank+1 (cluster)', () => {
+    const g = makeAbomGraphWithSentinel();
+    const [sub] = makeTestGraph(0);
+    sub.info.minrank = 0;
+    sub.info.maxrank = 1;
+    sub.info.rank = [emptyRank(2), emptyRank(2), emptyRank(0)];
+    sub.info.rankleader = [];
+    g.info.clust = [sub];
+    g.info.n_cluster = 1;
+
+    abomination(g);
+
+    const mx = sub.info.maxrank!;
+    expect(mx).toBe(2); // cluster window shifted with the root renumber
+    const sentinel = sub.info.rank![mx + 1];
+    expect(sentinel).toBeDefined();
+    expect(sentinel.n).toBe(0);
+    expect(sentinel).not.toBe(sub.info.rank![mx]);
+  });
+});
