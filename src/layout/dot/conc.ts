@@ -17,7 +17,7 @@ import {
   virtualEdge, mergeOneway, deleteFastEdge, deleteFastNode,
 } from './fastgr.js';
 import { dotScanRanks } from './rank.js';
-import { dotRoot } from './mincross-utils.js';
+import { dotRoot, rankGet } from './mincross-utils.js';
 import { nodesInSeq } from './decomp.js';
 import { graphMinrank, graphMaxrank } from './position-aux.js';
 
@@ -241,7 +241,13 @@ export function computeMaxi(g: Graph, r: number): number {
   const rankArr = g.info.rank!;
   let maxi = -1;
   for (let i = 0; i < rankArr[r].n; i++) {
-    const n = rankArr[r].v[i];
+    // Read THROUGH the window. C's `GD_rank(g)[r].v[i]` here is the OFFSET
+    // pointer set two lines above in rebuild_vlists, so index i is relative to
+    // the rank leader; a raw `v[i]` would read the ROOT's leftmost node. This is
+    // the sole conc.ts site reached with a CLUSTER (via fillRankVlist) — the
+    // rest run on the root under dotConcentrate, where vStart is 0 and C uses
+    // raw indexing too.
+    const n = rankGet(rankArr[r], i);
     if (n === undefined) break;
     if ((n.info.node_type ?? NORMAL) === NORMAL) {
       if (g.nodes.has(n.name)) { maxi = i; } else break;
@@ -268,12 +274,23 @@ export function fillRankVlist(g: Graph, r: number, root: Graph): number {
     );
     return -1;
   }
-  // C sets GD_rank(g)[r].v = GD_rank(root)[r].v + ND_order(lead) (pointer
-  // offset). The port bakes that offset into a fresh slice, so the window now
-  // starts at index 0 — reset the stale vStart (left over from mincross) or
-  // downstream rankGet double-offsets past the slice end. @see rebuild_vlists
-  rankArr[r].v = rootRank.v.slice(lead.info.order ?? 0);
-  rankArr[r].vStart = 0;
+  // C: GD_rank(g)[r].v = GD_rank(dot_root(g))[r].v + ND_order(lead) — a LIVE
+  // POINTER into the root's array, so writes through either view stay mutually
+  // visible. The port models that pointer-plus-offset as (shared array, vStart),
+  // exactly as merge_ranks does (cluster.ts:149-150, whose comment spells out
+  // that a `.slice` copy detaches the cluster view).
+  //
+  // This site used to `.slice()` — a COPY, with vStart reset to 0. It was the
+  // only one of the three rank-alias sites modelled as a copy, and it silently
+  // broke the invariant C gives for free: cluster window and root array are the
+  // same memory. It happened not to misbehave only because the sole root-rank
+  // mutation after dot_concentrate (makeVnSlot, inside flatNode) always sets
+  // reset=true, and recResetVlists then re-aliases the window and heals the copy.
+  // Any future writer through a cluster's rank[r].v would have written into the
+  // detached copy and been lost.
+  // @see lib/dotgen/conc.c:168 rebuild_vlists
+  rankArr[r].v = rootRank.v;
+  rankArr[r].vStart = lead.info.order ?? 0;
   const maxi = computeMaxi(g, r);
   if (maxi === -1) console.error(`Warning: degenerate concentrated rank ${g.name},${r}`);
   rankArr[r].n = maxi + 1;

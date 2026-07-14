@@ -3,7 +3,7 @@
 .vscode/
 
 # Dependencies
-node_modules/
+node_modules
 
 # npm pack output (local consumable package tarball)
 *.tgz
