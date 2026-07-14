@@ -8,6 +8,7 @@
  */
 
 import type { Point, Box } from '../../model/geom.js';
+import { cround } from '../../common/arith.js';
 
 /** Sign comparison matching C fcmp(). @see lib/util/gv_math.h:fcmp */
 export function fcmp(a: number, b: number): number {
@@ -179,7 +180,7 @@ export function splineIntersectf(pts: Point[], bb: Box): boolean {
 export function tryLeftSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.x >= bb.ll.x) return null;
   const x = bb.ll.x;
-  const y = pp.y + Math.round((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
+  const y = pp.y + cround((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
   return y >= bb.ll.y && y <= bb.ur.y ? { x, y } : null;
 }
 
@@ -187,7 +188,7 @@ export function tryLeftSide(pp: Point, cp: Point, bb: Box): Point | null {
 export function tryRightSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.x <= bb.ur.x) return null;
   const x = bb.ur.x;
-  const y = pp.y + Math.round((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
+  const y = pp.y + cround((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
   return y >= bb.ll.y && y <= bb.ur.y ? { x, y } : null;
 }
 
@@ -195,7 +196,7 @@ export function tryRightSide(pp: Point, cp: Point, bb: Box): Point | null {
 export function tryBottomSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.y >= bb.ll.y) return null;
   const y = bb.ll.y;
-  const x = pp.x + Math.round((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
+  const x = pp.x + cround((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
   return x >= bb.ll.x && x <= bb.ur.x ? { x, y } : null;
 }
 
@@ -203,13 +204,15 @@ export function tryBottomSide(pp: Point, cp: Point, bb: Box): Point | null {
 export function tryTopSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.y <= bb.ur.y) return null;
   const y = bb.ur.y;
-  const x = pp.x + Math.round((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
+  const x = pp.x + cround((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
   return x >= bb.ll.x && x <= bb.ur.x ? { x, y } : null;
 }
 
 /**
  * Intersection of segment [pp→cp] with box bb (pp inside/on, cp outside).
- * Tries sides in C order: left, right, bottom, top. Uses Math.round().
+ * Tries sides in C order: left, right, bottom, top. The slope-scaled delta
+ * is rounded with C `round()` (half away from zero) — it is negative
+ * whenever the cluster wall lies below/left of the endpoint.
  * @see lib/dotgen/compound.c:boxIntersectf
  */
 export function boxIntersectf(pp: Point, cp: Point, bb: Box): Point {

@@ -10,6 +10,7 @@ import type { Node } from '../../model/node.js';
 import type { TextlabelT } from '../../common/types.js';
 import { NORMAL } from './fastgr.js';
 import { dotRoot } from './mincross-utils.js';
+import { cround } from '../../common/arith.js';
 import {
   CL_OFFSET,
   TOP_IX, BOTTOM_IX, LEFT_IX, RIGHT_IX,
@@ -160,8 +161,10 @@ export function setAspect(g: Graph): void {
   if (g.info.flip) factors = [factors[1], factors[0]];
   const [xf, yf] = factors;
   for (let n = g.info.nlist; n !== undefined; n = n.info.next) {
-    n.info.coord.x = Math.round(n.info.coord.x * xf);
-    n.info.coord.y = Math.round(n.info.coord.y * yf);
+    // C round(): half away from zero. The frame is un-normalized here, so the
+    // leftmost real node may be negative. @see lib/dotgen/position.c:966-967
+    n.info.coord.x = cround(n.info.coord.x * xf);
+    n.info.coord.y = cround(n.info.coord.y * yf);
   }
   scaleBb(g, xf, yf);
 }

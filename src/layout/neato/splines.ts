@@ -47,6 +47,7 @@ import { legalArrangement } from './legal.js';
 import type { Router } from './multispline.js';
 import { updateBB } from '../dot/splines-label.js';
 import { resolvePort } from '../../common/splines-path-shared.js';
+import { cround } from '../../common/arith.js';
 
 // ---------------------------------------------------------------------------
 // Re-export EDGETYPE constants for consumers of this module
@@ -381,7 +382,8 @@ function graphNodesep(g: Graph): number {
   const root = g.root;
   if (root.info.nodesep === undefined) {
     const inches = lateDouble(root.attrs.get('nodesep'), 0.25, 0.02);
-    root.info.nodesep = Math.round(inches * 72); // C POINTS() macro
+    // C POINTS(a) = ROUND(a*72), half away from zero. @see lib/common/geom.h:62
+    root.info.nodesep = cround(inches * 72);
   }
   return root.info.nodesep;
 }

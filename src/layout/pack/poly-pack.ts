@@ -16,6 +16,7 @@ import type { Box, Point } from '../../model/geom.js';
 import type { PackInfo } from './types.js';
 import { spiralSearch } from './spiral-search.js';
 import { gvQsort } from '../../util/bsd-qsort.js';
+import { cround } from '../../common/arith.js';
 
 /** Max average polyomino size constant. @see lib/pack/pack.c:C */
 const C = 100;
@@ -30,9 +31,18 @@ export interface GInfo {
 /** A set of occupied grid cells (string-keyed for O(1) lookup). */
 export type PointSet = Set<string>;
 
-/** Encode a grid point as a canonical string key. */
+/**
+ * Encode a grid point as a canonical string key.
+ *
+ * C keys its PointSet dict on the `pointf` cell itself (exact double compare,
+ * no rounding). Every cell coordinate reaching here is an exact integer grid
+ * index produced by genBox's `cround(cval(...))`, so the rounding mode is
+ * unobservable; `cround` is used only so no `Math.round` survives in a layout
+ * coordinate path.
+ * @see lib/common/pointset.h:45 (insertPS/inPS take pointf)
+ */
 export function psKey(x: number, y: number): string {
-  return `${Math.round(x)},${Math.round(y)}`;
+  return `${cround(x)},${cround(y)}`;
 }
 
 /** Check if a cell is in the point set. @see lib/pack/pack.c:inPS */
@@ -92,11 +102,6 @@ export function gridCells(x: number, s: number): number {
  */
 export function cval(v: number, s: number): number {
   return v >= 0 ? v / s : (v + 1) / s - 1;
-}
-
-/** C `round()`: half away from zero (genBox rounds each CELL coordinate). */
-export function cround(v: number): number {
-  return v >= 0 ? Math.floor(v + 0.5) : Math.ceil(v - 0.5);
 }
 
 /** Parameters for genBox. */
@@ -178,9 +183,14 @@ export function fits(x: number, y: number, info: GInfo, ctx: PlaceCtx): Point | 
   if (hasCollision(info.cells, x, y, ctx.ps)) return null;
   const bb = ctx.bbs[info.index];
   if (bb === undefined) return null;
+  // C rounds the component's LL with round() — half AWAY from zero. Component
+  // bounding boxes are negative for every center-origin engine (neato/circo/
+  // twopi/sfdp), so a `.5` LL is ordinary and Math.round would translate the
+  // whole placed component by 1pt.
+  // @see lib/pack/pack.c:435-438 (fits: `const pointf LL = {.x = round(...)}`)
   const place: Point = {
-    x: ctx.step * x - Math.round(bb.ll.x),
-    y: ctx.step * y - Math.round(bb.ll.y),
+    x: ctx.step * x - cround(bb.ll.x),
+    y: ctx.step * y - cround(bb.ll.y),
   };
   markCells(info.cells, x, y, ctx.ps);
   return place;

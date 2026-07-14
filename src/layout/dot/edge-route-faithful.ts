@@ -32,6 +32,9 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Box, Point } from '../../model/geom.js';
 import type { Path, PathendT } from '../../common/types.js';
+// C's maximal_bbox rounds both cluster walls with libm round() — half away from
+// zero. @see lib/dotgen/dotsplines.c:maximal_bbox (round(b))
+import { cround } from '../../common/arith.js';
 import { makePort } from '../../model/edgeInfo.js';
 import { beginPath } from '../../common/splines-path-begin.js';
 import { endPath } from '../../common/splines-path-end.js';
@@ -148,29 +151,18 @@ function clBound(n: Node, adj: Node, g: Graph): Graph | undefined {
   return virtualAdjCluster(adj, tcl, hcl, g);
 }
 
-/**
- * C `round()` semantics: round half **away from zero**. JS `Math.round` rounds
- * half toward +∞, which diverges by 1 from C on a negative half-integer wall
- * (graphs routed in a negative-x frame, e.g. nshare/root_twopi). C's
- * `maximal_bbox` rounds both walls with libm `round()`.
- * @see lib/dotgen/dotsplines.c:maximal_bbox (round(b))
- */
-function roundCoord(v: number): number {
-  return v >= 0 ? Math.floor(v + 0.5) : Math.ceil(v - 0.5);
-}
-
 /** Left x-extent of the maximal bbox. @see lib/dotgen/dotsplines.c:maximal_bbox */
 function bboxLeftX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | undefined): number {
   const b = vn.info.coord.x - vn.info.lw - MBB_FUDGE;
   const left = neighbor(ctx.g, vn, ie, oe, -1);
-  if (!left) return Math.min(roundCoord(b), ctx.sp.leftBound);
+  if (!left) return Math.min(cround(b), ctx.sp.leftBound);
   // A left neighbor in another cluster clamps us to that cluster's right edge.
   const clBb = clBound(vn, left, ctx.g)?.info.bb;
   const nb = clBb !== undefined
     ? clBb.ur.x + ctx.sp.splinesep
     : left.info.coord.x + (left.info.mval ?? 0)
       + (nodeType(left) === NORMAL ? (ctx.g.info.nodesep ?? 18) / 2 : ctx.sp.splinesep);
-  return roundCoord(Math.min(nb, b));
+  return cround(Math.min(nb, b));
 }
 
 /** Right x-extent of the maximal bbox. @see lib/dotgen/dotsplines.c:maximal_bbox */
@@ -179,14 +171,14 @@ function bboxRightX(ctx: BboxCtx, vn: Node, ie: Edge | undefined, oe: Edge | und
     ? vn.info.coord.x + 10
     : vn.info.coord.x + vn.info.rw + MBB_FUDGE;
   const right = neighbor(ctx.g, vn, ie, oe, 1);
-  if (!right) return Math.max(roundCoord(b), ctx.sp.rightBound);
+  if (!right) return Math.max(cround(b), ctx.sp.rightBound);
   // A right neighbor in another cluster clamps us to that cluster's left edge.
   const clBb = clBound(vn, right, ctx.g)?.info.bb;
   const nb = clBb !== undefined
     ? clBb.ll.x - ctx.sp.splinesep
     : right.info.coord.x - right.info.lw
       - (nodeType(right) === NORMAL ? (ctx.g.info.nodesep ?? 18) / 2 : ctx.sp.splinesep);
-  return roundCoord(Math.max(nb, b));
+  return cround(Math.max(nb, b));
 }
 
 /**

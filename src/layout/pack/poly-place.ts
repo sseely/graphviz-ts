@@ -18,15 +18,11 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { PackInfo } from './types.js';
 import { PackMode } from './types.js';
+import { cround } from '../../common/arith.js';
 import { gvQsort } from '../../util/bsd-qsort.js';
 
 /** Max. avg. polyomino size. @see lib/pack/pack.c:C */
 const C_AVG = 100;
-
-/** C round(): half away from zero. */
-function cround(v: number): number {
-  return v >= 0 ? Math.floor(v + 0.5) : Math.ceil(v - 0.5);
-}
 
 /** Cells required by size x at cell size s. @see lib/pack/pack.c:GRID */
 function grid(x: number, s: number): number {

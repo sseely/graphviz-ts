@@ -8,6 +8,7 @@
 import { type Point } from '../model/geom.js';
 import { type Rect, overlap } from './rectangle.js';
 import { type ObjectT, type XLabelT } from './xlabels.js';
+import { cround } from '../common/arith.js';
 
 // ---------------------------------------------------------------------------
 // Hilbert spatial-filling-curve code
@@ -72,10 +73,12 @@ export function aabbaabb(r: Rect, s: Rect): number {
 export function objp2rect(op: ObjectT): Rect {
   return {
     boundary: [
-      Math.round(op.pos.x),
-      Math.round(op.pos.y),
-      Math.round(op.pos.x + op.sz.x),
-      Math.round(op.pos.y + op.sz.y),
+      // C round(): half away from zero; xlabel object positions live in the
+      // layout frame and are freely negative. @see lib/label/xlabels.c:173-176
+      cround(op.pos.x),
+      cround(op.pos.y),
+      cround(op.pos.x + op.sz.x),
+      cround(op.pos.y + op.sz.y),
     ],
   };
 }
@@ -88,10 +91,11 @@ export function objplp2rect(objp: ObjectT): Rect {
   const lp = objp.lbl as XLabelT;
   return {
     boundary: [
-      Math.round(lp.pos.x),
-      Math.round(lp.pos.y),
-      Math.round(lp.pos.x + lp.sz.x),
-      Math.round(lp.pos.y + lp.sz.y),
+      // @see lib/label/xlabels.c:184-187 (round())
+      cround(lp.pos.x),
+      cround(lp.pos.y),
+      cround(lp.pos.x + lp.sz.x),
+      cround(lp.pos.y + lp.sz.y),
     ],
   };
 }

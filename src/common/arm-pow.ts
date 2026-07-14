@@ -27,6 +27,7 @@
  */
 
 import { fma } from './fma.js';
+import { cround } from './arith.js';
 import {
   ARM_LN2HI,
   ARM_LN2LO,
@@ -145,11 +146,6 @@ function logInline(ix: bigint): LogResult {
   return { y, tail: hi - y + lo };
 }
 
-/** round-half-away-from-zero (C round()). */
-function roundHalfAway(x: number): number {
-  return x >= 0 ? Math.floor(x + 0.5) : Math.ceil(x - 0.5);
-}
-
 /**
  * sign·exp(x + xtail), normal-range only (over/underflow throw).
  * @see ARM optimized-routines math/pow.c:exp_inline (TOINT_INTRINSICS)
@@ -168,7 +164,7 @@ function expInline(x: number, xtail: number, signBias: number): number {
   }
 
   const z = INVLN2N * x;
-  const kd = roundHalfAway(z);           // roundtoint
+  const kd = cround(z);                  // roundtoint (round-half-away-from-zero)
   const ki = BigInt(kd);                 // converttoint (in-range)
   const r0 = x + kd * NEGLN2HIN + kd * NEGLN2LON;
   const r = r0 + xtail;

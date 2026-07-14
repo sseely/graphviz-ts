@@ -9,6 +9,7 @@
  */
 
 import type { Point, Box } from '../../model/geom.js';
+import { cround } from '../../common/arith.js';
 
 // ---------------------------------------------------------------------------
 // Primitive helpers
@@ -232,7 +233,7 @@ export function splineIntersectf(pts: Point[], bb: Box): boolean {
 export function tryLeftSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.x >= bb.ll.x) return null;
   const x = bb.ll.x;
-  const y = pp.y + Math.round((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
+  const y = pp.y + cround((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
   return y >= bb.ll.y && y <= bb.ur.y ? { x, y } : null;
 }
 
@@ -240,7 +241,7 @@ export function tryLeftSide(pp: Point, cp: Point, bb: Box): Point | null {
 export function tryRightSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.x <= bb.ur.x) return null;
   const x = bb.ur.x;
-  const y = pp.y + Math.round((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
+  const y = pp.y + cround((x - pp.x) * (pp.y - cp.y) / (pp.x - cp.x));
   return y >= bb.ll.y && y <= bb.ur.y ? { x, y } : null;
 }
 
@@ -248,7 +249,7 @@ export function tryRightSide(pp: Point, cp: Point, bb: Box): Point | null {
 export function tryBottomSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.y >= bb.ll.y) return null;
   const y = bb.ll.y;
-  const x = pp.x + Math.round((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
+  const x = pp.x + cround((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
   return x >= bb.ll.x && x <= bb.ur.x ? { x, y } : null;
 }
 
@@ -256,14 +257,17 @@ export function tryBottomSide(pp: Point, cp: Point, bb: Box): Point | null {
 export function tryTopSide(pp: Point, cp: Point, bb: Box): Point | null {
   if (cp.y <= bb.ur.y) return null;
   const y = bb.ur.y;
-  const x = pp.x + Math.round((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
+  const x = pp.x + cround((y - pp.y) * (pp.x - cp.x) / (pp.y - cp.y));
   return x >= bb.ll.x && x <= bb.ur.x ? { x, y } : null;
 }
 
 /**
  * Find intersection of segment [pp, cp] with box bb.
  * pp is inside/on the box; cp is outside. Tries four sides in C order.
- * Uses Math.round() on coordinates, matching C round().
+ * The slope-scaled delta is rounded with C `round()` (half away from zero),
+ * NOT Math.round: the delta is negative whenever the cluster wall lies
+ * below/left of the endpoint, and dot node coords are integers here, so
+ * exact .5 ties are routine.
  *
  * @see lib/dotgen/compound.c:boxIntersectf
  */
