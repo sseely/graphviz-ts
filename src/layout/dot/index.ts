@@ -75,9 +75,18 @@ export function setEdgeType(g: Graph, t: number): void {
  * Set the edge type from the graph's `splines` attribute: unset → defaultValue,
  * empty string → NONE, otherwise the parsed value. Mirrors C's setEdgeType
  * (which reads `agget(g, "splines")`). @see lib/common/utils.c:setEdgeType
+ *
+ * C's `agget` resolves a graph attribute up the ancestor chain, so a component
+ * subgraph sees the root's `splines`. The port's `attrs` map holds only the
+ * attributes written on that graph, so walk to the root ourselves — otherwise
+ * the per-component call sites (neato's `gc`, sfdp's `sg`) read `undefined` and
+ * silently fall back to the default.
  */
 export function setEdgeTypeFromAttr(g: Graph, defaultValue: number): void {
-  const s = g.attrs.get('splines');
+  let s = g.attrs.get('splines');
+  for (let p = g.parent; s === undefined && p !== null; p = p.parent) {
+    s = p.attrs.get('splines');
+  }
   let et: number;
   if (s === undefined) et = defaultValue;
   else if (s === '') et = EDGETYPE_NONE;

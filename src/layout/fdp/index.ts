@@ -12,7 +12,7 @@
 
 import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
-import { setEdgeType } from '../dot/index.js';
+import { setEdgeTypeFromAttr } from '../dot/index.js';
 import {
   EDGETYPE_LINE, EDGETYPE_NONE, splineEdges, injectOraclePositions,
 } from '../neato/splines.js';
@@ -44,7 +44,9 @@ export function fdpInitGraph(g: Graph): void {
   // The root graph label is created by the shared graphInit (do_graph_label),
   // called once from fdpLayoutEngine — C's graph_init runs before fdp_layout.
   // mkClusters below only labels the *clusters* (layout.c:413), never the root.
-  setEdgeType(g, EDGETYPE_LINE);
+  // setEdgeType FUNCTION (utils.c:1423): reads `splines`, LINE is the default.
+  // @see lib/fdpgen/layout.c:1004
+  setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   gdata(g); // GD_alg(g) = gv_alloc(sizeof(gdata))
   mkClusters(g, null, g);
   fdpInitParams(g);

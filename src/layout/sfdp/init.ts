@@ -11,7 +11,7 @@
  */
 
 import type { Graph } from '../../model/graph.js';
-import { setEdgeType } from '../dot/index.js';
+import { setEdgeTypeFromAttr } from '../dot/index.js';
 import { EDGETYPE_LINE } from '../neato/splines.js';
 import { neatoInitNode } from '../neato/init.js';
 import {
@@ -47,7 +47,9 @@ const INT_MAX = 2147483647;
 export function sfdpInitGraph(g: Graph): void {
   // The root graph label is created by the shared graphInit (do_graph_label),
   // called once from sfdpLayout — C's graph_init runs before sfdp_layout.
-  setEdgeType(g, EDGETYPE_LINE);
+  // setEdgeType FUNCTION (utils.c:1423): reads `splines`, LINE is the default.
+  // @see lib/sfdpgen/sfdpinit.c:54
+  setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   commonInitNodeEdge(g); // common_init_node inside neato_init_node
   for (const n of g.nodes.values()) neatoInitNode(n);
   // C sfdp_init_node_edge runs a second loop over out-edges calling

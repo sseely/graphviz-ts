@@ -15,7 +15,7 @@ import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
 import { csrand } from '../../common/crand.js';
 import { graphInit } from '../../common/graph-init.js';
-import { setEdgeType } from '../dot/index.js';
+import { setEdgeTypeFromAttr } from '../dot/index.js';
 import { EDGETYPE_LINE, splineEdgesShifted } from '../neato/splines.js';
 import { sepFactor, DFLT_MARGIN } from '../neato/sep-factor.js';
 import {
@@ -140,7 +140,8 @@ function layoutComponents(
     // ccomps already node-induces edges (graphviz_node_induce).
     sfdpLayoutComponent(sg, ctrl, pad);
     if (doAdjust) adjustNodesScale(sg); // removeOverlapWith (non-PRISM modes)
-    setEdgeType(sg, EDGETYPE_LINE);
+    // @see lib/sfdpgen/sfdpinit.c:284 (setEdgeType FUNCTION, per component)
+    setEdgeTypeFromAttr(sg, EDGETYPE_LINE);
     splineEdgesShifted(sg);
   }
   packSubgraphs(comps.length, comps, g, pinfo);

@@ -559,9 +559,21 @@ class Cdt {
     if (ref.inSurface) return; // constraint already realized (o3 >= 0 path)
 
     // C: triangulate_polygon(prepend(reverse(right), c)) then
-    //    triangulate_polygon(prepend(left, c))
-    this.triangulatePolygon([c, ...right.reverse()]);
-    this.triangulatePolygon([c, ...left]);
+    //    triangulate_polygon(prepend(left, c)).
+    //
+    // GTS accumulates `left`/`right` with g_slist_PREPEND, so ITS lists are in
+    // reverse-walk order; we accumulate with push, i.e. walk order. C's
+    // reverse(right) therefore yields WALK order and its un-reversed `left`
+    // yields REVERSE-walk order — the opposite of what the literal C reads like.
+    // Copying the reversal verbatim inverts both cavity rings' winding, so
+    // triangulatePolygon's `orient(v1,v2,v3) >= 0` ear test rejects every
+    // candidate, the cavity is left UNFILLED, and the constraint edge ends up in
+    // no triangle (findMap then throws "no triangle for segment").
+    //
+    // Latent when a constraint cuts a single triangle — each list holds one edge
+    // and the reversal is a no-op. It bites from two cut triangles up.
+    this.triangulatePolygon([c, ...right]);
+    this.triangulatePolygon([c, ...[...left].reverse()]);
     // ref face was kept floating; destroy it now (detach from edges)
     this.detachFace(ref);
   }

@@ -32,7 +32,7 @@ import {
 } from './init.js';
 import { removeOverlap } from './overlap.js';
 import { splineEdgesShifted, EDGETYPE_LINE } from './splines.js';
-import { setEdgeType } from '../dot/index.js';
+import { setEdgeTypeFromAttr } from '../dot/index.js';
 import {
   ccomps,
   computeSubgraphBB,
@@ -166,8 +166,11 @@ export function neatoLayout(g: Graph): void {
   // gv_postprocess's `GD_label(g) && !set` gate skips BOTH the bb expansion and
   // place_root_label. @see lib/common/input.c:600 graph_init
   graphInit(g, false);
-  // C: neato_init_graph sets EDGETYPE_LINE before node/edge init.
-  setEdgeType(g, EDGETYPE_LINE);
+  // C: neato_init_graph calls setEdgeType(g, EDGETYPE_LINE) — the FUNCTION
+  // (utils.c:1423), which reads the `splines` attr and uses EDGETYPE_LINE only
+  // as the DEFAULT. The bare macro would pin LINE and ignore `splines=`.
+  // @see lib/neatogen/neatoinit.c:598
+  setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);
   for (const [, n] of g.nodes) neatoInitNode(n);
   // C neato_init_node_edge runs a SECOND loop calling neato_init_edge ->
@@ -234,7 +237,8 @@ function addClusters(g: Graph): void {
  */
 function layoutComponents(g: Graph, comps: Graph[], mode: number, model: number): void {
   for (const gc of comps) {
-    setEdgeType(gc, EDGETYPE_LINE);
+    // @see lib/neatogen/neatoinit.c:1398 (setEdgeType FUNCTION, per component)
+    setEdgeTypeFromAttr(gc, EDGETYPE_LINE);
     solveModel(gc, mode, model);
     maybeRemoveOverlap(gc);
     splineEdgesShifted(gc);
