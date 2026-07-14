@@ -137,6 +137,14 @@ describe('dot splines=ortho port labels (144_ortho)', () => {
     e.info.head_label = headLabel as unknown as typeof e.info.head_label;
     e.info.tail_label = tailLabel as unknown as typeof e.info.tail_label;
     e.attrs.set('labeldistance', '2.2');
+    // The `headlabel`/`taillabel` ATTRS must be declared, not just the label
+    // objects: C gates place_portlabel on `E_headlabel`/`E_taillabel`
+    // (= agfindedgeattr, input.c:772), and `ED_head_label` is only ever created
+    // by common_init_edge READING that attr — so a label object without its
+    // attr is a state a real parse cannot produce. Setting only `info` (as this
+    // test originally did) modelled an unreachable graph.
+    e.attrs.set('headlabel', 'H');
+    e.attrs.set('taillabel', 'T');
     g.info.has_labels = HEAD_LABEL | TAIL_LABEL;
 
     const rc = dotSplines_(g, true);

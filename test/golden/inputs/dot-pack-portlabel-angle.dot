@@ -1,0 +1,5 @@
+digraph G {
+  pack=true;
+  a -> b [headlabel="HEAD", taillabel="TAIL", labelangle=45, labeldistance=2.5];
+  x -> y;
+}

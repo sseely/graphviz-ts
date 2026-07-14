@@ -1532,5 +1532,13 @@
     "input": "test/golden/inputs/dot-gap-headtail-record.dot",
     "reference": "test/golden/refs/dot-gap-headtail-record.svg",
     "description": "record/Mrecord with head/tail labels on a port edge: closes headtaillabel x record"
+  },
+  {
+    "id": "dot-pack-portlabel-angle",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-portlabel-angle.dot",
+    "reference": "test/golden/refs/dot-pack-portlabel-angle.svg",
+    "description": "pack + head/tail labels WITH labelangle/labeldistance: C gates place_portlabel on the ATTR DECLARATIONS (E_headlabel etc), not GD_has_labels -- a component projection has has_labels=0, so the port skipped placement and the labels kept their unplaced default. Without labelangle C skips too, which is why the plain pack x headtaillabel fixture could not catch this."
   }
 ]

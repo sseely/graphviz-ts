@@ -13,7 +13,7 @@ import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { TextlabelT } from '../../common/types.js';
 import { VIRTUAL } from './fastgr.js';
-import { HEAD_LABEL, TAIL_LABEL, IGNORED } from './rank.js';
+import { IGNORED } from './rank.js';
 import { lateDouble } from '../../common/nodeinit.js';
 import { nodesInSeq } from './decomp.js';
 
@@ -348,28 +348,59 @@ export function placeRegularEdgeLabels(g: Graph): void {
 // ---------------------------------------------------------------------------
 
 /**
- * C only places port labels here when a labelangle or labeldistance
- * attribute symbol is declared; otherwise the labels are handled by the
- * external-label pass (addXLabels — unported, see mission 9 journal).
- * @see lib/dotgen/dotsplines.c:440 (E_labelangle || E_labeldistance guard)
+ * Is an edge attribute DECLARED anywhere in the graph? Models C's
+ * `E_<attr> = agfindedgeattr(g, "<attr>")` (`input.c:772-778`), which resolves
+ * the attribute *declaration* on the **root** — it is graph-global, not
+ * per-subgraph.
+ *
+ * Scoping to the root is load-bearing under `pack`: `dot_position` runs on each
+ * projected COMPONENT, and a component holds only its own edges. Scanning `g`
+ * would miss a declaration made on an edge in a sibling component, where C's
+ * root-scoped `agfindedgeattr` still sees it.
+ *
+ * @see lib/common/input.c:772 (E_headlabel/E_taillabel/E_labelangle/E_labeldistance)
  */
-function portLabelAttrsDeclared(g: Graph): boolean {
-  if (g.attrs.has('labelangle') || g.attrs.has('labeldistance')) return true;
-  for (const e of g.edges) {
-    if (e.attrs.has('labelangle') || e.attrs.has('labeldistance')) return true;
+function edgeAttrDeclared(g: Graph, ...names: string[]): boolean {
+  const root = g.root;
+  for (const name of names) {
+    if (root.attrs.has(name)) return true; // `edge [<name>=...]` default
+  }
+  for (const e of root.edges) {
+    for (const name of names) {
+      if (e.attrs.has(name)) return true;
+    }
   }
   return false;
 }
 
 /**
  * Walk all nodes and edges; call placePortlabel for head/tail labels.
+ *
+ * C's gates are on the attribute DECLARATIONS, not on `GD_has_labels`:
+ *
+ *   if ((E_headlabel || E_taillabel) && (E_labelangle || E_labeldistance)) {
+ *       for (n = agfstnode(g); ...) {
+ *           if (E_headlabel) { ...place_portlabel(e, true)... }
+ *           if (E_taillabel) { ...place_portlabel(e, false)... }
+ *       }
+ *   }
+ *
+ * The port previously gated the two inner branches on
+ * `GD_has_labels & HEAD_LABEL/TAIL_LABEL`. That is NOT C, and it broke under
+ * `pack`: `has_labels` is OR'd onto the true cgraph root (`common_init_edge`,
+ * utils.c:521), so a projected component's own flag is 0 and BOTH branches were
+ * skipped — the head/tail labels kept their unplaced default position instead
+ * of being offset by labelangle/labeldistance. The per-edge
+ * `ED_head_label == NULL` checks inside the loops already do the real filtering,
+ * exactly as in C.
+ *
  * @see lib/dotgen/dotsplines.c:440-458
  */
 export function placePortLabels(g: Graph): void {
-  if (!portLabelAttrsDeclared(g)) return;
-  const hasLabels = g.info.has_labels !== undefined ? g.info.has_labels : 0;
-  if (hasLabels & HEAD_LABEL) placeHeadLabels(g);
-  if (hasLabels & TAIL_LABEL) placeTailLabels(g);
+  if (!edgeAttrDeclared(g, 'headlabel', 'taillabel')) return;
+  if (!edgeAttrDeclared(g, 'labelangle', 'labeldistance')) return;
+  if (edgeAttrDeclared(g, 'headlabel')) placeHeadLabels(g);
+  if (edgeAttrDeclared(g, 'taillabel')) placeTailLabels(g);
 }
 
 /**
