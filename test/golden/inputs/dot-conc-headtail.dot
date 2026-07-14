@@ -1,0 +1,1 @@
+digraph G { concentrate=true; a->b [headlabel="H", taillabel="T"]; c->b; d->b; }

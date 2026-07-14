@@ -1,0 +1,1 @@
+digraph G { pack=true; a [shape=record,label="<f0>l|<f1>r"]; b [shape=record,label="x|y"]; a:f0->b; p->q; }

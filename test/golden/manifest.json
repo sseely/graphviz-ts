@@ -167,7 +167,7 @@
     "input": "test/golden/inputs/fdp-large.dot",
     "reference": "test/golden/refs/fdp-large.svg",
     "portReference": "test/golden/refs-port/fdp-large.svg",
-    "description": "20-node undirected graph; ref: graphviz 15.0.0 dot -Kfdp -Tsvg. Node centers are BYTE-IDENTICAL to the ref; the only delta is text baseline @y 0.85pt \u2014 the intended Estimate vertical metric (yoffset_centerline 0.1*fs), which the ref predates. C-ref tolerance 1pt (iterative) absorbs it; portReference pins the exact port output at 0.01pt."
+    "description": "20-node undirected graph; ref: graphviz 15.0.0 dot -Kfdp -Tsvg. Node centers are BYTE-IDENTICAL to the ref; the only delta is text baseline @y 0.85pt — the intended Estimate vertical metric (yoffset_centerline 0.1*fs), which the ref predates. C-ref tolerance 1pt (iterative) absorbs it; portReference pins the exact port output at 0.01pt."
   },
   {
     "id": "fdp-nested-cluster",
@@ -1011,7 +1011,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-curved-single.dot",
     "reference": "test/golden/refs/dot-curved-single.svg",
-    "description": "splines=curved single edge a->b; bent toward cycle centroid (here on-axis \u2192 straight); ref: native C dot -Tsvg via gvmine"
+    "description": "splines=curved single edge a->b; bent toward cycle centroid (here on-axis → straight); ref: native C dot -Tsvg via gvmine"
   },
   {
     "id": "dot-curved-parallel",
@@ -1115,7 +1115,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-style-funlimit.dot",
     "reference": "test/golden/refs/dot-style-funlimit.svg",
-    "description": "node style with 65 tokens hits parse_style FUNLIMIT (64) truncation \u2192 empty style list \u2192 unfilled (fill=none); conforms to the oracle (parity color-stroke group B2)"
+    "description": "node style with 65 tokens hits parse_style FUNLIMIT (64) truncation → empty style list → unfilled (fill=none); conforms to the oracle (parity color-stroke group B2)"
   },
   {
     "id": "dot-edge-fontcolor-scheme",
@@ -1131,7 +1131,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-cluster-peripheries0.dot",
     "reference": "test/golden/refs/dot-cluster-peripheries0.svg",
-    "description": "cluster peripheries=0 suppresses the boundary stroke (pencolor transparent \u2192 stroke none) per emit_clusters; conforms to the oracle (parity color-stroke group D)"
+    "description": "cluster peripheries=0 suppresses the boundary stroke (pencolor transparent → stroke none) per emit_clusters; conforms to the oracle (parity color-stroke group D)"
   },
   {
     "id": "dot-label-xml-entity",
@@ -1139,7 +1139,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-label-xml-entity.dot",
     "reference": "test/golden/refs/dot-label-xml-entity.svg",
-    "description": "label XML-entity decode (htmlEntityUTF8: &lt;/&gt;/&amp;/&#65;) + textspan escaping flags {raw,dash,nbsp} (apostrophe\u2192&#39;, dash\u2192&#45;); fixedsize pins geometry; conforms to the oracle (parity text-content group b81/1990)"
+    "description": "label XML-entity decode (htmlEntityUTF8: &lt;/&gt;/&amp;/&#65;) + textspan escaping flags {raw,dash,nbsp} (apostrophe→&#39;, dash→&#45;); fixedsize pins geometry; conforms to the oracle (parity text-content group b81/1990)"
   },
   {
     "id": "dot-string-no-concat",
@@ -1147,7 +1147,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-string-no-concat.dot",
     "reference": "test/golden/refs/dot-string-no-concat.svg",
-    "description": "adjacent quoted strings are NOT implicitly concatenated (QAtom: only '+' concatenates) \u2014 \"a\" \"b\" yields two nodes; conforms to the oracle (parity parser-gap 2682/1990)"
+    "description": "adjacent quoted strings are NOT implicitly concatenated (QAtom: only '+' concatenates) — \"a\" \"b\" yields two nodes; conforms to the oracle (parity parser-gap 2682/1990)"
   },
   {
     "id": "dot-cluster-id-attr",
@@ -1163,7 +1163,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-node-class-attr.dot",
     "reference": "test/golden/refs/dot-node-class-attr.svg",
-    "description": "DOT `class` attr (node default) appended to the SVG class string (svg_print_id_class \u2192 class=\"node node\"); conforms to the oracle (parity attr-or-tag 2563)"
+    "description": "DOT `class` attr (node default) appended to the SVG class string (svg_print_id_class → class=\"node node\"); conforms to the oracle (parity attr-or-tag 2563)"
   },
   {
     "id": "dot-id-stylesheet",
@@ -1179,7 +1179,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-unicode-name.dot",
     "reference": "test/golden/refs/dot-unicode-name.svg",
-    "description": "non-Latin (Cyrillic) node names parse via the widened NAME char class (\\x80\u2013\\uFFFF, matching scan.l's byte>=0x80); fixedsize pins geometry; conforms to the oracle (parity parser-gap graphs-russian)"
+    "description": "non-Latin (Cyrillic) node names parse via the widened NAME char class (\\x80–\\uFFFF, matching scan.l's byte>=0x80); fixedsize pins geometry; conforms to the oracle (parity parser-gap graphs-russian)"
   },
   {
     "id": "dot-arrow-dot",
@@ -1187,7 +1187,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-dot.dot",
     "reference": "test/golden/refs/dot-arrow-dot.svg",
-    "description": "dir=both odot head + dot tail \u2192 two <ellipse> arrows (filled tail, open head); conforms to the oracle (arrowhead-geometry G1)"
+    "description": "dir=both odot head + dot tail → two <ellipse> arrows (filled tail, open head); conforms to the oracle (arrowhead-geometry G1)"
   },
   {
     "id": "dot-arrow-crow",
@@ -1195,7 +1195,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-crow.dot",
     "reference": "test/golden/refs/dot-arrow-crow.svg",
-    "description": "dir=both crow head + vee tail \u2192 9-point arrow polygons; conforms to the oracle (arrowhead-geometry G2)"
+    "description": "dir=both crow head + vee tail → 9-point arrow polygons; conforms to the oracle (arrowhead-geometry G2)"
   },
   {
     "id": "dot-arrow-box",
@@ -1203,7 +1203,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-box.dot",
     "reference": "test/golden/refs/dot-arrow-box.svg",
-    "description": "dir=both box head + obox tail \u2192 polygon(4)+polyline, filled vs open; conforms to the oracle"
+    "description": "dir=both box head + obox tail → polygon(4)+polyline, filled vs open; conforms to the oracle"
   },
   {
     "id": "dot-arrow-diamond",
@@ -1211,7 +1211,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-diamond.dot",
     "reference": "test/golden/refs/dot-arrow-diamond.svg",
-    "description": "dir=both diamond head + ediamond (open) tail \u2192 4-point polygons; conforms to the oracle"
+    "description": "dir=both diamond head + ediamond (open) tail → 4-point polygons; conforms to the oracle"
   },
   {
     "id": "dot-arrow-tee",
@@ -1219,7 +1219,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-tee.dot",
     "reference": "test/golden/refs/dot-arrow-tee.svg",
-    "description": "dir=both tee arrows \u2192 polygon(4)+polyline bar; conforms to the oracle"
+    "description": "dir=both tee arrows → polygon(4)+polyline bar; conforms to the oracle"
   },
   {
     "id": "dot-arrow-curve",
@@ -1227,7 +1227,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-curve.dot",
     "reference": "test/golden/refs/dot-arrow-curve.svg",
-    "description": "dir=both curve head + icurve tail \u2192 polyline shaft + concave B\u00e9zier <path>; conforms to the oracle"
+    "description": "dir=both curve head + icurve tail → polyline shaft + concave Bézier <path>; conforms to the oracle"
   },
   {
     "id": "dot-arrow-compound",
@@ -1235,7 +1235,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-compound.dot",
     "reference": "test/golden/refs/dot-arrow-compound.svg",
-    "description": "dir=both crowdot head + odotnormal tail \u2192 stacked compound arrows (polygon+ellipse) offset along the shaft; conforms to the oracle"
+    "description": "dir=both crowdot head + odotnormal tail → stacked compound arrows (polygon+ellipse) offset along the shaft; conforms to the oracle"
   },
   {
     "id": "dot-arrow-side",
@@ -1243,7 +1243,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-arrow-side.dot",
     "reference": "test/golden/refs/dot-arrow-side.svg",
-    "description": "dir=both lnormal head + rdiamond tail \u2192 side-modifier half arrows; conforms to the oracle"
+    "description": "dir=both lnormal head + rdiamond tail → side-modifier half arrows; conforms to the oracle"
   },
   {
     "id": "dot-htmltable-grad-linear",
@@ -1259,7 +1259,7 @@
     "toleranceClass": "deterministic",
     "input": "test/golden/inputs/dot-htmltable-grad-radial.dot",
     "reference": "test/golden/refs/dot-htmltable-grad-radial.svg",
-    "description": "HTML table cell with a radial gradient bgcolor (STYLE=radial \u2192 setFill RGRADIENT path); conforms to the oracle"
+    "description": "HTML table cell with a radial gradient bgcolor (STYLE=radial → setFill RGRADIENT path); conforms to the oracle"
   },
   {
     "id": "dot-htmltable-rounded-grad",
@@ -1356,5 +1356,77 @@
     "input": "test/golden/inputs/dot-pack-flat-label-vnode.dot",
     "reference": "test/golden/refs/dot-pack-flat-label-vnode.svg",
     "description": "pack + labeled NON-adjacent flat edge: flat_node/checkFlatAdjacent must read the rank table from dot_root(agtail(e)) (the component), not agroot(e) (the true root, which has none)"
+  },
+  {
+    "id": "dot-pack-concentrate",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-concentrate.dot",
+    "reference": "test/golden/refs/dot-pack-concentrate.svg",
+    "description": "pack + concentrate: component projection must survive edge merging (dark cell: 8 x 15 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-pack-record",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-record.dot",
+    "reference": "test/golden/refs/dot-pack-record.svg",
+    "description": "pack + record ports: component projection with record field boxes (dark cell: 8 x 56 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-pack-samehead",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-samehead.dot",
+    "reference": "test/golden/refs/dot-pack-samehead.svg",
+    "description": "pack + samehead: port merging inside a projected component (dark cell: 8 x 9 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-pack-ordering",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-ordering.dot",
+    "reference": "test/golden/refs/dot-pack-ordering.svg",
+    "description": "pack + ordering=out: edge order constraints inside a projected component (dark cell: 8 x 27 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-pack-headtail-label",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-headtail-label.dot",
+    "reference": "test/golden/refs/dot-pack-headtail-label.svg",
+    "description": "pack + head/tail labels: native ITSELF drops _hldraw_/_tldraw_ under pack; this locks in that surprising C behavior (dark cell: 8 x 17 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-conc-headtail",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-conc-headtail.dot",
+    "reference": "test/golden/refs/dot-conc-headtail.svg",
+    "description": "concentrate + head/tail labels: labels on a merged edge (dark cell: 15 x 17 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-conc-samehead",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-conc-samehead.dot",
+    "reference": "test/golden/refs/dot-conc-samehead.svg",
+    "description": "concentrate + samehead: port merging plus edge merging (dark cell: 15 x 9 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-record-splines",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-record-splines.dot",
+    "reference": "test/golden/refs/dot-record-splines.svg",
+    "description": "record ports + splines=true: spline routing between record fields (dark cell: 56 x 61 corpus graphs, never together)"
+  },
+  {
+    "id": "dot-cluster-samehead",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-samehead.dot",
+    "reference": "test/golden/refs/dot-cluster-samehead.svg",
+    "description": "cluster + samehead: port merging across a cluster boundary (dark cell: 271 x 9 corpus graphs, never together)"
   }
 ]

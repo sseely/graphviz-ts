@@ -1,0 +1,1 @@
+digraph G { concentrate=true; a->d [samehead=h]; b->d [samehead=h]; c->d; }

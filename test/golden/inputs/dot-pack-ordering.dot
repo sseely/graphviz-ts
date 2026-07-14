@@ -1,0 +1,1 @@
+digraph G { pack=true; ordering=out; a->b; a->c; a->d; x->y; }

@@ -1,0 +1,1 @@
+digraph G { pack=true; a->d [samehead=h]; b->d [samehead=h]; c->d [samehead=h]; x->y; }

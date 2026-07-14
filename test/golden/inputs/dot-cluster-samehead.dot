@@ -1,0 +1,1 @@
+digraph G { subgraph cluster0 { a; b; } c->a [samehead=h]; d->a [samehead=h]; b->c; }

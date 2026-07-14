@@ -1,0 +1,1 @@
+digraph G { splines=true; a [shape=record,label="<f0>l|<f1>r"]; b [shape=record,label="<g0>x|<g1>y"]; a:f0->b:g1; a:f1->b:g0; }

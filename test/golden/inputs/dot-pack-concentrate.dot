@@ -1,0 +1,1 @@
+digraph G { pack=true; concentrate=true; a->b; c->b; d->b; x->y; }
