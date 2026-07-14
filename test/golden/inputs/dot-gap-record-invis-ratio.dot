@@ -1,0 +1,9 @@
+digraph G {
+  ratio=compress; size="6,6";
+  r [shape=record, label="<f0> a | <f1> b", fixedsize=true, width=2.0, height=0.6];
+  s [shape=record, label="x | y"];
+  k -> r [samehead=hh];
+  m -> r [samehead=hh];
+  r -> s [style=invis];
+  s -> k [constraint=false];
+}

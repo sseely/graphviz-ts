@@ -1,0 +1,11 @@
+digraph G {
+  newrank=true; compound=true; ordering=out;
+  subgraph cluster0 { a; b; }
+  subgraph cluster1 { c; d; }
+  a -> b;
+  a -> c [lhead=cluster1, ltail=cluster0];
+  e [fixedsize=true, width=1.2, height=0.6, shape=box, label=""];
+  e -> c [samehead=h];
+  e -> d [samehead=h];
+  d -> a [constraint=false];
+}

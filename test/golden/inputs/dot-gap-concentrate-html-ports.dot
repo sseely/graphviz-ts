@@ -1,0 +1,9 @@
+digraph G {
+  newrank=true; concentrate=true;
+  h [shape=record, label="<p0> l | <p1> r"];
+  t [label=<<TABLE BORDER="0"><TR><TD>html</TD></TR></TABLE>>];
+  h:p0 -> t [minlen=0];
+  h:p1 -> t;
+  z -> t;
+  t -> h [constraint=false];
+}

@@ -1,7 +1,7 @@
 {
   "name": "graphviz-ts",
-  "version": "0.1.26071122",
-  "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) \u2014 no C: no native binary, no WASM. Oracle-verified against the C implementation, runs in the browser.",
+  "version": "0.1.26071415",
+  "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) — no C: no native binary, no WASM. Oracle-verified against the C implementation, runs in the browser.",
   "keywords": [
     "graphviz",
     "dot",

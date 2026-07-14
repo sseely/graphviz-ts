@@ -1,0 +1,7 @@
+digraph G {
+  newrank=true;
+  h [shape=record, label="<p0> l | <p1> r", xlabel="RX"];
+  h:p0 -> z [samehead=q];
+  h:p1 -> z [samehead=q];
+  y -> z;
+}

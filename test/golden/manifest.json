@@ -1460,5 +1460,77 @@
     "input": "test/golden/inputs/dot-pack-selfloop.dot",
     "reference": "test/golden/refs/dot-pack-selfloop.svg",
     "description": "pack + self-loops (labeled, in-cluster, and cross-component): self-loop routing inside a projected component (was thin ice: 1 upstream graph)"
+  },
+  {
+    "id": "dot-gap-compound-newrank-samehead",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-compound-newrank-samehead.dot",
+    "reference": "test/golden/refs/dot-gap-compound-newrank-samehead.svg",
+    "description": "newrank + compound(lhead/ltail) + samehead + fixedsize + ordering + constraint=false: closes 13 dark pairs across the rank/cluster/port hubs"
+  },
+  {
+    "id": "dot-gap-concentrate-html-ports",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-concentrate-html-ports.dot",
+    "reference": "test/golden/refs/dot-gap-concentrate-html-ports.svg",
+    "description": "newrank + concentrate + HTML label + minlen=0 + record ports + constraint=false: closes 10 dark pairs"
+  },
+  {
+    "id": "dot-gap-record-invis-ratio",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-record-invis-ratio.dot",
+    "reference": "test/golden/refs/dot-gap-record-invis-ratio.svg",
+    "description": "ratio=compress/size + record + samehead + fixedsize + style=invis + constraint=false: closes 9 dark pairs"
+  },
+  {
+    "id": "dot-gap-xlabel-headtail",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-xlabel-headtail.dot",
+    "reference": "test/golden/refs/dot-gap-xlabel-headtail.svg",
+    "description": "ordering + concentrate + fixedsize + xlabel + head/tail labels + constraint=false: closes 7 dark pairs"
+  },
+  {
+    "id": "dot-gap-selfloop-record-html",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-selfloop-record-html.dot",
+    "reference": "test/golden/refs/dot-gap-selfloop-record-html.svg",
+    "description": "ordering + samehead + HTML label + minlen=0 + self-loops + record: closes 7 dark pairs"
+  },
+  {
+    "id": "dot-gap-rankdir-ranksame-splines",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-rankdir-ranksame-splines.dot",
+    "reference": "test/golden/refs/dot-gap-rankdir-ranksame-splines.svg",
+    "description": "rankdir=LR + rank=same + splines + newrank + fixedsize + constraint=false: closes 5 dark pairs"
+  },
+  {
+    "id": "dot-gap-ports-xlabel-samehead",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-ports-xlabel-samehead.dot",
+    "reference": "test/golden/refs/dot-gap-ports-xlabel-samehead.svg",
+    "description": "newrank + record ports + xlabel + samehead: closes 3 dark pairs"
+  },
+  {
+    "id": "dot-gap-ordering-invis",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-ordering-invis.dot",
+    "reference": "test/golden/refs/dot-gap-ordering-invis.svg",
+    "description": "ordering=out + a style=invis edge: closes ordering x invis"
+  },
+  {
+    "id": "dot-gap-headtail-record",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-gap-headtail-record.dot",
+    "reference": "test/golden/refs/dot-gap-headtail-record.svg",
+    "description": "record/Mrecord with head/tail labels on a port edge: closes headtaillabel x record"
   }
 ]

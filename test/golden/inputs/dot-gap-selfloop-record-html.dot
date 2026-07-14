@@ -1,0 +1,10 @@
+digraph G {
+  ordering=out;
+  r [shape=record, label="<f0> p | <f1> q"];
+  t [label=<<TABLE BORDER="0"><TR><TD>tbl</TD></TR></TABLE>>];
+  r -> r [label="self"];
+  a -> r [samehead=sh];
+  b -> r [samehead=sh];
+  a -> t [minlen=0];
+  t -> t;
+}

@@ -1,0 +1,5 @@
+digraph G {
+  r [shape=record, label="<f0> a | <f1> b"];
+  s [shape=Mrecord, label="c | d"];
+  r:f0 -> s [headlabel="HL", taillabel="TL"];
+}

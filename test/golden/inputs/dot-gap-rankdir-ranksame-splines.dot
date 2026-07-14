@@ -1,0 +1,7 @@
+digraph G {
+  rankdir=LR; splines=true; newrank=true;
+  a [fixedsize=true, width=0.8, height=0.8, shape=box, label=""];
+  a -> b; b -> c;
+  { rank=same; b; d; }
+  c -> a [constraint=false];
+}

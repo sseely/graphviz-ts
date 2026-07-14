@@ -1,0 +1,9 @@
+digraph G {
+  ordering=out; concentrate=true;
+  a [fixedsize=true, width=0.9, height=0.5, shape=box, xlabel="XA"];
+  b [xlabel="XB"];
+  a -> b [headlabel="H", taillabel="T"];
+  c -> b;
+  d -> b;
+  b -> a [constraint=false];
+}
