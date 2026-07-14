@@ -118,8 +118,8 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 //   sep[1]=5 on odd ranks); dot-pack-flat-label-vnode pins dot_root() (C's
 //   flat_node/checkFlatAdjacent index the COMPONENT's rank table, while the true
 //   root has none under pack — the port used to crash there)
-test('manifest has 178 entries', () => {
-  expect(manifest).toHaveLength(178);
+test('manifest has 181 entries', () => {
+  expect(manifest).toHaveLength(181);
 });
 
 // ---------------------------------------------------------------------------

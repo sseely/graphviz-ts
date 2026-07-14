@@ -1,0 +1,8 @@
+digraph G {
+  pack=true;
+  subgraph cluster0 { a; b; }
+  a -> b;
+  b -> a [constraint=false];
+  a -> c [constraint=false];
+  x -> y;
+}

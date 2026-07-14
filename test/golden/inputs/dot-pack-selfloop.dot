@@ -1,0 +1,9 @@
+digraph G {
+  pack=true;
+  subgraph cluster0 { a; b; }
+  a -> a [label="loop"];
+  a -> b;
+  b -> b;
+  x -> x;
+  x -> y;
+}

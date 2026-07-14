@@ -1,0 +1,11 @@
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    a [shape=box, fixedsize=true, width=1.5, height=0.8, label=""];
+    b [shape=box, fixedsize=true, width=0.6, height=1.2, label=""];
+  }
+  a -> b;
+  c [shape=ellipse, fixedsize=true, width=1.0, height=0.5];
+  b -> c;
+  x -> y;
+}

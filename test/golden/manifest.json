@@ -1436,5 +1436,29 @@
     "input": "test/golden/inputs/dot-record-xlabel.dot",
     "reference": "test/golden/refs/dot-record-xlabel.svg",
     "description": "record/Mrecord node WITH an xlabel: common_init_node creates ND_xlabel for every shape (dark cell: 56 x 5 corpus graphs, never together -- this is the cell the record-xlabel drop lived in)"
+  },
+  {
+    "id": "dot-pack-constraint",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-constraint.dot",
+    "reference": "test/golden/refs/dot-pack-constraint.svg",
+    "description": "pack + constraint=false: non-ranking edges inside a projected component, with a cluster (dark cell: pack x constraint, never together upstream)"
+  },
+  {
+    "id": "dot-pack-fixedsize",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-fixedsize.dot",
+    "reference": "test/golden/refs/dot-pack-fixedsize.svg",
+    "description": "pack + fixedsize nodes in a cluster: component projection with pinned node sizes (dark cell: pack x fixedsize, never together upstream)"
+  },
+  {
+    "id": "dot-pack-selfloop",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-selfloop.dot",
+    "reference": "test/golden/refs/dot-pack-selfloop.svg",
+    "description": "pack + self-loops (labeled, in-cluster, and cross-component): self-loop routing inside a projected component (was thin ice: 1 upstream graph)"
   }
 ]
