@@ -1,58 +1,50 @@
 {
-  "generatedAt": "2026-07-14T01:52:37.618Z",
+  "generatedAt": "2026-07-14T03:25:34.520Z",
   "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
   "tolerance": 0.5,
   "results": [
     {
       "id": "1909",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 50,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -1.59,
-          -9.53
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-center",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 53,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "2225",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 48,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -1.59,
-          -9.53
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-bad",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 64,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -68,46 +60,46 @@
     },
     {
       "id": "graphs-b80a",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 59,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-radius",
       "verdict": "not-cleared",
       "baseDiffs": 48,
-      "injectedDiffs": 18,
+      "injectedDiffs": 12,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-clustlabel",
       "verdict": "not-cleared",
       "baseDiffs": 80,
-      "injectedDiffs": 16,
+      "injectedDiffs": 10,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "graphs-longflat",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 64,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -125,52 +117,44 @@
       "id": "2643",
       "verdict": "not-cleared",
       "baseDiffs": 46,
-      "injectedDiffs": 30,
+      "injectedDiffs": 24,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-b491",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 112,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          0.96,
-          -4.11
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-user_shapes",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 61,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          5.41,
-          -8.78
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-clust1",
       "verdict": "not-cleared",
       "baseDiffs": 248,
-      "injectedDiffs": 21,
+      "injectedDiffs": 15,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
       }
     },
     {
@@ -188,29 +172,33 @@
       "id": "1514",
       "verdict": "not-cleared",
       "baseDiffs": 156,
-      "injectedDiffs": 12,
+      "injectedDiffs": 6,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric",
+        "uniformDelta": [
+          6.09,
+          2.74
+        ]
       }
     },
     {
       "id": "2615",
       "verdict": "not-cleared",
       "baseDiffs": 168,
-      "injectedDiffs": 24,
+      "injectedDiffs": 18,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
       }
     },
     {
       "id": "graphs-fdp",
       "verdict": "not-cleared",
       "baseDiffs": 162,
-      "injectedDiffs": 78,
+      "injectedDiffs": 69,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "count",
@@ -221,22 +209,26 @@
       "id": "graphs-nestedclust",
       "verdict": "not-cleared",
       "baseDiffs": 89,
-      "injectedDiffs": 9,
+      "injectedDiffs": 6,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric",
+        "uniformDelta": [
+          -1.59,
+          -9.77
+        ]
       }
     },
     {
       "id": "graphs-b145",
       "verdict": "not-cleared",
       "baseDiffs": 96,
-      "injectedDiffs": 47,
+      "injectedDiffs": 39,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "count",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+…(12)"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/structural+…(10)"
       }
     },
     {
@@ -252,73 +244,57 @@
     },
     {
       "id": "graphs-layers",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 55,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -12.01,
-          -5.61
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-layer",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 55,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -12.01,
-          -5.61
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-layer2",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 55,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -12.01,
-          -5.61
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-structs",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 109,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          6.42,
-          -1.85
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "2521",
       "verdict": "not-cleared",
       "baseDiffs": 161,
-      "injectedDiffs": 30,
+      "injectedDiffs": 24,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
       }
     },
     {
@@ -345,39 +321,35 @@
     },
     {
       "id": "graphs-mike",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1130,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          571.89,
-          101.88
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "2184",
       "verdict": "not-cleared",
       "baseDiffs": 216,
-      "injectedDiffs": 43,
+      "injectedDiffs": 37,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "graphs-KW91",
       "verdict": "not-cleared",
       "baseDiffs": 356,
-      "injectedDiffs": 28,
+      "injectedDiffs": 22,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
@@ -439,29 +411,29 @@
       "id": "2556",
       "verdict": "not-cleared",
       "baseDiffs": 674,
-      "injectedDiffs": 12,
+      "injectedDiffs": 6,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-russian",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 58,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "241_0",
       "verdict": "not-cleared",
       "baseDiffs": 265,
-      "injectedDiffs": 66,
+      "injectedDiffs": 63,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "count",
@@ -483,239 +455,187 @@
       "id": "1856",
       "verdict": "not-cleared",
       "baseDiffs": 142,
-      "injectedDiffs": 58,
+      "injectedDiffs": 52,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-ER",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 301,
-      "injectedDiffs": 9,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b85",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 74,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          1.55,
-          -5.68
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-ports",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 675,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -15.7,
-          14.75
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "1658",
       "verdict": "not-cleared",
       "baseDiffs": 406,
-      "injectedDiffs": 122,
+      "injectedDiffs": 116,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-html",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 116,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -4.48,
-          -9.73
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-rowe",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2140,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          36.61,
-          202.15
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-abstract",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1904,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
-        "uniformDelta": [
-          -59.89,
-          -34.96
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "graphs-jcctree",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 521,
-      "injectedDiffs": 7,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/structural",
-        "uniformDelta": [
-          -64.98,
-          -8.04
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "graphs-Heawood",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 411,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          22.37,
-          32.41
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-fig6",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1950,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          242.79,
-          -28.63
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-Symbol",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 418,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          137.09,
-          146.17
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-alf",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 859,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          85.88,
-          -36.83
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-record",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 859,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          85.88,
-          -36.83
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-world",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1943,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          37.99,
-          -24.72
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-style",
       "verdict": "not-cleared",
       "baseDiffs": 719,
-      "injectedDiffs": 60,
+      "injectedDiffs": 54,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
       }
     },
     {
       "id": "graphs-shells",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1092,
-      "injectedDiffs": 10,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
-        "uniformDelta": [
-          -90.81,
-          -46.21
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -742,58 +662,46 @@
     },
     {
       "id": "graphs-grammar",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1514,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
-        "uniformDelta": [
-          -70.97,
-          -43.71
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "1855",
       "verdict": "not-cleared",
       "baseDiffs": 686,
-      "injectedDiffs": 457,
+      "injectedDiffs": 88,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(9)"
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-dpd",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1932,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -10.37,
-          10.71
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-overlap",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1932,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -10.37,
-          10.71
-        ]
+        "signature": "none"
       }
     },
     {
@@ -809,24 +717,20 @@
     },
     {
       "id": "graphs-b56",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 387,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -12.6,
-          -37.43
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-unix",
       "verdict": "not-cleared",
       "baseDiffs": 1425,
-      "injectedDiffs": 1340,
+      "injectedDiffs": 1337,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "position",
@@ -837,7 +741,7 @@
       "id": "graphs-lsunix1",
       "verdict": "not-cleared",
       "baseDiffs": 1425,
-      "injectedDiffs": 1340,
+      "injectedDiffs": 1337,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "position",
@@ -848,7 +752,7 @@
       "id": "graphs-lsunix2",
       "verdict": "not-cleared",
       "baseDiffs": 1425,
-      "injectedDiffs": 1340,
+      "injectedDiffs": 1337,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "position",
@@ -859,7 +763,7 @@
       "id": "graphs-lsunix3",
       "verdict": "not-cleared",
       "baseDiffs": 1425,
-      "injectedDiffs": 1340,
+      "injectedDiffs": 1337,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "position",
@@ -868,146 +772,134 @@
     },
     {
       "id": "graphs-trapeziumlr",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1937,
-      "injectedDiffs": 971,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "none"
       }
     },
     {
       "id": "2183",
       "verdict": "not-cleared",
       "baseDiffs": 833,
-      "injectedDiffs": 312,
+      "injectedDiffs": 306,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "count",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_draw_/structural+…(15)"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_draw_/structural+…(13)"
       }
     },
     {
       "id": "graphs-triedds",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 867,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -3.09,
-          -5.8
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-size",
       "verdict": "not-cleared",
       "baseDiffs": 1589,
-      "injectedDiffs": 1476,
+      "injectedDiffs": 1470,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
       "id": "graphs-ngk10_4",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1903,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -48.61,
-          -35.39
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-unix2",
       "verdict": "not-cleared",
       "baseDiffs": 1589,
-      "injectedDiffs": 1476,
+      "injectedDiffs": 1470,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
       "id": "graphs-unix2k",
       "verdict": "not-cleared",
       "baseDiffs": 1589,
-      "injectedDiffs": 1476,
+      "injectedDiffs": 1470,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
       "id": "graphs-weight",
       "verdict": "not-cleared",
       "baseDiffs": 1607,
-      "injectedDiffs": 1484,
+      "injectedDiffs": 1500,
       "bucket": {
         "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "kind": "count",
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(10)"
       }
     },
     {
       "id": "graphs-viewfile",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 989,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -67.42,
-          -23.65
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-arrows",
       "verdict": "not-cleared",
       "baseDiffs": 870,
-      "injectedDiffs": 249,
+      "injectedDiffs": 242,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(11)"
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
       }
     },
     {
       "id": "graphs-arrowsize",
       "verdict": "not-cleared",
       "baseDiffs": 902,
-      "injectedDiffs": 275,
+      "injectedDiffs": 268,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+…(13)"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+…(10)"
       }
     },
     {
       "id": "graphs-newarrows",
       "verdict": "not-cleared",
       "baseDiffs": 870,
-      "injectedDiffs": 249,
+      "injectedDiffs": 242,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(11)"
+        "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/_hldraw_/numeric+edge/_tdraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+…(8)"
       }
     },
     {
@@ -1034,46 +926,46 @@
     },
     {
       "id": "linux.x86-ordering_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 410,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "macosx-ordering_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 410,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "nshare-ordering_dot",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 410,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "2242",
       "verdict": "not-cleared",
       "baseDiffs": 757,
-      "injectedDiffs": 81,
+      "injectedDiffs": 75,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
       }
     },
     {
@@ -1100,120 +992,112 @@
     },
     {
       "id": "graphs-sl_box",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1522,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-sl_circle",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1405,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "1453",
       "verdict": "not-cleared",
       "baseDiffs": 1283,
-      "injectedDiffs": 763,
+      "injectedDiffs": 757,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+…(9)"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+…(7)"
       }
     },
     {
       "id": "1436",
       "verdict": "not-cleared",
       "baseDiffs": 432,
-      "injectedDiffs": 24,
+      "injectedDiffs": 18,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
       }
     },
     {
       "id": "graphs-pgram",
       "verdict": "not-cleared",
       "baseDiffs": 3136,
-      "injectedDiffs": 1875,
+      "injectedDiffs": 6,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "node/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
       "id": "graphs-NaN",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3624,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          192.73,
-          -11.29
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b71",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2091,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-Helvetica",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 508,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          566.91,
-          -91.66
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "2082",
       "verdict": "not-cleared",
       "baseDiffs": 182,
-      "injectedDiffs": 132,
+      "injectedDiffs": 124,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(9)"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-biglabel",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 92,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1284,127 +1168,123 @@
     },
     {
       "id": "graphs-sl_box_dbl",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2322,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-sl_circle_dbl",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2205,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "2669",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 6034,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          174.42,
-          77.2
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "56",
       "verdict": "not-cleared",
       "baseDiffs": 460,
-      "injectedDiffs": 217,
+      "injectedDiffs": 211,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "count",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_draw_/structural+…(13)"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_draw_/structural+…(11)"
       }
     },
     {
       "id": "2095",
       "verdict": "not-cleared",
       "baseDiffs": 8256,
-      "injectedDiffs": 58,
+      "injectedDiffs": 52,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(7)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/pos/numeric"
       }
     },
     {
       "id": "1898",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1346,
-      "injectedDiffs": 64,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-ldbxtried",
       "verdict": "not-cleared",
       "baseDiffs": 2148,
-      "injectedDiffs": 22,
+      "injectedDiffs": 16,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "graphs-crazy",
       "verdict": "not-cleared",
       "baseDiffs": 1919,
-      "injectedDiffs": 1707,
+      "injectedDiffs": 1698,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/_ldraw_/numeric+node/pos/numeric"
       }
     },
     {
       "id": "graphs-cairo",
       "verdict": "not-cleared",
       "baseDiffs": 2130,
-      "injectedDiffs": 2130,
+      "injectedDiffs": 2124,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/numeric+edge/lp/numeric+edge/pos/numeric+graph/_draw_/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/numeric+edge/lp/numeric+edge/pos/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
       "id": "graphs-proc3d",
       "verdict": "not-cleared",
       "baseDiffs": 1938,
-      "injectedDiffs": 102,
+      "injectedDiffs": 96,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "graphs-jsort",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2402,
-      "injectedDiffs": 1220,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "none"
       }
     },
     {
@@ -1433,7 +1313,7 @@
       "id": "2193",
       "verdict": "not-cleared",
       "baseDiffs": 2001,
-      "injectedDiffs": 1958,
+      "injectedDiffs": 1955,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "position",
@@ -1455,11 +1335,11 @@
       "id": "1447",
       "verdict": "not-cleared",
       "baseDiffs": 1263,
-      "injectedDiffs": 678,
+      "injectedDiffs": 672,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(7)"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
@@ -1497,43 +1377,35 @@
     },
     {
       "id": "graphs-awilliams",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3373,
-      "injectedDiffs": 10,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
-        "uniformDelta": [
-          -107.16,
-          341.31
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b57",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2119,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -122.57,
-          805.67
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b15",
       "verdict": "not-cleared",
       "baseDiffs": 5662,
-      "injectedDiffs": 86,
+      "injectedDiffs": 80,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
@@ -1560,13 +1432,13 @@
     },
     {
       "id": "graphs-big",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 79,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1582,28 +1454,24 @@
     },
     {
       "id": "graphs-b124",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 7641,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          369.77,
-          165.15
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b36",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3827,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1630,35 +1498,35 @@
     },
     {
       "id": "graphs-b94",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 60,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "share-ldbxtried",
       "verdict": "not-cleared",
       "baseDiffs": 1988,
-      "injectedDiffs": 16,
+      "injectedDiffs": 10,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "windows-ldbxtried",
       "verdict": "not-cleared",
       "baseDiffs": 2002,
-      "injectedDiffs": 16,
+      "injectedDiffs": 10,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
@@ -1687,350 +1555,286 @@
       "id": "1447_1",
       "verdict": "not-cleared",
       "baseDiffs": 7199,
-      "injectedDiffs": 1980,
+      "injectedDiffs": 1972,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/structural",
         "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural+graph/_draw_/numeric+…(9)"
+        "signature": "edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural"
       }
     },
     {
       "id": "graphs-mode",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 7523,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          23.08,
-          180.41
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "share-NaN",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3459,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b51",
       "verdict": "not-cleared",
       "baseDiffs": 3937,
-      "injectedDiffs": 204,
+      "injectedDiffs": 202,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "1718",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 24049,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+graph/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b69",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 4191,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-viewport",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 7531,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
-        "uniformDelta": [
-          -66.15,
-          -26.54
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b106",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 8738,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          78.78,
-          305.88
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "2343",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 27477,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -96.71,
-          198.05
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b143",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 11881,
-      "injectedDiffs": 8,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural",
-        "uniformDelta": [
-          651.89,
-          -30.41
-        ]
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b29",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 12359,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          -67.1,
-          102.01
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b102",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 18244,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          173.5,
-          55.42
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-xx",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 18259,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "2095_1",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 68842,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          192.69,
-          -36.39
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-root",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 37208,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "linux.i386-b102",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 18189,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          69.69,
-          34.33
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "share-b102",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 18263,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          35.24,
-          5.39
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "windows-b102",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 18092,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          118.73,
-          -13.54
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b81",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 10389,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "linux.x86-root_twopi",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 37154,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          373.81,
-          78.99
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "nshare-root_twopi",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 37063,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          256.08,
-          -36.39
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "nshare-root_circo",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 37214,
-      "injectedDiffs": 4,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric",
-        "uniformDelta": [
-          -226.34,
-          -36.48
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "linux.x86-root_circo",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 37214,
-      "injectedDiffs": 4,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric",
-        "uniformDelta": [
-          -225.76,
-          -36.49
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b103",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 69777,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "graph/_draw_/numeric+graph/bb/numeric",
-        "uniformDelta": [
-          241.99,
-          -20.35
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "2475_2",
       "verdict": "not-cleared",
       "baseDiffs": 327324,
-      "injectedDiffs": 12562,
+      "injectedDiffs": 12856,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+graph/_draw_/numeric+graph/bb/numeric"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
       }
     },
     {
       "id": "2470",
       "verdict": "not-cleared",
       "baseDiffs": 18559,
-      "injectedDiffs": 7363,
+      "injectedDiffs": 7355,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "cluster/_draw_/numeric",
         "kind": "count",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+…(13)"
+        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+…(9)"
       }
     }
   ]
