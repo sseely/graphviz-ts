@@ -1,0 +1,16 @@
+// pack + a labeled NON-ADJACENT flat edge (b->d spans c, order forced by the
+// b->c->d flat chain), so flat_edges must build a label vnode via flat_node.
+//
+// Guards dot_root() resolution under pack. C's flat_node/checkFlatAdjacent read
+// the rank table from dot_root(agtail(e)) — GD_dotroot(agroot(e)), a mutable slot
+// re-pointed at the graph being laid out, so under pack it is the COMPONENT. The
+// port resolved e.tail.root (the TRUE root), which has no rank table at all under
+// pack: checkFlatAdjacent silently bailed, and flat_node then dereferenced the
+// absent table (`Cannot read properties of undefined (reading '0')`).
+digraph G {
+  pack=true;
+  a -> b; a -> c; a -> d;
+  { rank=same; b -> c -> d; }
+  b -> d [label="L"];
+  x -> y;
+}

@@ -227,18 +227,20 @@ export function dotLayoutComponent(sg: Graph, root: Graph): void {
   sg.info.dotroot = sg;
   dotPhaseInit(sg);
   initSubg(sg, root);
-  // C sets GD_has_labels on `agraphof(e)` — the true ROOT — never on the
+  // C sets GD_has_labels on `agraphof(agtail(e))` — the true ROOT — never on the
   // component (common_init_edge). So a component's own dotLayout reads
-  // GD_has_labels(sg) == 0: edgelabelRanks does NOT double its ranks, and its
-  // edge labels get no rank node and are left unplaced (dot effectively drops
-  // edge labels inside packed components). The port's edge-label init set the
-  // flag on the component instead; clear it so the component matches C — no
-  // rank doubling and no label placement. (We intentionally do NOT propagate it
-  // to `root`: the port pre-computes arrowhead draw-ops during routing, and the
-  // root-flag label-placement path mishandles a label with no rank node,
-  // mis-parking the arrowhead. C regenerates arrows at render time and is
-  // immune; leaving root's flag clear reproduces C's output.)
-  // @see lib/common/utils.c:common_init_edge (GD_has_labels(agraphof(e)))
+  // GD_has_labels(sg) == 0, and `edgelabel_ranks` (rank.c:170 — the ONE reader C
+  // scopes to the layout graph) does NOT double the component's ranks. Keep that
+  // invariant explicit here.
+  //
+  // Every OTHER dotgen reader is scoped to `g->root` (position.c:234
+  // make_LR_constraints, dotsplines.c:243/1552/1650/1776), so under pack C still
+  // sees EDGE_LABEL via the root and takes the edge-label branch for each
+  // component — most visibly `sep[1] = 5` for odd-rank node separation. The port
+  // used to set the flag on the component and never on the root, so those
+  // `g->root` readers all took the wrong branch; `edge-label-init` now ORs onto
+  // `g.root` as C does, and the readers were corrected to `g.root`.
+  // @see lib/common/utils.c:common_init_edge (GD_has_labels(agraphof(agtail(e))))
   // @see lib/dotgen/rank.c:edgelabel_ranks
   sg.info.has_labels = 0;
   dotRank(sg);

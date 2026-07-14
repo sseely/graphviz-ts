@@ -111,8 +111,15 @@ function buildDiffError(id: string, diffs: Diff[]): string {
 // + 1 edgecmp-order fixture (fix-edge-route-order: edge-order-min — lone edge
 //   dispatched before a vnode-moving parallel group; conforms to the oracle and
 //   guards the unified single-pass router against breaking simple cases)
-test('manifest has 166 entries', () => {
-  expect(manifest).toHaveLength(166);
+// + 2 pack wrong-graph-resolution goldens: under `pack` each connected component
+//   is laid out as its own dot-root, so any field read from the WRONG graph
+//   silently diverges. dot-pack-flat-label pins GD_has_labels (C ORs it onto the
+//   true cgraph root and make_LR_constraints reads GD_has_labels(g->root) to pick
+//   sep[1]=5 on odd ranks); dot-pack-flat-label-vnode pins dot_root() (C's
+//   flat_node/checkFlatAdjacent index the COMPONENT's rank table, while the true
+//   root has none under pack — the port used to crash there)
+test('manifest has 168 entries', () => {
+  expect(manifest).toHaveLength(168);
 });
 
 // ---------------------------------------------------------------------------

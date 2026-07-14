@@ -1,0 +1,16 @@
+// pack + a labeled ADJACENT flat edge.
+//
+// Guards GD_has_labels resolution under pack. C ORs EDGE_LABEL onto the true
+// cgraph root (common_init_edge: agraphof(agtail(e))), never onto the packed
+// component, and make_LR_constraints then reads it back as GD_has_labels(g->root)
+// (position.c:234) to pick sep[1] = 5 for odd ranks. The port used to set the
+// flag on the component and read it from the layout graph, so under pack both
+// sides were 0 and the odd rank got the full nodesep (18) instead of 5 —
+// pushing node `c` from x=167 to x=180 and widening the packed bb 250 -> 264.
+digraph G {
+  pack=true;
+  a -> b; a -> c; a -> d;
+  { rank=same; b; c; d; }
+  b -> d [label="L"];
+  x -> y;
+}
