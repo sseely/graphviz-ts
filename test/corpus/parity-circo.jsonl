@@ -140,7 +140,7 @@
 {"id":"regression_tests-shapes-reference-invtriangle","size":136,"status":"pass"}
 {"id":"regression_tests-shapes-reference-proteinstab","size":136,"status":"pass"}
 {"id":"regression_tests-shapes-reference-invtrapezium","size":137,"status":"pass"}
-{"id":"regression_tests-shapes-reference-proteasesite","size":137,"status":"timeout"}
+{"id":"regression_tests-shapes-reference-proteasesite","size":137,"status":"pass"}
 {"id":"regression_tests-shapes-reference-fivepoverhang","size":138,"status":"pass"}
 {"id":"1425","size":139,"status":"pass"}
 {"id":"regression_tests-shapes-reference-egg","size":139,"status":"pass"}

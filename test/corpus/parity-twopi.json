@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T23:49:41.161Z",
+  "generatedAt": "2026-07-14T06:24:33.822Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "twopi",
   "tolerance": 0.01,
@@ -2791,8 +2791,8 @@
       "id": "graphs-newarrows",
       "size": 2045,
       "status": "diverged",
-      "nDiffs": 40,
-      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+      "nDiffs": 29,
+      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"
     },
     {
       "id": "windows-ER",
@@ -3239,8 +3239,8 @@
       "id": "share-newarrows",
       "size": 6364,
       "status": "diverged",
-      "nDiffs": 20,
-      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+      "nDiffs": 22,
+      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 272.79 vs 306.32"
     },
     {
       "id": "windows-newarrows",
