@@ -85,12 +85,18 @@ function spawnCapture(
 ): Promise<{ stdout: string; stderr: string; code: number | null; timedOut: boolean }> {
   return new Promise((resolve) => {
     const child = spawn(cmd, args, { env, detached: true });
-    let stdout = ''; let stderr = ''; let timedOut = false;
+    // Buffer raw bytes, decode once: `stdout += d` mangles a multi-byte UTF-8
+    // char split across a chunk boundary. @see json-walk.ts
+    const stdoutChunks: Buffer[] = []; let stderr = ''; let timedOut = false;
+    // Decode whole-stream UTF-8 (non-fatal): valid multi-byte chars survive chunk
+    // boundaries; an isolated invalid byte becomes U+FFFD, not a whole-output
+    // latin1 mojibake of every valid c3xx. @see json-walk.ts
+    const decode = (): string => Buffer.concat(stdoutChunks).toString('utf8');
     const timer = setTimeout(() => { timedOut = true; try { process.kill(-child.pid!, 'SIGKILL'); } catch { /* gone */ } }, budgetMs);
-    child.stdout.on('data', (d) => (stdout += d));
+    child.stdout.on('data', (d: Buffer) => stdoutChunks.push(d));
     child.stderr.on('data', (d) => (stderr += d));
-    child.on('close', (code) => { clearTimeout(timer); resolve({ stdout, stderr, code, timedOut }); });
-    child.on('error', () => { clearTimeout(timer); resolve({ stdout, stderr, code: -1, timedOut }); });
+    child.on('close', (code) => { clearTimeout(timer); resolve({ stdout: decode(), stderr, code, timedOut }); });
+    child.on('error', () => { clearTimeout(timer); resolve({ stdout: decode(), stderr, code: -1, timedOut }); });
   });
 }
 

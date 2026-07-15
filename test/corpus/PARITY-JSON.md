@@ -16,55 +16,41 @@ numeric-tolerant — see `test/golden/compare-json.ts`). Regenerate:
 
 - **Oracle:** dot 15.1.0 (`-Tjson`) · **corpus:** `~/git/graphviz/tests`
 - **Walked (conformant SVG set):** 761
-- **json-conformant:** 749 (98.4%)
-- **diverged (tracked, will-fix):** 12 · **accepted (documented, won't-fix):** 0
+- **json-conformant:** 758 (99.6%)
+- **diverged (tracked, will-fix):** 1 · **accepted (documented, won't-fix):** 2
 - **port-error:** 0 · **timeout:** 0 · **oracle-error:** 0 (excluded from scoring)
 
-## json-conformant (749)
+## json-conformant (758)
 
 Port json is *conformant* with the oracle: every object/attr/draw-op
 matches, numeric payloads within ±0.01 and canonicalized
 colors/fonts/text equal.
 
-_Conformant ids (749) are omitted for brevity — the full roster is in
+_Conformant ids (758) are omitted for brevity — the full roster is in
 [json-parity.json](json-parity.json)._
 
-## Tracked diverged (12) — worst-first
+## Tracked diverged (1) — worst-first
 
 | id | size | maxΔ | #diffs | firstDiff |
 |---|---:|---:|---:|---|
-| `1436` | 2599 | 1638.00 | 12 | `cluster:cluster/_draw_/op[1].p[0]` |
-| `1902` | 119 | 144.00 | 12 | `cluster:cluster/_draw_/op[1].p[0]` |
-| `1514` | 168 | 0.00 | 2 | `cluster:%7/nodes[members]` |
-| `graphs-b7` | 222 | 0.00 | 2 | `cluster:cluster_1/_draw_[missing]` |
-| `2825` | 312 | 0.00 | 2 | `cluster:%17/rank[missing]` |
 | `2239` | 48090 | 0.00 | 2 | `cluster:cluster_rtpbin_0x56412448e390/_ldraw_/op[11].T.text` |
-| `share-Latin1` | 155 | 0.00 | 1 | `node:a/label` |
-| `windows-Latin1` | 155 | 0.00 | 1 | `node:a/label` |
-| `2368_1` | 405 | 0.00 | 1 | `edge:256->376#0/lp[missing]` |
-| `1453` | 2446 | 0.00 | 1 | `cluster:%15/rank[missing]` |
-| `1879` | 287816 | 0.00 | 1 | `node:node_567x830_567/label` |
-| `2470` | 734358 | 0.00 | 1 | `edge:n96->n36#0/lp[missing]` |
 
 ### Diverged buckets — by (object · attr · shape)
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `node · label · numeric-or-scalar` | 3 | `share-Latin1`, `windows-Latin1`, `1879` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `cluster · _draw_ · numeric-or-scalar` | 2 | `1902`, `1436` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `cluster · rank · missing-attr` | 2 | `2825`, `1453` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
-| `edge · lp · missing-attr` | 2 | `2368_1`, `2470` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
-| `cluster · nodes · numeric-or-scalar` | 1 | `1514` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `cluster · _draw_ · missing-attr` | 1 | `graphs-b7` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
 | `cluster · _ldraw_ · text` | 1 | `2239` | rendered label text differs (content/escaping/encoding) |
 
-## Accepted divergences (0) — documented, not chased
+## Accepted divergences (2) — documented, not chased
 
 Irreducible C quirks (font-metric ULP, platform libm) recorded in
 `test/corpus/accepted-divergences-json.json`. Each is referenced in the
 mission decision journal with its mechanism.
 
-_(none)_
+| id | opClass | delta | rationale |
+|---|---|---:|---|
+| `share-Latin1` | node:label / _ldraw_ T.text [mixed-encoding] | 0 | Input is Latin-1 with NO `charset` declaration, so the bytes are invalid UTF-8. Native dot's -Tjson then emits a MIXED-ENCODING document: attribute values (e.g. node `label`) are echoed as RAW Latin-1 bytes (0xe1 0xe2 ... unconverted), while the DRAWN label text (_ldraw_ T op, via make_label) is UTF-8 (0xc3 0xa1 ...). No single decode reads both halves correctly: Latin-1 recovers the attribute but mojibakes the text, UTF-8 does the reverse (and the attribute bytes are not valid UTF-8). The port decodes the input once (utils.c latin1ToUTF8 fallback) and is internally consistent valid UTF-8 on BOTH surfaces, so it cannot reproduce the oracle's split encoding. A4 class: the oracle output is an encoding bug; the port declines to emit invalid/mixed-encoding JSON. The DECLARED charset=latin1 case (graphs-Latin1/b60) IS handled via the stoj double-encode fix; only the UNDECLARED-charset case is irreducible. |
+| `windows-Latin1` | node:label / _ldraw_ T.text [mixed-encoding] | 0 | Identical mechanism to share-Latin1: undeclared-charset Latin-1 input makes native -Tjson emit raw-Latin-1 attribute bytes alongside UTF-8 drawn text (mixed, invalid). The port's consistent-UTF-8 output cannot match both halves. A4 class. |
 
 ## port-error (0)
 

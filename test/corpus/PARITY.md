@@ -21,7 +21,7 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 |---|---:|---:|---:|---:|---:|---:|
 | [dot (SVG)](./PARITY-dot.md) | 788 | 761 | 0 | 16 | 11 | 96.6% |
 | [dot (xdot)](./PARITY-XDOT.md) | 761 | 761 | 0 | 0 | 0 | 100.0% |
-| [dot (json)](./PARITY-JSON.md) | 761 | 749 | 12 | 0 | 0 | 98.4% |
+| [dot (json)](./PARITY-JSON.md) | 761 | 758 | 1 | 2 | 0 | 99.6% |
 | [circo (xdot)](./PARITY-circo.md) | 761 | 745 | 0 | 3 | 13 | 97.9% |
 | [twopi (xdot)](./PARITY-twopi.md) | 761 | 739 | 0 | 14 | 8 | 97.1% |
 | [osage (xdot)](./PARITY-osage.md) | 761 | 750 | 0 | 6 | 5 | 98.6% |

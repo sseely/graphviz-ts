@@ -250,6 +250,19 @@ export function agDeleteFromCluster(clust: Graph, n: Node): void {
   for (let i = edges.length - 1; i >= 0; i--) {
     if (edges[i].tail === n || edges[i].head === n) edges.splice(i, 1);
   }
+  // cgraph agdelnode(subgraph) uses agapply(agdelnodeimage) to ALSO drop the
+  // node's image from every subgraph in clust's SUBTREE (nodes only, not edges —
+  // the edge purge above is a node_induce-specific fix, root-only in cgraph).
+  // Without it a rank subgraph nested in the cluster keeps a stale `nodes` member
+  // (1514, 2825). @see lib/cgraph/node.c:agdelnode (agapply)
+  for (const [, sub] of clust.subgraphs) removeNodeImageFromSubtree(sub, n);
+}
+
+/** Remove node `n`'s image from `g` and every subgraph beneath it, mirroring
+ *  cgraph's agapply cascade in agdelnode (image only, no edge purge). */
+function removeNodeImageFromSubtree(g: Graph, n: Node): void {
+  g.nodes.delete(n.name);
+  for (const [, sub] of g.subgraphs) removeNodeImageFromSubtree(sub, n);
 }
 
 /**

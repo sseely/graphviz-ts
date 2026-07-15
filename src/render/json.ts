@@ -195,8 +195,9 @@ interface DrawLookup {
   graph: Map<string, string>;
   /** Node xdot/layout attrs by node name. */
   node: Map<string, Map<string, string>>;
-  /** Cluster xdot/layout attrs by cluster name. */
-  cluster: Map<string, Map<string, string>>;
+  /** Cluster xdot/layout attrs, keyed by the original-graph cluster object
+   *  (name is ambiguous — see collectDrawLookup). */
+  cluster: Map<Graph, Map<string, string>>;
   /** Edge xdot/layout attrs by the original graph's Edge object. */
   edge: Map<Edge, Map<string, string>>;
 }
@@ -230,14 +231,27 @@ function collectDrawLookup(g: Graph): DrawLookup | undefined {
   }
   const node = new Map<string, Map<string, string>>();
   for (const [nm, xn] of xg.nodes) node.set(nm, new Map(xn.attrs));
-  const cluster = new Map<string, Map<string, string>>();
-  const walk = (sg: Graph): void => {
-    for (const [nm, xs] of sg.subgraphs) {
-      cluster.set(nm, new Map(xs.attrs));
-      walk(xs);
+  // Correlate each original-graph cluster with its xdot-re-render attrs by a
+  // PARALLEL walk keyed on the cluster OBJECT, not its name. A bare-name Map
+  // collides when two clusters share a name at different tree depths (empty
+  // `cluster_1` in `cluster_0` + a real top-level `cluster_1` — graphs-b7).
+  // xg holds only the drawable clusters (the xdot writer drops anonymous/rank
+  // subgraphs), so when a g-child has no same-named xg-child at this level it
+  // is a filtered non-cluster (or a cluster nested under one): descend g but
+  // hold the xg position, matching xg's flattened cluster tree (1436).
+  const cluster = new Map<Graph, Map<string, string>>();
+  const correlate = (gSub: Graph, xgSub: Graph): void => {
+    for (const [nm, gChild] of gSub.subgraphs) {
+      const xgChild = xgSub.subgraphs.get(nm);
+      if (xgChild !== undefined) {
+        cluster.set(gChild, new Map(xgChild.attrs));
+        correlate(gChild, xgChild);
+      } else {
+        correlate(gChild, xgSub);
+      }
     }
   };
-  walk(xg);
+  correlate(g, xg);
   // Edge draw attrs: match g-edges to xg-edges by the shared canonical key.
   const xByKey = new Map<string, Map<string, string>>();
   for (const { e, key } of canonicalRootEdges(xg)) xByKey.set(key, new Map(e.attrs));
@@ -400,6 +414,10 @@ function labelPos(l: TextlabelT): string {
  *  label), `head_lp`/`tail_lp` (end labels), and `xlp` (exterior label, only
  *  when its position is set). @see attach_attrs ED_label/head_label/tail_label/xlabel */
 function attachEdgeLabelPositions(o: JObj, e: Edge): void {
+  // C attaches pos/lp/head_lp/tail_lp/xlp only inside `if (ED_spl(e))`: a
+  // concentrated/merged edge with no spline of its own carries none of them, so
+  // its label position must be omitted (2368_1, 2470). @see attach_attrs
+  if (!e.info.spl) return;
   if (e.info.label !== undefined) o.lp = labelPos(e.info.label);
   if (e.info.head_label !== undefined) o.head_lp = labelPos(e.info.head_label);
   if (e.info.tail_label !== undefined) o.tail_lp = labelPos(e.info.tail_label);
@@ -535,7 +553,7 @@ function buildGraphObject(g: Graph, top: boolean, ctx: BuildCtx): JObj {
     o.strict = g.kind === 'strict-directed' || g.kind === 'strict-undirected';
   }
   // write_attrs (subgraphs inherit enclosing graph attrs via agxget)
-  const overlay = top ? ctx.draws?.graph : ctx.draws?.cluster.get(g.name);
+  const overlay = top ? ctx.draws?.graph : ctx.draws?.cluster.get(g);
   emitAttrs(o, graphEffectiveAttrs(g, top), overlay, ctx);
   attachGraphLabelGeom(o, g);
   // A declared graph `label` symbol makes write_attrs emit `label` on every

@@ -130,18 +130,26 @@ function spawnCapture(
 ): Promise<SpawnResult> {
   return new Promise((resolve) => {
     const child = spawn(cmd, args, { env, detached: true });
-    let stdout = '';
+    // Accumulate raw BYTES, decode once at close: `stdout += d` decodes each
+    // Buffer chunk independently, mangling a multi-byte UTF-8 char split across
+    // a chunk boundary into two U+FFFD (buffering-dependent). @see json-walk.ts
+    const stdoutChunks: Buffer[] = [];
     let stderr = '';
     let timedOut = false;
     const timer = setTimeout(() => {
       timedOut = true;
       killGroup(child.pid);
     }, timeoutMs);
-    child.stdout.on('data', (d) => (stdout += d));
+    child.stdout.on('data', (d: Buffer) => stdoutChunks.push(d));
     child.stderr.on('data', (d) => (stderr += d));
     child.on('error', (e) => (stderr += e.message));
     child.on('close', (code) => {
       clearTimeout(timer);
+      // Decode the whole stream as UTF-8 (non-fatal): valid multi-byte chars
+      // decode correctly regardless of chunk boundaries; an isolated invalid
+      // byte becomes U+FFFD rather than corrupting the rest (a whole-output
+      // latin1 fallback would mojibake every valid c3xx into A-tilde+x).
+      const stdout = Buffer.concat(stdoutChunks).toString('utf8');
       resolve({ stdout, stderr, code, timedOut });
     });
   });

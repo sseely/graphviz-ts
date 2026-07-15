@@ -1,4 +1,17 @@
 {
-  "comment": "Irreducible json divergences (mission: json-conformance). Each entry: {id, opClass, delta, rationale}. The walker treats listed ids as non-blocking ('accepted') and continues. Every entry MUST be referenced in the decision journal with its mechanism. Empty at baseline — the first survey's divergences are emitter gaps (missing graph attrs, unpopulated _draw_ arrays, no subgraph support), not irreducible FP/platform quirks, so nothing qualifies for acceptance yet.",
-  "divergences": []
+  "comment": "Irreducible json divergences (mission: json-conformance). Each entry: {id, opClass, delta, rationale}. The walker treats listed ids as non-blocking ('accepted') and continues. Every entry MUST be referenced in the decision journal with its mechanism.",
+  "divergences": [
+    {
+      "id": "share-Latin1",
+      "opClass": "node:label / _ldraw_ T.text [mixed-encoding]",
+      "delta": 0,
+      "rationale": "Input is Latin-1 with NO `charset` declaration, so the bytes are invalid UTF-8. Native dot's -Tjson then emits a MIXED-ENCODING document: attribute values (e.g. node `label`) are echoed as RAW Latin-1 bytes (0xe1 0xe2 ... unconverted), while the DRAWN label text (_ldraw_ T op, via make_label) is UTF-8 (0xc3 0xa1 ...). No single decode reads both halves correctly: Latin-1 recovers the attribute but mojibakes the text, UTF-8 does the reverse (and the attribute bytes are not valid UTF-8). The port decodes the input once (utils.c latin1ToUTF8 fallback) and is internally consistent valid UTF-8 on BOTH surfaces, so it cannot reproduce the oracle's split encoding. A4 class: the oracle output is an encoding bug; the port declines to emit invalid/mixed-encoding JSON. The DECLARED charset=latin1 case (graphs-Latin1/b60) IS handled via the stoj double-encode fix; only the UNDECLARED-charset case is irreducible."
+    },
+    {
+      "id": "windows-Latin1",
+      "opClass": "node:label / _ldraw_ T.text [mixed-encoding]",
+      "delta": 0,
+      "rationale": "Identical mechanism to share-Latin1: undeclared-charset Latin-1 input makes native -Tjson emit raw-Latin-1 attribute bytes alongside UTF-8 drawn text (mixed, invalid). The port's consistent-UTF-8 output cannot match both halves. A4 class."
+    }
+  ]
 }

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-15T12:16:58.035Z",
+  "generatedAt": "2026-07-15T14:01:22.669Z",
   "generatedWith": "test/corpus/json-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 761,
   "counts": {
-    "conformant": 749,
-    "diverged": 12,
-    "accepted": 0,
+    "conformant": 758,
+    "diverged": 1,
+    "accepted": 2,
     "port-error": 0,
     "oracle-error": 0,
     "timeout": 0
@@ -515,11 +515,7 @@
       "id": "1902",
       "path": "1902.dot",
       "size": 119,
-      "verdict": "diverged",
-      "diffCount": 12,
-      "firstDiff": "cluster:cluster/_draw_/op[1].p[0]",
-      "maxDelta": 144,
-      "maxDeltaPath": "cluster:cluster/_draw_/op[1].p[4]"
+      "verdict": "conformant"
     },
     {
       "id": "regression_tests-shapes-reference-plain",
@@ -981,7 +977,7 @@
       "id": "share-Latin1",
       "path": "share/Latin1.gv",
       "size": 155,
-      "verdict": "diverged",
+      "verdict": "accepted",
       "diffCount": 1,
       "firstDiff": "node:a/label"
     },
@@ -989,7 +985,7 @@
       "id": "windows-Latin1",
       "path": "windows/Latin1.gv",
       "size": 155,
-      "verdict": "diverged",
+      "verdict": "accepted",
       "diffCount": 1,
       "firstDiff": "node:a/label"
     },
@@ -1015,9 +1011,7 @@
       "id": "1514",
       "path": "1514.dot",
       "size": 168,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "cluster:%7/nodes[members]"
+      "verdict": "conformant"
     },
     {
       "id": "2436",
@@ -1131,9 +1125,7 @@
       "id": "graphs-b7",
       "path": "graphs/b7.gv",
       "size": 222,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "cluster:cluster_1/_draw_[missing]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-labelclust-ftd",
@@ -1583,9 +1575,7 @@
       "id": "2825",
       "path": "2825.dot",
       "size": 312,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "cluster:%17/rank[missing]"
+      "verdict": "conformant"
     },
     {
       "id": "2521",
@@ -1705,9 +1695,7 @@
       "id": "2368_1",
       "path": "2368_1.dot",
       "size": 405,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "edge:256->376#0/lp[missing]"
+      "verdict": "conformant"
     },
     {
       "id": "share-longflat",
@@ -3477,19 +3465,13 @@
       "id": "1453",
       "path": "1453.dot",
       "size": 2446,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "cluster:%15/rank[missing]"
+      "verdict": "conformant"
     },
     {
       "id": "1436",
       "path": "1436.dot",
       "size": 2599,
-      "verdict": "diverged",
-      "diffCount": 12,
-      "firstDiff": "cluster:cluster/_draw_/op[1].p[0]",
-      "maxDelta": 1638,
-      "maxDeltaPath": "cluster:cluster/_draw_/op[1].p[0]"
+      "verdict": "conformant"
     },
     {
       "id": "share-jcctree",
@@ -4547,9 +4529,7 @@
       "id": "1879",
       "path": "1879.dot",
       "size": 287816,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:node_567x830_567/label"
+      "verdict": "conformant"
     },
     {
       "id": "linux.x86-root_twopi",
@@ -4591,9 +4571,7 @@
       "id": "2470",
       "path": "2470.dot",
       "size": 734358,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "edge:n96->n36#0/lp[missing]"
+      "verdict": "conformant"
     },
     {
       "id": "2222",

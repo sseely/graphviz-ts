@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T12:23:04.238Z",
+  "generatedAt": "2026-07-15T13:56:36.713Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
