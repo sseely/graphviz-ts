@@ -1,0 +1,26 @@
+// 5-WAY: pack x cluster x minlen0 x ranksame x edgelabel
+// Maximum conjunction density in the danger zone: flat edges (minlen=0) and an
+// explicit rankset both pinning nodes onto the SAME rank, inside a cluster
+// window, on a rank axis DOUBLED by edge labels, under component projection.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="C0";
+    lonely;
+    a -> b [minlen=0, label="flat"];
+    a -> c [label="down"];
+    { rank=same; b; c; }
+    b -> d [label="e3"];
+    c -> d [label="e4"];
+  }
+  d -> z [label="out"];
+
+  subgraph cluster1 {
+    label="C1";
+    p -> q [label="f1"];
+    p -> r [label="f2"];
+    { rank=same; q; r; }
+    q -> r [minlen=0, label="flat2"];
+    r -> s [label="f3"];
+  }
+}

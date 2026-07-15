@@ -1,0 +1,17 @@
+// TRIPLE: cluster x edgelabel x ranksame (no pack -- rank machinery alone)
+// Edge labels DOUBLE the rank space (virtual label node per edge). rank=same
+// then pins nodes onto a doubled rank, inside a cluster's rank window. The
+// label-rank interleave is the part that has to survive.
+digraph G {
+  subgraph cluster0 {
+    label="C0";
+    a -> b [label="e1"];
+    a -> c [label="e2"];
+    { rank=same; b; c; }
+    b -> d [label="e3"];
+    c -> d [label="e4"];
+  }
+  d -> e [label="out"];
+  { rank=same; e; f; }
+  a -> f [label="side"];
+}

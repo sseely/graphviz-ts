@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T18:53:35.301Z",
+  "generatedAt": "2026-07-15T00:26:13.577Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "twopi",
   "tolerance": 0.01,
@@ -3246,8 +3246,8 @@
       "id": "windows-newarrows",
       "size": 6364,
       "status": "diverged",
-      "nDiffs": 22,
-      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 272.79 vs 306.32"
+      "nDiffs": 20,
+      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
     },
     {
       "id": "2193",

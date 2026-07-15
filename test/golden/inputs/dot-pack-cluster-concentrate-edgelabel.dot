@@ -1,0 +1,26 @@
+// 4-WAY: pack x cluster x concentrate x edgelabel
+// concentrate MERGES parallel/co-terminal edges into a shared trunk; edge labels
+// give each merged edge a virtual label node on a doubled rank axis. The merge
+// runs through the cluster rank window (conc.ts fillRankVlist) inside a projected
+// component. Corpus has 0 graphs pairing pack with concentrate at all.
+digraph G {
+  pack=true;
+  concentrate=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> t [label="m1"];
+    b -> t [label="m2"];
+    c -> t [label="m3"];
+    t -> u [label="trunk"];
+  }
+  u -> z [label="out"];
+  a -> b;
+
+  subgraph cluster1 {
+    label="C1";
+    p -> w [label="n1"];
+    q -> w [label="n2"];
+    w -> x [label="n3"];
+  }
+  p -> q;
+}

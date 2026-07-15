@@ -1,0 +1,5 @@
+digraph G {
+  newrank=true;
+  a -> b [minlen=0];
+  b -> c;
+}

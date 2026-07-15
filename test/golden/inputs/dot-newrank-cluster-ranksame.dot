@@ -1,0 +1,26 @@
+// TRIPLE: newrank x cluster x ranksame (+minlen0)
+// newrank switches dot to a GLOBAL rank solve that ranks across cluster
+// boundaries instead of per-cluster; cluster rank windows and ranksets then have
+// to agree with a ranking they did not produce. Legal without pack (pack+newrank
+// SIGSEGVs upstream -- the one permanently-dark cell).
+digraph G {
+  newrank=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> b;
+    a -> c;
+    { rank=same; b; c; }
+    b -> d [minlen=0];
+  }
+  subgraph cluster1 {
+    label="C1";
+    p -> q;
+    { rank=same; q; r; }
+    q -> r [minlen=0];
+    r -> s;
+  }
+  c -> p;
+  d -> q;
+  s -> z;
+  { rank=same; a; p; }
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T18:02:40.654Z",
+  "generatedAt": "2026-07-14T23:15:05.507Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "fdp",
   "tolerance": 0.5,
@@ -7,9 +7,9 @@
   "counts": {
     "pass": 600,
     "diverged": 145,
-    "oracle-error": 15,
+    "oracle-error": 16,
     "port-error": 0,
-    "timeout": 1
+    "timeout": 0
   },
   "results": [
     {
@@ -3961,8 +3961,8 @@
       "id": "graphs-b29",
       "size": 62931,
       "status": "diverged",
-      "nDiffs": 12347,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1633.23"
+      "nDiffs": 12359,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"
     },
     {
       "id": "2620",
@@ -4003,7 +4003,7 @@
       "id": "2095_1",
       "size": 105083,
       "status": "diverged",
-      "nDiffs": 68851,
+      "nDiffs": 68842,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"
     },
     {
@@ -4120,7 +4120,8 @@
     {
       "id": "2108",
       "size": 3136769,
-      "status": "timeout"
+      "status": "oracle-error",
+      "err": "spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"
     }
   ]
 }

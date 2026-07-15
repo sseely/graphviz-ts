@@ -1,0 +1,28 @@
+// TRIPLE: pack x cluster x concentrate  -- aims straight at the conc.ts fix.
+// fillRankVlist now ALIASES the cluster rank window into the root rank array
+// (v = rootRank.v, vStart = order(lead)) instead of slicing a copy. That aliasing
+// is only exercised when a cluster is present; pack additionally makes the graph
+// conc.ts sees a PROJECTED component (g != g.root). The corpus has 0 graphs with
+// pack + concentrate, and none of the 14 concentrate graphs pair it with pack.
+digraph G {
+  pack=true;
+  concentrate=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> t;
+    b -> t;
+    c -> t;
+    t -> u;
+  }
+  u -> z;
+  a -> b;
+
+  subgraph cluster1 {
+    label="C1";
+    p -> w;
+    q -> w;
+    r -> w;
+  }
+  w -> x;
+  p -> q;
+}

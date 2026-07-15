@@ -1,0 +1,23 @@
+// 4-WAY: pack x cluster x minlen0 x edgelabel (+ edge-less cluster member)
+// This is the xusuxe crash shape (cluster x minlen0 x edgelabel x edge-less
+// cluster member) with component projection layered on top -- the exact class of
+// conjunction every real bug this campaign lived in. Highest-risk fixture.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="C0";
+    lonely;                       // edge-less cluster member
+    a -> b [minlen=0, label="flat"];
+    b -> c [label="down"];
+    a -> c [label="skip"];
+  }
+  c -> z [label="out"];
+
+  subgraph cluster1 {
+    label="C1";
+    orphan;                       // edge-less cluster member
+    e -> f [minlen=0, label="flat2"];
+    f -> g [label="down2"];
+  }
+  e -> g [label="chord"];
+}

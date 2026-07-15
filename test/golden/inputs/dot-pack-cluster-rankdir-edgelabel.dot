@@ -1,0 +1,23 @@
+// 4-WAY: pack x cluster x rankdir=LR x edgelabel
+// rankdir sets GD_flip (label bboxes swap w/h, rank axis rotates) while edge
+// labels DOUBLE the rank space via virtual label nodes. Flipping a doubled rank
+// axis inside a cluster window, under component projection.
+digraph G {
+  pack=true;
+  rankdir=LR;
+  subgraph cluster0 {
+    label="C0";
+    a -> b [label="e1"];
+    b -> c [label="e2"];
+    a -> c [label="skip"];
+  }
+  c -> z [label="out"];
+
+  subgraph cluster1 {
+    label="C1 wide label";
+    p -> q [label="f1"];
+    p -> r [label="f2"];
+    { rank=same; q; r; }
+  }
+  q -> s [label="g1"];
+}

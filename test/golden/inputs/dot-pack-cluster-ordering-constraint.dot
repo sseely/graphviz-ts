@@ -1,0 +1,27 @@
+// TRIPLE(s): pack x cluster x ordering=out, and pack x cluster x constraint=false
+// ordering=out pins edge order by AGSEQ (which virtual edges must inherit);
+// constraint=false removes an edge from the rank solve while it still routes.
+// Both are rank-machinery switches read through a projected component.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="C0";
+    ordering=out;
+    a -> b;
+    a -> c;
+    a -> d;
+    b -> e;
+    c -> e;
+  }
+  e -> z;
+  d -> a [constraint=false];
+
+  subgraph cluster1 {
+    label="C1";
+    p -> q;
+    p -> r;
+    q -> s;
+    r -> s;
+  }
+  s -> p [constraint=false];
+}

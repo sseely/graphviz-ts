@@ -99,8 +99,13 @@ export function xgFindEdge(Xg: Graph, t: Node, h: Node): Edge | undefined {
   return Xg.edges.find(e => e.tail === t && e.head === h);
 }
 
+/** Xg edges are calloc'd in C: minlen/weight are 0, not the user-edge default 1
+ *  (dot_init_edge, dotinit.c:85). merge() relies on it — MAX(0,minlen) keeps a
+ *  minlen of 0, and += weight accumulates from 0. */
 export function xgAddEdge(Xg: Graph, t: Node, h: Node): Edge {
-  const e = new EdgeClass(t, h, ''); Xg.edges.push(e); return e;
+  const e = new EdgeClass(t, h, '');
+  e.info.minlen = 0; e.info.weight = 0;
+  Xg.edges.push(e); return e;
 }
 
 export function xgDeleteEdge(Xg: Graph, e: Edge): void {
@@ -211,9 +216,9 @@ export function xgWeakExists(Xg: Graph, t: Node, h: Node): boolean {
 
 export function xgWeakSetWeights(e: Edge, f: Edge, origW: number, origML: number): void {
   e.info.minlen = Math.max(eMinlen(e), 0);
-  e.info.weight = eWeight(e) + origW * BACKWARD_PENALTY - 1;
+  e.info.weight = eWeight(e) + origW * BACKWARD_PENALTY;
   f.info.minlen = Math.max(eMinlen(f), origML);
-  f.info.weight = eWeight(f) + origW - 1;
+  f.info.weight = eWeight(f) + origW;
 }
 
 /** @see lib/dotgen/rank.c:weak */

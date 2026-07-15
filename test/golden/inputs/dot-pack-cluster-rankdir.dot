@@ -1,0 +1,22 @@
+// TRIPLE: pack x cluster x rankdir=LR
+// rankdir sets GD_flip: cluster label bboxes swap w/h and the rank axis rotates.
+// Under projection the flip is applied per component.
+digraph G {
+  pack=true;
+  rankdir=LR;
+  subgraph cluster0 {
+    label="C0";
+    a -> b;
+    b -> c;
+    a -> c;
+  }
+  c -> z;
+
+  subgraph cluster1 {
+    label="C1 longer label";
+    p -> q;
+    { rank=same; q; r; }
+    q -> r;
+  }
+  r -> s;
+}

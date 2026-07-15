@@ -1,0 +1,25 @@
+// TRIPLE: pack x cluster x ranksame
+// rank=same collapses nodes onto one rank INSIDE a cluster window, and (2nd
+// component) across a cluster boundary -- the rank-set machinery reading a
+// root-scoped rank array through a projected component.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> b;
+    a -> c;
+    { rank=same; b; c; }
+    b -> d;
+    c -> d;
+  }
+  d -> z;
+
+  subgraph cluster1 {
+    label="C1";
+    p -> q;
+    p -> r;
+    { rank=same; q; r; }
+  }
+  q -> s;
+  r -> s;
+}

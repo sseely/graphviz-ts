@@ -733,14 +733,14 @@
 {"id":"graphs-b106","size":48933,"status":"diverged","nDiffs":8738,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[1]: -55.36 vs -296.41"}
 {"id":"2343","size":59368,"status":"diverged","nDiffs":27477,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 2458.63 vs 2260.56"}
 {"id":"graphs-b143","size":62055,"status":"diverged","nDiffs":11881,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1315.21 vs 2454.2"}
-{"id":"graphs-b29","size":62931,"status":"diverged","nDiffs":12347,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1633.23"}
+{"id":"graphs-b29","size":62931,"status":"diverged","nDiffs":12359,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1233.19 vs 1131.18"}
 {"id":"2620","size":64908,"status":"oracle-error","err":"Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot"}
 {"id":"linux.i386-b106","size":92005,"status":"pass"}
 {"id":"share-b106","size":92301,"status":"pass"}
 {"id":"windows-b106","size":95634,"status":"pass"}
 {"id":"graphs-b102","size":102329,"status":"diverged","nDiffs":18244,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1165.18 vs 1109.75"}
 {"id":"graphs-xx","size":102329,"status":"diverged","nDiffs":18259,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1559.26 vs 1408.75"}
-{"id":"2095_1","size":105083,"status":"diverged","nDiffs":68851,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"}
+{"id":"2095_1","size":105083,"status":"diverged","nDiffs":68842,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 6454.58 vs 7353.24"}
 {"id":"graphs-root","size":128221,"status":"diverged","nDiffs":37208,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3060.94 vs 2747.66"}
 {"id":"linux.i386-b29","size":136753,"status":"pass"}
 {"id":"share-b29","size":137802,"status":"pass"}
@@ -758,4 +758,4 @@
 {"id":"2475_2","size":641284,"status":"diverged","nDiffs":323062,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 18385.95 vs 18432"}
 {"id":"2470","size":734358,"status":"diverged","nDiffs":20080,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9488.17 vs 7690.38"}
 {"id":"2222","size":2384469,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
-{"id":"2108","size":3136769,"status":"timeout"}
+{"id":"2108","size":3136769,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}

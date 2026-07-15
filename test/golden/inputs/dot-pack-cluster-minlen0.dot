@@ -1,0 +1,22 @@
+// TRIPLE: pack x cluster x minlen0
+// minlen=0 forces endpoints onto the SAME rank -> flat-edge machinery
+// (flatLimits / checkFlatAdjacent / abomination) running inside a cluster's
+// rank window, under component projection.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> b [minlen=0];
+    a -> c [minlen=0];
+    b -> c [minlen=0];
+    c -> d;
+  }
+  d -> z;
+
+  subgraph cluster1 {
+    label="C1";
+    p -> q [minlen=0];
+    q -> r [minlen=0];
+  }
+  r -> s;
+}

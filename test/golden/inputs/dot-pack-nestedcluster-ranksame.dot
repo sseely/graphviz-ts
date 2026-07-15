@@ -1,0 +1,37 @@
+// TRIPLE: pack x nested-cluster x ranksame
+// Nested clusters nest rank WINDOWS (a window inside a window); under projection
+// the inner window is offset twice. Each rankset stays within ONE cluster scope:
+// C rejects a rankset that pulls a node out of a nested cluster into its parent
+// ("already in a rankset, deleted from cluster") and exits 1.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="outer0";
+    a -> b;
+    subgraph cluster00 {
+      label="inner0";
+      c -> d;
+      c -> e;
+      { rank=same; d; e; }
+    }
+    b -> c;
+    d -> f;
+    e -> f;
+  }
+  f -> z;
+
+  subgraph cluster1 {
+    label="outer1";
+    p -> q;
+    p -> r;
+    { rank=same; q; r; }
+    subgraph cluster11 {
+      label="inner1";
+      s -> t;
+      s -> u;
+      { rank=same; t; u; }
+    }
+    q -> s;
+    r -> s;
+  }
+}

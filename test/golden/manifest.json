@@ -1540,5 +1540,125 @@
     "input": "test/golden/inputs/dot-pack-portlabel-angle.dot",
     "reference": "test/golden/refs/dot-pack-portlabel-angle.svg",
     "description": "pack + head/tail labels WITH labelangle/labeldistance: C gates place_portlabel on the ATTR DECLARATIONS (E_headlabel etc), not GD_has_labels -- a component projection has has_labels=0, so the port skipped placement and the labels kept their unplaced default. Without labelangle C skips too, which is why the plain pack x headtaillabel fixture could not catch this."
+  },
+  {
+    "id": "dot-newrank-minlen0",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-minlen0.dot",
+    "reference": "test/golden/refs/dot-newrank-minlen0.svg",
+    "description": "newrank=true with a minlen=0 edge: the dot2 aux-graph rank solve must preserve minlen=0 (C creates Xg edges calloc-zeroed, so merge()s MAX(0,0) keeps it)"
+  },
+  {
+    "id": "dot-newrank-cluster-ranksame",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-cluster-ranksame.dot",
+    "reference": "test/golden/refs/dot-newrank-cluster-ranksame.svg",
+    "description": "newrank x cluster x cross-cluster rank=same x minlen=0: global rank solve across cluster boundaries"
+  },
+  {
+    "id": "dot-pack-cluster-edgelabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-edgelabel.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-edgelabel.svg",
+    "description": "pack x cluster x edgelabel: label-rank doubling inside a cluster rank window, under component projection"
+  },
+  {
+    "id": "dot-pack-cluster-minlen0",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-minlen0.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-minlen0.svg",
+    "description": "pack x cluster x minlen0: flat-edge machinery inside a cluster window, under component projection"
+  },
+  {
+    "id": "dot-pack-cluster-minlen0-edgelabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-minlen0-edgelabel.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-minlen0-edgelabel.svg",
+    "description": "pack x cluster x minlen0 x edgelabel x edge-less cluster member (the xusuxe crash shape, plus projection)"
+  },
+  {
+    "id": "dot-pack-cluster-ranksame",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-ranksame.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-ranksame.svg",
+    "description": "pack x cluster x ranksame: rank sets inside cluster windows under component projection"
+  },
+  {
+    "id": "dot-pack-nestedcluster-ranksame",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-nestedcluster-ranksame.dot",
+    "reference": "test/golden/refs/dot-pack-nestedcluster-ranksame.svg",
+    "description": "pack x nested cluster x ranksame: a rank window nested inside a rank window, under projection"
+  },
+  {
+    "id": "dot-pack-cluster-compound",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-compound.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-compound.svg",
+    "description": "pack x cluster x compound (lhead/ltail): cluster-boundary edge clipping under projection"
+  },
+  {
+    "id": "dot-cluster-edgelabel-ranksame",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-cluster-edgelabel-ranksame.dot",
+    "reference": "test/golden/refs/dot-cluster-edgelabel-ranksame.svg",
+    "description": "cluster x edgelabel x ranksame: rank=same pinned onto a label-doubled rank axis inside a cluster window"
+  },
+  {
+    "id": "dot-pack-cluster-rankdir",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-rankdir.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-rankdir.svg",
+    "description": "pack x cluster x rankdir=LR: GD_flip cluster label bboxes under component projection"
+  },
+  {
+    "id": "dot-pack-cluster-ordering-constraint",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-ordering-constraint.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-ordering-constraint.svg",
+    "description": "pack x cluster x ordering=out x constraint=false under component projection"
+  },
+  {
+    "id": "dot-pack-cluster-concentrate",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-concentrate.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-concentrate.svg",
+    "description": "pack x cluster x concentrate: the conc.ts cluster rank-window alias, under component projection"
+  },
+  {
+    "id": "dot-pack-cluster-rankdir-edgelabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-rankdir-edgelabel.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-rankdir-edgelabel.svg",
+    "description": "pack x cluster x rankdir=LR x edgelabel: flipping a label-doubled rank axis under projection"
+  },
+  {
+    "id": "dot-pack-cluster-minlen0-ranksame-edgelabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-minlen0-ranksame-edgelabel.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-minlen0-ranksame-edgelabel.svg",
+    "description": "pack x cluster x minlen0 x ranksame x edgelabel: max conjunction density in the rank/cluster/projection danger zone"
+  },
+  {
+    "id": "dot-pack-cluster-concentrate-edgelabel",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-pack-cluster-concentrate-edgelabel.dot",
+    "reference": "test/golden/refs/dot-pack-cluster-concentrate-edgelabel.svg",
+    "description": "pack x cluster x concentrate x edgelabel: edge merging with label nodes through a cluster window, under projection"
   }
 ]

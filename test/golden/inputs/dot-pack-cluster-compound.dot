@@ -1,0 +1,24 @@
+// TRIPLE: pack x cluster x compound (lhead/ltail)
+// compound edges clip against the CLUSTER's bounding box; under projection that
+// bb belongs to a component graph, not the root.
+digraph G {
+  pack=true;
+  compound=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> b;
+  }
+  subgraph cluster1 {
+    label="C1";
+    c -> d;
+  }
+  b -> c [lhead=cluster1, ltail=cluster0];
+  a -> d [lhead=cluster1];
+
+  subgraph cluster2 {
+    label="C2";
+    p -> q;
+  }
+  q -> r [ltail=cluster2];
+  r -> s;
+}

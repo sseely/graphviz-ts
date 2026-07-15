@@ -1,0 +1,22 @@
+// TRIPLE: pack x cluster x edgelabel
+// Edge labels make dot double the rank space (a virtual label node per edge);
+// clusters carry a rank WINDOW into the root rank array; pack projects each
+// component so g != g.root. has_labels is exactly the root-scoped property that
+// was written to the component but read from the layout graph.
+digraph G {
+  pack=true;
+  subgraph cluster0 {
+    label="C0";
+    a -> b [label="e1"];
+    b -> c [label="e2"];
+    a -> c [label="skip"];
+  }
+  c -> z [label="out"];
+
+  subgraph cluster1 {
+    label="C1";
+    p -> q [label="f1"];
+    q -> r [label="f2"];
+  }
+  p -> r [label="chord"];
+}

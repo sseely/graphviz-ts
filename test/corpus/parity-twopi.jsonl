@@ -641,7 +641,7 @@
 {"id":"graphs-proc3d","size":6121,"status":"pass"}
 {"id":"graphs-jsort","size":6189,"status":"pass"}
 {"id":"share-newarrows","size":6364,"status":"diverged","nDiffs":20,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
-{"id":"windows-newarrows","size":6364,"status":"diverged","nDiffs":22,"firstDiff":"edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 272.79 vs 306.32"}
+{"id":"windows-newarrows","size":6364,"status":"diverged","nDiffs":20,"firstDiff":"edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"}
 {"id":"2193","size":6399,"status":"pass"}
 {"id":"share-unix","size":6603,"status":"pass"}
 {"id":"windows-unix","size":6603,"status":"pass"}
