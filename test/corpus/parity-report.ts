@@ -495,6 +495,90 @@ function engineMarkdown(
   ].join('\n');
 }
 
+/** Normalized per-id status in one output format. */
+type FmtStatus = 'conformant' | 'accepted' | 'diverged' | 'error';
+const FMT_RANK: Record<FmtStatus, number> = {
+  conformant: 0, accepted: 1, diverged: 2, error: 3,
+};
+
+/** Map an xdot/json walk verdict to a {@link FmtStatus}. */
+function normDotVerdict(v: XdotVerdict | JsonVerdict): FmtStatus {
+  if (v === 'conformant') return 'conformant';
+  if (v === 'accepted') return 'accepted';
+  if (v === 'diverged') return 'diverged';
+  return 'error';
+}
+
+/**
+ * Cross-format view of the three deterministic dot outputs (SVG · xdot · json),
+ * joined by id. xdot and json survey the SVG-conformant roster, so the join is
+ * that intersection: it reports how many inputs the port renders faithfully in
+ * EVERY format, and lists the ids that fall short in any one. SVG `accepted` is
+ * resolved through the same registry join dotSvgRow uses.
+ */
+function dotFormatsSection(
+  svg: SvgParityReport,
+  xdot: XdotParityReport,
+  json: JsonParityReport,
+  manifest: CorpusEntry[],
+): string {
+  const reg = loadAccepted();
+  const engineOf = new Map(manifest.map((e) => [e.id, e.engine]));
+  const svgStatus = (r: SurveyResult): FmtStatus => {
+    if (r.verdict === 'conformant') return 'conformant';
+    if (r.verdict === 'diverged' || r.verdict === 'structural-match') {
+      return matchAccepted(r.id, engineOf.get(r.id), 'parity', reg) ? 'accepted' : 'diverged';
+    }
+    return 'error';
+  };
+  const svgMap = new Map(svg.results.map((r) => [r.id, svgStatus(r)]));
+  const xdotMap = new Map(xdot.results.map((r) => [r.id, normDotVerdict(r.verdict)]));
+  const jsonMap = new Map(json.results.map((r) => [r.id, normDotVerdict(r.verdict)]));
+
+  const ids = [...jsonMap.keys()].filter((id) => svgMap.has(id) && xdotMap.has(id));
+  const worstOf = (id: string): number => Math.max(
+    FMT_RANK[svgMap.get(id)!], FMT_RANK[xdotMap.get(id)!], FMT_RANK[jsonMap.get(id)!],
+  );
+  let allClean = 0, acceptedOnly = 0, notClean = 0;
+  for (const id of ids) {
+    const w = worstOf(id);
+    if (w === 0) allClean++;
+    else if (w === 1) acceptedOnly++;
+    else notClean++;
+  }
+  const n = ids.length;
+  const detailRows = ids
+    .filter((id) => worstOf(id) > 0)
+    .sort((a, b) => worstOf(b) - worstOf(a) || a.localeCompare(b))
+    .map((id) => `| \`${id}\` | ${svgMap.get(id)} | ${xdotMap.get(id)} | ${jsonMap.get(id)} |`);
+  const detail = detailRows.length === 0
+    ? ['_Every surveyed input is conformant in all three outputs._', '']
+    : [
+        'Per-format status of the ids not conformant in all three:',
+        '',
+        '| id | SVG | xdot | json |',
+        '|---|---|---|---|',
+        ...detailRows,
+        '',
+      ];
+  return [
+    '## Dot output formats (SVG · xdot · json)',
+    '',
+    'How faithfully the port renders each input across all three deterministic',
+    'dot outputs, joined by id. xdot and json survey the SVG-conformant roster,',
+    `so this is the intersection (${n} inputs); an input is *conformant in all`,
+    'three* only when every format agrees with the oracle within tolerance.',
+    '',
+    '| status across SVG · xdot · json | count | % |',
+    '|---|---:|---:|',
+    `| conformant in all three | ${allClean} | ${pct(allClean, n)} |`,
+    `| accepted (won't-fix) in ≥1, diverged in none | ${acceptedOnly} | ${pct(acceptedOnly, n)} |`,
+    `| diverged / errored in ≥1 | ${notClean} | ${pct(notClean, n)} |`,
+    '',
+    ...detail,
+  ].join('\n');
+}
+
 /** Build the cross-engine PARITY.md summary page. */
 function buildSummary(
   rows: TrackRow[],
@@ -505,6 +589,9 @@ function buildSummary(
   // the same way engine links are — see MAP block in the main body below.
   mapPresent = false,
   // map-conformance (END)
+  // Pre-rendered "Dot output formats (SVG · xdot · json)" cross-format section
+  // (dotFormatsSection); '' when the json survey artifact is absent.
+  dotFormats = '',
 ): string {
   const links = [
     '- [PARITY-dot.md](./PARITY-dot.md) — dot (SVG) dashboard (`dashboard.ts`)',
@@ -561,6 +648,7 @@ function buildSummary(
       : []),
     missingNote,
     '',
+    ...(dotFormats ? [dotFormats, ''] : []),
     goldensSection(),
     '## Per-track dashboards',
     '',
@@ -582,9 +670,11 @@ function main(): void {
 
   const acceptedEngines = loadAcceptedEngines();
   const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
+  let dotFormats = '';
   if (existsSync(JSON_PARITY)) {
     const jsonReport = JSON.parse(readFileSync(JSON_PARITY, 'utf8')) as JsonParityReport;
     rows.push(dotJsonRow(jsonReport));
+    dotFormats = dotFormatsSection(svgReport, xdotReport, jsonReport, manifest);
   }
   const iterativeRows: TrackRow[] = [];
   const presentEngines: string[] = [];
@@ -615,7 +705,10 @@ function main(): void {
   }
   // map-conformance (END)
 
-  writeFileSync(OUT, buildSummary(rows, missingEngines, presentEngines, iterativeRows, mapPresent));
+  writeFileSync(
+    OUT,
+    buildSummary(rows, missingEngines, presentEngines, iterativeRows, mapPresent, dotFormats),
+  );
   process.stderr.write(
     `wrote PARITY.md (${rows.length} tracks; not yet surveyed: ${missingEngines.join(', ') || 'none'})\n`,
   );

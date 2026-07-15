@@ -48,6 +48,28 @@ bar above.
 
 
 
+## Dot output formats (SVG · xdot · json)
+
+How faithfully the port renders each input across all three deterministic
+dot outputs, joined by id. xdot and json survey the SVG-conformant roster,
+so this is the intersection (761 inputs); an input is *conformant in all
+three* only when every format agrees with the oracle within tolerance.
+
+| status across SVG · xdot · json | count | % |
+|---|---:|---:|
+| conformant in all three | 758 | 99.6% |
+| accepted (won't-fix) in ≥1, diverged in none | 2 | 0.3% |
+| diverged / errored in ≥1 | 1 | 0.1% |
+
+Per-format status of the ids not conformant in all three:
+
+| id | SVG | xdot | json |
+|---|---|---|---|
+| `2239` | conformant | conformant | diverged |
+| `share-Latin1` | conformant | conformant | accepted |
+| `windows-Latin1` | conformant | conformant | accepted |
+
+
 ## Goldens
 
 211 pinned golden inputs (`test/golden/manifest.json`), by engine:
