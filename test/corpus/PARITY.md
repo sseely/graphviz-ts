@@ -26,7 +26,7 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 | [twopi (xdot)](./PARITY-twopi.md) | 761 | 739 | 0 | 14 | 8 | 97.1% |
 | [osage (xdot)](./PARITY-osage.md) | 761 | 750 | 0 | 6 | 5 | 98.6% |
 | [patchwork (xdot)](./PARITY-patchwork.md) | 761 | 756 | 0 | 0 | 5 | 99.3% |
-| [dot (imagemap)](./PARITY-MAP.md) | 761 | 739 | 11 | 0 | 11 | 97.1% |
+| [dot (imagemap)](./PARITY-MAP.md) | 761 | 755 | 0 | 0 | 6 | 99.2% |
 
 
 ### Iterative engines (±0.5 characterization)

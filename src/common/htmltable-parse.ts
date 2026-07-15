@@ -31,6 +31,14 @@ import {
   BORDER_MASK,
 } from './htmltable-types.js';
 import { tokenize } from './htmltable-lex.js';
+import { htmlEntityUTF8 } from './html-entities.js';
+
+/** Decode XML/HTML entities in an anchor attribute value (href/target), as C's
+ *  HTML parser does. The stored value is the real character (`&amp;` → `&`), so
+ *  imap emits it raw and cmapx re-escapes it. Undefined passes through. */
+function anchorAttr(v: string | undefined): string | undefined {
+  return v === undefined ? undefined : htmlEntityUTF8(v);
+}
 
 // ---------------------------------------------------------------------------
 // Attribute helpers
@@ -336,9 +344,9 @@ const buildCell = (content: HtmlCellContent[], a: Record<string, string>): HtmlC
   fixedsize: parseFixedSize(a),
   colspan: num(a['colspan']),
   rowspan: num(a['rowspan']),
-  href: a['href'],
+  href: anchorAttr(a['href']),
   title: parseTitle(a),
-  target: a['target'],
+  target: anchorAttr(a['target']),
   id: a['id'],
 });
 
@@ -407,9 +415,9 @@ const buildTable = (rows: HtmlRow[], a: Record<string, string>): HtmlTable => ({
   fixedsize: parseFixedSize(a),
   width: num(a['width']),
   height: num(a['height']),
-  href: a['href'],
+  href: anchorAttr(a['href']),
   title: parseTitle(a),
-  target: a['target'],
+  target: anchorAttr(a['target']),
   id: a['id'],
   port: a['port'],
   sides: parseSides(a['sides']),

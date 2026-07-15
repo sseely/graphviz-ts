@@ -9,7 +9,7 @@
  * @see lib/common/htmltable.c:endAnchor
  */
 
-import type { Point } from '../model/geom.js';
+import type { Point, Box } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import type { PlacedCell, PlacedHtml } from './htmltable-pos.js';
@@ -244,6 +244,7 @@ function normaliseAnchor(data: AnchorData): { h: string; t: string; tg: string; 
  */
 export function initHtmlAnchor(
   data: AnchorData,
+  box: Box,
   renderer: RendererPlugin,
   job: RenderJob,
 ): boolean {
@@ -270,6 +271,10 @@ export function initHtmlAnchor(
   }
   if (data.target !== undefined && data.target !== '') frame.target = data.target;
   if (frame.url !== null || frame.explicitTooltip) {
+    // C initAnchor: emit_map_rect(job, b) then gvrender_begin_anchor — the
+    // rectangle seeds obj.urlMapPts so the map device emits this cell/table's
+    // <area>. @see lib/common/htmltable.c:410
+    renderer.emitMapRect?.(box, job);
     renderer.beginAnchor?.(frame.url ?? '', frame.tooltip ?? '', frame.target ?? '', id, job);
     frame.opened = true;
   }

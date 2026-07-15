@@ -25,7 +25,7 @@ import { resolveEdgeAnchor, resolveObjAnchor, beginAnchorIf } from './anchor.js'
 import type { ShapeDesc, TextlabelT } from '../common/types.js';
 import type { TextSpan } from '../common/emit-types.js';
 import { type LayerInfo, parseLayers } from '../common/layers.js';
-import { RenderJob, GVRENDER_DOES_TRANSFORM, createObjState, ObjType, EmitState } from './job.js';
+import { RenderJob, GVRENDER_DOES_TRANSFORM, EMIT_CLUSTERS_LAST, createObjState, ObjType, EmitState } from './job.js';
 import { walkNodesAndEdges } from './emit-walk.js';
 import { polyInit } from '../common/poly-init.js';
 import { emitHtmlLabel } from '../common/htmltable-emit.js';
@@ -362,6 +362,12 @@ function renderClusterBox(
  * @see lib/common/emit.c:emit_clusters:3777
  */
 function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): void {
+  // EMIT_CLUSTERS_LAST (map device): recurse into sub-clusters BEFORE emitting
+  // this cluster's anchor, so an inner cluster's <area> precedes its parent's
+  // (child-first). Drawing devices recurse AFTER (parent-first), below.
+  // @see lib/common/emit.c:emit_clusters (3795 vs 3940)
+  const clustersLast = (job.flags & EMIT_CLUSTERS_LAST) !== 0;
+  if (clustersLast) renderClusters(sg, renderer, job);
   // push_obj_state in emit_begin_cluster (line 3762), before beginCluster
   const obj = createObjState(ObjType.Cluster);
   obj.emitState = EmitState.CDraw;
@@ -401,7 +407,8 @@ function renderOneCluster(sg: Graph, renderer: RendererPlugin, job: RenderJob): 
   }
   // C recurses AFTER emit_end_cluster (line 3940-3941): sub-clusters are drawn
   // with the parent already popped — each has its own independent push/pop.
-  renderClusters(sg, renderer, job);
+  // The map device recursed first (child-first), above.
+  if (!clustersLast) renderClusters(sg, renderer, job);
 }
 
 /**
@@ -470,8 +477,13 @@ function renderPage(g: Graph, renderer: RendererPlugin, job: RenderJob, info: La
   // emit root-graph label before clusters/nodes @see lib/common/emit.c:emit_page
   renderGraphLabel(g, renderer, job);
   if (anchored) renderer.endAnchor?.(job);
-  renderClusters(g, renderer, job);
+  // emit_view: clusters are drawn BEFORE nodes/edges normally, but the map
+  // device (EMIT_CLUSTERS_LAST) emits their <area> AFTER, so a node/edge area
+  // precedes its enclosing cluster's. @see lib/common/emit.c:emit_view (3513-3565)
+  const clustersLast = (job.flags & EMIT_CLUSTERS_LAST) !== 0;
+  if (!clustersLast) renderClusters(g, renderer, job);
   walkNodesAndEdges(g, renderer, job, info);
+  if (clustersLast) renderClusters(g, renderer, job);
   renderer.endPage?.(g, job);
 }
 

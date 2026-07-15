@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-12T07:23:58.351Z",
+  "generatedAt": "2026-07-15T20:30:36.703Z",
   "generatedWith": "test/corpus/map-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 761,
   "counts": {
-    "conformant": 739,
-    "diverged": 11,
+    "conformant": 755,
+    "diverged": 0,
     "accepted": 0,
     "port-error": 0,
-    "oracle-error": 0,
-    "timeout": 11
+    "oracle-error": 2,
+    "timeout": 4
   },
   "results": [
     {
@@ -303,14 +303,12 @@
       "id": "2458",
       "path": "2458.dot",
       "size": 52,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -318,14 +316,12 @@
       "id": "graphs-b77",
       "path": "graphs/b77.gv",
       "size": 53,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -333,14 +329,12 @@
       "id": "graphs-in",
       "path": "graphs/in.gv",
       "size": 55,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -348,14 +342,12 @@
       "id": "graphs-ps",
       "path": "graphs/ps.gv",
       "size": 55,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -363,14 +355,12 @@
       "id": "graphs-b123",
       "path": "graphs/b123.gv",
       "size": 59,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -378,14 +368,12 @@
       "id": "2391",
       "path": "2391.dot",
       "size": 61,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -393,14 +381,12 @@
       "id": "2743",
       "path": "2743.dot",
       "size": 66,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -408,14 +394,12 @@
       "id": "graphs-bad",
       "path": "graphs/bad.gv",
       "size": 68,
-      "verdict": "timeout",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "conformant"
       },
       "hasHref": false
     },
@@ -1905,11 +1889,9 @@
       "id": "1425",
       "path": "1425.dot",
       "size": 139,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -2414,16 +2396,12 @@
       "id": "2295",
       "path": "2295.dot",
       "size": 221,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -4069,16 +4047,12 @@
       "id": "1425_1",
       "path": "1425_1.dot",
       "size": 544,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -6426,20 +6400,12 @@
       "id": "graphs-url",
       "path": "graphs/url.gv",
       "size": 1242,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 67,
-        "firstDiff": "area[0].shape",
-        "maxDelta": 468,
-        "maxDeltaPath": "area[17].coords[0]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 33,
-        "firstDiff": "imap/line[2].keyword",
-        "maxDelta": 468,
-        "maxDeltaPath": "imap/line[19].coords[0]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -6538,16 +6504,12 @@
       "id": "graphs-html2",
       "path": "graphs/html2.gv",
       "size": 1414,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 15,
-        "firstDiff": "area[0].shape"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 6,
-        "firstDiff": "imap/line[1].keyword"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -7088,16 +7050,12 @@
       "id": "linux.x86-html2_dot",
       "path": "linux.x86/html2_dot.gv",
       "size": 1945,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 15,
-        "firstDiff": "area[0].shape"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 6,
-        "firstDiff": "imap/line[1].keyword"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -7105,16 +7063,12 @@
       "id": "nshare-html2_dot",
       "path": "nshare/html2_dot.gv",
       "size": 1946,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 15,
-        "firstDiff": "area[0].shape"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 6,
-        "firstDiff": "imap/line[1].keyword"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -7863,13 +7817,9 @@
       "id": "1880",
       "path": "1880.dot",
       "size": 3451,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 139,
-        "firstDiff": "area[2].shape",
-        "maxDelta": 854,
-        "maxDeltaPath": "area[22].coords[2]"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -8491,11 +8441,9 @@
       "id": "1447",
       "path": "1447.dot",
       "size": 6707,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "area[23].title"
+        "verdict": "conformant"
       },
       "imap": {
         "verdict": "conformant"
@@ -8506,16 +8454,12 @@
       "id": "2619_1",
       "path": "2619_1.dot",
       "size": 6721,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -8718,16 +8662,12 @@
       "id": "2619_2",
       "path": "2619_2.dot",
       "size": 7596,
-      "verdict": "diverged",
+      "verdict": "conformant",
       "cmapx": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "map/area[count]"
+        "verdict": "conformant"
       },
       "imap": {
-        "verdict": "diverged",
-        "diffCount": 1,
-        "firstDiff": "imap/line[count]"
+        "verdict": "conformant"
       },
       "hasHref": true
     },
@@ -9476,12 +9416,14 @@
       "id": "1718",
       "path": "1718.dot",
       "size": 22038,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -9606,14 +9548,14 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "timeout",
+      "verdict": "oracle-error",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "oracle-error",
+        "errMsg": "Warning: Warning: no value for width of non-ASCII character 207. Falling back to width of space character"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "oracle-error",
+        "errMsg": "Warning: Warning: no value for width of non-ASCII character 207. Falling back to width of space character"
       },
       "hasHref": false
     },
@@ -9725,14 +9667,14 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "size": 105083,
-      "verdict": "timeout",
+      "verdict": "oracle-error",
       "cmapx": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "oracle-error",
+        "errMsg": "oracle exit 0"
       },
       "imap": {
-        "verdict": "timeout",
-        "errMsg": ""
+        "verdict": "oracle-error",
+        "errMsg": "oracle exit 0"
       },
       "hasHref": false
     },
@@ -9922,12 +9864,14 @@
       "id": "2475_2",
       "path": "2475_2.dot",
       "size": 641284,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },
@@ -9948,12 +9892,14 @@
       "id": "2222",
       "path": "2222.dot",
       "size": 2384469,
-      "verdict": "conformant",
+      "verdict": "timeout",
       "cmapx": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "imap": {
-        "verdict": "conformant"
+        "verdict": "timeout",
+        "errMsg": ""
       },
       "hasHref": false
     },

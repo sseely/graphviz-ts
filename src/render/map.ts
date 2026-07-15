@@ -13,7 +13,7 @@
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
-import type { Point } from '../model/geom.js';
+import type { Point, Box } from '../model/geom.js';
 import { POINTS_PER_INCH } from '../model/geom.js';
 import type { TextSpan } from '../common/emit-types.js';
 import type { TextlabelT } from '../common/types.js';
@@ -21,7 +21,7 @@ import { lateDouble } from '../common/nodeinit.js';
 import { substObjAnchor } from '../common/subst.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import type { ObjState, RenderJob } from '../gvc/job.js';
-import { MapShape } from '../gvc/job.js';
+import { MapShape, EMIT_CLUSTERS_LAST } from '../gvc/job.js';
 import {
   type MapCtx,
   computeNodeUrlMap,
@@ -32,6 +32,7 @@ import {
 } from '../gvc/anchor.js';
 import { initJobViewportZoom, parseDrawingSize } from '../gvc/viewport.js';
 import { escapeXml } from './svg-helpers.js';
+import { escapeXmlTitle } from './xml-escape.js';
 
 // ---------------------------------------------------------------------------
 // Avoid Lizard quote-tracker bug: never put " in string literals.
@@ -218,8 +219,10 @@ export function cmapxCoords(shape: MapShape, pts: Point[]): string {
 export function mapCmapxAttrs(a: AnchorCtx, out: string[]): void {
   if (a.id) out.push(' id=' + DQ + escapeXml(a.id) + DQ);
   if (a.url) out.push(' href=' + DQ + escapeXml(a.url) + DQ);
-  if (a.target) out.push(' target=' + DQ + escapeXml(a.target) + DQ);
-  if (a.tooltip) out.push(' title=' + DQ + escapeXml(a.tooltip) + DQ);
+  // C uses gvputs_xml (dash+nbsp flags) for target/title — runs of spaces
+  // become &#160;. @see gvrender_core_map.c:map_output_shape
+  if (a.target) out.push(' target=' + DQ + escapeXmlTitle(a.target) + DQ);
+  if (a.tooltip) out.push(' title=' + DQ + escapeXmlTitle(a.tooltip) + DQ);
 }
 
 /** Write one `<area>` element: CMAPX (isXml=true → `/>`) or CMAP (`>`). */
@@ -365,6 +368,10 @@ abstract class MapRendererBase implements RendererPlugin {
 
   beginGraph(g: Graph, job: RenderJob): void {
     // Reset per render — instance may be reused across diagrams.
+    // The map device carries EMIT_CLUSTERS_LAST (device_features_map): container
+    // anchors (HTML table, cluster) emit their <area> AFTER their contents, so
+    // an inner cell's area precedes the enclosing table's. @see gvrender_core_map.c
+    job.flags |= EMIT_CLUSTERS_LAST;
     this.mapCtx = buildMapCtx(g, job, this.mapPolygon);
     if (this.isCmapx) {
       const name = escapeXml(mapGraphName(g));
@@ -402,6 +409,14 @@ abstract class MapRendererBase implements RendererPlugin {
 
   endEdge(e: Edge, job: RenderJob): void {
     if (this.mapCtx !== null && job.obj !== null) this.emitEdge(e, job.obj, job);
+  }
+
+  /** C emit_map_rect: record the HTML table/cell box as the pending hot spot,
+   *  so the following beginAnchor emits its <area>. @see emit.c:640 */
+  emitMapRect(box: Box, job: RenderJob): void {
+    if (this.mapCtx !== null && job.obj !== null) {
+      computeClusterUrlMap(box, job.obj, this.mapCtx);
+    }
   }
 
   beginAnchor(url: string, tip: string, target: string, id: string, job: RenderJob): void {

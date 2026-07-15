@@ -24,6 +24,7 @@
 
 import type { Point, Box } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
+import { EMIT_CLUSTERS_LAST } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import type { TextSpan } from './emit-types.js';
 import type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage } from './htmltable-pos.js';
@@ -42,6 +43,16 @@ export type { PlacedHtml, PlacedCell, PlacedLine, PlacedImage };
 // ---------------------------------------------------------------------------
 // Primitive helpers
 // ---------------------------------------------------------------------------
+
+/** Absolute (graph-frame) box for a cell/table: local box offset by `pos`.
+ *  Mirrors the `box + pos` used by the fill/border/rule helpers — the box C
+ *  passes to initAnchor's emit_map_rect. */
+function absBox(box: Box, pos: Point): Box {
+  return {
+    ll: { x: box.ll.x + pos.x, y: box.ll.y + pos.y },
+    ur: { x: box.ur.x + pos.x, y: box.ur.y + pos.y },
+  };
+}
 
 /** Box outline polygon: LL, (LL.x,UR.y), UR, (UR.x,LL.y). */
 export function emitHtmlBox(
@@ -255,7 +266,7 @@ export function emitHtmlCell(
 ): void {
   const inAnchor = initHtmlAnchor(
     { href: cell.href, title: cell.title, target: cell.target, id: cell.id },
-    renderer, job,
+    absBox(cell.box, pos), renderer, job,
   );
   emitCellDecoration(cell, pos, renderer, job);
   if (cell.nested !== undefined) {
@@ -310,10 +321,14 @@ export function emitHtmlLabel(
   // cluster shape drew at pen width 1, so the first table/cell fill carries no
   // stroke-width. Reset here so the leak starts clean per top-level table.
   resetHtmlFillPenWidth();
-  const inAnchor = initHtmlAnchor(
-    { href: placed.href, title: placed.title, target: placed.target, id: placed.id },
-    renderer, job,
-  );
+  const anchorData = { href: placed.href, title: placed.title, target: placed.target, id: placed.id };
+  const tblBox = absBox(placed.box, pos);
+  // EMIT_CLUSTERS_LAST (map device): the table anchor is NOT opened before the
+  // cells — it is emitted as its own area AFTER them, so a cell's <area>
+  // precedes the enclosing table's. Non-map devices wrap the cells.
+  // @see lib/common/htmltable.c:emit_html_tbl (537, 583-588)
+  const clustersLast = (job.flags & EMIT_CLUSTERS_LAST) !== 0;
+  const inAnchor = clustersLast ? false : initHtmlAnchor(anchorData, tblBox, renderer, job);
   if (placed.bgcolor !== undefined) {
     emitBgFill({ bgcolor: placed.bgcolor, box: placed.box, pos, border: placed.border,
       renderer, job, gradientangle: placed.gradientangle, style: placed.style });
@@ -324,4 +339,7 @@ export function emitHtmlLabel(
     emitBorder({ box: placed.box, pos, border: placed.border, color: placed.color, sides: placed.sides, style: placed.style }, renderer, job);
   }
   if (inAnchor) endHtmlAnchor(renderer, job);
+  if (clustersLast && initHtmlAnchor(anchorData, tblBox, renderer, job)) {
+    endHtmlAnchor(renderer, job);
+  }
 }

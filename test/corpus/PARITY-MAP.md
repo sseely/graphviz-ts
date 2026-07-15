@@ -16,10 +16,10 @@ EXACTLY, coords compared exact-after-round — both sides are already
 
 - **Oracle:** dot 15.1.0 · **corpus:** `~/git/graphviz/tests`
 - **Walked (conformant SVG set):** 761
-- **map-conformant (overall, worst-of-both-formats):** 739 (97.1%)
-- **cmapx-conformant:** 739 (97.1%) · **imap-conformant:** 742 (97.5%)
-- **diverged (tracked, will-fix, either format):** 11 · **accepted (documented, won't-fix):** 0
-- **port-error:** 0 · **timeout:** 11 · **oracle-error:** 0 (excluded from scoring)
+- **map-conformant (overall, worst-of-both-formats):** 755 (99.2%)
+- **cmapx-conformant:** 755 (99.2%) · **imap-conformant:** 755 (99.2%)
+- **diverged (tracked, will-fix, either format):** 0 · **accepted (documented, won't-fix):** 0
+- **port-error:** 0 · **timeout:** 4 · **oracle-error:** 2 (excluded from scoring)
 - **href-bearing ids in the surveyed set:** 34 — the substantive
   coverage (ids whose ORACLE output actually emits ≥1 real href, not an
   empty or tooltip-only map); see the dedicated table below.
@@ -33,14 +33,14 @@ reader does not have to cross-reference `map-parity.json`.
 
 | id | path | cmapx | imap | overall |
 |---|---|---|---|---|
-| `1425_1` | `1425_1.dot` | diverged | diverged | diverged |
-| `1447` | `1447.dot` | diverged | conformant | diverged |
+| `1425_1` | `1425_1.dot` | conformant | conformant | conformant |
+| `1447` | `1447.dot` | conformant | conformant | conformant |
 | `1447_1` | `1447_1.dot` | conformant | conformant | conformant |
 | `1879` | `1879.dot` | conformant | conformant | conformant |
 | `2258` | `2258.dot` | conformant | conformant | conformant |
-| `2295` | `2295.dot` | diverged | diverged | diverged |
-| `2619_1` | `2619_1.dot` | diverged | diverged | diverged |
-| `2619_2` | `2619_2.dot` | diverged | diverged | diverged |
+| `2295` | `2295.dot` | conformant | conformant | conformant |
+| `2619_1` | `2619_1.dot` | conformant | conformant | conformant |
+| `2619_2` | `2619_2.dot` | conformant | conformant | conformant |
 | `graphs-b102` | `graphs/b102.gv` | conformant | conformant | conformant |
 | `graphs-b103` | `graphs/b103.gv` | conformant | conformant | conformant |
 | `graphs-b106` | `graphs/b106.gv` | conformant | conformant | conformant |
@@ -48,17 +48,17 @@ reader does not have to cross-reference `map-parity.json`.
 | `graphs-b155` | `graphs/b155.gv` | conformant | conformant | conformant |
 | `graphs-b29` | `graphs/b29.gv` | conformant | conformant | conformant |
 | `graphs-b85` | `graphs/b85.gv` | conformant | conformant | conformant |
-| `graphs-html2` | `graphs/html2.gv` | diverged | diverged | diverged |
+| `graphs-html2` | `graphs/html2.gv` | conformant | conformant | conformant |
 | `graphs-root` | `graphs/root.gv` | conformant | conformant | conformant |
-| `graphs-url` | `graphs/url.gv` | diverged | diverged | diverged |
+| `graphs-url` | `graphs/url.gv` | conformant | conformant | conformant |
 | `graphs-xx` | `graphs/xx.gv` | conformant | conformant | conformant |
 | `linux.i386-b102` | `linux.i386/b102.gv` | conformant | conformant | conformant |
 | `linux.i386-b106` | `linux.i386/b106.gv` | conformant | conformant | conformant |
 | `linux.i386-b29` | `linux.i386/b29.gv` | conformant | conformant | conformant |
-| `linux.x86-html2_dot` | `linux.x86/html2_dot.gv` | diverged | diverged | diverged |
+| `linux.x86-html2_dot` | `linux.x86/html2_dot.gv` | conformant | conformant | conformant |
 | `linux.x86-root_circo` | `linux.x86/root_circo.gv` | conformant | conformant | conformant |
 | `linux.x86-root_twopi` | `linux.x86/root_twopi.gv` | conformant | conformant | conformant |
-| `nshare-html2_dot` | `nshare/html2_dot.gv` | diverged | diverged | diverged |
+| `nshare-html2_dot` | `nshare/html2_dot.gv` | conformant | conformant | conformant |
 | `nshare-root_circo` | `nshare/root_circo.gv` | conformant | conformant | conformant |
 | `nshare-root_twopi` | `nshare/root_twopi.gv` | conformant | conformant | conformant |
 | `share-b102` | `share/b102.gv` | conformant | conformant | conformant |
@@ -68,48 +68,23 @@ reader does not have to cross-reference `map-parity.json`.
 | `windows-b106` | `windows/b106.gv` | conformant | conformant | conformant |
 | `windows-b29` | `windows/b29.gv` | conformant | conformant | conformant |
 
-## map-conformant (739)
+## map-conformant (755)
 
 Port output is *conformant* with the oracle in BOTH cmapx and imap: every
 area/line matches exactly (shape/href/title/alt/target) with coords equal
 after rounding.
 
-_Conformant ids (739) are omitted for brevity — the full roster is in
+_Conformant ids (755) are omitted for brevity — the full roster is in
 [map-parity.json](map-parity.json)._
 
-## Tracked diverged (19 format-rows) — worst-first
+## Tracked diverged (0 format-rows) — worst-first
 
 | id | format | size | maxΔ | #diffs | firstDiff |
 |---|---|---:|---:|---:|---|
-| `1880` | cmapx | 3451 | 854.00 | 139 | `area[2].shape` |
-| `graphs-url` | cmapx | 1242 | 468.00 | 67 | `area[0].shape` |
-| `graphs-url` | imap | 1242 | 468.00 | 33 | `imap/line[2].keyword` |
-| `graphs-html2` | cmapx | 1414 | 0.00 | 15 | `area[0].shape` |
-| `linux.x86-html2_dot` | cmapx | 1945 | 0.00 | 15 | `area[0].shape` |
-| `nshare-html2_dot` | cmapx | 1946 | 0.00 | 15 | `area[0].shape` |
-| `graphs-html2` | imap | 1414 | 0.00 | 6 | `imap/line[1].keyword` |
-| `linux.x86-html2_dot` | imap | 1945 | 0.00 | 6 | `imap/line[1].keyword` |
-| `nshare-html2_dot` | imap | 1946 | 0.00 | 6 | `imap/line[1].keyword` |
-| `1425` | cmapx | 139 | 0.00 | 1 | `map/area[count]` |
-| `2295` | cmapx | 221 | 0.00 | 1 | `map/area[count]` |
-| `2295` | imap | 221 | 0.00 | 1 | `imap/line[count]` |
-| `1425_1` | cmapx | 544 | 0.00 | 1 | `map/area[count]` |
-| `1425_1` | imap | 544 | 0.00 | 1 | `imap/line[count]` |
-| `1447` | cmapx | 6707 | 0.00 | 1 | `area[23].title` |
-| `2619_1` | cmapx | 6721 | 0.00 | 1 | `map/area[count]` |
-| `2619_1` | imap | 6721 | 0.00 | 1 | `imap/line[count]` |
-| `2619_2` | cmapx | 7596 | 0.00 | 1 | `map/area[count]` |
-| `2619_2` | imap | 7596 | 0.00 | 1 | `imap/line[count]` |
 
 ### Diverged buckets — by (format · shape)
 
-| bucket | count | examples | hypothesis |
-|---|---:|---|---|
-| `cmapx · element/line-count` | 5 | `1425`, `2295`, `1425_1` | a different number of areas/lines were emitted — extra/missing anchor |
-| `cmapx · shape` | 5 | `graphs-url`, `graphs-html2`, `linux.x86-html2_dot` | the emitted shape (rect/circle/poly) differs |
-| `imap · element/line-count` | 4 | `2295`, `1425_1`, `2619_1` | a different number of areas/lines were emitted — extra/missing anchor |
-| `imap · line-keyword` | 4 | `graphs-url`, `graphs-html2`, `linux.x86-html2_dot` | the imap line keyword (rect/circle/poly/default) differs |
-| `cmapx · title` | 1 | `1447` | the emitted tooltip/title differs |
+_(none)_
 
 ## Accepted divergences (0 format-rows) — documented, not chased
 
@@ -123,24 +98,19 @@ _(none)_
 | id | path | message |
 |---|---|---|
 
-## timeout (11)
+## timeout (4)
 
 | id | path | message |
 |---|---|---|
-| `2095_1` | `2095_1.dot` |  |
+| `1718` | `1718.dot` |  |
 | `2108` | `2108.dot` |  |
-| `2343` | `2343.dot` |  |
-| `2391` | `2391.dot` |  |
-| `2458` | `2458.dot` |  |
-| `2743` | `2743.dot` |  |
-| `graphs-b123` | `graphs/b123.gv` |  |
-| `graphs-b77` | `graphs/b77.gv` |  |
-| `graphs-bad` | `graphs/bad.gv` |  |
-| `graphs-in` | `graphs/in.gv` |  |
-| `graphs-ps` | `graphs/ps.gv` |  |
+| `2222` | `2222.dot` |  |
+| `2475_2` | `2475_2.dot` |  |
 
-## oracle-error (0) — excluded from scoring
+## oracle-error (2) — excluded from scoring
 
 | id | path | message |
 |---|---|---|
+| `2095_1` | `2095_1.dot` | oracle exit 0 |
+| `2343` | `2343.dot` | Warning: Warning: no value for width of non-ASCII character 207. Falling back to width of space character |
 

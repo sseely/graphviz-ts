@@ -85,6 +85,13 @@ export interface RendererPlugin {
   comment?(text: string, job: RenderJob): void;
   beginAnchor?(href: string, tooltip: string, target: string, id: string, job: RenderJob): void;
   endAnchor?(job: RenderJob): void;
+  /**
+   * Set the pending hot-spot rectangle (graph-coordinate box) for the anchor
+   * about to open, mirroring C's `emit_map_rect(job, b)` call inside
+   * `initAnchor`. The map renderer records it as `obj.urlMapPts`; other
+   * renderers no-op. @see lib/common/emit.c:640 emit_map_rect
+   */
+  emitMapRect?(box: Box, job: RenderJob): void;
   beginLabel?(type: LabelType, job: RenderJob): void;
   endLabel?(job: RenderJob): void;
   beginCluster?(sg: Graph, job: RenderJob): void;
