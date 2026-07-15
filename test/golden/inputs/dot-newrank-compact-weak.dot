@@ -1,0 +1,12 @@
+// Exercises C's weak() path in dot2: is_a_strong_cluster(g) is mapbool(agget(g,
+// "compact")), so a cross-cluster edge only becomes a WEAK constraint when a
+// cluster sets compact=true. No upstream corpus graph and no golden sets it, so
+// this path was entirely unexercised.
+digraph G {
+  newrank=true;
+  subgraph cluster0 { compact=true; label="C0"; a -> b [minlen=0]; b -> c; }
+  subgraph cluster1 { compact=true; label="C1"; p -> q; }
+  c -> p;
+  a -> q [minlen=0];
+  q -> z;
+}

@@ -83,8 +83,16 @@ export function d2unionAll(g: Graph): Node | undefined {
 // `Xg.nodes.values()` is provably already AGSEQ-equivalent order.
 // ---------------------------------------------------------------------------
 
-/** @see lib/dotgen/rank.c:makeXnode */
+/** @see lib/dotgen/rank.c:makeXnode — C's `agnode(G, name, 1)` returns the
+ *  existing node when one with `name` is present, so the fixed-name helper nodes
+ *  TOP/BOT are a single shared node across all strong clusters (compile_clusters
+ *  calls makeXnode(Xg, TOPNODE) once per cluster). Creating a fresh node per call
+ *  gives each cluster its own TOP/BOT, splitting the STRONG_CLUSTER_WEIGHT
+ *  constraint and derailing the rank solve. Real/weak node names are unique, so
+ *  this dedup only affects TOP/BOT/ROOT — exactly as in C. */
 export function makeXnode(Xg: Graph, name: string, st: XgState): Node {
+  const existing = Xg.nodes.get(name);
+  if (existing) return existing;
   const n = new NodeClass(Xg.nodes.size, name, Xg);
   n.info.in = { list: [], size: 0 };
   n.info.out = { list: [], size: 0 };
@@ -318,7 +326,10 @@ export function ccStrongCluster(
 ): ClusterBounds {
   const b: ClusterBounds = { top, bot };
   for (const n of nodesInSeq(g)) ccProcessNode(g, Xg, st, n, b);
-  if (b.top && b.bot) xgMerge(xgAddEdge(Xg, b.top, b.bot), 0, STRONG_CLUSTER_WEIGHT);
+  // Xg is Agstrictdirected, so C's `agedge(Xg, top, bot)` returns the one shared
+  // TOP->BOT edge (TOP/BOT dedup in makeXnode) and merge() accumulates onto it.
+  // Mirror strict agedge with find-or-add so the weight sums instead of forking.
+  if (b.top && b.bot) xgMerge(xgFindEdge(Xg, b.top, b.bot) ?? xgAddEdge(Xg, b.top, b.bot), 0, STRONG_CLUSTER_WEIGHT);
   return b;
 }
 

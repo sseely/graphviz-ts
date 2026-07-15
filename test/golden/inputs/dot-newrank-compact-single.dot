@@ -1,0 +1,1 @@
+digraph G { newrank=true; subgraph cluster0 { compact=true; a->b; b->c; a->c; } c->d; }

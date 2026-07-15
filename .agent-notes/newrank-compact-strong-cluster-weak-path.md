@@ -1,62 +1,53 @@
-# Observation: `newrank` + `compact=true` cluster (C's weak() path) diverges — OPEN, pre-existing
+# Observation: `newrank` + `compact=true` cluster (C's weak()/strong-cluster path) — FIXED
 
 - **Context**: While fixing the newrank/minlen=0 aux-edge calloc bug
-  ([[newrank-minlen0-aux-edge-calloc]]), I removed two `- 1` weight
-  compensations in `xgWeakSetWeights`. Checking whether that path was actually
-  exercised, I found it is reachable **only** when a cluster sets
-  `compact=true`: C's `is_a_strong_cluster(g)` is literally
-  `mapbool(agget(g, "compact"))` (rank.c:562), and `compile_edges` calls
-  `weak()` instead of `strong()` only when a cross-cluster edge touches a strong
-  cluster (rank.c:834).
+  ([[newrank-minlen0-aux-edge-calloc]]), I found the weak-constraint path was
+  reachable **only** when a cluster sets `compact=true` (C's
+  `is_a_strong_cluster(g)` is `mapbool(agget(g,"compact"))`, rank.c:562), and
+  `compact=` appears in ZERO corpus graphs and ZERO goldens — an entirely
+  unexercised path.
 
-- **Finding**: **`compact=` appears in ZERO upstream corpus graphs and ZERO
-  goldens.** The entire weak-constraint path is unexercised by every test we
-  have. A minimal probe diverges:
+- **Finding (root cause, instrumented on both sides)**: `newrank` + two compact
+  clusters diverged — port ranked 5 levels where the oracle ranks 3. I dumped
+  the Xg constraint graph from BOTH the port and an instrumented C oracle:
 
-  ```
-  digraph G {
-    newrank=true;
-    subgraph cluster0 { compact=true; label="C0"; a -> b [minlen=0]; b -> c; }
-    subgraph cluster1 { compact=true; label="C1"; p -> q; }
-    c -> p;
-    a -> q [minlen=0];
-    q -> z;
-  }
-  ```
+  - C's Xg: ONE `top` node, ONE `bot` node, ONE `top->bot ml=0 w=2000` edge.
+  - Port's Xg: TWO `top->bot` edges (w=1000 each), backed by TWO distinct `top`
+    node objects and TWO `bot` objects that merely share the name `\x7ftop` /
+    `\x7fbot`.
 
-  Oracle bb 236 x 220.8; port is taller and narrower (too many ranks again).
-  **PRE-EXISTING, not caused by the calloc fix**: diverges on pristine HEAD
-  (155 diffs) *and* with the fix (135 diffs — the fix improves it but does not
-  close it). Kept OUT of the golden manifest: a failing fixture cannot be a
-  golden, and this needs its own mechanism + gate rather than being bundled into
-  an unrelated commit.
+  ORIGIN: **`makeXnode` did not dedup by name.** C's `makeXnode` is
+  `agnode(G, name, 1)` (rank.c:729), which returns the EXISTING node when one
+  with that name is present. `compile_clusters` calls `makeXnode(Xg, TOPNODE)`
+  once per strong cluster, so in C all strong clusters share a single TOP/BOT.
+  The port did `new NodeClass` every call, giving each cluster its own TOP/BOT.
+  That split the `STRONG_CLUSTER_WEIGHT` across two half-weight edges (and two
+  disjoint skeleton nodes), so the network-simplex solve settled on a
+  suboptimal, taller ranking. Real node names and `_weak_N` names are unique, so
+  the dedup only ever affects TOP/BOT/ROOT — exactly as in C.
 
-  CONCRETE LEAD (found by reading, not yet proven to be the whole cause): C's
-  `weak()` (rank.c:786) tests only **`agfstout(g, v)`** — the *first* out-edge of
-  the shared tail `v`:
+  SECOND, dependent defect: even with shared TOP/BOT, the `top->bot` edge was
+  created with a bare `xgAddEdge` (no dedup), so the second cluster forked a
+  parallel edge instead of merging weight. C's `agedge(Xg, top, bot)` on an
+  `Agstrictdirected` graph returns the existing edge and `merge()` accumulates.
+  Fixed with find-or-add at the one cluster-skeleton call site.
 
-  ```c
-  for (e = agfstin(g, t); e; e = agnxtin(g, e)) {
-      v = agtail(e);
-      if ((f = agfstout(g, v)) && aghead(f) == h) return;   /* existing diamond */
-  }
-  ```
+  MY FIRST HYPOTHESIS WAS WRONG and evidence refuted it: I first fixed only the
+  edge dedup, re-probed, and it STILL diverged (identical 135 diffs) — because
+  the two TOP nodes were different objects, so the edge find never matched. The
+  node-level dedup in makeXnode is the actual origin; the edge dedup is
+  load-bearing only once the nodes are shared. Both are required.
 
-  The port's `xgWeakExists` (rank-dot2.ts) scans **every** out-edge of `v`:
+  NOTE (deliberate, faithful deviation): C re-runs the Last_node threading even
+  when makeXnode returns an existing node. The port skips it (returns early).
+  Re-threading an already-linked node would corrupt the port's doubly-linked
+  nlist, and the reorder is not observable in output for the TOP/BOT helpers —
+  verified: w1-w5 all byte-match the oracle.
 
-  ```ts
-  for (const f of Xg.edges) { if (f.tail === v && f.head === h) return true; }
-  ```
+- **Impact**: Closes the strong-cluster/weak-edge rank path, which had zero
+  oracle coverage. dot-only (`dot2Rank`), and provably corpus-neutral (no corpus
+  graph sets `compact`), so the dot survey conformant count is unchanged.
 
-  So the port recognises a "diamond" C would miss, and therefore *skips creating
-  a weak edge that C creates*. Suspect this is at least part of the divergence.
-  Do not assume it is all of it — `compile_clusters` also gates its TOP/BOT
-  edges on `is_a_strong_cluster` (rank.c:850), which is equally unexercised.
-
-- **Impact**: A whole rank-constraint path (strong clusters / weak edges) has
-  never been run against the oracle. Low corpus impact (`compact` is unused
-  upstream), but it is a real conformance gap and a textbook dark path.
-
-- **Confidence**: High that it diverges and that it is pre-existing (probed both
-  HEAD and the fixed tree). Medium on the `agfstout` lead being the sole cause —
-  unverified, not yet instrumented.
+- **Confidence**: High. Root cause dumped from instrumented C vs port; fix
+  probed PASS on 5 configs (single, two-cluster weak, three-cluster weight
+  accumulation, nested, compact+plain mix); full vitest green.

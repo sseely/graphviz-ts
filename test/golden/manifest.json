@@ -1660,5 +1660,45 @@
     "input": "test/golden/inputs/dot-pack-cluster-concentrate-edgelabel.dot",
     "reference": "test/golden/refs/dot-pack-cluster-concentrate-edgelabel.svg",
     "description": "pack x cluster x concentrate x edgelabel: edge merging with label nodes through a cluster window, under projection"
+  },
+  {
+    "id": "dot-newrank-compact-weak",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-compact-weak.dot",
+    "reference": "test/golden/refs/dot-newrank-compact-weak.svg",
+    "description": "newrank + two compact (strong) clusters: cross-cluster edge becomes a weak constraint; shared TOP/BOT node keeps ranks minimal"
+  },
+  {
+    "id": "dot-newrank-compact-single",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-compact-single.dot",
+    "reference": "test/golden/refs/dot-newrank-compact-single.svg",
+    "description": "newrank + one compact cluster: strong-cluster TOP/BOT skeleton with a single cluster"
+  },
+  {
+    "id": "dot-newrank-compact-three",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-compact-three.dot",
+    "reference": "test/golden/refs/dot-newrank-compact-three.svg",
+    "description": "newrank + three compact clusters: STRONG_CLUSTER_WEIGHT accumulates onto one shared TOP->BOT edge across all three"
+  },
+  {
+    "id": "dot-newrank-compact-nested",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-compact-nested.dot",
+    "reference": "test/golden/refs/dot-newrank-compact-nested.svg",
+    "description": "newrank + nested compact clusters: strong-cluster skeleton nested inside a strong cluster"
+  },
+  {
+    "id": "dot-newrank-compact-mixed",
+    "engine": "dot",
+    "toleranceClass": "deterministic",
+    "input": "test/golden/inputs/dot-newrank-compact-mixed.dot",
+    "reference": "test/golden/refs/dot-newrank-compact-mixed.svg",
+    "description": "newrank + one compact and one non-compact cluster: weak vs strong constraint dispatch side by side"
   }
 ]
