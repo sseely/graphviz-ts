@@ -97,14 +97,23 @@ class XdotParser {
     return { val: { pts }, pos: cur };
   }
 
-  static countChar(ch: string, prev: string, accounted: number): number {
-    if (ch !== "\\" || prev === "\\") return accounted + 1;
-    return accounted;
+  /** UTF-8 byte length of one code point (mirrors dot.ts utf8Len per char). */
+  static cpByteLen(cp: number): number {
+    if (cp < 0x80) return 1;
+    if (cp < 0x800) return 2;
+    if (cp < 0x10000) return 3;
+    return 4;
   }
 
   static parseString(s: string, pos: number): PR<string> {
     const ri = XdotParser.parseInt_(s, pos);
     if (!ri || ri.val <= 0) return null;
+    // The leading number is a BYTE count (C writes strlen over the UTF-8 bytes,
+    // @see plugin/core/gvrender_core_dot.c:83). C's parser walks `char*` byte by
+    // byte until `accounted == len`, so a multi-byte char (e.g. `ÿ`, 2 bytes)
+    // consumes all its bytes. Counting JS chars instead over-reads the op
+    // separator (`ÿ` → `ÿ `) — invisible to the xdot track (both sides use this
+    // parser) but caught by -Tjson. @see cgraph/xdot/xdot.c parseString.
     const len = ri.val;
     let cur = XdotParser.skipWs(s, ri.pos);
     if (s[cur] !== "-") return null;
@@ -117,7 +126,13 @@ class XdotParser {
       const ch = s[cur + j];
       const prev = j > 0 ? s[cur + j - 1] : "";
       out += ch;
-      accounted = XdotParser.countChar(ch, prev, accounted);
+      // An unescaped backslash is an escape prefix: consumed but not counted
+      // (matches C's `s[j] != '\\' || s[j-1] == '\\'` guard). Every other char
+      // counts its full UTF-8 byte width toward the byte budget.
+      if (ch === "\\" && prev !== "\\") { j++; continue; }
+      const cp = s.codePointAt(cur + j) as number;
+      accounted += XdotParser.cpByteLen(cp);
+      if (cp > 0xffff) { out += s[cur + j + 1]; j++; } // low surrogate half
       j++;
     }
     return { val: out, pos: cur + j };

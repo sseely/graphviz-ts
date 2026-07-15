@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-12T06:51:27.268Z",
+  "generatedAt": "2026-07-15T12:16:58.035Z",
   "generatedWith": "test/corpus/json-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 761,
   "counts": {
-    "conformant": 719,
-    "diverged": 39,
+    "conformant": 749,
+    "diverged": 12,
     "accepted": 0,
     "port-error": 0,
     "oracle-error": 0,
-    "timeout": 3
+    "timeout": 0
   },
   "results": [
     {
@@ -59,9 +59,7 @@
       "id": "1724",
       "path": "1724.dot",
       "size": 36,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:ÿ/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "usershape",
@@ -133,9 +131,7 @@
       "id": "2502",
       "path": "2502.dot",
       "size": 50,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:A/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "2457_1",
@@ -417,9 +413,7 @@
       "id": "graphs-Latin1",
       "path": "graphs/Latin1.gv",
       "size": 99,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:a/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "2352",
@@ -491,9 +485,7 @@
       "id": "graphs-b60",
       "path": "graphs/b60.gv",
       "size": 112,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:0/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b491",
@@ -517,9 +509,7 @@
       "id": "graphs-b993",
       "path": "graphs/b993.gv",
       "size": 118,
-      "verdict": "diverged",
-      "diffCount": 3,
-      "firstDiff": "node:2/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "1902",
@@ -992,16 +982,16 @@
       "path": "share/Latin1.gv",
       "size": 155,
       "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "node:a/_ldraw_/op[2].T.text"
+      "diffCount": 1,
+      "firstDiff": "node:a/label"
     },
     {
       "id": "windows-Latin1",
       "path": "windows/Latin1.gv",
       "size": 155,
       "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "node:a/_ldraw_/op[2].T.text"
+      "diffCount": 1,
+      "firstDiff": "node:a/label"
     },
     {
       "id": "graphs-ordering",
@@ -1353,9 +1343,7 @@
       "id": "925",
       "path": "925.dot",
       "size": 256,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:recrus/_ldraw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b145",
@@ -1809,11 +1797,7 @@
       "id": "2258",
       "path": "2258.dot",
       "size": 460,
-      "verdict": "diverged",
-      "diffCount": 4,
-      "firstDiff": "node:e17e1a62c7e692fdee219e2a59f/_draw_/op[1].C[1]",
-      "maxDelta": 288.5,
-      "maxDeltaPath": "node:e17e21fbdb233f2d9c26769c3e5/_draw_/op[1].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "2556",
@@ -1861,11 +1845,7 @@
       "id": "graphs-grdcluster",
       "path": "graphs/grdcluster.gv",
       "size": 497,
-      "verdict": "diverged",
-      "diffCount": 8,
-      "firstDiff": "cluster:cluster0/_draw_/op[1].C[1]",
-      "maxDelta": 644,
-      "maxDeltaPath": "cluster:cluster0/_draw_/op[1].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grdradial_node",
@@ -1877,19 +1857,13 @@
       "id": "graphs-russian",
       "path": "graphs/russian.gv",
       "size": 520,
-      "verdict": "diverged",
-      "diffCount": 11,
-      "firstDiff": "node:БанковскиеСчета/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grdlinear_node",
       "path": "graphs/grdlinear_node.gv",
       "size": 523,
-      "verdict": "diverged",
-      "diffCount": 16,
-      "firstDiff": "[graph]/_draw_/op[1].C[1]",
-      "maxDelta": 244.82,
-      "maxDeltaPath": "[graph]/_draw_/op[1].C[3]"
+      "verdict": "conformant"
     },
     {
       "id": "1213-2",
@@ -2051,9 +2025,7 @@
       "id": "1990",
       "path": "1990.dot",
       "size": 610,
-      "verdict": "diverged",
-      "diffCount": 15,
-      "firstDiff": "node:0⋯1 'a'/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "share-labelclust-nbd",
@@ -2767,9 +2739,7 @@
       "id": "graphs-japanese",
       "path": "graphs/japanese.gv",
       "size": 789,
-      "verdict": "diverged",
-      "diffCount": 8,
-      "firstDiff": "[graph]/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-Heawood",
@@ -2781,9 +2751,7 @@
       "id": "graphs-b34",
       "path": "graphs/b34.gv",
       "size": 814,
-      "verdict": "diverged",
-      "diffCount": 1,
-      "firstDiff": "node:7/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-fig6",
@@ -2843,9 +2811,7 @@
       "id": "graphs-Symbol",
       "path": "graphs/Symbol.gv",
       "size": 924,
-      "verdict": "diverged",
-      "diffCount": 15,
-      "firstDiff": "node:a/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "windows-nhg",
@@ -2917,11 +2883,7 @@
       "id": "graphs-grdangles",
       "path": "graphs/grdangles.gv",
       "size": 1076,
-      "verdict": "diverged",
-      "diffCount": 18,
-      "firstDiff": "node:n1/_draw_/op[1].C[1]",
-      "maxDelta": 451.8,
-      "maxDeltaPath": "node:n7/_draw_/op[1].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-shells",
@@ -2993,11 +2955,7 @@
       "id": "graphs-grdshapes",
       "path": "graphs/grdshapes.gv",
       "size": 1204,
-      "verdict": "diverged",
-      "diffCount": 64,
-      "firstDiff": "node:n1/_draw_/op[1].C[1]",
-      "maxDelta": 2085.66,
-      "maxDeltaPath": "node:n1/_draw_/op[1].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "share-clust",
@@ -3087,9 +3045,7 @@
       "id": "graphs-b56",
       "path": "graphs/b56.gv",
       "size": 1421,
-      "verdict": "diverged",
-      "diffCount": 5,
-      "firstDiff": "node:Prefix/_ldraw_/op[5].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-unix",
@@ -3215,11 +3171,7 @@
       "id": "graphs-grdcolors",
       "path": "graphs/grdcolors.gv",
       "size": 1704,
-      "verdict": "diverged",
-      "diffCount": 48,
-      "firstDiff": "node:n0/_draw_/op[1].C[1]",
-      "maxDelta": 690.18,
-      "maxDeltaPath": "node:n1/_draw_/op[1].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-size",
@@ -3783,21 +3735,13 @@
       "id": "graphs-grdlinear",
       "path": "graphs/grdlinear.gv",
       "size": 4071,
-      "verdict": "diverged",
-      "diffCount": 150,
-      "firstDiff": "[graph]/_draw_/op[1].C[1]",
-      "maxDelta": 1229.78,
-      "maxDeltaPath": "node:a0/_ldraw_/op[17].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grdfillcolor",
       "path": "graphs/grdfillcolor.gv",
       "size": 4075,
-      "verdict": "diverged",
-      "diffCount": 152,
-      "firstDiff": "[graph]/_draw_/op[1].C[1]",
-      "maxDelta": 1180.18,
-      "maxDeltaPath": "node:a0/_ldraw_/op[17].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "share-mike",
@@ -3875,11 +3819,7 @@
       "id": "graphs-grdradial",
       "path": "graphs/grdradial.gv",
       "size": 5370,
-      "verdict": "diverged",
-      "diffCount": 6,
-      "firstDiff": "[graph]/_draw_/op[1].C[1]",
-      "maxDelta": 1157.54,
-      "maxDeltaPath": "node:a0/_ldraw_/op[2].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "share-shells",
@@ -3921,19 +3861,13 @@
       "id": "graphs-grdlinear_angle",
       "path": "graphs/grdlinear_angle.gv",
       "size": 5758,
-      "verdict": "diverged",
-      "diffCount": 150,
-      "firstDiff": "[graph]/_draw_/op[1].C[1]",
-      "maxDelta": 1260.04,
-      "maxDeltaPath": "node:a0/_ldraw_/op[17].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-cairo",
       "path": "graphs/cairo.gv",
       "size": 5866,
-      "verdict": "diverged",
-      "diffCount": 14,
-      "firstDiff": "node:БЛЭР [1120]/_ldraw_/op[2].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-pslib",
@@ -3999,19 +3933,13 @@
       "id": "2619_1",
       "path": "2619_1.dot",
       "size": 6721,
-      "verdict": "diverged",
-      "diffCount": 3,
-      "firstDiff": "node:I19/_ldraw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-grdradial_angle",
       "path": "graphs/grdradial_angle.gv",
       "size": 6918,
-      "verdict": "diverged",
-      "diffCount": 6,
-      "firstDiff": "[graph]/_draw_/op[1].C[1]",
-      "maxDelta": 1157.54,
-      "maxDeltaPath": "node:a0/_ldraw_/op[2].C[1]"
+      "verdict": "conformant"
     },
     {
       "id": "windows-trapeziumlr",
@@ -4101,9 +4029,7 @@
       "id": "2619_2",
       "path": "2619_2.dot",
       "size": 7596,
-      "verdict": "diverged",
-      "diffCount": 3,
-      "firstDiff": "node:I19/_ldraw_[opCount]"
+      "verdict": "conformant"
     },
     {
       "id": "share-abstract",
@@ -4379,9 +4305,7 @@
       "id": "1332",
       "path": "1332.dot",
       "size": 13890,
-      "verdict": "diverged",
-      "diffCount": 7,
-      "firstDiff": "node:c4115/_ldraw_/op[8].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "share-jsort",
@@ -4515,8 +4439,7 @@
       "id": "2343",
       "path": "2343.dot",
       "size": 59368,
-      "verdict": "timeout",
-      "errMsg": ""
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b143",
@@ -4570,8 +4493,7 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "size": 105083,
-      "verdict": "timeout",
-      "errMsg": ""
+      "verdict": "conformant"
     },
     {
       "id": "graphs-root",
@@ -4626,8 +4548,8 @@
       "path": "1879.dot",
       "size": 287816,
       "verdict": "diverged",
-      "diffCount": 466,
-      "firstDiff": "[graph]/_ldraw_/op[2].T.text"
+      "diffCount": 1,
+      "firstDiff": "node:node_567x830_567/label"
     },
     {
       "id": "linux.x86-root_twopi",
@@ -4683,8 +4605,7 @@
       "id": "2108",
       "path": "2108.dot",
       "size": 3136769,
-      "verdict": "timeout",
-      "errMsg": ""
+      "verdict": "conformant"
     }
   ]
 }

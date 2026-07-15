@@ -16,75 +16,44 @@ numeric-tolerant — see `test/golden/compare-json.ts`). Regenerate:
 
 - **Oracle:** dot 15.1.0 (`-Tjson`) · **corpus:** `~/git/graphviz/tests`
 - **Walked (conformant SVG set):** 761
-- **json-conformant:** 719 (94.5%)
-- **diverged (tracked, will-fix):** 39 · **accepted (documented, won't-fix):** 0
-- **port-error:** 0 · **timeout:** 3 · **oracle-error:** 0 (excluded from scoring)
+- **json-conformant:** 749 (98.4%)
+- **diverged (tracked, will-fix):** 12 · **accepted (documented, won't-fix):** 0
+- **port-error:** 0 · **timeout:** 0 · **oracle-error:** 0 (excluded from scoring)
 
-## json-conformant (719)
+## json-conformant (749)
 
 Port json is *conformant* with the oracle: every object/attr/draw-op
 matches, numeric payloads within ±0.01 and canonicalized
 colors/fonts/text equal.
 
-_Conformant ids (719) are omitted for brevity — the full roster is in
+_Conformant ids (749) are omitted for brevity — the full roster is in
 [json-parity.json](json-parity.json)._
 
-## Tracked diverged (39) — worst-first
+## Tracked diverged (12) — worst-first
 
 | id | size | maxΔ | #diffs | firstDiff |
 |---|---:|---:|---:|---|
-| `graphs-grdshapes` | 1204 | 2085.66 | 64 | `node:n1/_draw_/op[1].C[1]` |
 | `1436` | 2599 | 1638.00 | 12 | `cluster:cluster/_draw_/op[1].p[0]` |
-| `graphs-grdlinear_angle` | 5758 | 1260.04 | 150 | `[graph]/_draw_/op[1].C[1]` |
-| `graphs-grdlinear` | 4071 | 1229.78 | 150 | `[graph]/_draw_/op[1].C[1]` |
-| `graphs-grdfillcolor` | 4075 | 1180.18 | 152 | `[graph]/_draw_/op[1].C[1]` |
-| `graphs-grdradial` | 5370 | 1157.54 | 6 | `[graph]/_draw_/op[1].C[1]` |
-| `graphs-grdradial_angle` | 6918 | 1157.54 | 6 | `[graph]/_draw_/op[1].C[1]` |
-| `graphs-grdcolors` | 1704 | 690.18 | 48 | `node:n0/_draw_/op[1].C[1]` |
-| `graphs-grdcluster` | 497 | 644.00 | 8 | `cluster:cluster0/_draw_/op[1].C[1]` |
-| `graphs-grdangles` | 1076 | 451.80 | 18 | `node:n1/_draw_/op[1].C[1]` |
-| `2258` | 460 | 288.50 | 4 | `node:e17e1a62c7e692fdee219e2a59f/_draw_/op[1].C[1]` |
-| `graphs-grdlinear_node` | 523 | 244.82 | 16 | `[graph]/_draw_/op[1].C[1]` |
 | `1902` | 119 | 144.00 | 12 | `cluster:cluster/_draw_/op[1].p[0]` |
-| `1879` | 287816 | 0.00 | 466 | `[graph]/_ldraw_/op[2].T.text` |
-| `1990` | 610 | 0.00 | 15 | `node:0⋯1 'a'/_ldraw_/op[2].T.text` |
-| `graphs-Symbol` | 924 | 0.00 | 15 | `node:a/_ldraw_/op[2].T.text` |
-| `graphs-cairo` | 5866 | 0.00 | 14 | `node:БЛЭР [1120]/_ldraw_/op[2].T.text` |
-| `graphs-russian` | 520 | 0.00 | 11 | `node:БанковскиеСчета/_ldraw_/op[2].T.text` |
-| `graphs-japanese` | 789 | 0.00 | 8 | `[graph]/_ldraw_/op[2].T.text` |
-| `1332` | 13890 | 0.00 | 7 | `node:c4115/_ldraw_/op[8].T.text` |
-| `graphs-b56` | 1421 | 0.00 | 5 | `node:Prefix/_ldraw_/op[5].T.text` |
-| `graphs-b993` | 118 | 0.00 | 3 | `node:2/_ldraw_/op[2].T.text` |
-| `2619_1` | 6721 | 0.00 | 3 | `node:I19/_ldraw_[opCount]` |
-| `2619_2` | 7596 | 0.00 | 3 | `node:I19/_ldraw_[opCount]` |
-| `share-Latin1` | 155 | 0.00 | 2 | `node:a/_ldraw_/op[2].T.text` |
-| `windows-Latin1` | 155 | 0.00 | 2 | `node:a/_ldraw_/op[2].T.text` |
 | `1514` | 168 | 0.00 | 2 | `cluster:%7/nodes[members]` |
 | `graphs-b7` | 222 | 0.00 | 2 | `cluster:cluster_1/_draw_[missing]` |
 | `2825` | 312 | 0.00 | 2 | `cluster:%17/rank[missing]` |
 | `2239` | 48090 | 0.00 | 2 | `cluster:cluster_rtpbin_0x56412448e390/_ldraw_/op[11].T.text` |
-| `1724` | 36 | 0.00 | 1 | `node:ÿ/_ldraw_/op[2].T.text` |
-| `2502` | 50 | 0.00 | 1 | `node:A/_ldraw_/op[2].T.text` |
-| `graphs-Latin1` | 99 | 0.00 | 1 | `node:a/_ldraw_/op[2].T.text` |
-| `graphs-b60` | 112 | 0.00 | 1 | `node:0/_ldraw_/op[2].T.text` |
-| `925` | 256 | 0.00 | 1 | `node:recrus/_ldraw_[opCount]` |
+| `share-Latin1` | 155 | 0.00 | 1 | `node:a/label` |
+| `windows-Latin1` | 155 | 0.00 | 1 | `node:a/label` |
 | `2368_1` | 405 | 0.00 | 1 | `edge:256->376#0/lp[missing]` |
-| `graphs-b34` | 814 | 0.00 | 1 | `node:7/_ldraw_/op[2].T.text` |
 | `1453` | 2446 | 0.00 | 1 | `cluster:%15/rank[missing]` |
+| `1879` | 287816 | 0.00 | 1 | `node:node_567x830_567/label` |
 | `2470` | 734358 | 0.00 | 1 | `edge:n96->n36#0/lp[missing]` |
 
 ### Diverged buckets — by (object · attr · shape)
 
 | bucket | count | examples | hypothesis |
 |---|---:|---|---|
-| `node · _ldraw_ · text` | 14 | `1724`, `2502`, `graphs-Latin1` | rendered label text differs (content/escaping/encoding) |
-| `graph · _draw_ · numeric-or-scalar` | 6 | `graphs-grdlinear_node`, `graphs-grdlinear`, `graphs-grdfillcolor` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `node · _draw_ · numeric-or-scalar` | 4 | `2258`, `graphs-grdangles`, `graphs-grdshapes` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `cluster · _draw_ · numeric-or-scalar` | 3 | `1902`, `graphs-grdcluster`, `1436` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
-| `node · _ldraw_ · op-count` | 3 | `925`, `2619_1`, `2619_2` | the draw-op array has a different length (port emits `_draw_: []` unconditionally) |
+| `node · label · numeric-or-scalar` | 3 | `share-Latin1`, `windows-Latin1`, `1879` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
+| `cluster · _draw_ · numeric-or-scalar` | 2 | `1902`, `1436` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
 | `cluster · rank · missing-attr` | 2 | `2825`, `1453` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
 | `edge · lp · missing-attr` | 2 | `2368_1`, `2470` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
-| `graph · _ldraw_ · text` | 2 | `graphs-japanese`, `1879` | rendered label text differs (content/escaping/encoding) |
 | `cluster · nodes · numeric-or-scalar` | 1 | `1514` | a coordinate/size/generic scalar attr differs beyond tolerance or exactly |
 | `cluster · _draw_ · missing-attr` | 1 | `graphs-b7` | an attribute is present on one side only (graph attrs, xdotversion, ...) |
 | `cluster · _ldraw_ · text` | 1 | `2239` | rendered label text differs (content/escaping/encoding) |
@@ -102,13 +71,10 @@ _(none)_
 | id | path | message |
 |---|---|---|
 
-## timeout (3)
+## timeout (0)
 
 | id | path | message |
 |---|---|---|
-| `2095_1` | `2095_1.dot` |  |
-| `2108` | `2108.dot` |  |
-| `2343` | `2343.dot` |  |
 
 ## oracle-error (0) — excluded from scoring
 

@@ -42,6 +42,7 @@ import type { RenderJob } from '../gvc/job.js';
 import type { XdotOp, XdotColor } from '../xdot/types.js';
 import type { TextlabelT, FieldT } from '../common/types.js';
 import { printNum, gfmt5 } from './dot.js';
+import { CHAR_LATIN1 } from '../common/graph-init.js';
 import { parse } from '../parser/index.js';
 import { render as deviceRender } from '../gvc/device.js';
 import { createDefaultContext } from '../gvc/default-context.js';
@@ -135,7 +136,7 @@ function gradColorOp(op: 'C' | 'c', c: XdotColor): JObj {
 }
 
 /** Serialize one parsed xdot op to its JSON op-object shape. @see write_xdot */
-function opToJson(op: XdotOp): JObj {
+function opToJson(op: XdotOp, isLatin: boolean): JObj {
   switch (op.kind) {
     case 'filled_ellipse':
     case 'unfilled_ellipse': {
@@ -153,7 +154,10 @@ function opToJson(op: XdotOp): JObj {
     case 'text': {
       const t = op.text;
       const align = t.align === 'left' ? 'l' : t.align === 'center' ? 'c' : 'r';
-      return { op: 'T', pt: [t.x, t.y], align, width: t.width, text: t.text };
+      // charset=latin1: draw text is stored already-UTF-8, so C's stoj pass
+      // double-encodes it (unlike raw-stored attribute values). @see latin1Reencode
+      return { op: 'T', pt: [t.x, t.y], align, width: t.width,
+        text: isLatin ? latin1Reencode(t.text) : t.text };
     }
     case 'fill_color':
     case 'pen_color':
@@ -174,11 +178,11 @@ function opToJson(op: XdotOp): JObj {
 }
 
 /** Parse an xdot draw string into its JSON op-object array. @see write_xdots */
-function drawStringToOps(val: string): JVal[] {
+function drawStringToOps(val: string, isLatin: boolean): JVal[] {
   if (val === '') return [];
   const parsed = parseXDot(val);
   if (parsed === null) return [];
-  return parsed.ops.map(opToJson);
+  return parsed.ops.map((op) => opToJson(op, isLatin));
 }
 
 // ---------------------------------------------------------------------------
@@ -267,6 +271,9 @@ interface BuildCtx {
    *  graph or cluster carries a label, the root and every subgraph emit `label`
    *  (their own value or the empty default). @see write_attrs label exemption */
   graphLabelDeclared: boolean;
+  /** charset=latin1: draw-op text was stored already-UTF-8, so C's `stoj`
+   *  double-encodes it. @see latin1Reencode */
+  isLatin: boolean;
 }
 
 /** Whether a graph-type `label` symbol is declared anywhere (root, any cluster,
@@ -328,6 +335,7 @@ function assignIds(g: Graph, doXDot: boolean, draws?: DrawLookup): BuildCtx {
     doXDot, draws, sgcnt, subgGid, nodeGid, edgeGid, dfsSubs,
     edgeLabelDeclared: isEdgeLabelDeclared(g),
     graphLabelDeclared: isGraphLabelDeclared(g),
+    isLatin: g.info.charset === CHAR_LATIN1,
   };
 }
 
@@ -356,7 +364,7 @@ function emitAttrs(
     const v = isHtmlValue(rawV) ? htmlValueContent(rawV) : rawV;
     if (v === '' && k !== 'label') continue;
     if (ctx.doXDot && isXDot(k)) {
-      o[k] = drawStringToOps(v);
+      o[k] = drawStringToOps(v, ctx.isLatin);
     } else if (!isXDot(k)) {
       o[k] = v;
     }
@@ -575,6 +583,21 @@ function buildGraphObject(g: Graph, top: boolean, ctx: BuildCtx): JObj {
 // ---------------------------------------------------------------------------
 // buildJson — @see plugin/core/gvrender_core_json.c:write_graph (top entry)
 // ---------------------------------------------------------------------------
+
+/**
+ * Reinterpret a string's UTF-8 bytes as Latin-1 code points. Mirrors C's
+ * `stoj` applying `latin1ToUTF8` a SECOND time to text that input processing
+ * already converted latin1→UTF-8, when `charset=latin1`. The double pass is a
+ * graphviz quirk (the SVG backend does not do it), so `-Tjson` on a latin1
+ * graph emits mojibake — `á` becomes `Ã¡`. No-op on pure ASCII.
+ * @see plugin/core/gvrender_core_json.c:82,121 stoj (sp->isLatin branch)
+ */
+function latin1Reencode(s: string): string {
+  const bytes = new TextEncoder().encode(s);
+  let out = '';
+  for (const b of bytes) out += String.fromCharCode(b);
+  return out;
+}
 
 export function buildJson(g: Graph, doXDot: boolean): string {
   const draws = doXDot ? collectDrawLookup(g) : undefined;

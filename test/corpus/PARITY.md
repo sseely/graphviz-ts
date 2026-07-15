@@ -20,9 +20,9 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
 | [dot (SVG)](./PARITY-dot.md) | 788 | 761 | 0 | 16 | 11 | 96.6% |
-| [dot (xdot)](./PARITY-XDOT.md) | 759 | 754 | 0 | 4 | 1 | 99.3% |
-| [dot (json)](./PARITY-JSON.md) | 761 | 719 | 39 | 0 | 3 | 94.5% |
-| [circo (xdot)](./PARITY-circo.md) | 761 | 743 | 0 | 3 | 15 | 97.6% |
+| [dot (xdot)](./PARITY-XDOT.md) | 761 | 761 | 0 | 0 | 0 | 100.0% |
+| [dot (json)](./PARITY-JSON.md) | 761 | 749 | 12 | 0 | 0 | 98.4% |
+| [circo (xdot)](./PARITY-circo.md) | 761 | 745 | 0 | 3 | 13 | 97.9% |
 | [twopi (xdot)](./PARITY-twopi.md) | 761 | 739 | 0 | 14 | 8 | 97.1% |
 | [osage (xdot)](./PARITY-osage.md) | 761 | 750 | 0 | 6 | 5 | 98.6% |
 | [patchwork (xdot)](./PARITY-patchwork.md) | 761 | 756 | 0 | 0 | 5 | 99.3% |
@@ -41,20 +41,20 @@ bar above.
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| [neato (xdot)](./PARITY-neato.md) | 761 | 263 | 491 | 0 | 7 | 34.6% |
-| [fdp (xdot)](./PARITY-fdp.md) | 761 | 311 | 434 | 0 | 16 | 40.9% |
-| [sfdp (xdot)](./PARITY-sfdp.md) | 761 | 260 | 493 | 0 | 8 | 34.2% |
+| [neato (xdot)](./PARITY-neato.md) | 761 | 409 | 37 | 308 | 7 | 53.7% |
+| [fdp (xdot)](./PARITY-fdp.md) | 761 | 600 | 42 | 103 | 16 | 78.8% |
+| [sfdp (xdot)](./PARITY-sfdp.md) | 761 | 510 | 60 | 183 | 8 | 67.0% |
 
 
 
 
 ## Goldens
 
-165 pinned golden inputs (`test/golden/manifest.json`), by engine:
+211 pinned golden inputs (`test/golden/manifest.json`), by engine:
 
 | engine | goldens |
 |---|---:|
-| dot | 114 |
+| dot | 160 |
 | neato | 8 |
 | fdp | 7 |
 | sfdp | 6 |

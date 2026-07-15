@@ -12,7 +12,7 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-12T05:50:19.941Z)
+- **Surveyed:** 761 (generated 2026-07-15T00:55:50.717Z)
 - **pass:** 756 (99.3%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 0
 - **oracle-error:** 5 · **port-error:** 0 · **timeout:** 0
 
@@ -39,5 +39,6 @@ _(none)_
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
+**oracle errors:** 5 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
 _Passing ids (756) are omitted for brevity — the full roster is in
 `parity-patchwork.json`._

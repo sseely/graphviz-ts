@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-07-11T12:16:51.284Z",
+  "generatedAt": "2026-07-15T12:23:04.238Z",
   "generatedWith": "test/corpus/xdot-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
-  "total": 759,
+  "total": 761,
   "counts": {
-    "conformant": 754,
+    "conformant": 761,
     "diverged": 0,
-    "accepted": 4,
+    "accepted": 0,
     "port-error": 0,
     "oracle-error": 0,
-    "timeout": 1
+    "timeout": 0
   },
   "results": [
     {
@@ -1547,6 +1547,12 @@
       "id": "1939",
       "path": "1939.dot",
       "size": 307,
+      "verdict": "conformant"
+    },
+    {
+      "id": "graphs-structs",
+      "path": "graphs/structs.gv",
+      "size": 308,
       "verdict": "conformant"
     },
     {
@@ -4424,6 +4430,12 @@
       "verdict": "conformant"
     },
     {
+      "id": "2620",
+      "path": "2620.dot",
+      "size": 64908,
+      "verdict": "conformant"
+    },
+    {
       "id": "linux.i386-b106",
       "path": "linux.i386/b106.gv",
       "size": 92005,
@@ -4457,11 +4469,7 @@
       "id": "2095_1",
       "path": "2095_1.dot",
       "size": 105083,
-      "verdict": "accepted",
-      "diffCount": 2,
-      "firstDiff": "edge:1451->1450#0/pos[2]",
-      "maxDelta": 0.1000000000003638,
-      "maxDeltaPath": "edge:1451->1450#0/pos[2]"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-root",
@@ -4473,11 +4481,7 @@
       "id": "linux.i386-b29",
       "path": "linux.i386/b29.gv",
       "size": 136753,
-      "verdict": "accepted",
-      "diffCount": 1,
-      "firstDiff": "edge:Node14650->Node14650#0/pos[11]",
-      "maxDelta": 0.09999999999990905,
-      "maxDeltaPath": "edge:Node14650->Node14650#0/pos[11]"
+      "verdict": "conformant"
     },
     {
       "id": "share-b29",
@@ -4514,13 +4518,6 @@
       "path": "graphs/b81.gv",
       "size": 191024,
       "verdict": "conformant"
-    },
-    {
-      "id": "1652",
-      "path": "1652.dot",
-      "size": 240391,
-      "verdict": "timeout",
-      "errMsg": ""
     },
     {
       "id": "1879",
@@ -4562,11 +4559,13 @@
       "id": "2475_2",
       "path": "2475_2.dot",
       "size": 641284,
-      "verdict": "accepted",
-      "diffCount": 1113,
-      "firstDiff": "cluster:%11457/bb[2]",
-      "maxDelta": 10,
-      "maxDeltaPath": "cluster:%11457/bb[2]"
+      "verdict": "conformant"
+    },
+    {
+      "id": "2470",
+      "path": "2470.dot",
+      "size": 734358,
+      "verdict": "conformant"
     },
     {
       "id": "2222",
@@ -4578,11 +4577,7 @@
       "id": "2108",
       "path": "2108.dot",
       "size": 3136769,
-      "verdict": "accepted",
-      "diffCount": 3459,
-      "firstDiff": "cluster:cluster_SITE_47/bb[3]",
-      "maxDelta": 10,
-      "maxDeltaPath": "cluster:cluster_SITE_47/bb[3]"
+      "verdict": "conformant"
     }
   ]
 }

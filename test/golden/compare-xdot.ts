@@ -292,6 +292,17 @@ function opNumbers(op: XdotOp): number[] {
       return [op.image.pos.x, op.image.pos.y, op.image.pos.w, op.image.pos.h];
     case 'fontchar':
       return [op.fontchar];
+    case 'grad_fill_color':
+    case 'grad_pen_color': {
+      // Gradient anchor coords are compared at tolerance here (colors/stops
+      // stay in canonGrad). Without this the whole x0/y0/x1/y1/r0/r1 payload
+      // was unreviewed — the class the JSON track caught but xdot did not.
+      const c = op.gradColor;
+      if (c.type === 'linear') return [c.ling.x0, c.ling.y0, c.ling.x1, c.ling.y1];
+      if (c.type === 'radial')
+        return [c.ring.x0, c.ring.y0, c.ring.r0, c.ring.x1, c.ring.y1, c.ring.r1];
+      return [];
+    }
     default:
       return [];
   }

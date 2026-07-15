@@ -12,18 +12,18 @@ canonicalized — see `test/golden/compare-xdot.ts`). Regenerate:
 ## Summary
 
 - **Oracle:** dot 15.1.0 · **corpus:** `~/git/graphviz/tests`
-- **Walked (conformant SVG set):** 759
-- **xdot-conformant:** 754 (99.3%)
-- **diverged (tracked, will-fix):** 0 · **accepted (documented, won't-fix):** 4
-- **port-error:** 0 · **timeout:** 1 · **oracle-error:** 0 (excluded from scoring)
+- **Walked (conformant SVG set):** 761
+- **xdot-conformant:** 761 (100.0%)
+- **diverged (tracked, will-fix):** 0 · **accepted (documented, won't-fix):** 0
+- **port-error:** 0 · **timeout:** 0 · **oracle-error:** 0 (excluded from scoring)
 
-## xdot-conformant (754)
+## xdot-conformant (761)
 
 Port xdot is *conformant* with the oracle: every draw-op stream matches
 op-for-op with numeric payloads within ±0.01 and canonicalized
 colors/fonts/text equal.
 
-_Conformant ids (754) are omitted for brevity — the full roster is in
+_Conformant ids (761) are omitted for brevity — the full roster is in
 [xdot-parity.json](xdot-parity.json)._
 
 ## Tracked diverged (0) — worst-first
@@ -35,7 +35,7 @@ _Conformant ids (754) are omitted for brevity — the full roster is in
 
 _(none)_
 
-## Accepted divergences (4) — documented, not chased
+## Accepted divergences (0) — documented, not chased
 
 Irreducible C quirks (font-metric ULP, platform libm) recorded in
 `test/corpus/accepted-divergences-xdot.json`. Each is referenced in the
@@ -53,11 +53,10 @@ mission decision journal with its mechanism.
 | id | path | message |
 |---|---|---|
 
-## timeout (1)
+## timeout (0)
 
 | id | path | message |
 |---|---|---|
-| `1652` | `1652.dot` |  |
 
 ## oracle-error (0) — excluded from scoring
 

@@ -247,7 +247,9 @@ export function linearGradientOp(
   frac: number,
   angleDeg: number,
 ): string {
-  const { g0, g1 } = getGradientPoints(pts, (angleDeg * Math.PI) / 180, false);
+  // isRHS=true: native y-up coords, matching C's get_gradient_points(A,G,n,angle,2)
+  // for the xdot device path (the SVG path uses isRHS=false + a container flip).
+  const { g0, g1 } = getGradientPoints(pts, (angleDeg * Math.PI) / 180, false, true);
   const inner =
     '[' + xdotNum(g0.x) + ' ' + xdotNum(g0.y) + ' ' + xdotNum(g1.x) + ' ' + xdotNum(g1.y) +
     ' 2 ' + gradientStops(fillColor, stopColor, frac) + ']';
@@ -278,9 +280,10 @@ export function radialGradientOp(
   angleDeg: number,
 ): string {
   const rad = (angleDeg * Math.PI) / 180;
-  const gp = getGradientPoints(pts, rad, true);
+  // isRHS=true: native y-up coords, matching C's get_gradient_points(A,G,n,0,3).
+  const gp = getGradientPoints(pts, rad, true, true);
   const cx = gp.g0.x;
-  const cy = -gp.g0.y; // un-negate the SVG y-down convention
+  const cy = gp.g0.y;
   const r1 = gp.g1.x;
   const r2 = gp.g1.y;
   const c1x = angleDeg === 0 ? cx : cx + r1 * Math.cos(rad);

@@ -40,32 +40,50 @@ function bboxFromN(A: Point[]): BBox {
   }
   return { minX, maxX, minY, maxY };
 }
-/** Radial points from bbox, LHS (isRHS=0). @see lib/common/utils.c:1478 */
-function radialPoints(bb: BBox, cx: number, cy: number): GradientPoints {
+/** Radial points from bbox. isRHS selects native y-up (xdot) vs SVG y-down.
+ * @see lib/common/utils.c:1478 */
+function radialPoints(bb: BBox, cx: number, cy: number, isRHS: boolean): GradientPoints {
   const outerR = Math.hypot(cx - bb.minX, cy - bb.minY);
-  return { g0: { x: cx, y: -cy }, g1: { x: outerR / 4, y: outerR } };
+  return { g0: { x: cx, y: isRHS ? cy : -cy }, g1: { x: outerR / 4, y: outerR } };
 }
-/** Linear points from bbox+angle, LHS (isRHS=0). @see lib/common/utils.c:1487 */
-function linearPoints(bb: BBox, cx: number, cy: number, angle: number): GradientPoints {
+/** Linear points from bbox+angle. isRHS selects native y-up (xdot) vs SVG
+ * y-down; mirrors C's isRHS branch (half_y symmetric about center).
+ * @see lib/common/utils.c:1487 */
+function linearPoints(
+  bb: BBox, cx: number, cy: number, angle: number, isRHS: boolean,
+): GradientPoints {
   const halfX = bb.maxX - cx;
   const sina = Math.sin(angle), cosa = Math.cos(angle);
+  const gx0 = cx - halfX * cosa, gx1 = cx + halfX * cosa;
+  if (isRHS) {
+    const halfY = bb.maxY - cy;
+    return {
+      g0: { x: gx0, y: cy - halfY * sina },
+      g1: { x: gx1, y: cy + halfY * sina },
+    };
+  }
   return {
-    g0: { x: cx - halfX * cosa, y: -cy + (bb.maxY - cy) * sina },
-    g1: { x: cx + halfX * cosa, y: -cy - (cy - bb.minY) * sina },
+    g0: { x: gx0, y: -cy + (bb.maxY - cy) * sina },
+    g1: { x: gx1, y: -cy - (cy - bb.minY) * sina },
   };
 }
 
 /**
- * Compute gradient endpoints in y-up (Graphviz) space. SVG LHS (isRHS=0).
- * Linear: g0/g1 = endpoints. Radial: g0=(cx,-cy), g1=(inner_r,outer_r).
+ * Compute gradient endpoints. `isRHS` mirrors C's `flags & 2`: true yields
+ * native y-up (Graphviz) coordinates for the xdot/json device path, false
+ * yields the SVG y-down convention (the default, used by the SVG renderer,
+ * whose top-level `<g transform>` supplies the flip). Linear: g0/g1 =
+ * endpoints. Radial: g0=(cx,±cy), g1=(inner_r,outer_r).
  * @see lib/common/utils.c:1446 get_gradient_points
  */
-export function getGradientPoints(A: Point[], angle: number, radial: boolean): GradientPoints {
+export function getGradientPoints(
+  A: Point[], angle: number, radial: boolean, isRHS = false,
+): GradientPoints {
   const bb = A.length === 2 ? bboxFrom2(A) : bboxFromN(A);
   const cx = bb.minX + (bb.maxX - bb.minX) / 2;
   const cy = bb.minY + (bb.maxY - bb.minY) / 2;
-  if (radial) return radialPoints(bb, cx, cy);
-  return linearPoints(bb, cx, cy, angle);
+  if (radial) return radialPoints(bb, cx, cy, isRHS);
+  return linearPoints(bb, cx, cy, angle, isRHS);
 }
 
 /** Print color for gradient stop; "transparent"→"black" for SVG 1.1 compat.
