@@ -16,30 +16,27 @@ numeric-tolerant — see `test/golden/compare-json.ts`). Regenerate:
 
 - **Oracle:** dot 15.1.0 (`-Tjson`) · **corpus:** `~/git/graphviz/tests`
 - **Walked (conformant SVG set):** 761
-- **json-conformant:** 758 (99.6%)
-- **diverged (tracked, will-fix):** 1 · **accepted (documented, won't-fix):** 2
+- **json-conformant:** 759 (99.7%)
+- **diverged (tracked, will-fix):** 0 · **accepted (documented, won't-fix):** 2
 - **port-error:** 0 · **timeout:** 0 · **oracle-error:** 0 (excluded from scoring)
 
-## json-conformant (758)
+## json-conformant (759)
 
 Port json is *conformant* with the oracle: every object/attr/draw-op
 matches, numeric payloads within ±0.01 and canonicalized
 colors/fonts/text equal.
 
-_Conformant ids (758) are omitted for brevity — the full roster is in
+_Conformant ids (759) are omitted for brevity — the full roster is in
 [json-parity.json](json-parity.json)._
 
-## Tracked diverged (1) — worst-first
+## Tracked diverged (0) — worst-first
 
 | id | size | maxΔ | #diffs | firstDiff |
 |---|---:|---:|---:|---|
-| `2239` | 48090 | 0.00 | 2 | `cluster:cluster_rtpbin_0x56412448e390/_ldraw_/op[11].T.text` |
 
 ### Diverged buckets — by (object · attr · shape)
 
-| bucket | count | examples | hypothesis |
-|---|---:|---|---|
-| `cluster · _ldraw_ · text` | 1 | `2239` | rendered label text differs (content/escaping/encoding) |
+_(none)_
 
 ## Accepted divergences (2) — documented, not chased
 

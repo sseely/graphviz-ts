@@ -594,7 +594,7 @@ export class DotRenderer implements RendererPlugin {
 // ---------------------------------------------------------------------------
 
 /** Accumulated xdot draw strings for one model object (agset side-table). */
-interface XdotDraws {
+export interface XdotDraws {
   draw?: string;
   ldraw?: string;
   hdraw?: string;
@@ -718,6 +718,15 @@ export class XdotRenderer implements RendererPlugin {
     this.textflags = new Array(12).fill(0);
     this.draws = new Map();
     this.clusters = [];
+  }
+
+  /** The per-object draw strings accumulated during the last render, keyed by
+   *  the ORIGINAL model object. These are the pre-serialization values C's
+   *  `-Tjson` reads directly (via agxget) — feeding them to parseXDot avoids the
+   *  DOT-text round-trip, which cannot represent draw text containing `"` and so
+   *  drops a preceding backslash (a cluster label's `\"` → `"`, id 2239). */
+  drawStringsByObject(): ReadonlyMap<Node | Edge | Graph, XdotDraws> {
+    return this.draws;
   }
 
   endGraph(g: Graph, job: RenderJob): void {
@@ -1015,7 +1024,7 @@ export class XdotRenderer implements RendererPlugin {
   beginCluster(_sg: Graph, _job: RenderJob): void { /* no-op */ }
 
   endCluster(sg: Graph, _job: RenderJob): void {
-    const draw = this.flush(EmitState.CDraw);
+        const draw = this.flush(EmitState.CDraw);
     const ldraw = this.flush(EmitState.CLabel);
     if (draw || ldraw) {
       const set = this.drawsFor(sg);

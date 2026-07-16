@@ -41,7 +41,7 @@ import type { RendererPlugin } from '../gvc/context.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { XdotOp, XdotColor } from '../xdot/types.js';
 import type { TextlabelT, FieldT } from '../common/types.js';
-import { printNum, gfmt5 } from './dot.js';
+import { printNum, gfmt5, XdotRenderer, type XdotDraws } from './dot.js';
 import { CHAR_LATIN1 } from '../common/graph-init.js';
 import { parse } from '../parser/index.js';
 import { render as deviceRender } from '../gvc/device.js';
@@ -218,17 +218,43 @@ function canonicalRootEdges(g: Graph): Array<{ e: Edge; key: string }> {
   return out;
 }
 
+/** XdotDraws field → xdot draw-attribute name. */
+const DRAW_FIELDS: ReadonlyArray<readonly [keyof XdotDraws, string]> = [
+  ['draw', '_draw_'], ['ldraw', '_ldraw_'], ['hdraw', '_hdraw_'],
+  ['tdraw', '_tdraw_'], ['hldraw', '_hldraw_'], ['tldraw', '_tldraw_'],
+];
+
+/** Overlay an object's pre-serialization draw strings onto its attr map,
+ *  replacing the DOT-round-trip values (which drop a `\` before a `"`). */
+function applyDraws(attrs: Map<string, string> | undefined, d: XdotDraws | undefined): void {
+  if (attrs === undefined || d === undefined) return;
+  for (const [field, attr] of DRAW_FIELDS) {
+    const v = d[field];
+    if (v !== undefined) attrs.set(attr, v);
+  }
+}
+
 /** Re-render the laid-out graph to xdot and index every object's draw/layout
  *  attributes by identity. Returns `undefined` if the re-render fails (e.g. a
  *  hand-built graph with no real layout state) so callers fall back cleanly. */
 function collectDrawLookup(g: Graph): DrawLookup | undefined {
   let xg: Graph;
+  // Inject our own XdotRenderer (last-registered wins bestRenderer) so we can
+  // read its per-object draw strings AFTER the render: the DOT-text re-parse
+  // below is faithful for coordinates but LOSSY for draw text containing `"`
+  // (a DOT quoted string cannot hold `\` before `"`; a cluster label's `\"`
+  // round-trips to `"`, id 2239). The draws map holds the pre-serialization
+  // strings C's -Tjson reads directly, so we overlay them onto the re-parse.
+  const xr = new XdotRenderer();
   try {
-    const xdotText = deviceRender(createDefaultContext(), g, 'xdot');
+    const ctx = createDefaultContext();
+    ctx.register(xr);
+    const xdotText = deviceRender(ctx, g, 'xdot');
     xg = parse(xdotText);
   } catch {
     return undefined;
   }
+  const draws = xr.drawStringsByObject();
   const node = new Map<string, Map<string, string>>();
   for (const [nm, xn] of xg.nodes) node.set(nm, new Map(xn.attrs));
   // Correlate each original-graph cluster with its xdot-re-render attrs by a
@@ -260,7 +286,14 @@ function collectDrawLookup(g: Graph): DrawLookup | undefined {
     const a = xByKey.get(key);
     if (a !== undefined) edge.set(e, a);
   }
-  return { graph: new Map(xg.attrs), node, cluster, edge };
+  const graphAttrs = new Map(xg.attrs);
+  // Overlay the lossless per-object draw strings, keyed by the ORIGINAL object,
+  // over the (coordinate-faithful but draw-text-lossy) re-parsed attrs.
+  applyDraws(graphAttrs, draws.get(g));
+  for (const [nm, gn] of g.nodes) applyDraws(node.get(nm), draws.get(gn));
+  for (const [gc, attrs] of cluster) applyDraws(attrs, draws.get(gc));
+  for (const [ge, attrs] of edge) applyDraws(attrs, draws.get(ge));
+  return { graph: graphAttrs, node, cluster, edge };
 }
 
 // ---------------------------------------------------------------------------

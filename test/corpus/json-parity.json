@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-15T14:01:22.669Z",
+  "generatedAt": "2026-07-16T01:39:16.895Z",
   "generatedWith": "test/corpus/json-walk.ts --survey",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 761,
   "counts": {
-    "conformant": 758,
-    "diverged": 1,
+    "conformant": 759,
+    "diverged": 0,
     "accepted": 2,
     "port-error": 0,
     "oracle-error": 0,
@@ -4407,9 +4407,7 @@
       "id": "2239",
       "path": "2239.dot",
       "size": 48090,
-      "verdict": "diverged",
-      "diffCount": 2,
-      "firstDiff": "cluster:cluster_rtpbin_0x56412448e390/_ldraw_/op[11].T.text"
+      "verdict": "conformant"
     },
     {
       "id": "graphs-b106",
