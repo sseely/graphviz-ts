@@ -84,8 +84,7 @@ function mapbool(s: string | undefined): boolean {
 
 /** The text measurer threaded through the GVC context, if any. */
 export function layoutMeasurer(g: Graph): TextMeasurer | undefined {
-  const gvc = g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined;
-  return gvc?.textMeasurer;
+  return g.root.info.gvc?.textMeasurer;
 }
 
 /**

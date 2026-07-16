@@ -17,6 +17,7 @@ import type { Point } from '../model/geom.js';
 import type { RenderJob } from '../gvc/job.js';
 import type { RendererPlugin } from '../gvc/context.js';
 import { parseSegs } from '../common/multicolor.js';
+import { resolveRenderColor } from './color-resolve.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -210,7 +211,9 @@ function drawWedge(seg: WedgeSeg, e: EllipseParams, ctx: RenderCtx): number {
   const TWOPI = 2 * Math.PI;
   const angle1 = seg.isLast ? TWOPI : seg.angle0 + TWOPI * seg.t;
   const obj = ctx.job.obj;
-  if (obj !== null) obj.fillColor = { type: 'string', s: seg.color };
+  // Resolve the wedge segment color (C's gvrender_set_fillcolor) so a raw
+  // fillcolor spec cannot reach fill="..." as a verbatim type:'string' paint.
+  if (obj !== null) obj.fillColor = resolveRenderColor(seg.color);
   const ptsUp = ellipticWedge(e, seg.angle0, angle1);
   ctx.renderer.bezier(ptsUp.map((p) => ({ x: p.x, y: -p.y })), true, ctx.job);
   return angle1;
@@ -264,7 +267,7 @@ interface BandSeg { color: string; isLast: boolean; segWidth: number; lastx: num
 /** Draw one stripe band; advance p[0].x and p[3].x in place. */
 function drawBand(p: Point[], seg: BandSeg, ctx: RenderCtx): void {
   const obj = ctx.job.obj;
-  if (obj !== null) obj.fillColor = { type: 'string', s: seg.color };
+  if (obj !== null) obj.fillColor = resolveRenderColor(seg.color);
   p[1]!.x = p[2]!.x = seg.isLast ? seg.lastx : p[0]!.x + seg.segWidth;
   ctx.renderer.polygon([...p], true, ctx.job);
   p[0]!.x = p[3]!.x = p[1]!.x;

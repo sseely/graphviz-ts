@@ -953,7 +953,7 @@ export function injectOraclePositions(g: Graph): void {
 export function splineEdgesShifted(g: Graph): void {
   injectOraclePositions(g);
   const bb = computeBBFromPos(g);
-  if (process.env['STRESS_DEBUG']) console.error('shiftBB', JSON.stringify(bb));
+  if (typeof process !== 'undefined' && process.env['STRESS_DEBUG']) console.error('shiftBB', JSON.stringify(bb));
   shiftAllPos(g, bb.ll.x / 72, bb.ll.y / 72);
   shiftClusters(g, -bb.ll.x, -bb.ll.y);
   // C spline_edges leaves GD_bb = the shifted node-extent box (LL at origin);

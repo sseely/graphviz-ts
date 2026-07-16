@@ -129,7 +129,9 @@ export function emitGraphGroupOpen(
   // rotate(-job->rotation): 0 for portrait (byte-unchanged), -90 for landscape
   // (orientation=land). @see gvrender_core_svg.c:svg_begin_page
   const rot = String(-job.rotation);
-  job.write('<g id="' + graphId + '" ' + classStr +
+  // Escape the assembled id (DOT `id` attr + user-controlled layer prefix) the
+  // way C's svg_print_id_class does via gvputs_xml.
+  job.write('<g id="' + escapeXmlTitle(graphId) + '" ' + classStr +
     ' transform="scale(' + sx + ' ' + sy + ') rotate(' + rot + ') translate(');
   job.printDouble(tx);
   job.write(' ');
@@ -329,6 +331,11 @@ export function svgBeginGraph(g: Graph, job: RenderJob): void {
   // @see plugin/core/gvrender_core_svg.c:svg_begin_job
   const stylesheet = g.attrs.get('stylesheet');
   if (stylesheet !== undefined && stylesheet.length > 0) {
+    // Code review: the `stylesheet` attribute is written raw into the
+    // processing instruction (matches upstream gvrender_core_svg.c:svg_begin_job,
+    // which also does gvputs raw). Revisit if untrusted DOT can set `stylesheet`
+    // and the SVG is embedded inline — a `"?>` sequence breaks out of the PI.
+    // Left faithful to the oracle; hardening is the "origins/CSP" discussion.
     job.write('<?xml-stylesheet href="' + stylesheet + '" type="text/css"?>\n');
   }
   job.write(SVG_DOCTYPE);

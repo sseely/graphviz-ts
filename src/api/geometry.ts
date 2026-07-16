@@ -33,6 +33,7 @@
 import type { Graph } from '../model/graph.js';
 import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
+import { RenderError } from '../errors.js';
 
 // ---------------------------------------------------------------------------
 // Public coordinate types (canonical home — T5 imports GeometryOptions here)
@@ -198,15 +199,25 @@ function snapshotEdge(edge: Edge, flipY: (y: number) => number): EdgeGeometry {
  * Returns a plain, JSON-serializable snapshot of the computed geometry for
  * all nodes and edges in graph `g`.
  *
- * Must be called **after** `ctx.layout(g, engine)` has run; geometry fields
- * are undefined before that point.
+ * Must be called **after** `ctx.layout(g, engine)` (or `render`) has run.
+ * Before layout the geometry fields hold calloc-zero defaults (every node at
+ * the origin, an empty bounding box), so a not-yet-laid-out graph is rejected
+ * with a `RenderError` rather than returning that all-zero snapshot as if it
+ * were real geometry.
  *
  * @param g    - Laid-out graph (internal model; not mutated by this function).
  * @param opts - Coordinate options; defaults to `{ yAxis: 'down' }`.
+ * @throws RenderError if `g` has not been laid out.
  *
  * @see lib/common/types.h:GD_bb, ND_coord, ED_spl
  */
 export function getLayout(g: Graph, opts?: GeometryOptions): LayoutSnapshot {
+  if (g.info?.laidOut !== true) {
+    throw new RenderError(
+      'getLayout requires a laid-out graph; run ctx.layout(g, engine) or render() first',
+      'GENERIC_ERROR',
+    );
+  }
   const yAxis: YAxis = opts?.yAxis ?? 'down';
   const bb = g.info.bb;
   const bbWidth = bb.ur.x - bb.ll.x;

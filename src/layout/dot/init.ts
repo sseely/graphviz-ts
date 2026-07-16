@@ -17,7 +17,6 @@ import { nodeAttr } from '../../common/poly-init.js';
 import { NORMAL, deleteFastNode, removeFromRank } from './fastgr.js';
 import { mapbool } from './rank.js';
 import { initEdgeLabels } from '../../common/edge-label-init.js';
-import type { TextMeasurer } from '../../common/textmeasure.js';
 import { graphInit } from '../../common/graph-init.js';
 import { agsubg, agdelnode, agdelsubg } from '../../model/cgraph-ops.js';
 import { nodesInSeq } from './decomp.js';
@@ -236,7 +235,7 @@ export function dotInitNodeEdge(g: Graph): void {
     commonInitNode(n, g);
     dotInitNode(n);
   }
-  const measurer = (g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined)?.textMeasurer;
+  const measurer = g.root.info.gvc?.textMeasurer;
   for (const e of g.edges) {
     dotInitEdge(e);
     if (measurer) initEdgeLabels(e, g, measurer);

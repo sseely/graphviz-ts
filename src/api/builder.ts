@@ -17,6 +17,7 @@ import type { Node } from '../model/node.js';
 import type { Edge } from '../model/edge.js';
 import { agnode, agsubg, agsubnode } from '../model/cgraph-ops.js';
 import { addEdge as cgraphAddEdge } from './edge-ops.js';
+import { RenderError } from '../errors.js';
 
 // ── Public interfaces ──────────────────────────────────────────────────────────
 
@@ -120,7 +121,7 @@ function resolveNode(g: Graph, ref: GvNode | string): Node {
   if (typeof ref === 'string') {
     const node = agnode(g, ref, true);
     if (node === null) {
-      throw new Error(`Failed to resolve node '${ref}' in graph '${g.name}'`);
+      throw new RenderError(`Failed to resolve node '${ref}' in graph '${g.name}'`, 'GENERIC_ERROR');
     }
     return node;
   }
@@ -175,7 +176,7 @@ class GraphBuilder implements GvGraphBuilder {
   addSubgraph(name: string, attrs?: Record<string, string>): GvGraphBuilder {
     const sg = agsubg(this._context, name, true);
     if (sg === null) {
-      throw new Error(`Failed to create subgraph '${name}'`);
+      throw new RenderError(`Failed to create subgraph '${name}'`, 'GENERIC_ERROR');
     }
     applyAttrs(sg.attrs, attrs);
     return new GraphBuilder(this._graph, sg);
@@ -201,7 +202,7 @@ function addNodeToContext(
   attrs: Record<string, string> | undefined,
 ): GvNode {
   const node = agnode(root, name, true);
-  if (node === null) throw new Error(`Failed to create node '${name}'`);
+  if (node === null) throw new RenderError(`Failed to create node '${name}'`, 'GENERIC_ERROR');
   applyAttrs(node.attrs, attrs);
   if (context !== root) agsubnode(context, node, true);
   return new NodeHandle(node);

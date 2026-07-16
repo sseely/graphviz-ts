@@ -16,6 +16,7 @@ import type { Node } from './node.js';
 import type { Graph } from './graph.js';
 import type { LayoutParams, FontnameKind } from './layoutParams.js';
 import type { RankTable } from './rankEntry.js';
+import type { GvcContext } from '../gvc/context.js';
 
 // Re-export supporting types so consumers can import from this module alone.
 export type { RatioKind, LayoutParams } from './layoutParams.js';
@@ -25,16 +26,20 @@ export { FontnameKind } from './layoutParams.js';
 export type { AdjMatrix, RankEntry, RankTable } from './rankEntry.js';
 
 // ---------------------------------------------------------------------------
-// Forward stub — replaced when src/gvc/context.ts is written in Batch 6.
+// GVC_t — the rendering context attached to a laid-out graph.
 // ---------------------------------------------------------------------------
 
 /**
- * Forward stub for GVC_t. Replaced when src/gvc/context.ts is written
- * in Batch 6.
+ * The rendering context attached to a laid-out graph (C's GVC_t). Retained
+ * under the historical name `GVContext` for the `common/types.ts` re-export;
+ * it now resolves to the concrete {@link GvcContext} rather than `unknown`, so
+ * every `g.info.gvc` read is typed instead of an ad-hoc `as { textMeasurer? }`
+ * cast. Type-only import — erased at compile time, so no runtime cycle with
+ * `gvc/context.ts`.
  *
  * @see lib/gvc/gvcext.h:GVC_t
  */
-export type GVContext = unknown;
+export type GVContext = GvcContext;
 
 // ---------------------------------------------------------------------------
 // Agraphinfo_t — @see lib/common/types.h:Agraphinfo_t
@@ -99,6 +104,16 @@ export interface GraphInfo {
    * @see lib/common/types.h:GD_has_images
    */
   has_images: boolean;
+
+  /**
+   * Library-API-only flag (no C analogue): set by GvcContext.layout once the
+   * graph has been laid out. Not cleared by freeLayout — node coordinates and
+   * splines persist on the model after engine scratch is freed, so the
+   * "render then getLayout" workflow stays valid. The public `getLayout` reads
+   * it to reject a never-laid-out graph instead of returning the calloc-zero
+   * geometry defaults as if they were real coordinates.
+   */
+  laidOut?: boolean;
 
   // -----------------------------------------------------------------------
   // Optional pointer fields — all C pointers become `| undefined`

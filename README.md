@@ -161,6 +161,35 @@ Trade-off: the built-in model is reproducible across machines; the host-faithful
 path matches the rendering font but is platform-dependent (as native graphviz is).
 See the Text measurement guide for the full contract.
 
+## Security
+
+**Treat rendered output as attacker-controlled markup whenever the DOT source is
+untrusted.** The SVG and image-map strings this library produces embed graph
+attribute values (labels, `id`, `class`, `href`/`URL`, `image`, `stylesheet`,
+tooltips) directly. All such values are XML-escaped exactly as native Graphviz
+does, so they cannot break out of an element or attribute — but, **matching
+upstream Graphviz, the library does not filter URL schemes or validate resource
+origins.** A DOT source you did not author can therefore contain:
+
+- `href="javascript:…"` / `URL="javascript:…"` on a node or edge (executes on
+  click),
+- `image="…"` (usershape) or an image-map `href` pointing at an arbitrary
+  external origin,
+- a `stylesheet="…"` referencing an external CSS origin.
+
+This is deliberate — scheme/origin policy belongs to the page embedding the
+output, not to the layout library. If you render untrusted DOT and embed the
+result inline (`innerHTML`, `dangerouslySetInnerHTML`, an inline `<svg>`), apply
+a **Content-Security-Policy** on the host page as the control point:
+
+- `script-src` (without `'unsafe-inline'`) — neutralizes `javascript:` hrefs and
+  any inline event handlers,
+- `img-src` — constrains `<image>` / usershape origins,
+- `style-src` — constrains the `stylesheet` processing instruction.
+
+If you cannot set a CSP, sanitize the returned markup (e.g. DOMPurify with an
+SVG profile) before inserting it, or render from trusted DOT only.
+
 ## Public API
 
 ```ts

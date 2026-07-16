@@ -14,7 +14,7 @@ export function svgBeginCluster(sg: Graph, job: RenderJob): void {
   // Id from getObjId (DOT `id` attr / gid prefix / clust<seq>); layer prefix
   // only (no per-object suffix for graph/cluster ids). DOT `class` is appended.
   // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_print_id_class
-  job.write('<g id="' + job.idLayerPrefix() + svgClusterId(sg, job)
+  job.write('<g id="' + escapeXmlTitle(job.idLayerPrefix() + svgClusterId(sg, job))
     + '" ' + svgClusterClass(sg) + '>\n');
   job.write('<title>' + escapeXmlTitle(sg.name) + '</title>\n');
 }

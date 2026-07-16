@@ -65,6 +65,14 @@ function classifyError(err: unknown): GvError {
  * `ParseError`; layout/render failures surface as `RenderError`
  * (`RENDER_ERROR`).
  *
+ * @remarks
+ * Security: when `dotSource` is untrusted, treat the returned SVG as
+ * attacker-controlled markup. Attribute values are XML-escaped (no element or
+ * attribute breakout), but URL schemes and resource origins in `href`/`URL`/
+ * `image`/`stylesheet` are passed through unfiltered, matching native Graphviz.
+ * Embedding pages should apply a Content-Security-Policy (or sanitize the
+ * markup) — see the "Security" section of the README.
+ *
  * @param dotSource - DOT-language graph source
  * @param engine    - layout engine name ({@link EngineName}): a built-in
  *                    ('dot', 'neato', 'fdp', 'sfdp', 'circo', 'twopi',
@@ -74,9 +82,12 @@ function classifyError(err: unknown): GvError {
  * @throws RenderError if layout or rendering fails
  */
 export function renderSvg(dotSource: string, engine: EngineName): string {
-  const g = parse(dotSource);
   const ctx = createDefaultContext();
   try {
+    // parse() is inside the try so any non-ParseError throw (e.g. a raw
+    // RangeError from stack exhaustion) is still normalized to a GvError,
+    // honoring the "always throws a value implementing GvError" contract.
+    const g = parse(dotSource);
     ctx.layout(g, engine);
     const svg = deviceRender(ctx, g, 'svg');
     // C: gvFreeLayout runs after gvRenderJobs; cleanup is destructive.
@@ -95,6 +106,11 @@ export function renderSvg(dotSource: string, engine: EngineName): string {
  * Result-style render: returns `{ svg }` on success or `{ errors: [one] }` on
  * the first failure (svg XOR errors). Errors are plain JSON-serializable
  * {@link GvError} data objects.
+ *
+ * @remarks
+ * Security: same untrusted-input caveat as {@link renderSvg} — the returned
+ * `svg` is attacker-controlled markup for untrusted `dotSource`; apply a CSP or
+ * sanitize before embedding. See the README "Security" section.
  */
 export function tryRenderSvg(dotSource: string, engine: EngineName): RenderResult {
   try {

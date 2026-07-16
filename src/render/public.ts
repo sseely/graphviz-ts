@@ -83,6 +83,14 @@ function messageOf(err: unknown): string {
  * Error handling mirrors `renderSvg`: GvError-like throws re-surface
  * unchanged; unknown throws become `RenderError('RENDER_ERROR')`.
  *
+ * @remarks
+ * Security: for the markup formats (`svg`, `cmapx`, `imap`), treat the output
+ * as attacker-controlled when the source graph came from untrusted DOT.
+ * Attribute values are XML-escaped, but URL schemes and resource origins
+ * (`href`/`URL`/`image`/`stylesheet`) are passed through unfiltered, matching
+ * native Graphviz. Apply a Content-Security-Policy or sanitize before embedding
+ * — see the README "Security" section.
+ *
  * @param g      - graph produced by `parse(...)` or the builder API
  * @param format - target output format
  * @param opts   - optional engine override (default: `'dot'`)

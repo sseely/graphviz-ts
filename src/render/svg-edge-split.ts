@@ -22,6 +22,7 @@ import type { Point, Bezier } from '../model/geom.js';
 import { parseSegs } from '../common/multicolor.js';
 import { transformPoint } from '../gvc/device.js';
 import { emitBezierPath, emitDash, emitPenWidth } from './svg-helpers.js';
+import { resolveRenderColor, colorPaint } from './color-resolve.js';
 
 const DEFAULT_COLOR = 'black';
 const PENWIDTH_NORMAL = 1.0;
@@ -87,7 +88,9 @@ function splitBSpline(list: Point[], t: number): { left: Point[]; right: Point[]
 function emitCurve(list: Point[], color: string, job: RenderJob): void {
   const obj = job.obj;
   const pts = list.map((p) => transformPoint(p, job));
-  job.write('<path fill="none" stroke="' + color + '"');
+  // Resolve the segment color through the SVG known-color gate (C's
+  // gvrender_set_pencolor per multicolor segment) before it reaches stroke=".
+  job.write('<path fill="none" stroke="' + colorPaint(resolveRenderColor(color)) + '"');
   if (obj !== null && Math.abs(obj.penWidth - PENWIDTH_NORMAL) >= PENWIDTH_THRESHOLD) {
     emitPenWidth(job, obj.penWidth);
   }

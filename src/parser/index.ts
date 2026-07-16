@@ -220,6 +220,15 @@ export function isPeggyError(err: unknown): err is {
  * @throws ParseError for syntax errors or edge-direction violations.
  */
 export function parse(src: string): Graph {
+  if (typeof src !== 'string') {
+    // Runtime guard for JS callers (the TS signature already forbids this):
+    // a non-string argument must not surface as an opaque internal TypeError.
+    throw new ParseError('DOT source must be a string', 'GENERIC_ERROR', {
+      line: 1,
+      column: 1,
+      offset: 0,
+    });
+  }
   let ast: ParsedGraph;
   try {
     ast = peggyParse(src) as ParsedGraph;
@@ -233,6 +242,16 @@ export function parse(src: string): Graph {
         code,
         { line: start.line, column: start.column, offset: start.offset },
         err.expected,
+      );
+    }
+    // Deeply-nested input overflows the recursive-descent parser's call stack;
+    // honor the documented ParseError contract instead of leaking a raw
+    // RangeError. @see ~/.claude/rules/security.md (bound untrusted input)
+    if (err instanceof RangeError) {
+      throw new ParseError(
+        'DOT source is too deeply nested to parse',
+        'GENERIC_ERROR',
+        { line: 1, column: 1, offset: 0 },
       );
     }
     throw err;

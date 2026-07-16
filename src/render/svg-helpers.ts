@@ -181,7 +181,9 @@ export function svgBeginNode(n: Node, job: RenderJob): void {
   // prefix/suffix are empty unless rendering layers (layerNum>1). The DOT
   // `class` attr is appended to the SVG class string (svg_print_id_class).
   // @see lib/common/emit.c:getObjId; plugin/core/gvrender_core_svg.c:svg_begin_node
-  job.write('<g id="' + job.idLayerPrefix() + svgNodeId(n, job) + job.idLayerSuffix()
+  // C's svg_print_id_class prints the assembled id through gvputs_xml, so the
+  // DOT `id` attr (and user-controlled layer names) are XML-escaped at emission.
+  job.write('<g id="' + escapeXmlTitle(job.idLayerPrefix() + svgNodeId(n, job) + job.idLayerSuffix())
     + '" ' + svgNodeClass(n) + '>\n');
   job.write('<title>' + escapeXmlTitle(n.name) + '</title>\n');
 }
@@ -220,7 +222,7 @@ export function svgBeginEdge(e: Edge, job: RenderJob): void {
     + sep + e.head.name + (hp ? ':' + hp : '');
   // Edges get the layer prefix only — no per-object suffix (svg_begin_edge
   // passes idx=NULL, unlike svg_begin_node). DOT `id`/`class` attrs apply.
-  job.write('<g id="' + job.idLayerPrefix() + svgEdgeId(e, job)
+  job.write('<g id="' + escapeXmlTitle(job.idLayerPrefix() + svgEdgeId(e, job))
     + '" ' + svgEdgeClass(e) + '>\n');
   job.write('<title>' + escapeEdgeTitle(raw) + '</title>\n');
 }

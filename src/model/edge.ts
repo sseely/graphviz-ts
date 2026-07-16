@@ -33,6 +33,12 @@ import { type EdgeInfo, makeEdgeInfo, makePort } from './edgeInfo.js';
  * @see lib/cgraph/cgraph.h:AGMKOUT
  */
 export class Edge {
+  // Code review: process-wide static seq counter, never reset between renders
+  // (C's AGSEQ lives in a per-agopen Agclos_t). Safe today — every reader only
+  // compares .seq values within one graph's own edges for relative ordering —
+  // and it evades the module-globals fitness scan (a private static field, not
+  // a module-scope `let`). Revisit if any consumer serializes an absolute .seq
+  // or relies on the counter resetting per parse/createGraph.
   /** @see lib/cgraph/cgraph.h:AGSEQ */
   private static _nextSeq = 0;
 

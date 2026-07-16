@@ -56,7 +56,7 @@ import {
   emitPoints,
 } from './svg-helpers.js';
 import { emitArrowOps } from './svg-arrow-ops.js';
-import { resolveRenderColor, colorOpacity } from './color-resolve.js';
+import { resolveRenderColor, colorOpacity, colorPaint } from './color-resolve.js';
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 import { emitSplitEdgePaths } from './svg-edge-split.js';
 import { edgeIsTapered, svgTaperedEdge } from './svg-tapered-edge.js';
@@ -250,7 +250,10 @@ export class SvgRenderer implements RendererPlugin {
   // attachment polyline (emit.c:1886-1893) — the edge's own dash/width must
   // not leak onto it.
   attachmentPolyline(pts: Point[], pencolor: string, job: RenderJob): void {
-    job.write('<polyline fill="none" stroke="' + pencolor + '" points="');
+    // Resolve the label fontcolor through the SVG known-color gate before
+    // emission, mirroring C's gvrender_set_pencolor in emit_attachment; a raw
+    // attribute value must never reach stroke="..." unresolved/unescaped.
+    job.write('<polyline fill="none" stroke="' + colorPaint(resolveRenderColor(pencolor)) + '" points="');
     emitPoints(job, pts);
     job.write('"/>\n');
   }

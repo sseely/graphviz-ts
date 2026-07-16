@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-11T18:10:52.292Z",
+  "generatedAt": "2026-07-16T19:14:38.263Z",
   "generatedWith": "test/corpus/survey.ts",
   "oracleVersion": "dot 15.1.0",
   "corpusRoot": "~/git/graphviz/tests",
   "total": 788,
   "counts": {
-    "conformant": 761,
+    "conformant": 762,
     "structural-match": 14,
     "diverged": 2,
     "errored": 0,
-    "timeout": 1,
+    "timeout": 0,
     "oracle-error": 10
   },
   "results": [
@@ -212,7 +212,7 @@
     {
       "id": "1652",
       "path": "1652.dot",
-      "verdict": "timeout"
+      "verdict": "conformant"
     },
     {
       "id": "1658",

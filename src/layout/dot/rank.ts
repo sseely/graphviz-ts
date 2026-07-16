@@ -3,7 +3,6 @@
 import type { Node } from '../../model/node.js';
 import type { Edge } from '../../model/edge.js';
 import type { Graph } from '../../model/graph.js';
-import type { TextMeasurer } from '../../common/textmeasure.js';
 import { doGraphLabel } from './graph-label.js';
 import { ufFind, ufUnion, ufSingleton } from './decomp.js';
 import { decompose, nodesInSeq } from './decomp.js';
@@ -224,7 +223,7 @@ export function makeNewCluster(g: Graph, subg: Graph): void {
   g.info.n_cluster = nc;
   if (!g.info.clust) g.info.clust = [];
   g.info.clust[nc - 1] = subg;
-  const measurer = (g.root.info.gvc as { textMeasurer?: TextMeasurer } | undefined)?.textMeasurer;
+  const measurer = g.root.info.gvc?.textMeasurer;
   doGraphLabel(subg, measurer);
 }
 

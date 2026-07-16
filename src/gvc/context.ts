@@ -237,8 +237,11 @@ export class GvcContext {
     if (engine === undefined) {
       throw new Error(`no layout engine registered: ${name}`);
     }
-    if (g.info) g.info.gvc = this as unknown;
+    if (g.info) g.info.gvc = this;
     engine.layout(g);
+    // Mark the graph laid-out so the public getLayout can reject a graph that
+    // still carries calloc-zero geometry defaults.
+    if (g.info) g.info.laidOut = true;
   }
 
   /**
