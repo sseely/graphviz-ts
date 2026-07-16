@@ -19,55 +19,52 @@ Regenerate: `npm run build:js && node test/corpus/bench.mjs && node test/corpus/
   inflates a concurrent big render's single sample materially (≈66% on 2620). Set
   `BENCH_HEAVY_POOL>1` for a faster, noisier scan.
 - **Native:** `dot -Tsvg` best-of-3 (min).
-- **Budget:** target ≤3× native. Per-render cap **817795ms**
+- **Budget:** target ≤3× native. Per-render cap **1351530ms**
   (SIGKILL → `over-cap`, i.e. a true synchronous hang).
 - **Caveat:** light graphs are timed under up-to-6-way load; for a
   precise single number re-run `BENCH_POOL=1 BENCH_IDS=<id> node test/corpus/bench.mjs`.
 
 ## Summary
 
-- **Rated inputs:** 778 · **within ≤3× native:** 762 (97.9%)
-- **ok (≤3×):** 762 · **slow (>3×):** 16 · **over-cap (hang):** 1 · **errored:** 0 · **oracle-error:** 11
-- **ratio (port/native):** p50 0.01× · p90 0.17× · max 6.18×
+- **Rated inputs:** 779 · **within ≤3× native:** 762 (97.8%)
+- **ok (≤3×):** 761 · **slow (>3×):** 18 · **over-cap (hang):** 0 · **errored:** 0 · **oracle-error:** 9
+- **ratio (port/native):** p50 0.01× · p90 0.23× · max 6.48×
 
 ## Ratio distribution
 
 | band | count |
 |---|---:|
 | ≤1× (port ≥ native, warm) | 737 |
-| 1–2× | 15 |
-| 2–3× | 10 |
-| 3–4× | 15 |
-| 4–6× | 0 |
+| 1–2× | 11 |
+| 2–3× | 14 |
+| 3–4× | 11 |
+| 4–6× | 5 |
 | 6–10× | 1 |
 | >10× | 0 |
-| over-cap (≥817795ms, possible hang) | 1 |
+| over-cap (≥1351530ms, possible hang) | 0 |
 
 ## Over budget — slower than 3× native (worst first)
 
 | id | native ms | port ms (warm) | ratio |
 |---|---:|---:|---:|
-| `2108` | 12849 | 79370 | 6.18× |
-| `graphs-b104` | 8635 | 33395 | 3.87× |
-| `graphs-b100` | 8646 | 31228 | 3.61× |
-| `2743` | 201 | 704 | 3.5× |
-| `nshare-root_circo` | 247 | 865 | 3.5× |
-| `2646` | 97463 | 337497 | 3.46× |
-| `graphs-b103` | 1210 | 4109 | 3.4× |
-| `linux.x86-root_twopi` | 248 | 834 | 3.36× |
-| `graphs-root` | 214 | 712 | 3.33× |
-| `2095_1` | 22309 | 73128 | 3.28× |
-| `linux.x86-root_circo` | 245 | 798 | 3.26× |
-| `2620` | 371 | 1153 | 3.11× |
-| `nshare-root_twopi` | 247 | 768 | 3.11× |
-| `graphs-badvoro` | 320 | 991 | 3.1× |
-| `2095` | 261 | 794 | 3.04× |
-| `graphs-b29` | 585 | 1773 | 3.03× |
+| `2108` | 12849 | 83220 | 6.48× |
+| `2471` | 3269 | 17929 | 5.48× |
+| `2095` | 261 | 1155 | 4.42× |
+| `graphs-b100` | 8646 | 37691 | 4.36× |
+| `graphs-b104` | 8635 | 35254 | 4.08× |
+| `graphs-b103` | 1210 | 4883 | 4.04× |
+| `2095_1` | 22309 | 88075 | 3.95× |
+| `linux.x86-root_circo` | 245 | 943 | 3.85× |
+| `nshare-root_twopi` | 247 | 900 | 3.65× |
+| `2646` | 97463 | 352989 | 3.62× |
+| `2743` | 201 | 721 | 3.59× |
+| `graphs-root` | 214 | 757 | 3.54× |
+| `nshare-root_circo` | 247 | 809 | 3.28× |
+| `linux.x86-root_twopi` | 248 | 805 | 3.25× |
+| `2371` | 73639 | 235360 | 3.2× |
+| `graphs-b29` | 585 | 1852 | 3.17× |
+| `2620` | 371 | 1122 | 3.02× |
 
 ## Over-cap / possible hang
 
-| id | native ms | cap ms | native×budget | status |
-|---|---:|---:|---:|---|
-| `2854` | 163559 | 817795 | 490677 | exceeds budget (likely hang/runaway) |
-
-Raise `BENCH_CAP_MS` and re-run these ids to resolve an inconclusive status.
+_None — no input exceeded the per-render cap (no hangs)._
