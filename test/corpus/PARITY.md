@@ -43,7 +43,7 @@ bar above.
 |---|---:|---:|---:|---:|---:|---:|
 | [neato (xdot)](./PARITY-neato.md) | 761 | 409 | 37 | 308 | 7 | 53.7% |
 | [fdp (xdot)](./PARITY-fdp.md) | 761 | 600 | 19 | 126 | 16 | 78.8% |
-| [sfdp (xdot)](./PARITY-sfdp.md) | 761 | 510 | 60 | 183 | 8 | 67.0% |
+| [sfdp (xdot)](./PARITY-sfdp.md) | 762 | 518 | 52 | 184 | 8 | 68.0% |
 
 
 

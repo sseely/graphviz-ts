@@ -16,6 +16,7 @@ import type { ArrowDrawOp } from '../../common/arrows-types.js';
 import { mapArrowOpPoints } from '../../common/arrows-shapes-util.js';
 import { arrayRects } from './array-pack.js';
 import { polyRects } from './poly-pack.js';
+import { updateBbBz } from '../../common/splines-geom.js';
 import { polyGraphs } from './poly-place.js';
 import {
   PackMode, PackInfo,
@@ -113,10 +114,34 @@ export function expandBounds(
  */
 function expandBoundsByEdge(
   b: { llx: number; lly: number; urx: number; ury: number },
-  e: Edge, flip: boolean,
+  e: Edge, flip: boolean, refineSplines: boolean,
 ): void {
   const spl = e.info.spl;
-  if (spl !== undefined) {
+  if (spl !== undefined && refineSplines) {
+    // Single-component neato-family final bb: native never re-runs compute_bb
+    // after routing, so the edge contribution is the curve grown by
+    // update_bb_bz in clip_and_install (emit.c:746), strictly inside the
+    // control hull. Refine each cubic to the curve so a middle control point
+    // outside the curve does not inflate the box.
+    const box: Box = { ll: { x: b.llx, y: b.lly }, ur: { x: b.urx, y: b.ury } };
+    for (let i = 0; i < spl.size; i++) {
+      const bz = spl.list[i];
+      if (bz === undefined) continue;
+      for (let j = 0; j + 3 < bz.size; j += 3) {
+        const p0 = bz.list[j];
+        const p1 = bz.list[j + 1];
+        const p2 = bz.list[j + 2];
+        const p3 = bz.list[j + 3];
+        if (p0 && p1 && p2 && p3) updateBbBz(box, [p0, p1, p2, p3]);
+      }
+    }
+    b.llx = box.ll.x;
+    b.lly = box.ll.y;
+    b.urx = box.ur.x;
+    b.ury = box.ur.y;
+  } else if (spl !== undefined) {
+    // Pack / multi-component path: native's pack re-runs compute_bb AFTER
+    // routing (pack.c:801), which unions raw control points (ED_spl). Match it.
     for (let i = 0; i < spl.size; i++) {
       const bz = spl.list[i];
       if (bz === undefined) continue;
@@ -164,11 +189,11 @@ function expandBoundsByEdge(
  * @see lib/neatogen/neatoinit.c:1419 (compute_bb called right after spline_edges)
  * @see lib/pack/pack.c:801 computeBB
  */
-export function computeSubgraphBB(g: Graph, margin: number): Box {
+export function computeSubgraphBB(g: Graph, margin: number, refineSplines = false): Box {
   const b = { llx: Infinity, lly: Infinity, urx: -Infinity, ury: -Infinity };
   for (const n of g.nodes.values()) expandBounds(b, n, margin);
   const flip = g.info.flip === true;
-  for (const e of g.edges) expandBoundsByEdge(b, e, flip);
+  for (const e of g.edges) expandBoundsByEdge(b, e, flip, refineSplines);
   if (!isFinite(b.llx)) return { ll: { x: 0, y: 0 }, ur: { x: 0, y: 0 } };
   return { ll: { x: b.llx, y: b.lly }, ur: { x: b.urx, y: b.ury } };
 }

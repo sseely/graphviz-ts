@@ -152,10 +152,13 @@ function layoutComponents(
  * origin, set the root bb, place the graph label.
  * @see lib/common/postproc.c:gv_postprocess
  */
-function postprocess(g: Graph): void {
-  const bb = computeSubgraphBB(g, 0);
+function postprocess(g: Graph, singleComponent: boolean): void {
+  // Single-component: native never re-runs compute_bb after routing, so the
+  // graph bb is the curve-refined box (update_bb_bz). Multi-component: pack
+  // re-runs compute_bb post-routing over raw control points (hull). Mirror both.
+  const bb = computeSubgraphBB(g, 0, singleComponent);
   if (bb.ll.x !== 0 || bb.ll.y !== 0) shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
-  g.info.bb = computeSubgraphBB(g, 0);
+  g.info.bb = computeSubgraphBB(g, 0, singleComponent);
   // C sfdp_layout ends with dotneato_postprocess(g) = gv_postprocess(g, 1):
   // place_graph_label, then addXLabels — the pass that positions the *edge*
   // labels (sfdp never sets ED_label(e)->pos during routing).
@@ -183,10 +186,15 @@ export function sfdpLayout(g: Graph): void {
   sfdpInitGraph(g);
   csrand(1); // process-start rand() state on the reference platform
 
+  // Single-component graphs never reach pack, so their final bb keeps the
+  // curve-refined box grown during routing; multi-component graphs are packed,
+  // and pack re-runs compute_bb (control-point hull). @see postprocess.
+  let singleComponent = true;
   if (g.nodes.size > 0) {
     const { ctrl, pad, doAdjust } = resolveControl(g);
     const comps = ccomps(g, '_sfdp_cc');
-    if (comps.length === 1) {
+    singleComponent = comps.length === 1;
+    if (singleComponent) {
       sfdpLayoutComponent(g, ctrl, pad);
       if (doAdjust) adjustNodesScale(g); // removeOverlapWith (non-PRISM modes)
       splineEdgesShifted(g); // C spline_edges: shift + coord sync + route
@@ -195,7 +203,7 @@ export function sfdpLayout(g: Graph): void {
     }
   }
 
-  postprocess(g);
+  postprocess(g, singleComponent);
 }
 
 /** @see lib/gvc/gvplugin.h:gvlayout_engine_s */
