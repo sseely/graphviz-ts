@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T11:20:21.326Z",
+  "generatedAt": "2026-07-17T03:18:15.670Z",
   "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
   "tolerance": 0.5,
   "results": [
@@ -71,13 +71,13 @@
     },
     {
       "id": "graphs-clustlabel",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 80,
-      "injectedDiffs": 10,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -126,13 +126,13 @@
     },
     {
       "id": "graphs-clust1",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 248,
-      "injectedDiffs": 15,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -148,65 +148,57 @@
     },
     {
       "id": "1514",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 156,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric",
-        "uniformDelta": [
-          6.09,
-          2.74
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "2615",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 168,
-      "injectedDiffs": 18,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-fdp",
       "verdict": "not-cleared",
       "baseDiffs": 162,
-      "injectedDiffs": 69,
+      "injectedDiffs": 45,
       "bucket": {
         "shape": "graph/_draw_/numeric",
         "kind": "count",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+…(11)"
+        "signature": "edge/_draw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural+…(9)"
       }
     },
     {
       "id": "graphs-nestedclust",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 89,
-      "injectedDiffs": 6,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric",
-        "uniformDelta": [
-          -1.59,
-          -9.77
-        ]
+        "signature": "none"
       }
     },
     {
       "id": "graphs-b145",
       "verdict": "not-cleared",
       "baseDiffs": 96,
-      "injectedDiffs": 39,
+      "injectedDiffs": 27,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "count",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/structural+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/structural+node/_ldraw_/structural+node/height/structural+…(8)"
       }
     },
     {
@@ -255,13 +247,13 @@
     },
     {
       "id": "2521",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 161,
-      "injectedDiffs": 24,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -277,24 +269,24 @@
     },
     {
       "id": "2184",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 216,
-      "injectedDiffs": 37,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "graphs-KW91",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 356,
-      "injectedDiffs": 22,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -497,13 +489,13 @@
     },
     {
       "id": "graphs-style",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 719,
-      "injectedDiffs": 54,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -651,13 +643,13 @@
     },
     {
       "id": "2183",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1054,
-      "injectedDiffs": 39,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+node/_ldraw_/numeric+node/xlp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -827,13 +819,13 @@
     },
     {
       "id": "2242",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 757,
-      "injectedDiffs": 75,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -882,24 +874,24 @@
     },
     {
       "id": "1453",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1287,
-      "injectedDiffs": 88,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "1436",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 432,
-      "injectedDiffs": 18,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1058,13 +1050,13 @@
     },
     {
       "id": "56",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 512,
-      "injectedDiffs": 20,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_ldraw_/numeric+edge/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1091,13 +1083,13 @@
     },
     {
       "id": "graphs-ldbxtried",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2148,
-      "injectedDiffs": 16,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1124,13 +1116,13 @@
     },
     {
       "id": "graphs-proc3d",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1938,
-      "injectedDiffs": 96,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1201,13 +1193,13 @@
     },
     {
       "id": "graphs-b15",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 5662,
-      "injectedDiffs": 80,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1267,13 +1259,13 @@
     },
     {
       "id": "share-proc3d",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 10,
-      "injectedDiffs": 3,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/bb/numeric",
+        "shape": "cluster/bb/unknown",
         "kind": "position",
-        "signature": "cluster/bb/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1300,24 +1292,24 @@
     },
     {
       "id": "share-ldbxtried",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 1988,
-      "injectedDiffs": 10,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "windows-ldbxtried",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 2002,
-      "injectedDiffs": 10,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1355,13 +1347,13 @@
     },
     {
       "id": "graphs-b51",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 3937,
-      "injectedDiffs": 198,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1440,18 +1432,6 @@
         "kind": "position",
         "signature": "none"
       }
-    },
-    {
-      "id": "2620",
-      "verdict": "harness-error",
-      "baseDiffs": 10473,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "unknown",
-        "kind": "position",
-        "signature": "none"
-      },
-      "err": "oracle exit null: Warning: Warning: no hard-coded metrics for 'Times-Bold'.  Falling back to 'Times' metrics"
     },
     {
       "id": "graphs-b102",
@@ -1598,24 +1578,24 @@
     },
     {
       "id": "2475_2",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 323062,
-      "injectedDiffs": 12254,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     },
     {
       "id": "2470",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 20080,
-      "injectedDiffs": 3584,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "cluster/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric"
+        "signature": "none"
       }
     }
   ]

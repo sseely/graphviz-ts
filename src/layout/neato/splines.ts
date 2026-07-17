@@ -932,12 +932,42 @@ export function injectOraclePositions(g: Graph): void {
   if (!dumpPath || typeof process.getBuiltinModule !== 'function') return;
   const fs = process.getBuiltinModule('node:fs');
   if (!fs) return;
+  // fdp also emits GVTS_CLUST_BB per cluster: like GD_bb, cluster boxes are a
+  // product of fdpLayout's setBB (upstream of this hook) and are NOT re-derived
+  // from injected positions, so they must be carried across too — otherwise the
+  // injected render draws every cluster at the port's own (drifted) extent.
+  // Map cluster name → subgraph so a dump line can find its target.
+  const clustByName = new Map<string, Graph>();
+  const collectClusters = (sg: Graph): void => {
+    const n = sg.info.n_cluster ?? 0;
+    const cl = sg.info.clust;
+    if (!cl) return;
+    for (let i = 0; i < n; i++) {
+      const c = cl[i];
+      if (c) {
+        clustByName.set(c.name, c);
+        collectClusters(c);
+      }
+    }
+  };
+  collectClusters(g);
   const text = fs.readFileSync(dumpPath, 'utf8');
   for (const line of text.split('\n')) {
     const m = /^GVTS_POS (\S+) (\S+) (\S+)/.exec(line);
     if (m) {
       const n = g.nodes.get(m[1]!);
       if (n) n.info.pos = [Number(m[2]), Number(m[3])];
+      continue;
+    }
+    const cb = /^GVTS_CLUST_BB (\S+) (\S+) (\S+) (\S+) (\S+)/.exec(line);
+    if (cb) {
+      const c = clustByName.get(cb[1]!);
+      if (c) {
+        c.info.bb = {
+          ll: { x: Number(cb[2]), y: Number(cb[3]) },
+          ur: { x: Number(cb[4]), y: Number(cb[5]) },
+        };
+      }
       continue;
     }
     const b = /^GVTS_BB (\S+) (\S+) (\S+) (\S+)/.exec(line);

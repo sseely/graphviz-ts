@@ -321,8 +321,14 @@ function runOracleWithDump(engine: string, path: string): OracleDumpResult {
   // positions and has to be carried across explicitly. Keep both line kinds;
   // still require at least one GVTS_POS, since a dump with a bb and no
   // positions means the native patch is only half-applied.
+  // GVTS_BB and GVTS_CLUST_BB are fdp-only: fdp's GD_bb and every cluster bb are
+  // computed inside fdpLayout (setBB), upstream of the injection point, so unlike
+  // neato/sfdp they are not re-derived from the injected positions and have to be
+  // carried across explicitly (a cluster bb left un-carried draws the cluster box
+  // at the port's own drifted extent — see injection-recipe.md).
   const dumpLines = (r.stderr ?? '').split('\n')
-    .filter((l) => l.startsWith('GVTS_POS ') || l.startsWith('GVTS_BB '));
+    .filter((l) => l.startsWith('GVTS_POS ') || l.startsWith('GVTS_BB ')
+      || l.startsWith('GVTS_CLUST_BB '));
   if (!dumpLines.some((l) => l.startsWith('GVTS_POS '))) {
     return { ok: false, err: 'no GVTS_POS dump lines captured (native POS_DUMP patch missing/reverted?)' };
   }

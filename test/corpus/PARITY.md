@@ -19,7 +19,7 @@ equality. **errors** = oracle-error + port-error/errored + timeout
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| [dot (SVG)](./PARITY-dot.md) | 788 | 761 | 0 | 16 | 11 | 96.6% |
+| [dot (SVG)](./PARITY-dot.md) | 788 | 762 | 0 | 16 | 10 | 96.7% |
 | [dot (xdot)](./PARITY-XDOT.md) | 761 | 761 | 0 | 0 | 0 | 100.0% |
 | [dot (json)](./PARITY-JSON.md) | 761 | 759 | 0 | 2 | 0 | 99.7% |
 | [circo (xdot)](./PARITY-circo.md) | 761 | 745 | 0 | 3 | 13 | 97.9% |
@@ -42,7 +42,7 @@ bar above.
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
 | [neato (xdot)](./PARITY-neato.md) | 761 | 409 | 37 | 308 | 7 | 53.7% |
-| [fdp (xdot)](./PARITY-fdp.md) | 761 | 600 | 42 | 103 | 16 | 78.8% |
+| [fdp (xdot)](./PARITY-fdp.md) | 761 | 600 | 19 | 126 | 16 | 78.8% |
 | [sfdp (xdot)](./PARITY-sfdp.md) | 761 | 510 | 60 | 183 | 8 | 67.0% |
 
 
