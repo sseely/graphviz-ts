@@ -319,6 +319,15 @@ export interface NodeInfo {
   pinned?: boolean;
 
   /**
+   * True if the node has a user-supplied `pos=` (C's ND_pinned >= P_SET, i.e.
+   * hasPos). Distinct from {@link pinned} (P_PIN, isFixed): a plain `pos=`
+   * seeds the initial layout without fixing the node. neato uses it to start
+   * majorization from the input positions (user_pos + hasPos).
+   * @see lib/neatogen/neatoinit.c:user_pos; lib/common/macros.h:hasPos
+   */
+  posSet?: boolean;
+
+  /**
    * Internal integer node ID used by neato/fdp.
    * @see lib/common/types.h:ND_id
    */

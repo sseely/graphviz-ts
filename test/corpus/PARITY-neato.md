@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-14T22:25:17.634Z)
-- **pass:** 409 (53.7%) · **diverged (tracked):** 37 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 308
+- **Surveyed:** 762 (generated 2026-07-19T22:21:18.888Z)
+- **pass:** 660 (86.6%) · **diverged (tracked):** 25 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 70
 - **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -35,40 +35,27 @@ outright leaves the class silently on the next report regen.
 
 - **A1-drift**: **309** members — full per-id evidence in [`attribution-neato.json`](./attribution-neato.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
-## Diverged (37)
+## Diverged (25)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
 | `2239` | 48090 | 3838 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1676.96 vs 1702.77` |
-| `windows-pgram` | 11001 | 3174 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 542.16 vs 522` |
-| `share-pgram` | 10942 | 3162 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 542.16 vs 522` |
-| `linux.x86-rankdir_dot2` | 12815 | 1919 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 892.96 vs 998.83` |
-| `nshare-rankdir_dot2` | 12795 | 1919 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 892.96 vs 998.71` |
-| `linux.x86-rankdir_dot` | 12792 | 1918 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 892.96 vs 998.69` |
-| `nshare-rankdir_dot` | 12803 | 1918 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 892.96 vs 998.71` |
-| `nshare-rankdir_dot1` | 12675 | 1918 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 892.96 vs 830.43` |
-| `linux.i386-crazy` | 10433 | 1915 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 977.46 vs 842.92` |
-| `linux.x86-rankdir_dot1` | 12673 | 1915 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 892.96 vs 829.92` |
-| `windows-crazy` | 10433 | 1907 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 977.46 vs 838.23` |
-| `share-crazy` | 10433 | 1902 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 977.46 vs 838.05` |
-| `windows-unix2` | 7421 | 1607 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.43 vs 708.98` |
-| `windows-unix2k` | 7421 | 1607 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.43 vs 708.98` |
-| `share-unix2` | 7421 | 1606 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.43 vs 700.5` |
-| `share-unix2k` | 7421 | 1606 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.43 vs 700.5` |
-| `linux.x86-weight_dot` | 9278 | 1605 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 834.83 vs 651.75` |
-| `nshare-weight_dot` | 9391 | 1605 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 834.83 vs 651.97` |
-| `linux.x86-dotsplines_dot` | 8741 | 1604 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 834.83 vs 708.27` |
-| `linux.x86-dotsplines_dot1` | 9206 | 1604 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 834.83 vs 708.27` |
-| `nshare-dotsplines_dot` | 8836 | 1602 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 834.83 vs 709.14` |
-| `nshare-dotsplines_dot1` | 9332 | 1602 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 834.83 vs 709.14` |
-| `windows-unix` | 6603 | 1424 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 676.93 vs 528.79` |
-| `share-unix` | 6603 | 1422 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 676.93 vs 528.32` |
+| `windows-pgram` | 11001 | 2853 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522` |
+| `share-pgram` | 10942 | 2116 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522` |
 | `2193` | 6399 | 1085 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1683.89 vs 1682.42` |
 | `2470` | 734358 | 682 | `edge:n100->n99#0 _ldraw_ edge:n100->n99#0/_ldraw_/op[2].text[0]: 6930.71 vs 6852.93` |
-| `windows-nhg` | 926 | 196 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 118.37 vs 120.18` |
-| `share-nhg` | 938 | 194 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 118.37 vs 120.18` |
+| `windows-nhg` | 926 | 116 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 108.18 vs 120.18` |
+| `windows-crazy` | 10433 | 79 | `edge:7th Edition->8th Edition#0 _draw_ edge:7th Edition->8th Edition#0/_draw_/op[1].unfilled_bezier[1]: 468.42 vs 467.64` |
+| `share-crazy` | 10433 | 61 | `edge:7th Edition->8th Edition#0 _draw_ edge:7th Edition->8th Edition#0/_draw_/op[1].unfilled_bezier[1]: 468.02 vs 467.26` |
 | `graphs-pgram` | 2614 | 54 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 577.54 vs 597.54` |
+| `nshare-rankdir_dot1` | 12675 | 47 | `edge:32V->3 BSD#0 _draw_ edge:32V->3 BSD#0/_draw_/op[1].unfilled_bezier[1]: 703.25 vs 702.69` |
 | `graphs-b94` | 10503 | 40 | `edge:h212_202_184_169->h130_75_118_14_p1433#0 _draw_ edge:h212_202_184_169->h130_75_118_14_p1433#0/_draw_/op[1].unfilled_bezier[0]: 579.45 vs 453.45` |
+| `nshare-rankdir_dot` | 12803 | 36 | `edge:3 BSD->4 BSD#0 _draw_ edge:3 BSD->4 BSD#0/_draw_/op[1].unfilled_bezier[5]: 880.16 vs 879.48` |
+| `nshare-weight_dot` | 9391 | 36 | `edge:7th Edition->UniPlus+#0 _draw_ edge:7th Edition->UniPlus+#0/_draw_/op[1].unfilled_bezier[1]: 307.64 vs 307.13` |
+| `linux.x86-rankdir_dot2` | 12815 | 35 | `edge:4.2 BSD->Ultrix-32#0 _draw_ edge:4.2 BSD->Ultrix-32#0/_draw_/op[1].unfilled_bezier[1]: 871.13 vs 871.7` |
+| `linux.x86-rankdir_dot1` | 12673 | 32 | `edge:4.1 BSD->8th Edition#0 _draw_ edge:4.1 BSD->8th Edition#0/_draw_/op[1].unfilled_bezier[0]: 332.48 vs 331.92` |
+| `nshare-dotsplines_dot` | 8836 | 23 | `edge:7th Edition->Ultrix-11#0 _draw_ edge:7th Edition->Ultrix-11#0/_draw_/op[1].unfilled_bezier[0]: 396.15 vs 396.97` |
+| `nshare-dotsplines_dot1` | 9332 | 23 | `edge:7th Edition->Ultrix-11#0 _draw_ edge:7th Edition->Ultrix-11#0/_draw_/op[1].unfilled_bezier[0]: 396.15 vs 396.97` |
 | `1990` | 610 | 17 | `edge:0⋯7 ❰A❱->0⋯1 'a'#0 _draw_ edge:0⋯7 ❰A❱->0⋯1 'a'#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
 | `241_0` | 578 | 13 | `edge:1->6#0 _draw_ edge:1->6#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
 | `2801` | 651 | 8 | `edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_/op[2].text[0]: 330.01 vs 356.44` |
@@ -76,6 +63,7 @@ outright leaves the class silently on the next report regen.
 | `graphs-b117` | 338 | 7 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58` |
 | `graphs-nhg` | 339 | 7 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58` |
 | `2476` | 3653 | 2 | `edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0 _ldraw_ edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0/_ldraw_/op[2].text[1]: 648.25 vs 664.99` |
+| `share-nhg` | 938 | 2 | `edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 58.94 vs 42.14` |
 
 ## Errors and timeouts (7)
 
@@ -90,5 +78,5 @@ outright leaves the class silently on the next report regen.
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
 **oracle errors:** 7 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
-_Passing ids (409) are omitted for brevity — the full roster is in
+_Passing ids (660) are omitted for brevity — the full roster is in
 `parity-neato.json`._

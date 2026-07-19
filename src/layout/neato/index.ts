@@ -15,6 +15,7 @@ import type { Graph } from '../../model/graph.js';
 import type { LayoutEngine } from '../../gvc/context.js';
 import {
   neatoInitNode,
+  userPos,
   setSeed,
   solveModel,
   neatoTranslate,
@@ -172,7 +173,13 @@ export function neatoLayout(g: Graph): void {
   // @see lib/neatogen/neatoinit.c:598
   setEdgeTypeFromAttr(g, EDGETYPE_LINE);
   commonInitNodeEdge(g);
-  for (const [, n] of g.nodes) neatoInitNode(n);
+  // C neato_init_node_edge: neato_init_node then user_pos, per node. user_pos
+  // seeds a `pos=` input into the initial layout (P_SET/hasPos) so majorization
+  // starts from it instead of a random init. @see neatoinit.c:139-141
+  for (const [, n] of g.nodes) {
+    neatoInitNode(n);
+    userPos(n);
+  }
   // C neato_init_node_edge runs a SECOND loop calling neato_init_edge ->
   // common_init_edge, which creates ED_label(e) and ORs GD_has_labels with
   // EDGE_LABEL. Without it the edge label object never exists and addXLabels'

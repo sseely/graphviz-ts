@@ -80,7 +80,9 @@ export function computeWeightedApspPacked(graph: VtxData[], n: number): Float32A
  * @see lib/neatogen/stress.c:hasPos
  */
 function hasPos(n: Node): boolean {
-  return n.info.pinned === true;
+  // C hasPos = ND_pinned > 0 = P_SET (user pos=) OR P_PIN (pinned). posSet
+  // covers both (userPos sets it for every pos=; pinned is the P_PIN subset).
+  return n.info.posSet === true || n.info.pinned === true;
 }
 
 /** Is the node pinned? @see lib/neatogen/stress.c:isFixed (P_PIN) */

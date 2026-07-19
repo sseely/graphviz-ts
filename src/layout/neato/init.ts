@@ -22,6 +22,7 @@ import {
 } from './stress.js';
 import { sgdLayout } from './sgd.js';
 import { srand48 } from '../../common/random.js';
+import { mapbool } from '../dot/rank.js';
 import {
   computeApspPacked,
   computeWeightedApspPacked,
@@ -93,13 +94,29 @@ export function neatoInitNode(n: Node, dim = DFLT_DIM): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Return true if the node has any non-zero position component.
+ * Seed a node's initial position from its `pos=` attribute (C's P_SET),
+ * mirroring user_pos. Sets info.pos + info.posSet so hasPos is true and neato
+ * majorization starts from the input layout instead of a random init; a `!`
+ * suffix or `pin=true` additionally sets info.pinned (P_PIN → isFixed).
  *
+ * PSinputscale (the `inputscale` attr) is not tracked — the suite has
+ * PSinputscale <= 0, so positions stay in points exactly as native leaves them
+ * (a `pos="27,42"` seeds (27,42), which orthog1 then centres). Must run AFTER
+ * neatoInitNode, which zeroes info.pos.
  * @see lib/neatogen/neatoinit.c:user_pos
  */
 export function userPos(n: Node): boolean {
-  if (!n.info.pos) return false;
-  return n.info.pos.some((v) => v !== 0);
+  const p = n.attrs.get('pos');
+  if (p === undefined || p.length === 0) return false;
+  // 2-D "x,y" with an optional trailing '!' (3-D is absent from the 2-D suite).
+  const num = '(-?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)';
+  const m = new RegExp(`^\\s*${num}\\s*,\\s*${num}(.?)`).exec(p);
+  if (m === null) return false; // C agerrorf: malformed pos, non-fatal
+  n.info.pos = [Number(m[1]), Number(m[2])];
+  n.info.posSet = true;
+  const pin = n.attrs.get('pin');
+  if (m[3] === '!' || (pin !== undefined && mapbool(pin))) n.info.pinned = true;
+  return true;
 }
 
 // ---------------------------------------------------------------------------
