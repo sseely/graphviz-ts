@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T11:32:33.407Z",
+  "generatedAt": "2026-07-20T17:48:23.449Z",
   "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
   "tolerance": 0.5,
   "results": [
@@ -10,28 +10,6 @@
       "injectedDiffs": 0,
       "bucket": {
         "shape": "cluster/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "2563",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 72,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "2609",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 102,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -48,215 +26,6 @@
       }
     },
     {
-      "id": "share-a1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 29,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-a2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 39,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-a3",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 44,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-b",
-      "verdict": "not-cleared",
-      "baseDiffs": 7,
-      "injectedDiffs": 7,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/numeric+node/pos/numeric"
-      }
-    },
-    {
-      "id": "graphs-b117",
-      "verdict": "not-cleared",
-      "baseDiffs": 7,
-      "injectedDiffs": 7,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/numeric+node/pos/numeric"
-      }
-    },
-    {
-      "id": "graphs-nhg",
-      "verdict": "not-cleared",
-      "baseDiffs": 7,
-      "injectedDiffs": 7,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_ldraw_/numeric+node/pos/numeric"
-      }
-    },
-    {
-      "id": "share-longflat",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 70,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-longflat",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 70,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.i386-radius_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 69,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-radius_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 69,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-radius_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 69,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-radius_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 69,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-radius_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 69,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-record2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-record2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "2258",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 38,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "2556",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 680,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-b491",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 118,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-b491",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 118,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "241_0",
       "verdict": "not-cleared",
       "baseDiffs": 13,
@@ -265,171 +34,6 @@
         "shape": "edge/_draw_/structural",
         "kind": "count",
         "signature": "edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"
-      }
-    },
-    {
-      "id": "share-labelclust-ndd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ndd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fdd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fdd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-edgeclip_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 104,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-edgeclip_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 104,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-edgeclip_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 104,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ntd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ntd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ndl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ndl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ndr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ndr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ndc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ndc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
       }
     },
     {
@@ -448,974 +52,6 @@
       }
     },
     {
-      "id": "share-labelclust-nbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-nbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ftd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ftd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fdl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fdl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fdc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fdr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fdc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fdr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-rowcolsep_dot1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 132,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-rowcolsep_dot1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 132,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-rowcolsep_dot1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 132,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ntd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ntd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-rowcolsep_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 132,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-rowcolsep_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 132,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-rowcolsep_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 132,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ntl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ntl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ntr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ntr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ntc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ntc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-nbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-nbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ftd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ftd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ndd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ndd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fbd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-nbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 90,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-nbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 90,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ftl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-nbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ftl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-nbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-nbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fdd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-nbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fdd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ftc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-ftr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ftc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-ftr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ntl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 88,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ntl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 88,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelclust-fbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelclust-fbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ntc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ntr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ntc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ntr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 94,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-nbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 86,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-nbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 86,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ftl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-nbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-nbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ftl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-nbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-nbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ndl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 86,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ndl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 86,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 87,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ftc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fbl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 87,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ftc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ndc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ndr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ndc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ndr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 92,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-ftr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fbc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-ftr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 93,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fdl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 87,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fdl",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 87,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fbr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-labelroot-fdc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fdc",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 89,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "2801",
       "verdict": "not-cleared",
       "baseDiffs": 8,
@@ -1427,122 +63,12 @@
       }
     },
     {
-      "id": "share-labelroot-fdr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-labelroot-fdr",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 91,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-structs",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 204,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-structs",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 182,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "graphs-jcctree",
       "verdict": "drift-exonerated",
       "baseDiffs": 113,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "edge/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-states",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 170,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-states",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 170,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-nestedclust_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 117,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-nestedclust_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 117,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-nestedclust_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 117,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-flatedge",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 187,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -1561,18 +87,7 @@
     {
       "id": "windows-nhg",
       "verdict": "not-cleared",
-      "baseDiffs": 196,
-      "injectedDiffs": 116,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/numeric+edge/lp/numeric+edge/pos/numeric+graph/_draw_/numeric+…(10)"
-      }
-    },
-    {
-      "id": "share-nhg",
-      "verdict": "not-cleared",
-      "baseDiffs": 194,
+      "baseDiffs": 2,
       "injectedDiffs": 2,
       "bucket": {
         "shape": "edge/_ldraw_/numeric",
@@ -1581,152 +96,20 @@
       }
     },
     {
-      "id": "graphs-dd",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 205,
-      "injectedDiffs": 0,
+      "id": "share-nhg",
+      "verdict": "not-cleared",
+      "baseDiffs": 2,
+      "injectedDiffs": 2,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_ldraw_/numeric",
         "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-html_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 150,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-html_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 150,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-try",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 263,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-try",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 263,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-ctext",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 199,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-ctext",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 199,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-flatedge_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 186,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-flatedge_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 186,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-clust3",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 315,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-clust3",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 315,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-clust2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 318,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-clust2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 318,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
+        "signature": "edge/_ldraw_/numeric+edge/lp/numeric"
       }
     },
     {
       "id": "graphs-grdshapes",
       "verdict": "drift-exonerated",
-      "baseDiffs": 409,
+      "baseDiffs": 439,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "edge/_draw_/unknown",
@@ -1735,34 +118,12 @@
       }
     },
     {
-      "id": "share-clust",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 299,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-clust",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 299,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "share-clust1",
       "verdict": "drift-exonerated",
-      "baseDiffs": 310,
+      "baseDiffs": 43,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "cluster/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -1781,10 +142,10 @@
     {
       "id": "windows-clust1",
       "verdict": "drift-exonerated",
-      "baseDiffs": 310,
+      "baseDiffs": 43,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "cluster/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -1801,94 +162,6 @@
       }
     },
     {
-      "id": "1855",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 743,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-records",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 386,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-records",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 386,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-compound_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 282,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-compound_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 282,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-compound_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 282,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-process",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 252,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-process",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 254,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "2183",
       "verdict": "drift-exonerated",
       "baseDiffs": 22,
@@ -1900,331 +173,12 @@
       }
     },
     {
-      "id": "windows-clust5",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 426,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-clust5",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 426,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-clust4",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 428,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-clust4",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 428,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.i386-hashtable",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 494,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-hashtable",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 494,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-hashtable",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 494,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-Petersen",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 297,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-Petersen",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 297,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "share-KW91",
       "verdict": "drift-exonerated",
-      "baseDiffs": 363,
+      "baseDiffs": 2,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-KW91",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 363,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-tree",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 522,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-tree",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 522,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-html2_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 217,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-html2_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 217,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-pm2way",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 318,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-pm2way",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 318,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-arrows",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 938,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-arrowsize",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 987,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-ordering_dot1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 450,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-ordering_dot1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 450,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-ordering_dot1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 450,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-newarrows",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 938,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-ER",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 331,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.i386-ER",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 333,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-ER",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 333,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-ordering_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 450,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "macosx-ordering_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 450,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-ordering_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 450,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-fsm",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 484,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2233,17 +187,6 @@
       "id": "2242",
       "verdict": "drift-exonerated",
       "baseDiffs": 658,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-fsm",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 484,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -2274,175 +217,9 @@
       }
     },
     {
-      "id": "share-b786",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 605,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-Heawood",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 426,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-Heawood",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 426,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "1436",
       "verdict": "drift-exonerated",
       "baseDiffs": 385,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-jcctree",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 540,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-jcctree",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 540,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-pgram",
-      "verdict": "harness-error",
-      "baseDiffs": 54,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "unknown",
-        "kind": "position",
-        "signature": "none"
-      },
-      "err": "port render timeout (injected)"
-    },
-    {
-      "id": "linux.i386-dfa",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 620,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-dfa",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 620,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-dfa",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 615,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-pack_neato",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 468,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-pack_neato",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 467,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-pack_neato1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 468,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-pack_neato1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 462,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-pack_neato2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 470,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-pack_neato2",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 465,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -2462,89 +239,12 @@
       }
     },
     {
-      "id": "share-train11",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 903,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "windows-train11",
       "verdict": "drift-exonerated",
-      "baseDiffs": 903,
+      "baseDiffs": 2,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-pmpipe",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 616,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-pmpipe",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 616,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-ports_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 692,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-ports_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 694,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-alf",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 910,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-alf",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 907,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_ldraw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2583,94 +283,6 @@
       }
     },
     {
-      "id": "share-triedds",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 957,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-triedds",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 953,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-mike",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1140,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-mike",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1140,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-record_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 906,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-record_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 897,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-shapes_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1456,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-shapes_dot",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1456,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "2095",
       "verdict": "drift-exonerated",
       "baseDiffs": 7323,
@@ -2682,34 +294,12 @@
       }
     },
     {
-      "id": "share-viewfile",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 993,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "windows-viewfile",
       "verdict": "drift-exonerated",
-      "baseDiffs": 993,
+      "baseDiffs": 5,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-shells",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1086,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_hdraw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2717,21 +307,10 @@
     {
       "id": "windows-shells",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1086,
+      "baseDiffs": 14,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-grammar",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1530,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2739,10 +318,10 @@
     {
       "id": "share-grammar",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1530,
+      "baseDiffs": 79,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_hdraw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2761,10 +340,10 @@
     {
       "id": "share-newarrows",
       "verdict": "drift-exonerated",
-      "baseDiffs": 592,
+      "baseDiffs": 56,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2772,10 +351,10 @@
     {
       "id": "windows-newarrows",
       "verdict": "drift-exonerated",
-      "baseDiffs": 592,
+      "baseDiffs": 56,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2792,28 +371,6 @@
       }
     },
     {
-      "id": "share-unix",
-      "verdict": "not-cleared",
-      "baseDiffs": 1422,
-      "injectedDiffs": 1422,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "windows-unix",
-      "verdict": "not-cleared",
-      "baseDiffs": 1424,
-      "injectedDiffs": 1424,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
       "id": "1447",
       "verdict": "drift-exonerated",
       "baseDiffs": 98,
@@ -2827,7 +384,7 @@
     {
       "id": "windows-trapeziumlr",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1931,
+      "baseDiffs": 1777,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -2838,7 +395,7 @@
     {
       "id": "share-trapeziumlr",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1939,
+      "baseDiffs": 1818,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -2849,10 +406,10 @@
     {
       "id": "linux.x86-arrows_dot",
       "verdict": "drift-exonerated",
-      "baseDiffs": 888,
+      "baseDiffs": 118,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2860,10 +417,10 @@
     {
       "id": "macosx-arrows_dot",
       "verdict": "drift-exonerated",
-      "baseDiffs": 888,
+      "baseDiffs": 118,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2871,76 +428,10 @@
     {
       "id": "nshare-arrows_dot",
       "verdict": "drift-exonerated",
-      "baseDiffs": 888,
+      "baseDiffs": 118,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-unix2",
-      "verdict": "not-cleared",
-      "baseDiffs": 1606,
-      "injectedDiffs": 1544,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "share-unix2k",
-      "verdict": "not-cleared",
-      "baseDiffs": 1606,
-      "injectedDiffs": 1544,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "windows-unix2",
-      "verdict": "not-cleared",
-      "baseDiffs": 1607,
-      "injectedDiffs": 1538,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "windows-unix2k",
-      "verdict": "not-cleared",
-      "baseDiffs": 1607,
-      "injectedDiffs": 1538,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "share-rowe",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 2149,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-rowe",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 2149,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2948,10 +439,10 @@
     {
       "id": "share-fig6",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1942,
+      "baseDiffs": 46,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -2959,67 +450,12 @@
     {
       "id": "windows-fig6",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1942,
+      "baseDiffs": 46,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "share-abstract",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1917,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-abstract",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1917,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-world",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1928,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-world",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1928,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-dotsplines_dot",
-      "verdict": "not-cleared",
-      "baseDiffs": 1604,
-      "injectedDiffs": 1496,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
       }
     },
     {
@@ -3036,201 +472,65 @@
     {
       "id": "nshare-dotsplines_dot",
       "verdict": "not-cleared",
-      "baseDiffs": 1602,
-      "injectedDiffs": 1495,
+      "baseDiffs": 23,
+      "injectedDiffs": 20,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "share-polypoly",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3691,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-polypoly",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3691,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-dotsplines_dot1",
-      "verdict": "not-cleared",
-      "baseDiffs": 1604,
-      "injectedDiffs": 1496,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "linux.x86-weight_dot",
-      "verdict": "not-cleared",
-      "baseDiffs": 1605,
-      "injectedDiffs": 1499,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
       "id": "nshare-dotsplines_dot1",
       "verdict": "not-cleared",
-      "baseDiffs": 1602,
-      "injectedDiffs": 1495,
+      "baseDiffs": 23,
+      "injectedDiffs": 20,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
       "id": "nshare-weight_dot",
       "verdict": "not-cleared",
-      "baseDiffs": 1605,
-      "injectedDiffs": 1499,
+      "baseDiffs": 36,
+      "injectedDiffs": 14,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/numeric+…(8)"
-      }
-    },
-    {
-      "id": "share-b94",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1736,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-proc3d",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1954,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.i386-crazy",
-      "verdict": "not-cleared",
-      "baseDiffs": 1915,
-      "injectedDiffs": 1913,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
       "id": "share-crazy",
       "verdict": "not-cleared",
-      "baseDiffs": 1902,
-      "injectedDiffs": 1901,
+      "baseDiffs": 61,
+      "injectedDiffs": 22,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
       "id": "windows-crazy",
       "verdict": "not-cleared",
-      "baseDiffs": 1907,
-      "injectedDiffs": 1906,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
-      }
-    },
-    {
-      "id": "windows-proc3d",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1955,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-b94",
-      "verdict": "not-cleared",
-      "baseDiffs": 40,
-      "injectedDiffs": 40,
+      "baseDiffs": 79,
+      "injectedDiffs": 30,
       "bucket": {
         "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/numeric+edge/lp/numeric+edge/pos/numeric+node/_draw_/numeric+…(8)",
-        "uniformDelta": [
-          126,
-          378
-        ]
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric"
       }
     },
     {
       "id": "nshare-overlap_neato1",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1946,
+      "baseDiffs": 14,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-overlap_neato1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1948,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-overlap_neato",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1946,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-overlap_neato",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1933,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3238,7 +538,7 @@
     {
       "id": "share-pgram",
       "verdict": "harness-error",
-      "baseDiffs": 3162,
+      "baseDiffs": 2073,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "unknown",
@@ -3250,7 +550,7 @@
     {
       "id": "windows-pgram",
       "verdict": "harness-error",
-      "baseDiffs": 3174,
+      "baseDiffs": 2833,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "unknown",
@@ -3260,67 +560,12 @@
       "err": "port render timeout (injected)"
     },
     {
-      "id": "share-ldbxtried",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 2179,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-neatosplines_neato",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1946,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-neatosplines_neato",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1933,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-ldbxtried",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 2182,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "share-ngk10_4",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1890,
+      "baseDiffs": 75,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "42",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3156,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3328,100 +573,56 @@
     {
       "id": "windows-ngk10_4",
       "verdict": "drift-exonerated",
-      "baseDiffs": 1890,
+      "baseDiffs": 75,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "nshare-neatosplines_neato1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1933,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.x86-neatosplines_neato1",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1946,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
     },
     {
       "id": "linux.x86-rankdir_dot1",
-      "verdict": "not-cleared",
-      "baseDiffs": 1915,
-      "injectedDiffs": 1811,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 32,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/BSD->8th/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "none"
       }
     },
     {
       "id": "nshare-rankdir_dot1",
       "verdict": "not-cleared",
-      "baseDiffs": 1918,
-      "injectedDiffs": 1812,
+      "baseDiffs": 47,
+      "injectedDiffs": 2,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
-      }
-    },
-    {
-      "id": "linux.x86-rankdir_dot",
-      "verdict": "not-cleared",
-      "baseDiffs": 1918,
-      "injectedDiffs": 1916,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
-      }
-    },
-    {
-      "id": "nshare-rankdir_dot2",
-      "verdict": "not-cleared",
-      "baseDiffs": 1919,
-      "injectedDiffs": 1817,
-      "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/pos/numeric"
       }
     },
     {
       "id": "nshare-rankdir_dot",
       "verdict": "not-cleared",
-      "baseDiffs": 1918,
-      "injectedDiffs": 1918,
+      "baseDiffs": 36,
+      "injectedDiffs": 30,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
       "id": "linux.x86-rankdir_dot2",
       "verdict": "not-cleared",
-      "baseDiffs": 1919,
-      "injectedDiffs": 1817,
+      "baseDiffs": 35,
+      "injectedDiffs": 12,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
+        "shape": "edge/_draw_/numeric",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/_ldraw_/numeric+graph/bb/numeric+…(10)"
+        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"
       }
     },
     {
@@ -3436,155 +637,12 @@
       }
     },
     {
-      "id": "share-jsort",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 2412,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-jsort",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 2412,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-b94",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 1743,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "graphs-mode",
       "verdict": "drift-exonerated",
       "baseDiffs": 474,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "edge/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-b36",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3871,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "linux.i386-b36",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3870,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-b36",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3870,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-NaN",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3623,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-NaN",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3615,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-b124",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 7684,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-b124",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 4288,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-b51",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3716,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-b51",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3716,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "graphs-viewport",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 3212,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3623,39 +681,6 @@
       }
     },
     {
-      "id": "linux.i386-b106",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 8721,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "share-b106",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 8733,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
-      "id": "windows-b106",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 8733,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "2095_1",
       "verdict": "drift-exonerated",
       "baseDiffs": 35525,
@@ -3667,23 +692,12 @@
       }
     },
     {
-      "id": "linux.i386-b29",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 12345,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "share-b29",
       "verdict": "drift-exonerated",
-      "baseDiffs": 12323,
+      "baseDiffs": 425,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_ldraw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3691,10 +705,10 @@
     {
       "id": "windows-b29",
       "verdict": "drift-exonerated",
-      "baseDiffs": 12316,
+      "baseDiffs": 357,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_ldraw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3702,10 +716,10 @@
     {
       "id": "linux.i386-b102",
       "verdict": "drift-exonerated",
-      "baseDiffs": 18274,
+      "baseDiffs": 234,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3713,10 +727,10 @@
     {
       "id": "share-b102",
       "verdict": "drift-exonerated",
-      "baseDiffs": 18271,
+      "baseDiffs": 243,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3724,10 +738,10 @@
     {
       "id": "windows-b102",
       "verdict": "drift-exonerated",
-      "baseDiffs": 18258,
+      "baseDiffs": 66,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3757,7 +771,7 @@
     {
       "id": "linux.x86-root_twopi",
       "verdict": "drift-exonerated",
-      "baseDiffs": 37135,
+      "baseDiffs": 32621,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -3768,7 +782,7 @@
     {
       "id": "nshare-root_twopi",
       "verdict": "drift-exonerated",
-      "baseDiffs": 37168,
+      "baseDiffs": 32798,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -3779,10 +793,10 @@
     {
       "id": "nshare-root_circo",
       "verdict": "drift-exonerated",
-      "baseDiffs": 37155,
+      "baseDiffs": 22549,
       "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/unknown",
+        "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
       }
@@ -3790,7 +804,7 @@
     {
       "id": "linux.x86-root_circo",
       "verdict": "drift-exonerated",
-      "baseDiffs": 37090,
+      "baseDiffs": 31581,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
