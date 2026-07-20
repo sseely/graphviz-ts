@@ -51,3 +51,29 @@ reproducing C requires C's exact node positions = irreducible). All three
 deep residuals investigated (241_0, dotsplines, 1990) are irreducible A1/FP
 cascades. LESSON: verify a "genuine bug" to its origin — the attribution
 harness's not-cleared verdict can be a harness blind spot, not proof.
+
+## 2193 & 2239 — characterization (2026-07-20)
+
+**2239 (n=3838): A1-amplified packing arrangement — not cleanly fixable.**
+Multi-component (C's -v shows multiple majorization runs; 80 nested clusters,
+94 nodes, no pos=). Each component is laid out IDENTICALLY internally
+(intra-cluster relative vectors match C to ~0.15–0.48pt = A1 drift), but the
+components are PACKED in different positions (inter-component deltas 340–710pt;
+node scatter dx sd 186 / dy sd 255). So it's a packing-arrangement divergence,
+most likely A1 per-component drift tipping polyomino packing tie-breaks (qsort
+perimeter ties on near-equal components). GVTS_POS_INJECT was inconclusive
+(behaved anomalously for this 80-component nested-cluster case — bb went to a
+third value), so not definitively confirmed, but the internal-match + external-
+scatter signature is the A1-amplified pattern.
+
+**2193 (n=1085): genuine systematic ~1.5pt Y-offset + A1 — the one distinct
+non-drift component found.** Single-component (1 majorization run), 57 nodes,
+center=true, ratio="0,01" (malformed). Procrustes: scale 0.99994 (none),
+rotation -0.014deg (none), but a UNIFORM dy = -1.53pt (sd 0.34) translation;
+post-rigid-fit residual mean 0.36pt (A1). The whole drawing sits 1.53pt lower
+with bb 1.5pt taller (1682.4 vs 1683.9). NOT pure drift — a systematic bb-
+height / centering / margin computation difference. Origin not yet pinpointed
+(candidates: center=true centering offset, ratio="0,01" handling, or a graph/
+label bb-expansion rounding). This is the most promising remaining fixable
+candidate, though small (~1.5pt). Distinct from the A1/FP-cascade pattern of
+241_0/dotsplines/1990/2239.
