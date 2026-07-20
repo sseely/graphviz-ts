@@ -32,6 +32,7 @@ import {
   MODEL_MDS,
 } from './init.js';
 import { removeOverlap } from './overlap.js';
+import { adjustNodesFull } from './fdp-adjust.js';
 import { splineEdgesShifted, EDGETYPE_LINE } from './splines.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
 import {
@@ -125,6 +126,18 @@ export function maybeRemoveOverlap(g: Graph): void {
   // overlap removal ("overlap: none"). VPSC runs only on request.
   const overlap = g.attrs.get('overlap');
   if (overlap === undefined || overlap === 'true') return;
+  // C removeOverlapWith dispatches by adjust mode. `overlap=false` resolves to
+  // AM_PRISM (getAdjustMode's boolean fallback lands on adjustMode[1] on a
+  // GTS+SFDP build), `overlap=scale/scalexy/compress` to the scale family, only
+  // `overlap=vpsc` to VPSC. Previously neato hardcoded VPSC for ALL of these,
+  // under-scaling every overlap=false graph (bb ~0.4-0.8x the oracle) and
+  // scaling scale-mode graphs wrong. adjustNodesFull is the ported
+  // removeOverlapWith body (PRISM via fdpAdjust + scale via scAdjust); VPSC is
+  // the one mode it does not cover. @see lib/neatogen/adjust.c:removeOverlapWith
+  if (overlap !== 'vpsc') {
+    adjustNodesFull(g);
+    return;
+  }
   const nodes = Array.from(g.nodes.values());
   // Separation is DELIBERATELY the *default* nodesep, not GD_nodesep(g). C's
   // overlap removal derives its padding from `sep`/DFLT_MARGIN (adjust.c:591-600
