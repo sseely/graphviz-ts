@@ -263,9 +263,9 @@
 {"id":"2717","size":325,"status":"pass"}
 {"id":"1767","size":326,"status":"pass"}
 {"id":"graphs-flatedge","size":330,"status":"pass"}
-{"id":"graphs-b","size":338,"status":"diverged","nDiffs":7,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58"}
-{"id":"graphs-b117","size":338,"status":"diverged","nDiffs":7,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58"}
-{"id":"graphs-nhg","size":339,"status":"diverged","nDiffs":7,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58"}
+{"id":"graphs-b","size":338,"status":"pass"}
+{"id":"graphs-b117","size":338,"status":"pass"}
+{"id":"graphs-nhg","size":339,"status":"pass"}
 {"id":"2168_2","size":349,"status":"pass"}
 {"id":"graphs-ZapfDingbats","size":360,"status":"pass"}
 {"id":"graphs-colors","size":376,"status":"pass"}
@@ -462,7 +462,7 @@
 {"id":"nshare-nestedclust_dot","size":907,"status":"pass"}
 {"id":"share-flatedge","size":918,"status":"pass"}
 {"id":"graphs-Symbol","size":924,"status":"diverged","nDiffs":296,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 773.42 vs 774.81"}
-{"id":"windows-nhg","size":926,"status":"diverged","nDiffs":116,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 108.18 vs 120.18"}
+{"id":"windows-nhg","size":926,"status":"diverged","nDiffs":2,"firstDiff":"edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 59.62 vs 42.82"}
 {"id":"share-nhg","size":938,"status":"diverged","nDiffs":2,"firstDiff":"edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 58.94 vs 42.14"}
 {"id":"graphs-alf","size":958,"status":"pass"}
 {"id":"graphs-record","size":958,"status":"pass"}
@@ -576,7 +576,7 @@
 {"id":"1436","size":2599,"status":"diverged","nDiffs":385,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 783.23 vs 796.3"}
 {"id":"share-jcctree","size":2612,"status":"pass"}
 {"id":"windows-jcctree","size":2612,"status":"pass"}
-{"id":"graphs-pgram","size":2614,"status":"diverged","nDiffs":54,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 577.54 vs 597.54"}
+{"id":"graphs-pgram","size":2614,"status":"pass"}
 {"id":"linux.i386-dfa","size":2651,"status":"pass"}
 {"id":"share-dfa","size":2651,"status":"pass"}
 {"id":"graphs-NaN","size":2672,"status":"pass"}
@@ -687,13 +687,13 @@
 {"id":"share-crazy","size":10433,"status":"diverged","nDiffs":61,"firstDiff":"edge:7th Edition->8th Edition#0 _draw_ edge:7th Edition->8th Edition#0/_draw_/op[1].unfilled_bezier[1]: 468.02 vs 467.26"}
 {"id":"windows-crazy","size":10433,"status":"diverged","nDiffs":79,"firstDiff":"edge:7th Edition->8th Edition#0 _draw_ edge:7th Edition->8th Edition#0/_draw_/op[1].unfilled_bezier[1]: 468.42 vs 467.64"}
 {"id":"windows-proc3d","size":10446,"status":"pass"}
-{"id":"graphs-b94","size":10503,"status":"diverged","nDiffs":40,"firstDiff":"edge:h212_202_184_169->h130_75_118_14_p1433#0 _draw_ edge:h212_202_184_169->h130_75_118_14_p1433#0/_draw_/op[1].unfilled_bezier[0]: 579.45 vs 453.45"}
+{"id":"graphs-b94","size":10503,"status":"pass"}
 {"id":"nshare-overlap_neato1","size":10511,"status":"diverged","nDiffs":1943,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 711 vs 1759.98"}
 {"id":"linux.x86-overlap_neato1","size":10554,"status":"diverged","nDiffs":1940,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 576 vs 982.76"}
 {"id":"linux.x86-overlap_neato","size":10562,"status":"diverged","nDiffs":1925,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 531 vs 777.18"}
 {"id":"nshare-overlap_neato","size":10566,"status":"diverged","nDiffs":1931,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 531 vs 777.19"}
-{"id":"share-pgram","size":10942,"status":"diverged","nDiffs":2116,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522"}
-{"id":"windows-pgram","size":11001,"status":"diverged","nDiffs":2853,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522"}
+{"id":"share-pgram","size":10942,"status":"diverged","nDiffs":2073,"firstDiff":"edge:Parallelogram->A#0 _draw_ edge:Parallelogram->A#0/_draw_/op[1].unfilled_bezier[0]: 198.17 vs 197.63"}
+{"id":"windows-pgram","size":11001,"status":"diverged","nDiffs":2833,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 638.89 vs 638"}
 {"id":"share-ldbxtried","size":11505,"status":"pass"}
 {"id":"linux.x86-neatosplines_neato","size":11690,"status":"diverged","nDiffs":1925,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 531 vs 777.18"}
 {"id":"nshare-neatosplines_neato","size":11700,"status":"diverged","nDiffs":1931,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 531 vs 777.19"}

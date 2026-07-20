@@ -251,10 +251,15 @@ function layoutComponents(g: Graph, comps: Graph[], mode: number, model: number)
     splineEdgesShifted(gc);
   }
   const pinfo: PackInfo = {
-    aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: true,
+    aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: false,
     mode: PackMode.Node, fixed: null, vals: null, flags: 0,
   };
   getPackInfo(g, PackMode.Node, CL_OFFSET, pinfo);
+  // C sets pinfo.doSplines = true AFTER getPackModeInfo, right before
+  // packGraphs — so the packer follows each component's routed splines
+  // (self-loops/curves bulge past the chord). getPackInfo resets it to
+  // false, so this must come last. @see lib/neatogen/neatoinit.c:1409
+  pinfo.doSplines = true;
   packGraphs(comps.length, comps, g, pinfo);
   // C: compute_bb + gv_postprocess translate the packed drawing.
   const bb = computeSubgraphBB(g, 0);

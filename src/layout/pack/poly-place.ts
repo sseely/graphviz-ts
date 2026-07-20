@@ -143,15 +143,53 @@ function roundedCell(p: Point, ssize: number): Point {
 }
 
 /**
- * Mark cells crossed by edge e as a straight tail-to-head line.
- * Spline-following (doSplines) is not exercised by any packing caller
- * yet (pinfo.doSplines is false in twopi/neato component packing).
+ * Mark cells crossed by edge e. With doS and a routed spline present, follow
+ * the spline control points (self-loops and curved edges bulge past the
+ * straight tail-to-head chord, adding cells the packer must respect); else a
+ * straight tail-to-head line. neato/twopi component packing set doSplines=true,
+ * so the spline branch is live — omitting it undercounts the polyomino and lets
+ * a neighbouring component pack one grid cell too close.
  * @see lib/pack/pack.c:fillEdge
  */
-function fillEdge(e: Edge, pt: Point, ps: PointSet, off: Point, ssize: number): void {
-  const hc = e.head.info.coord ?? { x: 0, y: 0 };
-  const hpt = roundedCell({ x: hc.x + off.x, y: hc.y + off.y }, ssize);
-  fillLine(pt, hpt, ps);
+function fillEdge(
+  e: Edge, p: Point, ps: PointSet, off: Point, ssize: number, doS: boolean,
+): void {
+  const spl = e.info.spl;
+  // C: `if (!doS || !ED_spl(e))` — straight segment tail cell -> head cell.
+  if (!doS || spl === undefined) {
+    const hc = e.head.info.coord ?? { x: 0, y: 0 };
+    const hpt = roundedCell({ x: hc.x + off.x, y: hc.y + off.y }, ssize);
+    fillLine(p, hpt, ps);
+    return;
+  }
+  const cellOf = (q: Point): Point => roundedCell({ x: q.x + off.x, y: q.y + off.y }, ssize);
+  for (let j = 0; j < spl.size; j++) {
+    const bz = spl.list[j];
+    if (bz === undefined) continue;
+    let pt: Point;
+    let hpt: Point;
+    let k: number;
+    if (bz.sflag) {
+      pt = cellOf(bz.sp);
+      hpt = cellOf(bz.list[0]!);
+      k = 1;
+    } else {
+      pt = cellOf(bz.list[0]!);
+      hpt = cellOf(bz.list[1]!);
+      k = 2;
+    }
+    fillLine(pt, hpt, ps);
+    for (; k < bz.size; k++) {
+      pt = hpt;
+      hpt = cellOf(bz.list[k]!);
+      fillLine(pt, hpt, ps);
+    }
+    if (bz.eflag) {
+      pt = hpt;
+      hpt = cellOf(bz.ep);
+      fillLine(pt, hpt, ps);
+    }
+  }
 }
 
 /**
@@ -180,6 +218,7 @@ interface CoverCtx {
   off: Point;
   ssize: number;
   margin: number;
+  doSplines: boolean;
 }
 
 /** Cover one node's box and its out-edges. @see pack.c:genPoly (node loop body) */
@@ -194,7 +233,9 @@ function coverNode(n: Node, ctx: CoverCtx): void {
   const UR = roundedCell({ x: pt.x + s2.x, y: pt.y + s2.y }, ctx.ssize);
   fillRect(LL, UR, ctx.ps);
   const cpt = roundedCell(pt, ctx.ssize);
-  for (const e of n.outEdges(ctx.eg)) fillEdge(e, cpt, ctx.ps, ctx.off, ctx.ssize);
+  for (const e of n.outEdges(ctx.eg)) {
+    fillEdge(e, cpt, ctx.ps, ctx.off, ctx.ssize, ctx.doSplines);
+  }
 }
 
 /**
@@ -213,6 +254,7 @@ function genPoly(
     off: { x: -cround(bb.ll.x), y: -cround(bb.ll.y) },
     ssize,
     margin: pinfo.margin,
+    doSplines: pinfo.doSplines,
   };
   for (const n of g.nodes.values()) coverNode(n, ctx);
   return {

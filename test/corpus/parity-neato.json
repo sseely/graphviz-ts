@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-19T22:21:18.888Z",
+  "generatedAt": "2026-07-20T14:44:30.415Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "neato",
   "tolerance": 0.5,
   "total": 762,
   "counts": {
-    "pass": 660,
-    "diverged": 95,
+    "pass": 665,
+    "diverged": 90,
     "oracle-error": 7,
     "port-error": 0,
     "timeout": 0
@@ -1350,23 +1350,17 @@
     {
       "id": "graphs-b",
       "size": 338,
-      "status": "diverged",
-      "nDiffs": 7,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58"
+      "status": "pass"
     },
     {
       "id": "graphs-b117",
       "size": 338,
-      "status": "diverged",
-      "nDiffs": 7,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58"
+      "status": "pass"
     },
     {
       "id": "graphs-nhg",
       "size": 339,
-      "status": "diverged",
-      "nDiffs": 7,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58"
+      "status": "pass"
     },
     {
       "id": "2168_2",
@@ -2366,8 +2360,8 @@
       "id": "windows-nhg",
       "size": 926,
       "status": "diverged",
-      "nDiffs": 116,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 108.18 vs 120.18"
+      "nDiffs": 2,
+      "firstDiff": "edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 59.62 vs 42.82"
     },
     {
       "id": "share-nhg",
@@ -2969,9 +2963,7 @@
     {
       "id": "graphs-pgram",
       "size": 2614,
-      "status": "diverged",
-      "nDiffs": 54,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 577.54 vs 597.54"
+      "status": "pass"
     },
     {
       "id": "linux.i386-dfa",
@@ -3582,9 +3574,7 @@
     {
       "id": "graphs-b94",
       "size": 10503,
-      "status": "diverged",
-      "nDiffs": 40,
-      "firstDiff": "edge:h212_202_184_169->h130_75_118_14_p1433#0 _draw_ edge:h212_202_184_169->h130_75_118_14_p1433#0/_draw_/op[1].unfilled_bezier[0]: 579.45 vs 453.45"
+      "status": "pass"
     },
     {
       "id": "nshare-overlap_neato1",
@@ -3618,15 +3608,15 @@
       "id": "share-pgram",
       "size": 10942,
       "status": "diverged",
-      "nDiffs": 2116,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522"
+      "nDiffs": 2073,
+      "firstDiff": "edge:Parallelogram->A#0 _draw_ edge:Parallelogram->A#0/_draw_/op[1].unfilled_bezier[0]: 198.17 vs 197.63"
     },
     {
       "id": "windows-pgram",
       "size": 11001,
       "status": "diverged",
-      "nDiffs": 2853,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522"
+      "nDiffs": 2833,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 638.89 vs 638"
     },
     {
       "id": "share-ldbxtried",
