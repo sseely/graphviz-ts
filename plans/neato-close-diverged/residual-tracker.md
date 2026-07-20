@@ -5,6 +5,51 @@
 Source: fresh deleted-JSONL neato sweep committed with T1 (`fe2d315`).
 `test/corpus/parity-neato.json` = **665 pass · 90 diverged · 7 oracle-error**.
 
+---
+
+## POST-GF-A UPDATE (2026-07-20, commit `74da840`)
+
+GF-A (overlap-removal dispatch) landed: **15 more fixed, 0 regressions**.
+Running total across this mission: **20 fixed** (T1 5 + GF-A 15); neato now
+**680 pass · 75 diverged · 7 oracle-error**. Fresh re-triage of the 75:
+
+| bucket | count | character |
+|--------|------:|-----------|
+| B2-spline | 43 | mostly 0.5–1.3pt near-tolerance (see node-drift finding) + 2 genuine 6pt outliers (`241_0`, `1990`) + A1-drift `nshare-root_circo` (n=22549) |
+| graphfill-residual | 17 | GF-B A1-drift (accept-class) + GF-C over-scale (`graphs-b81` 2×, `2242`) |
+| B4-label | 8 | not yet diagnosed |
+| B3-cluster | 4 | **proven node-drift cascade, NOT a cluster-bbox bug** |
+| B5-arrow | 3 | not yet diagnosed |
+
+### KEY FINDING — the remaining tail is dominated by ~0.5pt neato node-position drift
+
+`graphs-clust1`: the cluster bboxes diverge because the **contained node
+positions themselves** differ 0.15–0.74pt from the oracle (e.g. node at
+224.22→224.96). Neato ignores clusters during layout, so the bbox merely traces
+drifted nodes — this is a stress-solver / init position drift, not a cluster bug.
+The same ~0.5–1pt magnitude dominates the B2-spline bucket (endpoints/interior
+drift by <1pt, pushing splines just over the 0.5pt tolerance). The brief asserts
+the neato stress loop is bounded ~1e-6, so a 0.5pt drift must originate **before**
+majorization (initial layout / seed / a pre-step) or in a larger-graph
+amplification the 1e-6 measurement did not cover — a **deep core-solver
+investigation** (`stress.ts`/`solve-model`/`init`), outside every Batch-3
+write-set, with reducibility unproven. Do NOT surface-patch bbox/spline layers.
+
+### Remaining work classification
+
+- **Node-drift cascade (deep, core solver):** B3-cluster (4) + a large share of
+  B2-spline. One common cause may exist; needs stress-solver diagnosis first.
+- **Genuine structural outliers (real bugs, deep):** `241_0` (spline ptCount 14
+  vs 8 — neato router), `1990` (6pt), `graphs-b81` (2× bb — text-measure on
+  giant multiline labels), `2242` (over-scale).
+- **Accept-class A1-drift (classify, don't fix):** `nshare-root_circo` (n=22549),
+  `linux.x86-root_twopi`/`nshare-root_twopi` (n≈32k), `2475_2` (n=283k), `2095`,
+  `2239` — huge-nDiff, ratio~1.0 signatures. Per the diagnosis rule, confirm each
+  with a controlled experiment before writing the `known-divergences.md` entry.
+- **Not yet diagnosed:** B4-label (8), B5-arrow (3).
+
+---
+
 ## Headline: the B1 bucket was a *symptom* cluster, not one cause
 
 `buckets.json` grouped 44 ids by the graph background-fill `_draw_` diff. T1
