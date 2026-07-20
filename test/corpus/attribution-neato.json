@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T17:48:23.449Z",
-  "oracleSha1": "5caf7a368dae445bdf045a7b0823f73b89806256",
+  "generatedAt": "2026-07-20T19:03:05.212Z",
+  "oracleSha1": "8fdd1294b3726c2a19fe384ca48f44a2954d1944",
   "tolerance": 0.5,
   "results": [
     {
@@ -52,17 +52,6 @@
       }
     },
     {
-      "id": "2801",
-      "verdict": "not-cleared",
-      "baseDiffs": 8,
-      "injectedDiffs": 8,
-      "bucket": {
-        "shape": "edge/_hldraw_/numeric",
-        "kind": "position",
-        "signature": "edge/_hldraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+edge/tail_lp/numeric"
-      }
-    },
-    {
       "id": "graphs-jcctree",
       "verdict": "drift-exonerated",
       "baseDiffs": 113,
@@ -82,28 +71,6 @@
         "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "windows-nhg",
-      "verdict": "not-cleared",
-      "baseDiffs": 2,
-      "injectedDiffs": 2,
-      "bucket": {
-        "shape": "edge/_ldraw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric"
-      }
-    },
-    {
-      "id": "share-nhg",
-      "verdict": "not-cleared",
-      "baseDiffs": 2,
-      "injectedDiffs": 2,
-      "bucket": {
-        "shape": "edge/_ldraw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric"
       }
     },
     {
@@ -247,17 +214,6 @@
         "shape": "edge/_ldraw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "2476",
-      "verdict": "not-cleared",
-      "baseDiffs": 2,
-      "injectedDiffs": 2,
-      "bucket": {
-        "shape": "edge/_ldraw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric"
       }
     },
     {
@@ -821,17 +777,6 @@
         "shape": "graph/_draw_/unknown",
         "kind": "position",
         "signature": "none"
-      }
-    },
-    {
-      "id": "2470",
-      "verdict": "not-cleared",
-      "baseDiffs": 682,
-      "injectedDiffs": 680,
-      "bucket": {
-        "shape": "edge/_ldraw_/numeric",
-        "kind": "position",
-        "signature": "edge/_ldraw_/numeric+edge/lp/numeric"
       }
     }
   ]

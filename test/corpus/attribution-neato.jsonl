@@ -1,13 +1,10 @@
-{"_meta":true,"oracleSha1":"5caf7a368dae445bdf045a7b0823f73b89806256","generatedAt":"2026-07-20T17:42:02.069Z"}
+{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-20T18:56:39.093Z"}
 {"id":"graphs-clust1","verdict":"drift-exonerated","baseDiffs":42,"injectedDiffs":0,"bucket":{"shape":"cluster/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-p","verdict":"drift-exonerated","baseDiffs":2,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"241_0","verdict":"not-cleared","baseDiffs":13,"injectedDiffs":14,"bucket":{"shape":"edge/_draw_/structural","kind":"count","signature":"edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"}}
 {"id":"1990","verdict":"not-cleared","baseDiffs":17,"injectedDiffs":17,"bucket":{"shape":"edge/_draw_/structural","kind":"count","signature":"edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural","uniformDelta":[-30.44,-1]}}
-{"id":"2801","verdict":"not-cleared","baseDiffs":8,"injectedDiffs":8,"bucket":{"shape":"edge/_hldraw_/numeric","kind":"position","signature":"edge/_hldraw_/numeric+edge/_tldraw_/numeric+edge/head_lp/numeric+edge/tail_lp/numeric"}}
 {"id":"graphs-jcctree","verdict":"drift-exonerated","baseDiffs":113,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-Symbol","verdict":"drift-exonerated","baseDiffs":296,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"windows-nhg","verdict":"not-cleared","baseDiffs":2,"injectedDiffs":2,"bucket":{"shape":"edge/_ldraw_/numeric","kind":"position","signature":"edge/_ldraw_/numeric+edge/lp/numeric"}}
-{"id":"share-nhg","verdict":"not-cleared","baseDiffs":2,"injectedDiffs":2,"bucket":{"shape":"edge/_ldraw_/numeric","kind":"position","signature":"edge/_ldraw_/numeric+edge/lp/numeric"}}
 {"id":"graphs-grdshapes","verdict":"drift-exonerated","baseDiffs":439,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"share-clust1","verdict":"drift-exonerated","baseDiffs":43,"injectedDiffs":0,"bucket":{"shape":"cluster/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-url","verdict":"drift-exonerated","baseDiffs":8,"injectedDiffs":0,"bucket":{"shape":"cluster/_draw_/unknown","kind":"position","signature":"none"}}
@@ -21,7 +18,6 @@
 {"id":"1436","verdict":"drift-exonerated","baseDiffs":385,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-Helvetica","verdict":"drift-exonerated","baseDiffs":275,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"windows-train11","verdict":"drift-exonerated","baseDiffs":2,"injectedDiffs":0,"bucket":{"shape":"edge/_ldraw_/unknown","kind":"position","signature":"none"}}
-{"id":"2476","verdict":"not-cleared","baseDiffs":2,"injectedDiffs":2,"bucket":{"shape":"edge/_ldraw_/numeric","kind":"position","signature":"edge/_ldraw_/numeric+edge/lp/numeric"}}
 {"id":"graphs-sr_box_dbl","verdict":"drift-exonerated","baseDiffs":2,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-sl_box_dbl","verdict":"drift-exonerated","baseDiffs":2,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2095","verdict":"drift-exonerated","baseDiffs":7323,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -73,4 +69,3 @@
 {"id":"nshare-root_circo","verdict":"drift-exonerated","baseDiffs":22549,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"linux.x86-root_circo","verdict":"drift-exonerated","baseDiffs":31581,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2475_2","verdict":"drift-exonerated","baseDiffs":283014,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2470","verdict":"not-cleared","baseDiffs":682,"injectedDiffs":680,"bucket":{"shape":"edge/_ldraw_/numeric","kind":"position","signature":"edge/_ldraw_/numeric+edge/lp/numeric"}}
