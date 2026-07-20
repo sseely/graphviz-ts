@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-20T16:57:39.084Z",
+  "generatedAt": "2026-07-20T18:55:01.758Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "neato",
   "tolerance": 0.5,
   "total": 762,
   "counts": {
-    "pass": 680,
-    "diverged": 75,
+    "pass": 685,
+    "diverged": 70,
     "oracle-error": 7,
     "port-error": 0,
     "timeout": 0
@@ -2170,9 +2170,7 @@
     {
       "id": "2801",
       "size": 651,
-      "status": "diverged",
-      "nDiffs": 8,
-      "firstDiff": "edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_/op[2].text[0]: 330.01 vs 356.44"
+      "status": "pass"
     },
     {
       "id": "share-labelroot-fdr",
@@ -2351,16 +2349,12 @@
     {
       "id": "windows-nhg",
       "size": 926,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 59.62 vs 42.82"
+      "status": "pass"
     },
     {
       "id": "share-nhg",
       "size": 938,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 58.94 vs 42.14"
+      "status": "pass"
     },
     {
       "id": "graphs-alf",
@@ -3101,9 +3095,7 @@
     {
       "id": "2476",
       "size": 3653,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0 _ldraw_ edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0/_ldraw_/op[2].text[1]: 648.25 vs 664.99"
+      "status": "pass"
     },
     {
       "id": "graphs-sr_box_dbl",
@@ -3963,9 +3955,7 @@
     {
       "id": "2470",
       "size": 734358,
-      "status": "diverged",
-      "nDiffs": 682,
-      "firstDiff": "edge:n100->n99#0 _ldraw_ edge:n100->n99#0/_ldraw_/op[2].text[0]: 6930.71 vs 6852.93"
+      "status": "pass"
     },
     {
       "id": "2222",

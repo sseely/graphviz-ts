@@ -40,7 +40,6 @@ import {
   computeSubgraphBB,
   getPackInfo,
   packGraphs,
-  shiftOneGraph,
   PackMode,
   type PackInfo,
 } from '../pack/index.js';
@@ -274,9 +273,16 @@ function layoutComponents(g: Graph, comps: Graph[], mode: number, model: number)
   // false, so this must come last. @see lib/neatogen/neatoinit.c:1409
   pinfo.doSplines = true;
   packGraphs(comps.length, comps, g, pinfo);
-  // C: compute_bb + gv_postprocess translate the packed drawing.
-  const bb = computeSubgraphBB(g, 0);
-  if (bb.ll.x !== 0 || bb.ll.y !== 0) shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
+  // C does NOT translate here — after packGraphs it runs compute_bb (no shift)
+  // then gv_postprocess, whose translate_drawing shifts the packed drawing to
+  // the origin AFTER addXLabels. Translating here (a premature shiftOneGraph)
+  // makes addXLabels run in the origin frame while C runs it in the packed
+  // (pre-translate) frame; round() in the xlabel obstacle rects then tips the
+  // edge-label side-selection knife-edge (lp off by one label height on
+  // share-nhg/2476/2470). Leave the shift to gvPostprocess.
+  // @see lib/neatogen/neatoinit.c:neato_layout (compute_bb then gv_postprocess)
+  // @see lib/common/postproc.c:gv_postprocess (addXLabels before translate_drawing)
+  g.info.bb = computeSubgraphBB(g, 0);
 }
 
 // ---------------------------------------------------------------------------

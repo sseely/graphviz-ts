@@ -427,7 +427,7 @@
 {"id":"graphs-ER","size":650,"status":"pass"}
 {"id":"share-labelroot-fdc","size":650,"status":"pass"}
 {"id":"windows-labelroot-fdc","size":650,"status":"pass"}
-{"id":"2801","size":651,"status":"diverged","nDiffs":8,"firstDiff":"edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_/op[2].text[0]: 330.01 vs 356.44"}
+{"id":"2801","size":651,"status":"pass"}
 {"id":"share-labelroot-fdr","size":652,"status":"pass"}
 {"id":"windows-labelroot-fdr","size":652,"status":"pass"}
 {"id":"graphs-nul_val","size":659,"status":"pass"}
@@ -462,8 +462,8 @@
 {"id":"nshare-nestedclust_dot","size":907,"status":"pass"}
 {"id":"share-flatedge","size":918,"status":"pass"}
 {"id":"graphs-Symbol","size":924,"status":"diverged","nDiffs":296,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 773.42 vs 774.81"}
-{"id":"windows-nhg","size":926,"status":"diverged","nDiffs":2,"firstDiff":"edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 59.62 vs 42.82"}
-{"id":"share-nhg","size":938,"status":"diverged","nDiffs":2,"firstDiff":"edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 58.94 vs 42.14"}
+{"id":"windows-nhg","size":926,"status":"pass"}
+{"id":"share-nhg","size":938,"status":"pass"}
 {"id":"graphs-alf","size":958,"status":"pass"}
 {"id":"graphs-record","size":958,"status":"pass"}
 {"id":"graphs-dfa","size":959,"status":"pass"}
@@ -606,7 +606,7 @@
 {"id":"share-alf","size":3629,"status":"pass"}
 {"id":"graphs-st_box_dbl","size":3640,"status":"pass"}
 {"id":"graphs-st_circle_dbl","size":3643,"status":"pass"}
-{"id":"2476","size":3653,"status":"diverged","nDiffs":2,"firstDiff":"edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0 _ldraw_ edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0/_ldraw_/op[2].text[1]: 648.25 vs 664.99"}
+{"id":"2476","size":3653,"status":"pass"}
 {"id":"graphs-sr_box_dbl","size":3777,"status":"diverged","nDiffs":2,"firstDiff":"edge:node62->node63#0 _draw_ edge:node62->node63#0/_draw_/op[1].unfilled_bezier[7]: 1213.84 vs 1214.37"}
 {"id":"graphs-sr_circle_dbl","size":3780,"status":"pass"}
 {"id":"graphs-sl_box_dbl","size":3792,"status":"diverged","nDiffs":2,"firstDiff":"edge:node82->node86#0 _draw_ edge:node82->node86#0/_draw_/op[1].unfilled_bezier[7]: 1213.84 vs 1214.37"}
@@ -757,6 +757,6 @@
 {"id":"linux.x86-root_circo","size":313168,"status":"diverged","nDiffs":31581,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1533.55 vs 1534.43"}
 {"id":"graphs-b103","size":377525,"status":"pass"}
 {"id":"2475_2","size":641284,"status":"diverged","nDiffs":283014,"firstDiff":"[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 13489.64 vs 13553.18"}
-{"id":"2470","size":734358,"status":"diverged","nDiffs":682,"firstDiff":"edge:n100->n99#0 _ldraw_ edge:n100->n99#0/_ldraw_/op[2].text[0]: 6930.71 vs 6852.93"}
+{"id":"2470","size":734358,"status":"pass"}
 {"id":"2222","size":2384469,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
 {"id":"2108","size":3136769,"status":"oracle-error","err":"spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT"}
