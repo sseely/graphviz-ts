@@ -21,3 +21,33 @@ output (T1 `b1RootCause`, T2 residual summary, per-task classifications).
 | 2026-07-20 | GF-A | **overlap-removal dispatch fixed (user-authorized `overlap.ts`/neato scope).** neato's `maybeRemoveOverlap` hardcoded VPSC for every non-`true` overlap; C's `removeOverlapWith` dispatches by mode — `overlap=false`→AM_PRISM (`fdpAdjust`), `overlap=scale/scalexy/compress`→scAdjust, only `overlap=vpsc`→VPSC. Routed the non-vpsc path through the existing `adjustNodesFull` (already used by twopi/circo). **15 fixed, 0 regressions**, neato 665→680 pass / 90→75 diverged. | 2609/2258/2556 + overlap_neato/neatosplines/newarrows/arrows families were single-component `overlap=false` graphs under-scaled ~0.4–0.8× by VPSC; PRISM matches oracle exactly. overlap_neato1 is `overlap=scale`→scAdjust (also fixed). Change is neato-only (`maybeRemoveOverlap` callers: neato index.ts:215,263) → dot/circo/twopi/osage/patchwork provably unaffected, no re-sweep. | bb oracle-exact on 2609/2258/2556/overlap_neato/neatosplines; near-miss arrows_dot/newarrows-mirror/overlap_neato1 graduated from graph-fill to ~1pt B2-spline residuals (bb now correct). tsc/vitest 3206/bundle green. |
 | 2026-07-20 | T2 | **Residual triage complete → `residual-tracker.md`.** 90 diverged split: graphfill 38, B2-spline 37, B4-label 8, B3-cluster 4, B5-arrow 3. Triaged from T1's committed fresh sweep (firstDiff already in the jsonl — no re-sweep needed). **Acceptance target (≤51) NOT met** and won't be by the planned batches: the graph-fill 38 subdivide into GF-A overlap-scale (~16, `overlap.ts`, outside all write-sets), GF-B near-match/A1-drift (~19, mostly accept-class incl. root_twopi/circo/2475_2 at 30k–283k nDiffs), GF-C over-scale outliers (3, incl. `graphs-b81` 2×). | The B1 "bucket" clustered by the graph-fill *symptom*, not one cause. Batch 3 (B2/B3/B4/B5) covers 52 of 90; the 38 graph-fill are unassigned to any task. This is a plan cost-model error, not a T1 failure. | bb ratio analysis in `residual-tracker.md`; 2609 confirmed single-component overlap-scale. |
 | 2026-07-20 | T1 | **Pre-existing gate breakage** (not introduced by T1): `bash test/golden/gates.sh` cannot exit 0 at HEAD — Gate 3 (`run.sh`) needs `dist/cli.js` which no source produces (stale harness from f1bf494); Gate 4 fails on 7 pre-existing files >600 lines (`dot.ts` 1500, `splines.ts` 1008, …). Effective gate used: Gate 1 (tsc) + Gate 2 (vitest incl. golden `suite.test.ts`/`xdot-suite.test.ts`) + Gate 5 (bundle) — all green. | Verified identical failure on stashed clean HEAD (`Cannot find module dist/cli.js`). Out of T1 write-set; golden coverage genuinely exercised via vitest. | clean-HEAD Gate 3 fails same; golden vitest 406 pass; bundle 233758 < 512000. |
+
+## 1990 ortho — CORRECTED classification (2026-07-20)
+
+Earlier I called 1990 a "distinct fixable bug." **That was wrong** — deep
+tracing (instrumented C ortho plugin) proves it is the **same irreducible
+A1-drift pattern**, amplified through the ortho maze's `isSmall` threshold:
+
+- Edge `1:se->6:sw`... (actually `0⋯7 ❰A❱ -> 0⋯1 'a'`) over-segments (B7 vs
+  oracle B4) because the port's `shortPath` cost is 555 (a bend) vs C's 12
+  (straight). Same maze cells, same constants (delta=1, mu=500, BIG=16384).
+- Root: the gap routing cell between the two nodes has width **6.987 in the
+  port vs 7.2 in C**. `isSmall(w) = (w-3)/2 < 2` i.e. width < 7.0. C's 7.2 is
+  not small (straight T-B edge weight 12); the port's 6.987 IS small, so
+  `vwt=BIG` blocks the straight edge → detour.
+- The 0.2pt width difference is the tail box left edge (tail.x − lw): port
+  tail.x=85.8 vs C 85.7. **1990 has no `pos=`** → neato lays it out from
+  scratch by stress majorization → that 0.1pt tail.x delta is A1 float32
+  drift. Confirmed: lowering the port's isSmall threshold below 1.9 makes the
+  edge route B4 (oracle-exact), proving the isSmall tip is the sole cause.
+- The attribution harness mislabeled it "not-cleared" because its position
+  injection sets `n.info.pos` but the ortho maze reads `coord`, so injection
+  never reaches ortho routing — a harness blind spot, not evidence of a
+  non-drift bug.
+
+**Conclusion:** 1990 is accept-class (A1-drift amplified by the isSmall maze
+knife-edge). No faithful fix (the port's ortho algorithm matches C;
+reproducing C requires C's exact node positions = irreducible). All three
+deep residuals investigated (241_0, dotsplines, 1990) are irreducible A1/FP
+cascades. LESSON: verify a "genuine bug" to its origin — the attribution
+harness's not-cleared verdict can be a harness blind spot, not proof.
