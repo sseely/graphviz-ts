@@ -88,7 +88,7 @@ Setup once per session: `npm run survey:setup` builds the headless `/tmp/ghl`.
 | Batch | Task | Status |
 |-------|------|--------|
 | 1 | [T1 · B1 packing / lone-node placement](./batch-1/T1-b1-packing-placement.md) | [x] |
-| 2 | [T2 · fresh re-sweep + residual triage](./batch-2/T2-resweep-triage.md) | [ ] |
+| 2 | [T2 · fresh re-sweep + residual triage](./batch-2/T2-resweep-triage.md) | [x] |
 | 3 | [T3 · B3 cluster-draw](./batch-3/T3-cluster-draw.md) (worktree) | [ ] |
 | 3 | [T4 · B4 edge-labels](./batch-3/T4-edge-labels.md) (worktree) | [ ] |
 | 3 | [T5 · B2+B5 splines & arrowheads](./batch-3/T5-splines-arrows.md) (worktree) | [ ] |
