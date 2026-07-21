@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-17T15:52:41.936Z)
-- **pass:** 518 (68.0%) · **diverged (tracked):** 52 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 184
+- **Surveyed:** 762 (generated 2026-07-21T18:29:49.395Z)
+- **pass:** 520 (68.2%) · **diverged (tracked):** 50 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 184
 - **oracle-error:** 7 · **port-error:** 1 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -35,13 +35,13 @@ outright leaves the class silently on the next report regen.
 
 - **A1-drift**: **184** members — full per-id evidence in [`attribution-sfdp.json`](./attribution-sfdp.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
-## Diverged (52)
+## Diverged (50)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
-| `2475_2` | 641284 | 305599 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 14372 vs 14375.01` |
+| `2475_2` | 641284 | 309794 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 14372 vs 14375.01` |
 | `1652` | 240391 | 114202 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 955.45 vs 958.43` |
-| `2095_1` | 105083 | 55782 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3321.65 vs 3295.8` |
+| `2095_1` | 105083 | 55818 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 3321.65 vs 3295.8` |
 | `linux.x86-root_circo` | 313168 | 35482 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1096.38 vs 1105.16` |
 | `linux.x86-root_twopi` | 287907 | 35482 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1096.38 vs 1105.16` |
 | `2470` | 734358 | 20258 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 9388.23 vs 7898.3` |
@@ -68,7 +68,6 @@ outright leaves the class silently on the next report regen.
 | `graphs-trapeziumlr` | 1484 | 971 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 876.66 vs 892.52` |
 | `share-trapeziumlr` | 7233 | 971 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 946.42 vs 964.29` |
 | `windows-trapeziumlr` | 7229 | 971 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 946.12 vs 963.98` |
-| `2476` | 3653 | 687 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1753.09 vs 1749.03` |
 | `graphs-size` | 1706 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
 | `graphs-unix2` | 1719 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
 | `graphs-unix2k` | 1719 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
@@ -77,6 +76,7 @@ outright leaves the class silently on the next report regen.
 | `share-unix2k` | 7421 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
 | `windows-unix2` | 7421 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
 | `windows-unix2k` | 7421 | 677 | `edge:1 BSD->2 BSD#0 _draw_ edge:1 BSD->2 BSD#0/_draw_/op[1].unfilled_bezier[1]: 534.77 vs 535.28` |
+| `2476` | 3653 | 669 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1753.09 vs 1749.03` |
 | `1855` | 1335 | 665 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 592.32 vs 595.62` |
 | `1436` | 2599 | 601 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1833.4 vs 1973.4` |
 | `linux.x86-rankdir_dot` | 12792 | 463 | `edge:2.8 BSD->2.9 BSD#0 _draw_ edge:2.8 BSD->2.9 BSD#0/_draw_/op[1].unfilled_bezier[0]: 1844.07 vs 1843.47` |
@@ -89,8 +89,6 @@ outright leaves the class silently on the next report regen.
 | `2521_1` | 1062 | 60 | `edge:TL 1 event 2->TL 1 event 3#0 _draw_ edge:TL 1 event 2->TL 1 event 3#0/_draw_/op[1].unfilled_bezier[5]: 120.17 vs 120.76` |
 | `2168` | 70 | 57 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 48.58 vs 42.27` |
 | `241_0` | 578 | 20 | `edge:1->2#0 _draw_ edge:1->2#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 20` |
-| `2184` | 393 | 18 | `edge:x21->x22#0 _draw_ edge:x21->x22#0/_draw_/op[1].unfilled_bezier[0]: 271.17 vs 240.17` |
-| `2639` | 170 | 18 | `edge:i->j#0 _draw_ edge:i->j#0/_draw_/op[1].unfilled_bezier[1]: 84 vs 51` |
 
 ## Errors and timeouts (8)
 
@@ -106,5 +104,5 @@ outright leaves the class silently on the next report regen.
 | `2556` | port-error | armPow: argument outside the ported normal-finite fast path |
 
 **oracle errors:** 7 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
-_Passing ids (518) are omitted for brevity — the full roster is in
+_Passing ids (520) are omitted for brevity — the full roster is in
 `parity-sfdp.json`._

@@ -9,8 +9,9 @@
  * matching group — faithfully ported from dttree.c lines 226-230).
  *
  * Iteration (first/next) produces ascending comparator order.  Among
- * equal-key nodes the splay tree does not guarantee a fixed sub-order,
- * matching Dtobag semantics in C.
+ * equal-key nodes the sub-order is the deterministic order CDT's Dtobag
+ * produces (via bagInsert's integrated splay+insert) — load-bearing for the
+ * xlabel R-tree, which drains this bag to seed its Hilbert insertion order.
  *
  * AD4 extension: required by xlabels.ts which uses dtopen(&Hdisc, Dtobag).
  *
@@ -22,29 +23,13 @@ import {
   splay,
   splayMin,
   splayMax,
-  splaySplitInsert,
+  bagInsert,
 } from "./splay-core.js";
 import type { SplayNode } from "./splay-core.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Splice a duplicate node to the left of the current root.
- * Mirrors dttree.c DT_OBAG DT_INSERT (found branch, lines 227-230):
- *   root->left = NULL; root->right = link.left; link.left = root;
- * @see lib/cdt/dttree.c:dttree DT_INSERT (DT_OBAG duplicate branch)
- */
-function insertDuplicate<T>(
-  node: SplayNode<T>,
-  root: SplayNode<T>,
-): SplayNode<T> {
-  node.left = root.left;
-  root.left = null;
-  node.right = root;
-  return node;
-}
 
 /**
  * Walk left-spine from `start` to find a node whose `.obj === target`.
@@ -122,12 +107,9 @@ export class DtBag<T, K = T> {
       this._size++;
       return obj;
     }
-    const key = this._keyOf(obj);
-    this._root = splay(this._root, key, this._keyOf, this._compare);
-    const cmp = this._compare(key, this._keyOf(this._root.obj));
-    this._root = cmp === 0
-      ? insertDuplicate(node, this._root)
-      : splaySplitInsert(node, this._root, cmp);
+    // Integrated CDT top-down splay + insert: the equal-key sub-order is
+    // load-bearing (see bagInsert), so we must NOT splay-reassemble first.
+    this._root = bagInsert(this._root, node, this._keyOf, this._compare);
     this._size++;
     return obj;
   }

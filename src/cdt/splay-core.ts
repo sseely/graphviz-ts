@@ -100,6 +100,80 @@ export function splaySplitInsert<T>(
 }
 
 /**
+ * Integrated top-down splay + insert, faithfully mirroring CDT's
+ * `dttree.c` DT_INSERT for a Dtobag (duplicate keys allowed).
+ *
+ * This differs from `splay()` + a separate splice: CDT inserts the new node
+ * *while the tree is still partitioned* into the LEFT (keys < target) and
+ * RIGHT (keys > target) spine-trees, pushing the found equal-key node onto
+ * the head of the RIGHT partition before the new node becomes root. Splaying
+ * to reassemble a normal BST first and only then splicing produces a
+ * different equal-key sub-order — which is load-bearing for the xlabel R-tree
+ * (its Hilbert-bag drain order, and therefore the tree it builds, depends on
+ * the exact duplicate ordering; see label/xlabels.ts).
+ *
+ * The do-search loop is identical to `splay()`; only the terminal insert
+ * differs. Returns the new root (always `node`).
+ *
+ * @see lib/cdt/dttree.c:dttree DT_INSERT (do_search + DT_OBAG found/has_root)
+ */
+export function bagInsert<T, K>(
+  root: SplayNode<T>,
+  node: SplayNode<T>,
+  keyOf: KeyOf<T, K>,
+  compare: Comparator<K>,
+): SplayNode<T> {
+  const key = keyOf(node.obj);
+  // Dummy: link.right = LEFT partition head, link.left = RIGHT partition head.
+  const link: SplayNode<T> = { left: null, right: null, obj: undefined as unknown as T };
+  let l: SplayNode<T> = link; // LEFT tail  (llink: l.right = x; l = x)
+  let r: SplayNode<T> = link; // RIGHT tail (rlink: r.left  = x; r = x)
+  let cur: SplayNode<T> | null = root;
+
+  outer: while (cur !== null) {
+    const cmp = compare(key, keyOf(cur.obj));
+    if (cmp === 0) break;
+    else if (cmp < 0) {
+      const t: SplayNode<T> | null = cur.left;
+      if (t !== null) {
+        const cmp2 = compare(key, keyOf(t.obj));
+        if (cmp2 < 0) { rrotate(cur, t); r.left = t; r = t; cur = t.left; }
+        else if (cmp2 === 0) { r.left = cur; r = cur; cur = t; break outer; }
+        else { l.right = t; l = t; r.left = cur; r = cur; cur = t.right; }
+        if (cur === null) break;
+      } else { r.left = cur; r = cur; cur = null; break; }
+    } else {
+      const t: SplayNode<T> | null = cur.right;
+      if (t !== null) {
+        const cmp2 = compare(key, keyOf(t.obj));
+        if (cmp2 > 0) { lrotate(cur, t); l.right = t; l = t; cur = t.right; }
+        else if (cmp2 === 0) { l.right = cur; l = cur; cur = t; break outer; }
+        else { r.left = t; r = t; l.right = cur; l = cur; cur = t.left; }
+        if (cur === null) break;
+      } else { l.right = cur; l = cur; cur = null; break; }
+    }
+  }
+
+  if (cur !== null) {
+    // Found equal key — CDT DT_OBAG found branch: close the partition tails,
+    // push the found node onto the RIGHT partition head, then new node roots.
+    l.right = cur.left;
+    r.left = cur.right;
+    cur.left = null;
+    cur.right = link.left;
+    link.left = cur;
+  } else {
+    // Not found — close partition tails.
+    r.left = null;
+    l.right = null;
+  }
+  // has_root: new node takes the two partitions as its subtrees.
+  node.left = link.right;
+  node.right = link.left;
+  return node;
+}
+
+/**
  * Top-down splay.
  *
  * Splays the node whose key equals `key` (or the closest node) to root.

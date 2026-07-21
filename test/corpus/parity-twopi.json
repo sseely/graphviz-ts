@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-15T00:26:13.577Z",
+  "generatedAt": "2026-07-21T20:20:47.502Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "twopi",
   "tolerance": 0.01,
-  "total": 761,
+  "total": 762,
   "counts": {
-    "pass": 739,
+    "pass": 740,
     "diverged": 14,
     "oracle-error": 8,
     "port-error": 0,
@@ -2764,8 +2764,8 @@
       "id": "graphs-arrowsize",
       "size": 2039,
       "status": "diverged",
-      "nDiffs": 72,
-      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[0]: 289.55 vs 297.2"
+      "nDiffs": 23,
+      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 264.42 vs 314.69"
     },
     {
       "id": "linux.x86-ordering_dot1",
@@ -3299,8 +3299,8 @@
       "id": "linux.x86-arrows_dot",
       "size": 7235,
       "status": "diverged",
-      "nDiffs": 40,
-      "firstDiff": "edge:Z->I#0 _draw_ edge:Z->I#0/_draw_/op[1].unfilled_bezier[ptCount]: 8 vs 14"
+      "nDiffs": 29,
+      "firstDiff": "edge:i->Z#0 _draw_ edge:i->Z#0/_draw_/op[1].unfilled_bezier[0]: 265.18 vs 313.93"
     },
     {
       "id": "macosx-arrows_dot",
@@ -3796,6 +3796,11 @@
     {
       "id": "graphs-b81",
       "size": 191024,
+      "status": "pass"
+    },
+    {
+      "id": "1652",
+      "size": 240391,
       "status": "pass"
     },
     {

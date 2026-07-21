@@ -12,9 +12,9 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-14T23:15:05.507Z)
-- **pass:** 600 (78.8%) · **diverged (tracked):** 19 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 126
-- **oracle-error:** 16 · **port-error:** 0 · **timeout:** 0
+- **Surveyed:** 762 (generated 2026-07-21T19:13:19.225Z)
+- **pass:** 600 (78.7%) · **diverged (tracked):** 20 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 126
+- **oracle-error:** 15 · **port-error:** 0 · **timeout:** 1
 
 ## Accepted deltas (0) — documented, not chased
 
@@ -35,10 +35,11 @@ outright leaves the class silently on the next report regen.
 
 - **A1-drift**: **126** members — full per-id evidence in [`attribution-fdp.json`](./attribution-fdp.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
-## Diverged (19)
+## Diverged (20)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
+| `2620` | 64908 | 10855 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4660.91 vs 4824.9` |
 | `2095` | 4865 | 8256 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 5425.41 vs 5672.31` |
 | `graphs-pgram` | 2614 | 3136 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1727.26 vs 1848.55` |
 | `graphs-cairo` | 5866 | 2130 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.47 vs 786.76` |
@@ -65,20 +66,20 @@ outright leaves the class silently on the next report regen.
 |---|---|---|
 | `1221` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1221.dot |
 | `1332` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1332.dot |
+| `1652` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 | `1767` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1767.dot |
 | `1879` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot |
-| `2108` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 | `2222` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
 | `2239` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2239.dot |
 | `2516` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2516.dot |
 | `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
-| `2620` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot |
 | `2717` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2717.dot |
 | `2721` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot |
 | `graphs-b53` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv |
 | `graphs-badvoro` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
+| `2108` | timeout |  |
 
 **oracle errors:** 13 native-crash (documented, excluded) / 3 timeout-flake (excluded this run, note to retry)
 _Passing ids (600) are omitted for brevity — the full roster is in

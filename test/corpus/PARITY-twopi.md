@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 761 (generated 2026-07-15T00:26:13.577Z)
-- **pass:** 739 (97.1%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 14
+- **Surveyed:** 762 (generated 2026-07-21T20:20:47.502Z)
+- **pass:** 740 (97.1%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 14
 - **oracle-error:** 8 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (14) — documented, not chased
@@ -27,9 +27,9 @@ table below.
 |---|---:|---|---|---|
 | `1855` | 842 | A1 | 842 xdot draw-op diffs; whole radial layout is the exact x-axis mirror of the oracle's (y-&gt;-y, ring relabel k&lt;-&gt;34-k), max node displacement 6.04pt. Mechanism: 1-ULP V8-vs-libm cos/sin in circleLayout setAbsolutePos, amplified by the symmetry-unstable PRISM overlap-removal equilibrium on the cocircular star. Injection A/B: feeding C's exact circleLayout pos into the port's PRISM reproduces the oracle node-for-node (3e-14). | known-divergences.md#a1-twopi-arrows-family |
 | `graphs-arrows` | 40 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 | known-divergences.md#a1-twopi-arrows-family |
-| `graphs-arrowsize` | 72 | A1 | 64 draw-op diffs on edge Z-&gt;I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
+| `graphs-arrowsize` | 23 | A1 | 64 draw-op diffs on edge Z-&gt;I; first diff unfilled_bezier[0]: 289.55 vs 297.2 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
 | `graphs-newarrows` | 40 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (same graph family as graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
-| `linux.x86-arrows_dot` | 40 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
+| `linux.x86-arrows_dot` | 29 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
 | `macosx-arrows_dot` | 40 | A1 | 32 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (arrows_dot variant of graphs-arrows) | known-divergences.md#a1-twopi-arrows-family |
 | `nshare-arrows_dot` | 40 | A1 | 25 draw-op diffs on edge i-&gt;Z; first diff unfilled_bezier[0]: 265.18 vs 313.93 (position drift, not a ptCount flip, but same pre-routing mechanism) | known-divergences.md#a1-twopi-arrows-family |
 | `share-newarrows` | 20 | A1 | 12 draw-op diffs, all on edge Z-&gt;I; unfilled_bezier[ptCount]: 8 vs 14 (newarrows variant of graphs-newarrows) | known-divergences.md#a1-twopi-arrows-family |
@@ -58,5 +58,5 @@ _(none)_
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K twopi -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
 **oracle errors:** 8 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
-_Passing ids (739) are omitted for brevity — the full roster is in
+_Passing ids (740) are omitted for brevity — the full roster is in
 `parity-twopi.json`._
