@@ -11,8 +11,14 @@ blocked until the injector handles it.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T4.1 | Analyze: separate the scale FP from the pre-scale drift | debugger | batch-4/findings.md | T0.2 | [ ] |
-| T4.2 | Fix aggressively (scale math) or accept (drift×scale) | general-purpose | (src fix, isolated) + batch-4/findings.md | T4.1 | [ ] |
+| T4.1 | Analyze: separate the scale FP from the pre-scale drift | debugger | batch-4/findings.md | T0.2 | [x] |
+| T4.2 | Fix aggressively (scale math) or accept (drift×scale) | general-purpose | (src fix, isolated) + batch-4/findings.md | T4.1 | [x] |
+
+**Result:** ONE fix (`sfdp/index.ts` postprocess: union/keep the routing box for
+single-component instead of a geometric recompute that clobbers the ratio=fill
+scale). Sweep: 0 regressions, **4 diverged→pass** (graphs/share/windows-trapeziumlr
++ bonus linux.x86-neatosplines_neato1); 1855 → drift (injected clears to 0 →
+A1-drift accept on attribution regen). B4 tracked ids resolved.
 
 Key question: does the divergence come from the SCALE COMPUTATION (fixable —
 match `_neato_set_aspect` fill/expand factors, [[ratio-fill-activation-done]],

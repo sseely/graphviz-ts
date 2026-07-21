@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-21T18:29:49.395Z",
+  "generatedAt": "2026-07-21T23:06:20.211Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
   "total": 762,
   "counts": {
-    "pass": 520,
-    "diverged": 234,
+    "pass": 524,
+    "diverged": 230,
     "oracle-error": 7,
     "port-error": 1,
     "timeout": 0
@@ -2638,7 +2638,7 @@
       "id": "1855",
       "size": 1335,
       "status": "diverged",
-      "nDiffs": 665,
+      "nDiffs": 663,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 592.32 vs 595.62"
     },
     {
@@ -2733,9 +2733,7 @@
     {
       "id": "graphs-trapeziumlr",
       "size": 1484,
-      "status": "diverged",
-      "nDiffs": 971,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 876.66 vs 892.52"
+      "status": "pass"
     },
     {
       "id": "linux.x86-compound_dot",
@@ -3574,16 +3572,12 @@
     {
       "id": "windows-trapeziumlr",
       "size": 7229,
-      "status": "diverged",
-      "nDiffs": 971,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 946.12 vs 963.98"
+      "status": "pass"
     },
     {
       "id": "share-trapeziumlr",
       "size": 7233,
-      "status": "diverged",
-      "nDiffs": 971,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 946.42 vs 964.29"
+      "status": "pass"
     },
     {
       "id": "linux.x86-arrows_dot",
@@ -3908,9 +3902,7 @@
     {
       "id": "linux.x86-neatosplines_neato1",
       "size": 12061,
-      "status": "diverged",
-      "nDiffs": 2,
-      "firstDiff": "edge:vd->cv#0 _draw_ edge:vd->cv#0/_draw_[opCount]: 2 vs 4"
+      "status": "pass"
     },
     {
       "id": "linux.x86-rankdir_dot1",
@@ -4228,7 +4220,7 @@
       "id": "1652",
       "size": 240391,
       "status": "diverged",
-      "nDiffs": 114202,
+      "nDiffs": 114198,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 955.45 vs 958.43"
     },
     {
@@ -4241,7 +4233,7 @@
       "id": "linux.x86-root_twopi",
       "size": 287907,
       "status": "diverged",
-      "nDiffs": 35482,
+      "nDiffs": 35484,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1096.38 vs 1105.16"
     },
     {
@@ -4262,7 +4254,7 @@
       "id": "linux.x86-root_circo",
       "size": 313168,
       "status": "diverged",
-      "nDiffs": 35482,
+      "nDiffs": 35484,
       "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1096.38 vs 1105.16"
     },
     {

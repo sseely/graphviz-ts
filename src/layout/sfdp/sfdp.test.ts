@@ -161,6 +161,32 @@ describe('sfdpLayout oracle parity', () => {
       expect(m.info.pos).toEqual(n.info.pos);
     }
   });
+
+  // Regression: ratio=fill must not have its scaled bb clobbered by the
+  // single-component postprocess. neatoSetAspect scales node POSITIONS by the
+  // fill factor but (matching C) not node half-sizes, and grows GD_bb to the
+  // scaled target; C's gv_postprocess never recomputes GD_bb. The old port
+  // recomputed it geometrically (node-box ∪ curve), landing short of the
+  // scaled box by node_size*(f-1) on the stretched axis. With pinned positions
+  // (deterministic), the stretched (Y) axis must keep the scaled height.
+  // @see src/layout/sfdp/index.ts postprocess, batch-4/findings.md
+  it('preserves the ratio=fill scaled bb on the stretched axis (single component)', () => {
+    const g = parse(`graph G {
+      size="4,6"; ratio=fill;
+      a [pos="0,0", shape=box, width=1, height=1];
+      b [pos="2,0", shape=box, width=1, height=1];
+      c [pos="1,2", shape=box, width=1, height=1];
+      a -- b; b -- c; c -- a;
+    }`);
+    sfdpLayout(g);
+    const width = g.info.bb.ur.x - g.info.bb.ll.x;
+    const height = g.info.bb.ur.y - g.info.bb.ll.y;
+    // Y is the fill-stretched axis; the geometric-recompute bug shortened it to
+    // ~418.4 (short by node_height*(yf-1)). The scaled box keeps ~446.3.
+    expect(height).toBeCloseTo(446.335, 1);
+    expect(width).toBeCloseTo(297.557, 1);
+    expect(height).toBeGreaterThan(440); // fails on the pre-fix ~418.4
+  });
 });
 
 describe('SFDP_LAYOUT_ENGINE', () => {

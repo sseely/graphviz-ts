@@ -74,7 +74,7 @@ turns out empty after Mission 0's regen (skip it, log why).
 | [1](batch-1/overview.md) | B1 node-size/text-measure residual (reps graphs-b106, share-b106) | 0 | [ ] |
 | [2](batch-2/overview.md) | B2 edge FP-ties (reps 241_0, 42, 2095) | 0 | [ ] |
 | [3](batch-3/overview.md) | B3 rankdir_dot edge family — **EMPTY (skipped, see findings.md)** | 0 | [x] |
-| [4](batch-4/overview.md) | B4 ratio=fill aspect-scaling (3×trapeziumlr, 1855) | 0 | [ ] |
+| [4](batch-4/overview.md) | B4 ratio=fill aspect-scaling (3×trapeziumlr, 1855) | 0 | [x] |
 | [5](batch-5/overview.md) | B5 RTree edge-label class (8 ids; 1652/2470 known) | 0 | [ ] |
 | [6](batch-6/overview.md) | Finalize: registry, docs, full sweep | 1-5 | [ ] |
 
