@@ -12,8 +12,8 @@ same analysis method; investigate each distinct input, apply to its copies.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T1.1 | Analyze: isolate what pushes the bb, to a mechanism | debugger | batch-1/findings.md | T0.2 | [ ] |
-| T1.2 | Fix aggressively or accept-with-evidence; apply to copies | general-purpose | (src fix, isolated) + batch-1/findings.md | T1.1 | [ ] |
+| T1.1 | Analyze: isolate what pushes the bb, to a mechanism | debugger | batch-1/findings.md | T0.2 | [x] |
+| T1.2 | Fix aggressively or accept-with-evidence; apply to copies | general-purpose | (src fix, isolated) + batch-1/findings.md | T1.1 | [x] |
 
 Analysis method (all B1 inputs): inject exact native positions
 ([[sfdp-edge-label-rtree-lossy]] repro harness), confirm the bb still diverges

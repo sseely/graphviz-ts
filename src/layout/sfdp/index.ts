@@ -23,7 +23,6 @@ import {
   computeSubgraphBB,
   getPackInfo,
   packSubgraphs,
-  shiftOneGraph,
   normalizeGraphBB,
   PackMode,
   type PackInfo,
@@ -167,8 +166,14 @@ function postprocess(g: Graph, singleComponent: boolean): void {
   if (singleComponent) {
     normalizeGraphBB(g);
   } else {
-    const bb = computeSubgraphBB(g, 0, false);
-    if (bb.ll.x !== 0 || bb.ll.y !== 0) shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
+    // Multi-component: packSubgraphs already placed the components; C runs
+    // compute_bb (hull) with NO shift, then gv_postprocess whose
+    // translate_drawing shifts to the origin AFTER addXLabels. Shifting here
+    // (before addXLabels) rounds the xlabel obstacle rects (objplp2rect uses
+    // round()) in the origin frame instead of C's packed frame, tipping the
+    // edge-label side-selection knife-edge (same X, wrong Y). Drop the
+    // premature shift and let gvPostprocess→translateDrawing do it.
+    // @see neato/index.ts layoutComponents (commit 1e7515d — identical bug/fix)
     g.info.bb = computeSubgraphBB(g, 0, false);
   }
   // C sfdp_layout ends with dotneato_postprocess(g) = gv_postprocess(g, 1):

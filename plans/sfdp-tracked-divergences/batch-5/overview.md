@@ -15,8 +15,8 @@ Three ids with prior characterization:
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T5.1 | Analyze 2470, 2475_2, arrows_dot | debugger | batch-5/findings.md | T0.2 | [ ] |
-| T5.2 | Fix aggressively or accept w/ evidence | general-purpose | (src fix, isolated) + batch-5/findings.md | T5.1 | [ ] |
+| T5.1 | Analyze 2470, 2475_2, arrows_dot | debugger | batch-5/findings.md | T0.2 | [x] |
+| T5.2 | Fix aggressively or accept w/ evidence | general-purpose | (src fix, isolated) + batch-5/findings.md | T5.1 | [x] |
 
 For 2470, fix-aggressively means: (a) find why THIS object's y crosses the
 floor boundary (is it a computable node/label whose size the port gets 1 ULP
