@@ -12,8 +12,8 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-19T22:21:18.888Z)
-- **pass:** 660 (86.6%) · **diverged (tracked):** 25 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 70
+- **Surveyed:** 762 (generated 2026-07-20T18:55:01.758Z)
+- **pass:** 685 (89.9%) · **diverged (tracked):** 2 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 68
 - **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
 
 ## Accepted deltas (0) — documented, not chased
@@ -33,37 +33,14 @@ exonerates it (`verdict: drift-exonerated`) is subtracted from the
 Diverged table below and counted in Summary; an id that starts passing
 outright leaves the class silently on the next report regen.
 
-- **A1-drift**: **309** members — full per-id evidence in [`attribution-neato.json`](./attribution-neato.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
+- **A1-drift**: **68** members — full per-id evidence in [`attribution-neato.json`](./attribution-neato.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
-## Diverged (25)
+## Diverged (2)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
 | `2239` | 48090 | 3838 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1676.96 vs 1702.77` |
-| `windows-pgram` | 11001 | 2853 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522` |
-| `share-pgram` | 10942 | 2116 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 504 vs 522` |
-| `2193` | 6399 | 1085 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1683.89 vs 1682.42` |
-| `2470` | 734358 | 682 | `edge:n100->n99#0 _ldraw_ edge:n100->n99#0/_ldraw_/op[2].text[0]: 6930.71 vs 6852.93` |
-| `windows-nhg` | 926 | 116 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 108.18 vs 120.18` |
-| `windows-crazy` | 10433 | 79 | `edge:7th Edition->8th Edition#0 _draw_ edge:7th Edition->8th Edition#0/_draw_/op[1].unfilled_bezier[1]: 468.42 vs 467.64` |
-| `share-crazy` | 10433 | 61 | `edge:7th Edition->8th Edition#0 _draw_ edge:7th Edition->8th Edition#0/_draw_/op[1].unfilled_bezier[1]: 468.02 vs 467.26` |
-| `graphs-pgram` | 2614 | 54 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 577.54 vs 597.54` |
-| `nshare-rankdir_dot1` | 12675 | 47 | `edge:32V->3 BSD#0 _draw_ edge:32V->3 BSD#0/_draw_/op[1].unfilled_bezier[1]: 703.25 vs 702.69` |
-| `graphs-b94` | 10503 | 40 | `edge:h212_202_184_169->h130_75_118_14_p1433#0 _draw_ edge:h212_202_184_169->h130_75_118_14_p1433#0/_draw_/op[1].unfilled_bezier[0]: 579.45 vs 453.45` |
-| `nshare-rankdir_dot` | 12803 | 36 | `edge:3 BSD->4 BSD#0 _draw_ edge:3 BSD->4 BSD#0/_draw_/op[1].unfilled_bezier[5]: 880.16 vs 879.48` |
-| `nshare-weight_dot` | 9391 | 36 | `edge:7th Edition->UniPlus+#0 _draw_ edge:7th Edition->UniPlus+#0/_draw_/op[1].unfilled_bezier[1]: 307.64 vs 307.13` |
-| `linux.x86-rankdir_dot2` | 12815 | 35 | `edge:4.2 BSD->Ultrix-32#0 _draw_ edge:4.2 BSD->Ultrix-32#0/_draw_/op[1].unfilled_bezier[1]: 871.13 vs 871.7` |
-| `linux.x86-rankdir_dot1` | 12673 | 32 | `edge:4.1 BSD->8th Edition#0 _draw_ edge:4.1 BSD->8th Edition#0/_draw_/op[1].unfilled_bezier[0]: 332.48 vs 331.92` |
-| `nshare-dotsplines_dot` | 8836 | 23 | `edge:7th Edition->Ultrix-11#0 _draw_ edge:7th Edition->Ultrix-11#0/_draw_/op[1].unfilled_bezier[0]: 396.15 vs 396.97` |
-| `nshare-dotsplines_dot1` | 9332 | 23 | `edge:7th Edition->Ultrix-11#0 _draw_ edge:7th Edition->Ultrix-11#0/_draw_/op[1].unfilled_bezier[0]: 396.15 vs 396.97` |
-| `1990` | 610 | 17 | `edge:0⋯7 ❰A❱->0⋯1 'a'#0 _draw_ edge:0⋯7 ❰A❱->0⋯1 'a'#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
 | `241_0` | 578 | 13 | `edge:1->6#0 _draw_ edge:1->6#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
-| `2801` | 651 | 8 | `edge:a->b#0 _hldraw_ edge:a->b#0/_hldraw_/op[2].text[0]: 330.01 vs 356.44` |
-| `graphs-b` | 338 | 7 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58` |
-| `graphs-b117` | 338 | 7 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58` |
-| `graphs-nhg` | 339 | 7 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[4]: 188.58 vs 199.58` |
-| `2476` | 3653 | 2 | `edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0 _ldraw_ edge:s_EnergeticFinch.s_MotionlessCobra->s_EnergeticFinch.s_EmbarrassedMeerkat#0/_ldraw_/op[2].text[1]: 648.25 vs 664.99` |
-| `share-nhg` | 938 | 2 | `edge:2->1#0 _ldraw_ edge:2->1#0/_ldraw_/op[2].text[1]: 58.94 vs 42.14` |
 
 ## Errors and timeouts (7)
 
@@ -78,5 +55,5 @@ outright leaves the class silently on the next report regen.
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
 
 **oracle errors:** 7 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
-_Passing ids (660) are omitted for brevity — the full roster is in
+_Passing ids (685) are omitted for brevity — the full roster is in
 `parity-neato.json`._
