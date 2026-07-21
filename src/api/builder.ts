@@ -18,6 +18,7 @@ import type { Edge } from '../model/edge.js';
 import { agnode, agsubg, agsubnode } from '../model/cgraph-ops.js';
 import { addEdge as cgraphAddEdge } from './edge-ops.js';
 import { RenderError } from '../errors.js';
+import { HTML_STRING_MARK } from '../common/html-string.js';
 
 // ── Public interfaces ──────────────────────────────────────────────────────────
 
@@ -35,6 +36,13 @@ export interface CreateGraphOptions {
 export interface GvNode {
   readonly name: string;
   setAttr(k: string, v: string): void;
+  /**
+   * Set an attribute to an HTML-string value (e.g. `label` to an HTML-table
+   * label). Equivalent to `label=<...>` in DOT text: the value is tagged as
+   * HTML so the layout engine measures it as markup, not as literal text.
+   * @see lib/cgraph/refstr.c:aghtmlstr
+   */
+  setHtmlAttr(k: string, v: string): void;
   getAttr(k: string): string | undefined;
 }
 
@@ -46,6 +54,11 @@ export interface GvEdge {
   readonly tail: string;
   readonly head: string;
   setAttr(k: string, v: string): void;
+  /**
+   * Set an attribute to an HTML-string value (e.g. an HTML-table edge label).
+   * @see GvNode.setHtmlAttr
+   */
+  setHtmlAttr(k: string, v: string): void;
   getAttr(k: string): string | undefined;
 }
 
@@ -62,6 +75,13 @@ export interface GvGraphBuilder {
   ): GvEdge;
   addSubgraph(name: string, attrs?: Record<string, string>): GvGraphBuilder;
   setAttr(k: string, v: string): void;
+  /**
+   * Set an attribute on this (sub)graph to an HTML-string value — the
+   * supported way to give a cluster an HTML-table `label` (the header-size
+   * reservation the jar drives) without hand-writing the internal marker.
+   * @see GvNode.setHtmlAttr
+   */
+  setHtmlAttr(k: string, v: string): void;
   getAttr(k: string): string | undefined;
   readonly graph: Graph;
 }
@@ -82,6 +102,10 @@ class NodeHandle implements GvNode {
 
   setAttr(k: string, v: string): void {
     this._node.attrs.set(k, v);
+  }
+
+  setHtmlAttr(k: string, v: string): void {
+    this._node.attrs.set(k, HTML_STRING_MARK + v);
   }
 
   getAttr(k: string): string | undefined {
@@ -107,6 +131,10 @@ class EdgeHandle implements GvEdge {
 
   setAttr(k: string, v: string): void {
     this._edge.attrs.set(k, v);
+  }
+
+  setHtmlAttr(k: string, v: string): void {
+    this._edge.attrs.set(k, HTML_STRING_MARK + v);
   }
 
   getAttr(k: string): string | undefined {
@@ -184,6 +212,10 @@ class GraphBuilder implements GvGraphBuilder {
 
   setAttr(k: string, v: string): void {
     this._context.attrs.set(k, v);
+  }
+
+  setHtmlAttr(k: string, v: string): void {
+    this._context.attrs.set(k, HTML_STRING_MARK + v);
   }
 
   getAttr(k: string): string | undefined {

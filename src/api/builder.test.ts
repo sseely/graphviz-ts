@@ -3,6 +3,11 @@
 import { describe, it, expect } from 'vitest';
 import { createGraph } from './builder.js';
 import { parse, serialize } from '../parser/index.js';
+import { GvcContext } from '../gvc/context.js';
+import { createMeasurer } from '../common/textmeasure-factory.js';
+import { DOT_LAYOUT_ENGINE } from '../layout/dot/index.js';
+import { getLayout } from './geometry.js';
+import type { GvGraphBuilder } from './builder.js';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -185,5 +190,81 @@ describe('GvGraphBuilder setAttr / getAttr', () => {
     const b = createGraph({ directed: true });
     b.setAttr('rankdir', 'LR');
     expect(b.getAttr('rankdir')).toBe('LR');
+  });
+});
+
+// ── setHtmlAttr — HTML-string label support (issue 07) ───────────────────────
+
+describe('setHtmlAttr marks the value as an HTML string', () => {
+  // U+0001 — the internal HTML-string marker (common/html-string.ts);
+  // computed here so no literal control character sits in the source.
+  const MARK = String.fromCharCode(1);
+  const HTML = '<TABLE FIXEDSIZE="TRUE" WIDTH="10" HEIGHT="3"><TR><TD></TD></TR></TABLE>';
+
+  it('node.setHtmlAttr prefixes the value with the HTML marker (U+0001)', () => {
+    const b = createGraph({ directed: true });
+    const n = b.addNode('F');
+    n.setHtmlAttr('label', HTML);
+    expect(n.getAttr('label')).toBe(MARK + HTML);
+  });
+
+  it('edge.setHtmlAttr prefixes the value with the HTML marker', () => {
+    const b = createGraph({ directed: true });
+    const e = b.addEdge('a', 'b');
+    e.setHtmlAttr('label', HTML);
+    expect(e.getAttr('label')).toBe(MARK + HTML);
+  });
+
+  it('subgraph builder setHtmlAttr prefixes the value with the HTML marker', () => {
+    const b = createGraph({ directed: true });
+    const sg = b.addSubgraph('cluster0');
+    sg.setHtmlAttr('label', HTML);
+    expect(sg.getAttr('label')).toBe(MARK + HTML);
+  });
+
+  it('a marked HTML value round-trips to `label=<...>` on serialize', () => {
+    const b = createGraph({ directed: true });
+    b.addNode('F').setHtmlAttr('label', '<B>x</B>');
+    // serialize emits an HTML value as `<...>`, not a quoted string.
+    expect(normalizeDoc(serialize(b.graph))).toContain('label=<<B>x</B>>');
+  });
+});
+
+// ── setHtmlAttr end-to-end: cluster HTML-table label sizing (issue 07) ────────
+
+describe('setHtmlAttr drives cluster HTML-table header reservation', () => {
+  const HTML = '<TABLE FIXEDSIZE="TRUE" WIDTH="10" HEIGHT="3"><TR><TD></TD></TR></TABLE>';
+
+  /** Build the issue's single-child cluster; apply the cluster label with fn. */
+  function clusterHeaderReserve(apply: (sg: GvGraphBuilder) => void): number {
+    const b = createGraph({ directed: true });
+    b.addNode('F', {
+      shape: 'box', fixedsize: 'true', label: '', width: '0.694', height: '0.694',
+    });
+    const sg = b.addSubgraph('cluster0');
+    apply(sg);
+    sg.addNode('F');
+    const ctx = new GvcContext(createMeasurer());
+    ctx.register(DOT_LAYOUT_ENGINE);
+    ctx.layout(b.graph, 'dot');
+    const snap = getLayout(b.graph, { yAxis: 'up' });
+    const c = snap.clusters.find((x) => x.name === 'cluster0')!;
+    const node = snap.nodes.find((n) => n.name === 'F')!;
+    // up-frame: header band = cluster top minus node top.
+    return (c.y + c.height) - (node.y + node.height / 2);
+  }
+
+  it('reserves FIXEDSIZE HEIGHT + 16 for a marked HTML-table label', () => {
+    // 19 = HEIGHT(3) + 16, per issue 07 / g5 ledger §C2.
+    const reserve = clusterHeaderReserve((sg) => sg.setHtmlAttr('label', HTML));
+    expect(reserve).toBeCloseTo(19, 1);
+  });
+
+  it('a plain setAttr label measures the literal markup as text (larger)', () => {
+    // The whole point of setHtmlAttr: setAttr treats the value as a literal
+    // string, so the long "<TABLE ...>" text reserves more than the table.
+    const htmlReserve = clusterHeaderReserve((sg) => sg.setHtmlAttr('label', HTML));
+    const plainReserve = clusterHeaderReserve((sg) => sg.setAttr('label', HTML));
+    expect(plainReserve).toBeGreaterThan(htmlReserve);
   });
 });
