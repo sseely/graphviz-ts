@@ -7,8 +7,8 @@ resolves the 3 pgram harness-errors. **Output feeds every later batch.**
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T0.1 | Regenerate `attribution-sfdp.jsonl` over current 234 diverged | general-purpose | test/corpus/attribution-sfdp.jsonl | — | [ ] |
-| T0.2 | Re-bucket not-cleared → findings + refined bucket list | general-purpose | batch-0/findings.md | T0.1 | [ ] |
+| T0.1 | Regenerate `attribution-sfdp.jsonl` over current 234 diverged | general-purpose | test/corpus/attribution-sfdp.jsonl | — | [x] |
+| T0.2 | Re-bucket not-cleared → findings + refined bucket list | general-purpose | batch-0/findings.md | T0.1 | [x] |
 
 Run T0.1 then T0.2 (T0.2 consumes T0.1's output). No `src/` changes in this
 batch — analysis only. After T0.2, the executor knows the real surviving
