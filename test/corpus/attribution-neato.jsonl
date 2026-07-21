@@ -1,8 +1,8 @@
-{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-20T18:56:39.093Z"}
+{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-21T00:24:48.236Z"}
 {"id":"graphs-clust1","verdict":"drift-exonerated","baseDiffs":42,"injectedDiffs":0,"bucket":{"shape":"cluster/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-p","verdict":"drift-exonerated","baseDiffs":2,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"241_0","verdict":"not-cleared","baseDiffs":13,"injectedDiffs":14,"bucket":{"shape":"edge/_draw_/structural","kind":"count","signature":"edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/structural"}}
-{"id":"1990","verdict":"not-cleared","baseDiffs":17,"injectedDiffs":17,"bucket":{"shape":"edge/_draw_/structural","kind":"count","signature":"edge/_draw_/numeric+edge/_draw_/structural+edge/_hdraw_/numeric+edge/pos/numeric+edge/pos/structural","uniformDelta":[-30.44,-1]}}
+{"id":"1990","verdict":"drift-exonerated","baseDiffs":17,"injectedDiffs":0,"bucket":{"shape":"edge/❰A❱->0⋯1/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-jcctree","verdict":"drift-exonerated","baseDiffs":113,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-Symbol","verdict":"drift-exonerated","baseDiffs":296,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-grdshapes","verdict":"drift-exonerated","baseDiffs":439,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
@@ -27,7 +27,7 @@
 {"id":"1949","verdict":"drift-exonerated","baseDiffs":151,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"share-newarrows","verdict":"drift-exonerated","baseDiffs":56,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"windows-newarrows","verdict":"drift-exonerated","baseDiffs":56,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2193","verdict":"not-cleared","baseDiffs":1085,"injectedDiffs":1085,"bucket":{"shape":"graph/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/_ldraw_/numeric+edge/lp/numeric+edge/pos/numeric+graph/_draw_/numeric+…(10)"}}
+{"id":"2193","verdict":"drift-exonerated","baseDiffs":1085,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"1447","verdict":"drift-exonerated","baseDiffs":98,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"windows-trapeziumlr","verdict":"drift-exonerated","baseDiffs":1777,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"share-trapeziumlr","verdict":"drift-exonerated","baseDiffs":1818,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -37,20 +37,20 @@
 {"id":"share-fig6","verdict":"drift-exonerated","baseDiffs":46,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"windows-fig6","verdict":"drift-exonerated","baseDiffs":46,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-b15","verdict":"drift-exonerated","baseDiffs":8,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"nshare-dotsplines_dot","verdict":"not-cleared","baseDiffs":23,"injectedDiffs":20,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"}}
-{"id":"nshare-dotsplines_dot1","verdict":"not-cleared","baseDiffs":23,"injectedDiffs":20,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"}}
-{"id":"nshare-weight_dot","verdict":"not-cleared","baseDiffs":36,"injectedDiffs":14,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"}}
-{"id":"share-crazy","verdict":"not-cleared","baseDiffs":61,"injectedDiffs":22,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"}}
-{"id":"windows-crazy","verdict":"not-cleared","baseDiffs":79,"injectedDiffs":30,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric"}}
+{"id":"nshare-dotsplines_dot","verdict":"drift-exonerated","baseDiffs":23,"injectedDiffs":0,"bucket":{"shape":"edge/Edition->Ultrix-11#0/unknown","kind":"position","signature":"none"}}
+{"id":"nshare-dotsplines_dot1","verdict":"drift-exonerated","baseDiffs":23,"injectedDiffs":0,"bucket":{"shape":"edge/Edition->Ultrix-11#0/unknown","kind":"position","signature":"none"}}
+{"id":"nshare-weight_dot","verdict":"drift-exonerated","baseDiffs":36,"injectedDiffs":0,"bucket":{"shape":"edge/Edition->UniPlus+#0/unknown","kind":"position","signature":"none"}}
+{"id":"share-crazy","verdict":"drift-exonerated","baseDiffs":61,"injectedDiffs":0,"bucket":{"shape":"edge/Edition->8th/unknown","kind":"position","signature":"none"}}
+{"id":"windows-crazy","verdict":"drift-exonerated","baseDiffs":79,"injectedDiffs":0,"bucket":{"shape":"edge/Edition->8th/unknown","kind":"position","signature":"none"}}
 {"id":"nshare-overlap_neato1","verdict":"drift-exonerated","baseDiffs":14,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"share-pgram","verdict":"harness-error","baseDiffs":2073,"injectedDiffs":0,"bucket":{"shape":"unknown","kind":"position","signature":"none"},"err":"port render timeout (injected)"}
-{"id":"windows-pgram","verdict":"harness-error","baseDiffs":2833,"injectedDiffs":0,"bucket":{"shape":"unknown","kind":"position","signature":"none"},"err":"port render timeout (injected)"}
+{"id":"share-pgram","verdict":"drift-exonerated","baseDiffs":2073,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
+{"id":"windows-pgram","verdict":"drift-exonerated","baseDiffs":2833,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"share-ngk10_4","verdict":"drift-exonerated","baseDiffs":75,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"windows-ngk10_4","verdict":"drift-exonerated","baseDiffs":75,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"linux.x86-rankdir_dot1","verdict":"drift-exonerated","baseDiffs":32,"injectedDiffs":0,"bucket":{"shape":"edge/BSD->8th/unknown","kind":"position","signature":"none"}}
-{"id":"nshare-rankdir_dot1","verdict":"not-cleared","baseDiffs":47,"injectedDiffs":2,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/pos/numeric"}}
-{"id":"nshare-rankdir_dot","verdict":"not-cleared","baseDiffs":36,"injectedDiffs":30,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"}}
-{"id":"linux.x86-rankdir_dot2","verdict":"not-cleared","baseDiffs":35,"injectedDiffs":12,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric"}}
+{"id":"nshare-rankdir_dot1","verdict":"drift-exonerated","baseDiffs":47,"injectedDiffs":0,"bucket":{"shape":"edge/BSD#0/unknown","kind":"position","signature":"none"}}
+{"id":"nshare-rankdir_dot","verdict":"drift-exonerated","baseDiffs":36,"injectedDiffs":0,"bucket":{"shape":"edge/BSD->4/unknown","kind":"position","signature":"none"}}
+{"id":"linux.x86-rankdir_dot2","verdict":"drift-exonerated","baseDiffs":35,"injectedDiffs":0,"bucket":{"shape":"edge/BSD->Ultrix-32#0/unknown","kind":"position","signature":"none"}}
 {"id":"1332","verdict":"drift-exonerated","baseDiffs":1049,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-mode","verdict":"drift-exonerated","baseDiffs":474,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2239","verdict":"not-cleared","baseDiffs":3838,"injectedDiffs":3838,"bucket":{"shape":"graph/_draw_/numeric","kind":"position","signature":"cluster/_draw_/numeric+cluster/_ldraw_/numeric+cluster/bb/numeric+cluster/lp/numeric+edge/_draw_/numeric+edge/_hdraw_/numeric+…(20)"}}

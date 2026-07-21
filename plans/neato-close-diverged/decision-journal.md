@@ -77,3 +77,56 @@ height / centering / margin computation difference. Origin not yet pinpointed
 label bb-expansion rounding). This is the most promising remaining fixable
 candidate, though small (~1.5pt). Distinct from the A1/FP-cascade pattern of
 241_0/dotsplines/1990/2239.
+
+## CORRECTION — 2193/2239 reversed; injection parser was blind to space-named nodes (2026-07-20)
+
+The "2193 & 2239 — characterization" entry above is **WRONG and superseded**.
+It was produced with a broken injection harness. `injectOraclePositions`
+(src/layout/neato/splines.ts) parsed dump lines with `/^GVTS_POS (\S+) …/` —
+a space-free node name. Every node in 2193, 2239, crazy, dotsplines, weight,
+and rankdir has a name **containing spaces** (multi-line labels used as ids,
+e.g. `"5th Edition"`, `Check if there is at least\none active IC headstage`).
+So the injector silently matched ZERO nodes on those graphs and injected
+nothing — the "injected" render was identical to the port's own drifted
+layout. That is why 2193 looked like it "survived injection" (→ falsely
+"genuine non-drift") and 2239's bb "went to a third value" (→ falsely
+"A1 packing"). Both conclusions were harness artefacts.
+
+**Fix:** `/^GVTS_POS (.+) (\S+) (\S+)$/` — greedy name, x/y are the trailing
+two tokens. Handles space/`\n`-containing names; still correct for simple
+single-token names. (splines.ts, this commit.)
+
+**Re-tested with the corrected parser (injected node positions vs oracle
+xdot, tol 0.5, sweep comparator):**
+
+| id                | non-injected nDiffs | INJECTED nDiffs | verdict |
+|-------------------|--------------------:|----------------:|---------|
+| 2193              | 1085 | **0** | A1 drift (exonerated) |
+| nshare-dotsplines_dot  | — | **0** | A1 drift |
+| nshare-dotsplines_dot1 | — | **0** | A1 drift |
+| nshare-weight_dot      | — | **0** | A1 drift |
+| share-crazy            | — | **0** | A1 drift |
+| windows-crazy          | — | **0** | A1 drift |
+| nshare-rankdir_dot     | — | **0** | A1 drift |
+| nshare-rankdir_dot1    | — | **0** | A1 drift |
+| linux.x86-rankdir_dot2 | — | **0** | A1 drift |
+| 2239              | — | **3838** (bb 1702.77 vs 1957.13, Δ254) | GENUINE post-layout defect |
+
+So of the 12 neato `not-cleared` ids, **9 are actually A1 drift** (their
+not-cleared verdict was the parser blind spot) and only **two remain genuine
+non-drift**: `241_0` (FP-irreducible compass-port, proven separately) and
+`2239` (post-layout — injected centres match but the render still diverges by
+3838 diffs; the port draws the whole graph 254pt SMALLER, i.e. a label/text
+sizing shortfall on `\l`-justified multi-line labels; distinct fixable bug).
+
+**2193 final classification: A1 (float32 stress-majorization drift),
+irreducible.** With C's node positions injected the port reproduces the oracle
+bb (1682.42 × 1608.66) and full xdot exactly (0 diffs); the ~1.5pt Y-offset is
+entirely drifted node coordinates, not a centering/ratio/bb bug. The port's
+spline/bb/emit machinery is byte-perfect on this graph.
+
+**Harness lesson (added to memory):** a `\S+` name field silently drops every
+space-named node — and a no-op injection is INDISTINGUISHABLE from "survives
+injection" unless you check the match count. Any attribution verdict on a
+space-named graph produced before this fix is suspect. Re-running the full
+neato attribution `--fresh` to regenerate verdicts.
