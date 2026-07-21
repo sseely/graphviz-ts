@@ -41,7 +41,7 @@ bar above.
 
 | track | surveyed | conformant / pass | diverged | accepted | errors | pass % |
 |---|---:|---:|---:|---:|---:|---:|
-| [neato (xdot)](./PARITY-neato.md) | 762 | 685 | 2 | 68 | 7 | 89.9% |
+| [neato (xdot)](./PARITY-neato.md) | 762 | 685 | 1 | 69 | 7 | 89.9% |
 | [fdp (xdot)](./PARITY-fdp.md) | 761 | 600 | 19 | 126 | 16 | 78.8% |
 | [sfdp (xdot)](./PARITY-sfdp.md) | 762 | 518 | 52 | 184 | 8 | 68.0% |
 

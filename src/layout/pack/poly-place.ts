@@ -245,13 +245,17 @@ function coverNode(n: Node, ctx: CoverCtx): void {
  * @see lib/pack/pack.c:genPoly
  */
 function genPoly(
-  root: Graph, g: Graph, bb: Box, ssize: number, pinfo: PackInfo,
+  root: Graph, g: Graph, bb: Box, ssize: number, pinfo: PackInfo, center: Point,
 ): GInfo {
   const ps = new PointSet();
+  // C: dx = center.x - round(GD_bb(g).LL.x) (pack.c:genPoly). center is (0,0)
+  // for free packing and the fixed-component bb midpoint when a pinned graph
+  // is present — it shifts every component's grid phase identically so the
+  // polyomino cell counts (and thus perimeters and sort order) match C.
   const ctx: CoverCtx = {
     eg: root,
     ps,
-    off: { x: -cround(bb.ll.x), y: -cround(bb.ll.y) },
+    off: { x: center.x - cround(bb.ll.x), y: center.y - cround(bb.ll.y) },
     ssize,
     margin: pinfo.margin,
     doSplines: pinfo.doSplines,
@@ -313,6 +317,17 @@ function* ringTall(bnd: number): Generator<[number, number]> {
 }
 
 /**
+ * Position a fixed (pinned) graph. Its polyomino was generated where it will
+ * be (via the center offset in genPoly), so the final translation is just
+ * -center and its cells are occupied as-is.
+ * @see lib/pack/pack.c:placeFixed
+ */
+function placeFixed(info: GInfo, ctx: PlaceCtx, center: Point): void {
+  ctx.places[info.index] = { x: -center.x, y: -center.y };
+  for (const c of info.cells) ctx.ps.add(c.x, c.y);
+}
+
+/**
  * Place one polyomino on concentric rings out from the origin; the
  * first (largest) graph is centered on the origin when possible.
  * @see lib/pack/pack.c:placeGraph
@@ -336,8 +351,8 @@ function placeGraph(i: number, info: GInfo, ctx: PlaceCtx): void {
 
 /**
  * Polyomino packing of pre-laid-out graphs. Returns the translation
- * point for each graph (indexed like gs). The pinfo.fixed protocol is
- * not ported (no caller passes fixed graphs yet).
+ * point for each graph (indexed like gs). When pinfo.fixed is set, the
+ * fixed (pinned) components stay put and the rest pack around them.
  * @see lib/pack/pack.c:polyGraphs
  */
 export function polyGraphs(
@@ -346,11 +361,35 @@ export function polyGraphs(
   if (gs.length === 0) return null;
   const stepSize = computeStep(bbs, pinfo.margin);
   if (stepSize <= 0) return null;
+  // Fixed (pinned) protocol: when some components carry a pinned node, C keeps
+  // them put and packs the rest around them. center = midpoint of the union of
+  // the fixed components' (rounded) bboxes; (0,0) for free packing.
+  // @see lib/pack/pack.c:putGraphs (fixed_bb / center / placeFixed)
+  const fixed = pinfo.fixed;
   const center = { x: 0, y: 0 };
+  if (fixed) {
+    let fixedBB: Box | null = null;
+    for (let i = 0; i < gs.length; i++) {
+      if (!fixed[i]) continue;
+      const b = bbs[i]!;
+      const rb: Box = {
+        ll: { x: cround(b.ll.x), y: cround(b.ll.y) },
+        ur: { x: cround(b.ur.x), y: cround(b.ur.y) },
+      };
+      fixedBB = fixedBB === null ? rb : {
+        ll: { x: Math.min(rb.ll.x, fixedBB.ll.x), y: Math.min(rb.ll.y, fixedBB.ll.y) },
+        ur: { x: Math.max(rb.ur.x, fixedBB.ur.x), y: Math.max(rb.ur.y, fixedBB.ur.y) },
+      };
+    }
+    if (fixedBB) {
+      center.x = cround((fixedBB.ll.x + fixedBB.ur.x) / 2);
+      center.y = cround((fixedBB.ll.y + fixedBB.ur.y) / 2);
+    }
+  }
   const info: GInfo[] = gs.map((g, i) => {
     const gi = pinfo.mode === PackMode.Graph
       ? genBox(bbs[i]!, stepSize, pinfo.margin, center)
-      : genPoly(root, g, bbs[i]!, stepSize, pinfo);
+      : genPoly(root, g, bbs[i]!, stepSize, pinfo, center);
     gi.index = i;
     return gi;
   });
@@ -364,8 +403,24 @@ export function polyGraphs(
     margin: pinfo.margin,
     bbs,
   };
-  for (let i = 0; i < sinfo.length; i++) {
-    placeGraph(i, sinfo[i]!, ctx);
+  if (fixed) {
+    // C indexes `fixed` by the SORTED loop position i, not sinfo[i].index — an
+    // original-vs-sorted-index mismatch in pack.c that is load-bearing: the
+    // component at sorted position k is treated as fixed iff fixed[k]. With
+    // fixed = [true,false,…], that fixes the LARGEST component (sorted first)
+    // at -center, not the pinned one, and the pinned component is packed
+    // normally at its sorted position. Replicate the quirk exactly.
+    // @see lib/pack/pack.c:putGraphs (fixed placement loops)
+    for (let i = 0; i < sinfo.length; i++) {
+      if (fixed[i]) placeFixed(sinfo[i]!, ctx, center);
+    }
+    for (let i = 0; i < sinfo.length; i++) {
+      if (!fixed[i]) placeGraph(i, sinfo[i]!, ctx);
+    }
+  } else {
+    for (let i = 0; i < sinfo.length; i++) {
+      placeGraph(i, sinfo[i]!, ctx);
+    }
   }
   return ctx.places;
 }

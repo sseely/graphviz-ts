@@ -131,6 +131,11 @@
       "class": true,
       "attributionFile": "attribution-neato.json",
       "ref": "known-divergences.md#a1-drift-iterative-engines"
+    },
+    "2239": {
+      "class": "A1",
+      "bound": "1862 draw-op diffs (was 3838 before the pinned-node fixed-packing protocol was ported). 7-component disconnected layout with a pinned `legend` (pos=0,0!); every node box is bit-identical to the oracle (0 size diffs) — the divergence is component PLACEMENT. With C's node positions injected the port's polyomino cell counts match C exactly (81,66,42,57,25,21,6,6,6,6), so the packer is byte-faithful; the residual is float32 stress-majorization drift in edge splines amplified through the discrete greedy packer (a few drifted cells flip a later component's slot). Not auto-verified by attribution: injection is per-component pre-pack, so on a multi-component graph it re-packs (double-transform) rather than reproducing C.",
+      "ref": "known-divergences.md#a1-drift-iterative-engines"
     }
   },
   "fdp": {

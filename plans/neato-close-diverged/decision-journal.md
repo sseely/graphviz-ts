@@ -130,3 +130,46 @@ space-named node — and a no-op injection is INDISTINGUISHABLE from "survives
 injection" unless you check the match count. Any attribution verdict on a
 space-named graph produced before this fix is suspect. Re-running the full
 neato attribution `--fresh` to regenerate verdicts.
+
+## 2239 — pinned-node fixed packing ported (2026-07-20)
+
+**Not a label bug.** Every node's rendered box matches the oracle exactly
+(95 objects compared, 0 size mismatches); the divergence was pure component
+PLACEMENT. 2239 is a 7-connected-component (10 packed graphs incl. singletons)
+disconnected neato layout with a pinned `legend` node (`pos="0,0!"`).
+
+**Root cause:** the polyomino packer's FIXED (pinned) protocol was unported.
+When a graph has a pinned node, C (pack.c:putGraphs) computes `center` = the
+midpoint of the pinned component's bbox and passes it to genPoly for EVERY
+component (dx = center.x - round(GD_bb.LL.x)); it then places fixed components
+via placeFixed (at -center) and the rest via placeGraph. The port hardcoded
+`center=(0,0)` and skipped placeFixed ("pinfo.fixed protocol not ported").
+
+The center offset shifts every component's grid phase identically, which is
+load-bearing: without it a singleton's box straddled 9 cells vs C's 6, tipping
+perimeters → qsort order → arrangement. Instrumented C (GVTS_COVER_DUMP /
+GVTS_FIX_DUMP) proved center=(141,31), and that fixed[i] is indexed by the
+SORTED loop position (not sinfo[i].index) — a pack.c original-vs-sorted index
+quirk that fixes the LARGEST component at -center and packs the pinned one
+normally. Replicated exactly.
+
+**Fix (3 sites):**
+- poly-place.ts: genPoly takes `center`; polyGraphs computes fixed_bb/center,
+  runs placeFixed for the fixed loop-index components then placeGraph for the
+  rest. Backward-compatible: center=(0,0) with fixed=null ⇒ identical to before,
+  so only pinned+multi-component graphs change (2239 alone in the corpus).
+- pack/index.ts: pccomps merges pinned-node components into index 0 (C order).
+- neato/index.ts: layoutComponents uses pccomps, sets pinfo.fixed=[true,false…]
+  after getPackInfo (which resets it), mirroring neatoinit.c.
+
+**Result:** diffs 3838 → 1862. legend + the largest components now place
+EXACTLY as C (idx0,1,3,4,8 match to the point). Residual is A1: with C's node
+positions injected the port's polyomino cell counts match C exactly
+(81,66,42,57,25,21,6,6,6,6), proving the packer is now byte-faithful and the
+remaining divergence is float32 stress-drift in edge splines amplified through
+the discrete greedy packer (a few drifted cells flip a later component's slot).
+Classified A1-amplified-pack (accepted). The attribution harness can't
+auto-verify it: injection is per-component pre-pack, so on a multi-component
+graph it re-packs (double-transform) rather than reproducing C — a known
+harness limitation, hence the per-id accepted entry rather than a
+drift-exonerated verdict.

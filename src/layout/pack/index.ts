@@ -431,12 +431,33 @@ export function cccomps(g: Graph, pfx: string): Graph[] {
  * @see lib/pack/ccomps.c:pccomps
  */
 export function pccomps(g: Graph, pfx: string): { graphs: Graph[]; pinned: boolean } {
-  const graphs = ccomps(g, pfx);
+  // C first collects every component containing a pinned node into a single
+  // subgraph at index 0 (pin=true), then the remaining components in
+  // agfstnode order. Mirror that ordering so the fixed[0] flag and packing
+  // arrangement match. @see lib/pack/ccomps.c:pccomps
+  const visited = new Set<string>();
+  const result: Graph[] = [];
+  let idx = 0;
   let pinned = false;
+
+  // Pass 1 — all pinned-node components merged into one subgraph (index 0).
+  const pinnedNodes: Node[] = [];
   for (const n of g.nodes.values()) {
-    if (n.info.pinned) { pinned = true; break; }
+    if (visited.has(n.name) || !n.info.pinned) continue;
+    for (const m of dfsCollect(g, n, visited)) pinnedNodes.push(m);
+    pinned = true;
   }
-  return { graphs, pinned };
+  if (pinnedNodes.length > 0) {
+    result.push(buildSubgraph(g, pinnedNodes, `${pfx}_${idx++}`));
+  }
+
+  // Pass 2 — remaining components in node order.
+  for (const n of g.nodes.values()) {
+    if (visited.has(n.name)) continue;
+    const comp = dfsCollect(g, n, visited);
+    result.push(buildSubgraph(g, comp, `${pfx}_${idx++}`));
+  }
+  return { graphs: result, pinned };
 }
 
 /** True if g has exactly one connected component. @see lib/pack/ccomps.c:isConnected */

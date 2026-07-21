@@ -12,18 +12,20 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-20T18:55:01.758Z)
-- **pass:** 685 (89.9%) · **diverged (tracked):** 2 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 68
+- **Surveyed:** 762 (generated 2026-07-21T02:08:21.461Z)
+- **pass:** 685 (89.9%) · **diverged (tracked):** 1 · **accepted (documented, won't-fix):** 1 · **accepted (A1-drift class):** 68
 - **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
 
-## Accepted deltas (0) — documented, not chased
+## Accepted deltas (1) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
 [Known divergences](../../docs/known-divergences.md). Excluded from the diverged
 table below.
 
-_(none in this corpus)_
+| id | #diffs | class | bound | ref |
+|---|---:|---|---|---|
+| `2239` | 1862 | A1 | 1862 draw-op diffs (was 3838 before the pinned-node fixed-packing protocol was ported). 7-component disconnected layout with a pinned `legend` (pos=0,0!); every node box is bit-identical to the oracle (0 size diffs) — the divergence is component PLACEMENT. With C's node positions injected the port's polyomino cell counts match C exactly (81,66,42,57,25,21,6,6,6,6), so the packer is byte-faithful; the residual is float32 stress-majorization drift in edge splines amplified through the discrete greedy packer (a few drifted cells flip a later component's slot). Not auto-verified by attribution: injection is per-component pre-pack, so on a multi-component graph it re-packs (double-transform) rather than reproducing C. | known-divergences.md#a1-drift-iterative-engines |
 
 ## Accepted class: A1-drift — computed, not enumerated
 
@@ -35,11 +37,10 @@ outright leaves the class silently on the next report regen.
 
 - **A1-drift**: **68** members — full per-id evidence in [`attribution-neato.json`](./attribution-neato.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
-## Diverged (2)
+## Diverged (1)
 
 | id | size | #diffs | firstDiff |
 |---|---:|---:|---|
-| `2239` | 48090 | 3838 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1676.96 vs 1702.77` |
 | `241_0` | 578 | 13 | `edge:1->6#0 _draw_ edge:1->6#0/_draw_/op[1].unfilled_bezier[ptCount]: 14 vs 8` |
 
 ## Errors and timeouts (7)

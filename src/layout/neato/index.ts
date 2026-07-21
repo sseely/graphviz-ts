@@ -36,7 +36,7 @@ import { adjustNodesFull } from './fdp-adjust.js';
 import { splineEdgesShifted, EDGETYPE_LINE } from './splines.js';
 import { setEdgeTypeFromAttr } from '../dot/index.js';
 import {
-  ccomps,
+  pccomps,
   computeSubgraphBB,
   getPackInfo,
   packGraphs,
@@ -206,9 +206,11 @@ export function neatoLayout(g: Graph): void {
   const mode = parseMode(g);
   const model = parseModel(g);
 
-  const comps = ccomps(g, '_neato_cc');
+  // C uses pccomps (pin-aware): components with a pinned node are collected
+  // first (index 0) so the packer can hold them fixed. @see neatoinit.c:1391
+  const { graphs: comps, pinned } = pccomps(g, '_neato_cc');
   if (comps.length > 1) {
-    layoutComponents(g, comps, mode, model);
+    layoutComponents(g, comps, mode, model, pinned);
   } else {
     solveModel(g, mode, model); // srand48 happens inside (C checkStart)
     maybeRemoveOverlap(g);
@@ -254,7 +256,9 @@ function addClusters(g: Graph): void {
  * origin.
  * @see lib/neatogen/neatoinit.c:neato_layout (Pack >= 0 branch)
  */
-function layoutComponents(g: Graph, comps: Graph[], mode: number, model: number): void {
+function layoutComponents(
+  g: Graph, comps: Graph[], mode: number, model: number, pinned: boolean,
+): void {
   for (const gc of comps) {
     // @see lib/neatogen/neatoinit.c:1398 (setEdgeType FUNCTION, per component)
     setEdgeTypeFromAttr(gc, EDGETYPE_LINE);
@@ -262,15 +266,19 @@ function layoutComponents(g: Graph, comps: Graph[], mode: number, model: number)
     maybeRemoveOverlap(gc);
     splineEdgesShifted(gc);
   }
+  // C sets fixed[0]=true when a pinned node is present: pccomps merges every
+  // pinned component into index 0, which packGraphs then holds in place.
+  // @see lib/neatogen/neatoinit.c:1400-1405
   const pinfo: PackInfo = {
     aspect: 1, sz: 0, margin: CL_OFFSET, doSplines: false,
     mode: PackMode.Node, fixed: null, vals: null, flags: 0,
   };
   getPackInfo(g, PackMode.Node, CL_OFFSET, pinfo);
-  // C sets pinfo.doSplines = true AFTER getPackModeInfo, right before
-  // packGraphs — so the packer follows each component's routed splines
-  // (self-loops/curves bulge past the chord). getPackInfo resets it to
-  // false, so this must come last. @see lib/neatogen/neatoinit.c:1409
+  // C sets pinfo.fixed and pinfo.doSplines AFTER getPackModeInfo, right before
+  // packGraphs (getPackInfo resets both). fixed[0]=true holds the merged
+  // pinned component in place; doSplines makes the packer follow each
+  // component's routed splines. @see lib/neatogen/neatoinit.c:1405-1409
+  pinfo.fixed = pinned ? comps.map((_, i) => i === 0) : null;
   pinfo.doSplines = true;
   packGraphs(comps.length, comps, g, pinfo);
   // C does NOT translate here — after packGraphs it runs compute_bb (no shift)

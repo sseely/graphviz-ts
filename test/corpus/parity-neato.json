@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T18:55:01.758Z",
+  "generatedAt": "2026-07-21T02:08:21.461Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "neato",
   "tolerance": 0.5,
@@ -3783,8 +3783,8 @@
       "id": "2239",
       "size": 48090,
       "status": "diverged",
-      "nDiffs": 3838,
-      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1676.96 vs 1702.77"
+      "nDiffs": 1862,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1702.02 vs 1702.77"
     },
     {
       "id": "graphs-b106",
