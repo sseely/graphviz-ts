@@ -110,14 +110,43 @@ export interface EdgeGeometry {
 }
 
 /**
+ * Per-cluster geometry extracted after layout, in points.
+ *
+ * `name` is the cluster subgraph's name (e.g. `cluster6`); for nested
+ * clusters the name encodes the hierarchy, so no explicit parent link is
+ * exposed. `x`/`y`/`width`/`height` describe the cluster's bounding box,
+ * following the same frame convention as {@link BoundsGeometry}: with
+ * `yAxis:'down'` (x, y) is the top-left corner; with `yAxis:'up'` (x, y) is
+ * the lower-left corner (native graphviz frame). These are the raw box
+ * corners graphviz computed — the same values `render()` rounds to emit the
+ * `class="cluster"` polygon, so a consumer quantizing to SVG precision gets
+ * byte-conformant geometry.
+ *
+ * @see lib/common/types.h:GD_bb (of a cluster subgraph)
+ */
+export interface ClusterGeometry {
+  /** Cluster subgraph name (e.g. `cluster6`); encodes nesting. */
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/**
  * Plain, JSON-serializable snapshot of the graph's computed geometry.
  *
- * @see lib/common/types.h:GD_bb, ND_coord, ED_spl
+ * `clusters` lists every cluster subgraph (recursively, nested clusters each
+ * get their own entry) with a computed bounding box; it is empty for graphs
+ * without clusters.
+ *
+ * @see lib/common/types.h:GD_bb, ND_coord, ED_spl, GD_clust
  */
 export interface LayoutSnapshot {
   bounds: BoundsGeometry;
   nodes: NodeGeometry[];
   edges: EdgeGeometry[];
+  clusters: ClusterGeometry[];
 }
 
 // ---------------------------------------------------------------------------
@@ -191,6 +220,47 @@ function snapshotEdge(edge: Edge, flipY: (y: number) => number): EdgeGeometry {
   return geom;
 }
 
+/**
+ * Snapshot one cluster's bounding box, in the requested frame.
+ *
+ * Mirrors the {@link BoundsGeometry} convention: `yAxis:'up'` returns the
+ * native lower-left corner (ll); `yAxis:'down'` returns the top-left corner
+ * (ll.x, flipped ur.y). `width`/`height` are frame-independent (ur - ll).
+ *
+ * @see lib/common/types.h:GD_bb (cluster subgraph)
+ */
+function snapshotCluster(
+  sg: Graph, yAxis: YAxis, flipY: (y: number) => number,
+): ClusterGeometry {
+  const bb = sg.info.bb;
+  return {
+    name: sg.name,
+    x: bb.ll.x,
+    // 'up' keeps the lower-left y; 'down' flips the upper-right y to the
+    // top-left of the box (flipY is monotonic-decreasing there).
+    y: yAxis === 'up' ? bb.ll.y : flipY(bb.ur.y),
+    width: bb.ur.x - bb.ll.x,
+    height: bb.ur.y - bb.ll.y,
+  };
+}
+
+/**
+ * Collect every cluster subgraph (depth-first, nested clusters included).
+ * C stores clusters 1-indexed in GD_clust; the TS model exposes a 0-indexed
+ * `info.clust` array on each (sub)graph. A cluster without a computed bb
+ * (never laid out) is skipped.
+ * @see lib/common/types.h:GD_clust, GD_n_cluster
+ */
+function collectClusters(
+  sg: Graph, yAxis: YAxis, flipY: (y: number) => number,
+  out: ClusterGeometry[],
+): void {
+  for (const c of sg.info.clust ?? []) {
+    if (c.info.bb !== undefined) out.push(snapshotCluster(c, yAxis, flipY));
+    collectClusters(c, yAxis, flipY, out);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -230,6 +300,8 @@ export function getLayout(g: Graph, opts?: GeometryOptions): LayoutSnapshot {
 
   const nodes = Array.from(g.nodes.values()).map((n) => snapshotNode(n, flipY));
   const edges = g.edges.map((e) => snapshotEdge(e, flipY));
+  const clusters: ClusterGeometry[] = [];
+  collectClusters(g, yAxis, flipY, clusters);
 
-  return { bounds, nodes, edges };
+  return { bounds, nodes, edges, clusters };
 }

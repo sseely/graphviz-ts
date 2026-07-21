@@ -27,6 +27,7 @@ export type {
   NodeGeometry,
   EdgeGeometry,
   BoundsGeometry,
+  ClusterGeometry,
   YAxis,
   GeometryOptions,
 } from './geometry.js';
