@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T02:13:46.741Z",
+  "generatedAt": "2026-07-22T03:27:30.302Z",
   "oracleSha1": "8fdd1294b3726c2a19fe384ca48f44a2954d1944",
   "tolerance": 0.5,
   "results": [
@@ -170,13 +170,13 @@
     },
     {
       "id": "graphs-fdp",
-      "verdict": "not-cleared",
-      "baseDiffs": 162,
-      "injectedDiffs": 45,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 131,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "graph/_draw_/numeric",
-        "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural+…(9)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -192,13 +192,13 @@
     },
     {
       "id": "graphs-b145",
-      "verdict": "not-cleared",
-      "baseDiffs": 96,
-      "injectedDiffs": 27,
+      "verdict": "drift-exonerated",
+      "baseDiffs": 79,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
-        "kind": "count",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/structural+node/_ldraw_/structural+node/height/structural+…(8)"
+        "shape": "graph/_draw_/unknown",
+        "kind": "position",
+        "signature": "none"
       }
     },
     {
@@ -391,7 +391,7 @@
     {
       "id": "graphs-rowe",
       "verdict": "drift-exonerated",
-      "baseDiffs": 2140,
+      "baseDiffs": 2149,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -1061,13 +1061,13 @@
     },
     {
       "id": "2095",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 8256,
-      "injectedDiffs": 52,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_draw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/pos/numeric"
+        "signature": "none"
       }
     },
     {
@@ -1434,17 +1434,6 @@
       }
     },
     {
-      "id": "2620",
-      "verdict": "drift-exonerated",
-      "baseDiffs": 10855,
-      "injectedDiffs": 0,
-      "bucket": {
-        "shape": "graph/_draw_/unknown",
-        "kind": "position",
-        "signature": "none"
-      }
-    },
-    {
       "id": "graphs-b102",
       "verdict": "drift-exonerated",
       "baseDiffs": 18244,
@@ -1590,7 +1579,7 @@
     {
       "id": "2475_2",
       "verdict": "drift-exonerated",
-      "baseDiffs": 323062,
+      "baseDiffs": 326466,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",
@@ -1601,7 +1590,7 @@
     {
       "id": "2470",
       "verdict": "drift-exonerated",
-      "baseDiffs": 19741,
+      "baseDiffs": 20080,
       "injectedDiffs": 0,
       "bucket": {
         "shape": "graph/_draw_/unknown",

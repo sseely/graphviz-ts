@@ -1,4 +1,4 @@
-{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-22T02:03:36.522Z"}
+{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-22T03:17:41.675Z"}
 {"id":"1909","verdict":"drift-exonerated","baseDiffs":50,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-center","verdict":"drift-exonerated","baseDiffs":53,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2225","verdict":"drift-exonerated","baseDiffs":48,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -14,9 +14,9 @@
 {"id":"705","verdict":"drift-exonerated","baseDiffs":36,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"1514","verdict":"drift-exonerated","baseDiffs":156,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2615","verdict":"drift-exonerated","baseDiffs":168,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"graphs-fdp","verdict":"not-cleared","baseDiffs":162,"injectedDiffs":45,"bucket":{"shape":"graph/_draw_/numeric","kind":"count","signature":"edge/_draw_/numeric+edge/pos/numeric+graph/_draw_/numeric+graph/bb/numeric+node/_draw_/structural+node/_ldraw_/structural+…(9)"}}
+{"id":"graphs-fdp","verdict":"drift-exonerated","baseDiffs":131,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-nestedclust","verdict":"drift-exonerated","baseDiffs":89,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"graphs-b145","verdict":"not-cleared","baseDiffs":96,"injectedDiffs":27,"bucket":{"shape":"edge/_draw_/numeric","kind":"count","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/structural+node/_ldraw_/structural+node/height/structural+…(8)"}}
+{"id":"graphs-b145","verdict":"drift-exonerated","baseDiffs":79,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-layers","verdict":"drift-exonerated","baseDiffs":55,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-layer","verdict":"drift-exonerated","baseDiffs":55,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-layer2","verdict":"drift-exonerated","baseDiffs":55,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -34,7 +34,7 @@
 {"id":"graphs-ports","verdict":"drift-exonerated","baseDiffs":675,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"1658","verdict":"drift-exonerated","baseDiffs":522,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-html","verdict":"drift-exonerated","baseDiffs":116,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"graphs-rowe","verdict":"drift-exonerated","baseDiffs":2140,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
+{"id":"graphs-rowe","verdict":"drift-exonerated","baseDiffs":2149,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-abstract","verdict":"drift-exonerated","baseDiffs":1904,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-jcctree","verdict":"drift-exonerated","baseDiffs":521,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-Heawood","verdict":"drift-exonerated","baseDiffs":411,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -95,7 +95,7 @@
 {"id":"graphs-sl_circle_dbl","verdict":"drift-exonerated","baseDiffs":2205,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2669","verdict":"drift-exonerated","baseDiffs":6034,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"56","verdict":"drift-exonerated","baseDiffs":512,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2095","verdict":"not-cleared","baseDiffs":8256,"injectedDiffs":52,"bucket":{"shape":"edge/_draw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/pos/numeric"}}
+{"id":"2095","verdict":"drift-exonerated","baseDiffs":8256,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"1898","verdict":"drift-exonerated","baseDiffs":1346,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-ldbxtried","verdict":"drift-exonerated","baseDiffs":2148,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-crazy","verdict":"drift-exonerated","baseDiffs":1919,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -129,7 +129,6 @@
 {"id":"2343","verdict":"drift-exonerated","baseDiffs":27477,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-b143","verdict":"drift-exonerated","baseDiffs":11881,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-b29","verdict":"drift-exonerated","baseDiffs":12359,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2620","verdict":"drift-exonerated","baseDiffs":10855,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-b102","verdict":"drift-exonerated","baseDiffs":18244,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-xx","verdict":"drift-exonerated","baseDiffs":18259,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2095_1","verdict":"drift-exonerated","baseDiffs":68842,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -143,5 +142,5 @@
 {"id":"nshare-root_circo","verdict":"drift-exonerated","baseDiffs":37214,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"linux.x86-root_circo","verdict":"drift-exonerated","baseDiffs":37214,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-b103","verdict":"drift-exonerated","baseDiffs":69777,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2475_2","verdict":"drift-exonerated","baseDiffs":323062,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2470","verdict":"drift-exonerated","baseDiffs":19741,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
+{"id":"2475_2","verdict":"drift-exonerated","baseDiffs":326466,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
+{"id":"2470","verdict":"drift-exonerated","baseDiffs":20080,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
