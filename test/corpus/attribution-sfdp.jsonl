@@ -1,4 +1,4 @@
-{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-21T23:59:16.225Z"}
+{"_meta":true,"oracleSha1":"8fdd1294b3726c2a19fe384ca48f44a2954d1944","generatedAt":"2026-07-22T13:10:31.683Z"}
 {"id":"2391","verdict":"drift-exonerated","baseDiffs":62,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"graphs-clover","verdict":"drift-exonerated","baseDiffs":177,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"2168","verdict":"drift-exonerated","baseDiffs":57,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
@@ -133,7 +133,7 @@
 {"id":"windows-mike","verdict":"drift-exonerated","baseDiffs":76,"injectedDiffs":0,"bucket":{"shape":"edge/pos/unknown","kind":"position","signature":"none"}}
 {"id":"linux.x86-record_dot","verdict":"drift-exonerated","baseDiffs":691,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"nshare-record_dot","verdict":"drift-exonerated","baseDiffs":685,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
-{"id":"2095","verdict":"not-cleared","baseDiffs":6014,"injectedDiffs":27,"bucket":{"shape":"edge/_hdraw_/numeric","kind":"position","signature":"edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/pos/numeric"}}
+{"id":"2095","verdict":"drift-exonerated","baseDiffs":6014,"injectedDiffs":0,"bucket":{"shape":"graph/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"share-viewfile","verdict":"drift-exonerated","baseDiffs":336,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"windows-viewfile","verdict":"drift-exonerated","baseDiffs":336,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}
 {"id":"1898","verdict":"drift-exonerated","baseDiffs":312,"injectedDiffs":0,"bucket":{"shape":"edge/_draw_/unknown","kind":"position","signature":"none"}}

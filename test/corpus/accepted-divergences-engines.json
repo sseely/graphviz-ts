@@ -170,11 +170,6 @@
       "class": "A9",
       "bound": "flat-edge ptCount 14 vs 8 (3->2); same CDT/hypot tie as twopi/circo 241_0 (corridor succeeds N-pt vs plain fallback); findMaxDev hypot ULP",
       "ref": "known-divergences.md#a9-sfdp-fp-ties"
-    },
-    "2095": {
-      "class": "A9",
-      "bound": "sub-0.7pt arrowhead/spline drift on empty-named-node edges; Math.hypot ULP in findMaxDev (route.ts:198-199)",
-      "ref": "known-divergences.md#a9-sfdp-fp-ties"
     }
   }
 }

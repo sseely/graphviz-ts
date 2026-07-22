@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T00:04:23.240Z",
+  "generatedAt": "2026-07-22T13:16:13.846Z",
   "oracleSha1": "8fdd1294b3726c2a19fe384ca48f44a2954d1944",
   "tolerance": 0.5,
   "results": [
@@ -1479,13 +1479,13 @@
     },
     {
       "id": "2095",
-      "verdict": "not-cleared",
+      "verdict": "drift-exonerated",
       "baseDiffs": 6014,
-      "injectedDiffs": 27,
+      "injectedDiffs": 0,
       "bucket": {
-        "shape": "edge/_hdraw_/numeric",
+        "shape": "graph/_draw_/unknown",
         "kind": "position",
-        "signature": "edge/_draw_/numeric+edge/_hdraw_/numeric+edge/pos/numeric+node/_draw_/numeric+node/pos/numeric"
+        "signature": "none"
       }
     },
     {
