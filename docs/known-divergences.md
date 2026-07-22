@@ -670,6 +670,39 @@ width/height differ.
 layout behavior worth porting, and the input is degenerate. Revisit if upstream
 fixes the overflow (e.g. widens the field or clamps the size).
 
+<a id="a6b-degenerate-nan-layout"></a>
+
+#### A6b. Degenerate NaN layout (`sfdp`, pathological `repulsiveforce`)
+
+**Affected:** `2556` — `repulsiveforce=100` (⇒ the repulsive force uses
+`pow(dist, 101)`), which drives the spring-electrical solver to **NaN in both
+engines**. The native oracle itself emits all-`nan` node/edge positions and a
+degenerate bounding box.
+
+**What happens.** With every coordinate NaN, the two implementations serialize
+the garbage differently: (1) the graph bb / background polygon — C rounds `NaN`
+to `int`, which on arm64 yields `INT_MIN`-scale garbage (`bb="0,0,-4.295e+09,
+-4.295e+09"`); the port keeps `0`. (2) Edge draw ops — native's emit pass
+suppresses the `_draw_`/`_hdraw_` of a NaN spline (emitting only the `pos`),
+while the port emits them with NaN control points. Node draws match (both
+suppress them). No real layout exists on either side.
+
+**Why we don't chase it.** The port already reproduces the *same* NaN blow-up as
+native — the fix that got it there is genuine (see below); what remains is only
+how each serializes NaN garbage. Replicating C's `(int)NaN` undefined behavior
+and its NaN-spline draw suppression is not meaningful layout fidelity on an input
+whose layout is degenerate in both engines. Revisit if upstream clamps
+`repulsiveforce` or sanitizes NaN positions.
+
+**Port fixes that made this reachable (not chased-away — real bugs).** Before
+these, the port could not even reach the degenerate state: (1) `armPow`
+(`src/common/arm-pow.ts`) threw on any non-fast-path argument; it now ports ARM
+`pow.c`'s full special-case branch so `pow(NaN, y) = NaN` like libm. (2)
+`bezierClip` (`src/common/splines-geom.ts`) looped forever on NaN control points
+because its convergence test was the naive negation of C's `while (ABS > .5)`
+(equivalent for finite values, not for NaN); it now mirrors C exactly and
+terminates on NaN. Both are C-faithful and affect only NaN inputs.
+
 ---
 
 ### A7. `round()` box-wall rounding boundary (`dot`)

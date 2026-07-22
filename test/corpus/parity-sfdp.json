@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-21T23:54:17.848Z",
+  "generatedAt": "2026-07-22T14:05:55.040Z",
   "generatedWith": "test/corpus/engine-walk.ts",
   "engine": "sfdp",
   "tolerance": 0.5,
   "total": 762,
   "counts": {
     "pass": 524,
-    "diverged": 230,
+    "diverged": 231,
     "oracle-error": 7,
-    "port-error": 1,
+    "port-error": 0,
     "timeout": 0
   },
   "results": [
@@ -1560,8 +1560,9 @@
     {
       "id": "2556",
       "size": 469,
-      "status": "port-error",
-      "err": "armPow: argument outside the ported normal-finite fast path"
+      "status": "diverged",
+      "nDiffs": 54,
+      "firstDiff": "[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 0 vs -4294967294"
     },
     {
       "id": "1213-1",

@@ -12,11 +12,11 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-21T23:54:17.848Z)
-- **pass:** 524 (68.8%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 2 · **accepted (A1-drift class):** 228
-- **oracle-error:** 7 · **port-error:** 1 · **timeout:** 0
+- **Surveyed:** 762 (generated 2026-07-22T14:05:55.040Z)
+- **pass:** 524 (68.8%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3 · **accepted (A1-drift class):** 228
+- **oracle-error:** 7 · **port-error:** 0 · **timeout:** 0
 
-## Accepted deltas (2) — documented, not chased
+## Accepted deltas (3) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
@@ -25,6 +25,7 @@ table below.
 
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
+| `2556` | 54 | A6 | degenerate NaN layout: repulsiveforce=100 drives the spring-electrical solver to NaN in BOTH engines (the native oracle emits all-nan positions). Residual 54 diffs are NaN-garbage serialization only - C rounds NaN-&gt;int (bb -4.295e9 vs port 0) and suppresses NaN-spline edge draws (port emits them). No real layout exists on either side. The armPow throw + bezierClip NaN-hang that previously blocked rendering are fixed (C-faithful, NaN-only). | known-divergences.md#a6b-degenerate-nan-layout |
 | `241_0` | 20 | A9 | flat-edge ptCount 14 vs 8 (3-&gt;2); same CDT/hypot tie as twopi/circo 241_0 (corridor succeeds N-pt vs plain fallback); findMaxDev hypot ULP | known-divergences.md#a9-sfdp-fp-ties |
 | `42` | 200 | A9 | CDT cocircular incircle tie: opCount 5 vs 9 (0-&gt;3), ptCount 32 vs 26 (3-&gt;7); multispline corridor flip. fma+robust-incircle applied; residual is V8-vs-Apple-libm sin/hypot 1-ULP in the predicate input | known-divergences.md#a9-sfdp-fp-ties |
 
@@ -42,7 +43,7 @@ outright leaves the class silently on the next report regen.
 
 _(none)_
 
-## Errors and timeouts (8)
+## Errors and timeouts (7)
 
 | id | status | message |
 |---|---|---|
@@ -53,7 +54,6 @@ _(none)_
 | `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K sfdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
-| `2556` | port-error | armPow: argument outside the ported normal-finite fast path |
 
 **oracle errors:** 7 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
 _Passing ids (524) are omitted for brevity — the full roster is in

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T13:16:13.846Z",
+  "generatedAt": "2026-07-22T14:19:05.580Z",
   "oracleSha1": "8fdd1294b3726c2a19fe384ca48f44a2954d1944",
   "tolerance": 0.5,
   "results": [
@@ -375,6 +375,17 @@
         "shape": "edge/_draw_/unknown",
         "kind": "position",
         "signature": "none"
+      }
+    },
+    {
+      "id": "2556",
+      "verdict": "not-cleared",
+      "baseDiffs": 54,
+      "injectedDiffs": 54,
+      "bucket": {
+        "shape": "graph/_draw_/numeric",
+        "kind": "count",
+        "signature": "edge/_draw_/structural+edge/_hdraw_/structural+graph/_draw_/numeric+graph/bb/numeric"
       }
     },
     {

@@ -170,6 +170,11 @@
       "class": "A9",
       "bound": "flat-edge ptCount 14 vs 8 (3->2); same CDT/hypot tie as twopi/circo 241_0 (corridor succeeds N-pt vs plain fallback); findMaxDev hypot ULP",
       "ref": "known-divergences.md#a9-sfdp-fp-ties"
+    },
+    "2556": {
+      "class": "A6",
+      "bound": "degenerate NaN layout: repulsiveforce=100 drives the spring-electrical solver to NaN in BOTH engines (the native oracle emits all-nan positions). Residual 54 diffs are NaN-garbage serialization only - C rounds NaN->int (bb -4.295e9 vs port 0) and suppresses NaN-spline edge draws (port emits them). No real layout exists on either side. The armPow throw + bezierClip NaN-hang that previously blocked rendering are fixed (C-faithful, NaN-only).",
+      "ref": "known-divergences.md#a6b-degenerate-nan-layout"
     }
   }
 }
