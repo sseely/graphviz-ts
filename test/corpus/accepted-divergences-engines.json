@@ -155,6 +155,21 @@
       "class": true,
       "attributionFile": "attribution-sfdp.json",
       "ref": "known-divergences.md#a1-drift-iterative-engines"
+    },
+    "42": {
+      "class": "A9",
+      "bound": "CDT cocircular incircle tie: opCount 5 vs 9 (0->3), ptCount 32 vs 26 (3->7); multispline corridor flip. fma+robust-incircle applied; residual is V8-vs-Apple-libm sin/hypot 1-ULP in the predicate input",
+      "ref": "known-divergences.md#a9-sfdp-fp-ties"
+    },
+    "241_0": {
+      "class": "A9",
+      "bound": "flat-edge ptCount 14 vs 8 (3->2); same CDT/hypot tie as twopi/circo 241_0 (corridor succeeds N-pt vs plain fallback); findMaxDev hypot ULP",
+      "ref": "known-divergences.md#a9-sfdp-fp-ties"
+    },
+    "2095": {
+      "class": "A9",
+      "bound": "sub-0.7pt arrowhead/spline drift on empty-named-node edges; Math.hypot ULP in findMaxDev (route.ts:198-199)",
+      "ref": "known-divergences.md#a9-sfdp-fp-ties"
     }
   }
 }

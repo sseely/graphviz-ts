@@ -975,6 +975,39 @@ value 18.0, and `closestSide`'s dyna head-port selection flips TOP/BOTTOM at
 that exact tie; node positions and boxes are otherwise bit-identical to the
 oracle).
 
+**sfdp engine track — edge FP-ties (`42`, `241_0`, `2095`).**
+<a id="a9-sfdp-fp-ties"></a> The sfdp xdot engine track (`parity-sfdp.json`,
+native `dot -Ksfdp -Txdot`, ±0.5) surfaces the same two FP-tie mechanisms once
+exact native pre-routing positions are injected (so the divergence is NOT
+iterative drift — see the A1-drift class — but a discrete predicate tie):
+
+- `42` and `241_0` — CDT cocircular incircle tie (the multispline corridor).
+  With injected positions the residual is a **segment-count flip**: `42`
+  `opCount 5 vs 9` (edge 0->3) / `ptCount 32 vs 26` (3->7); `241_0` `ptCount 14
+  vs 8` (edge 3->2) — the port's constrained-Delaunay diagonal flips vs the
+  oracle, so the multispline corridor succeeds with an N-pt spline where the
+  native build falls back to a shorter plain route (or vice versa), exactly as
+  the twopi/circo `241_0` entry above. The port already emulates the arm64
+  `fmadd` contraction in the incircle/`ccw` predicate (`src/pathplan/triang.ts`,
+  `src/common/fma.ts`) and uses robust-incircle Delaunay; the residual is the
+  V8-vs-Apple-libm `sin`/`hypot` 1-ULP in the predicate input that no portable
+  code reproduces.
+- `2095` — the hypot sibling: with positions injected the residual is a
+  sub-0.7pt arrowhead/spline drift (`_hdraw_`/`_draw_`, edges to/from a
+  genuinely empty-named node `""->"4"`) from the same `Math.hypot` ULP in
+  `findMaxDev` (`src/pathplan/route.ts:198-199`, whose comment documents the
+  Apple-libm hypot boundary and the deliberately translation-equivariant
+  tie-break).
+
+**Fresh controlled experiment (2026-07-21).** A native-vs-V8 `hypot` probe
+(`plans/sfdp-tracked-divergences/batch-2/hypot-ulp-probe.txt`): compiling the
+system C `hypot` and comparing to Node `Math.hypot` on representative
+flat-edge deviation inputs shows a 1-ULP disagreement on 2 of 6 (Δ 7.1e-15 and
+5.7e-14) — the split-threshold knife-edge that flips the subdivision count.
+Irreducible: no portable hypot reproduces Apple libm (the `arm-pow.ts`
+precedent for the same boundary). Accepted at the engine-track level via
+`accepted-divergences-engines.json` (`sfdp.42`, `sfdp.241_0`, `sfdp.2095`).
+
 ---
 
 ## Tracked long tail (`dot` attribute & edge-case)

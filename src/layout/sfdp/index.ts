@@ -23,7 +23,7 @@ import {
   computeSubgraphBB,
   getPackInfo,
   packSubgraphs,
-  shiftOneGraph,
+  normalizeGraphBB,
   PackMode,
   type PackInfo,
 } from '../pack/index.js';
@@ -153,12 +153,29 @@ function layoutComponents(
  * @see lib/common/postproc.c:gv_postprocess
  */
 function postprocess(g: Graph, singleComponent: boolean): void {
-  // Single-component: native never re-runs compute_bb after routing, so the
-  // graph bb is the curve-refined box (update_bb_bz). Multi-component: pack
-  // re-runs compute_bb post-routing over raw control points (hull). Mirror both.
-  const bb = computeSubgraphBB(g, 0, singleComponent);
-  if (bb.ll.x !== 0 || bb.ll.y !== 0) shiftOneGraph(g, -bb.ll.x, -bb.ll.y);
-  g.info.bb = computeSubgraphBB(g, 0, singleComponent);
+  // Single-component: native never re-runs compute_bb after routing (C
+  // gv_postprocess only translates), so g.info.bb stays the box
+  // splineEdgesShifted left — the neatoSetAspect-scaled box grown by
+  // clip_and_install curve extents. A geometric recompute here would clobber
+  // the ratio=fill scale: node half-sizes are (correctly) not scaled by the
+  // fill factor, so a node-box∪curve union lands short of the scaled box by
+  // node_size*(f-1) on the stretched axis. Just translate to the origin,
+  // exactly as neato/splines.ts:1000-1003 warns. Multi-component: pack re-runs
+  // compute_bb post-routing over raw control points (hull).
+  // @see lib/common/postproc.c:599 gv_postprocess (never recomputes GD_bb)
+  if (singleComponent) {
+    normalizeGraphBB(g);
+  } else {
+    // Multi-component: packSubgraphs already placed the components; C runs
+    // compute_bb (hull) with NO shift, then gv_postprocess whose
+    // translate_drawing shifts to the origin AFTER addXLabels. Shifting here
+    // (before addXLabels) rounds the xlabel obstacle rects (objplp2rect uses
+    // round()) in the origin frame instead of C's packed frame, tipping the
+    // edge-label side-selection knife-edge (same X, wrong Y). Drop the
+    // premature shift and let gvPostprocess→translateDrawing do it.
+    // @see neato/index.ts layoutComponents (commit 1e7515d — identical bug/fix)
+    g.info.bb = computeSubgraphBB(g, 0, false);
+  }
   // C sfdp_layout ends with dotneato_postprocess(g) = gv_postprocess(g, 1):
   // place_graph_label, then addXLabels — the pass that positions the *edge*
   // labels (sfdp never sets ED_label(e)->pos during routing).

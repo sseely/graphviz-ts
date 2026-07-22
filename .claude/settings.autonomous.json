@@ -6,14 +6,28 @@
       "Bash(npx *:*)",
       "Bash(node *:*)",
       "Bash(git *:*)",
-      "Bash(gh *:*)",
-      "Bash(shellcheck:*)",
+      "Bash(python3 *:*)",
+      "Bash(make *:*)",
+      "Bash(cc *:*)",
+      "Bash(clang *:*)",
+      "Bash(otool *:*)",
+      "Bash(~/git/graphviz/build/cmd/dot/dot:*)",
+      "Bash(GVBINDIR=* *:*)",
+      "Bash(GVTS_POS_DUMP=* *:*)",
+      "Bash(GVTS_POS_INJECT=* *:*)",
+      "Bash(GVTS_XL_KEYS=* *:*)",
+      "Bash(pgrep *:*)",
+      "Bash(pkill *:*)",
+      "Bash(nohup *:*)",
       "Bash(rg:*)",
+      "Bash(shellcheck:*)",
+      "Bash(command -v:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(mkdir *:*)",
       "Bash(cp *:*)",
       "Bash(mv *:*)",
+      "Bash(rm -f *:*)",
       "Bash(chmod *:*)",
       "Bash(find *:*)",
       "Bash(grep *:*)",
@@ -22,10 +36,9 @@
       "Bash(head *:*)",
       "Bash(tail *:*)",
       "Bash(diff *:*)",
-      "Bash(openssl *:*)",
-      "Bash(command -v:*)",
-      "Bash(curl -s https://raw.githubusercontent.com/**:*)",
-      "Bash(~/.claude/hooks/quality-gate.sh:*)",
+      "Bash(sed *:*)",
+      "Bash(awk *:*)",
+      "Bash(paste *:*)",
       "Read(**)",
       "Write(**)",
       "Edit(**)",
@@ -34,97 +47,37 @@
       "mcp__serena__list_dir",
       "mcp__serena__find_file",
       "mcp__serena__find_symbol",
+      "mcp__serena__find_referencing_symbols",
       "mcp__serena__search_for_pattern",
       "mcp__serena__get_symbols_overview",
       "mcp__serena__replace_symbol_body",
       "mcp__serena__insert_after_symbol",
       "mcp__serena__insert_before_symbol",
       "mcp__serena__safe_delete_symbol",
-      "mcp__serena__rename_symbol",
-      "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_click",
-      "mcp__playwright__browser_take_screenshot",
-      "mcp__playwright__browser_evaluate",
-      "Bash(python3 *:*)",
-      "Bash(/Users/scottseely/git/graphviz/build/cmd/dot/dot *:*)",
-      "Bash(sh test/corpus/gen-headless-gvbindir.sh:*)",
-      "Bash(cmp *:*)",
-      "Bash(time *:*)",
-      "Bash(sed *:*)",
-      "Bash(awk *:*)",
-      "Agent"
+      "mcp__serena__rename_symbol"
     ]
   },
   "hooks": {
     "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/session-start.sh",
-            "async": true
-          }
-        ]
-      }
+      { "hooks": [ { "type": "command", "command": "~/.claude/hooks/session-start.sh", "async": true } ] }
     ],
     "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/record-turn-start.sh",
-            "async": true
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/project-init.sh",
-            "async": true
-          }
-        ]
-      }
+      { "hooks": [
+        { "type": "command", "command": "~/.claude/hooks/record-turn-start.sh", "async": true },
+        { "type": "command", "command": "~/.claude/hooks/project-init.sh", "async": true }
+      ] }
     ],
     "PostCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cat ~/.claude/post-compact-context.md"
-          }
-        ]
-      }
+      { "hooks": [ { "type": "command", "command": "cat ~/.claude/post-compact-context.md" } ] }
     ],
     "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '-- COMPACTING: verify open TODOs are committed --'"
-          }
-        ]
-      }
+      { "hooks": [ { "type": "command", "command": "echo '-- COMPACTING: re-read plans/sfdp-tracked-divergences/README.md + decision-journal.md from disk; verify open task commits --'" } ] }
     ],
     "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/check-complexity.py"
-          }
-        ]
-      }
+      { "matcher": "Write|Edit|MultiEdit", "hooks": [ { "type": "command", "command": "python3 ~/.claude/hooks/check-complexity.py" } ] }
     ],
     "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify-on-stop.sh",
-            "async": true
-          }
-        ]
-      }
+      { "hooks": [ { "type": "command", "command": "~/.claude/hooks/notify-on-stop.sh", "async": true } ] }
     ]
   }
 }
