@@ -7,9 +7,9 @@ re-bucket. **Output feeds every later batch** (which are provisional until T0.3)
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T0.1 | Re-add native fdp `GVTS_POS_DUMP`, rebuild `dot`, verify it fires | debugger | ~/git/graphviz/lib/fdpgen/layout.c (native) | — | [ ] |
-| T0.2 | Regenerate `attribution-fdp` + snapshot `parity-fdp` baseline | general-purpose | test/corpus/attribution-fdp.{jsonl,json} | T0.1 | [ ] |
-| T0.3 | Re-bucket not-cleared → findings + refined bucket list | general-purpose | batch-0/findings.md | T0.2 | [ ] |
+| T0.1 | Re-add native fdp `GVTS_POS_DUMP`, rebuild `dot`, verify it fires | debugger | ~/git/graphviz/lib/fdpgen/layout.c (native) | — | [x] |
+| T0.2 | Regenerate `attribution-fdp` + snapshot `parity-fdp` baseline | general-purpose | test/corpus/attribution-fdp.{jsonl,json} | T0.1 | [x] |
+| T0.3 | Re-bucket not-cleared → findings + refined bucket list | general-purpose | batch-0/findings.md | T0.2 | [x] |
 
 Run T0.1 → T0.2 → T0.3 strictly in sequence. No `src/` changes in this batch
 (the only code change is the env-gated native dump line). After T0.3 the

@@ -92,7 +92,7 @@ same A9 FP-tie already accepted for sfdp.
 
 | Batch | Focus | Depends | Done |
 |-------|-------|---------|------|
-| [0](batch-0/overview.md) | Restore fdp injection, regen attribution, re-bucket | — | [ ] |
+| [0](batch-0/overview.md) | Restore fdp injection, regen attribution, re-bucket | — | [x] |
 | [1](batch-1/overview.md) | Frame/postprocess candidates (graphs-cairo, 2193) | 0 | [ ] |
 | [2](batch-2/overview.md) | Force-drift → A1 accept (unix family etc.) | 0 | [ ] |
 | [3](batch-3/overview.md) | FP-ties → A9 accept (241_0, 2095) | 0 | [ ] |
