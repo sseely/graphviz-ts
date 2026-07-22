@@ -79,8 +79,29 @@ full sweep on the render change.
 - [x] **Batch 2 — Content pages** ([overview](./batch-2/overview.md)) — T5
   types · T6 recipes · T7 images · T8 overview · T9 migration · T10 glossary ·
   T11 API reference.
-- [ ] **Batch 3 — Integration** ([overview](./batch-3/overview.md)) — T12 IA
+- [x] **Batch 3 — Integration** ([overview](./batch-3/overview.md)) — T12 IA
   overhaul (sidebar, landing, getting-started).
+
+## Mission summary (2026-07-22)
+
+**Status: COMPLETE.** All 3 batches / 12 tasks landed on `feature/docs-overhaul`.
+
+- **Tasks completed vs planned:** 12 / 12 (T1–T12), one commit each, plus one
+  orchestrator gate-fix commit (`fix(T3)` sanitizeComments) and three
+  `chore(docs-overhaul)` bookkeeping commits.
+- **Final quality gates:** `typecheck` 0 · `test` 3255 passed (234 files) ·
+  `build` 0 · `docs:build` 0 (copy-reports + TypeDoc + VitePress) ·
+  `grep /Users/ docs-site/parity-*.md` clean.
+- **Decisions flagged for review:** none contradicted an AD. The only
+  judgment calls were the fitness-allowlist entry for T1's DI global and the
+  `sanitizeComments` toolchain fix — both logged in the decision journal.
+- **Byte-identical guard (T1 hard stop):** honored — default-off emit proven
+  identical to `main` via a captured baseline test.
+- **Known follow-ups:** `docs-site/reference/` is gitignored and regenerated
+  at build time (never committed). The generated TypeDoc barrel folder is
+  literally `reference/index/` (root) with `reference/api/` and
+  `reference/render/` as re-export stubs — the sidebar links the `/reference/`
+  index. VitePress emits a chunk-size warning (cosmetic).
 
 ## Index
 

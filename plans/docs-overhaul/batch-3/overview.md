@@ -7,7 +7,7 @@ Batches 1–2 (it links pages T3/T5–T11 created).
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T12 | IA overhaul: sidebar restructure, landing redesign, getting-started orientation | frontend-developer or documentation-engineer (Sonnet) | `docs-site/.vitepress/config.ts`, `docs-site/index.md`, `docs-site/guide/getting-started.md` | T3, T5–T11 | [ ] |
+| T12 | IA overhaul: sidebar restructure, landing redesign, getting-started orientation | frontend-developer or documentation-engineer (Sonnet) | `docs-site/.vitepress/config.ts`, `docs-site/index.md`, `docs-site/guide/getting-started.md` | T3, T5–T11 | [x] 03e6ea2 |
 
 ## Final quality gates (after T12)
 
