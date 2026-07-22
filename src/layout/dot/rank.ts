@@ -270,7 +270,10 @@ export function nodeInduce(par: Graph, clust: Graph): void {
   for (const n of nodesInSeq(clust)) {
     if (n.info.clust) continue;
     n.info.clust = clust;
-    n.info.clustnode = true;
+    // C node_induce sets ND_clust only (not ND_clustnode). ND_clustnode marks
+    // fdp's invisible cluster-edge proxies (SET_CLUST_NODE), and the dot
+    // serializer suppresses those; a real cluster-member node must NOT carry it.
+    // @see lib/dotgen/rank.c:node_induce
     if (n.info.in) {
       for (let i = n.info.in.size - 1; i >= 0; i--) {
         const e = n.info.in.list[i];

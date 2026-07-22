@@ -955,9 +955,11 @@ export function injectOraclePositions(g: Graph): void {
   for (const line of text.split('\n')) {
     // Name is greedy: node names can contain spaces (and literal "\n" from
     // multi-line labels used as ids), so x and y are the trailing two tokens
-    // and the name is everything between. A `\S+` name silently skipped every
-    // space-named node — a harness blind spot on graphs like 2193.
-    const m = /^GVTS_POS (.+) (\S+) (\S+)$/.exec(line);
+    // and the name is everything between. `(.*)` (not `(.+)`) so a node with
+    // the EMPTY name "" also injects — `\S+` skipped space-named nodes (2193),
+    // `(.+)` still skipped empty-named nodes (2095's single "" node, which drags
+    // its two incident edges ~1000pt when left un-injected).
+    const m = /^GVTS_POS (.*) (\S+) (\S+)$/.exec(line);
     if (m) {
       const n = g.nodes.get(m[1]!);
       if (n) n.info.pos = [Number(m[2]), Number(m[3])];

@@ -14,7 +14,8 @@ import type { Graph } from '../../model/graph.js';
 import type { Node } from '../../model/node.js';
 import type { Box, Point } from '../../model/geom.js';
 import type { TextlabelT } from '../../common/types.js';
-import { lateInt } from '../../common/nodeinit.js';
+import { lateInt, lateDouble } from '../../common/nodeinit.js';
+import type { PolygonT } from '../../common/types.js';
 import { isACluster } from '../dot/rank.js';
 import { BOTTOM_IX, TOP_IX } from '../dot/position-aux.js';
 import {
@@ -37,6 +38,7 @@ import {
   dndata,
   isPort,
   setDnode,
+  getParent,
 } from './fdp-model.js';
 
 /** @see lib/common/geom.h:POINTS_PER_INCH */
@@ -280,18 +282,43 @@ export function setBB(g: Graph): void {
 }
 
 /**
- * Position cluster nodes (created by processClusterEdges for edges
- * with cluster endpoints) at the centers of their clusters.
- * processClusterEdges is not ported, so no node can carry the
- * clustnode flag; reaching the body is a port gap, not a layout case.
+ * Position cluster nodes (created by processClusterEdges for edges with
+ * cluster endpoints) at the centers of their clusters and size them to the
+ * cluster box, so their incident edges clip to the cluster boundary. Runs
+ * before evalPositions, so the cluster bb (gdata.bb, inches) is still in its
+ * parent-relative frame; pos is the cluster center, likewise relative.
  * @see lib/fdpgen/layout.c:setClustNodes
  */
 export function setClustNodes(root: Graph): void {
   for (const n of root.nodes.values()) {
     if (!n.info.clustnode) continue;
-    throw new Error(
-      'fdp setClustNodes: cluster-endpoint edges (compound) are not ' +
-      'ported — see mission 7 journal');
+    const p = getParent(n);
+    if (p === null) continue;
+    const bb = gdata(p).bb; // cluster bbox in inches (BB(p))
+    const w = bb.ur.x - bb.ll.x;
+    const h = bb.ur.y - bb.ll.y;
+    const w2 = POINTS_PER_INCH * (w / 2);
+    const h2 = POINTS_PER_INCH * (h / 2);
+    n.info.pos![0] = w / 2; // center of the cluster (relative, inches)
+    n.info.pos![1] = h / 2;
+    n.info.width = w;
+    n.info.height = h;
+    // C late_double(n, N_penwidth, DEFAULT_NODEPENWIDTH=1, MIN_NODEPENWIDTH=0)
+    const penwidth = lateDouble(n.attrs.get('penwidth'), 1, 0);
+    n.info.outline_width = w + penwidth;
+    n.info.outline_height = h + penwidth;
+    n.info.lw = n.info.rw = w2;
+    n.info.ht = POINTS_PER_INCH * h;
+    // Rewrite the box shape vertices to the cluster extent (points). The TS
+    // polygon omits C's outline periphery ring (poly_inside reapplies it via
+    // penwidth), so only the 4 box corners are set. @see layout.c:750-758
+    const poly = n.info.shape_info as PolygonT | undefined;
+    if (poly && poly.vertices) {
+      poly.vertices[0] = { x: w2, y: h2 };
+      poly.vertices[1] = { x: -w2, y: h2 };
+      poly.vertices[2] = { x: -w2, y: -h2 };
+      poly.vertices[3] = { x: w2, y: -h2 };
+    }
   }
 }
 

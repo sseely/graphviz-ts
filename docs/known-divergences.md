@@ -1008,6 +1008,22 @@ Irreducible: no portable hypot reproduces Apple libm (the `arm-pow.ts`
 precedent for the same boundary). Accepted at the engine-track level via
 `accepted-divergences-engines.json` (`sfdp.42`, `sfdp.241_0`, `sfdp.2095`).
 
+The **fdp** xdot engine track (`parity-fdp.json`, native `dot -Kfdp -Txdot`,
+±0.5) surfaces the SAME CDT cocircular tie on the same graph, `241_0`: with the
+oracle's exact pre-routing positions injected, the residual is 11 numeric
+`unfilled_bezier` diffs confined to one edge (`0->1#0`, maxΔ 3.39pt). Because
+the node positions are injected-identical, the divergence is downstream in the
+pathplan multispline corridor — the same libm-1-ULP incircle tie as
+twopi/circo/sfdp `241_0` (exact-rational incircle 185/185 above). The levers are
+already applied (`src/pathplan/triang.ts` fmadd, `src/pathplan/route.ts:198`
+`Math.hypot`); the tie is irreducible. Accepted via `accepted-divergences-engines.json`
+`fdp.241_0`. fdp's `2095`, by contrast, is **A1-drift, not A9**: injecting the
+single empty-named node (after the attribution injector was fixed to match
+`""`-named nodes) collapses its residual to zero — the earlier "A9 tail" was the
+un-injected empty node dragging its incident edges. (The sfdp `2095` entry above
+predates that injector fix and may share the blindspot; a future sfdp
+attribution regen should re-check it.)
+
 ---
 
 ## Tracked long tail (`dot` attribute & edge-case)

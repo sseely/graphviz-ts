@@ -232,6 +232,13 @@ export interface GraphInfo {
   n_cluster?: number;
 
   /**
+   * Count of cluster edges created by fdp's processClusterEdges (edges whose
+   * endpoint names a cluster). Non-zero ⇒ HAS_CLUST_EDGE(g).
+   * @see lib/common/utils.c:processClusterEdges (cl_edge_t.n_cluster_edges)
+   */
+  n_cluster_edges?: number;
+
+  /**
    * Cluster margin (in points). Corresponds to the `margin` attribute on a
    * cluster graph, read by `late_int(g, G_margin, CL_OFFSET, 0)` in C.
    * @see lib/dotgen/position.c:contain_nodes

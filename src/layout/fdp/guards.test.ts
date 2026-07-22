@@ -7,17 +7,15 @@
  *   with overlap="voronoi" parses as tries=0, rest="voronoi" and calls
  *   removeOverlapAs directly (no xLayout attempt).
  *
- * fdp setClustNodes (compound): NOT reachable from public API — n.info.clustnode
- *   is only set in the dot engine's rank pass (dotgen/rank.ts), never by any
- *   path through fdpLayoutEngine.  Tested via direct call.
+ * fdp processClusterEdges / setClustNodes (compound): reachable from the public
+ *   API when an edge endpoint names a cluster (e.g. `c -- clusterX`). fdp
+ *   replaces the endpoint with an invisible cluster node sized to the cluster
+ *   and deletes the original node, so it draws no node for the cluster name.
  */
 
 import { describe, it, expect } from 'vitest';
 import { parse } from '../../parser/index.js';
 import { fdpLayoutEngine } from './index.js';
-import { setClustNodes } from './layout.js';
-import { Graph } from '../../model/graph.js';
-import { Node } from '../../model/node.js';
 
 /** Inline copy of test/golden/inputs/fdp-simple.dot */
 const FDP_SIMPLE = `graph G {
@@ -72,31 +70,44 @@ describe('fdp removeOverlapAs dispatch', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Guard 2: fdp setClustNodes / compound  (direct-call test — not reachable
-// via public API).
+// Guard 2: fdp processClusterEdges / setClustNodes (compound cluster edges).
 //
-// n.info.clustnode is only set in the dot engine's rank.ts pass.  No path
-// through fdpLayoutEngine or fdpInitGraph sets this flag, so there is no
-// graph attribute or DOT source that triggers the guard from the public API.
-// The guard exists as a safety net for the unported processClusterEdges path.
+// An edge whose endpoint names a cluster (`c -- clusterX`) is replaced by an
+// invisible cluster node standing in for the cluster; the original visible
+// node is deleted. Only fdp does this (dot/neato draw the node). Exercised
+// through the public API. @see lib/common/utils.c:processClusterEdges
 // ---------------------------------------------------------------------------
 
-describe('fdp setClustNodes compound guard (direct call)', () => {
-  it('throws when a node carries clustnode=true', () => {
-    const g = new Graph('test', 'undirected');
-    const n = new Node(0, 'n0', g);
-    n.info.clustnode = true;
-    g.nodes.set('n0', n);
-    expect(() => setClustNodes(g)).toThrow(
-      'fdp setClustNodes: cluster-endpoint edges (compound) are not ported',
-    );
+describe('fdp compound cluster edges (processClusterEdges)', () => {
+  const COMPOUND = `graph G {
+    n0
+    subgraph clusterX { a -- b }
+    n0 -- clusterX
+  }`;
+
+  it('deletes the original cluster-named node and adds an invisible proxy', () => {
+    const g = parse(COMPOUND);
+    expect(() => fdpLayoutEngine(g)).not.toThrow();
+    // The original visible node "clusterX" is gone; an invisible cluster-node
+    // proxy (ND_clustnode, name "__0:clusterX") stands in its place.
+    expect(g.nodes.get('clusterX')).toBeUndefined();
+    const proxies = [...g.nodes.values()].filter((n) => n.info.clustnode);
+    expect(proxies).toHaveLength(1);
+    const proxy = proxies[0]!;
+    expect(proxy.name).toBe('__0:clusterX');
+    expect(proxy.attrs.get('style')).toBe('invis');
+    // setClustNodes gives it a positive size (the cluster's extent).
+    expect(proxy.info.width).toBeGreaterThan(0);
+    expect(proxy.info.height).toBeGreaterThan(0);
+    // The real nodes still lay out.
+    for (const name of ['n0', 'a', 'b']) {
+      expect(g.nodes.get(name)?.info.pos).toBeDefined();
+    }
   });
 
-  it('does not throw when no nodes carry clustnode=true', () => {
-    const g = new Graph('test', 'undirected');
-    const n = new Node(0, 'n0', g);
-    // clustnode defaults to false (makeNodeInfo initialises it false)
-    g.nodes.set('n0', n);
-    expect(() => setClustNodes(g)).not.toThrow();
+  it('is a no-op for graphs with no cluster-named edge endpoints', () => {
+    const g = parse(FDP_SIMPLE);
+    expect(() => fdpLayoutEngine(g)).not.toThrow();
+    expect([...g.nodes.values()].some((n) => n.info.clustnode)).toBe(false);
   });
 });
