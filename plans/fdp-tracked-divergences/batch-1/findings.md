@@ -66,9 +66,10 @@ counter, so index_counter never advances — every proxy for a cluster is
 - graphs-fdp: base 131 → **inj 0** (was base 162 → inj 45 w/ 10 structural).
 - graphs-b145: base 79 → **inj 0** (was base 96 → inj 27 w/ structural).
 - Full fresh fdp engine-walk (762 items): **0 pass→diverged regressions**.
-  (`2620 diverged→oracle-error` is a sweep-time oracle TIMEOUT under CPU load —
-  the C oracle succeeds standalone (exit 0) and the port renders 2620's 22
-  cluster refs cleanly; not a port regression.)
+  (`2620 diverged→oracle-error`: the native oracle SEGFAULTS on 2620 under
+  -Kfdp (exit 139), a PRE-EXISTING native graphviz bug — confirmed by reverting
+  the gated dump + rebuilding (still segfaults). Not a port regression; the port
+  itself renders 2620's 22 cluster refs cleanly. Excluded from tracked.)
 - `tsc` clean; `npm test` 3220 passed (incl. 42 dot cluster goldens that
   transiently broke on the shared serializer change, then passed after the
   rank.ts root-fix).
