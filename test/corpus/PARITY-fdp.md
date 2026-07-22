@@ -12,18 +12,20 @@ test/corpus/parity-report.ts`.
 
 ## Summary
 
-- **Surveyed:** 762 (generated 2026-07-21T19:13:19.225Z)
-- **pass:** 600 (78.7%) · **diverged (tracked):** 20 · **accepted (documented, won't-fix):** 0 · **accepted (A1-drift class):** 126
-- **oracle-error:** 15 · **port-error:** 0 · **timeout:** 1
+- **Surveyed:** 762 (generated 2026-07-22T03:10:52.557Z)
+- **pass:** 600 (78.7%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 1 · **accepted (A1-drift class):** 144
+- **oracle-error:** 16 · **port-error:** 0 · **timeout:** 1
 
-## Accepted deltas (0) — documented, not chased
+## Accepted deltas (1) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
 [Known divergences](../../docs/known-divergences.md). Excluded from the diverged
 table below.
 
-_(none in this corpus)_
+| id | #diffs | class | bound | ref |
+|---|---:|---|---|---|
+| `241_0` | 446 | A9 | 11 numeric draw-op diffs confined to edge 0-&gt;1#0's unfilled_bezier (maxΔ 3.39pt), under injected-identical node positions ⇒ pathplan routing. Same graph and CDT cocircular incircle 1-ULP tie (V8 vs Apple libm) accepted for circo/twopi/sfdp 241_0; exact-rational incircle 185/185. Levers (fmadd triang.ts, hypot route.ts:198) applied; the tie is irreducible. | known-divergences.md#a9-sfdp-fp-ties |
 
 ## Accepted class: A1-drift — computed, not enumerated
 
@@ -33,34 +35,13 @@ exonerates it (`verdict: drift-exonerated`) is subtracted from the
 Diverged table below and counted in Summary; an id that starts passing
 outright leaves the class silently on the next report regen.
 
-- **A1-drift**: **126** members — full per-id evidence in [`attribution-fdp.json`](./attribution-fdp.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
+- **A1-drift**: **144** members — full per-id evidence in [`attribution-fdp.json`](./attribution-fdp.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
-## Diverged (20)
+## Diverged (0)
 
-| id | size | #diffs | firstDiff |
-|---|---:|---:|---|
-| `2620` | 64908 | 10855 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4660.91 vs 4824.9` |
-| `2095` | 4865 | 8256 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 5425.41 vs 5672.31` |
-| `graphs-pgram` | 2614 | 3136 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1727.26 vs 1848.55` |
-| `graphs-cairo` | 5866 | 2130 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 563.47 vs 786.76` |
-| `2193` | 6399 | 2001 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 4941.45 vs 3747.01` |
-| `graphs-crazy` | 5556 | 1919 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1714.32 vs 2050.29` |
-| `graphs-weight` | 1720 | 1605 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1613.08 vs 1022.6` |
-| `graphs-size` | 1706 | 1589 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 944.33 vs 1504.44` |
-| `graphs-unix2` | 1719 | 1589 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 944.33 vs 1504.44` |
-| `graphs-unix2k` | 1719 | 1589 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 944.33 vs 1504.44` |
-| `graphs-lsunix1` | 1456 | 1425 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01` |
-| `graphs-lsunix2` | 1456 | 1425 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01` |
-| `graphs-lsunix3` | 1465 | 1425 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01` |
-| `graphs-unix` | 1433 | 1425 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 1567.98 vs 1101.01` |
-| `241_0` | 578 | 446 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 366.16 vs 353.14` |
-| `graphs-fdp` | 183 | 162 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 180.47 vs 290.4` |
-| `graphs-b145` | 256 | 96 | `[graph] _draw_ [graph]/_draw_/op[2].filled_polygon[3]: 95.37 vs 144.25` |
-| `nshare-dotsplines_dot` | 8836 | 89 | `edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57` |
-| `nshare-dotsplines_dot1` | 9332 | 89 | `edge:4.1 BSD->4.2 BSD#0 _draw_ edge:4.1 BSD->4.2 BSD#0/_draw_/op[1].unfilled_bezier[4]: 8748.99 vs 8752.57` |
-| `windows-unix` | 6603 | 4 | `edge:6th Edition->Mini Unix#0 pos edge:6th Edition->Mini Unix#0/pos[8]: 14197 vs 14198` |
+_(none)_
 
-## Errors and timeouts (16)
+## Errors and timeouts (17)
 
 | id | status | message |
 |---|---|---|
@@ -75,6 +56,7 @@ outright leaves the class silently on the next report regen.
 | `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
 | `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
 | `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
+| `2620` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot |
 | `2717` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2717.dot |
 | `2721` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot |
 | `graphs-b53` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv |

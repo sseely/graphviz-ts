@@ -96,7 +96,7 @@ same A9 FP-tie already accepted for sfdp.
 | [1](batch-1/overview.md) | B1 cluster-name collision (graphs-fdp, graphs-b145) FIXED | 0 | [x] |
 | [2](batch-2/overview.md) | Force-drift → A1 (unix family) — EMPTY, skipped | 0 | [x] |
 | [3](batch-3/overview.md) | FP-ties: 241_0 A9 accept; 2095 reclassified A1 | 0 | [x] |
-| [final](batch-final/overview.md) | Registry, docs, full sweep | 1-3 | [ ] |
+| [final](batch-final/overview.md) | Registry, docs, full sweep — DONE (tracked 4→0) | 1-3 | [x] |
 
 Links: [decisions.md](decisions.md) · [decision-journal.md](decision-journal.md) ·
 [diagrams/data-flow.md](diagrams/data-flow.md) ·
