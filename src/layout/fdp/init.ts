@@ -3,9 +3,10 @@
 /**
  * fdp node/edge initialization and cleanup.
  *
- * processClusterEdges (cluster-endpoint/compound edges) is not ported:
- * no supported input has edges whose endpoint is a cluster, and
- * setClustNodes guards the gap.
+ * processClusterEdges (cluster-endpoint/compound edges: an edge whose endpoint
+ * names a cluster, e.g. `e -- clusterB`) runs first, mirroring C — it replaces
+ * such endpoints with invisible cluster nodes and deletes the original nodes,
+ * so fdp (unlike dot/neato) does not draw a node for the cluster name.
  *
  * Spec read at the 15.0.0 tag.
  *
@@ -20,6 +21,7 @@ import { initEdgeLabels } from '../../common/edge-label-init.js';
 import type { TextMeasurer } from '../../common/textmeasure.js';
 import { fdpParms } from './tlayout-parms.js';
 import { fdpData, P_SET, P_PIN } from './fdp-model.js';
+import { processClusterEdges } from './cluster-edges.js';
 
 /**
  * Read user-supplied positions from the pos attribute (P_SET; P_PIN
@@ -77,6 +79,10 @@ function initNode(n: Node, id: number): void {
  * @see lib/fdpgen/fdpinit.c:fdp_init_node_edge
  */
 export function fdpInitNodeEdge(g: Graph): void {
+  // C runs processClusterEdges right after aginit and before node sizing/ids
+  // (fdpinit.c:90); it may add invisible cluster nodes and delete originals, so
+  // it must precede the sizing + id assignment below.
+  processClusterEdges(g);
   commonInitNodeEdge(g);
 
   let i = 0;

@@ -1344,9 +1344,22 @@ export class XdotRenderer implements RendererPlugin {
   }
 
   /** @see write.c:write_node_test — every xdot node carries pos/size, so it is
-   *  never "default"; write it in the first scope that has not yet emitted it. */
+   *  never "default"; write it in the first scope that has not yet emitted it.
+   *  Cluster nodes (fdp compound proxies, ND_clustnode) are never declared —
+   *  C's write_plain/writenodeandport suppress them. @see lib/common/output.c:146 */
   private writeNodeTest(g: Graph, n: Node, ctx: SerCtx): boolean {
+    if (n.info.clustnode) return false;
     return (ctx.nodeLW.get(n) ?? 0) < ctx.preorder.get(g)!;
+  }
+
+  /** Emitted node name: a cluster node's synthetic `__i:<cluster>` id is written
+   *  as the cluster name it stands for. @see lib/common/output.c:114 */
+  private emitNodeName(n: Node): string {
+    if (n.info.clustnode) {
+      const i = n.name.indexOf(':');
+      if (i >= 0) return n.name.slice(i + 1);
+    }
+    return n.name;
   }
 
   /** @see write.c:write_edge_test */
@@ -1356,7 +1369,7 @@ export class XdotRenderer implements RendererPlugin {
 
   /** @see write.c:write_node */
   private writeNode(g: Graph, n: Node, ctx: SerCtx): void {
-    let s = this.indent(ctx) + xdotId(n.name);
+    let s = this.indent(ctx) + xdotId(this.emitNodeName(n));
     if (!ctx.attrsWritten.has(n)) {
       s += ' [' + this.nodeAttrs(n) + ']';
       ctx.attrsWritten.add(n);
@@ -1368,7 +1381,8 @@ export class XdotRenderer implements RendererPlugin {
   /** @see write.c:write_edge — attrs only on first emission, bare thereafter. */
   private writeEdge(g: Graph, e: Edge, ctx: SerCtx): void {
     const conn = edgeConnector(isDirected(g));
-    let s = this.indent(ctx) + xdotId(e.tail.name) + ' ' + conn + ' ' + xdotId(e.head.name);
+    let s = this.indent(ctx) + xdotId(this.emitNodeName(e.tail)) + ' ' + conn + ' ' +
+      xdotId(this.emitNodeName(e.head));
     if (!ctx.attrsWritten.has(e)) {
       const attrs = this.edgeAttrStr(e);
       if (attrs) s += ' [' + attrs + ']';
