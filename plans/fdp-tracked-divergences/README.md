@@ -94,8 +94,8 @@ same A9 FP-tie already accepted for sfdp.
 |-------|-------|---------|------|
 | [0](batch-0/overview.md) | Restore fdp injection, regen attribution, re-bucket | — | [x] |
 | [1](batch-1/overview.md) | B1 cluster-name collision (graphs-fdp, graphs-b145) FIXED | 0 | [x] |
-| [2](batch-2/overview.md) | Force-drift → A1 accept (unix family etc.) | 0 | [ ] |
-| [3](batch-3/overview.md) | FP-ties → A9 accept (241_0, 2095) | 0 | [ ] |
+| [2](batch-2/overview.md) | Force-drift → A1 (unix family) — EMPTY, skipped | 0 | [x] |
+| [3](batch-3/overview.md) | FP-ties: 241_0 A9 accept; 2095 reclassified A1 | 0 | [x] |
 | [final](batch-final/overview.md) | Registry, docs, full sweep | 1-3 | [ ] |
 
 Links: [decisions.md](decisions.md) · [decision-journal.md](decision-journal.md) ·

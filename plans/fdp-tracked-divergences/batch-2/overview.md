@@ -11,8 +11,8 @@ crazy) and other large-multi-kind residuals. Prediction: fdp is iterative
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T2.1 | Confirm each B2 id is drift-exonerated (injection clears to 0) | debugger | batch-2/findings.md | Batch 0 | [ ] |
-| T2.2 | Any residual that does NOT clear: diagnose (fix vs A9/other) | general-purpose | (src fix if any) + batch-2/findings.md | T2.1 | [ ] |
+| T2.1 | Confirm each B2 id is drift-exonerated (injection clears to 0) | debugger | batch-2/findings.md | Batch 0 | [x] SKIP |
+| T2.2 | Any residual that does NOT clear: diagnose (fix vs A9/other) | general-purpose | (src fix if any) + batch-2/findings.md | T2.1 | [x] SKIP |
 
 If T0.2's fresh attribution already marks these `drift-exonerated`, this batch is
 just confirmation + a note that they join the A1-drift class (registry `A1-drift`

@@ -11,8 +11,8 @@ applies every lever (arm64 `fmadd` in `src/pathplan/triang.ts`, `Math.hypot` in
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T3.1 | Confirm the fdp residual matches the known A9 mechanism | debugger | batch-3/findings.md | Batch 0 | [ ] |
-| T3.2 | Fix-aggressive attempt else accept A9 w/ controlled-experiment evidence | general-purpose | (src fix if any) + batch-3/findings.md | T3.1 | [ ] |
+| T3.1 | Confirm the fdp residual matches the known A9 mechanism | debugger | batch-3/findings.md | Batch 0 | [x] |
+| T3.2 | Fix-aggressive attempt else accept A9 w/ controlled-experiment evidence | general-purpose | (src fix if any) + batch-3/findings.md | T3.1 | [x] |
 
 Fix-aggressive (ADR-3): confirm the levers are already applied (read triang.ts /
 route.ts), then the accept needs the controlled experiment (reuse the sfdp
