@@ -76,7 +76,7 @@ turns out empty after Mission 0's regen (skip it, log why).
 | [3](batch-3/overview.md) | B3 rankdir_dot edge family — **EMPTY (skipped, see findings.md)** | 0 | [x] |
 | [4](batch-4/overview.md) | B4 ratio=fill aspect-scaling (3×trapeziumlr, 1855) | 0 | [x] |
 | [5](batch-5/overview.md) | B5 RTree edge-label class (8 ids) — RESOLVED by frame fixes | 0 | [x] |
-| [6](batch-6/overview.md) | Finalize: registry, docs, full sweep | 1-5 | [ ] |
+| [6](batch-6/overview.md) | Finalize: registry, docs, full sweep | 1-5 | [x] |
 
 Links: [decisions.md](decisions.md) · [decision-journal.md](decision-journal.md) ·
 [diagrams/data-flow.md](diagrams/data-flow.md) ·

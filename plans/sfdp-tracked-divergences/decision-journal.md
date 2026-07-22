@@ -16,3 +16,48 @@ accepted divergence with its evidence pointer.
 | 2026-07-21 | T4.1/T4.2 DONE | B4 = ONE bug (not 4). `src/layout/sfdp/index.ts` postprocess recomputed g.info.bb geometrically for single-component, clobbering the neatoSetAspect fill-scaled box (node half-sizes not scaled by f, so node∪curve union short by node_size·(f−1) on the stretched axis) AND shifting by the geometric ll instead of the scaled ll (→ all-coord offset = the 971 diffs). Fix: single-component keeps the routing box via `normalizeGraphBB` (C gv_postprocess never recomputes GD_bb; splines.ts:1000-1003 warns exactly this). Scale math proven faithful. Verify: injected 4/4 →0 diffs; FRESH sweep 0 regr, 4 diverged→pass (3 trapeziumlr + bonus linux.x86-neatosplines_neato1); 1855→drift (A1 on regen). Added deterministic regression test (pinned ratio=fill: height 446.3 post vs 418.4 pre). tsc 0, npm test 3221. | src/layout/sfdp/index.ts, src/layout/sfdp/sfdp.test.ts, test/corpus/parity-sfdp.json, batch-4/findings.md | committed (this row) |
 | 2026-07-21 | T4.1(pre) | trapeziumlr (B4): injection DOES take effect (not a no-op — clears the space-named caveat). Residual = uniform y-scale: width EXACT (657.65), height port 876.66 vs native 892.52 (~1.78%). ratio=fill normalizes one axis to 1.0, stretches other; pre-scale bb.ur.y (edge-curve derived) is the variable. Delegated scale-math-vs-amplified-drift to debugger. | scratchpad | n/a |
 | 2026-07-21 | T0.2 | Re-bucketed the 17. **B3 EMPTY** (rankdir_dot family all passing). **ADR-3 collapse does NOT apply** — the b106/b29/trapeziumlr/root stems are distinct inputs (proven by size+sha+injection behaviour), each its own representative. Buckets: B1=2 (graphs/share-b106, node-size/text-measure), B2=3 (42/241_0/2095, edge FP-tie), B4=4 (3×trapeziumlr+1855, ratio=fill scaling), B5=8 (RTree edge-label, accept-lean; 1652/2470 known). Discriminator = injection signature+inj/base, not firstDiff (which is the graph bg polygon for all). | batch-0/findings.md | committed (this row) |
+
+## Mission summary (2026-07-21)
+
+**Objective met: sfdp tracked divergences 50 → 0.**
+
+- **Before:** 520 pass / 234 diverged (stale attribution: 184 A1 / 50 tracked).
+- **After:** 524 pass / 230 diverged, **0 tracked** (227 A1-drift accepted + 3
+  A9 evidence-backed accepts). Attribution regenerated (oracle 8fdd1294).
+
+**Fixes landed (2 commits, both in `src/layout/sfdp/index.ts` postprocess — one
+root cause, two component paths):**
+- `fix(T4.2)` fa0240b — single-component: keep the routing box
+  (`normalizeGraphBB`) instead of a geometric recompute that clobbered the
+  ratio=fill scaled bb and shifted by the wrong `ll`. Resolved 11 ids:
+  3 trapeziumlr (→pass), 1855 (→A1), b106+share-b106 (B1), 1652, graphs-b29,
+  linux.i386-b29, linux.i386-b106, linux.x86-root_twopi, linux.x86-root_circo
+  (B5) + bonus linux.x86-neatosplines_neato1. The single-comp shift ran before
+  `addXLabels`, so fixing it also corrected the xlabel frame — the prior
+  "RTree-lossy floor-boundary" (1652) was a symptom of that offset, not a root.
+- `fix(T5.2)` dfaafcc — multi-component: drop the premature `shiftOneGraph`
+  before `gvPostprocess`→`addXLabels` (objplp2rect round()s in C's packed
+  frame), mirroring neato 1e7515d. Resolved 2470 (7 comps) + 2095_1 (44 comps).
+
+**Accepts added (class A9, evidence-backed, ADR-2):** 42, 241_0, 2095 — CDT
+cocircular incircle / findMaxDev hypot 1-ULP ties (segment-count flip /
+sub-0.7pt drift). Fix levers already applied+documented in-code (triang.ts fma,
+route.ts:198-199 hypot). Fresh controlled experiment: native-vs-V8 hypot ULP
+probe (batch-2/hypot-ulp-probe.txt) shows 1-ULP disagreement on 2/6 flat-edge
+inputs. Registry: `accepted-divergences-engines.json` sfdp.{42,241_0,2095},
+ref known-divergences.md#a9-sfdp-fp-ties.
+
+**Buckets:** B0 regen (57→17 not-cleared); B1 (repurposed from graphs-unix,
+cleared by fix); B3 EMPTY (rankdir_dot passing); B4 fixed (4); B5 fixed (8, all
+edge-label frame, not RTree-lossy after all); B2 accepted (3, A9).
+
+**Verification:** tsc 0, npm test 3220 green, clean fresh sfdp sweep 0
+pass→diverged, tracked=0. Cross-engine isolation: `git diff main` = only
+`src/layout/sfdp/index.ts` (+ its test) — the shared functions it calls
+(normalizeGraphBB/computeSubgraphBB/gvPostprocess) are unmodified, so
+neato/fdp/circo/twopi/osage/patchwork are unaffected by construction; PARITY.md
+shows their tracked counts unchanged (fdp's 20 is pre-existing).
+
+**Lesson:** never run competing renders during a verification sweep — the first
+multi-comp sweep showed a false pass→diverged on a single-comp opCount-tie graph
+from CPU contention; a clean idle sweep = 0 regressions.
