@@ -13,8 +13,8 @@ Edge-first divergences where the spline geometry differs. Representatives:
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T2.1 | Analyze each rep: isolate the tie/straddle to a predicate | debugger | batch-2/findings.md | T0.2 | [ ] |
-| T2.2 | Fix aggressively (fma/robust predicate) or accept A9 w/ disasm | general-purpose | (src fix, isolated) + batch-2/findings.md | T2.1 | [ ] |
+| T2.1 | Analyze each rep: isolate the tie/straddle to a predicate | debugger | batch-2/findings.md | T0.2 | [x] |
+| T2.2 | Fix aggressively (fma/robust predicate) or accept A9 w/ disasm | general-purpose | (src fix, isolated) + batch-2/findings.md | T2.1 | [x] |
 
 Fix-aggressively targets: match the C binary's `fmadd`/`fma` contraction
 ([[fma-ccw-emulated]], `common/fma.ts`); the robust-incircle predicate
