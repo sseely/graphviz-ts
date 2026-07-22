@@ -180,8 +180,14 @@ export function bezierClip(
     } else {
       if (leftInside) { high = t; } else { low = t; }
     }
-    // convergence check uses opt vs current pt
-    if (Math.abs(opt.x - pt.x) <= 0.5 && Math.abs(opt.y - pt.y) <= 0.5) break;
+    // Convergence: mirror C's loop continuation `while (ABS(dx) > .5 ||
+    // ABS(dy) > .5)` EXACTLY — break when neither exceeds 0.5. Written as the
+    // negation of C's `>` test (not `<=`) so it is NaN-equivalent to C: for a
+    // NaN delta both `>` and `<=` are false, so `!(NaN > .5 || NaN > .5)` is
+    // true (stop, as C does), whereas `NaN <= .5 && NaN <= .5` is false (spin
+    // forever). NaN control points occur when a layout blows up (e.g. sfdp
+    // under a large repulsiveforce), and C terminates on them.
+    if (!(Math.abs(opt.x - pt.x) > 0.5 || Math.abs(opt.y - pt.y) > 0.5)) break;
   } while (true); // eslint-disable-line no-constant-condition
   const src = found ? best : seg;
   for (let i = 0; i < 4; i++) sp[i] = src[i];

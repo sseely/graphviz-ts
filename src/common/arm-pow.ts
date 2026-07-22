@@ -87,6 +87,12 @@ const EXP_TABLE_BITS = 7;
 const N_EXP = 1 << EXP_TABLE_BITS;
 const OFF = 0x3fe6955500000000n;
 
+/** Bit patterns and sign bias for the pow special-case branch. */
+const INF_BITS = 0x7ff0000000000000n;
+const ONE_BITS = 0x3ff0000000000000n; // asuint64(1.0)
+/** SIGN_BIAS = 0x800 << EXP_TABLE_BITS. @see ARM pow.c */
+const SIGN_BIAS = 0x800 << EXP_TABLE_BITS;
+
 /** Exp poly constants C2..C5 (poly[5−ORDER+i], ORDER = 5). */
 const C2 = EC[0]!;
 const C3 = EC[1]!;
@@ -147,7 +153,8 @@ function logInline(ix: bigint): LogResult {
 }
 
 /**
- * sign·exp(x + xtail), normal-range only (over/underflow throw).
+ * sign·exp(x + xtail). Tiny argument → 1 + x; over/underflow → signed inf/0
+ * (via expOverflow, matching libm rather than throwing).
  * @see ARM optimized-routines math/pow.c:exp_inline (TOINT_INTRINSICS)
  */
 function expInline(x: number, xtail: number, signBias: number): number {
@@ -159,8 +166,9 @@ function expInline(x: number, xtail: number, signBias: number): number {
       const one = 1.0 + x;
       return signBias ? -one : one;
     }
-    /* large/overflow argument — not reached by sfdp (x^y bounded). */
-    powSpecial();
+    /* large/overflow argument — bounded for sfdp, but return the signed
+     * over/underflow instead of crashing on a pathological input. */
+    return expOverflow(x, signBias);
   }
 
   const z = INVLN2N * x;
@@ -181,26 +189,108 @@ function expInline(x: number, xtail: number, signBias: number): number {
   return scale + scale * tmp;
 }
 
-/** Out-of-fast-path guard. */
-function powSpecial(): never {
-  throw new Error('armPow: argument outside the ported normal-finite fast path');
+/**
+ * Reached only for the exp_inline overflow band (|result| would over/underflow).
+ * sfdp's x^y is bounded and never triggers it — but rather than throw, return
+ * the correctly-signed over/underflow so a pathological input still renders
+ * (matching libm) instead of crashing the layout.
+ * @see ARM optimized-routines math/pow.c:exp_inline specialcase
+ */
+function expOverflow(x: number, signBias: number): number {
+  // x is the exp argument; large positive → overflow, large negative → underflow.
+  const neg = signBias !== 0;
+  if (x > 0) return neg ? -Infinity : Infinity;
+  return neg ? -0 : 0;
+}
+
+/** unsigned 64-bit wrap. */
+function u64(v: bigint): bigint { return v & MASK64; }
+const INF2M1 = u64(2n * INF_BITS - 1n);
+
+/**
+ * zeroinfnan(i): true when the double with bits i is zero, inf, or nan.
+ * @see ARM optimized-routines math/pow.c:zeroinfnan
+ */
+function zeroinfnan(i: bigint): boolean {
+  return u64(2n * i - 1n) >= INF2M1;
 }
 
 /**
- * pow(x, y) for x positive-normal-finite and y in the fast-path band.
+ * checkint(iy): 0 if y is not an integer, 1 if odd integer, 2 if even integer.
+ * @see ARM optimized-routines math/pow.c:checkint
+ */
+function checkint(iy: bigint): number {
+  const e = Number((iy >> 52n) & 0x7ffn);
+  if (e < 0x3ff) return 0;
+  if (e > 0x3ff + 52) return 2;
+  const shift = BigInt(0x3ff + 52 - e);
+  if ((iy & ((1n << shift) - 1n)) !== 0n) return 0;
+  if ((iy & (1n << shift)) !== 0n) return 1;
+  return 2;
+}
+
+/**
+ * pow(x, y). The normal-finite fast path is the log_inline/exp_inline core;
+ * the special-case branch (x or y is 0/inf/nan, negative base, subnormal base,
+ * or extreme |y|) is ported faithfully so armPow returns exactly what libm's
+ * pow returns — including `pow(NaN, y) = NaN`. This matters for sfdp graphs
+ * whose force loop blows up to NaN under a large `repulsiveforce` (e.g. 2556,
+ * repulsiveforce=100 → the native oracle itself emits all-`nan` positions):
+ * the port must reproduce the same NaN, not throw.
  * @see ARM optimized-routines math/pow.c:pow
  */
 export function armPow(x: number, y: number): number {
-  const topx = top12(x);
+  let signBias = 0;
+  let ix = asUint64(x);
+  const iy = asUint64(y);
+  let topx = top12(x);
   const topy = top12(y);
   if (
     ((topx - 0x001) >>> 0) >= (0x7ff - 0x001) ||
     ((((topy & 0x7ff) - 0x3be) >>> 0) >= (0x43e - 0x3be))
   ) {
-    powSpecial();
+    // Special cases: (x < 0x1p-126 or inf or nan) or (|y| < 0x1p-65 or |y| >= 0x1p63).
+    if (zeroinfnan(iy)) {
+      if (u64(2n * iy) === 0n) return 1.0;              // pow(x, 0) = 1
+      if (ix === ONE_BITS) return 1.0;                  // pow(1, y) = 1
+      if (u64(2n * ix) > u64(2n * INF_BITS) || u64(2n * iy) > u64(2n * INF_BITS)) {
+        return x + y;                                   // nan operand → nan
+      }
+      if (u64(2n * ix) === u64(2n * ONE_BITS)) return 1.0; // pow(±1, ±inf) = 1
+      // (|x|<1 && y<0) or (|x|>1 && y>=0) → 0, else inf. `yNonNeg` is !(iy>>63).
+      const yNonNeg = (iy >> 63n) === 0n;
+      if ((u64(2n * ix) < u64(2n * ONE_BITS)) === yNonNeg) return 0.0;
+      return y * y;                                     // inf
+    }
+    if (zeroinfnan(ix)) {
+      let x2 = x * x;
+      if ((ix >> 63n) === 1n && checkint(iy) === 1) { x2 = -x2; signBias = SIGN_BIAS; }
+      if (u64(2n * ix) === 0n && (iy >> 63n) === 1n) return signBias ? -Infinity : Infinity;
+      return (iy >> 63n) === 1n ? 1 / x2 : x2;          // pow(NaN, y>0) = NaN
+    }
+    // Here x and y are non-zero finite.
+    if ((ix >> 63n) === 1n) {                           // finite x < 0
+      const yint = checkint(iy);
+      if (yint === 0) return NaN;                       // pow(neg, non-integer) invalid
+      if (yint === 1) signBias = SIGN_BIAS;
+      ix = ix & 0x7fffffffffffffffn;
+      topx = topx & 0x7ff;
+    }
+    if ((((topy & 0x7ff) - 0x3be) >>> 0) >= (0x43e - 0x3be)) {
+      if (ix === ONE_BITS) return 1.0;
+      if ((topy & 0x7ff) < 0x3be) return 1.0;           // |y| tiny → x^y ≈ 1
+      // |y| >= 0x1p63 → 0 or inf.
+      return ((ix > ONE_BITS) === (topy < 0x800))
+        ? (signBias ? -Infinity : Infinity)
+        : (signBias ? -0 : 0);
+    }
+    if (topx === 0) {                                   // normalize subnormal x
+      ix = asUint64(x * 2 ** 52) & 0x7fffffffffffffffn;
+      ix = ix - (52n << 52n);
+    }
   }
-  const { y: hi, tail: lo } = logInline(asUint64(x));
+  const { y: hi, tail: lo } = logInline(ix);
   const ehi = y * hi;
   const elo = y * lo + fma(y, hi, -ehi);
-  return expInline(ehi, elo, 0);
+  return expInline(ehi, elo, signBias);
 }

@@ -57,10 +57,36 @@ describe('armPow', () => {
 
 });
 
-describe('armPow fast-path guard', () => {
-  it('throws outside the ported fast path', () => {
-    expect(() => armPow(0, 2)).toThrow();
-    expect(() => armPow(-3, 2)).toThrow();
-    expect(() => armPow(Infinity, 2)).toThrow();
+describe('armPow special cases (libm-faithful, never throws)', () => {
+  // The special-case branch returns exactly what libm's pow returns. This is
+  // load-bearing for sfdp graphs whose force loop blows up to NaN under a large
+  // repulsiveforce (e.g. 2556): the native oracle emits all-nan positions, so
+  // the port must reproduce NaN, not throw. @see ARM pow.c:pow
+  it('propagates NaN (pow(NaN, y) = NaN for y != 0)', () => {
+    expect(armPow(NaN, 101)).toBeNaN();
+    expect(armPow(NaN, 2)).toBeNaN();
+  });
+
+  it('returns 1 for a zero exponent, even on nan/inf bases', () => {
+    expect(armPow(5, 0)).toBe(1);
+    expect(armPow(NaN, 0)).toBe(1);
+    expect(armPow(Infinity, 0)).toBe(1);
+  });
+
+  it('handles zero and infinite bases like libm', () => {
+    expect(armPow(0, 2)).toBe(0);
+    expect(armPow(0, -2)).toBe(Infinity);
+    expect(armPow(Infinity, 2)).toBe(Infinity);
+    expect(armPow(Infinity, -2)).toBe(0);
+  });
+
+  it('handles negative bases (sign by integer parity; nan for non-integer y)', () => {
+    expect(armPow(-3, 2)).toBe(9);   // even integer → positive
+    expect(armPow(-2, 3)).toBe(-8);  // odd integer → negative
+    expect(armPow(-3, 0.5)).toBeNaN(); // non-integer → invalid
+  });
+
+  it('returns 1 for pow(1, y)', () => {
+    expect(armPow(1, 999)).toBe(1);
   });
 });
