@@ -25,7 +25,7 @@ table below.
 
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
-| `241_0` | 446 | A9 | 11 numeric draw-op diffs confined to edge 0-&gt;1#0's unfilled_bezier (maxΔ 3.39pt), under injected-identical node positions ⇒ pathplan routing. Same graph and CDT cocircular incircle 1-ULP tie (V8 vs Apple libm) accepted for circo/twopi/sfdp 241_0; exact-rational incircle 185/185. Levers (fmadd triang.ts, hypot route.ts:198) applied; the tie is irreducible. | known-divergences.md#a9-sfdp-fp-ties |
+| [`241_0`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/241_0.dot) | 446 | A9 | 11 numeric draw-op diffs confined to edge 0-&gt;1#0's unfilled_bezier (maxΔ 3.39pt), under injected-identical node positions ⇒ pathplan routing. Same graph and CDT cocircular incircle 1-ULP tie (V8 vs Apple libm) accepted for circo/twopi/sfdp 241_0; exact-rational incircle 185/185. Levers (fmadd triang.ts, hypot route.ts:198) applied; the tie is irreducible. | known-divergences.md#a9-sfdp-fp-ties |
 
 ## Accepted class: A1-drift — computed, not enumerated
 
@@ -45,23 +45,23 @@ _(none)_
 
 | id | status | message |
 |---|---|---|
-| `1221` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1221.dot |
-| `1332` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1332.dot |
-| `1652` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
-| `1767` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1767.dot |
-| `1879` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/1879.dot |
-| `2222` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
-| `2239` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2239.dot |
-| `2516` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2516.dot |
-| `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
-| `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
-| `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
-| `2620` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2620.dot |
-| `2717` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2717.dot |
-| `2721` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/2721.dot |
-| `graphs-b53` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K fdp -Txdot /Users/scottseely/git/graphviz/tests/graphs/b53.gv |
-| `graphs-badvoro` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
-| `2108` | timeout |  |
+| [`1221`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1221.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1221.dot |
+| [`1332`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1332.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1332.dot |
+| [`1652`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1652.dot) | oracle-error | spawnSync dot ETIMEDOUT |
+| [`1767`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1767.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1767.dot |
+| [`1879`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot |
+| [`2222`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2222.dot) | oracle-error | spawnSync dot ETIMEDOUT |
+| [`2239`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2239.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2239.dot |
+| [`2516`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2516.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2516.dot |
+| [`2619`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619.dot |
+| [`2619_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot |
+| [`2619_2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot |
+| [`2620`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2620.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2620.dot |
+| [`2717`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2717.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2717.dot |
+| [`2721`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2721.dot) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2721.dot |
+| [`graphs-b53`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b53.gv) | oracle-error | Command failed: dot -K fdp -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b53.gv |
+| [`graphs-badvoro`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/badvoro.gv) | oracle-error | spawnSync dot ETIMEDOUT |
+| [`2108`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2108.dot) | timeout |  |
 
 **oracle errors:** 13 native-crash (documented, excluded) / 3 timeout-flake (excluded this run, note to retry)
 _Passing ids (600) are omitted for brevity — the full roster is in

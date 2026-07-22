@@ -33,40 +33,40 @@ reader does not have to cross-reference `map-parity.json`.
 
 | id | path | cmapx | imap | overall |
 |---|---|---|---|---|
-| `1425_1` | `1425_1.dot` | conformant | conformant | conformant |
-| `1447` | `1447.dot` | conformant | conformant | conformant |
-| `1447_1` | `1447_1.dot` | conformant | conformant | conformant |
-| `1879` | `1879.dot` | conformant | conformant | conformant |
-| `2258` | `2258.dot` | conformant | conformant | conformant |
-| `2295` | `2295.dot` | conformant | conformant | conformant |
-| `2619_1` | `2619_1.dot` | conformant | conformant | conformant |
-| `2619_2` | `2619_2.dot` | conformant | conformant | conformant |
-| `graphs-b102` | `graphs/b102.gv` | conformant | conformant | conformant |
-| `graphs-b103` | `graphs/b103.gv` | conformant | conformant | conformant |
-| `graphs-b106` | `graphs/b106.gv` | conformant | conformant | conformant |
-| `graphs-b143` | `graphs/b143.gv` | conformant | conformant | conformant |
-| `graphs-b155` | `graphs/b155.gv` | conformant | conformant | conformant |
-| `graphs-b29` | `graphs/b29.gv` | conformant | conformant | conformant |
-| `graphs-b85` | `graphs/b85.gv` | conformant | conformant | conformant |
-| `graphs-html2` | `graphs/html2.gv` | conformant | conformant | conformant |
-| `graphs-root` | `graphs/root.gv` | conformant | conformant | conformant |
-| `graphs-url` | `graphs/url.gv` | conformant | conformant | conformant |
-| `graphs-xx` | `graphs/xx.gv` | conformant | conformant | conformant |
-| `linux.i386-b102` | `linux.i386/b102.gv` | conformant | conformant | conformant |
-| `linux.i386-b106` | `linux.i386/b106.gv` | conformant | conformant | conformant |
-| `linux.i386-b29` | `linux.i386/b29.gv` | conformant | conformant | conformant |
-| `linux.x86-html2_dot` | `linux.x86/html2_dot.gv` | conformant | conformant | conformant |
-| `linux.x86-root_circo` | `linux.x86/root_circo.gv` | conformant | conformant | conformant |
-| `linux.x86-root_twopi` | `linux.x86/root_twopi.gv` | conformant | conformant | conformant |
-| `nshare-html2_dot` | `nshare/html2_dot.gv` | conformant | conformant | conformant |
-| `nshare-root_circo` | `nshare/root_circo.gv` | conformant | conformant | conformant |
-| `nshare-root_twopi` | `nshare/root_twopi.gv` | conformant | conformant | conformant |
-| `share-b102` | `share/b102.gv` | conformant | conformant | conformant |
-| `share-b106` | `share/b106.gv` | conformant | conformant | conformant |
-| `share-b29` | `share/b29.gv` | conformant | conformant | conformant |
-| `windows-b102` | `windows/b102.gv` | conformant | conformant | conformant |
-| `windows-b106` | `windows/b106.gv` | conformant | conformant | conformant |
-| `windows-b29` | `windows/b29.gv` | conformant | conformant | conformant |
+| [`1425_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1425_1.dot) | `1425_1.dot` | conformant | conformant | conformant |
+| [`1447`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1447.dot) | `1447.dot` | conformant | conformant | conformant |
+| [`1447_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1447_1.dot) | `1447_1.dot` | conformant | conformant | conformant |
+| [`1879`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot) | `1879.dot` | conformant | conformant | conformant |
+| [`2258`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2258.dot) | `2258.dot` | conformant | conformant | conformant |
+| [`2295`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2295.dot) | `2295.dot` | conformant | conformant | conformant |
+| [`2619_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot) | `2619_1.dot` | conformant | conformant | conformant |
+| [`2619_2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot) | `2619_2.dot` | conformant | conformant | conformant |
+| [`graphs-b102`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b102.gv) | `graphs/b102.gv` | conformant | conformant | conformant |
+| [`graphs-b103`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b103.gv) | `graphs/b103.gv` | conformant | conformant | conformant |
+| [`graphs-b106`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b106.gv) | `graphs/b106.gv` | conformant | conformant | conformant |
+| [`graphs-b143`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b143.gv) | `graphs/b143.gv` | conformant | conformant | conformant |
+| [`graphs-b155`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b155.gv) | `graphs/b155.gv` | conformant | conformant | conformant |
+| [`graphs-b29`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b29.gv) | `graphs/b29.gv` | conformant | conformant | conformant |
+| [`graphs-b85`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b85.gv) | `graphs/b85.gv` | conformant | conformant | conformant |
+| [`graphs-html2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/html2.gv) | `graphs/html2.gv` | conformant | conformant | conformant |
+| [`graphs-root`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/root.gv) | `graphs/root.gv` | conformant | conformant | conformant |
+| [`graphs-url`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/url.gv) | `graphs/url.gv` | conformant | conformant | conformant |
+| [`graphs-xx`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/xx.gv) | `graphs/xx.gv` | conformant | conformant | conformant |
+| [`linux.i386-b102`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/linux.i386/b102.gv) | `linux.i386/b102.gv` | conformant | conformant | conformant |
+| [`linux.i386-b106`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/linux.i386/b106.gv) | `linux.i386/b106.gv` | conformant | conformant | conformant |
+| [`linux.i386-b29`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/linux.i386/b29.gv) | `linux.i386/b29.gv` | conformant | conformant | conformant |
+| [`linux.x86-html2_dot`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/linux.x86/html2_dot.gv) | `linux.x86/html2_dot.gv` | conformant | conformant | conformant |
+| [`linux.x86-root_circo`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/linux.x86/root_circo.gv) | `linux.x86/root_circo.gv` | conformant | conformant | conformant |
+| [`linux.x86-root_twopi`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/linux.x86/root_twopi.gv) | `linux.x86/root_twopi.gv` | conformant | conformant | conformant |
+| [`nshare-html2_dot`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/nshare/html2_dot.gv) | `nshare/html2_dot.gv` | conformant | conformant | conformant |
+| [`nshare-root_circo`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/nshare/root_circo.gv) | `nshare/root_circo.gv` | conformant | conformant | conformant |
+| [`nshare-root_twopi`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/nshare/root_twopi.gv) | `nshare/root_twopi.gv` | conformant | conformant | conformant |
+| [`share-b102`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/share/b102.gv) | `share/b102.gv` | conformant | conformant | conformant |
+| [`share-b106`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/share/b106.gv) | `share/b106.gv` | conformant | conformant | conformant |
+| [`share-b29`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/share/b29.gv) | `share/b29.gv` | conformant | conformant | conformant |
+| [`windows-b102`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/windows/b102.gv) | `windows/b102.gv` | conformant | conformant | conformant |
+| [`windows-b106`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/windows/b106.gv) | `windows/b106.gv` | conformant | conformant | conformant |
+| [`windows-b29`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/windows/b29.gv) | `windows/b29.gv` | conformant | conformant | conformant |
 
 ## map-conformant (755)
 
@@ -102,15 +102,15 @@ _(none)_
 
 | id | path | message |
 |---|---|---|
-| `1718` | `1718.dot` |  |
-| `2108` | `2108.dot` |  |
-| `2222` | `2222.dot` |  |
-| `2475_2` | `2475_2.dot` |  |
+| [`1718`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1718.dot) | `1718.dot` |  |
+| [`2108`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2108.dot) | `2108.dot` |  |
+| [`2222`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2222.dot) | `2222.dot` |  |
+| [`2475_2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2475_2.dot) | `2475_2.dot` |  |
 
 ## oracle-error (2) — excluded from scoring
 
 | id | path | message |
 |---|---|---|
-| `2095_1` | `2095_1.dot` | oracle exit 0 |
-| `2343` | `2343.dot` | Warning: Warning: no value for width of non-ASCII character 207. Falling back to width of space character |
+| [`2095_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2095_1.dot) | `2095_1.dot` | oracle exit 0 |
+| [`2343`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2343.dot) | `2343.dot` | Warning: Warning: no value for width of non-ASCII character 207. Falling back to width of space character |
 

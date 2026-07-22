@@ -10,6 +10,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { XdotVerdict, XdotWalkResult } from './xdot-walk.js';
+import { testIdLink, scrubLocalPaths } from './corpus-links.js';
 
 const XDOT_PARITY = new URL('./xdot-parity.json', import.meta.url);
 const ACCEPTED = new URL('./accepted-divergences-xdot.json', import.meta.url);
@@ -132,7 +133,7 @@ function divergedTable(diverged: XdotWalkResult[]): string {
   const sorted = [...diverged].sort((a, b) => (b.maxDelta ?? 0) - (a.maxDelta ?? 0) || (b.diffCount ?? 0) - (a.diffCount ?? 0));
   const shown = sorted.slice(0, TABLE_CAP);
   const rows = shown.map(
-    (r) => `| \`${r.id}\` | ${r.size} | ${(r.maxDelta ?? 0).toFixed(2)} | ${r.diffCount ?? 0} | \`${cell(r.firstDiff)}\` |`,
+    (r) => `| ${testIdLink(r.id, r.path)} | ${r.size} | ${(r.maxDelta ?? 0).toFixed(2)} | ${r.diffCount ?? 0} | \`${cell(r.firstDiff)}\` |`,
   );
   const more = sorted.length > shown.length
     ? `\n_… and ${sorted.length - shown.length} more (full set in xdot-parity.json)._\n`
@@ -144,14 +145,14 @@ function msgTable(results: XdotWalkResult[]): string {
   const rows = results
     .slice()
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map((r) => `| \`${r.id}\` | \`${r.path}\` | ${escText(r.errMsg)} |`);
+    .map((r) => `| ${testIdLink(r.id, r.path)} | \`${r.path}\` | ${escText(scrubLocalPaths(r.errMsg ?? ''))} |`);
   return ['| id | path | message |', '|---|---|---|', ...rows, ''].join('\n');
 }
 
 function acceptedTable(entries: AcceptedEntry[]): string {
   if (entries.length === 0) return '_(none)_\n';
   const rows = entries.map(
-    (e) => `| \`${e.id}\` | ${escText(e.opClass)} | ${e.delta ?? ''} | ${escText(e.rationale)} |`,
+    (e) => `| ${testIdLink(e.id)} | ${escText(e.opClass)} | ${e.delta ?? ''} | ${escText(e.rationale)} |`,
   );
   return ['| id | opClass | delta | rationale |', '|---|---|---:|---|', ...rows, ''].join('\n');
 }

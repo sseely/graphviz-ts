@@ -18,6 +18,7 @@ export default defineConfig({
     // Built-in offline search (MiniSearch); no external service.
     search: { provider: 'local' },
     nav: [
+      { text: 'Overview', link: '/guide/overview' },
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Playground', link: '/playground' },
       { text: 'API', link: '/guide/api' },
@@ -26,22 +27,45 @@ export default defineConfig({
     ],
     sidebar: [
       {
-        text: 'Guide',
+        text: 'Introduction',
         items: [
+          { text: 'Overview (mental model)', link: '/guide/overview' },
           { text: 'Getting started', link: '/guide/getting-started' },
           { text: 'Layout engines', link: '/guide/engines' },
+          { text: 'Glossary', link: '/guide/glossary' },
+        ],
+      },
+      {
+        text: 'Guides',
+        items: [
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'Build a graph in code', link: '/guide/build-a-graph' },
           { text: 'Read computed geometry', link: '/guide/geometry' },
           { text: 'Text measurement', link: '/guide/text-measurement' },
+          { text: 'Working with images', link: '/guide/images' },
           { text: 'Render to other formats', link: '/guide/render-formats' },
           { text: 'Custom rendering with xdot', link: '/guide/xdot-drawops' },
-          { text: 'API reference', link: '/guide/api' },
+        ],
+      },
+      {
+        text: 'Recipes',
+        items: [
+          { text: 'Recipes cookbook', link: '/guide/recipes' },
+        ],
+      },
+      {
+        text: 'Migrating',
+        items: [
+          { text: 'From the C dot CLI', link: '/guide/migrate-from-c-cli' },
+          { text: 'From JS graphviz libraries', link: '/guide/migrate-from-js-libs' },
         ],
       },
       {
         text: 'Reference',
         items: [
+          { text: 'API reference (curated)', link: '/guide/api' },
+          { text: 'Types', link: '/guide/types' },
+          { text: 'Generated API (TypeDoc)', link: '/reference/' },
           { text: 'Playground', link: '/playground' },
           { text: 'Conformance (what "match" means)', link: '/conformance' },
           { text: 'Known divergences', link: '/divergences' },

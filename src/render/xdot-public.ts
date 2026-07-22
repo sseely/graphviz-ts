@@ -37,6 +37,26 @@ import type { EngineName } from '../gvc/context.js';
 import { RenderError } from '../errors.js';
 import type { GvError } from '../errors.js';
 
+/**
+ * `Xdot` — the parsed result of one xdot attribute stream: `ops` (the
+ * decoded draw-op array) plus `flags` (parse status bits).
+ *
+ * `XdotOp` — a single decoded xdot drawing operation, discriminated by its
+ * `kind` field (e.g. `filled_ellipse`, `filled_polygon`, `filled_bezier`,
+ * `polyline`, `text`, `fill_color`, `pen_color`, `grad_fill_color`,
+ * `grad_pen_color`, `font`, `style`, `image`, `fontchar`). Each variant
+ * carries one payload property named for its shape (`ellipse`, `polygon`,
+ * `bezier`, `polyline`, `text`, `color`, `gradColor`, `font`, `style`,
+ * `image`, `fontchar`) — narrow on `kind` in a switch to access it safely.
+ *
+ * `XdotColor` — a resolved xdot fill/pen color: `{ type: 'none', clr }` for
+ * a solid color, or a linear/radial gradient (`{ type: 'linear', ling }` /
+ * `{ type: 'radial', ring }`).
+ *
+ * @see lib/xdot/xdot.h:xdot
+ * @see lib/xdot/xdot.h:xdot_op (`_xdot_op`)
+ * @see lib/xdot/xdot.h:xdot_color
+ */
 export type { Xdot, XdotOp, XdotColor } from '../xdot/index.js';
 
 /** Options for {@link getDrawOps}. */
@@ -114,6 +134,26 @@ function layoutAndRenderXdot(g: Graph, engine: EngineName): string {
  * @returns Flat typed draw-op array covering the full graph.
  * @throws ParseError  if the xdot DOT output cannot be re-parsed.
  * @throws RenderError if layout or rendering fails.
+ *
+ * @example
+ * ```ts
+ * import { parse } from 'graphviz-ts';
+ * import { getDrawOps } from 'graphviz-ts/render';
+ *
+ * const g = parse('digraph { a -> b; }');
+ * for (const op of getDrawOps(g)) {
+ *   switch (op.kind) {
+ *     case 'filled_ellipse':
+ *     case 'unfilled_ellipse':
+ *       drawEllipse(op.ellipse);
+ *       break;
+ *     case 'text':
+ *       drawText(op.text);
+ *       break;
+ *     // ...handle the remaining XdotOp kinds
+ *   }
+ * }
+ * ```
  *
  * @see lib/xdot/xdot.h
  * @see lib/gvc/gvc.h:gvRender

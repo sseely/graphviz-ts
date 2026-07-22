@@ -39,22 +39,22 @@ the diverged table and the backlog below.
 
 | id | verdict | maxΔ | class | bound | ref |
 |---|---|---:|---|---|---|
-| `2368` | structural-match | 10.22 | A3 | maxΔ~10pt on one flat-edge arc (376-&gt;76); bbox/nodes/labels conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `2371` | structural-match | 16.80 | A3 | maxΔ 16.8 on two edges (g[9263] r6837mid--r9687mid, g[23859] r38mid--r8699mid); the port emits the exact control-point-sequence mirror of the oracle on both; all ~36,900 other elements byte-identical | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `241_1` | structural-match | 2.36 | A3 | maxΔ ~2.4pt on one flat-edge arc; bbox/nodes/labels conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `2413_1` | structural-match | 67.65 | A3 | maxΔ 67.65 on the labeled 2-cycle back-edge label-vnode slit corridor; nodes/bbox conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `2413_2` | structural-match | 99.55 | A3 | maxΔ ≤99.55 (two findMaxDev ties, same corridor family as 2413_1) once the T11 swapBezier-reverse fix lands; until then parity.json reports maxΔ 1922.26, dominated by that separate, already-diagnosed-and-fixed swapBezier over-allocated-reverse defect (not part of this acceptance) | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `graphs-b100` | structural-match | 20.00 | A3 | maxΔ 20 (one rank-row) on one hub in-edge knot (Node23730-&gt;Node23729); every node + all upstream box/poly/taut-path byte-identical to C | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `graphs-b104` | structural-match | 20.00 | A3 | maxΔ 20 (one rank-row) on one hub in-edge knot; identical source to graphs-b100, same symmetric-channel tie-break | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `graphs-decorate` | structural-match | 43.54 | A3 | maxΔ 43.54 on a single intra-cluster labeled edge (Se3ffa656...-&gt;Se3ffa61c...); all 23 diffs live in that one &lt;g&gt; | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
-| `1435` | structural-match | 0.39 | A4 | maxΔ 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
-| `1581` | diverged | 0.00 | A4 | maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
-| `2471` | structural-match | 6906.60 | A4 | whole-layout numeric (maxΔ ~9063); element tree identical incl. the same 6 lost edges | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
-| `2796` | structural-match | 11.11 | A4 | maxΔ 49 numeric only; identical element tree (both sides lose edge 3-&gt;16) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
-| `1367` | diverged | 0.00 | A5 | maxDelta 0; exactly one structural diff (one &lt;title&gt; byte: raw 0x80 vs UTF-8 U+0080); all element counts and coordinates conformant | known-divergences.md#a5-invalid-input-bytes-encoding-representation |
-| `1314` | structural-match | 1683625618000.00 | A6 | only the top-level svg width/height differ; every node ellipse/coord, translate, polygon, and font-size is byte-identical | known-divergences.md#a6-unsigned-int-canvas-overflow-on-degenerate-input |
-| `graphs-honda-tokoro` | structural-match | 1.06 | A7 | maxΔ ~1pt on one edge (n012-&gt;n011); every node/label/bbox conformant | known-divergences.md#a7-round-box-wall-rounding-boundary-dot |
-| `2646` | structural-match | 42.09 | A8 | maxΔ 42.09 on 3 of 21,216 edges (edge2575 g[4639], edge3905 g[7777], edge15467 g[30201]; all record-port :c-&gt;:nb_part smode long-edge routes) | known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot |
+| [`2368`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2368.dot) | structural-match | 10.22 | A3 | maxΔ~10pt on one flat-edge arc (376-&gt;76); bbox/nodes/labels conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`2371`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2371.dot) | structural-match | 16.80 | A3 | maxΔ 16.8 on two edges (g[9263] r6837mid--r9687mid, g[23859] r38mid--r8699mid); the port emits the exact control-point-sequence mirror of the oracle on both; all ~36,900 other elements byte-identical | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`241_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/241_1.dot) | structural-match | 2.36 | A3 | maxΔ ~2.4pt on one flat-edge arc; bbox/nodes/labels conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`2413_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2413_1.dot) | structural-match | 67.65 | A3 | maxΔ 67.65 on the labeled 2-cycle back-edge label-vnode slit corridor; nodes/bbox conformant | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`2413_2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2413_2.dot) | structural-match | 99.55 | A3 | maxΔ ≤99.55 (two findMaxDev ties, same corridor family as 2413_1) once the T11 swapBezier-reverse fix lands; until then parity.json reports maxΔ 1922.26, dominated by that separate, already-diagnosed-and-fixed swapBezier over-allocated-reverse defect (not part of this acceptance) | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`graphs-b100`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b100.gv) | structural-match | 20.00 | A3 | maxΔ 20 (one rank-row) on one hub in-edge knot (Node23730-&gt;Node23729); every node + all upstream box/poly/taut-path byte-identical to C | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`graphs-b104`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/b104.gv) | structural-match | 20.00 | A3 | maxΔ 20 (one rank-row) on one hub in-edge knot; identical source to graphs-b100, same symmetric-channel tie-break | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`graphs-decorate`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/decorate.gv) | structural-match | 43.54 | A3 | maxΔ 43.54 on a single intra-cluster labeled edge (Se3ffa656...-&gt;Se3ffa61c...); all 23 diffs live in that one &lt;g&gt; | known-divergences.md#a3-hypot-tie-break-in-spline-routing-dot |
+| [`1435`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1435.dot) | structural-match | 0.39 | A4 | maxΔ 503 on pathplan-fallback spline debris; 11/11 edges on both sides; nodes/clusters conformant | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
+| [`1581`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1581.dot) | diverged | 0.00 | A4 | maxDelta 465; top-level childCount 39 vs 22 (oracle recovery discards content) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
+| [`2471`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2471.dot) | structural-match | 6906.60 | A4 | whole-layout numeric (maxΔ ~9063); element tree identical incl. the same 6 lost edges | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
+| [`2796`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2796.dot) | structural-match | 11.11 | A4 | maxΔ 49 numeric only; identical element tree (both sides lose edge 3-&gt;16) | known-divergences.md#a4-oracle-in-an-acknowledged-broken-state-the-init_rank--pathplan-family |
+| [`1367`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1367.dot) | diverged | 0.00 | A5 | maxDelta 0; exactly one structural diff (one &lt;title&gt; byte: raw 0x80 vs UTF-8 U+0080); all element counts and coordinates conformant | known-divergences.md#a5-invalid-input-bytes-encoding-representation |
+| [`1314`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1314.dot) | structural-match | 1683625618000.00 | A6 | only the top-level svg width/height differ; every node ellipse/coord, translate, polygon, and font-size is byte-identical | known-divergences.md#a6-unsigned-int-canvas-overflow-on-degenerate-input |
+| [`graphs-honda-tokoro`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/graphs/honda-tokoro.gv) | structural-match | 1.06 | A7 | maxΔ ~1pt on one edge (n012-&gt;n011); every node/label/bbox conformant | known-divergences.md#a7-round-box-wall-rounding-boundary-dot |
+| [`2646`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2646.dot) | structural-match | 42.09 | A8 | maxΔ 42.09 on 3 of 21,216 edges (edge2575 g[4639], edge3905 g[7777], edge15467 g[30201]; all record-port :c-&gt;:nb_part smode long-edge routes) | known-divergences.md#a8-fp-contractfma-rounding-vs-strict-ieee-dot |
 
 ## Tracked structural-match (0)
 
@@ -93,16 +93,16 @@ it rejects entirely); there is no reference to compare against.
 
 | id | path | message |
 |---|---|---|
-| `1411` | `1411.dot` | Error: ~/git/graphviz/tests/1411.dot: syntax error in line 17 near '\' |
-| `1472` | `1472.dot` | oracle not well-formed XML: 102068B |
-| `1783` | `1783.dot` | Error: overflow when calculating virtual weight of edge |
-| `1864` | `1864.dot` | Warning: Warning: no hard-coded metrics for 'monospace'.  Falling back to 'Times' metrics |
-| `2064` | `2064.dot` | oracle exit null |
-| `2475_1` | `2475_1.dot` | oracle exit null |
-| `2593` | `2593.dot` | oracle exit null |
-| `2723` | `2723.dot` | oracle exit null |
-| `imagepath_test-base` | `imagepath_test/base.gv` | Error: ~/git/graphviz/tests/imagepath_test/base.gv: syntax error in line 8 near ']' |
-| `share-b545` | `share/b545.gv` | Error: ~/git/graphviz/tests/share/b545.gv: syntax error in line 1 near '3.583' |
+| [`1411`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1411.dot) | `1411.dot` | Error: https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1411.dot: syntax error in line 17 near '\' |
+| [`1472`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1472.dot) | `1472.dot` | oracle not well-formed XML: 102068B |
+| [`1783`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1783.dot) | `1783.dot` | Error: overflow when calculating virtual weight of edge |
+| [`1864`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1864.dot) | `1864.dot` | Warning: Warning: no hard-coded metrics for 'monospace'.  Falling back to 'Times' metrics |
+| [`2064`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2064.dot) | `2064.dot` | oracle exit null |
+| [`2475_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2475_1.dot) | `2475_1.dot` | oracle exit null |
+| [`2593`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2593.dot) | `2593.dot` | oracle exit null |
+| [`2723`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2723.dot) | `2723.dot` | oracle exit null |
+| [`imagepath_test-base`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/imagepath_test/base.gv) | `imagepath_test/base.gv` | Error: https://gitlab.com/graphviz/graphviz/-/blob/main/tests/imagepath_test/base.gv: syntax error in line 8 near ']' |
+| [`share-b545`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/share/b545.gv) | `share/b545.gv` | Error: https://gitlab.com/graphviz/graphviz/-/blob/main/tests/share/b545.gv: syntax error in line 1 near '3.583' |
 
 ## Divergence backlog (next missions)
 

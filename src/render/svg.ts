@@ -60,6 +60,7 @@ import { resolveRenderColor, colorOpacity, colorPaint } from './color-resolve.js
 import { svgBeginCluster, svgEndCluster } from './svg-cluster.js';
 import { emitSplitEdgePaths } from './svg-edge-split.js';
 import { edgeIsTapered, svgTaperedEdge } from './svg-tapered-edge.js';
+import { findImageBytes, toDataUri } from '../gvc/image-resolver.js';
 
 // ---------------------------------------------------------------------------
 // Multicolor arrow helpers
@@ -263,7 +264,15 @@ export class SvgRenderer implements RendererPlugin {
    * svg_printdouble used elsewhere); toPrecision(6) reproduces %g.
    * Deviation: C writes us->name raw (gvputs); the port XML-escapes the
    * src so metacharacter paths cannot produce invalid SVG.
+   *
+   * AD-1 (image-api, additive): when job.inlineImages is set AND the
+   * registered image resolver (`setImageResolver`) resolves `src`, emit a
+   * self-contained `data:` URI instead of the raw src passthrough. This is
+   * not a C behavior — native Graphviz never inlines image bytes. Default
+   * off (job.inlineImages unset/false, or no resolver registered, or the
+   * resolver misses) reproduces the byte-identical pre-AD-1 output below.
    * @see plugin/core/gvloadimage_core.c:core_loadimage_svg
+   * @see src/gvc/image-resolver.ts
    */
   usershape(src: string, b: Box, job: RenderJob): void {
     const g = (n: number): string => String(parseFloat(n.toPrecision(6)));
@@ -271,7 +280,12 @@ export class SvgRenderer implements RendererPlugin {
     const height = b.ur.y - b.ll.y;
     const originx = (b.ur.x + b.ll.x - width) / 2;
     const originy = (b.ur.y + b.ll.y + height) / 2;
-    job.write('<image xlink:href="' + escapeXml(src) + '" width="' + g(width)
+    let href = src;
+    if (job.inlineImages === true) {
+      const found = findImageBytes(src);
+      if (found !== null) href = toDataUri(found.bytes, found.mime);
+    }
+    job.write('<image xlink:href="' + escapeXml(href) + '" width="' + g(width)
       + 'px" height="' + g(height) + 'px" preserveAspectRatio="xMinYMin meet" x="'
       + g(originx) + '" y="' + g(-originy) + '"/>\n');
   }

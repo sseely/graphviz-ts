@@ -25,6 +25,7 @@ import type { JsonVerdict, JsonWalkResult } from './json-walk.js';
 import type { EngineParityReport, EngineWalkRow } from './engine-walk.js';
 import type { CorpusEntry } from './enumerate.js';
 import { loadAccepted, matchAccepted } from './accepted.js';
+import { testIdLink, scrubLocalPaths } from './corpus-links.js';
 // map-conformance (BEGIN): dot (imagemap) track types — see MAP block below.
 import type { MapVerdict, MapWalkResult } from './map-walk.js';
 // map-conformance (END)
@@ -350,12 +351,19 @@ function goldensSection(): string {
   ].join('\n');
 }
 
-/** Accepted-deltas table for an engine track: id | #diffs | class | bound | ref. */
-function engineAcceptedTable(rows: Array<{ r: EngineWalkRow; e: EngineAcceptedEntry }>): string {
+/** Accepted-deltas table for an engine track: id | #diffs | class | bound | ref.
+ * `pathById` resolves each id's corpus-relative path (from the dot-track
+ * survey this engine's roster is a subset of) so the id column links to its
+ * gitlab blob; omitted when the id isn't in the map. */
+function engineAcceptedTable(
+  rows: Array<{ r: EngineWalkRow; e: EngineAcceptedEntry }>,
+  pathById: Map<string, string> = new Map(),
+): string {
   if (rows.length === 0) return '_(none in this corpus)_\n';
   const sorted = [...rows].sort((a, b) => a.e.class.localeCompare(b.e.class) || a.r.id.localeCompare(b.r.id));
   const body = sorted.map(
-    ({ r, e }) => `| \`${r.id}\` | ${r.nDiffs ?? 0} | ${e.class} | ${escText(e.bound)} | ${escText(e.ref)} |`,
+    ({ r, e }) =>
+      `| ${testIdLink(r.id, pathById.get(r.id))} | ${r.nDiffs ?? 0} | ${e.class} | ${escText(e.bound)} | ${escText(e.ref)} |`,
   );
   return ['| id | #diffs | class | bound | ref |', '|---|---:|---|---|---|', ...body, ''].join('\n');
 }
@@ -390,11 +398,14 @@ function classAcceptanceSection(classes: ClassAcceptance[]): string {
   ].join('\n');
 }
 
-/** Per-engine detail page (PARITY-<engine>.md). */
+/** Per-engine detail page (PARITY-<engine>.md). `pathById` resolves each id's
+ * corpus-relative path (dot-track survey; this engine's roster is always a
+ * subset) so per-id table rows link to their gitlab blob (AD-4). */
 function engineMarkdown(
   engine: string,
   report: EngineParityReport,
   rawAcceptedMap: Record<string, EngineAcceptedRegistryEntry>,
+  pathById: Map<string, string> = new Map(),
 ): string {
   const c = Object.assign(
     { pass: 0, diverged: 0, 'oracle-error': 0, 'port-error': 0, timeout: 0 },
@@ -437,7 +448,7 @@ function engineMarkdown(
         '|---|---:|---:|---|',
         ...diverged.map(
           (r: EngineWalkRow) =>
-            `| \`${r.id}\` | ${r.size} | ${r.nDiffs ?? 0} | \`${cell(r.firstDiff)}\` |`,
+            `| ${testIdLink(r.id, pathById.get(r.id))} | ${r.size} | ${r.nDiffs ?? 0} | \`${cell(r.firstDiff)}\` |`,
         ),
         '',
       ].join('\n');
@@ -447,7 +458,9 @@ function engineMarkdown(
     : [
         '| id | status | message |',
         '|---|---|---|',
-        ...faults.map((r) => `| \`${r.id}\` | ${r.status} | ${escText(r.err)} |`),
+        ...faults.map(
+          (r) => `| ${testIdLink(r.id, pathById.get(r.id))} | ${r.status} | ${escText(scrubLocalPaths(r.err ?? ''))} |`,
+        ),
         '',
       ].join('\n');
 
@@ -480,7 +493,7 @@ function engineMarkdown(
     '[Known divergences](../../docs/known-divergences.md). Excluded from the diverged',
     'table below.',
     '',
-    engineAcceptedTable(acceptedRows),
+    engineAcceptedTable(acceptedRows, pathById),
     ...(classes.length ? [classAcceptanceSection(classes)] : []),
     `## Diverged (${diverged.length})`,
     '',
@@ -667,6 +680,9 @@ function main(): void {
   const svgReport = JSON.parse(readFileSync(PARITY, 'utf8')) as SvgParityReport;
   const xdotReport = JSON.parse(readFileSync(XDOT_PARITY, 'utf8')) as XdotParityReport;
   const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8')) as CorpusEntry[];
+  // Every engine-walk roster is a subset of the dot-track (SVG) survey, so its
+  // corpus-relative paths resolve every per-engine id (AD-4 gitlab links).
+  const pathById = new Map(svgReport.results.map((r) => [r.id, r.path]));
 
   const acceptedEngines = loadAcceptedEngines();
   const rows: TrackRow[] = [dotSvgRow(svgReport, manifest), dotXdotRow(xdotReport)];
@@ -691,7 +707,7 @@ function main(): void {
     (isIterative ? iterativeRows : rows).push(engineRow(engine, report, acceptedMap));
     presentEngines.push(engine);
     const out = fileURLToPath(new URL(`./PARITY-${engine}.md`, import.meta.url));
-    writeFileSync(out, engineMarkdown(engine, report, acceptedMap));
+    writeFileSync(out, engineMarkdown(engine, report, acceptedMap, pathById));
     process.stderr.write(`wrote PARITY-${engine}.md (${report.total} surveyed)\n`);
   }
 
