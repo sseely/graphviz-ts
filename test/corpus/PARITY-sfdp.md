@@ -13,10 +13,10 @@ test/corpus/parity-report.ts`.
 ## Summary
 
 - **Surveyed:** 762 (generated 2026-07-21T23:54:17.848Z)
-- **pass:** 524 (68.8%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 3 · **accepted (A1-drift class):** 227
+- **pass:** 524 (68.8%) · **diverged (tracked):** 0 · **accepted (documented, won't-fix):** 2 · **accepted (A1-drift class):** 228
 - **oracle-error:** 7 · **port-error:** 1 · **timeout:** 0
 
-## Accepted deltas (3) — documented, not chased
+## Accepted deltas (2) — documented, not chased
 
 Deliberate, root-caused differences we have chosen not to make conformant. Source of
 truth: `test/corpus/accepted-divergences-engines.json`; rationale in
@@ -25,7 +25,6 @@ table below.
 
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
-| `2095` | 6014 | A9 | sub-0.7pt arrowhead/spline drift on empty-named-node edges; Math.hypot ULP in findMaxDev (route.ts:198-199) | known-divergences.md#a9-sfdp-fp-ties |
 | `241_0` | 20 | A9 | flat-edge ptCount 14 vs 8 (3-&gt;2); same CDT/hypot tie as twopi/circo 241_0 (corridor succeeds N-pt vs plain fallback); findMaxDev hypot ULP | known-divergences.md#a9-sfdp-fp-ties |
 | `42` | 200 | A9 | CDT cocircular incircle tie: opCount 5 vs 9 (0-&gt;3), ptCount 32 vs 26 (3-&gt;7); multispline corridor flip. fma+robust-incircle applied; residual is V8-vs-Apple-libm sin/hypot 1-ULP in the predicate input | known-divergences.md#a9-sfdp-fp-ties |
 
@@ -37,7 +36,7 @@ exonerates it (`verdict: drift-exonerated`) is subtracted from the
 Diverged table below and counted in Summary; an id that starts passing
 outright leaves the class silently on the next report regen.
 
-- **A1-drift**: **227** members — full per-id evidence in [`attribution-sfdp.json`](./attribution-sfdp.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
+- **A1-drift**: **228** members — full per-id evidence in [`attribution-sfdp.json`](./attribution-sfdp.json). Rationale: [Known divergences](../../docs/known-divergences.md#a1-drift-iterative-engines).
 
 ## Diverged (0)
 
