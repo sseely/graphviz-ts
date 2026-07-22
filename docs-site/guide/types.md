@@ -417,7 +417,7 @@ flowchart LR
     parse --> Graph
   end
 
-  subgraph Layout+Read
+  subgraph layoutRead["Layout + Read"]
     Graph -->|getLayout| LayoutSnapshot
     LayoutSnapshot --> NodeGeometry
     LayoutSnapshot --> EdgeGeometry

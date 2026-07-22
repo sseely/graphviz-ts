@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: EPL-2.0
 import { defineConfig } from 'vitepress';
+import { withMermaid } from 'vitepress-plugin-mermaid';
 import { fileURLToPath, URL } from 'node:url';
 import { dotLang } from './dot.tmLanguage';
 
 // Deployed at https://sseely.github.io/graphviz-ts/ — base must match the repo.
-export default defineConfig({
-  base: '/graphviz-ts/',
+// withMermaid() renders ```mermaid fences client-side (VitePress has no native
+// mermaid support); see docs-site/guide/overview.md and types.md.
+export default withMermaid(
+  defineConfig({
+    base: '/graphviz-ts/',
   title: 'graphviz-ts',
   description:
     'A faithful, pure-TypeScript port of Graphviz. DOT in, SVG out — no Java, ' +
@@ -90,4 +94,5 @@ export default defineConfig({
       },
     },
   },
-});
+  }),
+);

@@ -21,9 +21,9 @@ flowchart LR
         A["DOT source"] -->|"parse()"| G["Graph"]
         B["createGraph()"] -->|".graph"| G
     end
-    G --> L["layout engine\n(dot, neato, fdp, sfdp,\ncirco, twopi, osage, patchwork)"]
+    G --> L["layout engine<br/>(dot, neato, fdp, sfdp,<br/>circo, twopi, osage, patchwork)"]
     L -->|"render()"| O["SVG / JSON / xdot / DOT / imagemap"]
-    L -->|"getLayout()"| S["LayoutSnapshot\n(nodes, edges, bounds)"]
+    L -->|"getLayout()"| S["LayoutSnapshot<br/>(nodes, edges, bounds)"]
 ```
 
 There is no separate "run layout" call: `renderSvg` and `render` trigger
