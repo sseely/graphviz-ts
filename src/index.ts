@@ -132,6 +132,8 @@ export type {
 } from './errors.js';
 export { setImageSizer } from './gvc/usershape.js';
 export type { ImageSizer } from './common/htmltable-types.js';
+export { setImageResolver } from './gvc/image-resolver.js';
+export type { ImageResolver } from './gvc/image-resolver.js';
 
 // Text measurement: install a custom measurer (deterministic tests, or a
 // host-faithful Node measurer wired from node-canvas). The library auto-resolves

@@ -71,6 +71,8 @@ const ALLOWLIST: Readonly<Record<string, string>> = {
   // --- Immutable / one-time / DI wiring — not per-render render state ---
   'src/gvc/usershape.ts::activeSizer':
     'process-wide image-sizer DI hook set via setImageSizer; not mutated by rendering (shared config, last-write-wins by design)',
+  'src/gvc/image-resolver.ts::activeResolver':
+    'process-wide image-resolver DI hook set via setImageResolver (AD-1); consulted (never mutated) by rendering when RenderOptions.inlineImages is set — twin of activeSizer, shared config, last-write-wins by design',
   'src/common/textmeasure-factory.ts::override':
     'process-wide text-measurer DI hook set via setTextMeasurer; not mutated by rendering (shared config, last-write-wins by design), analogous to activeSizer',
   'src/common/textmeasure-factory.ts::adviceShown':

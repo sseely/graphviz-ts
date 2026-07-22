@@ -55,6 +55,24 @@ export function renderClusterLabel(sg: Graph, renderer: RendererPlugin, job: Ren
 import { svgNodeId, svgEdgeId, svgClusterId, svgGraphId } from '../render/svg-id.js';
 
 // ---------------------------------------------------------------------------
+// AD-1 (image-api): `inlineImages` on RenderJob via module augmentation
+//
+// Declared here (not as an edit to job.ts) so the field lives with the one
+// caller that sets it (render(), below) and the one caller that reads it
+// (svg.ts usershape()). Purely additive: an unset field reads `undefined`,
+// which is falsy, so any RenderJob built without going through this render()
+// (tests, other call sites) keeps today's raw-src passthrough unchanged.
+// @see src/render/public.ts:RenderOptions.inlineImages
+// @see src/gvc/image-resolver.ts
+// ---------------------------------------------------------------------------
+declare module './job.js' {
+  interface RenderJob {
+    /** When true, usershape() inlines resolved image bytes as a data: URI. */
+    inlineImages?: boolean;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // transformPoint — @see lib/gvc/gvrender.c:gvrender_ptf
 // ---------------------------------------------------------------------------
 
@@ -494,12 +512,18 @@ function renderPage(g: Graph, renderer: RendererPlugin, job: RenderJob, info: La
 /**
  * Select renderer, create job, initialise bb from graph, then render.
  *
+ * @param inlineImages - AD-1 (additive, default false): when true, the SVG
+ *   renderer's usershape() consults the registered image resolver
+ *   (`setImageResolver`) and inlines a `data:` URI on a hit instead of the
+ *   raw src passthrough. Unset/false reproduces byte-identical pre-AD-1
+ *   output. @see src/render/public.ts:RenderOptions.inlineImages
  * @throws Error if no renderer is registered for format
  * @see lib/gvc/gvrender.c:gvrender_select
  */
-export function render(ctx: GvcContext, g: Graph, format: string): string {
+export function render(ctx: GvcContext, g: Graph, format: string, inlineImages = false): string {
   const renderer = ctx.bestRenderer(format);
   const job = new RenderJob(format, ctx.textMeasurer);
+  job.inlineImages = inlineImages;
   // gvc->bb = GD_bb(g) verbatim -- no recompute fallback. Every layout engine
   // sets g.info.bb itself before render() runs (set_aspect for dot,
   // compute_bb-equivalent computeSubgraphBB calls in neato/circo/sfdp/fdp/

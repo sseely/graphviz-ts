@@ -47,6 +47,17 @@ export interface RenderOptions {
    * y-up coordinates; callers that need y-down must flip in post-processing.
    */
   engine?: EngineName;
+
+  /**
+   * Inline external images as `data:` URIs (AD-1, additive). Defaults to
+   * `false` — unset reproduces the pre-AD-1 raw `xlink:href="src"`
+   * passthrough byte-for-byte. When `true`, the SVG emitter consults the
+   * process-global resolver registered via `setImageResolver` (from
+   * `graphviz-ts`) for each `image=`/HTML `<IMG>` source; a hit is inlined
+   * as `data:<mime>;base64,<...>`, a miss (or no resolver registered) falls
+   * back to the raw src passthrough. Has no effect on non-SVG formats.
+   */
+  inlineImages?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -105,10 +116,11 @@ export function render(
   opts?: RenderOptions,
 ): string {
   const engine: EngineName = opts?.engine ?? 'dot';
+  const inlineImages = opts?.inlineImages ?? false;
   const ctx = createDefaultContext();
   try {
     ctx.layout(g, engine);
-    const result = deviceRender(ctx, g, format);
+    const result = deviceRender(ctx, g, format, inlineImages);
     ctx.freeLayout(g, engine);
     return result;
   } catch (err: unknown) {
