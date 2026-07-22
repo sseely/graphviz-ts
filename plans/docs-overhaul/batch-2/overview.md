@@ -15,13 +15,13 @@ lines say what the page is and who it's for.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T5 | Types reference (shapes + mermaid relationships) | technical-writer (Sonnet) | `docs-site/guide/types.md` | — | [ ] |
-| T6 | Recipes cookbook harvested from plantuml-ts | technical-writer (Sonnet) | `docs-site/guide/recipes.md` | — | [ ] |
-| T7 | Images guide (resolver/sizer, deploy, CSP) | technical-writer (Sonnet) | `docs-site/guide/images.md` | T1 | [ ] |
-| T8 | Conceptual overview / mental model | technical-writer (Sonnet) | `docs-site/guide/overview.md` | — | [ ] |
-| T9 | Migration pages (from C CLI; from JS libs) | technical-writer (Sonnet) | `docs-site/guide/migrate-from-c-cli.md`, `migrate-from-js-libs.md` | — | [ ] |
-| T10 | Glossary | technical-writer (Sonnet) | `docs-site/guide/glossary.md` | — | [ ] |
-| T11 | Expand API reference prose + document image API | technical-writer (Sonnet) | `docs-site/guide/api.md` | T1 | [ ] |
+| T5 | Types reference (shapes + mermaid relationships) | technical-writer (Sonnet) | `docs-site/guide/types.md` | — | [x] c494de6 |
+| T6 | Recipes cookbook harvested from plantuml-ts | technical-writer (Sonnet) | `docs-site/guide/recipes.md` | — | [x] 8474ba8 |
+| T7 | Images guide (resolver/sizer, deploy, CSP) | technical-writer (Sonnet) | `docs-site/guide/images.md` | T1 | [x] beac529 |
+| T8 | Conceptual overview / mental model | technical-writer (Sonnet) | `docs-site/guide/overview.md` | — | [x] c32a9ea |
+| T9 | Migration pages (from C CLI; from JS libs) | technical-writer (Sonnet) | `docs-site/guide/migrate-from-c-cli.md`, `migrate-from-js-libs.md` | — | [x] dd34a81 |
+| T10 | Glossary | technical-writer (Sonnet) | `docs-site/guide/glossary.md` | — | [x] 08383c2 |
+| T11 | Expand API reference prose + document image API | technical-writer (Sonnet) | `docs-site/guide/api.md` | T1 | [x] 40e0e24 |
 
 ## Gate after batch
 

@@ -76,7 +76,7 @@ full sweep on the render change.
 
 - [x] **Batch 1 — Foundations** ([overview](./batch-1/overview.md)) — code +
   toolchain. T1 image API · T2 gitlab links · T3 TypeDoc · T4 TSDoc gap-fill.
-- [ ] **Batch 2 — Content pages** ([overview](./batch-2/overview.md)) — T5
+- [x] **Batch 2 — Content pages** ([overview](./batch-2/overview.md)) — T5
   types · T6 recipes · T7 images · T8 overview · T9 migration · T10 glossary ·
   T11 API reference.
 - [ ] **Batch 3 — Integration** ([overview](./batch-3/overview.md)) — T12 IA
