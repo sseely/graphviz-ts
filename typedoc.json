@@ -13,6 +13,7 @@
   "hidePageHeader": true,
   "hideBreadcrumbs": true,
   "useCodeBlocks": true,
+  "sanitizeComments": true,
   "expandObjects": true,
   "expandParameters": true,
   "sidebar": {
