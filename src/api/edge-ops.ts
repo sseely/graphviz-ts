@@ -67,12 +67,30 @@ function insertEdge(g: Graph, root: Graph, edge: Edge): void {
  * (symmetric for undirected). When a match is found the existing edge is
  * returned without modification. This matches C `agedge` with `cflag=1`.
  *
+ * Most callers building a graph programmatically should prefer
+ * `createGraph().addEdge(...)` (the `GvGraphBuilder` method), which accepts
+ * node names or handles. Use this lower-level `addEdge` when you already
+ * hold `Graph`/`Node` references — e.g. edges added onto a graph returned by
+ * `parse()`.
+ *
  * @param g    - Owning graph or subgraph; root derived via `g.root`.
  * @param tail - Source node (AGTAIL). @see lib/cgraph/cgraph.h:AGTAIL
  * @param head - Destination node (AGHEAD). @see lib/cgraph/cgraph.h:AGHEAD
  * @param name - Edge key; defaults to empty string for anonymous edges.
  *               Ignored for strict-graph dedup (wildcard match).
  * @returns The new (or existing, for strict graphs) edge.
+ *
+ * @example
+ * ```ts
+ * import { parse, addEdge } from 'graphviz-ts';
+ *
+ * const g = parse('digraph { a; b; }');
+ * const a = g.nodes.get('a')!;
+ * const b = g.nodes.get('b')!;
+ * const edge = addEdge(g, a, b, 'ab1');
+ * // edge.tail === a, edge.head === b
+ * ```
+ *
  * @see lib/cgraph/edge.c:agedge
  */
 export function addEdge(
