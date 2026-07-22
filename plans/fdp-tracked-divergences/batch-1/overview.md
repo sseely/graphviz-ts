@@ -14,8 +14,8 @@ round() and flipping edge-label sides.
 
 | ID | Description | Agent | Writes | Depends On | Done |
 |----|-------------|-------|--------|-----------|------|
-| T1.1 | Analyze: inject positions, isolate frame vs genuine; state mechanism | debugger | batch-1/findings.md | Batch 0 | [ ] |
-| T1.2 | Fix (aggressively) at the frame origin, or accept w/ evidence | general-purpose | (src fix, isolated) + batch-1/findings.md | T1.1 | [ ] |
+| T1.1 | Analyze: inject positions, isolate frame vs genuine; state mechanism | debugger | batch-1/findings.md | Batch 0 | [x] |XX
+| T1.2 | Fix (aggressively) at the frame origin, or accept w/ evidence | general-purpose | (src fix, isolated) + batch-1/findings.md | T1.1 | [x] |
 
 Method (per diagnosis.md): inject exact native positions; if the residual is a
 pure constant translation (dx=0, const dy) or an edge-label `lp` side flip, it is
