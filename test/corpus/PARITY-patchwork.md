@@ -33,11 +33,11 @@ _(none)_
 
 | id | status | message |
 |---|---|---|
-| `1879` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/1879.dot |
-| `2516` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2516.dot |
-| `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
-| `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
-| `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K patchwork -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
+| [`1879`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot) | oracle-error | Command failed: dot -K patchwork -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot |
+| [`2516`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2516.dot) | oracle-error | Command failed: dot -K patchwork -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2516.dot |
+| [`2619`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619.dot) | oracle-error | Command failed: dot -K patchwork -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619.dot |
+| [`2619_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot) | oracle-error | Command failed: dot -K patchwork -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot |
+| [`2619_2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot) | oracle-error | Command failed: dot -K patchwork -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot |
 
 **oracle errors:** 5 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
 _Passing ids (757) are omitted for brevity — the full roster is in

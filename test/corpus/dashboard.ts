@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import type { SurveyResult, Verdict } from './survey.js';
 import type { CorpusEntry, QuarantineReason } from './enumerate.js';
 import { loadAccepted, matchAccepted, type AcceptedEntry } from './accepted.js';
+import { testIdLink, scrubLocalPaths } from './corpus-links.js';
 
 const PARITY = new URL('./parity.json', import.meta.url);
 const MANIFEST = new URL('./corpus-manifest.json', import.meta.url);
@@ -153,7 +154,7 @@ function structuralRoster(rows: SurveyResult[]): string {
   const sorted = [...rows].sort((a, b) => (b.maxDelta ?? 0) - (a.maxDelta ?? 0));
   const shown = sorted.slice(0, DIVERGED_TABLE_CAP);
   const body = shown.map(
-    (r) => `| \`${r.id}\` | ${(r.maxDelta ?? 0).toFixed(2)} | \`${structuralKind(r.maxDeltaPath)}\` | \`${cell(r.maxDeltaPath)}\` |`,
+    (r) => `| ${testIdLink(r.id, r.path)} | ${(r.maxDelta ?? 0).toFixed(2)} | \`${structuralKind(r.maxDeltaPath)}\` | \`${cell(r.maxDeltaPath)}\` |`,
   );
   const more = sorted.length > shown.length ? `\n_… and ${sorted.length - shown.length} more (full set in parity.json)._\n` : '';
   return ['| id | maxΔ | kind | worst-diff path |', '|---|---:|---|---|', ...body, ''].join('\n') + more;
@@ -218,7 +219,7 @@ function divergedTable(diverged: SurveyResult[]): string {
   const sorted = [...diverged].sort((a, b) => (b.maxDelta ?? 0) - (a.maxDelta ?? 0));
   const shown = sorted.slice(0, DIVERGED_TABLE_CAP);
   const rows = shown.map(
-    (r) => `| \`${r.id}\` | ${(r.maxDelta ?? 0).toFixed(2)} | \`${cell(r.firstDiffPath)}\` |`,
+    (r) => `| ${testIdLink(r.id, r.path)} | ${(r.maxDelta ?? 0).toFixed(2)} | \`${cell(r.firstDiffPath)}\` |`,
   );
   const more = sorted.length > shown.length ? `\n_… and ${sorted.length - shown.length} more diverged inputs (see parity.json + the buckets below)._\n` : '';
   return ['| id | maxDelta | firstDiffPath |', '|---|---:|---|', ...rows, ''].join('\n') + more;
@@ -229,7 +230,7 @@ function msgTable(results: SurveyResult[]): string {
   const rows = results
     .slice()
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map((r) => `| \`${r.id}\` | \`${r.path}\` | ${escText(r.errMsg)} |`);
+    .map((r) => `| ${testIdLink(r.id, r.path)} | \`${r.path}\` | ${escText(scrubLocalPaths(r.errMsg ?? ''))} |`);
   return ['| id | path | message |', '|---|---|---|', ...rows, ''].join('\n');
 }
 
@@ -281,7 +282,7 @@ function acceptedTable(rows: Array<{ r: SurveyResult; e: AcceptedEntry }>): stri
   const sorted = [...rows].sort((a, b) => a.e.class.localeCompare(b.e.class) || a.r.id.localeCompare(b.r.id));
   const body = sorted.map(
     ({ r, e }) =>
-      `| \`${r.id}\` | ${r.verdict} | ${(r.maxDelta ?? 0).toFixed(2)} | ${e.class} | ${escText(e.bound)} | ${escText(e.ref)} |`,
+      `| ${testIdLink(r.id, r.path)} | ${r.verdict} | ${(r.maxDelta ?? 0).toFixed(2)} | ${e.class} | ${escText(e.bound)} | ${escText(e.ref)} |`,
   );
   return ['| id | verdict | maxΔ | class | bound | ref |', '|---|---|---:|---|---|---|', ...body, ''].join('\n');
 }

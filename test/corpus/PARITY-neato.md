@@ -25,8 +25,8 @@ table below.
 
 | id | #diffs | class | bound | ref |
 |---|---:|---|---|---|
-| `2239` | 1862 | A1 | 1862 draw-op diffs (was 3838 before the pinned-node fixed-packing protocol was ported). 7-component disconnected layout with a pinned `legend` (pos=0,0!); every node box is bit-identical to the oracle (0 size diffs) — the divergence is component PLACEMENT. With C's node positions injected the port's polyomino cell counts match C exactly (81,66,42,57,25,21,6,6,6,6), so the packer is byte-faithful; the residual is float32 stress-majorization drift in edge splines amplified through the discrete greedy packer (a few drifted cells flip a later component's slot). Not auto-verified by attribution: injection is per-component pre-pack, so on a multi-component graph it re-packs (double-transform) rather than reproducing C. | known-divergences.md#a1-drift-iterative-engines |
-| `241_0` | 13 | A9 | 13 draw-op diffs confined to edges 1-&gt;6 and 2-&gt;3; edge 1-&gt;6 routed as a 14-pt multispline corridor (port) vs the native plain per-member fallback (8-pt) (unfilled_bezier[ptCount]: 8 vs 14), the rest its consequent arrowhead points (&lt;=5.8pt). Same graph, edge and ptCount signature as the accepted twopi/circo 241_0: CDT cocircular incircle tie flipped by libm sin/cos 1-ULP (V8 vs Apple libm) — the port's multispline routing is faithful; the tie is irreducible. | known-divergences.md#a9-engine-track-twopi-circo |
+| [`2239`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2239.dot) | 1862 | A1 | 1862 draw-op diffs (was 3838 before the pinned-node fixed-packing protocol was ported). 7-component disconnected layout with a pinned `legend` (pos=0,0!); every node box is bit-identical to the oracle (0 size diffs) — the divergence is component PLACEMENT. With C's node positions injected the port's polyomino cell counts match C exactly (81,66,42,57,25,21,6,6,6,6), so the packer is byte-faithful; the residual is float32 stress-majorization drift in edge splines amplified through the discrete greedy packer (a few drifted cells flip a later component's slot). Not auto-verified by attribution: injection is per-component pre-pack, so on a multi-component graph it re-packs (double-transform) rather than reproducing C. | known-divergences.md#a1-drift-iterative-engines |
+| [`241_0`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/241_0.dot) | 13 | A9 | 13 draw-op diffs confined to edges 1-&gt;6 and 2-&gt;3; edge 1-&gt;6 routed as a 14-pt multispline corridor (port) vs the native plain per-member fallback (8-pt) (unfilled_bezier[ptCount]: 8 vs 14), the rest its consequent arrowhead points (&lt;=5.8pt). Same graph, edge and ptCount signature as the accepted twopi/circo 241_0: CDT cocircular incircle tie flipped by libm sin/cos 1-ULP (V8 vs Apple libm) — the port's multispline routing is faithful; the tie is irreducible. | known-divergences.md#a9-engine-track-twopi-circo |
 
 ## Accepted class: A1-drift — computed, not enumerated
 
@@ -46,13 +46,13 @@ _(none)_
 
 | id | status | message |
 |---|---|---|
-| `1879` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/1879.dot |
-| `2108` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
-| `2222` | oracle-error | spawnSync /Users/scottseely/git/graphviz/build/cmd/dot/dot ETIMEDOUT |
-| `2516` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/2516.dot |
-| `2619` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/2619.dot |
-| `2619_1` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/2619_1.dot |
-| `2619_2` | oracle-error | Command failed: /Users/scottseely/git/graphviz/build/cmd/dot/dot -K neato -Txdot /Users/scottseely/git/graphviz/tests/2619_2.dot |
+| [`1879`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot) | oracle-error | Command failed: dot -K neato -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/1879.dot |
+| [`2108`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2108.dot) | oracle-error | spawnSync dot ETIMEDOUT |
+| [`2222`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2222.dot) | oracle-error | spawnSync dot ETIMEDOUT |
+| [`2516`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2516.dot) | oracle-error | Command failed: dot -K neato -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2516.dot |
+| [`2619`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619.dot) | oracle-error | Command failed: dot -K neato -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619.dot |
+| [`2619_1`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot) | oracle-error | Command failed: dot -K neato -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_1.dot |
+| [`2619_2`](https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot) | oracle-error | Command failed: dot -K neato -Txdot https://gitlab.com/graphviz/graphviz/-/blob/main/tests/2619_2.dot |
 
 **oracle errors:** 7 native-crash (documented, excluded) / 0 timeout-flake (excluded this run, note to retry)
 _Passing ids (685) are omitted for brevity — the full roster is in

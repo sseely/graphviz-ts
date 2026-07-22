@@ -13,6 +13,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { MapVerdict, MapWalkResult, MapFormatResult } from './map-walk.js';
+import { testIdLink, scrubLocalPaths } from './corpus-links.js';
 
 const MAP_PARITY = new URL('./map-parity.json', import.meta.url);
 const ACCEPTED = new URL('./accepted-divergences-map.json', import.meta.url);
@@ -177,7 +178,7 @@ function divergedTable(rows: DivergedRow[]): string {
   const sorted = [...rows].sort((a, b) => b.maxDelta - a.maxDelta || b.diffCount - a.diffCount);
   const shown = sorted.slice(0, TABLE_CAP);
   const body = shown.map(
-    (r) => `| \`${r.id}\` | ${r.format} | ${r.size} | ${r.maxDelta.toFixed(2)} | ${r.diffCount} | \`${cell(r.firstDiff)}\` |`,
+    (r) => `| ${testIdLink(r.id, r.path)} | ${r.format} | ${r.size} | ${r.maxDelta.toFixed(2)} | ${r.diffCount} | \`${cell(r.firstDiff)}\` |`,
   );
   const more = sorted.length > shown.length
     ? `\n_… and ${sorted.length - shown.length} more (full set in map-parity.json)._\n`
@@ -189,14 +190,18 @@ function msgTable(results: MapWalkResult[]): string {
   const rows = results
     .slice()
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map((r) => `| \`${r.id}\` | \`${r.path}\` | ${escText(r.cmapx.errMsg ?? r.imap.errMsg)} |`);
+    .map(
+      (r) =>
+        `| ${testIdLink(r.id, r.path)} | \`${r.path}\` | ` +
+        `${escText(scrubLocalPaths(r.cmapx.errMsg ?? r.imap.errMsg ?? ''))} |`,
+    );
   return ['| id | path | message |', '|---|---|---|', ...rows, ''].join('\n');
 }
 
 function acceptedTable(entries: AcceptedEntry[]): string {
   if (entries.length === 0) return '_(none)_\n';
   const rows = entries.map(
-    (e) => `| \`${e.id}\` | ${escText(e.opClass)} | ${e.delta ?? ''} | ${escText(e.rationale)} |`,
+    (e) => `| ${testIdLink(e.id)} | ${escText(e.opClass)} | ${e.delta ?? ''} | ${escText(e.rationale)} |`,
   );
   return ['| id | opClass | delta | rationale |', '|---|---|---:|---|', ...rows, ''].join('\n');
 }
@@ -207,7 +212,7 @@ function hrefTable(results: MapWalkResult[]): string {
   const hrefResults = results.filter((r) => r.hasHref).sort((a, b) => a.id.localeCompare(b.id));
   if (hrefResults.length === 0) return '_(none in the surveyed set)_\n';
   const rows = hrefResults.map(
-    (r) => `| \`${r.id}\` | \`${r.path}\` | ${r.cmapx.verdict} | ${r.imap.verdict} | ${r.verdict} |`,
+    (r) => `| ${testIdLink(r.id, r.path)} | \`${r.path}\` | ${r.cmapx.verdict} | ${r.imap.verdict} | ${r.verdict} |`,
   );
   return ['| id | path | cmapx | imap | overall |', '|---|---|---|---|---|', ...rows, ''].join('\n');
 }
