@@ -82,7 +82,7 @@ function insertEdge(g: Graph, root: Graph, edge: Edge): void {
  *
  * @example
  * ```ts
- * import { parse, addEdge } from 'graphviz-ts';
+ * import { parse, addEdge } from '@knowvah/dot-engine';
  *
  * const g = parse('digraph { a; b; }');
  * const a = g.nodes.get('a')!;

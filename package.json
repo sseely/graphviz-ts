@@ -1,5 +1,5 @@
 {
-  "name": "graphviz-ts",
+  "name": "@knowvah/dot-engine",
   "version": "0.1.26072117",
   "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) — no C: no native binary, no WASM. Oracle-verified against the C implementation, runs in the browser.",
   "keywords": [
@@ -16,13 +16,16 @@
   ],
   "license": "EPL-2.0",
   "author": "Scott Seely",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sseely/graphviz-ts.git"
+    "url": "git+https://github.com/knowvah/dot-engine.git"
   },
-  "homepage": "https://sseely.github.io/graphviz-ts/",
+  "homepage": "https://knowvah.github.io/dot-engine/",
   "bugs": {
-    "url": "https://github.com/sseely/graphviz-ts/issues"
+    "url": "https://github.com/knowvah/dot-engine/issues"
   },
   "type": "module",
   "main": "./dist/index.js",
