@@ -6,7 +6,7 @@ node positions, edge spline points, and bounding box — after layout has run.
 ## Basic usage
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('a');

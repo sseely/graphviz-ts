@@ -173,7 +173,7 @@ function buildMarkdown(report: XdotParityReport, accepted: AcceptedEntry[]): str
     '',
     '# xdot parity dashboard',
     '',
-    'Differential survey of graphviz-ts `render(g, \'xdot\')` vs the native',
+    'Differential survey of @knowvah/dot-engine `render(g, \'xdot\')` vs the native',
     '`dot -Txdot` oracle over the **759 SVG-conformant** corpus items, sorted by',
     'input size. Semantic comparison (draw-op streams at ±0.01, colors/fonts',
     'canonicalized — see `test/golden/compare-xdot.ts`). Regenerate:',

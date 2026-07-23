@@ -3,7 +3,7 @@
 
 # Dot (SVG) parity dashboard
 
-Differential survey of graphviz-ts SVG output vs the native `dot` oracle over
+Differential survey of @knowvah/dot-engine SVG output vs the native `dot` oracle over
 the dot test corpus. A report, not a gate (AD-1). Regenerate: `npx tsx
 test/corpus/survey.ts && npx tsx test/corpus/dashboard.ts` (writes
 PARITY-dot.md; the cross-engine [PARITY.md](./PARITY.md) summary comes from

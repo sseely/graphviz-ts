@@ -2,13 +2,13 @@
 
 viz.js / `@viz-js/viz`, `@hpcc-js/wasm` (`@hpcc-js/wasm-graphviz`), and
 `d3-graphviz` all give JavaScript access to Graphviz by compiling the real C
-Graphviz to **WebAssembly** and calling into it. graphviz-ts is a from-scratch
+Graphviz to **WebAssembly** and calling into it. @knowvah/dot-engine is a from-scratch
 **TypeScript port** — the layout engines, parser, and SVG emitter are
 TypeScript source, not a compiled binary.
 
 That difference is the headline, not a footnote:
 
-| | WASM wrappers (viz.js / `@hpcc-js/wasm` / d3-graphviz) | graphviz-ts |
+| | WASM wrappers (viz.js / `@hpcc-js/wasm` / d3-graphviz) | @knowvah/dot-engine |
 |---|---|---|
 | Implementation | Real C Graphviz, compiled to a `.wasm` binary | Pure TypeScript port, no compiled artifact |
 | Module init | Async — instantiate/await the WASM module before first use | None — `import` and call synchronously |
@@ -18,7 +18,7 @@ That difference is the headline, not a footnote:
 | Output formats | Whatever the underlying C build was compiled with — typically the full Graphviz set, including raster/PDF | SVG + the DOT/json/xdot/plain/imagemap text formats — see below |
 
 If your use case is "call a function, get SVG back, no async ceremony, no
-WASM asset to host" — that's what graphviz-ts is for. If your use case
+WASM asset to host" — that's what @knowvah/dot-engine is for. If your use case
 depends on raster or PDF output, see [When to stay on WASM](#when-to-stay-on-wasm)
 below.
 
@@ -28,16 +28,16 @@ The three libraries have different shapes; the table below is the common
 migration case (approximate — verify against each library's own docs; see
 citations below each row).
 
-| Library | Typical call | graphviz-ts equivalent |
+| Library | Typical call | @knowvah/dot-engine equivalent |
 |---|---|---|
 | `@viz-js/viz` (successor to viz.js) | `Viz.instance().then(viz => viz.renderSVGElement(dot))` — async, `Viz.instance()` resolves a Promise | `renderSvg(dot, 'dot')` — synchronous, no instance/init step |
 | viz.js 2.x (legacy, `new Viz()`) | `new Viz().renderString(dot)` — returns a `Promise<string>` | `renderSvg(dot, 'dot')` — synchronous |
 | `@hpcc-js/wasm-graphviz` | `await Graphviz.load()` once, then `graphviz.dot(dot)` (sync after load) | `renderSvg(dot, engine)` — no load/warm-up step at all |
 | `d3-graphviz` | `d3.select(sel).graphviz().renderDot(dot)` — binds output into the DOM, animates transitions | `renderSvg(dot, engine)` returns an SVG **string**; you insert it into the DOM yourself (e.g. `el.innerHTML = svg`) |
 
-Every graphviz-ts call in the right column is **synchronous** — there is no
+Every @knowvah/dot-engine call in the right column is **synchronous** — there is no
 module to await, because there's no WASM binary to instantiate. Drop any
-`await`/`.then()` wrapping a graphviz-ts call; it was never needed.
+`await`/`.then()` wrapping a @knowvah/dot-engine call; it was never needed.
 
 - `@viz-js/viz`'s `Viz.instance()` → Promise and `renderSVGElement()` method
   are documented at viz-js.com; confirmed via the project's published usage
@@ -58,7 +58,7 @@ module to await, because there's no WASM binary to instantiate. Drop any
 
 `d3-graphviz` does more than render SVG: it binds the result into a D3
 selection, diffs re-renders, and animates transitions between layouts.
-graphviz-ts has no DOM opinion at all — `renderSvg`/`render` return a plain
+@knowvah/dot-engine has no DOM opinion at all — `renderSvg`/`render` return a plain
 string. If you want d3-graphviz-style animated transitions between two
 layouts, that's logic you'd build on top of two `renderSvg` calls and your
 own DOM diffing (or keep using d3-graphviz for that specific feature — see
@@ -68,12 +68,12 @@ below).
 
 All three WASM libraries can be asked for Graphviz's own JSON or plain text
 formats, then you parse that string yourself to get node/edge coordinates.
-graphviz-ts skips the text round-trip: call `getLayout(g)` (after `render`)
+@knowvah/dot-engine skips the text round-trip: call `getLayout(g)` (after `render`)
 for a typed, JSON-serializable snapshot directly — no `-Tjson`/`-Tplain`
 string to parse.
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('a');
@@ -92,7 +92,7 @@ units, and the `yAxis` option.
 
 ## When to stay on WASM
 
-Be honest with yourself about scope: graphviz-ts targets SVG plus the
+Be honest with yourself about scope: @knowvah/dot-engine targets SVG plus the
 `dot`/`xdot`/`json`/`plain`/`plain-ext`/`imap`/`cmapx` text formats. It does
 **not** emit raster formats (PNG/JPEG/GIF/...) or PostScript/PDF/EPS — those
 are an intentional scope boundary, not a gap that's merely unfinished. See
@@ -102,7 +102,7 @@ If your application needs `-Tpng` or `-Tpdf` output directly from the layout
 engine, the WASM-based libraries above still cover that case — because
 they're running the real C Graphviz, they support whatever output formats
 that build was compiled with. In that scenario, either keep using the WASM
-library for that one code path, or render to `'svg'` with graphviz-ts and
+library for that one code path, or render to `'svg'` with @knowvah/dot-engine and
 convert the SVG to a raster/PDF downstream with a separate tool.
 
 ## See also

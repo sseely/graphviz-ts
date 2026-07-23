@@ -2,14 +2,14 @@
 
 Task-oriented snippets for the parts of the build → layout → read-geometry
 path that aren't obvious from the API reference alone. Each recipe is a
-minimal, runnable example using only the public `graphviz-ts` /
-`graphviz-ts/api` / `graphviz-ts/render` surface — no internal model classes.
+minimal, runnable example using only the public `@knowvah/dot-engine` /
+`@knowvah/dot-engine/api` / `@knowvah/dot-engine/render` surface — no internal model classes.
 See `/guide/api` for the full list of entry points these snippets draw from.
 
 ## 1. Build a graph in code and render it
 
 ```ts
-import { createGraph, render } from 'graphviz-ts';
+import { createGraph, render } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('client', { shape: 'box' });
@@ -27,7 +27,7 @@ attributes, `parse` comparison) is in `/guide/build-a-graph`.
 ## 2. Lay out without rendering, then read the geometry
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('a');
@@ -55,7 +55,7 @@ layout side effect is what you're actually paying for.
 ## 3. Choose the y-axis for your renderer
 
 ```ts
-import { getLayout } from 'graphviz-ts';
+import { getLayout } from '@knowvah/dot-engine';
 
 // Screen/canvas/SVG convention: origin top-left, y increases downward.
 const screenLayout = getLayout(g);
@@ -87,7 +87,7 @@ offset empirically from one node you already have positions for in both
 frames:
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('start');
@@ -134,7 +134,7 @@ that's unavoidable today.
 ## 5. Recover edge-label positions
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('client');
@@ -160,10 +160,10 @@ measured for that label text on your own side (e.g. by echoing back your
 own per-edge label-size map, keyed by the same tail/head pair you used to
 build the edge).
 
-## 6. Map graphviz-ts cluster names back to yours
+## 6. Map @knowvah/dot-engine cluster names back to yours
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 
@@ -195,7 +195,7 @@ const clustersByCallerId = new Map(
 ```
 
 **Why:** `ClusterGeometry.name` echoes back exactly whatever name you gave
-`addSubgraph` — graphviz-ts does not invent, renumber, or otherwise
+`addSubgraph` — @knowvah/dot-engine does not invent, renumber, or otherwise
 transform it. If your domain model keys clusters by its own id (not a name
 graphviz would accept), keep the id-to-name mapping yourself while building
 the graph and re-key the `clusters` snapshot after layout; don't try to
@@ -204,7 +204,7 @@ recover meaning from graphviz's own name.
 ## 7. Add many edges safely
 
 ```ts
-import { createGraph, render } from 'graphviz-ts';
+import { createGraph, render } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true, strict: true });
 
@@ -232,10 +232,10 @@ contract.
 
 If you're adding edges onto a graph produced by `parse()` rather than
 `createGraph()`, use the lower-level `addEdge(g, tail, head, name?)` from
-`graphviz-ts` directly on `Node` references you already hold:
+`@knowvah/dot-engine` directly on `Node` references you already hold:
 
 ```ts
-import { parse, addEdge } from 'graphviz-ts';
+import { parse, addEdge } from '@knowvah/dot-engine';
 
 const g = parse('digraph { a; b; }');
 const a = g.nodes.get('a')!;
@@ -252,8 +252,8 @@ A compact function that takes a small domain graph, lays it out, and
 returns positioned nodes and edges:
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
-import type { LayoutSnapshot } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
+import type { LayoutSnapshot } from '@knowvah/dot-engine';
 
 interface DomainNode {
   id: string;

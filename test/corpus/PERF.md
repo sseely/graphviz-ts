@@ -3,7 +3,7 @@
 
 # Dot performance dashboard
 
-Warm, in-process timing of graphviz-ts vs the native `dot` oracle over the dot
+Warm, in-process timing of @knowvah/dot-engine vs the native `dot` oracle over the dot
 test corpus. **Peer to [PARITY.md](./PARITY.md)** — PARITY tracks *correctness*,
 PERF tracks *speed*. A report, not a gate. The fidelity target is **≤3× native**.
 

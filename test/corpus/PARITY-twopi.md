@@ -3,7 +3,7 @@
 
 # twopi parity dashboard
 
-Differential survey of graphviz-ts `twopi` xdot output vs the native
+Differential survey of @knowvah/dot-engine `twopi` xdot output vs the native
 `dot -K twopi -Txdot` oracle over the dot-track SVG-conformant corpus
 set (semantic draw-op comparison at ±0.01 — see `test/golden/compare-xdot.ts`;
 per [docs/conformance.md](../../docs/conformance.md), not byte equality).

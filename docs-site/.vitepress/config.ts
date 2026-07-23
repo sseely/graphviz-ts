@@ -4,13 +4,15 @@ import { withMermaid } from 'vitepress-plugin-mermaid';
 import { fileURLToPath, URL } from 'node:url';
 import { dotLang } from './dot.tmLanguage';
 
-// Deployed at https://sseely.github.io/graphviz-ts/ — base must match the repo.
+// Deployed at https://knowvah.github.io/dot-engine/ — base MUST match the repo
+// name (Pages serves the site under /<repo>/), or every CSS/JS/font asset 404s
+// and the page renders unstyled.
 // withMermaid() renders ```mermaid fences client-side (VitePress has no native
 // mermaid support); see docs-site/guide/overview.md and types.md.
 export default withMermaid(
   defineConfig({
-    base: '/graphviz-ts/',
-  title: 'graphviz-ts',
+    base: '/dot-engine/',
+  title: '@knowvah/dot-engine',
   description:
     'A faithful, pure-TypeScript port of Graphviz. DOT in, SVG out — no Java, ' +
     'no native binary, no WASM. Runs in the browser.',
@@ -80,7 +82,7 @@ export default withMermaid(
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/sseely/graphviz-ts' },
+      { icon: 'github', link: 'https://github.com/knowvah/dot-engine' },
     ],
   },
   vite: {
@@ -88,7 +90,7 @@ export default withMermaid(
       alias: {
         // The playground imports the *real* engine source, so docs stay in
         // lockstep with the library rather than a copied bundle.
-        'graphviz-ts': fileURLToPath(
+        '@knowvah/dot-engine': fileURLToPath(
           new URL('../../src/index.ts', import.meta.url),
         ),
       },

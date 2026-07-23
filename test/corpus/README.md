@@ -5,7 +5,7 @@
 A **differential parity survey** over the real
 [graphviz](https://gitlab.com/graphviz/graphviz/-/tree/main/tests) **dot** test corpus.
 It renders every dot-targetable input through the native `dot` oracle and
-through graphviz-ts, diffs the two SVGs, and reports a parity dashboard plus a
+through @knowvah/dot-engine, diffs the two SVGs, and reports a parity dashboard plus a
 triaged divergence backlog.
 
 This is a **report, not a gate**. Hundreds of inputs legitimately diverge — that

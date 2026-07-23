@@ -3,7 +3,7 @@
 import { ref, onMounted, watch } from 'vue';
 // Aliased in .vitepress/config.ts to the real engine source (src/index.ts),
 // so the playground always runs the library exactly as shipped.
-import { renderSvg } from 'graphviz-ts';
+import { renderSvg } from '@knowvah/dot-engine';
 // Client-side DOT syntax highlighting, reusing the SAME grammar the docs code
 // blocks use (single source of truth). Shiki runs in the browser here over a
 // transparent-textarea overlay with its pure-JS regex engine (no WASM); the

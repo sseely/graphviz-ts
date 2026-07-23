@@ -1,28 +1,28 @@
 # Getting started
 
-graphviz-ts is a faithful TypeScript port of [Graphviz](https://graphviz.org/).
+@knowvah/dot-engine is a faithful TypeScript port of [Graphviz](https://graphviz.org/).
 It parses the DOT language, runs Graphviz's layout engines, and emits SVG — in
 pure TypeScript — no C: no native Graphviz binary and no WASM port.
 
 ::: tip New to the library?
 Read the [Overview](/guide/overview) first — it maps the pipeline
 (parse/build → layout → render / read-geometry) and the three entry points
-(`graphviz-ts`, `graphviz-ts/api`, `graphviz-ts/render`) so you know which
+(`@knowvah/dot-engine`, `@knowvah/dot-engine/api`, `@knowvah/dot-engine/render`) so you know which
 door to use before you install.
 :::
 
 ## Install
 
-graphviz-ts is published on npm:
+@knowvah/dot-engine is published on npm:
 
 ```bash
-npm i graphviz-ts
+npm i @knowvah/dot-engine
 ```
 
 Zero runtime dependencies. The `canvas` package is an optional peer
 dependency, only needed for host-faithful text measurement in Node — see
 [Text measurement](/guide/text-measurement). The package ships three entry
-points (`graphviz-ts`, `graphviz-ts/api`, `graphviz-ts/render`), each with
+points (`@knowvah/dot-engine`, `@knowvah/dot-engine/api`, `@knowvah/dot-engine/render`), each with
 its own `.d.ts` type declarations, declaration maps, and source maps — "go to
 definition" jumps into the real TypeScript source, which ships alongside the
 build.
@@ -30,8 +30,8 @@ build.
 To build from source instead:
 
 ```bash
-git clone https://github.com/sseely/graphviz-ts.git
-cd graphviz-ts
+git clone https://github.com/knowvah/dot-engine.git
+cd @knowvah/dot-engine
 npm install
 npm run build        # → dist/index.js (ESM bundle, via esbuild) + .d.ts
 ```
@@ -39,7 +39,7 @@ npm run build        # → dist/index.js (ESM bundle, via esbuild) + .d.ts
 ## Render a graph
 
 ```ts
-import { renderSvg } from 'graphviz-ts';
+import { renderSvg } from '@knowvah/dot-engine';
 
 const dot = `
   digraph {

@@ -7,7 +7,7 @@ source) that covers it in depth.
 
 A subgraph whose name starts with `cluster` (e.g. `subgraph cluster_build`) —
 Graphviz renders it as a distinct box grouping its member nodes. Internally,
-graphviz-ts's geometry snapshot re-keys every cluster subgraph to a
+@knowvah/dot-engine's geometry snapshot re-keys every cluster subgraph to a
 positional name like `cluster6` (`ClusterGeometry.name`), not the DOT source
 name, so a consumer that needs the original name builds an `idByName` map
 before layout and re-keys `snapshot.clusters` afterward. See
@@ -16,7 +16,7 @@ before layout and re-keys `snapshot.clusters` afterward. See
 
 ## Conformance
 
-The mechanically-checked property behind the claim that a graphviz-ts render
+The mechanically-checked property behind the claim that a @knowvah/dot-engine render
 "matches" the C oracle. After both SVGs are parsed into normalized element
 trees, every numeric value (coordinates, path data, `points`) must agree
 within a fixed tolerance — **±0.01pt** for the deterministic engines
@@ -36,7 +36,7 @@ native y-up frame. See [Read computed geometry](/guide/geometry).
 
 ## Divergence
 
-A difference between a graphviz-ts render and the oracle that has been
+A difference between a @knowvah/dot-engine render and the oracle that has been
 investigated, root-caused, and catalogued — as opposed to silently
 tolerated. Catalogued divergences fall into one of three classes: accepted
 deltas (deliberately not made conformant, e.g. cross-platform
@@ -47,7 +47,7 @@ accepted behavior. See [Known divergences](/divergences).
 ## DOT
 
 The graph description language — `digraph { ... }` / `graph { ... }` with
-node, edge, and attribute statements — that graphviz-ts parses before
+node, edge, and attribute statements — that @knowvah/dot-engine parses before
 handing the result to a layout engine. See [Getting started](/guide/getting-started).
 
 ## Image sizer / resolver
@@ -60,7 +60,7 @@ See [Images](/guide/images).
 
 ## Layout engine
 
-One of the eight layout algorithms graphviz-ts registers, selected by name
+One of the eight layout algorithms @knowvah/dot-engine registers, selected by name
 (`renderSvg(dot, engine)`): `dot` (hierarchical/layered), `neato`
 (spring-model, Kamada–Kawai), `fdp` (force-directed), `sfdp` (multiscale
 force-directed, for large graphs), `circo` (circular), `twopi` (radial),
@@ -70,7 +70,7 @@ force-directed, for large graphs), `circo` (circular), `twopi` (radial),
 ## Oracle
 
 The native C Graphviz `dot` binary, built from the canonical C source, that
-every graphviz-ts render is validated against. graphviz-ts spawns this
+every @knowvah/dot-engine render is validated against. @knowvah/dot-engine spawns this
 binary directly (never a WASM build) to avoid ABI drift between the
 reference and the port. See [Conformance](/conformance) and
 [Parity](/parity) for how oracle comparisons are run and reported.
@@ -85,7 +85,7 @@ default `TB` (top to bottom), or `LR`, `BT`, `RL` — set as a graph attribute
 ## Spline / edge routing
 
 The curved (Bézier) path an edge is drawn along, computed by routing code
-that steers around node and cluster obstacles. graphviz-ts exposes the
+that steers around node and cluster obstacles. @knowvah/dot-engine exposes the
 routed control points as `EdgeGeometry.points` — an ordered array of
 `{x, y}` points, in points — from `getLayout`. See
 [Read computed geometry](/guide/geometry).
@@ -93,7 +93,7 @@ routed control points as `EdgeGeometry.points` — an ordered array of
 ## Text measurer
 
 The injectable seam (`TextMeasurer`) that reports label width/height so node
-and edge-label sizing can proceed before layout. graphviz-ts resolves one
+and edge-label sizing can proceed before layout. @knowvah/dot-engine resolves one
 automatically per render — an explicit `setTextMeasurer` first, then the
 browser's `<canvas>` if available, then the built-in deterministic
 `EstimateTextMeasurer` in Node — or accepts a custom implementation. See
@@ -103,7 +103,7 @@ browser's `<canvas>` if available, then the built-in deterministic
 
 Graphviz's term for a node whose shape is an externally supplied image
 (via the `image` attribute) rather than a drawn polygon or ellipse.
-graphviz-ts resolves usershapes through the injectable image sizer/resolver
+@knowvah/dot-engine resolves usershapes through the injectable image sizer/resolver
 seam rather than reading files directly, keeping the library browser-safe.
 See [Images](/guide/images).
 

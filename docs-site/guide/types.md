@@ -12,7 +12,7 @@ This page does not repeat the coordinate-frame walkthrough — see
 [Read computed geometry](/guide/geometry) for that. It does restate the
 y-axis note briefly wherever a type's fields are frame-dependent.
 
-## Build + inspect (`graphviz-ts` / `graphviz-ts/api`)
+## Build + inspect (`@knowvah/dot-engine` / `@knowvah/dot-engine/api`)
 
 ### `Graph`
 
@@ -184,7 +184,7 @@ Per-cluster bounding box. `name` is the cluster subgraph's name (e.g.
 explicit parent link is exposed. Follows the same frame convention as
 `BoundsGeometry`.
 
-## Render (`graphviz-ts/render`)
+## Render (`@knowvah/dot-engine/render`)
 
 ### `OutputFormat`
 
@@ -285,7 +285,7 @@ A resolved xdot fill/pen color: a solid color, or a linear/radial gradient
 (`XdotLinearGrad`/`XdotRadialGrad` each carry `x0,y0,x1,y1[,r0,r1]` plus a
 `stops: { frac: number; color: string }[]` array).
 
-## Root package (`graphviz-ts`)
+## Root package (`@knowvah/dot-engine`)
 
 ### `EngineName`
 
