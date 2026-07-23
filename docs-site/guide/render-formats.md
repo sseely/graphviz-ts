@@ -46,7 +46,7 @@ type OutputFormat =
 ## Examples
 
 ```ts
-import { parse, render } from 'graphviz-ts';
+import { parse, render } from '@knowvah/dot-engine';
 
 const g = parse(`
   digraph {
@@ -73,7 +73,7 @@ const plain = render(g, 'plain');
 ## Using a different engine
 
 ```ts
-import { createGraph, render } from 'graphviz-ts';
+import { createGraph, render } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: false });
 b.addNode('x'); b.addNode('y'); b.addNode('z');

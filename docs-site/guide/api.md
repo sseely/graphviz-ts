@@ -8,24 +8,24 @@ overload.
 
 > Type declarations (`.d.ts`) are emitted by `npm run build` (the `build:types`
 > step runs `tsc -p tsconfig.build.json`). The `package.json` `exports` map
-> wires `types` conditions for each entry, so `graphviz-ts`, `graphviz-ts/api`,
-> and `graphviz-ts/render` all resolve types in editors and downstream builds.
+> wires `types` conditions for each entry, so `@knowvah/dot-engine`, `@knowvah/dot-engine/api`,
+> and `@knowvah/dot-engine/render` all resolve types in editors and downstream builds.
 >
 > The build also emits declaration maps (`.d.ts.map`) and JS source maps, and
 > the package ships its `src/` sources — so "go to definition" jumps straight
 > to the real TypeScript, making it easy to read the code and open a PR.
 
 This page is organized by the three entry points ([Overview](/guide/overview)
-covers when to reach for each): the root `graphviz-ts` package (parse + render
-in one call, plus process-global configuration), `graphviz-ts/api` (build a
-graph in code, read back computed geometry), and `graphviz-ts/render`
+covers when to reach for each): the root `@knowvah/dot-engine` package (parse + render
+in one call, plus process-global configuration), `@knowvah/dot-engine/api` (build a
+graph in code, read back computed geometry), and `@knowvah/dot-engine/render`
 (multi-format output and raw draw-ops). Every function below re-exports from
 the root package too (`export * from './api/index.js'` /
 `export * from './render/index.js'` in `src/index.ts`) — importing everything
-from `graphviz-ts` works, but the sub-path imports are more explicit about
+from `@knowvah/dot-engine` works, but the sub-path imports are more explicit about
 which layer you're touching.
 
-## `graphviz-ts` (root)
+## `@knowvah/dot-engine` (root)
 
 ### `renderSvg`
 
@@ -69,8 +69,8 @@ function parse(dotSource: string): Graph;
 ```
 
 Parses DOT into the in-memory graph model **without** laying it out. Useful
-for inspecting or transforming the graph — or handing it to `graphviz-ts/api`'s
-`getLayout` / `graphviz-ts/render`'s `render` — before rendering.
+for inspecting or transforming the graph — or handing it to `@knowvah/dot-engine/api`'s
+`getLayout` / `@knowvah/dot-engine/render`'s `render` — before rendering.
 
 - **Throws** `ParseError` for syntax errors or edge-direction violations (e.g.
   `->` in an undirected graph). `ParseError` implements `GvError` with
@@ -88,7 +88,7 @@ class RenderError extends Error implements GvError {
 ```
 
 Thrown for known layout/render-stage failures (`code` is `'RENDER_ERROR'` or
-`'GENERIC_ERROR'`). Every graphviz-ts throw — `ParseError`, `RenderError`, or
+`'GENERIC_ERROR'`). Every @knowvah/dot-engine throw — `ParseError`, `RenderError`, or
 an `HtmlParseError` from an HTML-like label — implements the shared `GvError`
 contract, so callers can branch on `err.type` / `err.code` without an
 `instanceof` chain per error class. See [Types](/guide/types) for the full
@@ -166,7 +166,7 @@ example, to register a subset of engines, add a custom `LayoutEngine` or
 without re-running layout (call `layout` once, then `renderWithContext` for
 each format, then `freeLayout`). [Reference](/reference/).
 
-## `graphviz-ts/api`
+## `@knowvah/dot-engine/api`
 
 Programmatic construction, safe edge insertion, and computed-geometry readout
 — the layer for building a graph without hand-writing DOT text and reading its
@@ -246,7 +246,7 @@ exposed (not the mutable class) — annotate a variable holding a builder's
 fields directly; use the builder, `getLayout`, or `getDrawOps` to read state
 back out. [Reference](/reference/).
 
-## `graphviz-ts/render`
+## `@knowvah/dot-engine/render`
 
 Multi-format output and raw draw-op access — the layer for rendering an
 already-`parse`d or builder-constructed graph.
@@ -283,9 +283,9 @@ effect on non-SVG formats. Unset, output is byte-identical to before this
 option existed.
 
 ```ts
-import { setImageResolver } from 'graphviz-ts';
-import { render } from 'graphviz-ts/render';
-import { parse } from 'graphviz-ts';
+import { setImageResolver } from '@knowvah/dot-engine';
+import { render } from '@knowvah/dot-engine/render';
+import { parse } from '@knowvah/dot-engine';
 
 setImageResolver((src) => {
   // Return the bytes for any src your DOT source references via

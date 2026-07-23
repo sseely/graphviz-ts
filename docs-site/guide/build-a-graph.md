@@ -7,7 +7,7 @@ static DOT string.
 ## Basic usage
 
 ```ts
-import { createGraph, render } from 'graphviz-ts';
+import { createGraph, render } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 
@@ -54,7 +54,7 @@ b.addNode('server', { shape: 'cylinder', fillcolor: '#d0e8ff', style: 'filled' }
 b.setAttr('rankdir', 'LR');
 ```
 
-Any valid DOT attribute is accepted; graphviz-ts passes them through to the
+Any valid DOT attribute is accepted; @knowvah/dot-engine passes them through to the
 layout engine unchanged.
 
 ## Subgraphs
@@ -80,12 +80,12 @@ const svg = render(b.graph, 'svg');
 
 ```ts
 // DOT string — convenient for static graphs
-import { parse, render } from 'graphviz-ts';
+import { parse, render } from '@knowvah/dot-engine';
 const g = parse('digraph { a -> b }');
 const svg = render(g, 'svg');
 
 // Builder — convenient when graph structure comes from code
-import { createGraph, render } from 'graphviz-ts';
+import { createGraph, render } from '@knowvah/dot-engine';
 const b = createGraph();
 b.addEdge('a', 'b');
 const svg2 = render(b.graph, 'svg');

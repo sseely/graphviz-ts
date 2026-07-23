@@ -1,7 +1,7 @@
 # Text measurement
 
 Dot layout needs the width and height of every label to size nodes and place
-edges. graphviz-ts measures text through a single pluggable seam, the
+edges. @knowvah/dot-engine measures text through a single pluggable seam, the
 `TextMeasurer`, and resolves which one to use automatically — or you can set your
 own.
 
@@ -15,12 +15,12 @@ There are two distinct goals, and they call for different measurers:
 | **Host-faithful layout** (matches the rendering font) | the platform's canvas | no (font-dependent) | yes |
 
 Native graphviz itself is host-faithful — its output depends on the fonts
-installed on the machine that runs it. graphviz-ts lets you choose: deterministic
+installed on the machine that runs it. @knowvah/dot-engine lets you choose: deterministic
 by default, host-faithful when you opt in.
 
 ## Automatic resolution
 
-When you don't set a measurer, graphviz-ts picks one per render:
+When you don't set a measurer, @knowvah/dot-engine picks one per render:
 
 1. an explicit measurer set via `setTextMeasurer` (wins if present);
 2. **browser** (`document` available) → the page's `<canvas>` — host-faithful,
@@ -37,7 +37,7 @@ For Node output whose boxes fit a specific font (real kerning and shaping),
 install the optional `canvas` peer and wire it once at startup:
 
 ```ts
-import { setTextMeasurer, CanvasTextMeasurer, renderSvg } from 'graphviz-ts';
+import { setTextMeasurer, CanvasTextMeasurer, renderSvg } from '@knowvah/dot-engine';
 import { createCanvas } from 'canvas'; // optional peer dependency: `npm i canvas`
 
 setTextMeasurer(new CanvasTextMeasurer(createCanvas(0, 0).getContext('2d')));
@@ -47,7 +47,7 @@ const svg = renderSvg('digraph { A -> B }', 'dot');
 
 `canvas` is declared as an **optional peer dependency** — it is not installed
 unless you ask for it. When Node falls back to the built-in model in an
-interactive terminal, graphviz-ts prints this advice once; silence it with
+interactive terminal, @knowvah/dot-engine prints this advice once; silence it with
 `GV_FONT_QUIET=1`.
 
 ## Custom measurers
@@ -55,7 +55,7 @@ interactive terminal, graphviz-ts prints this advice once; silence it with
 `setTextMeasurer` accepts anything implementing `TextMeasurer`:
 
 ```ts
-import { setTextMeasurer, type TextMeasurer } from 'graphviz-ts';
+import { setTextMeasurer, type TextMeasurer } from '@knowvah/dot-engine';
 
 const myMeasurer: TextMeasurer = {
   measure: (text, fontname, fontsize) => ({ w: text.length * fontsize * 0.6, h: fontsize }),

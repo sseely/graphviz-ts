@@ -1,6 +1,6 @@
 # Overview
 
-graphviz-ts is a line-by-line TypeScript port of [Graphviz](https://graphviz.org/):
+@knowvah/dot-engine is a line-by-line TypeScript port of [Graphviz](https://graphviz.org/):
 DOT source (or a graph built in code) goes in, SVG — or JSON, xdot, DOT, or an
 image map — comes out, computed entirely in TypeScript with no native
 Graphviz binary and no WASM. If you haven't rendered anything yet, start at
@@ -35,24 +35,24 @@ graph.
 
 ## The three entry points — which door?
 
-graphviz-ts ships three entry points: the root package re-exports everything
+@knowvah/dot-engine ships three entry points: the root package re-exports everything
 from the other two, so you only need to reach past it when you want a
 narrower import surface.
 
 | I want to…                                            | Use                                    |
 |--------------------------------------------------------|-----------------------------------------|
-| Turn DOT text into an SVG string, fast                  | `graphviz-ts` — `renderSvg(dot, engine)` |
-| Parse DOT without rendering it                          | `graphviz-ts` — `parse(dot)`             |
-| Configure text measurement or image resolution globally | `graphviz-ts` — `setTextMeasurer`, `setImageSizer`, `setImageResolver` |
-| Build a graph in code, no DOT text                      | `graphviz-ts/api` — `createGraph`, `addEdge` |
-| Read back computed node/edge/cluster positions           | `graphviz-ts/api` — `getLayout`          |
-| Render to a format other than SVG (JSON, xdot, DOT, image map) | `graphviz-ts/render` — `render(g, format, opts?)` |
-| Drive a custom canvas/WebGL/PDF backend                  | `graphviz-ts/render` — `getDrawOps`      |
+| Turn DOT text into an SVG string, fast                  | `@knowvah/dot-engine` — `renderSvg(dot, engine)` |
+| Parse DOT without rendering it                          | `@knowvah/dot-engine` — `parse(dot)`             |
+| Configure text measurement or image resolution globally | `@knowvah/dot-engine` — `setTextMeasurer`, `setImageSizer`, `setImageResolver` |
+| Build a graph in code, no DOT text                      | `@knowvah/dot-engine/api` — `createGraph`, `addEdge` |
+| Read back computed node/edge/cluster positions           | `@knowvah/dot-engine/api` — `getLayout`          |
+| Render to a format other than SVG (JSON, xdot, DOT, image map) | `@knowvah/dot-engine/render` — `render(g, format, opts?)` |
+| Drive a custom canvas/WebGL/PDF backend                  | `@knowvah/dot-engine/render` — `getDrawOps`      |
 
-`graphviz-ts/api` is the *build + inspect* door: construct a graph
-programmatically and read geometry off it. `graphviz-ts/render` is the
+`@knowvah/dot-engine/api` is the *build + inspect* door: construct a graph
+programmatically and read geometry off it. `@knowvah/dot-engine/render` is the
 *output* door: turn a graph (from either `parse()` or the builder) into a
-serialized format or a structured draw-op stream. The root `graphviz-ts`
+serialized format or a structured draw-op stream. The root `@knowvah/dot-engine`
 package re-exports both, plus the one-shot `renderSvg` convenience function
 and the global configuration hooks — most projects only ever import from
 the root.
@@ -70,7 +70,7 @@ need to mix `getLayout` output with a raw format's coordinates.
 
 ## Scope boundary
 
-graphviz-ts renders to SVG, JSON, xdot, DOT, and HTML image maps (`imap` /
+@knowvah/dot-engine renders to SVG, JSON, xdot, DOT, and HTML image maps (`imap` /
 `cmapx`) — the deterministic, string- or structure-based output formats. It
 does not produce raster images (PNG, JPEG) or PDF, and it has no GUI viewer;
 those are out of scope for a browser-safe pure-TypeScript port. Known
@@ -82,10 +82,10 @@ places where the port's output diverges — are tracked on the
 
 - [Getting started](/guide/getting-started) — install and render your first graph.
 - [Layout engines](/guide/engines) — the eight engines and when to use each.
-- [Build a graph in code](/guide/build-a-graph) — the `graphviz-ts/api` builder.
+- [Build a graph in code](/guide/build-a-graph) — the `@knowvah/dot-engine/api` builder.
 - [Read computed geometry](/guide/geometry) — `getLayout`, coordinate frames, units.
 - [Recipes](/guide/recipes) — common task-based patterns.
 - [Images](/guide/images) — `setImageSizer`, `setImageResolver`, inlining.
 - [Types reference](/guide/types) — full shapes for every exported type.
 - [API reference](/reference/) — generated per-symbol documentation.
-- [Glossary](/guide/glossary) — Graphviz and graphviz-ts terminology.
+- [Glossary](/guide/glossary) — Graphviz and @knowvah/dot-engine terminology.

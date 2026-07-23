@@ -1,6 +1,6 @@
 # Browser usage
 
-graphviz-ts uses no Node-only APIs and is safe to bundle for the browser. This
+@knowvah/dot-engine uses no Node-only APIs and is safe to bundle for the browser. This
 page covers the two things to know when running client-side.
 
 ## Bundling
@@ -10,7 +10,7 @@ webpack) can include it. There are no runtime dependencies to externalize and no
 WASM artifacts to host.
 
 ```ts
-import { renderSvg } from 'graphviz-ts';
+import { renderSvg } from '@knowvah/dot-engine';
 
 const svg = renderSvg('digraph { a -> b }', 'dot');
 document.querySelector('#out')!.innerHTML = svg;
@@ -21,7 +21,7 @@ engine and calls `renderSvg` in the browser, with no server round-trip.
 
 ## Text measurement
 
-Graphviz needs text dimensions to size labels. graphviz-ts handles this
+Graphviz needs text dimensions to size labels. @knowvah/dot-engine handles this
 automatically:
 
 - **In the browser** (when `document` exists), it measures text with the
@@ -44,7 +44,7 @@ Graphviz needs that image's intrinsic dimensions. Because the library cannot
 read the filesystem, you supply a sizer:
 
 ```ts
-import { setImageSizer } from 'graphviz-ts';
+import { setImageSizer } from '@knowvah/dot-engine';
 
 setImageSizer((src) => {
   // Return the intrinsic { w, h } for this image source, or null if unknown.

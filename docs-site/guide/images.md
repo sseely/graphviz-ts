@@ -1,7 +1,7 @@
 # Images
 
 A node with `image="logo.png"` (or an HTML-like label's `<IMG SRC="logo.png">`
-cell) does not get its pixels embedded by default. graphviz-ts emits the
+cell) does not get its pixels embedded by default. @knowvah/dot-engine emits the
 source **verbatim**:
 
 ```html
@@ -46,7 +46,7 @@ it once before `render()`/`renderSvg()`.
 `decode()`:
 
 ```ts
-import { setImageSizer } from 'graphviz-ts';
+import { setImageSizer } from '@knowvah/dot-engine';
 
 const cache = new Map<string, { w: number; h: number }>();
 
@@ -74,7 +74,7 @@ filesystem for you. Either hardcode known dimensions, or read them yourself
 feed the result the same way:
 
 ```ts
-import { setImageSizer } from 'graphviz-ts';
+import { setImageSizer } from '@knowvah/dot-engine';
 import { readFileSync } from 'node:fs';
 
 // Simplest: fixed dimensions known ahead of time.
@@ -110,8 +110,8 @@ external fetch at all: `setImageResolver` supplies raw bytes, and
 `render(g, 'svg', { inlineImages: true })` embeds them.
 
 ```ts
-import { render, setImageResolver } from 'graphviz-ts';
-import type { ImageResolver } from 'graphviz-ts';
+import { render, setImageResolver } from '@knowvah/dot-engine';
+import type { ImageResolver } from '@knowvah/dot-engine';
 
 const images = new Map<string, Uint8Array>([
   ['logo.png', /* Uint8Array of the PNG bytes, e.g. fetched or bundled */ new Uint8Array()],
@@ -149,7 +149,7 @@ passthrough automatically — inlining degrades gracefully, it never throws.
 
 Native Graphviz's `imagepath` graph attribute tells the C binary a
 filesystem/`GDFONTPATH`-style search directory to resolve relative `image=`
-values against. graphviz-ts does not implement `imagepath` — the port never
+values against. @knowvah/dot-engine does not implement `imagepath` — the port never
 reads image data from disk itself, so there is no path to resolve against
 (see [Known divergences](/divergences) for the full scope boundary). If your
 graphs use relative `image=` paths, resolve them against your own base
@@ -208,7 +208,7 @@ data:` everywhere.
 ## Missing images
 
 If `setImageSizer` returns `null` (or no sizer is registered) for a
-referenced source, graphviz-ts follows the same C-faithful path as native
+referenced source, @knowvah/dot-engine follows the same C-faithful path as native
 Graphviz's `gvusershape` miss: it warns and treats the image as **zero
 size**, which affects the node box layout computed around it. If
 `setImageResolver`/`inlineImages` is in play and the resolver misses, the

@@ -13,7 +13,7 @@ function getDrawOps(g: Graph, opts?: { engine?: string }): XdotOp[];
 ## Basic usage
 
 ```ts
-import { createGraph, getDrawOps } from 'graphviz-ts';
+import { createGraph, getDrawOps } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('a', { shape: 'ellipse', label: 'Start' });
@@ -119,7 +119,7 @@ supported pattern; use one or the other per graph.
 ## Canvas example (node labels only)
 
 ```ts
-import { parse, getDrawOps } from 'graphviz-ts';
+import { parse, getDrawOps } from '@knowvah/dot-engine';
 
 const g = parse(`digraph { a [label="A"]; b [label="B"]; a -> b }`);
 const ops = getDrawOps(g);

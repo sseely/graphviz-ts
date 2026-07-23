@@ -52,19 +52,19 @@ Golden (**green**) and ours (**red**) superimposed in the same frame. At full
 scale they blend to brown — the shift is sub-perceptual (hence
 *structural-match*).
 
-![proc3d golden-vs-ours overlay, full drawing: green = C, red = graphviz-ts](/img/proc3d-overlay.svg)
+![proc3d golden-vs-ours overlay, full drawing: green = C, red = @knowvah/dot-engine](/img/proc3d-overlay.svg)
 
 Zoomed, the green/red fringe appears **almost entirely on the long file-path oval
 labels** — exactly the wide strings the measurer over-measures. The code/box
 nodes stay coincident:
 
-![proc3d overlay zoomed on the wide path-label ovals: green = C, red = graphviz-ts](/img/proc3d-overlay-zoom.png)
+![proc3d overlay zoomed on the wide path-label ovals: green = C, red = @knowvah/dot-engine](/img/proc3d-overlay-zoom.png)
 
 ## Full drawings — golden first, ours second
 
-| Golden — native `dot` | Ours — graphviz-ts |
+| Golden — native `dot` | Ours — @knowvah/dot-engine |
 |---|---|
-| ![proc3d rendered by C Graphviz](/img/proc3d-golden.svg) | ![proc3d rendered by graphviz-ts](/img/proc3d-ours.svg) |
+| ![proc3d rendered by C Graphviz](/img/proc3d-golden.svg) | ![proc3d rendered by @knowvah/dot-engine](/img/proc3d-ours.svg) |
 
 ## Numbers (at the time this page was written)
 

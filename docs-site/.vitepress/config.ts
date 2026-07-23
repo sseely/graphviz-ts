@@ -12,7 +12,7 @@ import { dotLang } from './dot.tmLanguage';
 export default withMermaid(
   defineConfig({
     base: '/dot-engine/',
-  title: 'graphviz-ts',
+  title: '@knowvah/dot-engine',
   description:
     'A faithful, pure-TypeScript port of Graphviz. DOT in, SVG out — no Java, ' +
     'no native binary, no WASM. Runs in the browser.',
@@ -82,7 +82,7 @@ export default withMermaid(
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/sseely/graphviz-ts' },
+      { icon: 'github', link: 'https://github.com/knowvah/dot-engine' },
     ],
   },
   vite: {
@@ -90,7 +90,7 @@ export default withMermaid(
       alias: {
         // The playground imports the *real* engine source, so docs stay in
         // lockstep with the library rather than a copied bundle.
-        'graphviz-ts': fileURLToPath(
+        '@knowvah/dot-engine': fileURLToPath(
           new URL('../../src/index.ts', import.meta.url),
         ),
       },

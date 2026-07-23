@@ -1,7 +1,7 @@
 ---
 layout: home
 hero:
-  name: graphviz-ts
+  name: "@knowvah/dot-engine"
   text: Graphviz, in pure TypeScript
   tagline: DOT in, SVG out — no C. No native Graphviz binary, no WASM. Pure TypeScript, runs in the browser.
   actions:
@@ -13,7 +13,7 @@ hero:
       link: /playground
     - theme: alt
       text: View on GitHub
-      link: https://github.com/sseely/graphviz-ts
+      link: https://github.com/knowvah/dot-engine
 features:
   - title: Faithful to C Graphviz
     details: A line-by-line port of the canonical C implementation. The dot engine matches the native binary to a tight deterministic tolerance (±0.01 on coordinates, exact non-numeric content) on the golden corpus.

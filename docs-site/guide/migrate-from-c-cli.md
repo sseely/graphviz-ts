@@ -1,7 +1,7 @@
 # Migrating from the `dot` command-line tool
 
 The C `dot`/`neato`/`fdp`/... binaries read a `.dot` file (or stdin) and write
-a rendered file (or stdout). graphviz-ts has no filesystem: it takes a DOT
+a rendered file (or stdout). @knowvah/dot-engine has no filesystem: it takes a DOT
 **string** in and returns a rendered **string** out (or, with `getLayout`, a
 plain JavaScript geometry object instead of a string to parse).
 
@@ -10,7 +10,7 @@ dot -Kneato -Tsvg input.dot -o output.svg
 ```
 
 ```ts
-import { renderSvg } from 'graphviz-ts';
+import { renderSvg } from '@knowvah/dot-engine';
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const dot = readFileSync('input.dot', 'utf8');
@@ -18,17 +18,17 @@ const svg = renderSvg(dot, 'neato');
 writeFileSync('output.svg', svg);
 ```
 
-The file reads/writes above are your code, not the library's — graphviz-ts
+The file reads/writes above are your code, not the library's — @knowvah/dot-engine
 never touches disk. That's also what makes it work unmodified in a browser
 tab with no `input.dot` to read.
 
 ## `-K<engine>` — the layout engine
 
-`-K` selects the layout engine; graphviz-ts takes the same name as the
+`-K` selects the layout engine; @knowvah/dot-engine takes the same name as the
 `engine` argument to `renderSvg` or the `opts.engine` field of `render`. All
 eight engines are ported:
 
-| `-K` value | graphviz-ts `engine` string |
+| `-K` value | @knowvah/dot-engine `engine` string |
 |---|---|
 | `-Kdot` | `'dot'` (also the default for `render` when `engine` is omitted) |
 | `-Kneato` | `'neato'` |
@@ -50,9 +50,9 @@ conformance class.
 ## `-T<format>` — the output format
 
 `renderSvg` is SVG-only; use `render(g, format, opts?)` for anything else.
-graphviz-ts's `OutputFormat` union covers these `-T` targets:
+@knowvah/dot-engine's `OutputFormat` union covers these `-T` targets:
 
-| `-T` value | graphviz-ts `format` string | Notes |
+| `-T` value | @knowvah/dot-engine `format` string | Notes |
 |---|---|---|
 | `-Tsvg` | `'svg'` | also `renderSvg`'s only output |
 | `-Tdot` | `'dot'` | DOT source with layout attributes (`pos`, `bb`, ...) added |
@@ -77,7 +77,7 @@ downstream (a headless browser, `resvg`, or similar).
 ## `-Gname=val` / `-Nname=val` / `-Ename=val` — attributes
 
 The CLI's global attribute flags set a default on every graph/node/edge from
-the command line. graphviz-ts has no command-line flags — set the same
+the command line. @knowvah/dot-engine has no command-line flags — set the same
 attributes directly in the DOT source, or via the builder API if you're
 constructing the graph in code:
 
@@ -100,7 +100,7 @@ const svg = renderSvg(dot, 'dot');
 
 ```ts
 // Builder — set per-node/per-edge attrs where you create each one
-import { createGraph, render } from 'graphviz-ts';
+import { createGraph, render } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.setAttr('size', '6,6');
@@ -115,12 +115,12 @@ See [Build a graph in code](/guide/build-a-graph) for the full builder API.
 ## Getting geometry the CLI can't give you directly
 
 `-Tplain` exists precisely so scripts can scrape node/edge coordinates out of
-text output. graphviz-ts skips the round-trip: call `getLayout(g)` after
+text output. @knowvah/dot-engine skips the round-trip: call `getLayout(g)` after
 `render` to get a typed, JSON-serializable snapshot of every node position,
 edge spline, and the overall bounding box — no text format to parse.
 
 ```ts
-import { createGraph, render, getLayout } from 'graphviz-ts';
+import { createGraph, render, getLayout } from '@knowvah/dot-engine';
 
 const b = createGraph({ directed: true });
 b.addNode('a');
@@ -135,11 +135,11 @@ const layout = getLayout(b.graph);
 See [Read computed geometry](/guide/geometry) for the full snapshot shape and
 the `yAxis` option (native graphviz is y-up; browsers are y-down).
 
-## Fonts and images: the CLI reads your filesystem, graphviz-ts doesn't
+## Fonts and images: the CLI reads your filesystem, @knowvah/dot-engine doesn't
 
 Native `dot` measures text with whatever fonts are installed on the machine,
 and resolves `image="..."` attributes by reading files relative to the
-working directory. graphviz-ts has no filesystem access, so both are
+working directory. @knowvah/dot-engine has no filesystem access, so both are
 injected by the host application instead of read from disk:
 
 - **Text measurement** — `setTextMeasurer` installs a `TextMeasurer`; the
@@ -148,7 +148,7 @@ injected by the host application instead of read from disk:
   [Text measurement](/guide/text-measurement).
 - **Images** — `setImageSizer` (and `setImageResolver` for inlining) let you
   supply intrinsic image dimensions and image data yourself, since
-  graphviz-ts cannot stat a file on your behalf. See
+  @knowvah/dot-engine cannot stat a file on your behalf. See
   [Working with images](/guide/images).
 
 ## See also
