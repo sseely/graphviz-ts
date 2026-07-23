@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 
-# graphviz-ts
+# @knowvah/dot-engine
 
 A faithful TypeScript port of [Graphviz](https://gitlab.com/graphviz/graphviz) — the
 graph-visualization toolkit originally written in C at AT&T Research and Lucent
@@ -27,18 +27,18 @@ the exact definition and the comparison code, and
 
 Existing ways to render DOT in a JS environment shell out to a Graphviz
 binary, a rendering server, or a WASM build — none of which run everywhere a
-browser does, and all of which add deployment friction. graphviz-ts removes
+browser does, and all of which add deployment friction. @knowvah/dot-engine removes
 that dependency entirely: the layout engine *is* TypeScript.
 
 ## Install
 
 ```bash
-npm i graphviz-ts
+npm i @knowvah/dot-engine
 ```
 
 Ships as ESM bundles with TypeScript declarations, zero runtime dependencies.
-Entry points: `graphviz-ts` (core), `graphviz-ts/api` (graph-building API),
-`graphviz-ts/render` (renderers).
+Entry points: `@knowvah/dot-engine` (core), `@knowvah/dot-engine/api` (graph-building API),
+`@knowvah/dot-engine/render` (renderers).
 
 To build from source instead: clone, `npm install`, `npm run build`
 (esbuild bundles + `.d.ts` declarations into `dist/`).
@@ -46,7 +46,7 @@ To build from source instead: clone, `npm install`, `npm run build`
 ## Quick start
 
 ```ts
-import { renderSvg } from 'graphviz-ts';
+import { renderSvg } from '@knowvah/dot-engine';
 
 const dot = `
   digraph {
@@ -70,7 +70,7 @@ structured error — see [Error handling](#error-handling).
 throws, use `tryRenderSvg`:
 
 ```ts
-import { tryRenderSvg } from 'graphviz-ts';
+import { tryRenderSvg } from '@knowvah/dot-engine';
 
 const result = tryRenderSvg('digraph { a ->', 'dot');
 if (result.svg) {
@@ -134,7 +134,7 @@ caller-supplied hook may be required:
   `setImageSizer`:
 
   ```ts
-  import { setImageSizer } from 'graphviz-ts';
+  import { setImageSizer } from '@knowvah/dot-engine';
 
   setImageSizer((src) => ({ w: 64, h: 64 })); // return null if unknown
   ```
@@ -151,7 +151,7 @@ fonts the SVG will be rendered with), install the optional `canvas` peer and wir
 it once via `setTextMeasurer`:
 
 ```ts
-import { setTextMeasurer, CanvasTextMeasurer } from 'graphviz-ts';
+import { setTextMeasurer, CanvasTextMeasurer } from '@knowvah/dot-engine';
 import { createCanvas } from 'canvas'; // optional peer: `npm i canvas`
 
 setTextMeasurer(new CanvasTextMeasurer(createCanvas(0, 0).getContext('2d')));
@@ -214,13 +214,13 @@ function parse(dotSource: string): Graph;
 function setImageSizer(sizer: ImageSizer | null): void;
 type ImageSizer = (src: string) => { w: number; h: number } | null;
 
-// Multi-format render + structured xdot draw-ops (from `graphviz-ts/render`,
+// Multi-format render + structured xdot draw-ops (from `@knowvah/dot-engine/render`,
 // also re-exported from the root package).
 function render(g: Graph, format: OutputFormat, opts?: { engine?: string }): string;
 function getDrawOps(g: Graph, opts?: { engine?: string }): XdotOp[];
 
 // Programmatic graph construction and computed-geometry readback (from
-// `graphviz-ts/api`, also re-exported from the root package) — build a graph
+// `@knowvah/dot-engine/api`, also re-exported from the root package) — build a graph
 // without writing DOT source, or read back node/edge/bbox coordinates after
 // layout.
 function createGraph(opts?: CreateGraphOptions): GvGraphBuilder;
@@ -238,7 +238,7 @@ advanced use — e.g. inspecting the parsed model, or driving layout and
 rendering as separate steps. `createGraph`/`addEdge`, `getLayout`, `render`,
 and `getDrawOps` are the graph-building, geometry-readback, multi-format
 render, and structured-draw-op surfaces respectively — see the
-[API guide](https://sseely.github.io/graphviz-ts/guide/api) for full
+[API guide](https://knowvah.github.io/dot-engine/guide/api) for full
 walkthroughs of each.
 
 ## Development
@@ -266,7 +266,7 @@ from the canonical C Graphviz. New behavior is pinned to the C source — see
   byte equality. Full definition: [Conformance](./docs/conformance.md).
 - **Current parity** (fresh corpus sweeps, dated 2026-07-11 — see
   [`test/corpus/PARITY.md`](./test/corpus/PARITY.md) and the
-  [docs-site parity pages](https://sseely.github.io/graphviz-ts/engines) for
+  [docs-site parity pages](https://knowvah.github.io/dot-engine/engines) for
   live counts): `dot` SVG 762/788 conformant (+14 structural-match, 0
   unaccepted tracked gaps — every remaining non-conformant graph is a
   documented, accepted divergence); `dot` xdot 754/759; `circo` xdot 745/762;
