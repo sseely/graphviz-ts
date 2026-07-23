@@ -58,6 +58,11 @@ docs-site/perf.md
 docs-site/engines.md
 docs-site/parity-*.md
 
+# Golden showcase injected at build (docs:copy-goldens); source of truth is
+# test/golden/manifest.json + test/golden/inputs/.
+docs-site/.vitepress/goldens.json
+docs-site/showcase/
+
 # Corpus survey transient log + any in-repo oracle SVG cache (AD-3: cache is
 # gitignored; default cache lives under the OS tmpdir, outside the repo)
 survey.log
