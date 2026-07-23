@@ -1,97 +1,111 @@
 <!-- SPDX-License-Identifier: EPL-2.0 -->
 
-# Publishing graphviz-ts to npmjs.org (manual)
+# Publishing @knowvah/dot-engine
 
-The package name `graphviz-ts` is unclaimed on the npm registry (verified
-2026-07-11). Publishing is a deliberate, manual act — nothing in CI publishes.
+Releases are automated with **Changesets + npm Trusted Publishing (OIDC)** — no
+long-lived tokens. Day to day you never run `npm publish`: you write a changeset
+and merge the auto-generated "Version Packages" PR, and GitHub Actions publishes.
 
-## Versioning scheme
+The automation can't run until a one-time setup is done, though. **That setup is
+what's left to do now.**
 
-Intended scheme: `0.1.<YYMM>.<DDHH>`. npm enforces strict semver (exactly
-`major.minor.patch`), which rejects four-part versions, so the two date parts
-are concatenated into the patch component:
+## ▶ What you need to do now (one-time bootstrap)
 
+### 1. Create the `@knowvah` npm org
+
+npmjs.com → **Add Organization** → `knowvah` (the free tier is fine). This owns
+the `@knowvah/*` scope so the scoped packages can be published.
+
+### 2. Do the first publish manually (to create the package)
+
+Trusted publishing is configured on a package's *Settings* page, which requires
+the package to **already exist** on npm. So the very first
+`@knowvah/dot-engine` publish is manual, done interactively with your 2FA:
+
+```sh
+git checkout main && git pull        # publish from the released tree
+npm run publish:check                # typecheck + build + `npm pack --dry-run`
+npm login                            # once per machine
+npm publish                          # publishes 0.1.0; prompts for your 2FA OTP
 ```
-0.1.<YYMMDDHH>     e.g. 2026-07-11 16:00 UTC  →  0.1.26071116
+
+`prepublishOnly` re-runs typecheck + build, so a stale `dist/` can't ship.
+`publishConfig.access` is already `public` — no `--access` flag needed.
+
+### 3. Configure the trusted publisher (so CI publishes from now on)
+
+npmjs.com → **@knowvah/dot-engine → Settings → Trusted Publishers → Add →
+GitHub Actions**:
+
+| Field | Value |
+| --- | --- |
+| Organization or user | `knowvah` |
+| Repository | `dot-engine` |
+| Workflow filename | `release.yml` |
+| Environment | `release` |
+
+After this, you never publish `@knowvah/dot-engine` by hand again.
+
+### 4. Deprecate the old `graphviz-ts` package
+
+The predecessor `graphviz-ts` (unscoped, date-stamp versions up to
+`0.1.26072117`) is superseded. Point installers at the new name:
+
+```sh
+npm deprecate graphviz-ts "renamed to @knowvah/dot-engine"
 ```
 
-Ordering is identical to the intended scheme (later timestamp ⇒ greater
-version). `npm run version:stamp` computes it from the current UTC time and
-rewrites `package.json`.
+### 5. (Optional) gate publishes behind an approval
+
+The `release` environment is auto-created on the first workflow run with no
+protection. To require a manual approval before each publish, add reviewers:
+GitHub → repo **Settings → Environments → `release` → Required reviewers**.
+
+> The sibling **`@knowvah/dot-plugins`** monorepo publishes the same way. Repeat
+> steps 1–3 there for each package (`@knowvah/dot-core`,
+> `@knowvah/dot-markdown-it`, `@knowvah/vitepress-plugin-dot`,
+> `@knowvah/eleventy-plugin-dot`, `@knowvah/docusaurus-plugin-dot`,
+> `@knowvah/dot-react`), with repository `dot-plugins`, workflow `release.yml`,
+> environment `release`.
+
+## Day-to-day releasing (after the bootstrap)
+
+1. Make a change, then `npm run changeset` — pick the bump (patch / minor /
+   major) and describe it. Commit the generated `.changeset/*.md` with your change.
+2. Merge to `main`. The **Release** workflow opens/updates a "Version Packages"
+   PR that applies the pending changesets (bumps `version`, writes `CHANGELOG.md`).
+3. Merge that PR. GitHub Actions publishes to npm via OIDC — with provenance
+   attestations — automatically.
+
+No `NPM_TOKEN`, no `npm publish`, no version stamping.
 
 ## What gets published
 
-`package.json` `files` whitelist: `dist/` (esbuild ESM bundles + `.d.ts`
-declarations) and `src/` (excluding tests) for source-map/debugging use.
-`README.md` and `LICENSE` (EPL-2.0) are always included by npm. Entry points:
+`package.json` `files`: `dist/` (esbuild ESM bundles + `.d.ts`) and `src/`
+(excluding tests). `README.md` + `LICENSE` (EPL-2.0) are always included by npm.
+Entry points:
 
 | import | bundle | types |
-|---|---|---|
-| `graphviz-ts` | `dist/index.js` | `dist/index.d.ts` |
-| `graphviz-ts/api` | `dist/api.js` | `dist/api/index.d.ts` |
-| `graphviz-ts/render` | `dist/render.js` | `dist/render/index.d.ts` |
+| --- | --- | --- |
+| `@knowvah/dot-engine` | `dist/index.js` | `dist/index.d.ts` |
+| `@knowvah/dot-engine/api` | `dist/api.js` | `dist/api/index.d.ts` |
+| `@knowvah/dot-engine/render` | `dist/render.js` | `dist/render/index.d.ts` |
 
 `canvas` is an **optional** peer dependency (text measurement defaults to the
 built-in Estimate measurer; no native deps required).
 
-## Checklist
-
-```sh
-# 0. clean tree on the branch you mean to publish
-git status
-
-# 1. gates (the corpus sweeps are the real bar; at minimum:)
-npm run typecheck && npm test
-
-# 2. stamp the version (prints it)
-npm run version:stamp
-
-# 3. build + inspect exactly what will ship (no upload)
-npm run publish:check          # typecheck + build + `npm pack --dry-run`
-
-# 4. log in (once per machine) and publish
-npm login
-npm publish                    # prepublishOnly re-runs typecheck + build
-
-# 5. tag and record
-git add package.json && git commit -m "chore(release): v$(jq -r .version package.json)"
-git tag "v$(jq -r .version package.json)" && git push origin --tags
-```
-
-Sanity check after publish: `npm view graphviz-ts version` and a scratch
-`npm i graphviz-ts` + `import { parse, render } from 'graphviz-ts'` smoke test.
-
-## Troubleshooting
-
-**`403 Forbidden … Two-factor authentication or granular access token with
-bypass 2fa enabled is required to publish packages.`** — registry-wide npm
-policy; fix on npmjs.com (not in this repo):
-
-- *Preferred (interactive publishing):* Account Settings → Two-Factor
-  Authentication → enable ("Authorization and writes"). Then `npm publish`
-  prompts for the OTP, or pass `npm publish --otp=<code>`.
-- *Alternative (scripted):* Access Tokens → Generate New Token → **Granular**,
-  packages Read/Write, with **Bypass two-factor authentication** checked.
-  Export it per-shell (`export NPM_TOKEN=…`) and add
-  `//registry.npmjs.org/:_authToken=${NPM_TOKEN}` to `~/.npmrc`. Never commit
-  a token.
-
 ## Removing a published version
 
-- Within **72 hours** of publishing: `npm unpublish graphviz-ts@<version>`
-  (or `npm unpublish graphviz-ts --force` for the whole package; the name is
-  then locked for 24h before it can be republished).
-- A deleted version number can **never be reused** — stamp a new one
-  (`npm run version:stamp`).
-- After 72 hours unpublish is restricted (no dependents, <300 weekly
-  downloads, single owner); otherwise retire the version with
-  `npm deprecate graphviz-ts@<version> "<message>"`, which keeps it
-  installable but warns on install.
+- Within **72 h** of publishing: `npm unpublish @knowvah/dot-engine@<version>`.
+- A version number can **never be reused** — cut a new one via a changeset.
+- After 72 h, prefer `npm deprecate @knowvah/dot-engine@<version> "<message>"`
+  (keeps it installable, warns on install).
 
 ## Notes
 
-- `prepublishOnly` runs `typecheck + build` automatically inside `npm publish`,
-  so a stale `dist/` cannot ship.
-- The package is unscoped and public; no `--access` flag needed.
-- Do not publish from a tree with uncommitted `src/` changes — the sweep
-  dashboards (`test/corpus/PARITY*.md`) describe the committed tree only.
+- Trusted publishing requires npm **≥ 11.5.1** (the workflow upgrades it);
+  provenance is automatic — no `--provenance` flag.
+- npm is retiring 2FA-bypass **token** publishing (sensitive-op limits ~Aug 2026;
+  no direct token publish ~Jan 2027), which is why CI uses OIDC rather than a
+  long-lived publish token. Interactive `npm publish` with 2FA (step 2) stays
+  supported for the one-time bootstrap.
