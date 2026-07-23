@@ -3,7 +3,7 @@
 
 # Parity overview
 
-Cross-engine conformance summary of graphviz-ts vs the native Graphviz
+Cross-engine conformance summary of @knowvah/dot-engine vs the native Graphviz
 oracle, one row per track (engine × comparison surface). A report, not a
 gate. Regenerate: `npx tsx test/corpus/parity-report.ts` (after refreshing
 the per-track surveys it reads).

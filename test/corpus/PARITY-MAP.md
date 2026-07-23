@@ -3,7 +3,7 @@
 
 # imagemap parity dashboard
 
-Differential survey of graphviz-ts `render(g, 'cmapx')` / `render(g, 'imap')`
+Differential survey of @knowvah/dot-engine `render(g, 'cmapx')` / `render(g, 'imap')`
 vs the native `dot -Tcmapx` / `dot -Timap` oracle over the dot-track
 SVG-conformant corpus set, sorted by input size. BOTH formats are rendered
 and compared for every id; the overall verdict is the worse of the two

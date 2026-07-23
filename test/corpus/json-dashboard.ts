@@ -190,7 +190,7 @@ function buildMarkdown(report: JsonParityReport, accepted: AcceptedEntry[]): str
     '',
     '# json parity dashboard',
     '',
-    'Differential survey of graphviz-ts `render(g, \'json\')` vs the native',
+    'Differential survey of @knowvah/dot-engine `render(g, \'json\')` vs the native',
     '`dot -Tjson` oracle over the SVG-conformant corpus set, sorted by input',
     'size. `-Tjson` (not `-Tjson0`) is the oracle: the port structurally emits',
     'the `doXDot=true` shape (`"_draw_": []` present on every node/edge — see',

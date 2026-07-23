@@ -3,7 +3,7 @@
 // Differential parity survey runner (mission: dot-corpus-harness, T2).
 //
 // Reads corpus-manifest.json (T1), renders every `applicable` input through the
-// native `dot` oracle and through graphviz-ts (in an isolated subprocess), diffs
+// native `dot` oracle and through @knowvah/dot-engine (in an isolated subprocess), diffs
 // the two SVGs with test/golden/compare.ts (read-only reuse), and writes
 // parity.json — the per-input verdict report consumed by T3 (dashboard.ts).
 //

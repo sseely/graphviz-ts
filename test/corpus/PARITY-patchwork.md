@@ -3,7 +3,7 @@
 
 # patchwork parity dashboard
 
-Differential survey of graphviz-ts `patchwork` xdot output vs the native
+Differential survey of @knowvah/dot-engine `patchwork` xdot output vs the native
 `dot -K patchwork -Txdot` oracle over the dot-track SVG-conformant corpus
 set (semantic draw-op comparison at ±0.01 — see `test/golden/compare-xdot.ts`;
 per [docs/conformance.md](../../docs/conformance.md), not byte equality).
