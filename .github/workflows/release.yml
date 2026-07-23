@@ -1,0 +1,45 @@
+name: Release
+
+# Changesets + npm Trusted Publishing (OIDC). Pushes to main open/update a
+# "Version Packages" PR that bumps the version + CHANGELOG from the .changeset/
+# entries; merging it publishes @knowvah/dot-engine to npm via OIDC — no
+# long-lived NPM_TOKEN. Requires a trusted publisher on npmjs.com: repo
+# knowvah/dot-engine, workflow release.yml, environment "release". npm publishes
+# provenance attestations automatically.
+on:
+  push:
+    branches:
+      - main
+
+concurrency: release-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write # OIDC trusted publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+
+      # Trusted publishing (OIDC) requires npm >= 11.5.1.
+      - run: npm install -g npm@latest
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - uses: changesets/action@v1
+        with:
+          version: npm run version-packages
+          publish: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
