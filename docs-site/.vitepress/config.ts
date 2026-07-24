@@ -26,6 +26,7 @@ export default withMermaid(
     nav: [
       { text: 'Overview', link: '/guide/overview' },
       { text: 'Guide', link: '/guide/getting-started' },
+      { text: 'Showcase', link: '/showcase/' },
       { text: 'Playground', link: '/playground' },
       { text: 'API', link: '/guide/api' },
       { text: 'Conformance', link: '/conformance' },
@@ -51,6 +52,20 @@ export default withMermaid(
           { text: 'Working with images', link: '/guide/images' },
           { text: 'Render to other formats', link: '/guide/render-formats' },
           { text: 'Custom rendering with xdot', link: '/guide/xdot-drawops' },
+        ],
+      },
+      {
+        text: 'Showcase',
+        items: [
+          { text: 'The golden corpus', link: '/showcase/' },
+          { text: 'dot', link: '/showcase/dot' },
+          { text: 'neato', link: '/showcase/neato' },
+          { text: 'fdp', link: '/showcase/fdp' },
+          { text: 'sfdp', link: '/showcase/sfdp' },
+          { text: 'circo', link: '/showcase/circo' },
+          { text: 'twopi', link: '/showcase/twopi' },
+          { text: 'osage', link: '/showcase/osage' },
+          { text: 'patchwork', link: '/showcase/patchwork' },
         ],
       },
       {

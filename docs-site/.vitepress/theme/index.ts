@@ -2,10 +2,12 @@
 import DefaultTheme from 'vitepress/theme';
 import type { Theme } from 'vitepress';
 import Playground from './Playground.vue';
+import GoldenGallery from './GoldenGallery.vue';
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
     app.component('Playground', Playground);
+    app.component('GoldenGallery', GoldenGallery);
   },
 } satisfies Theme;
