@@ -2,14 +2,16 @@
 
 # Publishing @knowvah/dot-engine
 
-Releases are automated with **Changesets + npm Trusted Publishing (OIDC)** — no
-long-lived tokens. Day to day you never run `npm publish`: you write a changeset
-and merge the auto-generated "Version Packages" PR, and GitHub Actions publishes.
+Releases are automated with **semantic-release + npm Trusted Publishing (OIDC)** —
+no long-lived tokens. Day to day you never run `npm publish`: merge a PR whose
+title is a Conventional Commit (`feat:` / `fix:` / `feat!:`) and GitHub Actions
+derives the version, publishes, tags, and creates the GitHub Release. See the
+[Releasing section of CONTRIBUTING](CONTRIBUTING.md#releasing-semantic-release).
 
-The automation can't run until a one-time setup is done, though. **That setup is
-what's left to do now.**
+The one-time trusted-publisher setup below is already done for
+`@knowvah/dot-engine`; it's kept here as reference (and for future packages).
 
-## ▶ What you need to do now (one-time bootstrap)
+## One-time trusted-publisher setup (reference — already done)
 
 ### 1. Create the `@knowvah` npm org
 
@@ -70,14 +72,17 @@ GitHub → repo **Settings → Environments → `release` → Required reviewers
 
 ## Day-to-day releasing (after the bootstrap)
 
-1. Make a change, then `npm run changeset` — pick the bump (patch / minor /
-   major) and describe it. Commit the generated `.changeset/*.md` with your change.
-2. Merge to `main`. The **Release** workflow opens/updates a "Version Packages"
-   PR that applies the pending changesets (bumps `version`, writes `CHANGELOG.md`).
-3. Merge that PR. GitHub Actions publishes to npm via OIDC — with provenance
-   attestations — automatically.
+1. Open a PR whose **title is a Conventional Commit** — `fix:` (patch),
+   `feat:` (minor), `feat!:` / `BREAKING CHANGE:` (major). PRs are squash-merged,
+   so that title is the commit semantic-release reads. `docs:`/`chore:`/`ci:`
+   titles publish nothing.
+2. Merge it. The **Release** workflow runs semantic-release, which — if the
+   commit is releasable — publishes to npm via OIDC (with provenance), pushes the
+   `v<version>` tag, and creates a GitHub Release with the notes.
 
-No `NPM_TOKEN`, no `npm publish`, no version stamping.
+No `NPM_TOKEN`, no `npm publish`, no version bumping, no changeset files. The
+version lives in the git tag / npm / GitHub Release (`package.json` stays
+`0.0.0-development`).
 
 ## What gets published
 
@@ -97,7 +102,7 @@ built-in Estimate measurer; no native deps required).
 ## Removing a published version
 
 - Within **72 h** of publishing: `npm unpublish @knowvah/dot-engine@<version>`.
-- A version number can **never be reused** — cut a new one via a changeset.
+- A version number can **never be reused** — cut a new one via a new releasable commit.
 - After 72 h, prefer `npm deprecate @knowvah/dot-engine@<version> "<message>"`
   (keeps it installable, warns on install).
 

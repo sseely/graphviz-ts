@@ -1,11 +1,12 @@
 name: Release
 
-# Changesets + npm Trusted Publishing (OIDC). Pushes to main open/update a
-# "Version Packages" PR that bumps the version + CHANGELOG from the .changeset/
-# entries; merging it publishes @knowvah/dot-engine to npm via OIDC — no
-# long-lived NPM_TOKEN. Requires a trusted publisher on npmjs.com: repo
-# knowvah/dot-engine, workflow release.yml, environment "release". npm publishes
-# provenance attestations automatically.
+# semantic-release: on push to main, analyze Conventional Commits since the last
+# tag and, when there's a releasable change, publish to npm via OIDC trusted
+# publishing (no NPM_TOKEN), push the `v<version>` git tag, and create a GitHub
+# Release with the generated notes. It does NOT commit a changelog/version back
+# to main (main requires signed commits) — the changelog lives in the GitHub
+# Release. The trusted publisher on npmjs.com is pinned to THIS workflow file
+# (release.yml) + the "release" environment, so keep both stable.
 on:
   push:
     branches:
@@ -18,11 +19,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # push the git tag + create the GitHub Release
+      issues: write # semantic-release release comments
+      pull-requests: write # semantic-release release comments
       id-token: write # OIDC trusted publishing + provenance
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # semantic-release needs full history + tags
+          persist-credentials: false
 
       - uses: actions/setup-node@v7
         with:
@@ -37,14 +42,6 @@ jobs:
 
       - run: npm run typecheck
 
-      - uses: changesets/action@v1
-        with:
-          # Opens/updates the "Version Packages" PR (bumps version + CHANGELOG).
-          version: npm run version-packages
-          # On merge of that PR: `changeset publish` publishes via OIDC AND
-          # pushes a `v<version>` git tag; the action then creates the matching
-          # GitHub Release from the changelog.
-          publish: npm run release
-          createGithubReleases: true
+      - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
