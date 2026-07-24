@@ -80,3 +80,35 @@ re-sign with its own key instead (also verified, but not your key).
 ```bash
 git log --show-signature -1     # expect: Good "git" signature … ED25519-SK
 ```
+
+## Releasing (Changesets)
+
+Versioning, changelog, git tags, GitHub Releases, and the npm publish are all
+automated with [Changesets](https://github.com/changesets/changesets) — you
+never bump `version` or run `npm publish` by hand.
+
+**When you make a change worth releasing**, add a changeset and commit it
+alongside the change:
+
+```bash
+npx changeset      # pick patch / minor / major, write a one-line summary
+```
+
+This writes a `.changeset/*.md` file describing the change. Docs-only, CI, or
+internal changes that don't affect the published package need no changeset.
+
+**On merge to `main`**, the Release workflow
+([`.github/workflows/release.yml`](.github/workflows/release.yml)) opens or
+updates a **"Version Packages" PR** that consumes the pending changesets: it
+bumps `version` and writes `CHANGELOG.md`. Merging **that** PR runs
+`changeset publish`, which:
+
+- publishes to npm via **OIDC** trusted publishing (no token — see
+  [PUBLISHING.md](PUBLISHING.md)),
+- **creates and pushes the `v<version>` git tag**, and
+- creates the matching **GitHub Release** from the changelog.
+
+So a release is two merges — your change (with its changeset), then the Version
+PR. No tags or releases appear until that first publish, which is gated on the
+one-time npm-org bootstrap in PUBLISHING.md. (`@knowvah/dot-plugins` releases
+the same way.)
