@@ -1,6 +1,6 @@
 {
   "name": "@knowvah/dot-engine",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "description": "Faithful TypeScript port of Graphviz (dot, neato, fdp, sfdp, circo, twopi, osage, patchwork) — no C: no native binary, no WASM. Oracle-verified against the C implementation, runs in the browser.",
   "keywords": [
     "graphviz",
@@ -71,9 +71,7 @@
     "docs:dev": "npm run docs:copy-reports && npm run docs:copy-goldens && npm run docs:api && vitepress dev docs-site",
     "docs:build": "npm run docs:copy-reports && npm run docs:copy-goldens && npm run docs:api && vitepress build docs-site",
     "docs:preview": "vitepress preview docs-site",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "npm run build && changeset publish",
+    "release": "semantic-release",
     "publish:check": "npm run typecheck && npm run build && npm pack --dry-run",
     "prepublishOnly": "npm run typecheck && npm run build"
   },
@@ -89,7 +87,10 @@
     }
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.1",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/github": "^12.0.9",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/fontkit": "^2.0.9",
     "@types/node": "^26.0.0",
     "@typescript/native-preview": "^7.0.0-dev.20260622.1",
@@ -99,6 +100,7 @@
     "esbuild": "^0.28.1",
     "fontkit": "^2.0.4",
     "peggy": "^5.0.0",
+    "semantic-release": "^25.0.8",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.12.0",
     "typedoc-vitepress-theme": "^1.1.3",
