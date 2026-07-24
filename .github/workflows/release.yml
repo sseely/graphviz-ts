@@ -39,7 +39,12 @@ jobs:
 
       - uses: changesets/action@v1
         with:
+          # Opens/updates the "Version Packages" PR (bumps version + CHANGELOG).
           version: npm run version-packages
+          # On merge of that PR: `changeset publish` publishes via OIDC AND
+          # pushes a `v<version>` git tag; the action then creates the matching
+          # GitHub Release from the changelog.
           publish: npm run release
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
