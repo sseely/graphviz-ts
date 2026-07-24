@@ -56,6 +56,11 @@ console.log(svg); // <svg ...>...</svg>
 `renderSvg(dotSource, engine)` parses the DOT source, runs the named
 [layout engine](/guide/engines), renders to SVG, and returns the SVG string.
 
+New to DOT? It is a small plain-text language for describing graphs — the
+canonical **[DOT language reference](https://graphviz.org/doc/info/lang.html)** is
+the syntax guide, and [Overview](/guide/overview#what-is-dot-what-is-graphviz)
+has a one-paragraph primer.
+
 ## Next steps
 
 - [Overview](/guide/overview) — the mental model and the three entry points.

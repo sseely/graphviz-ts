@@ -2,10 +2,13 @@
 
 # @knowvah/dot-engine
 
-A faithful TypeScript port of [Graphviz](https://gitlab.com/graphviz/graphviz) — the
-graph-visualization toolkit originally written in C at AT&T Research and Lucent
-Bell Labs. It parses the DOT language, runs Graphviz's layout engines, and emits
-SVG.
+A faithful TypeScript port of [Graphviz](https://graphviz.org/) — the
+graph-visualization toolkit that originated at AT&T Bell Labs (a foundational
+technical report dates to 1991). It parses the
+[DOT language](https://graphviz.org/doc/info/lang.html), runs Graphviz's layout
+engines, and emits SVG. Ported line-by-line from the canonical
+[C source](https://gitlab.com/graphviz/graphviz); see
+[Graphviz on Wikipedia](https://en.wikipedia.org/wiki/Graphviz) for background.
 
 The defining property: **pure TypeScript — no C.** No compiled Graphviz binary, no WASM build of it, no native dependencies.
 It runs in a browser or in Node with zero external dependencies at runtime. The

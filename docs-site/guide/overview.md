@@ -8,6 +8,43 @@ Graphviz binary and no WASM. If you haven't rendered anything yet, start at
 above it — what the library is doing, and which of its three entry points to
 reach for.
 
+## What is DOT? What is Graphviz?
+
+**DOT** is a small, plain-text language for describing graphs — nodes, edges,
+and their attributes:
+
+```dot
+digraph {
+  rankdir=LR;
+  a [shape=box];
+  a -> b -> c;
+  a -> c [color=red];
+}
+```
+
+That is the whole input format: declare nodes, connect them with `->` (directed)
+or `--` (undirected), and set attributes in `[...]`. The complete grammar —
+statements, subgraphs, ports, HTML-like labels, and every attribute — is defined
+in the canonical **[DOT language reference](https://graphviz.org/doc/info/lang.html)**
+(with the full [attributes list](https://graphviz.org/doc/info/attrs.html) alongside
+it). `@knowvah/dot-engine` parses that language exactly as upstream does — so any
+DOT the C tools accept is DOT this library accepts.
+
+**Graphviz** is the open-source graph-visualization toolkit that DOT was created
+for. It began at **AT&T Bell Labs** (Murray Hill, NJ) — a foundational technical
+report by Eleftherios Koutsofios and Stephen North dates to **1991** — and is
+maintained today under the **Eclipse Public License** (the same license this
+port carries). This library is a faithful TypeScript re-implementation of it; the
+C code is the specification we match to a tight tolerance. For the original
+project:
+
+- **[graphviz.org](https://graphviz.org/)** — the official project site, docs, and
+  the DOT / attribute references.
+- **[gitlab.com/graphviz/graphviz](https://gitlab.com/graphviz/graphviz)** — the
+  canonical C source we port from.
+- **[Graphviz on Wikipedia](https://en.wikipedia.org/wiki/Graphviz)** — history and
+  background.
+
 ## The pipeline
 
 Every render, regardless of which entry point kicks it off, follows the same
