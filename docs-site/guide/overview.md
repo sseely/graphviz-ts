@@ -52,15 +52,26 @@ shape: get a `Graph` (by parsing DOT or building one programmatically), run a
 layout engine over it, then either serialize the result or read the computed
 geometry back off the same graph object.
 
-```mermaid
-flowchart LR
-    subgraph build["Get a Graph"]
-        A["DOT source"] -->|"parse()"| G["Graph"]
-        B["createGraph()"] -->|".graph"| G
-    end
-    G --> L["layout engine<br/>(dot, neato, fdp, sfdp,<br/>circo, twopi, osage, patchwork)"]
-    L -->|"render()"| O["SVG / JSON / xdot / DOT / imagemap"]
-    L -->|"getLayout()"| S["LayoutSnapshot<br/>(nodes, edges, bounds)"]
+```dot render
+digraph pipeline {
+  rankdir=LR;
+  bgcolor="transparent";
+  node [shape=box, style=rounded, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10];
+
+  src  [label="DOT source"];
+  api  [label="createGraph()"];
+  g    [label="Graph"];
+  eng  [label="layout engine\n(dot · neato · fdp · sfdp ·\ncirco · twopi · osage · patchwork)"];
+  out  [label="SVG / JSON / xdot /\nDOT / imagemap"];
+  snap [label="LayoutSnapshot\n(nodes, edges, bounds)"];
+
+  src -> g [label="parse()"];
+  api -> g [label=".graph"];
+  g -> eng;
+  eng -> out  [label="render()"];
+  eng -> snap [label="getLayout()"];
+}
 ```
 
 There is no separate "run layout" call: `renderSvg` and `render` trigger

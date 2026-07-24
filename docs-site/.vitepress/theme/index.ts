@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: EPL-2.0
 import DefaultTheme from 'vitepress/theme';
 import type { Theme } from 'vitepress';
+import './custom.css';
 import Playground from './Playground.vue';
 import GoldenGallery from './GoldenGallery.vue';
 

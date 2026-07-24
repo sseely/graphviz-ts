@@ -407,28 +407,42 @@ layout/render-stage failures. Callers that want structured errors without a
 
 ## Relationships
 
-```mermaid
-flowchart LR
-  subgraph Build
-    createGraph --> GvGraphBuilder
-    GvGraphBuilder -->|addNode| GvNode
-    GvGraphBuilder -->|addEdge| GvEdge
-    GvGraphBuilder -->|.graph| Graph
-    parse --> Graph
-  end
+```dot render
+digraph types {
+  rankdir=LR;
+  bgcolor="transparent";
+  node [shape=box, style=rounded, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10];
 
-  subgraph layoutRead["Layout + Read"]
-    Graph -->|getLayout| LayoutSnapshot
-    LayoutSnapshot --> NodeGeometry
-    LayoutSnapshot --> EdgeGeometry
-    LayoutSnapshot --> ClusterGeometry
-    LayoutSnapshot --> BoundsGeometry
-  end
+  subgraph cluster_build {
+    label="Build"; labeljust=l; style=dashed; color="gray60"; fontname="Helvetica"; fontsize=11;
+    createGraph; GvGraphBuilder; GvNode; GvEdge;
+  }
+  subgraph cluster_read {
+    label="Layout + Read"; labeljust=l; style=dashed; color="gray60"; fontname="Helvetica"; fontsize=11;
+    LayoutSnapshot; NodeGeometry; EdgeGeometry; ClusterGeometry; BoundsGeometry;
+  }
+  subgraph cluster_render {
+    label="Render"; labeljust=l; style=dashed; color="gray60"; fontname="Helvetica"; fontsize=11;
+    OutputString [label="string"];
+    XdotOpArray [label="XdotOp[]"];
+  }
 
-  subgraph Render
-    Graph -->|render| OutputString[string]
-    Graph -->|getDrawOps| XdotOpArray["XdotOp[]"]
-  end
+  createGraph -> GvGraphBuilder;
+  GvGraphBuilder -> GvNode [label="addNode"];
+  GvGraphBuilder -> GvEdge [label="addEdge"];
+  GvGraphBuilder -> "Graph" [label=".graph"];
+  parse -> "Graph";
+
+  "Graph" -> LayoutSnapshot [label="getLayout"];
+  LayoutSnapshot -> NodeGeometry;
+  LayoutSnapshot -> EdgeGeometry;
+  LayoutSnapshot -> ClusterGeometry;
+  LayoutSnapshot -> BoundsGeometry;
+
+  "Graph" -> OutputString [label="render"];
+  "Graph" -> XdotOpArray  [label="getDrawOps"];
+}
 ```
 
 ## Which type comes from which call

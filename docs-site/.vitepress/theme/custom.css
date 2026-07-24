@@ -1,0 +1,14 @@
+/* SPDX-License-Identifier: EPL-2.0 */
+/* Diagrams rendered from ```dot render fences at build time (config.ts). */
+.dot-figure {
+  margin: 20px 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.dot-figure svg {
+  max-width: 100%;
+  height: auto;
+}
+.dot-figure-error {
+  color: var(--vp-c-danger-1);
+}
